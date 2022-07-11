@@ -575,9 +575,9 @@ checksum = "68f2d64f2edebec4ce84ad108148e67e1064789bee435edc5b60ad398714a3a9"
 
 [[package]]
 name = "ipnetwork"
-version = "0.18.0"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4088d739b183546b239688ddbc79891831df421773df95e236daf7867866d355"
+checksum = "bf466541e9d546596ee94f9f69590f89473455f88372423e0008fc1a7daf100e"
 dependencies = [
  "serde",
 ]
