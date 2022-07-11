@@ -30,7 +30,7 @@ serde_urlencoded = "^0.7"
 tabled = { version = "0.5.0", features = ["color"] }
 thiserror = "^1"
 url = { version = "2", features = ["serde"] }
-uuid = { version = "^0.8", features = ["serde", "v4"] }
+uuid = { version = "^1.1", features = ["serde", "v4"] }
 
 [dev-dependencies]
 base64 = "^0.13"
