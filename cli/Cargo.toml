@@ -1,0 +1,23 @@
+[package]
+name = "cli"
+version = "0.1.0"
+edition = "2021"
+default-run = "cli"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+chrono = { workspace = true }
+futures = { workspace = true }
+oauth2 = { workspace = true }
+oxide-api = { workspace = true }
+reqwest = { workspace = true }
+schemars = { workspace = true }
+serde = { workspace = true }
+tokio = { workspace = true }
+url = { workspace = true }
+uuid = { workspace = true }
+
+[dev-dependencies]
+pretty_assertions = { workspace = true }
+serial_test = { workspace = true }
