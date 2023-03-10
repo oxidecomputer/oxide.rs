@@ -1,12 +1,15 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, io::Read};
 
-use anyhow::{anyhow, Result};
+use anyhow::{anyhow, bail, Result};
 use clap::Parser;
 use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse,
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
     TokenUrl,
 };
+use oxide_api::ClientHiddenExt;
+
+use crate::{config::Host, context::Context};
 
 /// Login, logout, and get the status of your authentication.
 ///
@@ -26,13 +29,10 @@ enum SubCommand {
     Status(CmdAuthStatus),
 }
 
-// #[async_trait::async_trait]
-// impl crate::cmd::Command for CmdAuth {
 impl CmdAuth {
-    // async fn run(&self, ctx: &mut crate::context::Context) -> Result<()> {
-    pub async fn run(&self) -> Result<()> {
+    pub async fn run(&self, ctx: &mut Context) -> Result<()> {
         match &self.subcmd {
-            SubCommand::Login(cmd) => cmd.run().await,
+            SubCommand::Login(cmd) => cmd.run(ctx).await,
             SubCommand::Logout(cmd) => cmd.run().await,
             SubCommand::Status(cmd) => cmd.run().await,
         }
@@ -124,48 +124,107 @@ pub struct CmdAuthLogin {
     pub with_token: bool,
 
     /// The host of the Oxide instance to authenticate with.
-    /// This assumes the instance is an `https://` url, if not otherwise
-    /// specified as `http://`.
+    /// This assumes http; specify an `http://` prefix if needed.
     #[clap(short = 'H', long, env = "OXIDE_HOST", value_parser = parse_host)]
-    pub host: Option<url::Url>,
-    // Open a browser to authenticate.
-    // TODO: Make this work when we have device auth.
-    // #[clap(short, long)]
-    // pub web: bool,
+    pub host: url::Url,
 }
 
 // #[async_trait::async_trait]
 // impl crate::cmd::Command for CmdAuthLogin {
 //     async fn run(&self, ctx: &mut crate::context::Context) -> Result<()> {
 impl CmdAuthLogin {
-    pub async fn run(&self) -> Result<()> {
+    pub async fn run(&self, ctx: &mut Context) -> Result<()> {
         // if !ctx.io.can_prompt() && !self.with_token {
         //     return Err(anyhow!(
         //         "--with-token required when not running interactively"
         //     ));
         // }
 
-        let mut token = String::new();
+        let token = if self.with_token {
+            // Read the token from stdin.
+            let mut token = String::new();
+            std::io::stdin().read_to_string(&mut token)?;
+            token = token.trim_end_matches('\n').to_string();
 
-        // if self.with_token {
-        //     // Read from stdin.
-        //     ctx.io.stdin.read_to_string(&mut token)?;
-        //     token = token.trim_end_matches('\n').to_string();
-        // }
+            if token.is_empty() {
+                bail!("token cannot be empty");
+            }
 
-        let mut interactive = false;
-        // if ctx.io.can_prompt() && token.is_empty() {
-        //     interactive = true;
-        // }
-
-        let host = if let Some(host) = &self.host {
-            host.as_str()
-        } else if interactive {
-            // host = parse_host_interactively(ctx)?;
-            // host.as_str()
-            todo!()
+            token
         } else {
-            return Err(anyhow!("--host required when not running interactively"));
+            let existing_token = ctx
+                .config
+                .hosts
+                .get(&self.host)
+                .map(|host_entry| &host_entry.token);
+
+            if existing_token.is_some() {
+                match dialoguer::Confirm::new()
+                    .with_prompt(format!(
+                        "You're already logged into {}\nDo you want to re-authenticate?",
+                        &self.host,
+                    ))
+                    .interact()
+                {
+                    Ok(true) => {}
+                    Ok(false) => {
+                        return Ok(());
+                    }
+                    Err(err) => {
+                        return Err(anyhow!("prompt failed: {}", err));
+                    }
+                }
+            }
+
+            // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
+            let device_auth_url =
+                DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
+            let client_id = &ctx.config.client_id;
+            let auth_client = BasicClient::new(
+                ClientId::new(client_id.to_string()),
+                None,
+                AuthUrl::new(format!("{}authorize", &self.host))?,
+                Some(TokenUrl::new(format!("{}device/token", &self.host))?),
+            )
+            .set_auth_type(AuthType::RequestBody)
+            .set_device_authorization_url(device_auth_url);
+
+            let details: StandardDeviceAuthorizationResponse = auth_client
+                .exchange_device_code()?
+                .request_async(async_http_client)
+                .await?;
+
+            // TODO ahl kludge
+            if let Some(uri) = details.verification_uri_complete() {
+                open::that(uri.secret())?;
+            }
+
+            // if let Some(uri) = details.verification_uri_complete() {
+            //     writeln!(
+            //         ctx.io.out,
+            //         "Opening {} in your browser.\n\
+            //          Please verify user code: {}\n",
+            //         uri.secret(),
+            //         details.user_code().secret()
+            //     )?;
+            //     let _ = ctx.browser(host, uri.secret());
+            // } else {
+            //     writeln!(
+            //         ctx.io.out,
+            //         "Open this URL in your browser:\n{}\n\
+            //          And enter the code: {}\n",
+            //         **details.verification_uri(),
+            //         details.user_code().secret()
+            //     )?;
+            // }
+
+            auth_client
+                .exchange_device_access_token(&details)
+                .request_async(async_http_client, tokio::time::sleep, None)
+                .await?
+                .access_token()
+                .secret()
+                .to_string()
         };
 
         // if let Err(err) = ctx.config.check_writable(host, "token") {
@@ -187,80 +246,6 @@ impl CmdAuthLogin {
         //     return Err(err);
         // }
 
-        // let cs = ctx.io.color_scheme();
-
-        // Do the login flow if we didn't get a token from stdin.
-        if token.is_empty() {
-            // We don't want to capture the error here just in case we have no host config
-            // for this specific host yet.
-            // let existing_token = if let Ok(existing_token) = ctx.config.get(host, "token") {
-            //     existing_token
-            // } else {
-            //     String::new()
-            // };
-            // if !existing_token.is_empty() && interactive {
-            // match dialoguer::Confirm::new()
-            //     .with_prompt(format!(
-            //         "You're already logged into {}\nDo you want to re-authenticate?",
-            //         host
-            //     ))
-            //     .interact()
-            // {
-            //     Ok(true) => {}
-            //     Ok(false) => {
-            //         return Ok(());
-            //     }
-            //     Err(err) => {
-            //         return Err(anyhow!("prompt failed: {}", err));
-            //     }
-            // }
-            // }
-
-            // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
-            let device_auth_url = DeviceAuthorizationUrl::new(format!("{}device/auth", host))?;
-            // let client_id = ctx.config.get("", "client_id")?;
-            // let auth_client = BasicClient::new(
-            //     ClientId::new(client_id),
-            //     None,
-            //     AuthUrl::new(format!("{}authorize", host))?,
-            //     Some(TokenUrl::new(format!("{}device/token", host))?),
-            // )
-            // .set_auth_type(AuthType::RequestBody)
-            // .set_device_authorization_url(device_auth_url);
-
-            // let details: StandardDeviceAuthorizationResponse = auth_client
-            //     .exchange_device_code()?
-            //     .request_async(async_http_client)
-            //     .await?;
-
-            // if let Some(uri) = details.verification_uri_complete() {
-            //     writeln!(
-            //         ctx.io.out,
-            //         "Opening {} in your browser.\n\
-            //          Please verify user code: {}\n",
-            //         uri.secret(),
-            //         details.user_code().secret()
-            //     )?;
-            //     let _ = ctx.browser(host, uri.secret());
-            // } else {
-            //     writeln!(
-            //         ctx.io.out,
-            //         "Open this URL in your browser:\n{}\n\
-            //          And enter the code: {}\n",
-            //         **details.verification_uri(),
-            //         details.user_code().secret()
-            //     )?;
-            // }
-
-            // token = auth_client
-            //     .exchange_device_access_token(&details)
-            //     .request_async(async_http_client, tokio::time::sleep, None)
-            //     .await?
-            //     .access_token()
-            //     .secret()
-            //     .to_string();
-        }
-
         // Set the token in the config file.
         // ctx.config.set(host, "token", &token)?;
 
@@ -269,21 +254,47 @@ impl CmdAuthLogin {
         // Get the session for the token.
         // let session = client.hidden().session_me().await?;
 
+        // Construct a one-off API client, authenticated with the token
+        // returned in the previous step, so that we can extract and save the
+        // identity of the authenticated user.
+        let auth = format!("Bearer {}", token);
+        let dur = std::time::Duration::from_secs(15);
+        let rclient = reqwest::Client::builder()
+            .connect_timeout(dur)
+            .timeout(dur)
+            .default_headers(
+                [(http::header::AUTHORIZATION, auth.try_into().unwrap())]
+                    .into_iter()
+                    .collect(),
+            )
+            .build()
+            .unwrap();
+        let client = oxide_api::Client::new_with_client(self.host.as_ref(), rclient);
+
+        let user = client.session_me().send().await?;
+
+        println!("{:#?}", user);
+
         // Set the user.
         // TODO: This should instead store the email, or some username or something
         // that is human knowable.
-        // let email = session.id;
+        // TODO ahl: not sure what even we're shooting for here. Maybe just a
+        // way to understand the config files?
+        let uid = user.id;
         // ctx.config.set(host, "user", &email)?;
 
         // Save the config.
         // ctx.config.write()?;
 
-        // writeln!(
-        //     ctx.io.out,
-        //     "{} Logged in as {}",
-        //     cs.success_icon(),
-        //     cs.bold(&email)
-        // )?;
+        println!("Logged in as {}", uid);
+
+        let host_entry = Host {
+            token,
+            user: uid.to_string(),
+            default: false,
+        };
+
+        ctx.config.update_host(self.host.to_string(), host_entry)?;
 
         Ok(())
     }

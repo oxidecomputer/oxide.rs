@@ -1,11 +1,19 @@
 use std::collections::HashMap;
 
-use clap::{Command, CommandFactory, FromArgMatches, Parser};
+use clap::{Command, CommandFactory, FromArgMatches};
 
+use config::Config;
+use context::Context;
 use generated_cli::{Cli, CliCommand};
 
+#[allow(unused_mut)] // TODO
+#[allow(unused)] // TODO
 mod cmd_auth;
+mod config;
+mod context;
 #[allow(unused_mut)]
+#[allow(unused)] // TODO
+#[allow(unused_must_use)] // TODO
 mod generated_cli;
 
 #[derive(Debug, Default)]
@@ -69,11 +77,16 @@ async fn main() {
 
     let matches = cmd.get_matches();
 
+    // Construct the global config
+    // TODO I think this has to come between parsing and execution in that the
+    // parsed options may change where we get config from.
+    let config = Config::default();
+    let mut ctx = Context::new(config).unwrap();
+
     match matches.subcommand() {
         Some(("auth", sub_matches)) => {
             let x = cmd_auth::CmdAuth::from_arg_matches(sub_matches).unwrap();
-            x.run().await.unwrap();
-            todo!()
+            x.run(&mut ctx).await.unwrap();
         }
 
         _ => {
@@ -85,7 +98,7 @@ async fn main() {
                 sm = sub_matches;
             }
 
-            let cli = Cli::new(oxide_api::Client::new("xxx"));
+            let cli = Cli::new(ctx.client.clone());
 
             cli.execute(node.cmd.unwrap(), sm).await;
         }
