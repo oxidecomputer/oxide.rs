@@ -4,26 +4,37 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{fs::File, path::PathBuf, time::Instant};
+use std::{fs::File, io::Write, path::PathBuf, time::Instant};
 
+use clap::Parser;
 use progenitor::{GenerationSettings, Generator, TagStyle};
+use similar::{Algorithm, ChangeTag, TextDiff};
 
-fn main() {
-    let args = std::env::args().collect::<Vec<_>>();
-    if args.len() != 2 || args.get(1).map(String::as_str) != Some("generate") {
-        usage();
-    }
+#[derive(Parser)]
+#[command(name = "xtask")]
+#[command(about = "build tasks")]
 
-    generate();
+enum Xtask {
+    #[command(about = "generate CLI and SDK code from oxide.json")]
+    Generate {
+        #[clap(long)]
+        check: bool,
+        #[clap(short = 'v', long)]
+        verbose: bool,
+    },
 }
 
-fn usage() -> ! {
-    todo!()
+fn main() -> Result<(), String> {
+    let xtask = Xtask::parse();
+
+    match xtask {
+        Xtask::Generate { check, verbose } => generate(check, verbose),
+    }
 }
 
 // TODO flag to --check the generated file that we can use in CI to keep people
 // from modifying the generated file by hand or forgetting to update it.
-fn generate() {
+fn generate(check: bool, verbose: bool) -> Result<(), String> {
     let start = Instant::now();
     let xtask_path = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
     let root_path = xtask_path.parent().unwrap().to_path_buf();
@@ -39,14 +50,21 @@ fn generate() {
             .with_derive("schemars::JsonSchema"),
     );
 
+    let mut result = Ok(());
+
     // TODO I'd like to generate a hash as well to have a way to check if the
     // spec has changed since the last generation.
 
+    // SDK
+    print!("generating sdk ... ");
+    std::io::stdout().flush().unwrap();
+
     let code = generator.generate_text(&spec).unwrap();
+    let loc_sdk = code.matches('\n').count();
 
     let contents = format!(
         "// The contents of this file are generated; do not modify them.\n\n{}",
-        code
+        code,
     );
 
     let mut out_path = root_path.clone();
@@ -54,10 +72,30 @@ fn generate() {
     out_path.push("src");
     out_path.push("generated_sdk.rs");
 
-    std::fs::write(out_path, contents).unwrap();
+    if check {
+        let checked_in = std::fs::read_to_string(out_path.clone()).unwrap();
+        if checked_in != contents {
+            println!("❌");
+            if verbose {
+                show_diff(&checked_in, &contents);
+            }
+            result = Err(format!(
+                "{} is out of date relative to oxide.json",
+                out_path.to_string_lossy(),
+            ));
+        } else {
+            println!("👍");
+        }
+    } else {
+        std::fs::write(out_path, contents).unwrap();
+        println!("done.");
+    }
 
     // CLI
+    print!("generating cli ... ");
+    std::io::stdout().flush().unwrap();
     let code = generator.cli_text(&spec, "oxide_api").unwrap();
+    let loc_cli = code.matches('\n').count();
 
     let contents = format!(
         "{}\n\n{}\n\n{}",
@@ -71,12 +109,53 @@ fn generate() {
     out_path.push("src");
     out_path.push("generated_cli.rs");
 
-    let loc = contents.matches('\n').count();
-    std::fs::write(out_path, contents).unwrap();
-    let duration = Instant::now().duration_since(start).as_millis();
-    println!(
-        "generation took {}ms ({:.3}ms per line)",
-        duration,
-        duration as f64 / loc as f64,
-    );
+    if check {
+        let checked_in = std::fs::read_to_string(out_path.clone()).unwrap();
+        if checked_in != contents {
+            println!("❌");
+            if verbose {
+                show_diff(&checked_in, &contents);
+            }
+            result = Err(format!(
+                "{} is out of date relative to oxide.json",
+                out_path.to_string_lossy(),
+            ));
+        } else {
+            println!("👍");
+        }
+    } else {
+        std::fs::write(out_path, contents).unwrap();
+        println!("done.");
+        let duration = Instant::now().duration_since(start).as_millis();
+        println!(
+            "generation took {}ms ({:.3}ms per line)",
+            duration,
+            duration as f64 / (loc_sdk + loc_cli) as f64,
+        );
+    }
+
+    result
+}
+
+fn show_diff(expected: &str, actual: &str) {
+    for hunk in TextDiff::configure()
+        .algorithm(Algorithm::Myers)
+        .diff_lines(expected, actual)
+        .unified_diff()
+        .context_radius(5)
+        .iter_hunks()
+    {
+        println!("{}", hunk.header());
+        for change in hunk.iter_changes() {
+            let marker = match change.tag() {
+                ChangeTag::Delete => '-',
+                ChangeTag::Insert => '+',
+                ChangeTag::Equal => ' ',
+            };
+            print!("{}{}", marker, change);
+            if change.missing_newline() {
+                println!();
+            }
+        }
+    }
 }

@@ -31,7 +31,7 @@ impl clap::builder::TypedValueParser for ByteCountParser {
         value: &std::ffi::OsStr,
     ) -> Result<Self::Value, clap::Error> {
         let bytes = value.as_bytes();
-        let ii = bytes.partition_point(|c| ('0'..'9').contains(&(*c as char)));
+        let ii = bytes.partition_point(|c| (*c as char).is_ascii_digit());
         let number = std::ffi::OsStr::from_bytes(&bytes[..ii]);
         let suffix = std::ffi::OsStr::from_bytes(&bytes[ii..])
             .to_str()
