@@ -47,8 +47,6 @@ impl Default for Config {
             Default::default()
         };
 
-        println!("{:#?}", hosts);
-
         Self {
             client_id: Default::default(),
             hosts,

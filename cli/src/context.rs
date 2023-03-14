@@ -31,8 +31,6 @@ impl Context {
             .unwrap();
         let client = oxide_api::Client::new_with_client(hostname, rclient);
 
-        println!("{:#?}:", client);
-
         Ok(Self { client, config })
     }
 }

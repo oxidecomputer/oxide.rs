@@ -84,14 +84,12 @@ pub struct PaginatedResponse {
 
 impl CmdApi {
     pub async fn run(&self, ctx: &mut crate::context::Context) -> Result<()> {
-        // Let's get the raw client.
-        let client = ctx.client.client();
-
         // Make sure the endpoint starts with a slash.
-        let mut endpoint = self.endpoint.to_string();
-        if !self.endpoint.starts_with('/') {
-            endpoint = format!("/{}", endpoint);
-        }
+        let endpoint = if self.endpoint.starts_with('/') {
+            self.endpoint.clone()
+        } else {
+            format!("/{}", self.endpoint)
+        };
 
         // Parse the fields.
         let params = self.parse_fields(ctx)?;
@@ -104,8 +102,8 @@ impl CmdApi {
 
         let mut bytes = b.as_bytes().to_vec();
 
-        // If they didn't specify the method and we have parameters, we'll
-        // assume they want to use POST.
+        // If no method is specified and we have parameters, we'll assume the
+        // user wants to use POST.
         let method = if let Some(m) = &self.method {
             m.clone()
         } else if !params.is_empty() {
@@ -116,14 +114,14 @@ impl CmdApi {
 
         if self.paginate && method != http::method::Method::GET {
             return Err(anyhow!(
-                "the `--paginate` option only compatible with GET requests",
+                "the `--paginate` option is only compatible with GET requests",
             ));
         }
 
+        let mut endpoint_with_query = endpoint.clone();
+
         // Parse the input file.
         if !self.input.is_empty() {
-            // Read the input file.
-
             let mut buf = Vec::new();
             if self.input == "-" {
                 // Read from stdin.
@@ -147,28 +145,26 @@ impl CmdApi {
                     query_string.push_str(&format!("{}={}", key, value));
                 }
 
-                endpoint = add_query_string(&endpoint, &query_string);
+                endpoint_with_query = add_query_string(&endpoint_with_query, &query_string);
             }
         }
 
-        // TODO
-        endpoint = add_query_string(&endpoint, "limit=1");
+        let client = ctx.client.client();
+        let uri = format!("{}{}", ctx.client.baseurl(), endpoint_with_query);
 
         // Make the request.
-        let mut req = client.request(
-            method.clone(),
-            format!("{}{}", ctx.client.baseurl(), endpoint),
-        );
+        let mut req = client.request(method.clone(), uri);
 
         if !bytes.is_empty() {
             req = req.body(bytes.clone())
         }
 
-        for (key, value) in self.parse_headers()? {
+        let headers = self.parse_headers()?;
+        for (key, value) in headers.clone() {
             req = req.header(key, value);
         }
 
-        let resp = req.send().await?;
+        let resp = req.send().await?.error_for_status()?;
 
         // Print the response headers if requested.
         if self.include {
@@ -176,179 +172,83 @@ impl CmdApi {
             print_headers(ctx, resp.headers())?;
         }
 
-        if resp.status() == 204 {
+        if resp.status() == http::StatusCode::NO_CONTENT {
             return Ok(());
         }
 
-        if !resp.status().is_success() {
-            return Err(anyhow!(
-                "{} {}",
-                resp.status(),
-                resp.status().canonical_reason().unwrap_or("")
-            ));
-        }
-
         if !self.paginate {
-            // Read the response body.
+            // Print the response body.
             let result = resp.json::<serde_json::Value>().await?;
-
             println!("{}", serde_json::to_string_pretty(&result)?);
 
             Ok(())
         } else {
-            println!("[");
+            print!("[");
 
-            let result = futures::stream::try_unfold(resp, |resp| async {
-                let page = resp.json::<PaginatedResponse>().await?;
+            // If this is a paginated request, wrap the output in brackets, and
+            // print out the contents of each page to make a unified json array
+            // as the output.
 
-                if !page.items.is_empty() {
-                    let items_out = serde_json::to_string_pretty(&page.items)?;
+            let result = futures::stream::try_unfold(Some(resp), |maybe_resp| async {
+                match maybe_resp {
+                    None => Ok(None),
+                    Some(resp) => {
+                        let page = resp.json::<PaginatedResponse>().await?;
+
+                        match page.next_page {
+                            None => Ok(Some((page.items, None))),
+                            Some(next_page) => {
+                                // TODO deal with limit
+                                let uri = format!(
+                                    "{}{}?page_token={}",
+                                    ctx.client.baseurl(),
+                                    endpoint,
+                                    next_page,
+                                );
+
+                                let mut req = client.request(method.clone(), uri);
+                                for (key, value) in headers.clone() {
+                                    req = req.header(key, value);
+                                }
+
+                                let resp = req.send().await?.error_for_status()?;
+                                Ok(Some((page.items, Some(resp))))
+                            }
+                        }
+                    }
+                }
+            })
+            .try_fold(false, |comma_needed, items| async move {
+                if items.is_empty() {
+                    Ok(false)
+                } else {
+                    let items_out = serde_json::to_string_pretty(&items)?;
                     let len = items_out.len();
                     assert_eq!(&items_out[0..2], "[\n");
                     assert_eq!(&items_out[len - 2..], "\n]");
                     let items_core = &items_out[2..len - 2];
 
-                    println!("page");
-                    println!("{}", items_core);
-                }
-
-                match page.next_page {
-                    None => Ok(None),
-                    Some(next_page) => {
-                        // TODO deal with limit
-                        let uri = format!(
-                            "{}{}?page_token={}",
-                            ctx.client.baseurl(),
-                            self.endpoint,
-                            next_page,
-                        );
-
-                        let mut req = client.request(method.clone(), uri);
-                        for (key, value) in self.parse_headers()? {
-                            req = req.header(key, value);
-                        }
-
-                        match req.send().await {
-                            Ok(r) => Ok(Some(((), r))),
-                            Err(e) => Err(anyhow::Error::from(e)),
-                        }
+                    if comma_needed {
+                        print!(",");
                     }
+                    println!();
+                    print!("{}", items_core);
+                    Ok(true)
                 }
             })
-            .try_collect::<()>()
             .await;
-            // let mut resp = resp;
 
-            // let xxx = loop {
-            //     let page = resp.json::<PaginatedResponse>().await?;
-
-            //     if !page.items.is_empty() {
-            //         let items_out = serde_json::to_string_pretty(&page.items)?;
-            //         let len = items_out.len();
-            //         assert_eq!(&items_out[0..2], "[\n");
-            //         assert_eq!(&items_out[len - 2..], "\n]");
-            //         let items_core = &items_out[2..len - 2];
-
-            //         println!("page");
-            //         println!("{}", items_core);
-            //     }
-
-            //     let Some(next_page) = page.next_page else {
-            //         break Ok(());
-            //     };
-
-            //     // TODO deal with limit
-            //     let uri = format!(
-            //         "{}{}?page_token={}",
-            //         ctx.client.baseurl(),
-            //         self.endpoint,
-            //         next_page,
-            //     );
-
-            //     let mut req = client.request(method.clone(), uri);
-            //     for (key, value) in self.parse_headers()? {
-            //         req = req.header(key, value);
-            //     }
-
-            //     match req.send().await {
-            //         Ok(r) => {
-            //             resp = r;
-            //         }
-            //         Err(e) => break Err(e),
-            //     }
-            // };
-
-            // let page = resp.json::<PaginatedResponse>().await?;
-
-            // let xxx = serde_json::to_string_pretty(&page.items)?;
-            // assert_eq!(&xxx[0..2], "[\n");
-            // let len = xxx.len();
-            // assert_eq!(&xxx[len - 2..], "\n]");
-            // let items = &xxx[2..len - 2];
-
-            // println!("{items}");
-
-            // let mut maybe_next_page = page.next_page;
-
-            // while let Some(next_page) = maybe_next_page {
-            //     println!("page");
-            //     let uri = format!(
-            //         "{}{}?page_token={}",
-            //         ctx.client.baseurl(),
-            //         self.endpoint,
-            //         next_page
-            //     );
-
-            //     let mut req = client.request(method.clone(), uri);
-            //     for (key, value) in self.parse_headers()? {
-            //         req = req.header(key, value);
-            //     }
-
-            //     match req.send().await {
-            //         Ok(resp) => {
-            //             let page = resp.json::<PaginatedResponse>().await?;
-
-            //             let xxx = serde_json::to_string_pretty(&page.items)?;
-            //             assert_eq!(&xxx[0..2], "[\n");
-            //             let len = xxx.len();
-            //             assert_eq!(&xxx[len - 2..], "\n]");
-            //             let items = &xxx[2..len - 2];
-
-            //             println!("{items}");
-
-            //             maybe_next_page = page.next_page;
-            //         }
-            //         Err(err) => todo!(),
-            //     }
-            // }
-
+            if let Ok(true) = result {
+                print!(",")
+            }
+            println!();
             println!("]");
 
-            //         if !page.items.is_empty() {
-            //             page_results.append(&mut page.items);
-            //         }
+            if result.is_err() {
+                println!("An error occurred during a paginated query")
+            }
 
-            //         match page.next_page {
-            //             Some(next_page) => {
-            //                 endpoint =
-            //                     add_query_string(&endpoint, &format!("page_token={}", next_page));
-            //             }
-            //             None => {
-            //                 has_next_page = false;
-            //             }
-            //         }
-            //     } else {
-            //         // Read the response body.
-            //         result = resp.json().await?;
-            //         has_next_page = false;
-            //     }
-            // }
-
-            // if self.paginate {
-            //     result = serde_json::Value::Array(page_results);
-            // }
-
-            Ok(())
+            result.map(|_| ())
         }
     }
 }
@@ -374,7 +274,7 @@ impl CmdApi {
 
     fn parse_fields(
         &self,
-        ctx: &crate::context::Context,
+        _ctx: &crate::context::Context,
     ) -> Result<HashMap<String, serde_json::Value>> {
         let mut params: HashMap<String, serde_json::Value> = HashMap::new();
 
@@ -452,7 +352,7 @@ impl CmdApi {
 }
 
 fn print_headers(
-    ctx: &crate::context::Context,
+    _ctx: &crate::context::Context,
     headers: &reqwest::header::HeaderMap,
 ) -> Result<()> {
     let mut names: Vec<String> = headers.keys().map(|k| k.as_str().to_string()).collect();

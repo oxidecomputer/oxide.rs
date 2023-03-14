@@ -67,8 +67,6 @@ async fn main() {
         }
     }
 
-    // println!("{:#?}", root);
-
     let mut cmd = root.cmd("oxide");
     cmd = cmd.bin_name("oxide");
 
