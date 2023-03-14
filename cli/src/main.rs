@@ -122,6 +122,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceSerialConsoleStreamV1 => None, // Ditto
         CliCommand::InstanceStartV1 => Some("instance start"),
         CliCommand::InstanceStopV1 => Some("instance stop"),
+        CliCommand::InstanceExternalIpListV1 => Some("instance external-ip list"),
 
         CliCommand::OrganizationListV1 => Some("org list"),
         CliCommand::OrganizationCreateV1 => Some("org create"),
@@ -144,13 +145,14 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ImageCreateV1 => Some("image create"),
         CliCommand::ImageViewV1 => Some("image view"),
         CliCommand::ImageDeleteV1 => Some("image delete"),
-        CliCommand::InstanceExternalIpListV1 => Some("instance external-ip list"),
+
         CliCommand::SiloIdentityProviderListV1 => Some("silo idp list"),
-        CliCommand::LocalIdpUserCreateV1 => Some("local-idp user create"),
-        CliCommand::LocalIdpUserDeleteV1 => Some("local-idp user delete"),
-        CliCommand::LocalIdpUserSetPasswordV1 => Some("local-idp user set-password"),
-        CliCommand::SamlIdentityProviderCreateV1 => Some("saml-idp provider create"),
-        CliCommand::SamlIdentityProviderViewV1 => Some("saml-idp provider view"),
+        CliCommand::LocalIdpUserCreateV1 => Some("silo idp local user create"),
+        CliCommand::LocalIdpUserDeleteV1 => Some("silo idp local user delete"),
+        CliCommand::LocalIdpUserSetPasswordV1 => Some("silo idp local user set-password"),
+        CliCommand::SamlIdentityProviderCreateV1 => Some("silo idp saml create"),
+        CliCommand::SamlIdentityProviderViewV1 => Some("silo idp saml view"),
+
         CliCommand::IpPoolListV1 => Some("ip-pool list"),
         CliCommand::IpPoolCreateV1 => Some("ip-pool create"),
         CliCommand::IpPoolViewV1 => Some("ip-pool view"),
@@ -171,7 +173,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SiloPolicyUpdateV1 => Some("silo policy update"),
         CliCommand::SiloUsersListV1 => Some("silo user list"),
         CliCommand::SiloUserViewV1 => Some("silo user view"),
-        CliCommand::VpcSubnetListNetworkInterfacesV1 => Some("vpc subnet list-nics"),
+        CliCommand::VpcSubnetListNetworkInterfacesV1 => Some("vpc subnet nic list"),
 
         CliCommand::UserListV1
         | CliCommand::VpcFirewallRulesViewV1
