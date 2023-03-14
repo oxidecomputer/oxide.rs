@@ -7,6 +7,7 @@
 use std::{fs::File, io::Write, path::PathBuf, time::Instant};
 
 use clap::Parser;
+use newline_converter::dos2unix;
 use progenitor::{GenerationSettings, Generator, TagStyle};
 use similar::{Algorithm, ChangeTag, TextDiff};
 
@@ -66,6 +67,7 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
         "// The contents of this file are generated; do not modify them.\n\n{}",
         code,
     );
+    let contents = dos2unix(&contents);
 
     let mut out_path = root_path.clone();
     out_path.push("sdk");
@@ -87,7 +89,7 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
             println!("👍");
         }
     } else {
-        std::fs::write(out_path, contents).unwrap();
+        std::fs::write(out_path, contents.as_ref()).unwrap();
         println!("done.");
     }
 
@@ -103,6 +105,7 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
         "use oxide_api::*;",
         code,
     );
+    let contents = dos2unix(&contents);
 
     let mut out_path = root_path;
     out_path.push("cli");
@@ -124,7 +127,7 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
             println!("👍");
         }
     } else {
-        std::fs::write(out_path, contents).unwrap();
+        std::fs::write(out_path, contents.as_ref()).unwrap();
         println!("done.");
         let duration = Instant::now().duration_since(start).as_millis();
         println!(

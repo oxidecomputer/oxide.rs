@@ -14,6 +14,7 @@ dialoguer = "0.10.3"
 dirs = "4.0.0"
 futures = "0.3.26"
 http = "0.2.9"
+newline-converter = "0.2.2"
 oauth2 = "4.3.0"
 open = "3.4.0"
 oxide-api = { path = "sdk" }
