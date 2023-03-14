@@ -6,8 +6,8 @@ default-run = "cli"
 
 [dependencies]
 anyhow = { workspace = true }
-clap = { workspace = true }
 chrono = { workspace = true }
+clap = { workspace = true }
 dialoguer = { workspace = true }
 dirs = { workspace = true }
 futures = { workspace = true }
@@ -18,6 +18,8 @@ oxide-api = { workspace = true }
 reqwest = { workspace = true }
 schemars = { workspace = true }
 serde = { workspace = true }
+serde_json = { workspace = true }
+tabwriter = { workspace = true }
 tokio = { workspace = true }
 toml = { workspace = true }
 toml_edit = { workspace = true }

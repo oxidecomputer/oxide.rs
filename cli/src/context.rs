@@ -15,20 +15,21 @@ impl Context {
         };
 
         let auth = format!("Bearer {}", &host.token);
+        let mut auth_value = reqwest::header::HeaderValue::from_str(&auth)?;
+        auth_value.set_sensitive(true);
+
         let dur = std::time::Duration::from_secs(15);
         let rclient = reqwest::Client::builder()
             .connect_timeout(dur)
             .timeout(dur)
             .default_headers(
-                [(http::header::AUTHORIZATION, auth.try_into().unwrap())]
+                [(http::header::AUTHORIZATION, auth_value)]
                     .into_iter()
                     .collect(),
             )
             .build()
             .unwrap();
         let client = oxide_api::Client::new_with_client(hostname, rclient);
-
-        println!("{:#?}:", client);
 
         Ok(Self { client, config })
     }
