@@ -1673,7 +1673,9 @@ pub mod types {
         pub id: uuid::Uuid,
         #[doc = "unique, mutable, user-controlled identifier for each resource"]
         pub name: Name,
-        #[doc = "The project the disk belongs to"]
+        #[doc = "The family of the operating system like Debian, Ubuntu, etc."]
+        pub os: String,
+        #[doc = "The project the image belongs to"]
         pub project_id: uuid::Uuid,
         #[doc = "total size in bytes"]
         pub size: ByteCount,
@@ -1684,9 +1686,8 @@ pub mod types {
         #[doc = "URL source of this image, if any"]
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub url: Option<String>,
-        #[doc = "Version of this, if any"]
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub version: Option<String>,
+        #[doc = "Version of the operating system"]
+        pub version: String,
     }
 
     impl From<&Image> for Image {
@@ -1708,8 +1709,12 @@ pub mod types {
         pub block_size: BlockSize,
         pub description: String,
         pub name: Name,
+        #[doc = "The family of the operating system (e.g. Debian, Ubuntu, etc.)"]
+        pub os: String,
         #[doc = "The source of the image's contents."]
         pub source: ImageSource,
+        #[doc = "The version of the operating system (e.g. 18.04, 20.04, etc.)"]
+        pub version: String,
     }
 
     impl From<&ImageCreate> for ImageCreate {
@@ -4303,13 +4308,7 @@ pub mod types {
     impl std::str::FromStr for SemverVersion {
         type Err = &'static str;
         fn from_str(value: &str) -> Result<Self, &'static str> {
-            if regress::Regex::new("^\\d+\\.\\d+\\.\\d+([\\-\\+].+)?$")
-                .unwrap()
-                .find(value)
-                .is_none()
-            {
-                return Err("doesn't match pattern \"^\\d+\\.\\d+\\.\\d+([\\-\\+].+)?$\"");
-            }
+            if regress :: Regex :: new ("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$") . unwrap () . find (value) . is_none () { return Err ("doesn't match pattern \"^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$\"") ; }
             Ok(Self(value.to_string()))
         }
     }
@@ -8738,12 +8737,13 @@ pub mod types {
             digest: Result<Option<super::Digest>, String>,
             id: Result<uuid::Uuid, String>,
             name: Result<super::Name, String>,
+            os: Result<String, String>,
             project_id: Result<uuid::Uuid, String>,
             size: Result<super::ByteCount, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             url: Result<Option<String>, String>,
-            version: Result<Option<String>, String>,
+            version: Result<String, String>,
         }
 
         impl Default for Image {
@@ -8754,12 +8754,13 @@ pub mod types {
                     digest: Ok(Default::default()),
                     id: Err("no value supplied for id".to_string()),
                     name: Err("no value supplied for name".to_string()),
+                    os: Err("no value supplied for os".to_string()),
                     project_id: Err("no value supplied for project_id".to_string()),
                     size: Err("no value supplied for size".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                     url: Ok(Default::default()),
-                    version: Ok(Default::default()),
+                    version: Err("no value supplied for version".to_string()),
                 }
             }
         }
@@ -8815,6 +8816,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
+            pub fn os<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.os = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for os: {}", e));
+                self
+            }
             pub fn project_id<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<uuid::Uuid>,
@@ -8867,7 +8878,7 @@ pub mod types {
             }
             pub fn version<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Option<String>>,
+                T: std::convert::TryInto<String>,
                 T::Error: std::fmt::Display,
             {
                 self.version = value
@@ -8886,6 +8897,7 @@ pub mod types {
                     digest: value.digest?,
                     id: value.id?,
                     name: value.name?,
+                    os: value.os?,
                     project_id: value.project_id?,
                     size: value.size?,
                     time_created: value.time_created?,
@@ -8900,7 +8912,9 @@ pub mod types {
             block_size: Result<super::BlockSize, String>,
             description: Result<String, String>,
             name: Result<super::Name, String>,
+            os: Result<String, String>,
             source: Result<super::ImageSource, String>,
+            version: Result<String, String>,
         }
 
         impl Default for ImageCreate {
@@ -8909,7 +8923,9 @@ pub mod types {
                     block_size: Err("no value supplied for block_size".to_string()),
                     description: Err("no value supplied for description".to_string()),
                     name: Err("no value supplied for name".to_string()),
+                    os: Err("no value supplied for os".to_string()),
                     source: Err("no value supplied for source".to_string()),
+                    version: Err("no value supplied for version".to_string()),
                 }
             }
         }
@@ -8945,6 +8961,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
+            pub fn os<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.os = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for os: {}", e));
+                self
+            }
             pub fn source<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::ImageSource>,
@@ -8953,6 +8979,16 @@ pub mod types {
                 self.source = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for source: {}", e));
+                self
+            }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {}", e));
                 self
             }
         }
@@ -8964,7 +9000,9 @@ pub mod types {
                     block_size: value.block_size?,
                     description: value.description?,
                     name: value.name?,
+                    os: value.os?,
                     source: value.source?,
+                    version: value.version?,
                 })
             }
         }
@@ -15508,7 +15546,7 @@ pub trait ClientDisksExt {
     fn disk_view(&self) -> builder::DiskView;
     #[doc = "Use `DELETE /v1/disks/{disk}` instead\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/disks/{disk_name}`\n\n```ignore\nlet response = client.disk_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .disk_name(disk_name)\n    .send()\n    .await;\n```"]
     fn disk_delete(&self) -> builder::DiskDelete;
-    #[doc = "Fetch disk metrics\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/disks/{disk_name}/metrics/{metric_name}`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `disk_name`\n- `metric_name`\n- `end_time`: An exclusive end time of metrics.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.disk_metrics_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .disk_name(disk_name)\n    .metric_name(metric_name)\n    .end_time(end_time)\n    .limit(limit)\n    .page_token(page_token)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch disk metrics\n\nUse `/v1/disks/{disk}/{metric}` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/disks/{disk_name}/metrics/{metric_name}`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `disk_name`\n- `metric_name`\n- `end_time`: An exclusive end time of metrics.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.disk_metrics_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .disk_name(disk_name)\n    .metric_name(metric_name)\n    .end_time(end_time)\n    .limit(limit)\n    .page_token(page_token)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
     fn disk_metrics_list(&self) -> builder::DiskMetricsList;
     #[doc = "List disks\n\nSends a `GET` request to `/v1/disks`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.disk_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn disk_list_v1(&self) -> builder::DiskListV1;
@@ -15518,6 +15556,8 @@ pub trait ClientDisksExt {
     fn disk_view_v1(&self) -> builder::DiskViewV1;
     #[doc = "Delete a disk\n\nSends a `DELETE` request to `/v1/disks/{disk}`\n\n```ignore\nlet response = client.disk_delete_v1()\n    .disk(disk)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn disk_delete_v1(&self) -> builder::DiskDeleteV1;
+    #[doc = "Fetch disk metrics\n\nSends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`\n\nArguments:\n- `disk`\n- `metric`\n- `end_time`: An exclusive end time of metrics.\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.disk_metrics_list_v1()\n    .disk(disk)\n    .metric(metric)\n    .end_time(end_time)\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
+    fn disk_metrics_list_v1(&self) -> builder::DiskMetricsListV1;
 }
 
 impl ClientDisksExt for Client {
@@ -15559,6 +15599,10 @@ impl ClientDisksExt for Client {
 
     fn disk_delete_v1(&self) -> builder::DiskDeleteV1 {
         builder::DiskDeleteV1::new(self)
+    }
+
+    fn disk_metrics_list_v1(&self) -> builder::DiskMetricsListV1 {
+        builder::DiskMetricsListV1::new(self)
     }
 }
 
@@ -15612,7 +15656,7 @@ impl ClientHiddenExt for Client {
 pub trait ClientImagesExt {
     #[doc = "Fetch an image by id\n\nSends a `GET` request to `/by-id/images/{id}`\n\n```ignore\nlet response = client.image_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
     fn image_view_by_id(&self) -> builder::ImageViewById;
-    #[doc = "List images\n\nList images in a project. The images are returned sorted by creation date, with the most recent images appearing first.\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/images`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.image_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List images\n\nList images in a project. The images are returned sorted by creation date, with the most recent images appearing first. Use `GET /v1/images` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/images`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.image_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn image_list(&self) -> builder::ImageList;
     #[doc = "Create an image\n\nCreate a new image in a project.\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/images`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `body`\n```ignore\nlet response = client.image_create()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn image_create(&self) -> builder::ImageCreate;
@@ -15620,6 +15664,14 @@ pub trait ClientImagesExt {
     fn image_view(&self) -> builder::ImageView;
     #[doc = "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/images/{image_name}`\n\n```ignore\nlet response = client.image_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .image_name(image_name)\n    .send()\n    .await;\n```"]
     fn image_delete(&self) -> builder::ImageDelete;
+    #[doc = "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.\n\nSends a `GET` request to `/v1/images`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.image_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn image_list_v1(&self) -> builder::ImageListV1;
+    #[doc = "Create an image\n\nCreate a new image in a project.\n\nSends a `POST` request to `/v1/images`\n\n```ignore\nlet response = client.image_create_v1()\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn image_create_v1(&self) -> builder::ImageCreateV1;
+    #[doc = "Fetch an image\n\nFetch the details for a specific image in a project.\n\nSends a `GET` request to `/v1/images/{image}`\n\n```ignore\nlet response = client.image_view_v1()\n    .image(image)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
+    fn image_view_v1(&self) -> builder::ImageViewV1;
+    #[doc = "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.\n\nSends a `DELETE` request to `/v1/images/{image}`\n\n```ignore\nlet response = client.image_delete_v1()\n    .image(image)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
+    fn image_delete_v1(&self) -> builder::ImageDeleteV1;
 }
 
 impl ClientImagesExt for Client {
@@ -15642,6 +15694,22 @@ impl ClientImagesExt for Client {
     fn image_delete(&self) -> builder::ImageDelete {
         builder::ImageDelete::new(self)
     }
+
+    fn image_list_v1(&self) -> builder::ImageListV1 {
+        builder::ImageListV1::new(self)
+    }
+
+    fn image_create_v1(&self) -> builder::ImageCreateV1 {
+        builder::ImageCreateV1::new(self)
+    }
+
+    fn image_view_v1(&self) -> builder::ImageViewV1 {
+        builder::ImageViewV1::new(self)
+    }
+
+    fn image_delete_v1(&self) -> builder::ImageDeleteV1 {
+        builder::ImageDeleteV1::new(self)
+    }
 }
 
 pub trait ClientInstancesExt {
@@ -15663,7 +15731,7 @@ pub trait ClientInstancesExt {
     fn instance_disk_attach(&self) -> builder::InstanceDiskAttach;
     #[doc = "Detach a disk from an instance\n\nUse `POST /v1/disks/{disk}/detach` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/disks/detach`\n\n```ignore\nlet response = client.instance_disk_detach()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_disk_detach(&self) -> builder::InstanceDiskDetach;
-    #[doc = "List external IP addresses\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/external-ips`\n\n```ignore\nlet response = client.instance_external_ip_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .send()\n    .await;\n```"]
+    #[doc = "List external IP addresses\n\nUse `/v1/instances/{instance}/external-ips` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/external-ips`\n\n```ignore\nlet response = client.instance_external_ip_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .send()\n    .await;\n```"]
     fn instance_external_ip_list(&self) -> builder::InstanceExternalIpList;
     #[doc = "Migrate an instance\n\nUse `POST /v1/instances/{instance}/migrate` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/migrate`\n\n```ignore\nlet response = client.instance_migrate()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_migrate(&self) -> builder::InstanceMigrate;
@@ -15701,6 +15769,8 @@ pub trait ClientInstancesExt {
     fn instance_disk_attach_v1(&self) -> builder::InstanceDiskAttachV1;
     #[doc = "Detach a disk from an instance\n\nSends a `POST` request to `/v1/instances/{instance}/disks/detach`\n\n```ignore\nlet response = client.instance_disk_detach_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_disk_detach_v1(&self) -> builder::InstanceDiskDetachV1;
+    #[doc = "List external IP addresses\n\nSends a `GET` request to `/v1/instances/{instance}/external-ips`\n\n```ignore\nlet response = client.instance_external_ip_list_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
+    fn instance_external_ip_list_v1(&self) -> builder::InstanceExternalIpListV1;
     #[doc = "Migrate an instance\n\nSends a `POST` request to `/v1/instances/{instance}/migrate`\n\n```ignore\nlet response = client.instance_migrate_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_migrate_v1(&self) -> builder::InstanceMigrateV1;
     #[doc = "Reboot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/reboot`\n\n```ignore\nlet response = client.instance_reboot_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
@@ -15836,6 +15906,10 @@ impl ClientInstancesExt for Client {
 
     fn instance_disk_detach_v1(&self) -> builder::InstanceDiskDetachV1 {
         builder::InstanceDiskDetachV1::new(self)
+    }
+
+    fn instance_external_ip_list_v1(&self) -> builder::InstanceExternalIpListV1 {
+        builder::InstanceExternalIpListV1::new(self)
     }
 
     fn instance_migrate_v1(&self) -> builder::InstanceMigrateV1 {
@@ -16303,9 +16377,9 @@ impl ClientSnapshotsExt for Client {
 pub trait ClientSystemExt {
     #[doc = "Fetch a system-wide image by id\n\nSends a `GET` request to `/system/by-id/images/{id}`\n\n```ignore\nlet response = client.system_image_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
     fn system_image_view_by_id(&self) -> builder::SystemImageViewById;
-    #[doc = "Fetch an IP pool by id\n\nSends a `GET` request to `/system/by-id/ip-pools/{id}`\n\n```ignore\nlet response = client.ip_pool_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an IP pool by id\n\nUse `GET /v1/system/ip-pools/{pool}` instead\n\nSends a `GET` request to `/system/by-id/ip-pools/{id}`\n\n```ignore\nlet response = client.ip_pool_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
     fn ip_pool_view_by_id(&self) -> builder::IpPoolViewById;
-    #[doc = "Fetch a silo by id\n\nSends a `GET` request to `/system/by-id/silos/{id}`\n\n```ignore\nlet response = client.silo_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a silo by id\n\nUse `GET /v1/system/silos/{id}` instead.\n\nSends a `GET` request to `/system/by-id/silos/{id}`\n\n```ignore\nlet response = client.silo_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
     fn silo_view_by_id(&self) -> builder::SiloViewById;
     #[doc = "List system-wide certificates\n\nReturns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first. Use `GET /v1/system/certificates` instead\n\nSends a `GET` request to `/system/certificates`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.certificate_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn certificate_list(&self) -> builder::CertificateList;
@@ -16335,29 +16409,29 @@ pub trait ClientSystemExt {
     fn system_image_view(&self) -> builder::SystemImageView;
     #[doc = "Delete a system-wide image\n\nPermanently delete a system-wide image. This operation cannot be undone. Any instances using the system-wide image will continue to run, however new instances can not be created with this image.\n\nSends a `DELETE` request to `/system/images/{image_name}`\n\n```ignore\nlet response = client.system_image_delete()\n    .image_name(image_name)\n    .send()\n    .await;\n```"]
     fn system_image_delete(&self) -> builder::SystemImageDelete;
-    #[doc = "List IP pools\n\nSends a `GET` request to `/system/ip-pools`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.ip_pool_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List IP pools\n\nUse `GET /v1/system/ip-pools` instead\n\nSends a `GET` request to `/system/ip-pools`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.ip_pool_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn ip_pool_list(&self) -> builder::IpPoolList;
-    #[doc = "Create an IP pool\n\nSends a `POST` request to `/system/ip-pools`\n\n```ignore\nlet response = client.ip_pool_create()\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create an IP pool\n\nUse `POST /v1/system/ip-pools` instead\n\nSends a `POST` request to `/system/ip-pools`\n\n```ignore\nlet response = client.ip_pool_create()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn ip_pool_create(&self) -> builder::IpPoolCreate;
-    #[doc = "Fetch an IP pool\n\nSends a `GET` request to `/system/ip-pools/{pool_name}`\n\n```ignore\nlet response = client.ip_pool_view()\n    .pool_name(pool_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an IP pool\n\nUse `GET /v1/system/ip-pools/{pool}` instead\n\nSends a `GET` request to `/system/ip-pools/{pool_name}`\n\n```ignore\nlet response = client.ip_pool_view()\n    .pool_name(pool_name)\n    .send()\n    .await;\n```"]
     fn ip_pool_view(&self) -> builder::IpPoolView;
-    #[doc = "Update an IP Pool\n\nSends a `PUT` request to `/system/ip-pools/{pool_name}`\n\n```ignore\nlet response = client.ip_pool_update()\n    .pool_name(pool_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update an IP Pool\n\nUse `PUT /v1/system/ip-pools/{pool}` instead\n\nSends a `PUT` request to `/system/ip-pools/{pool_name}`\n\n```ignore\nlet response = client.ip_pool_update()\n    .pool_name(pool_name)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn ip_pool_update(&self) -> builder::IpPoolUpdate;
-    #[doc = "Delete an IP Pool\n\nSends a `DELETE` request to `/system/ip-pools/{pool_name}`\n\n```ignore\nlet response = client.ip_pool_delete()\n    .pool_name(pool_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete an IP Pool\n\nUse `DELETE /v1/system/ip-pools/{pool}` instead\n\nSends a `DELETE` request to `/system/ip-pools/{pool_name}`\n\n```ignore\nlet response = client.ip_pool_delete()\n    .pool_name(pool_name)\n    .send()\n    .await;\n```"]
     fn ip_pool_delete(&self) -> builder::IpPoolDelete;
-    #[doc = "List ranges for an IP pool\n\nRanges are ordered by their first address.\n\nSends a `GET` request to `/system/ip-pools/{pool_name}/ranges`\n\nArguments:\n- `pool_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_range_list()\n    .pool_name(pool_name)\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
+    #[doc = "List ranges for an IP pool\n\nRanges are ordered by their first address. Use `GET /v1/system/ip-pools/{pool}/ranges` instead\n\nSends a `GET` request to `/system/ip-pools/{pool_name}/ranges`\n\nArguments:\n- `pool_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_range_list()\n    .pool_name(pool_name)\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
-    #[doc = "Add a range to an IP pool\n\nSends a `POST` request to `/system/ip-pools/{pool_name}/ranges/add`\n\n```ignore\nlet response = client.ip_pool_range_add()\n    .pool_name(pool_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Add a range to an IP pool\n\nUse `POST /v1/system/ip-pools/{pool}/ranges/add` instead\n\nSends a `POST` request to `/system/ip-pools/{pool_name}/ranges/add`\n\n```ignore\nlet response = client.ip_pool_range_add()\n    .pool_name(pool_name)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd;
-    #[doc = "Remove a range from an IP pool\n\nSends a `POST` request to `/system/ip-pools/{pool_name}/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_range_remove()\n    .pool_name(pool_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Remove a range from an IP pool\n\nUse `POST /v1/system/ip-pools/{pool}/ranges/remove` instead.\n\nSends a `POST` request to `/system/ip-pools/{pool_name}/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_range_remove()\n    .pool_name(pool_name)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove;
-    #[doc = "Fetch the IP pool used for Oxide services\n\nSends a `GET` request to `/system/ip-pools-service`\n\n```ignore\nlet response = client.ip_pool_service_view()\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch the IP pool used for Oxide services\n\nUse `GET /v1/system/ip-pools-service` instead\n\nSends a `GET` request to `/system/ip-pools-service`\n\n```ignore\nlet response = client.ip_pool_service_view()\n    .send()\n    .await;\n```"]
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
-    #[doc = "List ranges for the IP pool used for Oxide services\n\nRanges are ordered by their first address.\n\nSends a `GET` request to `/system/ip-pools-service/ranges`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_service_range_list()\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
+    #[doc = "List ranges for the IP pool used for Oxide services\n\nRanges are ordered by their first address. Use `GET /v1/system/ip-pools-service/ranges` instead.\n\nSends a `GET` request to `/system/ip-pools-service/ranges`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_service_range_list()\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
     fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
-    #[doc = "Add a range to an IP pool used for Oxide services\n\nSends a `POST` request to `/system/ip-pools-service/ranges/add`\n\n```ignore\nlet response = client.ip_pool_service_range_add()\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Add a range to an IP pool used for Oxide services\n\nUse `POST /v1/system/ip-pools-service/ranges/add` instead\n\nSends a `POST` request to `/system/ip-pools-service/ranges/add`\n\n```ignore\nlet response = client.ip_pool_service_range_add()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd;
-    #[doc = "Remove a range from an IP pool used for Oxide services\n\nSends a `POST` request to `/system/ip-pools-service/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_service_range_remove()\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Remove a range from an IP pool used for Oxide services\n\nUse `POST /v1/system/ip-pools-service/ranges/remove` instead\n\nSends a `POST` request to `/system/ip-pools-service/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_service_range_remove()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
     #[doc = "Access metrics data\n\nSends a `GET` request to `/system/metrics/{metric_name}`\n\nArguments:\n- `metric_name`\n- `end_time`: An exclusive end time of metrics.\n- `id`: The UUID of the container being queried\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.system_metric()\n    .metric_name(metric_name)\n    .end_time(end_time)\n    .id(id)\n    .limit(limit)\n    .page_token(page_token)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
     fn system_metric(&self) -> builder::SystemMetric;
@@ -16365,33 +16439,33 @@ pub trait ClientSystemExt {
     fn saga_list(&self) -> builder::SagaList;
     #[doc = "Fetch a saga\n\nUse `GET v1/system/sagas/{saga_id}` instead\n\nSends a `GET` request to `/system/sagas/{saga_id}`\n\n```ignore\nlet response = client.saga_view()\n    .saga_id(saga_id)\n    .send()\n    .await;\n```"]
     fn saga_view(&self) -> builder::SagaView;
-    #[doc = "List silos\n\nLists silos that are discoverable based on the current permissions.\n\nSends a `GET` request to `/system/silos`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.silo_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List silos\n\nLists silos that are discoverable based on the current permissions. Use `GET /v1/system/silos` instead\n\nSends a `GET` request to `/system/silos`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.silo_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn silo_list(&self) -> builder::SiloList;
-    #[doc = "Create a silo\n\nSends a `POST` request to `/system/silos`\n\n```ignore\nlet response = client.silo_create()\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a silo\n\nUse `POST /v1/system/silos` instead\n\nSends a `POST` request to `/system/silos`\n\n```ignore\nlet response = client.silo_create()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn silo_create(&self) -> builder::SiloCreate;
-    #[doc = "Fetch a silo\n\nFetch a silo by name.\n\nSends a `GET` request to `/system/silos/{silo_name}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n```ignore\nlet response = client.silo_view()\n    .silo_name(silo_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a silo\n\nFetch a silo by name. Use `GET /v1/system/silos/{silo}` instead.\n\nSends a `GET` request to `/system/silos/{silo_name}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n```ignore\nlet response = client.silo_view()\n    .silo_name(silo_name)\n    .send()\n    .await;\n```"]
     fn silo_view(&self) -> builder::SiloView;
-    #[doc = "Delete a silo\n\nDelete a silo by name.\n\nSends a `DELETE` request to `/system/silos/{silo_name}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n```ignore\nlet response = client.silo_delete()\n    .silo_name(silo_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a silo\n\nDelete a silo by name. Use `DELETE /v1/system/silos/{silo}` instead.\n\nSends a `DELETE` request to `/system/silos/{silo_name}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n```ignore\nlet response = client.silo_delete()\n    .silo_name(silo_name)\n    .send()\n    .await;\n```"]
     fn silo_delete(&self) -> builder::SiloDelete;
-    #[doc = "List a silo's IDPs\n\nSends a `GET` request to `/system/silos/{silo_name}/identity-providers`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.silo_identity_provider_list()\n    .silo_name(silo_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List a silo's IDPs\n\nUse `/v1/system/silos/{silo}/identity-providers` instead.\n\nSends a `GET` request to `/system/silos/{silo_name}/identity-providers`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.silo_identity_provider_list()\n    .silo_name(silo_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
     #[doc = "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.\n\nSends a `POST` request to `/system/silos/{silo_name}/identity-providers/local/users`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `body`\n```ignore\nlet response = client.local_idp_user_create()\n    .silo_name(silo_name)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
-    #[doc = "Delete a user\n\nSends a `DELETE` request to `/system/silos/{silo_name}/identity-providers/local/users/{user_id}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `user_id`: The user's internal id\n```ignore\nlet response = client.local_idp_user_delete()\n    .silo_name(silo_name)\n    .user_id(user_id)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a user\n\nUse `DELETE /v1/system/identity-providers/local/users/{user_id}` instead\n\nSends a `DELETE` request to `/system/silos/{silo_name}/identity-providers/local/users/{user_id}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `user_id`: The user's internal id\n```ignore\nlet response = client.local_idp_user_delete()\n    .silo_name(silo_name)\n    .user_id(user_id)\n    .send()\n    .await;\n```"]
     fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
-    #[doc = "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.\n\nSends a `POST` request to `/system/silos/{silo_name}/identity-providers/local/users/{user_id}/set-password`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `user_id`: The user's internal id\n- `body`\n```ignore\nlet response = client.local_idp_user_set_password()\n    .silo_name(silo_name)\n    .user_id(user_id)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`. Use `POST /v1/system/identity-providers/local/users/{user_id}/set-password` instead\n\nSends a `POST` request to `/system/silos/{silo_name}/identity-providers/local/users/{user_id}/set-password`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `user_id`: The user's internal id\n- `body`\n```ignore\nlet response = client.local_idp_user_set_password()\n    .silo_name(silo_name)\n    .user_id(user_id)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
-    #[doc = "Create a SAML IDP\n\nSends a `POST` request to `/system/silos/{silo_name}/identity-providers/saml`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `body`\n```ignore\nlet response = client.saml_identity_provider_create()\n    .silo_name(silo_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a SAML IDP\n\nUse `POST /v1/system/identity-providers/saml` instead.\n\nSends a `POST` request to `/system/silos/{silo_name}/identity-providers/saml`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `body`\n```ignore\nlet response = client.saml_identity_provider_create()\n    .silo_name(silo_name)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
-    #[doc = "Fetch a SAML IDP\n\nSends a `GET` request to `/system/silos/{silo_name}/identity-providers/saml/{provider_name}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `provider_name`: The SAML identity provider's name\n```ignore\nlet response = client.saml_identity_provider_view()\n    .silo_name(silo_name)\n    .provider_name(provider_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a SAML IDP\n\nUse `GET /v1/system/identity-providers/saml/{provider_name}` instead\n\nSends a `GET` request to `/system/silos/{silo_name}/identity-providers/saml/{provider_name}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `provider_name`: The SAML identity provider's name\n```ignore\nlet response = client.saml_identity_provider_view()\n    .silo_name(silo_name)\n    .provider_name(provider_name)\n    .send()\n    .await;\n```"]
     fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView;
-    #[doc = "Fetch a silo's IAM policy\n\nSends a `GET` request to `/system/silos/{silo_name}/policy`\n\nArguments:\n- `silo_name`: The silo's unique name.\n```ignore\nlet response = client.silo_policy_view()\n    .silo_name(silo_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a silo's IAM policy\n\nUse `GET /v1/system/silos/{silo}/policy` instead.\n\nSends a `GET` request to `/system/silos/{silo_name}/policy`\n\nArguments:\n- `silo_name`: The silo's unique name.\n```ignore\nlet response = client.silo_policy_view()\n    .silo_name(silo_name)\n    .send()\n    .await;\n```"]
     fn silo_policy_view(&self) -> builder::SiloPolicyView;
-    #[doc = "Update a silo's IAM policy\n\nSends a `PUT` request to `/system/silos/{silo_name}/policy`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `body`\n```ignore\nlet response = client.silo_policy_update()\n    .silo_name(silo_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a silo's IAM policy\n\nUse `PUT /v1/system/silos/{silo}/policy` instead\n\nSends a `PUT` request to `/system/silos/{silo_name}/policy`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `body`\n```ignore\nlet response = client.silo_policy_update()\n    .silo_name(silo_name)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate;
-    #[doc = "List users in a silo\n\nSends a `GET` request to `/system/silos/{silo_name}/users/all`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.silo_users_list()\n    .silo_name(silo_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List users in a silo\n\nUse `GET /v1/system/users` instead.\n\nSends a `GET` request to `/system/silos/{silo_name}/users/all`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.silo_users_list()\n    .silo_name(silo_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn silo_users_list(&self) -> builder::SiloUsersList;
-    #[doc = "Fetch a user\n\nSends a `GET` request to `/system/silos/{silo_name}/users/id/{user_id}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `user_id`: The user's internal id\n```ignore\nlet response = client.silo_user_view()\n    .silo_name(silo_name)\n    .user_id(user_id)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a user\n\nUse `GET /v1/system/users/{user_id}` instead\n\nSends a `GET` request to `/system/silos/{silo_name}/users/id/{user_id}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `user_id`: The user's internal id\n```ignore\nlet response = client.silo_user_view()\n    .silo_name(silo_name)\n    .user_id(user_id)\n    .send()\n    .await;\n```"]
     fn silo_user_view(&self) -> builder::SiloUserView;
     #[doc = "List built-in users\n\nSends a `GET` request to `/system/user`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.system_user_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn system_user_list(&self) -> builder::SystemUserList;
@@ -16417,10 +16491,58 @@ pub trait ClientSystemExt {
     fn sled_view_v1(&self) -> builder::SledViewV1;
     #[doc = "List physical disks attached to sleds\n\nSends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/disks`\n\nArguments:\n- `sled_id`: The sled's unique ID.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.sled_physical_disk_list_v1()\n    .sled_id(sled_id)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn sled_physical_disk_list_v1(&self) -> builder::SledPhysicalDiskListV1;
+    #[doc = "List a silo's IDPs_name\n\nSends a `GET` request to `/v1/system/identity-providers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `silo`\n- `sort_by`\n```ignore\nlet response = client.silo_identity_provider_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .silo(silo)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn silo_identity_provider_list_v1(&self) -> builder::SiloIdentityProviderListV1;
+    #[doc = "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider. Use `POST /v1/system/identity-providers/local/users` instead\n\nSends a `POST` request to `/v1/system/identity-providers/local/users`\n\n```ignore\nlet response = client.local_idp_user_create_v1()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn local_idp_user_create_v1(&self) -> builder::LocalIdpUserCreateV1;
+    #[doc = "Delete a user\n\nSends a `DELETE` request to `/v1/system/identity-providers/local/users/{user_id}`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n```ignore\nlet response = client.local_idp_user_delete_v1()\n    .user_id(user_id)\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    fn local_idp_user_delete_v1(&self) -> builder::LocalIdpUserDeleteV1;
+    #[doc = "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.\n\nSends a `POST` request to `/v1/system/identity-providers/local/users/{user_id}/set-password`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n- `body`\n```ignore\nlet response = client.local_idp_user_set_password_v1()\n    .user_id(user_id)\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn local_idp_user_set_password_v1(&self) -> builder::LocalIdpUserSetPasswordV1;
+    #[doc = "Create a SAML IDP\n\nSends a `POST` request to `/v1/system/identity-providers/saml`\n\n```ignore\nlet response = client.saml_identity_provider_create_v1()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn saml_identity_provider_create_v1(&self) -> builder::SamlIdentityProviderCreateV1;
+    #[doc = "Fetch a SAML IDP\n\nSends a `GET` request to `/v1/system/identity-providers/saml/{provider}`\n\n```ignore\nlet response = client.saml_identity_provider_view_v1()\n    .provider(provider)\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    fn saml_identity_provider_view_v1(&self) -> builder::SamlIdentityProviderViewV1;
+    #[doc = "List IP pools\n\nSends a `GET` request to `/v1/system/ip-pools`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.ip_pool_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn ip_pool_list_v1(&self) -> builder::IpPoolListV1;
+    #[doc = "Create an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools`\n\n```ignore\nlet response = client.ip_pool_create_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_create_v1(&self) -> builder::IpPoolCreateV1;
+    #[doc = "Fetch an IP pool\n\nSends a `GET` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_view_v1()\n    .pool(pool)\n    .send()\n    .await;\n```"]
+    fn ip_pool_view_v1(&self) -> builder::IpPoolViewV1;
+    #[doc = "Update an IP Pool\n\nSends a `PUT` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_update_v1()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_update_v1(&self) -> builder::IpPoolUpdateV1;
+    #[doc = "Delete an IP Pool\n\nSends a `DELETE` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_delete_v1()\n    .pool(pool)\n    .send()\n    .await;\n```"]
+    fn ip_pool_delete_v1(&self) -> builder::IpPoolDeleteV1;
+    #[doc = "List ranges for an IP pool\n\nRanges are ordered by their first address.\n\nSends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`\n\nArguments:\n- `pool`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_range_list_v1()\n    .pool(pool)\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
+    fn ip_pool_range_list_v1(&self) -> builder::IpPoolRangeListV1;
+    #[doc = "Add a range to an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`\n\n```ignore\nlet response = client.ip_pool_range_add_v1()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_range_add_v1(&self) -> builder::IpPoolRangeAddV1;
+    #[doc = "Remove a range from an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_range_remove_v1()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_range_remove_v1(&self) -> builder::IpPoolRangeRemoveV1;
+    #[doc = "Fetch the IP pool used for Oxide services\n\nSends a `GET` request to `/v1/system/ip-pools-service`\n\n```ignore\nlet response = client.ip_pool_service_view_v1()\n    .send()\n    .await;\n```"]
+    fn ip_pool_service_view_v1(&self) -> builder::IpPoolServiceViewV1;
+    #[doc = "List ranges for the IP pool used for Oxide services\n\nRanges are ordered by their first address.\n\nSends a `GET` request to `/v1/system/ip-pools-service/ranges`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_service_range_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
+    fn ip_pool_service_range_list_v1(&self) -> builder::IpPoolServiceRangeListV1;
+    #[doc = "Add a range to an IP pool used for Oxide services\n\nSends a `POST` request to `/v1/system/ip-pools-service/ranges/add`\n\n```ignore\nlet response = client.ip_pool_service_range_add_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_service_range_add_v1(&self) -> builder::IpPoolServiceRangeAddV1;
+    #[doc = "Remove a range from an IP pool used for Oxide services\n\nSends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_service_range_remove_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_service_range_remove_v1(&self) -> builder::IpPoolServiceRangeRemoveV1;
     #[doc = "List sagas\n\nSends a `GET` request to `/v1/system/sagas`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.saga_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn saga_list_v1(&self) -> builder::SagaListV1;
     #[doc = "Fetch a saga\n\nSends a `GET` request to `/v1/system/sagas/{saga_id}`\n\n```ignore\nlet response = client.saga_view_v1()\n    .saga_id(saga_id)\n    .send()\n    .await;\n```"]
     fn saga_view_v1(&self) -> builder::SagaViewV1;
+    #[doc = "List silos\n\nLists silos that are discoverable based on the current permissions.\n\nSends a `GET` request to `/v1/system/silos`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.silo_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn silo_list_v1(&self) -> builder::SiloListV1;
+    #[doc = "Create a silo\n\nSends a `POST` request to `/v1/system/silos`\n\n```ignore\nlet response = client.silo_create_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn silo_create_v1(&self) -> builder::SiloCreateV1;
+    #[doc = "Fetch a silo\n\nFetch a silo by name.\n\nSends a `GET` request to `/v1/system/silos/{silo}`\n\n```ignore\nlet response = client.silo_view_v1()\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    fn silo_view_v1(&self) -> builder::SiloViewV1;
+    #[doc = "Delete a silo\n\nDelete a silo by name.\n\nSends a `DELETE` request to `/v1/system/silos/{silo}`\n\n```ignore\nlet response = client.silo_delete_v1()\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    fn silo_delete_v1(&self) -> builder::SiloDeleteV1;
+    #[doc = "Fetch a silo's IAM policy\n\nSends a `GET` request to `/v1/system/silos/{silo}/policy`\n\n```ignore\nlet response = client.silo_policy_view_v1()\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    fn silo_policy_view_v1(&self) -> builder::SiloPolicyViewV1;
+    #[doc = "Update a silo's IAM policy\n\nSends a `PUT` request to `/v1/system/silos/{silo}/policy`\n\n```ignore\nlet response = client.silo_policy_update_v1()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn silo_policy_update_v1(&self) -> builder::SiloPolicyUpdateV1;
     #[doc = "View version and update status of component tree\n\nSends a `GET` request to `/v1/system/update/components`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.system_component_version_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn system_component_version_list(&self) -> builder::SystemComponentVersionList;
     #[doc = "List all update deployments\n\nSends a `GET` request to `/v1/system/update/deployments`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.update_deployments_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
@@ -16441,6 +16563,10 @@ pub trait ClientSystemExt {
     fn system_update_components_list(&self) -> builder::SystemUpdateComponentsList;
     #[doc = "View system version and update status\n\nSends a `GET` request to `/v1/system/update/version`\n\n```ignore\nlet response = client.system_version()\n    .send()\n    .await;\n```"]
     fn system_version(&self) -> builder::SystemVersion;
+    #[doc = "List users in a silo\n\nSends a `GET` request to `/v1/system/users`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `silo`\n- `sort_by`\n```ignore\nlet response = client.silo_users_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .silo(silo)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn silo_users_list_v1(&self) -> builder::SiloUsersListV1;
+    #[doc = "Fetch a user\n\nSends a `GET` request to `/v1/system/users/{user_id}`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n```ignore\nlet response = client.silo_user_view_v1()\n    .user_id(user_id)\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    fn silo_user_view_v1(&self) -> builder::SiloUserViewV1;
 }
 
 impl ClientSystemExt for Client {
@@ -16676,12 +16802,108 @@ impl ClientSystemExt for Client {
         builder::SledPhysicalDiskListV1::new(self)
     }
 
+    fn silo_identity_provider_list_v1(&self) -> builder::SiloIdentityProviderListV1 {
+        builder::SiloIdentityProviderListV1::new(self)
+    }
+
+    fn local_idp_user_create_v1(&self) -> builder::LocalIdpUserCreateV1 {
+        builder::LocalIdpUserCreateV1::new(self)
+    }
+
+    fn local_idp_user_delete_v1(&self) -> builder::LocalIdpUserDeleteV1 {
+        builder::LocalIdpUserDeleteV1::new(self)
+    }
+
+    fn local_idp_user_set_password_v1(&self) -> builder::LocalIdpUserSetPasswordV1 {
+        builder::LocalIdpUserSetPasswordV1::new(self)
+    }
+
+    fn saml_identity_provider_create_v1(&self) -> builder::SamlIdentityProviderCreateV1 {
+        builder::SamlIdentityProviderCreateV1::new(self)
+    }
+
+    fn saml_identity_provider_view_v1(&self) -> builder::SamlIdentityProviderViewV1 {
+        builder::SamlIdentityProviderViewV1::new(self)
+    }
+
+    fn ip_pool_list_v1(&self) -> builder::IpPoolListV1 {
+        builder::IpPoolListV1::new(self)
+    }
+
+    fn ip_pool_create_v1(&self) -> builder::IpPoolCreateV1 {
+        builder::IpPoolCreateV1::new(self)
+    }
+
+    fn ip_pool_view_v1(&self) -> builder::IpPoolViewV1 {
+        builder::IpPoolViewV1::new(self)
+    }
+
+    fn ip_pool_update_v1(&self) -> builder::IpPoolUpdateV1 {
+        builder::IpPoolUpdateV1::new(self)
+    }
+
+    fn ip_pool_delete_v1(&self) -> builder::IpPoolDeleteV1 {
+        builder::IpPoolDeleteV1::new(self)
+    }
+
+    fn ip_pool_range_list_v1(&self) -> builder::IpPoolRangeListV1 {
+        builder::IpPoolRangeListV1::new(self)
+    }
+
+    fn ip_pool_range_add_v1(&self) -> builder::IpPoolRangeAddV1 {
+        builder::IpPoolRangeAddV1::new(self)
+    }
+
+    fn ip_pool_range_remove_v1(&self) -> builder::IpPoolRangeRemoveV1 {
+        builder::IpPoolRangeRemoveV1::new(self)
+    }
+
+    fn ip_pool_service_view_v1(&self) -> builder::IpPoolServiceViewV1 {
+        builder::IpPoolServiceViewV1::new(self)
+    }
+
+    fn ip_pool_service_range_list_v1(&self) -> builder::IpPoolServiceRangeListV1 {
+        builder::IpPoolServiceRangeListV1::new(self)
+    }
+
+    fn ip_pool_service_range_add_v1(&self) -> builder::IpPoolServiceRangeAddV1 {
+        builder::IpPoolServiceRangeAddV1::new(self)
+    }
+
+    fn ip_pool_service_range_remove_v1(&self) -> builder::IpPoolServiceRangeRemoveV1 {
+        builder::IpPoolServiceRangeRemoveV1::new(self)
+    }
+
     fn saga_list_v1(&self) -> builder::SagaListV1 {
         builder::SagaListV1::new(self)
     }
 
     fn saga_view_v1(&self) -> builder::SagaViewV1 {
         builder::SagaViewV1::new(self)
+    }
+
+    fn silo_list_v1(&self) -> builder::SiloListV1 {
+        builder::SiloListV1::new(self)
+    }
+
+    fn silo_create_v1(&self) -> builder::SiloCreateV1 {
+        builder::SiloCreateV1::new(self)
+    }
+
+    fn silo_view_v1(&self) -> builder::SiloViewV1 {
+        builder::SiloViewV1::new(self)
+    }
+
+    fn silo_delete_v1(&self) -> builder::SiloDeleteV1 {
+        builder::SiloDeleteV1::new(self)
+    }
+
+    fn silo_policy_view_v1(&self) -> builder::SiloPolicyViewV1 {
+        builder::SiloPolicyViewV1::new(self)
+    }
+
+    fn silo_policy_update_v1(&self) -> builder::SiloPolicyUpdateV1 {
+        builder::SiloPolicyUpdateV1::new(self)
     }
 
     fn system_component_version_list(&self) -> builder::SystemComponentVersionList {
@@ -16722,6 +16944,14 @@ impl ClientSystemExt for Client {
 
     fn system_version(&self) -> builder::SystemVersion {
         builder::SystemVersion::new(self)
+    }
+
+    fn silo_users_list_v1(&self) -> builder::SiloUsersListV1 {
+        builder::SiloUsersListV1::new(self)
+    }
+
+    fn silo_user_view_v1(&self) -> builder::SiloUserViewV1 {
+        builder::SiloUserViewV1::new(self)
     }
 }
 
@@ -16778,7 +17008,7 @@ pub trait ClientVpcsExt {
     fn vpc_subnet_update(&self) -> builder::VpcSubnetUpdate;
     #[doc = "Delete a subnet\n\nUse `DELETE /v1/vpc-subnets/{subnet}` instead\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}`\n\n```ignore\nlet response = client.vpc_subnet_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .subnet_name(subnet_name)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_delete(&self) -> builder::VpcSubnetDelete;
-    #[doc = "List network interfaces\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}/network-interfaces`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `vpc_name`\n- `subnet_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.vpc_subnet_list_network_interfaces()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .subnet_name(subnet_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List network interfaces for a VPC subnet\n\nUse `/v1/vpc-subnets/{subnet}/network-interfaces` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}/network-interfaces`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `vpc_name`\n- `subnet_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.vpc_subnet_list_network_interfaces()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .subnet_name(subnet_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_list_network_interfaces(&self) -> builder::VpcSubnetListNetworkInterfaces;
     #[doc = "List firewall rules\n\nSends a `GET` request to `/v1/vpc-firewall-rules`\n\n```ignore\nlet response = client.vpc_firewall_rules_view_v1()\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_firewall_rules_view_v1(&self) -> builder::VpcFirewallRulesViewV1;
@@ -16814,6 +17044,8 @@ pub trait ClientVpcsExt {
     fn vpc_subnet_update_v1(&self) -> builder::VpcSubnetUpdateV1;
     #[doc = "Delete a subnet\n\nSends a `DELETE` request to `/v1/vpc-subnets/{subnet}`\n\n```ignore\nlet response = client.vpc_subnet_delete_v1()\n    .subnet(subnet)\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_delete_v1(&self) -> builder::VpcSubnetDeleteV1;
+    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`\n\nArguments:\n- `subnet`\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_subnet_list_network_interfaces_v1()\n    .subnet(subnet)\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    fn vpc_subnet_list_network_interfaces_v1(&self) -> builder::VpcSubnetListNetworkInterfacesV1;
     #[doc = "List VPCs\n\nSends a `GET` request to `/v1/vpcs`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.vpc_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn vpc_list_v1(&self) -> builder::VpcListV1;
     #[doc = "Create a VPC\n\nSends a `POST` request to `/v1/vpcs`\n\n```ignore\nlet response = client.vpc_create_v1()\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
@@ -17001,6 +17233,10 @@ impl ClientVpcsExt for Client {
 
     fn vpc_subnet_delete_v1(&self) -> builder::VpcSubnetDeleteV1 {
         builder::VpcSubnetDeleteV1::new(self)
+    }
+
+    fn vpc_subnet_list_network_interfaces_v1(&self) -> builder::VpcSubnetListNetworkInterfacesV1 {
+        builder::VpcSubnetListNetworkInterfacesV1::new(self)
     }
 
     fn vpc_list_v1(&self) -> builder::VpcListV1 {
@@ -25314,7 +25550,7 @@ pub mod builder {
         subnet_name: Result<types::Name, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
     impl<'a> VpcSubnetListNetworkInterfaces<'a> {
@@ -25394,12 +25630,12 @@ pub mod builder {
 
         pub fn sort_by<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::NameSortMode>,
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
         {
             self.sort_by = value
                 .try_into()
                 .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
             self
         }
 
@@ -30905,6 +31141,228 @@ pub mod builder {
         }
     }
 
+    #[doc = "Builder for [`ClientDisksExt::disk_metrics_list_v1`]\n\n[`ClientDisksExt::disk_metrics_list_v1`]: super::ClientDisksExt::disk_metrics_list_v1"]
+    #[derive(Debug, Clone)]
+    pub struct DiskMetricsListV1<'a> {
+        client: &'a super::Client,
+        disk: Result<types::NameOrId, String>,
+        metric: Result<types::DiskMetricName, String>,
+        end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        organization: Result<Option<types::NameOrId>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+    }
+
+    impl<'a> DiskMetricsListV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                disk: Err("disk was not initialized".to_string()),
+                metric: Err("metric was not initialized".to_string()),
+                end_time: Ok(None),
+                limit: Ok(None),
+                organization: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                start_time: Ok(None),
+            }
+        }
+
+        pub fn disk<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.disk = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for disk failed".to_string());
+            self
+        }
+
+        pub fn metric<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::DiskMetricName>,
+        {
+            self.metric = value
+                .try_into()
+                .map_err(|_| "conversion to `DiskMetricName` for metric failed".to_string());
+            self
+        }
+
+        pub fn end_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+        {
+            self . end_time = value . try_into () . map (Some) . map_err (| _ | "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed" . to_string ()) ;
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn organization<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.organization = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn start_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+        {
+            self . start_time = value . try_into () . map (Some) . map_err (| _ | "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for start_time failed" . to_string ()) ;
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                disk,
+                metric,
+                end_time,
+                limit,
+                organization,
+                page_token,
+                project,
+                start_time,
+            } = self;
+            let disk = disk.map_err(Error::InvalidRequest)?;
+            let metric = metric.map_err(Error::InvalidRequest)?;
+            let end_time = end_time.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let organization = organization.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let start_time = start_time.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/disks/{}/metrics/{}",
+                client.baseurl,
+                encode_path(&disk.to_string()),
+                encode_path(&metric.to_string()),
+            );
+            let mut query = Vec::with_capacity(6usize);
+            if let Some(v) = &end_time {
+                query.push(("end_time", v.to_string()));
+            }
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &organization {
+                query.push(("organization", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &start_time {
+                query.push(("start_time", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/disks/{disk}/metrics/{metric}`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Measurement, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                end_time: Ok(None),
+                limit: Ok(None),
+                organization: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                start_time: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
     #[doc = "Builder for [`ClientSilosExt::group_list_v1`]\n\n[`ClientSilosExt::group_list_v1`]: super::ClientSilosExt::group_list_v1"]
     #[derive(Debug, Clone)]
     pub struct GroupListV1<'a> {
@@ -31082,6 +31540,445 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientImagesExt::image_list_v1`]\n\n[`ClientImagesExt::image_list_v1`]: super::ClientImagesExt::image_list_v1"]
+    #[derive(Debug, Clone)]
+    pub struct ImageListV1<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        organization: Result<Option<types::NameOrId>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> ImageListV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                organization: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn organization<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.organization = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/images`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ImageResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                organization,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let organization = organization.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/images", client.baseurl,);
+            let mut query = Vec::with_capacity(5usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &organization {
+                query.push(("organization", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/images`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Image, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                organization: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientImagesExt::image_create_v1`]\n\n[`ClientImagesExt::image_create_v1`]: super::ClientImagesExt::image_create_v1"]
+    #[derive(Debug, Clone)]
+    pub struct ImageCreateV1<'a> {
+        client: &'a super::Client,
+        organization: Result<Option<types::NameOrId>, String>,
+        project: Result<types::NameOrId, String>,
+        body: Result<types::ImageCreate, String>,
+    }
+
+    impl<'a> ImageCreateV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                organization: Ok(None),
+                project: Err("project was not initialized".to_string()),
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn organization<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.organization = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ImageCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `ImageCreate` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/images`"]
+        pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
+            let Self {
+                client,
+                organization,
+                project,
+                body,
+            } = self;
+            let organization = organization.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/images", client.baseurl,);
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &organization {
+                query.push(("organization", v.to_string()));
+            }
+            query.push(("project", project.to_string()));
+            let request = client.client.post(url).json(&body).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientImagesExt::image_view_v1`]\n\n[`ClientImagesExt::image_view_v1`]: super::ClientImagesExt::image_view_v1"]
+    #[derive(Debug, Clone)]
+    pub struct ImageViewV1<'a> {
+        client: &'a super::Client,
+        image: Result<types::NameOrId, String>,
+        organization: Result<Option<types::NameOrId>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> ImageViewV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                image: Err("image was not initialized".to_string()),
+                organization: Ok(None),
+                project: Ok(None),
+            }
+        }
+
+        pub fn image<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.image = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for image failed".to_string());
+            self
+        }
+
+        pub fn organization<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.organization = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/images/{image}`"]
+        pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
+            let Self {
+                client,
+                image,
+                organization,
+                project,
+            } = self;
+            let image = image.map_err(Error::InvalidRequest)?;
+            let organization = organization.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/images/{}",
+                client.baseurl,
+                encode_path(&image.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &organization {
+                query.push(("organization", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientImagesExt::image_delete_v1`]\n\n[`ClientImagesExt::image_delete_v1`]: super::ClientImagesExt::image_delete_v1"]
+    #[derive(Debug, Clone)]
+    pub struct ImageDeleteV1<'a> {
+        client: &'a super::Client,
+        image: Result<types::NameOrId, String>,
+        organization: Result<Option<types::NameOrId>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> ImageDeleteV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                image: Err("image was not initialized".to_string()),
+                organization: Ok(None),
+                project: Ok(None),
+            }
+        }
+
+        pub fn image<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.image = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for image failed".to_string());
+            self
+        }
+
+        pub fn organization<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.organization = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `DELETE` request to `/v1/images/{image}`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                image,
+                organization,
+                project,
+            } = self;
+            let image = image.map_err(Error::InvalidRequest)?;
+            let organization = organization.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/images/{}",
+                client.baseurl,
+                encode_path(&image.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &organization {
+                query.push(("organization", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client.client.delete(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -31923,6 +32820,98 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientInstancesExt::instance_external_ip_list_v1`]\n\n[`ClientInstancesExt::instance_external_ip_list_v1`]: super::ClientInstancesExt::instance_external_ip_list_v1"]
+    #[derive(Debug, Clone)]
+    pub struct InstanceExternalIpListV1<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        organization: Result<Option<types::NameOrId>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InstanceExternalIpListV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                instance: Err("instance was not initialized".to_string()),
+                organization: Ok(None),
+                project: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn organization<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.organization = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/instances/{instance}/external-ips`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ExternalIpResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                organization,
+                project,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let organization = organization.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/external-ips",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &organization {
+                query.push(("organization", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -35771,6 +36760,1369 @@ pub mod builder {
         }
     }
 
+    #[doc = "Builder for [`ClientSystemExt::silo_identity_provider_list_v1`]\n\n[`ClientSystemExt::silo_identity_provider_list_v1`]: super::ClientSystemExt::silo_identity_provider_list_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SiloIdentityProviderListV1<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        silo: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> SiloIdentityProviderListV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                silo: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/identity-providers`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IdentityProviderResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+                silo,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/identity-providers", client.baseurl,);
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &silo {
+                query.push(("silo", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/system/identity-providers`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::IdentityProvider, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                silo: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::local_idp_user_create_v1`]\n\n[`ClientSystemExt::local_idp_user_create_v1`]: super::ClientSystemExt::local_idp_user_create_v1"]
+    #[derive(Debug, Clone)]
+    pub struct LocalIdpUserCreateV1<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+        body: Result<types::UserCreate, String>,
+    }
+
+    impl<'a> LocalIdpUserCreateV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                silo: Err("silo was not initialized".to_string()),
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::UserCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `UserCreate` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/system/identity-providers/local/users`"]
+        pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
+            let Self { client, silo, body } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/identity-providers/local/users",
+                client.baseurl,
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("silo", silo.to_string()));
+            let request = client.client.post(url).json(&body).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::local_idp_user_delete_v1`]\n\n[`ClientSystemExt::local_idp_user_delete_v1`]: super::ClientSystemExt::local_idp_user_delete_v1"]
+    #[derive(Debug, Clone)]
+    pub struct LocalIdpUserDeleteV1<'a> {
+        client: &'a super::Client,
+        user_id: Result<uuid::Uuid, String>,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> LocalIdpUserDeleteV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                user_id: Err("user_id was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn user_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.user_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `DELETE` request to `/v1/system/identity-providers/local/users/{user_id}`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                user_id,
+                silo,
+            } = self;
+            let user_id = user_id.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/identity-providers/local/users/{}",
+                client.baseurl,
+                encode_path(&user_id.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("silo", silo.to_string()));
+            let request = client.client.delete(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::local_idp_user_set_password_v1`]\n\n[`ClientSystemExt::local_idp_user_set_password_v1`]: super::ClientSystemExt::local_idp_user_set_password_v1"]
+    #[derive(Debug, Clone)]
+    pub struct LocalIdpUserSetPasswordV1<'a> {
+        client: &'a super::Client,
+        user_id: Result<uuid::Uuid, String>,
+        silo: Result<types::NameOrId, String>,
+        body: Result<types::UserPassword, String>,
+    }
+
+    impl<'a> LocalIdpUserSetPasswordV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                user_id: Err("user_id was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn user_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.user_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::UserPassword>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `UserPassword` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/system/identity-providers/local/users/{user_id}/set-password`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                user_id,
+                silo,
+                body,
+            } = self;
+            let user_id = user_id.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/identity-providers/local/users/{}/set-password",
+                client.baseurl,
+                encode_path(&user_id.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("silo", silo.to_string()));
+            let request = client.client.post(url).json(&body).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::saml_identity_provider_create_v1`]\n\n[`ClientSystemExt::saml_identity_provider_create_v1`]: super::ClientSystemExt::saml_identity_provider_create_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SamlIdentityProviderCreateV1<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+        body: Result<types::SamlIdentityProviderCreate, String>,
+    }
+
+    impl<'a> SamlIdentityProviderCreateV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                silo: Err("silo was not initialized".to_string()),
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SamlIdentityProviderCreate>,
+        {
+            self.body = value.try_into().map_err(|_| {
+                "conversion to `SamlIdentityProviderCreate` for body failed".to_string()
+            });
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/system/identity-providers/saml`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SamlIdentityProvider>, Error<types::Error>> {
+            let Self { client, silo, body } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/identity-providers/saml", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("silo", silo.to_string()));
+            let request = client.client.post(url).json(&body).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::saml_identity_provider_view_v1`]\n\n[`ClientSystemExt::saml_identity_provider_view_v1`]: super::ClientSystemExt::saml_identity_provider_view_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SamlIdentityProviderViewV1<'a> {
+        client: &'a super::Client,
+        provider: Result<types::NameOrId, String>,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SamlIdentityProviderViewV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                provider: Err("provider was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn provider<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.provider = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for provider failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SamlIdentityProvider>, Error<types::Error>> {
+            let Self {
+                client,
+                provider,
+                silo,
+            } = self;
+            let provider = provider.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/identity-providers/saml/{}",
+                client.baseurl,
+                encode_path(&provider.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("silo", silo.to_string()));
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_list_v1`]\n\n[`ClientSystemExt::ip_pool_list_v1`]: super::ClientSystemExt::ip_pool_list_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolListV1<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> IpPoolListV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/ip-pools`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IpPoolResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/ip-pools", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/system/ip-pools`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::IpPool, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_create_v1`]\n\n[`ClientSystemExt::ip_pool_create_v1`]: super::ClientSystemExt::ip_pool_create_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolCreateV1<'a> {
+        client: &'a super::Client,
+        body: Result<types::IpPoolCreate, String>,
+    }
+
+    impl<'a> IpPoolCreateV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpPoolCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `IpPoolCreate` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/system/ip-pools`"]
+        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/ip-pools", client.baseurl,);
+            let request = client.client.post(url).json(&body).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_view_v1`]\n\n[`ClientSystemExt::ip_pool_view_v1`]: super::ClientSystemExt::ip_pool_view_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolViewV1<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> IpPoolViewV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                pool: Err("pool was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/ip-pools/{pool}`"]
+        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
+            let Self { client, pool } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_update_v1`]\n\n[`ClientSystemExt::ip_pool_update_v1`]: super::ClientSystemExt::ip_pool_update_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolUpdateV1<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        body: Result<types::IpPoolUpdate, String>,
+    }
+
+    impl<'a> IpPoolUpdateV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                pool: Err("pool was not initialized".to_string()),
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpPoolUpdate>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `IpPoolUpdate` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `PUT` request to `/v1/system/ip-pools/{pool}`"]
+        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
+            let Self { client, pool, body } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let request = client.client.put(url).json(&body).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_delete_v1`]\n\n[`ClientSystemExt::ip_pool_delete_v1`]: super::ClientSystemExt::ip_pool_delete_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolDeleteV1<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> IpPoolDeleteV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                pool: Err("pool was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, pool } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let request = client.client.delete(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_list_v1`]\n\n[`ClientSystemExt::ip_pool_range_list_v1`]: super::ClientSystemExt::ip_pool_range_list_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolRangeListV1<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+    }
+
+    impl<'a> IpPoolRangeListV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                pool: Err("pool was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                pool,
+                limit,
+                page_token,
+            } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}/ranges",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/system/ip-pools/{pool}/ranges`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::IpPoolRange, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_add_v1`]\n\n[`ClientSystemExt::ip_pool_range_add_v1`]: super::ClientSystemExt::ip_pool_range_add_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolRangeAddV1<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        body: Result<types::IpRange, String>,
+    }
+
+    impl<'a> IpPoolRangeAddV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                pool: Err("pool was not initialized".to_string()),
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpRange>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`"]
+        pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
+            let Self { client, pool, body } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}/ranges/add",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let request = client.client.post(url).json(&body).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_remove_v1`]\n\n[`ClientSystemExt::ip_pool_range_remove_v1`]: super::ClientSystemExt::ip_pool_range_remove_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolRangeRemoveV1<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        body: Result<types::IpRange, String>,
+    }
+
+    impl<'a> IpPoolRangeRemoveV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                pool: Err("pool was not initialized".to_string()),
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpRange>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, pool, body } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}/ranges/remove",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let request = client.client.post(url).json(&body).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_view_v1`]\n\n[`ClientSystemExt::ip_pool_service_view_v1`]: super::ClientSystemExt::ip_pool_service_view_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolServiceViewV1<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> IpPoolServiceViewV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client }
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/ip-pools-service`"]
+        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/ip-pools-service", client.baseurl,);
+            let request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_list_v1`]\n\n[`ClientSystemExt::ip_pool_service_range_list_v1`]: super::ClientSystemExt::ip_pool_service_range_list_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolServiceRangeListV1<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+    }
+
+    impl<'a> IpPoolServiceRangeListV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/ip-pools-service/ranges`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/ip-pools-service/ranges", client.baseurl,);
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/system/ip-pools-service/ranges`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::IpPoolRange, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_add_v1`]\n\n[`ClientSystemExt::ip_pool_service_range_add_v1`]: super::ClientSystemExt::ip_pool_service_range_add_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolServiceRangeAddV1<'a> {
+        client: &'a super::Client,
+        body: Result<types::IpRange, String>,
+    }
+
+    impl<'a> IpPoolServiceRangeAddV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpRange>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`"]
+        pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/ip-pools-service/ranges/add", client.baseurl,);
+            let request = client.client.post(url).json(&body).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_remove_v1`]\n\n[`ClientSystemExt::ip_pool_service_range_remove_v1`]: super::ClientSystemExt::ip_pool_service_range_remove_v1"]
+    #[derive(Debug, Clone)]
+    pub struct IpPoolServiceRangeRemoveV1<'a> {
+        client: &'a super::Client,
+        body: Result<types::IpRange, String>,
+    }
+
+    impl<'a> IpPoolServiceRangeRemoveV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpRange>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools-service/ranges/remove",
+                client.baseurl,
+            );
+            let request = client.client.post(url).json(&body).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     #[doc = "Builder for [`ClientPolicyExt::system_policy_view_v1`]\n\n[`ClientPolicyExt::system_policy_view_v1`]: super::ClientPolicyExt::system_policy_view_v1"]
     #[derive(Debug, Clone)]
     pub struct SystemPolicyViewV1<'a> {
@@ -36025,6 +38377,407 @@ pub mod builder {
                 encode_path(&saga_id.to_string()),
             );
             let request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::silo_list_v1`]\n\n[`ClientSystemExt::silo_list_v1`]: super::ClientSystemExt::silo_list_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SiloListV1<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> SiloListV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/silos`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/silos", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/system/silos`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Silo, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::silo_create_v1`]\n\n[`ClientSystemExt::silo_create_v1`]: super::ClientSystemExt::silo_create_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SiloCreateV1<'a> {
+        client: &'a super::Client,
+        body: Result<types::SiloCreate, String>,
+    }
+
+    impl<'a> SiloCreateV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SiloCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `SiloCreate` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/system/silos`"]
+        pub async fn send(self) -> Result<ResponseValue<types::Silo>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/silos", client.baseurl,);
+            let request = client.client.post(url).json(&body).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::silo_view_v1`]\n\n[`ClientSystemExt::silo_view_v1`]: super::ClientSystemExt::silo_view_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SiloViewV1<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SiloViewV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/silos/{silo}`"]
+        pub async fn send(self) -> Result<ResponseValue<types::Silo>, Error<types::Error>> {
+            let Self { client, silo } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/silos/{}",
+                client.baseurl,
+                encode_path(&silo.to_string()),
+            );
+            let request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::silo_delete_v1`]\n\n[`ClientSystemExt::silo_delete_v1`]: super::ClientSystemExt::silo_delete_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SiloDeleteV1<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SiloDeleteV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `DELETE` request to `/v1/system/silos/{silo}`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, silo } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/silos/{}",
+                client.baseurl,
+                encode_path(&silo.to_string()),
+            );
+            let request = client.client.delete(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::silo_policy_view_v1`]\n\n[`ClientSystemExt::silo_policy_view_v1`]: super::ClientSystemExt::silo_policy_view_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SiloPolicyViewV1<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SiloPolicyViewV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/silos/{silo}/policy`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
+            let Self { client, silo } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/silos/{}/policy",
+                client.baseurl,
+                encode_path(&silo.to_string()),
+            );
+            let request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::silo_policy_update_v1`]\n\n[`ClientSystemExt::silo_policy_update_v1`]: super::ClientSystemExt::silo_policy_update_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SiloPolicyUpdateV1<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+        body: Result<types::SiloRolePolicy, String>,
+    }
+
+    impl<'a> SiloPolicyUpdateV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                silo: Err("silo was not initialized".to_string()),
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SiloRolePolicy>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `SiloRolePolicy` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `PUT` request to `/v1/system/silos/{silo}/policy`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
+            let Self { client, silo, body } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/silos/{}/policy",
+                client.baseurl,
+                encode_path(&silo.to_string()),
+            );
+            let request = client.client.put(url).json(&body).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -36739,6 +39492,232 @@ pub mod builder {
             let Self { client } = self;
             let url = format!("{}/v1/system/update/version", client.baseurl,);
             let request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::silo_users_list_v1`]\n\n[`ClientSystemExt::silo_users_list_v1`]: super::ClientSystemExt::silo_users_list_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SiloUsersListV1<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        silo: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> SiloUsersListV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                silo: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/users`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::UserResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                silo,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/users", client.baseurl,);
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &silo {
+                query.push(("silo", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/system/users`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::User, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                silo: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::silo_user_view_v1`]\n\n[`ClientSystemExt::silo_user_view_v1`]: super::ClientSystemExt::silo_user_view_v1"]
+    #[derive(Debug, Clone)]
+    pub struct SiloUserViewV1<'a> {
+        client: &'a super::Client,
+        user_id: Result<uuid::Uuid, String>,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SiloUserViewV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                user_id: Err("user_id was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn user_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.user_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/users/{user_id}`"]
+        pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
+            let Self {
+                client,
+                user_id,
+                silo,
+            } = self;
+            let user_id = user_id.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/users/{}",
+                client.baseurl,
+                encode_path(&user_id.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("silo", silo.to_string()));
+            let request = client.client.get(url).query(&query).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -39087,6 +42066,220 @@ pub mod builder {
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
+        }
+    }
+
+    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_list_network_interfaces_v1`]\n\n[`ClientVpcsExt::vpc_subnet_list_network_interfaces_v1`]: super::ClientVpcsExt::vpc_subnet_list_network_interfaces_v1"]
+    #[derive(Debug, Clone)]
+    pub struct VpcSubnetListNetworkInterfacesV1<'a> {
+        client: &'a super::Client,
+        subnet: Result<types::NameOrId, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        organization: Result<Option<types::NameOrId>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> VpcSubnetListNetworkInterfacesV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                subnet: Err("subnet was not initialized".to_string()),
+                limit: Ok(None),
+                organization: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+            }
+        }
+
+        pub fn subnet<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.subnet = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for subnet failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn organization<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.organization = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        pub fn vpc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.vpc = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::NetworkInterfaceResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                subnet,
+                limit,
+                organization,
+                page_token,
+                project,
+                sort_by,
+                vpc,
+            } = self;
+            let subnet = subnet.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let organization = organization.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let vpc = vpc.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/vpc-subnets/{}/network-interfaces",
+                client.baseurl,
+                encode_path(&subnet.to_string()),
+            );
+            let mut query = Vec::with_capacity(6usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &organization {
+                query.push(("organization", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/vpc-subnets/{subnet}/network-interfaces`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::NetworkInterface, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                organization: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                vpc: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
         }
     }
 

@@ -139,6 +139,64 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ProjectPolicyViewV1 => Some("project policy view"),
         CliCommand::ProjectPolicyUpdateV1 => Some("project policy update"),
 
+        CliCommand::DiskMetricsListV1 => Some("disk metrics list"),
+        CliCommand::ImageListV1 => Some("image list"),
+        CliCommand::ImageCreateV1 => Some("image create"),
+        CliCommand::ImageViewV1 => Some("image view"),
+        CliCommand::ImageDeleteV1 => Some("image delete"),
+        CliCommand::InstanceExternalIpListV1 => Some("instance external-ip list"),
+        CliCommand::SiloIdentityProviderListV1 => Some("silo idp list"),
+        CliCommand::LocalIdpUserCreateV1 => Some("local-idp user create"),
+        CliCommand::LocalIdpUserDeleteV1 => Some("local-idp user delete"),
+        CliCommand::LocalIdpUserSetPasswordV1 => Some("local-idp user set-password"),
+        CliCommand::SamlIdentityProviderCreateV1 => Some("saml-idp provider create"),
+        CliCommand::SamlIdentityProviderViewV1 => Some("saml-idp provider view"),
+        CliCommand::IpPoolListV1 => Some("ip-pool list"),
+        CliCommand::IpPoolCreateV1 => Some("ip-pool create"),
+        CliCommand::IpPoolViewV1 => Some("ip-pool view"),
+        CliCommand::IpPoolUpdateV1 => Some("ip-pool update"),
+        CliCommand::IpPoolDeleteV1 => Some("ip-pool delete"),
+        CliCommand::IpPoolRangeListV1 => Some("ip-pool range list"),
+        CliCommand::IpPoolRangeAddV1 => Some("ip-pool range add"),
+        CliCommand::IpPoolRangeRemoveV1 => Some("ip-pool range remove"),
+        CliCommand::IpPoolServiceViewV1 => Some("ip-pool service view"),
+        CliCommand::IpPoolServiceRangeListV1 => Some("ip-pool service range list"),
+        CliCommand::IpPoolServiceRangeAddV1 => Some("ip-pool service range add"),
+        CliCommand::IpPoolServiceRangeRemoveV1 => Some("ip-pool service remove"),
+        CliCommand::SiloListV1 => Some("silo list"),
+        CliCommand::SiloCreateV1 => Some("silo create"),
+        CliCommand::SiloViewV1 => Some("silo view"),
+        CliCommand::SiloDeleteV1 => Some("silo delete"),
+        CliCommand::SiloPolicyViewV1 => Some("silo policy view"),
+        CliCommand::SiloPolicyUpdateV1 => Some("silo policy update"),
+        CliCommand::SiloUsersListV1 => Some("silo user list"),
+        CliCommand::SiloUserViewV1 => Some("silo user view"),
+        CliCommand::VpcSubnetListNetworkInterfacesV1 => Some("vpc subnet list-nics"),
+
+        CliCommand::UserListV1
+        | CliCommand::VpcFirewallRulesViewV1
+        | CliCommand::VpcFirewallRulesUpdateV1
+        | CliCommand::VpcRouterRouteListV1
+        | CliCommand::VpcRouterRouteCreateV1
+        | CliCommand::VpcRouterRouteViewV1
+        | CliCommand::VpcRouterRouteUpdateV1
+        | CliCommand::VpcRouterRouteDeleteV1
+        | CliCommand::VpcRouterListV1
+        | CliCommand::VpcRouterCreateV1
+        | CliCommand::VpcRouterViewV1
+        | CliCommand::VpcRouterUpdateV1
+        | CliCommand::VpcRouterDeleteV1
+        | CliCommand::VpcSubnetListV1
+        | CliCommand::VpcSubnetCreateV1
+        | CliCommand::VpcSubnetViewV1
+        | CliCommand::VpcSubnetUpdateV1
+        | CliCommand::VpcSubnetDeleteV1
+        | CliCommand::VpcListV1
+        | CliCommand::VpcCreateV1
+        | CliCommand::VpcViewV1
+        | CliCommand::VpcUpdateV1
+        | CliCommand::VpcDeleteV1 => None,
+
         // TODO
         CliCommand::DiskViewById
         | CliCommand::ImageViewById
@@ -334,30 +392,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::SystemUpdateList
         | CliCommand::SystemUpdateView
         | CliCommand::SystemUpdateComponentsList
-        | CliCommand::SystemVersion
-        | CliCommand::UserListV1
-        | CliCommand::VpcFirewallRulesViewV1
-        | CliCommand::VpcFirewallRulesUpdateV1
-        | CliCommand::VpcRouterRouteListV1
-        | CliCommand::VpcRouterRouteCreateV1
-        | CliCommand::VpcRouterRouteViewV1
-        | CliCommand::VpcRouterRouteUpdateV1
-        | CliCommand::VpcRouterRouteDeleteV1
-        | CliCommand::VpcRouterListV1
-        | CliCommand::VpcRouterCreateV1
-        | CliCommand::VpcRouterViewV1
-        | CliCommand::VpcRouterUpdateV1
-        | CliCommand::VpcRouterDeleteV1
-        | CliCommand::VpcSubnetListV1
-        | CliCommand::VpcSubnetCreateV1
-        | CliCommand::VpcSubnetViewV1
-        | CliCommand::VpcSubnetUpdateV1
-        | CliCommand::VpcSubnetDeleteV1
-        | CliCommand::VpcListV1
-        | CliCommand::VpcCreateV1
-        | CliCommand::VpcViewV1
-        | CliCommand::VpcUpdateV1
-        | CliCommand::VpcDeleteV1 => None,
+        | CliCommand::SystemVersion => None,
     };
 
     x
