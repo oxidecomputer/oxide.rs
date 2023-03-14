@@ -6,6 +6,7 @@ use config::Config;
 use context::Context;
 use generated_cli::{Cli, CliCommand};
 
+mod cmd_api;
 #[allow(unused_mut)] // TODO
 #[allow(unused)] // TODO
 mod cmd_auth;
@@ -74,6 +75,7 @@ async fn main() {
     // TODO Example of how to build a fully custom sub-command. Note that this
     // could be placed under another subcommand if needed.
     cmd = cmd.subcommand(cmd_auth::CmdAuth::command());
+    cmd = cmd.subcommand(cmd_api::CmdApi::command());
 
     let matches = cmd.get_matches();
 
@@ -86,6 +88,11 @@ async fn main() {
     match matches.subcommand() {
         Some(("auth", sub_matches)) => {
             let x = cmd_auth::CmdAuth::from_arg_matches(sub_matches).unwrap();
+            x.run(&mut ctx).await.unwrap();
+        }
+
+        Some(("api", sub_matches)) => {
+            let x = cmd_api::CmdApi::from_arg_matches(sub_matches).unwrap();
             x.run(&mut ctx).await.unwrap();
         }
 
