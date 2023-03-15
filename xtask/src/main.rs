@@ -76,6 +76,7 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
 
     if check {
         let checked_in = std::fs::read_to_string(out_path.clone()).unwrap();
+        let checked_in = dos2unix(&checked_in);
         if checked_in != contents {
             println!("❌");
             if verbose {
@@ -114,6 +115,7 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
 
     if check {
         let checked_in = std::fs::read_to_string(out_path.clone()).unwrap();
+        let checked_in = dos2unix(&checked_in);
         if checked_in != contents {
             println!("❌");
             if verbose {

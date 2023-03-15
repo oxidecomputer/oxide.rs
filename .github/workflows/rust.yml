@@ -46,10 +46,18 @@ jobs:
             feature_flags: --all-features
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - name: Install nightly rustfmt
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          components: rustfmt
+          default: false
       - name: Report cargo version
         run: cargo --version
       - name: Report rustc version
         run: rustc --version
+      - name: Check generation
+        run: cargo xtask generate --check
       - name: Build
         run: cargo build ${{ matrix.feature_flags }} --locked --all-targets --verbose
       - name: Run tests
