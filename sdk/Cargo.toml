@@ -5,6 +5,7 @@ version = "0.1.0"
 edition = "2021"
 license = "MPL-2.0"
 repository = "https://github.com/oxidecomputer/oxide-sdk-and-cli"
+readme = "README.md"
 
 [dependencies]
 base64 = { workspace = true }

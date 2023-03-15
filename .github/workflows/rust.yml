@@ -1,0 +1,56 @@
+#
+# Configuration for GitHub-based CI, based on the stock GitHub Rust config.
+#
+name: Rust
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-style:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - name: Report cargo version
+        run: cargo --version
+      - name: Report rustfmt version
+        run: cargo fmt -- --version
+      - name: Check style
+        run: cargo fmt -- --check
+
+  clippy-lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - name: Report cargo version
+        run: cargo --version
+      - name: Report Clippy version
+        run: cargo clippy -- --version
+      - name: Run Clippy Lints
+        # Clippy's style nits are useful, but not worth keeping in CI.  This
+        # override belongs in src/lib.rs, but that doesn't reliably work due to
+        # rust-lang/rust-clippy#6610.
+        run: cargo clippy --all-targets -- --deny warnings --allow clippy::style
+
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, windows-2022, macos-12]
+        features: [ all, default ]
+        include:
+          - features: all
+            feature_flags: --all-features
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - name: Report cargo version
+        run: cargo --version
+      - name: Report rustc version
+        run: rustc --version
+      - name: Build
+        run: cargo build ${{ matrix.feature_flags }} --locked --all-targets --verbose
+      - name: Run tests
+        run: cargo test ${{ matrix.feature_flags }} --locked --verbose
