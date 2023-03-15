@@ -1403,7 +1403,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .help("An inclusive start time of metrics."),
             )
-            .about("Fetch disk metrics")
+            .about("Fetch disk metrics\n\nUse `/v1/disks/{disk}/{metric}` instead")
     }
 
     pub async fn execute_disk_metrics_list(&self, matches: &clap::ArgMatches) {
@@ -1479,7 +1479,8 @@ impl Cli {
             )
             .about(
                 "List images\n\nList images in a project. The images are returned sorted by \
-                 creation date, with the most recent images appearing first.",
+                 creation date, with the most recent images appearing first. Use `GET /v1/images` \
+                 instead",
             )
     }
 
@@ -1540,6 +1541,20 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
+            .arg(
+                clap::Arg::new("os")
+                    .long("os")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("The family of the operating system (e.g. Debian, Ubuntu, etc.)"),
+            )
+            .arg(
+                clap::Arg::new("version")
+                    .long("version")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("The version of the operating system (e.g. 18.04, 20.04, etc.)"),
+            )
             .about("Create an image\n\nCreate a new image in a project.")
     }
 
@@ -1560,6 +1575,12 @@ impl Cli {
             }
             if let Some(value) = matches.get_one::<types::Name>("name") {
                 body = body.name(value.clone());
+            }
+            if let Some(value) = matches.get_one::<String>("os") {
+                body = body.os(value.clone());
+            }
+            if let Some(value) = matches.get_one::<String>("version") {
+                body = body.version(value.clone());
             }
             body
         });
@@ -2158,7 +2179,9 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about("List external IP addresses")
+            .about(
+                "List external IP addresses\n\nUse `/v1/instances/{instance}/external-ips` instead",
+            )
     }
 
     pub async fn execute_instance_external_ip_list(&self, matches: &clap::ArgMatches) {
@@ -4655,9 +4678,12 @@ impl Cli {
                 clap::Arg::new("sort_by")
                     .long("sort_by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameSortMode)),
+                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
-            .about("List network interfaces")
+            .about(
+                "List network interfaces for a VPC subnet\n\nUse \
+                 `/v1/vpc-subnets/{subnet}/network-interfaces` instead",
+            )
     }
 
     pub async fn execute_vpc_subnet_list_network_interfaces(&self, matches: &clap::ArgMatches) {
@@ -4682,7 +4708,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
             request = request.sort_by(value.clone());
         }
 
@@ -5044,7 +5070,7 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid)),
             )
-            .about("Fetch an IP pool by id")
+            .about("Fetch an IP pool by id\n\nUse `GET /v1/system/ip-pools/{pool}` instead")
     }
 
     pub async fn execute_ip_pool_view_by_id(&self, matches: &clap::ArgMatches) {
@@ -5072,7 +5098,7 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid)),
             )
-            .about("Fetch a silo by id")
+            .about("Fetch a silo by id\n\nUse `GET /v1/system/silos/{id}` instead.")
     }
 
     pub async fn execute_silo_view_by_id(&self, matches: &clap::ArgMatches) {
@@ -5643,7 +5669,7 @@ impl Cli {
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
-            .about("List IP pools")
+            .about("List IP pools\n\nUse `GET /v1/system/ip-pools` instead")
     }
 
     pub async fn execute_ip_pool_list(&self, matches: &clap::ArgMatches) {
@@ -5681,7 +5707,7 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about("Create an IP pool")
+            .about("Create an IP pool\n\nUse `POST /v1/system/ip-pools` instead")
     }
 
     pub async fn execute_ip_pool_create(&self, matches: &clap::ArgMatches) {
@@ -5715,7 +5741,7 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about("Fetch an IP pool")
+            .about("Fetch an IP pool\n\nUse `GET /v1/system/ip-pools/{pool}` instead")
     }
 
     pub async fn execute_ip_pool_view(&self, matches: &clap::ArgMatches) {
@@ -5743,7 +5769,7 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about("Update an IP Pool")
+            .about("Update an IP Pool\n\nUse `PUT /v1/system/ip-pools/{pool}` instead")
     }
 
     pub async fn execute_ip_pool_update(&self, matches: &clap::ArgMatches) {
@@ -5775,7 +5801,7 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about("Delete an IP Pool")
+            .about("Delete an IP Pool\n\nUse `DELETE /v1/system/ip-pools/{pool}` instead")
     }
 
     pub async fn execute_ip_pool_delete(&self, matches: &clap::ArgMatches) {
@@ -5810,7 +5836,10 @@ impl Cli {
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
                     .help("Maximum number of items returned by a single call"),
             )
-            .about("List ranges for an IP pool\n\nRanges are ordered by their first address.")
+            .about(
+                "List ranges for an IP pool\n\nRanges are ordered by their first address. Use \
+                 `GET /v1/system/ip-pools/{pool}/ranges` instead",
+            )
     }
 
     pub async fn execute_ip_pool_range_list(&self, matches: &clap::ArgMatches) {
@@ -5842,7 +5871,10 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about("Add a range to an IP pool")
+            .about(
+                "Add a range to an IP pool\n\nUse `POST /v1/system/ip-pools/{pool}/ranges/add` \
+                 instead",
+            )
     }
 
     pub async fn execute_ip_pool_range_add(&self, matches: &clap::ArgMatches) {
@@ -5870,7 +5902,10 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about("Remove a range from an IP pool")
+            .about(
+                "Remove a range from an IP pool\n\nUse `POST \
+                 /v1/system/ip-pools/{pool}/ranges/remove` instead.",
+            )
     }
 
     pub async fn execute_ip_pool_range_remove(&self, matches: &clap::ArgMatches) {
@@ -5891,7 +5926,10 @@ impl Cli {
     }
 
     pub fn cli_ip_pool_service_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the IP pool used for Oxide services.")
+        clap::Command::new("").about(
+            "Fetch the IP pool used for Oxide services.\n\nUse `GET /v1/system/ip-pools-service` \
+             instead",
+        )
     }
 
     pub async fn execute_ip_pool_service_view(&self, matches: &clap::ArgMatches) {
@@ -5918,7 +5956,7 @@ impl Cli {
             )
             .about(
                 "List ranges for the IP pool used for Oxide services.\n\nRanges are ordered by \
-                 their first address.",
+                 their first address. Use `GET /v1/system/ip-pools-service/ranges` instead.",
             )
     }
 
@@ -5940,7 +5978,10 @@ impl Cli {
     }
 
     pub fn cli_ip_pool_service_range_add() -> clap::Command {
-        clap::Command::new("").about("Add a range to an IP pool used for Oxide services.")
+        clap::Command::new("").about(
+            "Add a range to an IP pool used for Oxide services.\n\nUse `POST \
+             /v1/system/ip-pools-service/ranges/add` instead",
+        )
     }
 
     pub async fn execute_ip_pool_service_range_add(&self, matches: &clap::ArgMatches) {
@@ -5957,7 +5998,10 @@ impl Cli {
     }
 
     pub fn cli_ip_pool_service_range_remove() -> clap::Command {
-        clap::Command::new("").about("Remove a range from an IP pool used for Oxide services.")
+        clap::Command::new("").about(
+            "Remove a range from an IP pool used for Oxide services.\n\nUse `POST \
+             /v1/system/ip-pools-service/ranges/remove` instead",
+        )
     }
 
     pub async fn execute_ip_pool_service_range_remove(&self, matches: &clap::ArgMatches) {
@@ -6180,7 +6224,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
             .about(
-                "List silos\n\nLists silos that are discoverable based on the current permissions.",
+                "List silos\n\nLists silos that are discoverable based on the current \
+                 permissions. Use `GET /v1/system/silos` instead",
             )
     }
 
@@ -6231,7 +6276,7 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about("Create a silo")
+            .about("Create a silo\n\nUse `POST /v1/system/silos` instead")
     }
 
     pub async fn execute_silo_create(&self, matches: &clap::ArgMatches) {
@@ -6272,7 +6317,9 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::Name))
                     .help("The silo's unique name."),
             )
-            .about("Fetch a silo\n\nFetch a silo by name.")
+            .about(
+                "Fetch a silo\n\nFetch a silo by name. Use `GET /v1/system/silos/{silo}` instead.",
+            )
     }
 
     pub async fn execute_silo_view(&self, matches: &clap::ArgMatches) {
@@ -6301,7 +6348,10 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::Name))
                     .help("The silo's unique name."),
             )
-            .about("Delete a silo\n\nDelete a silo by name.")
+            .about(
+                "Delete a silo\n\nDelete a silo by name. Use `DELETE /v1/system/silos/{silo}` \
+                 instead.",
+            )
     }
 
     pub async fn execute_silo_delete(&self, matches: &clap::ArgMatches) {
@@ -6343,7 +6393,9 @@ impl Cli {
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameSortMode)),
             )
-            .about("List a silo's IDPs")
+            .about(
+                "List a silo's IDPs\n\nUse `/v1/system/silos/{silo}/identity-providers` instead.",
+            )
     }
 
     pub async fn execute_silo_identity_provider_list(&self, matches: &clap::ArgMatches) {
@@ -6434,7 +6486,10 @@ impl Cli {
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .help("The user's internal id"),
             )
-            .about("Delete a user")
+            .about(
+                "Delete a user\n\nUse `DELETE \
+                 /v1/system/identity-providers/local/users/{user_id}` instead",
+            )
     }
 
     pub async fn execute_local_idp_user_delete(&self, matches: &clap::ArgMatches) {
@@ -6476,7 +6531,8 @@ impl Cli {
             )
             .about(
                 "Set or invalidate a user's password\n\nPasswords can only be updated for users \
-                 in Silos with identity mode `LocalOnly`.",
+                 in Silos with identity mode `LocalOnly`. Use `POST \
+                 /v1/system/identity-providers/local/users/{user_id}/set-password` instead",
             )
     }
 
@@ -6557,7 +6613,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(String))
                     .help("customer's technical contact for saml configuration"),
             )
-            .about("Create a SAML IDP")
+            .about("Create a SAML IDP\n\nUse `POST /v1/system/identity-providers/saml` instead.")
     }
 
     pub async fn execute_saml_identity_provider_create(&self, matches: &clap::ArgMatches) {
@@ -6618,7 +6674,10 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::Name))
                     .help("The SAML identity provider's name"),
             )
-            .about("Fetch a SAML IDP")
+            .about(
+                "Fetch a SAML IDP\n\nUse `GET /v1/system/identity-providers/saml/{provider_name}` \
+                 instead",
+            )
     }
 
     pub async fn execute_saml_identity_provider_view(&self, matches: &clap::ArgMatches) {
@@ -6651,7 +6710,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::Name))
                     .help("The silo's unique name."),
             )
-            .about("Fetch a silo's IAM policy")
+            .about("Fetch a silo's IAM policy\n\nUse `GET /v1/system/silos/{silo}/policy` instead.")
     }
 
     pub async fn execute_silo_policy_view(&self, matches: &clap::ArgMatches) {
@@ -6680,7 +6739,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::Name))
                     .help("The silo's unique name."),
             )
-            .about("Update a silo's IAM policy")
+            .about("Update a silo's IAM policy\n\nUse `PUT /v1/system/silos/{silo}/policy` instead")
     }
 
     pub async fn execute_silo_policy_update(&self, matches: &clap::ArgMatches) {
@@ -6726,7 +6785,7 @@ impl Cli {
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
-            .about("List users in a silo")
+            .about("List users in a silo\n\nUse `GET /v1/system/users` instead.")
     }
 
     pub async fn execute_silo_users_list(&self, matches: &clap::ArgMatches) {
@@ -6770,7 +6829,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .help("The user's internal id"),
             )
-            .about("Fetch a user")
+            .about("Fetch a user\n\nUse `GET /v1/system/users/{user_id}` instead")
     }
 
     pub async fn execute_silo_user_view(&self, matches: &clap::ArgMatches) {
@@ -7155,6 +7214,98 @@ impl Cli {
         }
     }
 
+    pub fn cli_disk_metrics_list_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("disk")
+                    .long("disk")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("metric")
+                    .long("metric")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::DiskMetricName)),
+            )
+            .arg(
+                clap::Arg::new("end_time")
+                    .long("end_time")
+                    .required(false)
+                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .help("An exclusive end time of metrics."),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("organization")
+                    .long("organization")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("start_time")
+                    .long("start_time")
+                    .required(false)
+                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .help("An inclusive start time of metrics."),
+            )
+            .about("Fetch disk metrics")
+    }
+
+    pub async fn execute_disk_metrics_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.disk_metrics_list_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
+            request = request.disk(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::DiskMetricName>("metric") {
+            request = request.metric(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end_time") {
+            request = request.end_time(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("organization") {
+            request = request.organization(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start_time")
+        {
+            request = request.start_time(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub fn cli_group_list_v1() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -7215,6 +7366,249 @@ impl Cli {
         match result {
             Ok(r) => {
                 println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_image_list_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("organization")
+                    .long("organization")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("sort_by")
+                    .long("sort_by")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+            )
+            .about(
+                "List images\n\nList images which are global or scoped to the specified project. \
+                 The images are returned sorted by creation date, with the most recent images \
+                 appearing first.",
+            )
+    }
+
+    pub async fn execute_image_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.image_list_v1();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("organization") {
+            request = request.organization(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+            request = request.sort_by(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_image_create_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("organization")
+                    .long("organization")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::Name)),
+            )
+            .arg(
+                clap::Arg::new("os")
+                    .long("os")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("The family of the operating system (e.g. Debian, Ubuntu, etc.)"),
+            )
+            .arg(
+                clap::Arg::new("version")
+                    .long("version")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("The version of the operating system (e.g. 18.04, 20.04, etc.)"),
+            )
+            .about("Create an image\n\nCreate a new image in a project.")
+    }
+
+    pub async fn execute_image_create_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.image_create_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("organization") {
+            request = request.organization(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        let request = request.body({
+            let mut body = types::ImageCreate::builder();
+            if let Some(value) = matches.get_one::<String>("description") {
+                body = body.description(value.clone());
+            }
+            if let Some(value) = matches.get_one::<types::Name>("name") {
+                body = body.name(value.clone());
+            }
+            if let Some(value) = matches.get_one::<String>("os") {
+                body = body.os(value.clone());
+            }
+            if let Some(value) = matches.get_one::<String>("version") {
+                body = body.version(value.clone());
+            }
+            body
+        });
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_image_view_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("image")
+                    .long("image")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("organization")
+                    .long("organization")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Fetch an image\n\nFetch the details for a specific image in a project.")
+    }
+
+    pub async fn execute_image_view_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.image_view_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("image") {
+            request = request.image(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("organization") {
+            request = request.organization(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_image_delete_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("image")
+                    .long("image")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("organization")
+                    .long("organization")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about(
+                "Delete an image\n\nPermanently delete an image from a project. This operation \
+                 cannot be undone. Any instances in the project using the image will continue to \
+                 run, however new instances can not be created with this image.",
+            )
+    }
+
+    pub async fn execute_image_delete_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.image_delete_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("image") {
+            request = request.image(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("organization") {
+            request = request.organization(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -7668,6 +8062,54 @@ impl Cli {
             }
             body
         });
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_instance_external_ip_list_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("organization")
+                    .long("organization")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("List external IP addresses")
+    }
+
+    pub async fn execute_instance_external_ip_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.instance_external_ip_list_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("organization") {
+            request = request.organization(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -9554,6 +9996,666 @@ impl Cli {
         }
     }
 
+    pub fn cli_silo_identity_provider_list_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("sort_by")
+                    .long("sort_by")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+            )
+            .about("List a silo's IDPs_name")
+    }
+
+    pub async fn execute_silo_identity_provider_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_identity_provider_list_v1();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+            request = request.sort_by(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_local_idp_user_create_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("external_id")
+                    .long("external_id")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::UserId))
+                    .help("username used to log in"),
+            )
+            .about(
+                "Create a user\n\nUsers can only be created in Silos with `provision_type` == \
+                 `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user \
+                 first logs in using an external Identity Provider. Use `POST \
+                 /v1/system/identity-providers/local/users` instead",
+            )
+    }
+
+    pub async fn execute_local_idp_user_create_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.local_idp_user_create_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        let request = request.body({
+            let mut body = types::UserCreate::builder();
+            if let Some(value) = matches.get_one::<types::UserId>("external_id") {
+                body = body.external_id(value.clone());
+            }
+            body
+        });
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_local_idp_user_delete_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("user_id")
+                    .long("user_id")
+                    .required(true)
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .help("The user's internal id"),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Delete a user")
+    }
+
+    pub async fn execute_local_idp_user_delete_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.local_idp_user_delete_v1();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("user_id") {
+            request = request.user_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_local_idp_user_set_password_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("user_id")
+                    .long("user_id")
+                    .required(true)
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .help("The user's internal id"),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about(
+                "Set or invalidate a user's password\n\nPasswords can only be updated for users \
+                 in Silos with identity mode `LocalOnly`.",
+            )
+    }
+
+    pub async fn execute_local_idp_user_set_password_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.local_idp_user_set_password_v1();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("user_id") {
+            request = request.user_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_saml_identity_provider_create_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("acs_url")
+                    .long("acs_url")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("service provider endpoint where the response will be sent"),
+            )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("idp_entity_id")
+                    .long("idp_entity_id")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("idp's entity id"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::Name)),
+            )
+            .arg(
+                clap::Arg::new("slo_url")
+                    .long("slo_url")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("service provider endpoint where the idp should send log out requests"),
+            )
+            .arg(
+                clap::Arg::new("sp_client_id")
+                    .long("sp_client_id")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("sp's client id"),
+            )
+            .arg(
+                clap::Arg::new("technical_contact_email")
+                    .long("technical_contact_email")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("customer's technical contact for saml configuration"),
+            )
+            .about("Create a SAML IDP")
+    }
+
+    pub async fn execute_saml_identity_provider_create_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.saml_identity_provider_create_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        let request = request.body({
+            let mut body = types::SamlIdentityProviderCreate::builder();
+            if let Some(value) = matches.get_one::<String>("acs_url") {
+                body = body.acs_url(value.clone());
+            }
+            if let Some(value) = matches.get_one::<String>("description") {
+                body = body.description(value.clone());
+            }
+            if let Some(value) = matches.get_one::<String>("idp_entity_id") {
+                body = body.idp_entity_id(value.clone());
+            }
+            if let Some(value) = matches.get_one::<types::Name>("name") {
+                body = body.name(value.clone());
+            }
+            if let Some(value) = matches.get_one::<String>("slo_url") {
+                body = body.slo_url(value.clone());
+            }
+            if let Some(value) = matches.get_one::<String>("sp_client_id") {
+                body = body.sp_client_id(value.clone());
+            }
+            if let Some(value) = matches.get_one::<String>("technical_contact_email") {
+                body = body.technical_contact_email(value.clone());
+            }
+            body
+        });
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_saml_identity_provider_view_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("provider")
+                    .long("provider")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Fetch a SAML IDP")
+    }
+
+    pub async fn execute_saml_identity_provider_view_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.saml_identity_provider_view_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("provider") {
+            request = request.provider(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_list_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort_by")
+                    .long("sort_by")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+            )
+            .about("List IP pools")
+    }
+
+    pub async fn execute_ip_pool_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_list_v1();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+            request = request.sort_by(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_create_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::Name)),
+            )
+            .about("Create an IP pool")
+    }
+
+    pub async fn execute_ip_pool_create_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_create_v1();
+        let request = request.body({
+            let mut body = types::IpPoolCreate::builder();
+            if let Some(value) = matches.get_one::<String>("description") {
+                body = body.description(value.clone());
+            }
+            if let Some(value) = matches.get_one::<types::Name>("name") {
+                body = body.name(value.clone());
+            }
+            body
+        });
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_view_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Fetch an IP pool")
+    }
+
+    pub async fn execute_ip_pool_view_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_view_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_update_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Update an IP Pool")
+    }
+
+    pub async fn execute_ip_pool_update_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_update_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        let request = request.body({
+            let mut body = types::IpPoolUpdate::builder();
+            body
+        });
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_delete_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Delete an IP Pool")
+    }
+
+    pub async fn execute_ip_pool_delete_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_delete_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_range_list_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about("List ranges for an IP pool\n\nRanges are ordered by their first address.")
+    }
+
+    pub async fn execute_ip_pool_range_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_range_list_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_range_add_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Add a range to an IP pool")
+    }
+
+    pub async fn execute_ip_pool_range_add_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_range_add_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_range_remove_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Remove a range from an IP pool")
+    }
+
+    pub async fn execute_ip_pool_range_remove_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_range_remove_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_service_view_v1() -> clap::Command {
+        clap::Command::new("").about("Fetch the IP pool used for Oxide services.")
+    }
+
+    pub async fn execute_ip_pool_service_view_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_service_view_v1();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_service_range_list_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about(
+                "List ranges for the IP pool used for Oxide services.\n\nRanges are ordered by \
+                 their first address.",
+            )
+    }
+
+    pub async fn execute_ip_pool_service_range_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_service_range_list_v1();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_service_range_add_v1() -> clap::Command {
+        clap::Command::new("").about("Add a range to an IP pool used for Oxide services.")
+    }
+
+    pub async fn execute_ip_pool_service_range_add_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_service_range_add_v1();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_ip_pool_service_range_remove_v1() -> clap::Command {
+        clap::Command::new("").about("Remove a range from an IP pool used for Oxide services.")
+    }
+
+    pub async fn execute_ip_pool_service_range_remove_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_service_range_remove_v1();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub fn cli_system_policy_view_v1() -> clap::Command {
         clap::Command::new("").about("Fetch the top-level IAM policy")
     }
@@ -9648,6 +10750,221 @@ impl Cli {
             request = request.saga_id(value.clone());
         }
 
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_silo_list_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort_by")
+                    .long("sort_by")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+            )
+            .about(
+                "List silos\n\nLists silos that are discoverable based on the current permissions.",
+            )
+    }
+
+    pub async fn execute_silo_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_list_v1();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+            request = request.sort_by(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_silo_create_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("discoverable")
+                    .long("discoverable")
+                    .required(true)
+                    .value_parser(clap::value_parser!(bool)),
+            )
+            .arg(
+                clap::Arg::new("identity_mode")
+                    .long("identity_mode")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::SiloIdentityMode)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::Name)),
+            )
+            .about("Create a silo")
+    }
+
+    pub async fn execute_silo_create_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_create_v1();
+        let request = request.body({
+            let mut body = types::SiloCreate::builder();
+            if let Some(value) = matches.get_one::<String>("description") {
+                body = body.description(value.clone());
+            }
+            if let Some(value) = matches.get_one::<bool>("discoverable") {
+                body = body.discoverable(value.clone());
+            }
+            if let Some(value) = matches.get_one::<types::SiloIdentityMode>("identity_mode") {
+                body = body.identity_mode(value.clone());
+            }
+            if let Some(value) = matches.get_one::<types::Name>("name") {
+                body = body.name(value.clone());
+            }
+            body
+        });
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_silo_view_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Fetch a silo\n\nFetch a silo by name.")
+    }
+
+    pub async fn execute_silo_view_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_view_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_silo_delete_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Delete a silo\n\nDelete a silo by name.")
+    }
+
+    pub async fn execute_silo_delete_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_delete_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_silo_policy_view_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Fetch a silo's IAM policy")
+    }
+
+    pub async fn execute_silo_policy_view_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_policy_view_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_silo_policy_update_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Update a silo's IAM policy")
+    }
+
+    pub async fn execute_silo_policy_update_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_policy_update_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        let request = request.body({
+            let mut body = types::SiloRolePolicy::builder();
+            body
+        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -9932,6 +11249,94 @@ impl Cli {
 
     pub async fn execute_system_version(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.system_version();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_silo_users_list_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("sort_by")
+                    .long("sort_by")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::IdSortMode)),
+            )
+            .about("List users in a silo")
+    }
+
+    pub async fn execute_silo_users_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_users_list_v1();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+            request = request.sort_by(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_silo_user_view_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("user_id")
+                    .long("user_id")
+                    .required(true)
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .help("The user's internal id"),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("Fetch a user")
+    }
+
+    pub async fn execute_silo_user_view_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_user_view_v1();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("user_id") {
+            request = request.user_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -11107,6 +12512,85 @@ impl Cli {
         }
     }
 
+    pub fn cli_vpc_subnet_list_network_interfaces_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("subnet")
+                    .long("subnet")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("organization")
+                    .long("organization")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("sort_by")
+                    .long("sort_by")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+            )
+            .arg(
+                clap::Arg::new("vpc")
+                    .long("vpc")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about("List network interfaces")
+    }
+
+    pub async fn execute_vpc_subnet_list_network_interfaces_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.vpc_subnet_list_network_interfaces_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("subnet") {
+            request = request.subnet(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("organization") {
+            request = request.organization(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
+            request = request.vpc(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub fn cli_vpc_list_v1() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -11550,8 +13034,13 @@ impl Cli {
             CliCommand::DiskCreateV1 => Self::cli_disk_create_v1(),
             CliCommand::DiskViewV1 => Self::cli_disk_view_v1(),
             CliCommand::DiskDeleteV1 => Self::cli_disk_delete_v1(),
+            CliCommand::DiskMetricsListV1 => Self::cli_disk_metrics_list_v1(),
             CliCommand::GroupListV1 => Self::cli_group_list_v1(),
             CliCommand::GroupView => Self::cli_group_view(),
+            CliCommand::ImageListV1 => Self::cli_image_list_v1(),
+            CliCommand::ImageCreateV1 => Self::cli_image_create_v1(),
+            CliCommand::ImageViewV1 => Self::cli_image_view_v1(),
+            CliCommand::ImageDeleteV1 => Self::cli_image_delete_v1(),
             CliCommand::InstanceListV1 => Self::cli_instance_list_v1(),
             CliCommand::InstanceCreateV1 => Self::cli_instance_create_v1(),
             CliCommand::InstanceViewV1 => Self::cli_instance_view_v1(),
@@ -11559,6 +13048,7 @@ impl Cli {
             CliCommand::InstanceDiskListV1 => Self::cli_instance_disk_list_v1(),
             CliCommand::InstanceDiskAttachV1 => Self::cli_instance_disk_attach_v1(),
             CliCommand::InstanceDiskDetachV1 => Self::cli_instance_disk_detach_v1(),
+            CliCommand::InstanceExternalIpListV1 => Self::cli_instance_external_ip_list_v1(),
             CliCommand::InstanceMigrateV1 => Self::cli_instance_migrate_v1(),
             CliCommand::InstanceRebootV1 => Self::cli_instance_reboot_v1(),
             CliCommand::InstanceSerialConsoleV1 => Self::cli_instance_serial_console_v1(),
@@ -11612,10 +13102,36 @@ impl Cli {
             CliCommand::SledListV1 => Self::cli_sled_list_v1(),
             CliCommand::SledViewV1 => Self::cli_sled_view_v1(),
             CliCommand::SledPhysicalDiskListV1 => Self::cli_sled_physical_disk_list_v1(),
+            CliCommand::SiloIdentityProviderListV1 => Self::cli_silo_identity_provider_list_v1(),
+            CliCommand::LocalIdpUserCreateV1 => Self::cli_local_idp_user_create_v1(),
+            CliCommand::LocalIdpUserDeleteV1 => Self::cli_local_idp_user_delete_v1(),
+            CliCommand::LocalIdpUserSetPasswordV1 => Self::cli_local_idp_user_set_password_v1(),
+            CliCommand::SamlIdentityProviderCreateV1 => {
+                Self::cli_saml_identity_provider_create_v1()
+            }
+            CliCommand::SamlIdentityProviderViewV1 => Self::cli_saml_identity_provider_view_v1(),
+            CliCommand::IpPoolListV1 => Self::cli_ip_pool_list_v1(),
+            CliCommand::IpPoolCreateV1 => Self::cli_ip_pool_create_v1(),
+            CliCommand::IpPoolViewV1 => Self::cli_ip_pool_view_v1(),
+            CliCommand::IpPoolUpdateV1 => Self::cli_ip_pool_update_v1(),
+            CliCommand::IpPoolDeleteV1 => Self::cli_ip_pool_delete_v1(),
+            CliCommand::IpPoolRangeListV1 => Self::cli_ip_pool_range_list_v1(),
+            CliCommand::IpPoolRangeAddV1 => Self::cli_ip_pool_range_add_v1(),
+            CliCommand::IpPoolRangeRemoveV1 => Self::cli_ip_pool_range_remove_v1(),
+            CliCommand::IpPoolServiceViewV1 => Self::cli_ip_pool_service_view_v1(),
+            CliCommand::IpPoolServiceRangeListV1 => Self::cli_ip_pool_service_range_list_v1(),
+            CliCommand::IpPoolServiceRangeAddV1 => Self::cli_ip_pool_service_range_add_v1(),
+            CliCommand::IpPoolServiceRangeRemoveV1 => Self::cli_ip_pool_service_range_remove_v1(),
             CliCommand::SystemPolicyViewV1 => Self::cli_system_policy_view_v1(),
             CliCommand::SystemPolicyUpdateV1 => Self::cli_system_policy_update_v1(),
             CliCommand::SagaListV1 => Self::cli_saga_list_v1(),
             CliCommand::SagaViewV1 => Self::cli_saga_view_v1(),
+            CliCommand::SiloListV1 => Self::cli_silo_list_v1(),
+            CliCommand::SiloCreateV1 => Self::cli_silo_create_v1(),
+            CliCommand::SiloViewV1 => Self::cli_silo_view_v1(),
+            CliCommand::SiloDeleteV1 => Self::cli_silo_delete_v1(),
+            CliCommand::SiloPolicyViewV1 => Self::cli_silo_policy_view_v1(),
+            CliCommand::SiloPolicyUpdateV1 => Self::cli_silo_policy_update_v1(),
             CliCommand::SystemComponentVersionList => Self::cli_system_component_version_list(),
             CliCommand::UpdateDeploymentsList => Self::cli_update_deployments_list(),
             CliCommand::UpdateDeploymentView => Self::cli_update_deployment_view(),
@@ -11626,6 +13142,8 @@ impl Cli {
             CliCommand::SystemUpdateView => Self::cli_system_update_view(),
             CliCommand::SystemUpdateComponentsList => Self::cli_system_update_components_list(),
             CliCommand::SystemVersion => Self::cli_system_version(),
+            CliCommand::SiloUsersListV1 => Self::cli_silo_users_list_v1(),
+            CliCommand::SiloUserViewV1 => Self::cli_silo_user_view_v1(),
             CliCommand::UserListV1 => Self::cli_user_list_v1(),
             CliCommand::VpcFirewallRulesViewV1 => Self::cli_vpc_firewall_rules_view_v1(),
             CliCommand::VpcFirewallRulesUpdateV1 => Self::cli_vpc_firewall_rules_update_v1(),
@@ -11644,6 +13162,9 @@ impl Cli {
             CliCommand::VpcSubnetViewV1 => Self::cli_vpc_subnet_view_v1(),
             CliCommand::VpcSubnetUpdateV1 => Self::cli_vpc_subnet_update_v1(),
             CliCommand::VpcSubnetDeleteV1 => Self::cli_vpc_subnet_delete_v1(),
+            CliCommand::VpcSubnetListNetworkInterfacesV1 => {
+                Self::cli_vpc_subnet_list_network_interfaces_v1()
+            }
             CliCommand::VpcListV1 => Self::cli_vpc_list_v1(),
             CliCommand::VpcCreateV1 => Self::cli_vpc_create_v1(),
             CliCommand::VpcViewV1 => Self::cli_vpc_view_v1(),
@@ -12124,11 +13645,26 @@ impl Cli {
             CliCommand::DiskDeleteV1 => {
                 self.execute_disk_delete_v1(matches).await;
             }
+            CliCommand::DiskMetricsListV1 => {
+                self.execute_disk_metrics_list_v1(matches).await;
+            }
             CliCommand::GroupListV1 => {
                 self.execute_group_list_v1(matches).await;
             }
             CliCommand::GroupView => {
                 self.execute_group_view(matches).await;
+            }
+            CliCommand::ImageListV1 => {
+                self.execute_image_list_v1(matches).await;
+            }
+            CliCommand::ImageCreateV1 => {
+                self.execute_image_create_v1(matches).await;
+            }
+            CliCommand::ImageViewV1 => {
+                self.execute_image_view_v1(matches).await;
+            }
+            CliCommand::ImageDeleteV1 => {
+                self.execute_image_delete_v1(matches).await;
             }
             CliCommand::InstanceListV1 => {
                 self.execute_instance_list_v1(matches).await;
@@ -12150,6 +13686,9 @@ impl Cli {
             }
             CliCommand::InstanceDiskDetachV1 => {
                 self.execute_instance_disk_detach_v1(matches).await;
+            }
+            CliCommand::InstanceExternalIpListV1 => {
+                self.execute_instance_external_ip_list_v1(matches).await;
             }
             CliCommand::InstanceMigrateV1 => {
                 self.execute_instance_migrate_v1(matches).await;
@@ -12280,6 +13819,60 @@ impl Cli {
             CliCommand::SledPhysicalDiskListV1 => {
                 self.execute_sled_physical_disk_list_v1(matches).await;
             }
+            CliCommand::SiloIdentityProviderListV1 => {
+                self.execute_silo_identity_provider_list_v1(matches).await;
+            }
+            CliCommand::LocalIdpUserCreateV1 => {
+                self.execute_local_idp_user_create_v1(matches).await;
+            }
+            CliCommand::LocalIdpUserDeleteV1 => {
+                self.execute_local_idp_user_delete_v1(matches).await;
+            }
+            CliCommand::LocalIdpUserSetPasswordV1 => {
+                self.execute_local_idp_user_set_password_v1(matches).await;
+            }
+            CliCommand::SamlIdentityProviderCreateV1 => {
+                self.execute_saml_identity_provider_create_v1(matches).await;
+            }
+            CliCommand::SamlIdentityProviderViewV1 => {
+                self.execute_saml_identity_provider_view_v1(matches).await;
+            }
+            CliCommand::IpPoolListV1 => {
+                self.execute_ip_pool_list_v1(matches).await;
+            }
+            CliCommand::IpPoolCreateV1 => {
+                self.execute_ip_pool_create_v1(matches).await;
+            }
+            CliCommand::IpPoolViewV1 => {
+                self.execute_ip_pool_view_v1(matches).await;
+            }
+            CliCommand::IpPoolUpdateV1 => {
+                self.execute_ip_pool_update_v1(matches).await;
+            }
+            CliCommand::IpPoolDeleteV1 => {
+                self.execute_ip_pool_delete_v1(matches).await;
+            }
+            CliCommand::IpPoolRangeListV1 => {
+                self.execute_ip_pool_range_list_v1(matches).await;
+            }
+            CliCommand::IpPoolRangeAddV1 => {
+                self.execute_ip_pool_range_add_v1(matches).await;
+            }
+            CliCommand::IpPoolRangeRemoveV1 => {
+                self.execute_ip_pool_range_remove_v1(matches).await;
+            }
+            CliCommand::IpPoolServiceViewV1 => {
+                self.execute_ip_pool_service_view_v1(matches).await;
+            }
+            CliCommand::IpPoolServiceRangeListV1 => {
+                self.execute_ip_pool_service_range_list_v1(matches).await;
+            }
+            CliCommand::IpPoolServiceRangeAddV1 => {
+                self.execute_ip_pool_service_range_add_v1(matches).await;
+            }
+            CliCommand::IpPoolServiceRangeRemoveV1 => {
+                self.execute_ip_pool_service_range_remove_v1(matches).await;
+            }
             CliCommand::SystemPolicyViewV1 => {
                 self.execute_system_policy_view_v1(matches).await;
             }
@@ -12291,6 +13884,24 @@ impl Cli {
             }
             CliCommand::SagaViewV1 => {
                 self.execute_saga_view_v1(matches).await;
+            }
+            CliCommand::SiloListV1 => {
+                self.execute_silo_list_v1(matches).await;
+            }
+            CliCommand::SiloCreateV1 => {
+                self.execute_silo_create_v1(matches).await;
+            }
+            CliCommand::SiloViewV1 => {
+                self.execute_silo_view_v1(matches).await;
+            }
+            CliCommand::SiloDeleteV1 => {
+                self.execute_silo_delete_v1(matches).await;
+            }
+            CliCommand::SiloPolicyViewV1 => {
+                self.execute_silo_policy_view_v1(matches).await;
+            }
+            CliCommand::SiloPolicyUpdateV1 => {
+                self.execute_silo_policy_update_v1(matches).await;
             }
             CliCommand::SystemComponentVersionList => {
                 self.execute_system_component_version_list(matches).await;
@@ -12321,6 +13932,12 @@ impl Cli {
             }
             CliCommand::SystemVersion => {
                 self.execute_system_version(matches).await;
+            }
+            CliCommand::SiloUsersListV1 => {
+                self.execute_silo_users_list_v1(matches).await;
+            }
+            CliCommand::SiloUserViewV1 => {
+                self.execute_silo_user_view_v1(matches).await;
             }
             CliCommand::UserListV1 => {
                 self.execute_user_list_v1(matches).await;
@@ -12375,6 +13992,10 @@ impl Cli {
             }
             CliCommand::VpcSubnetDeleteV1 => {
                 self.execute_vpc_subnet_delete_v1(matches).await;
+            }
+            CliCommand::VpcSubnetListNetworkInterfacesV1 => {
+                self.execute_vpc_subnet_list_network_interfaces_v1(matches)
+                    .await;
             }
             CliCommand::VpcListV1 => {
                 self.execute_vpc_list_v1(matches).await;
@@ -12552,8 +14173,13 @@ pub enum CliCommand {
     DiskCreateV1,
     DiskViewV1,
     DiskDeleteV1,
+    DiskMetricsListV1,
     GroupListV1,
     GroupView,
+    ImageListV1,
+    ImageCreateV1,
+    ImageViewV1,
+    ImageDeleteV1,
     InstanceListV1,
     InstanceCreateV1,
     InstanceViewV1,
@@ -12561,6 +14187,7 @@ pub enum CliCommand {
     InstanceDiskListV1,
     InstanceDiskAttachV1,
     InstanceDiskDetachV1,
+    InstanceExternalIpListV1,
     InstanceMigrateV1,
     InstanceRebootV1,
     InstanceSerialConsoleV1,
@@ -12602,10 +14229,34 @@ pub enum CliCommand {
     SledListV1,
     SledViewV1,
     SledPhysicalDiskListV1,
+    SiloIdentityProviderListV1,
+    LocalIdpUserCreateV1,
+    LocalIdpUserDeleteV1,
+    LocalIdpUserSetPasswordV1,
+    SamlIdentityProviderCreateV1,
+    SamlIdentityProviderViewV1,
+    IpPoolListV1,
+    IpPoolCreateV1,
+    IpPoolViewV1,
+    IpPoolUpdateV1,
+    IpPoolDeleteV1,
+    IpPoolRangeListV1,
+    IpPoolRangeAddV1,
+    IpPoolRangeRemoveV1,
+    IpPoolServiceViewV1,
+    IpPoolServiceRangeListV1,
+    IpPoolServiceRangeAddV1,
+    IpPoolServiceRangeRemoveV1,
     SystemPolicyViewV1,
     SystemPolicyUpdateV1,
     SagaListV1,
     SagaViewV1,
+    SiloListV1,
+    SiloCreateV1,
+    SiloViewV1,
+    SiloDeleteV1,
+    SiloPolicyViewV1,
+    SiloPolicyUpdateV1,
     SystemComponentVersionList,
     UpdateDeploymentsList,
     UpdateDeploymentView,
@@ -12616,6 +14267,8 @@ pub enum CliCommand {
     SystemUpdateView,
     SystemUpdateComponentsList,
     SystemVersion,
+    SiloUsersListV1,
+    SiloUserViewV1,
     UserListV1,
     VpcFirewallRulesViewV1,
     VpcFirewallRulesUpdateV1,
@@ -12634,6 +14287,7 @@ pub enum CliCommand {
     VpcSubnetViewV1,
     VpcSubnetUpdateV1,
     VpcSubnetDeleteV1,
+    VpcSubnetListNetworkInterfacesV1,
     VpcListV1,
     VpcCreateV1,
     VpcViewV1,
@@ -12799,8 +14453,13 @@ impl CliCommand {
             CliCommand::DiskCreateV1,
             CliCommand::DiskViewV1,
             CliCommand::DiskDeleteV1,
+            CliCommand::DiskMetricsListV1,
             CliCommand::GroupListV1,
             CliCommand::GroupView,
+            CliCommand::ImageListV1,
+            CliCommand::ImageCreateV1,
+            CliCommand::ImageViewV1,
+            CliCommand::ImageDeleteV1,
             CliCommand::InstanceListV1,
             CliCommand::InstanceCreateV1,
             CliCommand::InstanceViewV1,
@@ -12808,6 +14467,7 @@ impl CliCommand {
             CliCommand::InstanceDiskListV1,
             CliCommand::InstanceDiskAttachV1,
             CliCommand::InstanceDiskDetachV1,
+            CliCommand::InstanceExternalIpListV1,
             CliCommand::InstanceMigrateV1,
             CliCommand::InstanceRebootV1,
             CliCommand::InstanceSerialConsoleV1,
@@ -12849,10 +14509,34 @@ impl CliCommand {
             CliCommand::SledListV1,
             CliCommand::SledViewV1,
             CliCommand::SledPhysicalDiskListV1,
+            CliCommand::SiloIdentityProviderListV1,
+            CliCommand::LocalIdpUserCreateV1,
+            CliCommand::LocalIdpUserDeleteV1,
+            CliCommand::LocalIdpUserSetPasswordV1,
+            CliCommand::SamlIdentityProviderCreateV1,
+            CliCommand::SamlIdentityProviderViewV1,
+            CliCommand::IpPoolListV1,
+            CliCommand::IpPoolCreateV1,
+            CliCommand::IpPoolViewV1,
+            CliCommand::IpPoolUpdateV1,
+            CliCommand::IpPoolDeleteV1,
+            CliCommand::IpPoolRangeListV1,
+            CliCommand::IpPoolRangeAddV1,
+            CliCommand::IpPoolRangeRemoveV1,
+            CliCommand::IpPoolServiceViewV1,
+            CliCommand::IpPoolServiceRangeListV1,
+            CliCommand::IpPoolServiceRangeAddV1,
+            CliCommand::IpPoolServiceRangeRemoveV1,
             CliCommand::SystemPolicyViewV1,
             CliCommand::SystemPolicyUpdateV1,
             CliCommand::SagaListV1,
             CliCommand::SagaViewV1,
+            CliCommand::SiloListV1,
+            CliCommand::SiloCreateV1,
+            CliCommand::SiloViewV1,
+            CliCommand::SiloDeleteV1,
+            CliCommand::SiloPolicyViewV1,
+            CliCommand::SiloPolicyUpdateV1,
             CliCommand::SystemComponentVersionList,
             CliCommand::UpdateDeploymentsList,
             CliCommand::UpdateDeploymentView,
@@ -12863,6 +14547,8 @@ impl CliCommand {
             CliCommand::SystemUpdateView,
             CliCommand::SystemUpdateComponentsList,
             CliCommand::SystemVersion,
+            CliCommand::SiloUsersListV1,
+            CliCommand::SiloUserViewV1,
             CliCommand::UserListV1,
             CliCommand::VpcFirewallRulesViewV1,
             CliCommand::VpcFirewallRulesUpdateV1,
@@ -12881,6 +14567,7 @@ impl CliCommand {
             CliCommand::VpcSubnetViewV1,
             CliCommand::VpcSubnetUpdateV1,
             CliCommand::VpcSubnetDeleteV1,
+            CliCommand::VpcSubnetListNetworkInterfacesV1,
             CliCommand::VpcListV1,
             CliCommand::VpcCreateV1,
             CliCommand::VpcViewV1,
