@@ -50,6 +50,8 @@ jobs:
         run: cargo --version
       - name: Report rustc version
         run: rustc --version
+      - name: Check generation
+        run: cargo xtask generate --check
       - name: Build
         run: cargo build ${{ matrix.feature_flags }} --locked --all-targets --verbose
       - name: Run tests
