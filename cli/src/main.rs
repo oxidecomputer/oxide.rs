@@ -62,7 +62,7 @@ async fn main() {
             if path.peek().is_some() {
                 node = node.children.entry(ss).or_default();
             } else {
-                assert!(node.children.get(ss).is_none());
+                assert!(node.children.get(ss).is_none(), "{}", subcmd_str);
                 node.children.insert(
                     ss,
                     Tree {
@@ -235,7 +235,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CertificateCreateV1 => Some("certificate create"),
         CliCommand::CertificateViewV1 => Some("certificate view"),
         CliCommand::CertificateDeleteV1 => Some("certificate delete"),
-        CliCommand::PhysicalDiskListV1 => Some("certificate list"),
+        CliCommand::PhysicalDiskListV1 => Some("physical-disk list"),
         CliCommand::RackListV1 => Some("rack list"),
         CliCommand::RackViewV1 => Some("rack view"),
         CliCommand::SledListV1 => Some("sled list"),
