@@ -15617,9 +15617,9 @@ pub trait ClientHiddenExt {
     fn login_spoof(&self) -> builder::LoginSpoof;
     #[doc = "Sends a `POST` request to `/logout`\n\n```ignore\nlet response = client.logout()\n    .send()\n    .await;\n```"]
     fn logout(&self) -> builder::Logout;
-    #[doc = "Fetch the user associated with the current session\n\nSends a `GET` request to `/session/me`\n\n```ignore\nlet response = client.session_me()\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch the user associated with the current session\n\nUse `GET /v1/me` instead\n\nSends a `GET` request to `/session/me`\n\n```ignore\nlet response = client.session_me()\n    .send()\n    .await;\n```"]
     fn session_me(&self) -> builder::SessionMe;
-    #[doc = "Fetch the silo\u{a0}groups the current user belongs to\n\nSends a `GET` request to `/session/me/groups`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.session_me_groups()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch the silo\u{a0}groups the current user belongs to\n\nUse `GET /v1/me/groups` instead\n\nSends a `GET` request to `/session/me/groups`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.session_me_groups()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn session_me_groups(&self) -> builder::SessionMeGroups;
 }
 
@@ -16232,10 +16232,22 @@ pub trait ClientSessionExt {
     fn session_sshkey_list(&self) -> builder::SessionSshkeyList;
     #[doc = "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.\n\nSends a `POST` request to `/session/me/sshkeys`\n\n```ignore\nlet response = client.session_sshkey_create()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn session_sshkey_create(&self) -> builder::SessionSshkeyCreate;
-    #[doc = "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.\n\nSends a `GET` request to `/session/me/sshkeys/{ssh_key_name}`\n\n```ignore\nlet response = client.session_sshkey_view()\n    .ssh_key_name(ssh_key_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user. Use `GET /v1/me/ssh-keys` instead\n\nSends a `GET` request to `/session/me/sshkeys/{ssh_key_name}`\n\n```ignore\nlet response = client.session_sshkey_view()\n    .ssh_key_name(ssh_key_name)\n    .send()\n    .await;\n```"]
     fn session_sshkey_view(&self) -> builder::SessionSshkeyView;
     #[doc = "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.\n\nSends a `DELETE` request to `/session/me/sshkeys/{ssh_key_name}`\n\n```ignore\nlet response = client.session_sshkey_delete()\n    .ssh_key_name(ssh_key_name)\n    .send()\n    .await;\n```"]
     fn session_sshkey_delete(&self) -> builder::SessionSshkeyDelete;
+    #[doc = "Fetch the user associated with the current session\n\nSends a `GET` request to `/v1/me`\n\n```ignore\nlet response = client.current_user_view_v1()\n    .send()\n    .await;\n```"]
+    fn current_user_view_v1(&self) -> builder::CurrentUserViewV1;
+    #[doc = "Fetch the silo\u{a0}groups the current user belongs to\n\nSends a `GET` request to `/v1/me/groups`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.current_user_groups_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn current_user_groups_v1(&self) -> builder::CurrentUserGroupsV1;
+    #[doc = "List SSH public keys\n\nLists SSH public keys for the currently authenticated user.\n\nSends a `GET` request to `/v1/me/ssh-keys`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.current_user_ssh_key_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn current_user_ssh_key_list_v1(&self) -> builder::CurrentUserSshKeyListV1;
+    #[doc = "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.\n\nSends a `POST` request to `/v1/me/ssh-keys`\n\n```ignore\nlet response = client.current_user_ssh_key_create_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn current_user_ssh_key_create_v1(&self) -> builder::CurrentUserSshKeyCreateV1;
+    #[doc = "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.\n\nSends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`\n\n```ignore\nlet response = client.current_user_ssh_key_view_v1()\n    .ssh_key(ssh_key)\n    .send()\n    .await;\n```"]
+    fn current_user_ssh_key_view_v1(&self) -> builder::CurrentUserSshKeyViewV1;
+    #[doc = "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.\n\nSends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`\n\n```ignore\nlet response = client.current_user_ssh_key_delete_v1()\n    .ssh_key(ssh_key)\n    .send()\n    .await;\n```"]
+    fn current_user_ssh_key_delete_v1(&self) -> builder::CurrentUserSshKeyDeleteV1;
 }
 
 impl ClientSessionExt for Client {
@@ -16253,6 +16265,30 @@ impl ClientSessionExt for Client {
 
     fn session_sshkey_delete(&self) -> builder::SessionSshkeyDelete {
         builder::SessionSshkeyDelete::new(self)
+    }
+
+    fn current_user_view_v1(&self) -> builder::CurrentUserViewV1 {
+        builder::CurrentUserViewV1::new(self)
+    }
+
+    fn current_user_groups_v1(&self) -> builder::CurrentUserGroupsV1 {
+        builder::CurrentUserGroupsV1::new(self)
+    }
+
+    fn current_user_ssh_key_list_v1(&self) -> builder::CurrentUserSshKeyListV1 {
+        builder::CurrentUserSshKeyListV1::new(self)
+    }
+
+    fn current_user_ssh_key_create_v1(&self) -> builder::CurrentUserSshKeyCreateV1 {
+        builder::CurrentUserSshKeyCreateV1::new(self)
+    }
+
+    fn current_user_ssh_key_view_v1(&self) -> builder::CurrentUserSshKeyViewV1 {
+        builder::CurrentUserSshKeyViewV1::new(self)
+    }
+
+    fn current_user_ssh_key_delete_v1(&self) -> builder::CurrentUserSshKeyDeleteV1 {
+        builder::CurrentUserSshKeyDeleteV1::new(self)
     }
 }
 
@@ -16563,8 +16599,8 @@ pub trait ClientSystemExt {
     fn system_update_components_list(&self) -> builder::SystemUpdateComponentsList;
     #[doc = "View system version and update status\n\nSends a `GET` request to `/v1/system/update/version`\n\n```ignore\nlet response = client.system_version()\n    .send()\n    .await;\n```"]
     fn system_version(&self) -> builder::SystemVersion;
-    #[doc = "List users in a silo\n\nSends a `GET` request to `/v1/system/users`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `silo`\n- `sort_by`\n```ignore\nlet response = client.silo_users_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .silo(silo)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn silo_users_list_v1(&self) -> builder::SiloUsersListV1;
+    #[doc = "List users in a silo\n\nSends a `GET` request to `/v1/system/users`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `silo`\n- `sort_by`\n```ignore\nlet response = client.silo_user_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .silo(silo)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn silo_user_list_v1(&self) -> builder::SiloUserListV1;
     #[doc = "Fetch a user\n\nSends a `GET` request to `/v1/system/users/{user_id}`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n```ignore\nlet response = client.silo_user_view_v1()\n    .user_id(user_id)\n    .silo(silo)\n    .send()\n    .await;\n```"]
     fn silo_user_view_v1(&self) -> builder::SiloUserViewV1;
 }
@@ -16946,8 +16982,8 @@ impl ClientSystemExt for Client {
         builder::SystemVersion::new(self)
     }
 
-    fn silo_users_list_v1(&self) -> builder::SiloUsersListV1 {
-        builder::SiloUsersListV1::new(self)
+    fn silo_user_list_v1(&self) -> builder::SiloUserListV1 {
+        builder::SiloUserListV1::new(self)
     }
 
     fn silo_user_view_v1(&self) -> builder::SiloUserViewV1 {
@@ -33544,6 +33580,459 @@ pub mod builder {
         }
     }
 
+    #[doc = "Builder for [`ClientSessionExt::current_user_view_v1`]\n\n[`ClientSessionExt::current_user_view_v1`]: super::ClientSessionExt::current_user_view_v1"]
+    #[derive(Debug, Clone)]
+    pub struct CurrentUserViewV1<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> CurrentUserViewV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client }
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/me`"]
+        pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/me", client.baseurl,);
+            let request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSessionExt::current_user_groups_v1`]\n\n[`ClientSessionExt::current_user_groups_v1`]: super::ClientSessionExt::current_user_groups_v1"]
+    #[derive(Debug, Clone)]
+    pub struct CurrentUserGroupsV1<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> CurrentUserGroupsV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/me/groups`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::GroupResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/me/groups", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/me/groups`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Group, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_list_v1`]\n\n[`ClientSessionExt::current_user_ssh_key_list_v1`]: super::ClientSessionExt::current_user_ssh_key_list_v1"]
+    #[derive(Debug, Clone)]
+    pub struct CurrentUserSshKeyListV1<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> CurrentUserSshKeyListV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/me/ssh-keys`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SshKeyResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/me/ssh-keys", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/me/ssh-keys`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SshKey, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_create_v1`]\n\n[`ClientSessionExt::current_user_ssh_key_create_v1`]: super::ClientSessionExt::current_user_ssh_key_create_v1"]
+    #[derive(Debug, Clone)]
+    pub struct CurrentUserSshKeyCreateV1<'a> {
+        client: &'a super::Client,
+        body: Result<types::SshKeyCreate, String>,
+    }
+
+    impl<'a> CurrentUserSshKeyCreateV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SshKeyCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `SshKeyCreate` for body failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/me/ssh-keys`"]
+        pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/me/ssh-keys", client.baseurl,);
+            let request = client.client.post(url).json(&body).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_view_v1`]\n\n[`ClientSessionExt::current_user_ssh_key_view_v1`]: super::ClientSessionExt::current_user_ssh_key_view_v1"]
+    #[derive(Debug, Clone)]
+    pub struct CurrentUserSshKeyViewV1<'a> {
+        client: &'a super::Client,
+        ssh_key: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> CurrentUserSshKeyViewV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                ssh_key: Err("ssh_key was not initialized".to_string()),
+            }
+        }
+
+        pub fn ssh_key<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.ssh_key = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for ssh_key failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`"]
+        pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
+            let Self { client, ssh_key } = self;
+            let ssh_key = ssh_key.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/me/ssh-keys/{}",
+                client.baseurl,
+                encode_path(&ssh_key.to_string()),
+            );
+            let request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_delete_v1`]\n\n[`ClientSessionExt::current_user_ssh_key_delete_v1`]: super::ClientSessionExt::current_user_ssh_key_delete_v1"]
+    #[derive(Debug, Clone)]
+    pub struct CurrentUserSshKeyDeleteV1<'a> {
+        client: &'a super::Client,
+        ssh_key: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> CurrentUserSshKeyDeleteV1<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                ssh_key: Err("ssh_key was not initialized".to_string()),
+            }
+        }
+
+        pub fn ssh_key<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.ssh_key = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for ssh_key failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, ssh_key } = self;
+            let ssh_key = ssh_key.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/me/ssh-keys/{}",
+                client.baseurl,
+                encode_path(&ssh_key.to_string()),
+            );
+            let request = client.client.delete(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_list_v1`]\n\n[`ClientInstancesExt::instance_network_interface_list_v1`]: super::ClientInstancesExt::instance_network_interface_list_v1"]
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceListV1<'a> {
@@ -39507,9 +39996,9 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::silo_users_list_v1`]\n\n[`ClientSystemExt::silo_users_list_v1`]: super::ClientSystemExt::silo_users_list_v1"]
+    #[doc = "Builder for [`ClientSystemExt::silo_user_list_v1`]\n\n[`ClientSystemExt::silo_user_list_v1`]: super::ClientSystemExt::silo_user_list_v1"]
     #[derive(Debug, Clone)]
-    pub struct SiloUsersListV1<'a> {
+    pub struct SiloUserListV1<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
@@ -39517,7 +40006,7 @@ pub mod builder {
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
-    impl<'a> SiloUsersListV1<'a> {
+    impl<'a> SiloUserListV1<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,

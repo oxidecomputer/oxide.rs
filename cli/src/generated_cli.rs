@@ -4822,7 +4822,8 @@ impl Cli {
     }
 
     pub fn cli_session_me() -> clap::Command {
-        clap::Command::new("").about("Fetch the user associated with the current session")
+        clap::Command::new("")
+            .about("Fetch the user associated with the current session\n\nUse `GET /v1/me` instead")
     }
 
     pub async fn execute_session_me(&self, matches: &clap::ArgMatches) {
@@ -4853,7 +4854,10 @@ impl Cli {
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
-            .about("Fetch the silo\u{a0}groups the current user belongs to")
+            .about(
+                "Fetch the silo\u{a0}groups the current user belongs to\n\nUse `GET \
+                 /v1/me/groups` instead",
+            )
     }
 
     pub async fn execute_session_me_groups(&self, matches: &clap::ArgMatches) {
@@ -4982,7 +4986,7 @@ impl Cli {
             )
             .about(
                 "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently \
-                 authenticated user.",
+                 authenticated user. Use `GET /v1/me/ssh-keys` instead",
             )
     }
 
@@ -8468,6 +8472,219 @@ impl Cli {
         }
     }
 
+    pub fn cli_current_user_view_v1() -> clap::Command {
+        clap::Command::new("").about("Fetch the user associated with the current session")
+    }
+
+    pub async fn execute_current_user_view_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.current_user_view_v1();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_current_user_groups_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort_by")
+                    .long("sort_by")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::IdSortMode)),
+            )
+            .about("Fetch the silo\u{a0}groups the current user belongs to")
+    }
+
+    pub async fn execute_current_user_groups_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.current_user_groups_v1();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+            request = request.sort_by(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_current_user_ssh_key_list_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort_by")
+                    .long("sort_by")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+            )
+            .about(
+                "List SSH public keys\n\nLists SSH public keys for the currently authenticated \
+                 user.",
+            )
+    }
+
+    pub async fn execute_current_user_ssh_key_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.current_user_ssh_key_list_v1();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+            request = request.sort_by(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_current_user_ssh_key_create_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::Name)),
+            )
+            .arg(
+                clap::Arg::new("public_key")
+                    .long("public_key")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("SSH public key, e.g., `\"ssh-ed25519 AAAAC3NzaC...\"`"),
+            )
+            .about(
+                "Create an SSH public key\n\nCreate an SSH public key for the currently \
+                 authenticated user.",
+            )
+    }
+
+    pub async fn execute_current_user_ssh_key_create_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.current_user_ssh_key_create_v1();
+        let request = request.body({
+            let mut body = types::SshKeyCreate::builder();
+            if let Some(value) = matches.get_one::<String>("description") {
+                body = body.description(value.clone());
+            }
+            if let Some(value) = matches.get_one::<types::Name>("name") {
+                body = body.name(value.clone());
+            }
+            if let Some(value) = matches.get_one::<String>("public_key") {
+                body = body.public_key(value.clone());
+            }
+            body
+        });
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_current_user_ssh_key_view_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("ssh_key")
+                    .long("ssh_key")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about(
+                "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently \
+                 authenticated user.",
+            )
+    }
+
+    pub async fn execute_current_user_ssh_key_view_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.current_user_ssh_key_view_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("ssh_key") {
+            request = request.ssh_key(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub fn cli_current_user_ssh_key_delete_v1() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("ssh_key")
+                    .long("ssh_key")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .about(
+                "Delete an SSH public key\n\nDelete an SSH public key associated with the \
+                 currently authenticated user.",
+            )
+    }
+
+    pub async fn execute_current_user_ssh_key_delete_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.current_user_ssh_key_delete_v1();
+        if let Some(value) = matches.get_one::<types::NameOrId>("ssh_key") {
+            request = request.ssh_key(value.clone());
+        }
+
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub fn cli_instance_network_interface_list_v1() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -11260,7 +11477,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_silo_users_list_v1() -> clap::Command {
+    pub fn cli_silo_user_list_v1() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("limit")
@@ -11284,8 +11501,8 @@ impl Cli {
             .about("List users in a silo")
     }
 
-    pub async fn execute_silo_users_list_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_users_list_v1();
+    pub async fn execute_silo_user_list_v1(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_user_list_v1();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -13057,6 +13274,12 @@ impl Cli {
             }
             CliCommand::InstanceStartV1 => Self::cli_instance_start_v1(),
             CliCommand::InstanceStopV1 => Self::cli_instance_stop_v1(),
+            CliCommand::CurrentUserViewV1 => Self::cli_current_user_view_v1(),
+            CliCommand::CurrentUserGroupsV1 => Self::cli_current_user_groups_v1(),
+            CliCommand::CurrentUserSshKeyListV1 => Self::cli_current_user_ssh_key_list_v1(),
+            CliCommand::CurrentUserSshKeyCreateV1 => Self::cli_current_user_ssh_key_create_v1(),
+            CliCommand::CurrentUserSshKeyViewV1 => Self::cli_current_user_ssh_key_view_v1(),
+            CliCommand::CurrentUserSshKeyDeleteV1 => Self::cli_current_user_ssh_key_delete_v1(),
             CliCommand::InstanceNetworkInterfaceListV1 => {
                 Self::cli_instance_network_interface_list_v1()
             }
@@ -13142,7 +13365,7 @@ impl Cli {
             CliCommand::SystemUpdateView => Self::cli_system_update_view(),
             CliCommand::SystemUpdateComponentsList => Self::cli_system_update_components_list(),
             CliCommand::SystemVersion => Self::cli_system_version(),
-            CliCommand::SiloUsersListV1 => Self::cli_silo_users_list_v1(),
+            CliCommand::SiloUserListV1 => Self::cli_silo_user_list_v1(),
             CliCommand::SiloUserViewV1 => Self::cli_silo_user_view_v1(),
             CliCommand::UserListV1 => Self::cli_user_list_v1(),
             CliCommand::VpcFirewallRulesViewV1 => Self::cli_vpc_firewall_rules_view_v1(),
@@ -13709,6 +13932,24 @@ impl Cli {
             CliCommand::InstanceStopV1 => {
                 self.execute_instance_stop_v1(matches).await;
             }
+            CliCommand::CurrentUserViewV1 => {
+                self.execute_current_user_view_v1(matches).await;
+            }
+            CliCommand::CurrentUserGroupsV1 => {
+                self.execute_current_user_groups_v1(matches).await;
+            }
+            CliCommand::CurrentUserSshKeyListV1 => {
+                self.execute_current_user_ssh_key_list_v1(matches).await;
+            }
+            CliCommand::CurrentUserSshKeyCreateV1 => {
+                self.execute_current_user_ssh_key_create_v1(matches).await;
+            }
+            CliCommand::CurrentUserSshKeyViewV1 => {
+                self.execute_current_user_ssh_key_view_v1(matches).await;
+            }
+            CliCommand::CurrentUserSshKeyDeleteV1 => {
+                self.execute_current_user_ssh_key_delete_v1(matches).await;
+            }
             CliCommand::InstanceNetworkInterfaceListV1 => {
                 self.execute_instance_network_interface_list_v1(matches)
                     .await;
@@ -13933,8 +14174,8 @@ impl Cli {
             CliCommand::SystemVersion => {
                 self.execute_system_version(matches).await;
             }
-            CliCommand::SiloUsersListV1 => {
-                self.execute_silo_users_list_v1(matches).await;
+            CliCommand::SiloUserListV1 => {
+                self.execute_silo_user_list_v1(matches).await;
             }
             CliCommand::SiloUserViewV1 => {
                 self.execute_silo_user_view_v1(matches).await;
@@ -14194,6 +14435,12 @@ pub enum CliCommand {
     InstanceSerialConsoleStreamV1,
     InstanceStartV1,
     InstanceStopV1,
+    CurrentUserViewV1,
+    CurrentUserGroupsV1,
+    CurrentUserSshKeyListV1,
+    CurrentUserSshKeyCreateV1,
+    CurrentUserSshKeyViewV1,
+    CurrentUserSshKeyDeleteV1,
     InstanceNetworkInterfaceListV1,
     InstanceNetworkInterfaceCreateV1,
     InstanceNetworkInterfaceViewV1,
@@ -14267,7 +14514,7 @@ pub enum CliCommand {
     SystemUpdateView,
     SystemUpdateComponentsList,
     SystemVersion,
-    SiloUsersListV1,
+    SiloUserListV1,
     SiloUserViewV1,
     UserListV1,
     VpcFirewallRulesViewV1,
@@ -14474,6 +14721,12 @@ impl CliCommand {
             CliCommand::InstanceSerialConsoleStreamV1,
             CliCommand::InstanceStartV1,
             CliCommand::InstanceStopV1,
+            CliCommand::CurrentUserViewV1,
+            CliCommand::CurrentUserGroupsV1,
+            CliCommand::CurrentUserSshKeyListV1,
+            CliCommand::CurrentUserSshKeyCreateV1,
+            CliCommand::CurrentUserSshKeyViewV1,
+            CliCommand::CurrentUserSshKeyDeleteV1,
             CliCommand::InstanceNetworkInterfaceListV1,
             CliCommand::InstanceNetworkInterfaceCreateV1,
             CliCommand::InstanceNetworkInterfaceViewV1,
@@ -14547,7 +14800,7 @@ impl CliCommand {
             CliCommand::SystemUpdateView,
             CliCommand::SystemUpdateComponentsList,
             CliCommand::SystemVersion,
-            CliCommand::SiloUsersListV1,
+            CliCommand::SiloUserListV1,
             CliCommand::SiloUserViewV1,
             CliCommand::UserListV1,
             CliCommand::VpcFirewallRulesViewV1,
