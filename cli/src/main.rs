@@ -180,33 +180,73 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SiloPolicyUpdateV1 => Some("silo policy update"),
         CliCommand::SiloUsersListV1 => Some("silo user list"),
         CliCommand::SiloUserViewV1 => Some("silo user view"),
+
+        CliCommand::UserListV1 => Some("user list"),
+
+        // VPCs
+        CliCommand::VpcListV1 => Some("vpc list"),
+        CliCommand::VpcCreateV1 => Some("vpc create"),
+        CliCommand::VpcViewV1 => Some("vpc view"),
+        CliCommand::VpcUpdateV1 => Some("vpc update"),
+        CliCommand::VpcDeleteV1 => Some("vpc delete"),
+
+        CliCommand::VpcFirewallRulesViewV1 => Some("vpc firewall-rules view"),
+        CliCommand::VpcFirewallRulesUpdateV1 => Some("vpc firewall-rules update"),
+
+        CliCommand::VpcRouterListV1 => Some("vpc router list"),
+        CliCommand::VpcRouterCreateV1 => Some("vpc router create"),
+        CliCommand::VpcRouterViewV1 => Some("vpc router view"),
+        CliCommand::VpcRouterUpdateV1 => Some("vpc router update"),
+        CliCommand::VpcRouterDeleteV1 => Some("vpc router delete"),
+
+        CliCommand::VpcRouterRouteListV1 => Some("vpc router route list"),
+        CliCommand::VpcRouterRouteCreateV1 => Some("vpc router route create"),
+        CliCommand::VpcRouterRouteViewV1 => Some("vpc router route view"),
+        CliCommand::VpcRouterRouteUpdateV1 => Some("vpc router route update"),
+        CliCommand::VpcRouterRouteDeleteV1 => Some("vpc router route delete"),
+
+        CliCommand::VpcSubnetListV1 => Some("vpc subnet list"),
+        CliCommand::VpcSubnetCreateV1 => Some("vpc subnet create"),
+        CliCommand::VpcSubnetViewV1 => Some("vpc subnet view"),
+        CliCommand::VpcSubnetUpdateV1 => Some("vpc subnet update"),
+        CliCommand::VpcSubnetDeleteV1 => Some("vpc subnet delete"),
         CliCommand::VpcSubnetListNetworkInterfacesV1 => Some("vpc subnet nic list"),
 
-        CliCommand::UserListV1
-        | CliCommand::VpcFirewallRulesViewV1
-        | CliCommand::VpcFirewallRulesUpdateV1
-        | CliCommand::VpcRouterRouteListV1
-        | CliCommand::VpcRouterRouteCreateV1
-        | CliCommand::VpcRouterRouteViewV1
-        | CliCommand::VpcRouterRouteUpdateV1
-        | CliCommand::VpcRouterRouteDeleteV1
-        | CliCommand::VpcRouterListV1
-        | CliCommand::VpcRouterCreateV1
-        | CliCommand::VpcRouterViewV1
-        | CliCommand::VpcRouterUpdateV1
-        | CliCommand::VpcRouterDeleteV1
-        | CliCommand::VpcSubnetListV1
-        | CliCommand::VpcSubnetCreateV1
-        | CliCommand::VpcSubnetViewV1
-        | CliCommand::VpcSubnetUpdateV1
-        | CliCommand::VpcSubnetDeleteV1
-        | CliCommand::VpcListV1
-        | CliCommand::VpcCreateV1
-        | CliCommand::VpcViewV1
-        | CliCommand::VpcUpdateV1
-        | CliCommand::VpcDeleteV1 => None,
+        CliCommand::DiskListV1 => Some("disk list"),
+        CliCommand::DiskCreateV1 => Some("disk create"),
+        CliCommand::DiskViewV1 => Some("disk view"),
+        CliCommand::DiskDeleteV1 => Some("disk delete"),
+        CliCommand::GroupListV1 => Some("group list"),
+        CliCommand::InstanceDiskListV1 => Some("instance disk list"),
+        CliCommand::InstanceDiskAttachV1 => Some("instance disk attach"),
+        CliCommand::InstanceDiskDetachV1 => Some("instance disk detach"),
+        CliCommand::InstanceNetworkInterfaceListV1 => Some("instance nic list"),
+        CliCommand::InstanceNetworkInterfaceCreateV1 => Some("instance nic create"),
+        CliCommand::InstanceNetworkInterfaceViewV1 => Some("instance nic view"),
+        CliCommand::InstanceNetworkInterfaceUpdateV1 => Some("instance nic update"),
+        CliCommand::InstanceNetworkInterfaceDeleteV1 => Some("instance nic delete"),
+        CliCommand::PolicyViewV1 => Some("policy view"),
+        CliCommand::PolicyUpdateV1 => Some("policy update"),
+        CliCommand::SnapshotListV1 => Some("snapshot list"),
+        CliCommand::SnapshotCreateV1 => Some("snapshot create"),
+        CliCommand::SnapshotViewV1 => Some("snapshot view"),
+        CliCommand::SnapshotDeleteV1 => Some("snapshot delete"),
+        CliCommand::CertificateListV1 => Some("certificate list"),
+        CliCommand::CertificateCreateV1 => Some("certificate create"),
+        CliCommand::CertificateViewV1 => Some("certificate view"),
+        CliCommand::CertificateDeleteV1 => Some("certificate delete"),
+        CliCommand::PhysicalDiskListV1 => Some("certificate list"),
+        CliCommand::RackListV1 => Some("rack list"),
+        CliCommand::RackViewV1 => Some("rack view"),
+        CliCommand::SledListV1 => Some("sled list"),
+        CliCommand::SledViewV1 => Some("sled view"),
+        CliCommand::SledPhysicalDiskListV1 => Some("sled disk-led"),
+        CliCommand::SystemPolicyViewV1 => Some("system policy view"),
+        CliCommand::SystemPolicyUpdateV1 => Some("system policy update"),
+        CliCommand::SagaListV1 => Some("saga list"),
+        CliCommand::SagaViewV1 => Some("saga view"),
 
-        // TODO
+        // Pre-v1 operations
         CliCommand::DiskViewById
         | CliCommand::ImageViewById
         | CliCommand::InstanceViewById
@@ -358,40 +398,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::PhysicalDiskList
         | CliCommand::SledPhysicalDiskList
         | CliCommand::SystemMetric
-        | CliCommand::DiskListV1
-        | CliCommand::DiskCreateV1
-        | CliCommand::DiskViewV1
-        | CliCommand::DiskDeleteV1
-        | CliCommand::GroupListV1
         | CliCommand::GroupView
-        | CliCommand::InstanceDiskListV1
-        | CliCommand::InstanceDiskAttachV1
-        | CliCommand::InstanceDiskDetachV1
-        | CliCommand::InstanceNetworkInterfaceListV1
-        | CliCommand::InstanceNetworkInterfaceCreateV1
-        | CliCommand::InstanceNetworkInterfaceViewV1
-        | CliCommand::InstanceNetworkInterfaceUpdateV1
-        | CliCommand::InstanceNetworkInterfaceDeleteV1
-        | CliCommand::PolicyViewV1
-        | CliCommand::PolicyUpdateV1
-        | CliCommand::SnapshotListV1
-        | CliCommand::SnapshotCreateV1
-        | CliCommand::SnapshotViewV1
-        | CliCommand::SnapshotDeleteV1
-        | CliCommand::CertificateListV1
-        | CliCommand::CertificateCreateV1
-        | CliCommand::CertificateViewV1
-        | CliCommand::CertificateDeleteV1
-        | CliCommand::PhysicalDiskListV1
-        | CliCommand::RackListV1
-        | CliCommand::RackViewV1
-        | CliCommand::SledListV1
-        | CliCommand::SledViewV1
-        | CliCommand::SledPhysicalDiskListV1
-        | CliCommand::SystemPolicyViewV1
-        | CliCommand::SystemPolicyUpdateV1
-        | CliCommand::SagaListV1
-        | CliCommand::SagaViewV1
         | CliCommand::SystemComponentVersionList
         | CliCommand::UpdateDeploymentsList
         | CliCommand::UpdateDeploymentView
