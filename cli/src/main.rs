@@ -62,7 +62,11 @@ async fn main() {
             if path.peek().is_some() {
                 node = node.children.entry(ss).or_default();
             } else {
-                assert!(node.children.get(ss).is_none(), "{}", subcmd_str);
+                assert!(
+                    node.children.get(ss).is_none(),
+                    "two identical subcommands {}",
+                    subcmd_str,
+                );
                 node.children.insert(
                     ss,
                     Tree {
@@ -178,7 +182,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SiloDeleteV1 => Some("silo delete"),
         CliCommand::SiloPolicyViewV1 => Some("silo policy view"),
         CliCommand::SiloPolicyUpdateV1 => Some("silo policy update"),
-        CliCommand::SiloUsersListV1 => Some("silo user list"),
+        CliCommand::SiloUserListV1 => Some("silo user list"),
         CliCommand::SiloUserViewV1 => Some("silo user view"),
 
         CliCommand::UserListV1 => Some("user list"),
@@ -245,6 +249,13 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SystemPolicyUpdateV1 => Some("system policy update"),
         CliCommand::SagaListV1 => Some("saga list"),
         CliCommand::SagaViewV1 => Some("saga view"),
+
+        CliCommand::CurrentUserViewV1 => Some("current-user view"),
+        CliCommand::CurrentUserGroupsV1 => Some("current-user groups"),
+        CliCommand::CurrentUserSshKeyListV1 => Some("current-user ssh-key list"),
+        CliCommand::CurrentUserSshKeyCreateV1 => Some("current-user ssh-key create"),
+        CliCommand::CurrentUserSshKeyViewV1 => Some("current-user ssh-key view"),
+        CliCommand::CurrentUserSshKeyDeleteV1 => Some("current-user ssh-key delete"),
 
         // Pre-v1 operations
         CliCommand::DiskViewById
