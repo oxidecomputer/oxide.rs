@@ -170,7 +170,19 @@ impl CmdApi {
             req = req.header(key, value);
         }
 
-        let resp = req.send().await?.error_for_status()?;
+        let resp = req.send().await?;
+
+        if !resp.status().is_success() {
+            let status = resp.status();
+            let v = resp.json::<serde_json::Value>().await?;
+            println!(
+                "error; status code: {} {}",
+                status.as_u16(),
+                status.canonical_reason().unwrap_or_default()
+            );
+            println!("{}", serde_json::to_string_pretty(&v).unwrap());
+            return Err(anyhow!("error"));
+        }
 
         // Print the response headers if requested.
         if self.include {
