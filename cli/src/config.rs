@@ -5,8 +5,8 @@
 // Copyright 2023 Oxide Computer Company
 
 use std::collections::HashMap;
-use std::fs::{self, OpenOptions};
-use std::io::prelude::*;
+use std::fs::{create_dir_all, OpenOptions};
+use std::io::Read;
 
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
@@ -47,7 +47,7 @@ impl Default for Config {
         let mut dir = dirs::home_dir().unwrap();
         dir.push(".config");
         dir.push("oxide");
-        fs::create_dir_all(&dir).unwrap();
+        create_dir_all(&dir).unwrap();
 
         let mut hosts_path = OpenOptions::new()
             .write(true)
@@ -73,7 +73,7 @@ impl Config {
         let mut dir = dirs::home_dir().unwrap();
         dir.push(".config");
         dir.push("oxide");
-        fs::create_dir_all(&dir).unwrap();
+        create_dir_all(&dir).unwrap();
 
         let mut hosts_path = OpenOptions::new()
             .write(true)
