@@ -162,34 +162,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cli"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "dialoguer",
- "dirs",
- "futures",
- "http",
- "oauth2",
- "open",
- "oxide-api",
- "pretty_assertions",
- "reqwest",
- "schemars",
- "serde",
- "serde_json",
- "serial_test",
- "tabwriter",
- "tokio",
- "toml 0.7.3",
- "toml_edit",
- "url",
- "uuid",
-]
-
-[[package]]
 name = "codespan-reporting"
 version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1070,6 +1042,34 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "628223faebab4e3e40667ee0b2336d34a5b960ff60ea743ddfdbcf7770bcfb66"
 dependencies = [
  "winapi",
+]
+
+[[package]]
+name = "oxide"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "dialoguer",
+ "dirs",
+ "futures",
+ "http",
+ "oauth2",
+ "open",
+ "oxide-api",
+ "pretty_assertions",
+ "reqwest",
+ "schemars",
+ "serde",
+ "serde_json",
+ "serial_test",
+ "tabwriter",
+ "tokio",
+ "toml 0.7.3",
+ "toml_edit",
+ "url",
+ "uuid",
 ]
 
 [[package]]
