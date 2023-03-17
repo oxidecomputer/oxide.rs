@@ -388,7 +388,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -508,7 +508,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -654,7 +654,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -826,7 +826,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -1119,7 +1119,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -1348,7 +1348,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -1687,7 +1687,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -1957,7 +1957,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -2628,7 +2628,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -3235,7 +3235,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -3515,7 +3515,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -3932,7 +3932,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -4302,7 +4302,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -4633,7 +4633,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -5030,7 +5030,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -5274,7 +5274,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -5650,7 +5650,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -5817,7 +5817,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -5921,7 +5921,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -6013,7 +6013,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -6367,7 +6367,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -6509,7 +6509,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -6553,7 +6553,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -7210,7 +7210,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -7612,7 +7612,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -7878,7 +7878,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -8677,7 +8677,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -9038,7 +9038,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -9205,7 +9205,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -9520,7 +9520,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -9825,7 +9825,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -9980,7 +9980,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -10340,7 +10340,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -10382,7 +10382,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -10687,7 +10687,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -10782,7 +10782,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -10865,7 +10865,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -11125,7 +11125,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -11308,7 +11308,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -11357,7 +11357,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -12073,7 +12073,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -12390,7 +12390,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -12721,7 +12721,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -13076,7 +13076,7 @@ impl Cli {
         let result = request.send().await;
         match result {
             Ok(r) => {
-                todo!()
+                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
