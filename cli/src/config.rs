@@ -4,7 +4,9 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::HashMap, fs::read_to_string};
+use std::collections::HashMap;
+use std::fs::{self, OpenOptions};
+use std::io::prelude::*;
 
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
@@ -45,10 +47,16 @@ impl Default for Config {
         let mut dir = dirs::home_dir().unwrap();
         dir.push(".config");
         dir.push("oxide");
-        let hosts_path = dir.join("hosts.toml");
+        fs::create_dir_all(&dir).unwrap();
 
-        let hosts = if let Ok(hosts_content) = read_to_string(hosts_path) {
-            toml::from_str(&hosts_content).unwrap()
+        let mut hosts_path = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .open(dir.join("hosts.toml"))
+            .unwrap();
+        let mut contents = String::new();
+        let hosts = if let Ok(_) = hosts_path.read_to_string(&mut contents) {
+            toml::from_str(&contents).unwrap()
         } else {
             Default::default()
         };
@@ -65,10 +73,16 @@ impl Config {
         let mut dir = dirs::home_dir().unwrap();
         dir.push(".config");
         dir.push("oxide");
-        let hosts_path = dir.join("hosts.toml");
+        fs::create_dir_all(&dir).unwrap();
 
-        let mut hosts = if let Ok(hosts_content) = read_to_string(&hosts_path) {
-            hosts_content.parse::<toml_edit::Document>()?
+        let mut hosts_path = OpenOptions::new()
+            .write(true)
+            .create(true)
+            .open(dir.join("hosts.toml"))
+            .unwrap();
+        let mut contents = String::new();
+        let mut hosts = if let Ok(_) = hosts_path.read_to_string(&mut contents) {
+            contents.parse::<toml_edit::Document>()?
         } else {
             Default::default()
         };
@@ -92,6 +106,7 @@ impl Config {
             table.insert("default", toml_edit::value(default));
         }
 
+        let hosts_path = dir.join("hosts.toml");
         std::fs::write(hosts_path, hosts.to_string())?;
 
         Ok(())
