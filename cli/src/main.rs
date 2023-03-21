@@ -250,7 +250,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CurrentUserSshKeyDelete => Some("current-user ssh-key delete"),
 
         // Pre-v1 operations
-        | CliCommand::DeviceAccessToken
+        CliCommand::DeviceAccessToken
         | CliCommand::DeviceAuthConfirm
         | CliCommand::DeviceAuthRequest
         | CliCommand::GroupView
