@@ -168,16 +168,16 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::IpPoolServiceRangeList => Some("ip-pool service range list"),
         CliCommand::IpPoolServiceRangeAdd => Some("ip-pool service range add"),
         CliCommand::IpPoolServiceRangeRemove => Some("ip-pool service remove"),
-        CliCommand::SiloListV1 => Some("silo list"),
-        CliCommand::SiloCreateV1 => Some("silo create"),
-        CliCommand::SiloViewV1 => Some("silo view"),
-        CliCommand::SiloDeleteV1 => Some("silo delete"),
-        CliCommand::SiloPolicyViewV1 => Some("silo policy view"),
-        CliCommand::SiloPolicyUpdateV1 => Some("silo policy update"),
-        CliCommand::SiloUserListV1 => Some("silo user list"),
-        CliCommand::SiloUserViewV1 => Some("silo user view"),
+        CliCommand::SiloList => Some("silo list"),
+        CliCommand::SiloCreate => Some("silo create"),
+        CliCommand::SiloView => Some("silo view"),
+        CliCommand::SiloDelete => Some("silo delete"),
+        CliCommand::SiloPolicyView => Some("silo policy view"),
+        CliCommand::SiloPolicyUpdate => Some("silo policy update"),
+        CliCommand::SiloUserList => Some("silo user list"),
+        CliCommand::SiloUserView => Some("silo user view"),
 
-        CliCommand::UserListV1 => Some("user list"),
+        CliCommand::UserList => Some("user list"),
 
         // VPCs
         CliCommand::VpcList => Some("vpc list"),
@@ -212,7 +212,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::DiskCreate => Some("disk create"),
         CliCommand::DiskView => Some("disk view"),
         CliCommand::DiskDelete => Some("disk delete"),
-        CliCommand::GroupListV1 => Some("group list"),
+        CliCommand::GroupList => Some("group list"),
         CliCommand::InstanceDiskList => Some("instance disk list"),
         CliCommand::InstanceDiskAttach => Some("instance disk attach"),
         CliCommand::InstanceDiskDetach => Some("instance disk detach"),
@@ -231,16 +231,16 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CertificateCreate => Some("certificate create"),
         CliCommand::CertificateView => Some("certificate view"),
         CliCommand::CertificateDelete => Some("certificate delete"),
-        CliCommand::PhysicalDiskListV1 => Some("physical-disk list"),
-        CliCommand::RackListV1 => Some("rack list"),
-        CliCommand::RackViewV1 => Some("rack view"),
-        CliCommand::SledListV1 => Some("sled list"),
-        CliCommand::SledViewV1 => Some("sled view"),
-        CliCommand::SledPhysicalDiskListV1 => Some("sled disk-led"),
+        CliCommand::PhysicalDiskList => Some("physical-disk list"),
+        CliCommand::RackList => Some("rack list"),
+        CliCommand::RackView => Some("rack view"),
+        CliCommand::SledList => Some("sled list"),
+        CliCommand::SledView => Some("sled view"),
+        CliCommand::SledPhysicalDiskList => Some("sled disk-led"),
         CliCommand::SystemPolicyView => Some("system policy view"),
         CliCommand::SystemPolicyUpdate => Some("system policy update"),
-        CliCommand::SagaListV1 => Some("saga list"),
-        CliCommand::SagaViewV1 => Some("saga view"),
+        CliCommand::SagaList => Some("saga list"),
+        CliCommand::SagaView => Some("saga view"),
 
         CliCommand::CurrentUserView => Some("current-user view"),
         CliCommand::CurrentUserGroups => Some("current-user groups"),
@@ -249,7 +249,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CurrentUserSshKeyView => Some("current-user ssh-key view"),
         CliCommand::CurrentUserSshKeyDelete => Some("current-user ssh-key delete"),
 
-        // Pre-v1 operations
+        // Commands not yet implemented
         CliCommand::DeviceAccessToken
         | CliCommand::DeviceAuthConfirm
         | CliCommand::DeviceAuthRequest
@@ -259,23 +259,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::LoginSamlBegin
         | CliCommand::LoginSpoof
         | CliCommand::Logout
-        | CliCommand::PhysicalDiskList
-        | CliCommand::RackList
-        | CliCommand::RackView
         | CliCommand::RoleList
         | CliCommand::RoleView
-        | CliCommand::SagaList
-        | CliCommand::SagaView
-        | CliCommand::SiloCreate
-        | CliCommand::SiloDelete
-        | CliCommand::SiloList
-        | CliCommand::SiloPolicyUpdate
-        | CliCommand::SiloPolicyView
-        | CliCommand::SiloView
-        | CliCommand::SiloViewById
-        | CliCommand::SledList
-        | CliCommand::SledPhysicalDiskList
-        | CliCommand::SledView
         | CliCommand::SystemComponentVersionList
         | CliCommand::SystemImageCreate
         | CliCommand::SystemImageDelete
