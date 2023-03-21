@@ -13,7 +13,7 @@ use oauth2::{
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
     TokenUrl,
 };
-use oxide_api::ClientHiddenExt;
+use oxide_api::{ClientHiddenExt, ClientSessionExt};
 
 use crate::{config::Host, context::Context};
 
@@ -277,7 +277,7 @@ impl CmdAuthLogin {
             .unwrap();
         let client = oxide_api::Client::new_with_client(self.host.as_ref(), rclient);
 
-        let user = client.session_me().send().await?;
+        let user = client.current_user_view().send().await?;
 
         println!("{:#?}", user);
 
