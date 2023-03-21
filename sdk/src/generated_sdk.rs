@@ -9,7 +9,7 @@ pub mod types {
     use serde::{Deserialize, Serialize};
     #[allow(unused_imports)]
     use std::convert::TryFrom;
-    #[doc = "Describes properties that should uniquely identify a Gimlet."]
+    #[doc = "Properties that should uniquely identify a Sled."]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Baseboard {
         pub part: String,
@@ -407,102 +407,6 @@ pub mod types {
         }
     }
 
-    #[doc = "The type of an individual datum of a metric."]
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        Deserialize,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        Serialize,
-        schemars :: JsonSchema,
-    )]
-    pub enum DatumType {
-        #[serde(rename = "bool")]
-        Bool,
-        #[serde(rename = "i64")]
-        I64,
-        #[serde(rename = "f64")]
-        F64,
-        #[serde(rename = "string")]
-        String,
-        #[serde(rename = "bytes")]
-        Bytes,
-        #[serde(rename = "cumulative_i64")]
-        CumulativeI64,
-        #[serde(rename = "cumulative_f64")]
-        CumulativeF64,
-        #[serde(rename = "histogram_i64")]
-        HistogramI64,
-        #[serde(rename = "histogram_f64")]
-        HistogramF64,
-    }
-
-    impl From<&DatumType> for DatumType {
-        fn from(value: &DatumType) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ToString for DatumType {
-        fn to_string(&self) -> String {
-            match *self {
-                Self::Bool => "bool".to_string(),
-                Self::I64 => "i64".to_string(),
-                Self::F64 => "f64".to_string(),
-                Self::String => "string".to_string(),
-                Self::Bytes => "bytes".to_string(),
-                Self::CumulativeI64 => "cumulative_i64".to_string(),
-                Self::CumulativeF64 => "cumulative_f64".to_string(),
-                Self::HistogramI64 => "histogram_i64".to_string(),
-                Self::HistogramF64 => "histogram_f64".to_string(),
-            }
-        }
-    }
-
-    impl std::str::FromStr for DatumType {
-        type Err = &'static str;
-        fn from_str(value: &str) -> Result<Self, &'static str> {
-            match value {
-                "bool" => Ok(Self::Bool),
-                "i64" => Ok(Self::I64),
-                "f64" => Ok(Self::F64),
-                "string" => Ok(Self::String),
-                "bytes" => Ok(Self::Bytes),
-                "cumulative_i64" => Ok(Self::CumulativeI64),
-                "cumulative_f64" => Ok(Self::CumulativeF64),
-                "histogram_i64" => Ok(Self::HistogramI64),
-                "histogram_f64" => Ok(Self::HistogramF64),
-                _ => Err("invalid value"),
-            }
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for DatumType {
-        type Error = &'static str;
-        fn try_from(value: &str) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for DatumType {
-        type Error = &'static str;
-        fn try_from(value: &String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for DatumType {
-        type Error = &'static str;
-        fn try_from(value: String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct DerEncodedKeyPair {
         #[doc = "request signing private key (base64 encoded der file)"]
@@ -645,24 +549,6 @@ pub mod types {
     impl DiskCreate {
         pub fn builder() -> builder::DiskCreate {
             builder::DiskCreate::default()
-        }
-    }
-
-    #[doc = "TODO-v1: Delete this Parameters for the [`Disk`](omicron_common::api::external::Disk) to be attached or detached to an instance"]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct DiskIdentifier {
-        pub name: Name,
-    }
-
-    impl From<&DiskIdentifier> for DiskIdentifier {
-        fn from(value: &DiskIdentifier) -> Self {
-            value.clone()
-        }
-    }
-
-    impl DiskIdentifier {
-        pub fn builder() -> builder::DiskIdentifier {
-            builder::DiskIdentifier::default()
         }
     }
 
@@ -943,174 +829,6 @@ pub mod types {
     impl ExternalIpResultsPage {
         pub fn builder() -> builder::ExternalIpResultsPage {
             builder::ExternalIpResultsPage::default()
-        }
-    }
-
-    #[doc = "The name and type information for a field of a timeseries schema."]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct FieldSchema {
-        pub name: String,
-        pub source: FieldSource,
-        pub ty: FieldType,
-    }
-
-    impl From<&FieldSchema> for FieldSchema {
-        fn from(value: &FieldSchema) -> Self {
-            value.clone()
-        }
-    }
-
-    impl FieldSchema {
-        pub fn builder() -> builder::FieldSchema {
-            builder::FieldSchema::default()
-        }
-    }
-
-    #[doc = "The source from which a field is derived, the target or metric."]
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        Deserialize,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        Serialize,
-        schemars :: JsonSchema,
-    )]
-    pub enum FieldSource {
-        #[serde(rename = "target")]
-        Target,
-        #[serde(rename = "metric")]
-        Metric,
-    }
-
-    impl From<&FieldSource> for FieldSource {
-        fn from(value: &FieldSource) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ToString for FieldSource {
-        fn to_string(&self) -> String {
-            match *self {
-                Self::Target => "target".to_string(),
-                Self::Metric => "metric".to_string(),
-            }
-        }
-    }
-
-    impl std::str::FromStr for FieldSource {
-        type Err = &'static str;
-        fn from_str(value: &str) -> Result<Self, &'static str> {
-            match value {
-                "target" => Ok(Self::Target),
-                "metric" => Ok(Self::Metric),
-                _ => Err("invalid value"),
-            }
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for FieldSource {
-        type Error = &'static str;
-        fn try_from(value: &str) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for FieldSource {
-        type Error = &'static str;
-        fn try_from(value: &String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for FieldSource {
-        type Error = &'static str;
-        fn try_from(value: String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    #[doc = "The `FieldType` identifies the data type of a target or metric field."]
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        Deserialize,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        Serialize,
-        schemars :: JsonSchema,
-    )]
-    pub enum FieldType {
-        #[serde(rename = "string")]
-        String,
-        #[serde(rename = "i64")]
-        I64,
-        #[serde(rename = "ip_addr")]
-        IpAddr,
-        #[serde(rename = "uuid")]
-        Uuid,
-        #[serde(rename = "bool")]
-        Bool,
-    }
-
-    impl From<&FieldType> for FieldType {
-        fn from(value: &FieldType) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ToString for FieldType {
-        fn to_string(&self) -> String {
-            match *self {
-                Self::String => "string".to_string(),
-                Self::I64 => "i64".to_string(),
-                Self::IpAddr => "ip_addr".to_string(),
-                Self::Uuid => "uuid".to_string(),
-                Self::Bool => "bool".to_string(),
-            }
-        }
-    }
-
-    impl std::str::FromStr for FieldType {
-        type Err = &'static str;
-        fn from_str(value: &str) -> Result<Self, &'static str> {
-            match value {
-                "string" => Ok(Self::String),
-                "i64" => Ok(Self::I64),
-                "ip_addr" => Ok(Self::IpAddr),
-                "uuid" => Ok(Self::Uuid),
-                "bool" => Ok(Self::Bool),
-                _ => Err("invalid value"),
-            }
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for FieldType {
-        type Error = &'static str;
-        fn try_from(value: &str) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for FieldType {
-        type Error = &'static str;
-        fn try_from(value: &String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for FieldType {
-        type Error = &'static str;
-        fn try_from(value: String) -> Result<Self, &'static str> {
-            value.parse()
         }
     }
 
@@ -3157,205 +2875,6 @@ pub mod types {
         }
     }
 
-    #[doc = "Client view of an [`Organization`]"]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct Organization {
-        #[doc = "human-readable free-form text about a resource"]
-        pub description: String,
-        #[doc = "unique, immutable, system-controlled identifier for each resource"]
-        pub id: uuid::Uuid,
-        #[doc = "unique, mutable, user-controlled identifier for each resource"]
-        pub name: Name,
-        #[doc = "timestamp when this resource was created"]
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        #[doc = "timestamp when this resource was last modified"]
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-    }
-
-    impl From<&Organization> for Organization {
-        fn from(value: &Organization) -> Self {
-            value.clone()
-        }
-    }
-
-    impl Organization {
-        pub fn builder() -> builder::Organization {
-            builder::Organization::default()
-        }
-    }
-
-    #[doc = "Create-time parameters for an [`Organization`](crate::external_api::views::Organization)"]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct OrganizationCreate {
-        pub description: String,
-        pub name: Name,
-    }
-
-    impl From<&OrganizationCreate> for OrganizationCreate {
-        fn from(value: &OrganizationCreate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl OrganizationCreate {
-        pub fn builder() -> builder::OrganizationCreate {
-            builder::OrganizationCreate::default()
-        }
-    }
-
-    #[doc = "A single page of results"]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct OrganizationResultsPage {
-        #[doc = "list of items on this page of results"]
-        pub items: Vec<Organization>,
-        #[doc = "token used to fetch the next page of results (if any)"]
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
-    }
-
-    impl From<&OrganizationResultsPage> for OrganizationResultsPage {
-        fn from(value: &OrganizationResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl OrganizationResultsPage {
-        pub fn builder() -> builder::OrganizationResultsPage {
-            builder::OrganizationResultsPage::default()
-        }
-    }
-
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        Deserialize,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        Serialize,
-        schemars :: JsonSchema,
-    )]
-    pub enum OrganizationRole {
-        #[serde(rename = "admin")]
-        Admin,
-        #[serde(rename = "collaborator")]
-        Collaborator,
-        #[serde(rename = "viewer")]
-        Viewer,
-    }
-
-    impl From<&OrganizationRole> for OrganizationRole {
-        fn from(value: &OrganizationRole) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ToString for OrganizationRole {
-        fn to_string(&self) -> String {
-            match *self {
-                Self::Admin => "admin".to_string(),
-                Self::Collaborator => "collaborator".to_string(),
-                Self::Viewer => "viewer".to_string(),
-            }
-        }
-    }
-
-    impl std::str::FromStr for OrganizationRole {
-        type Err = &'static str;
-        fn from_str(value: &str) -> Result<Self, &'static str> {
-            match value {
-                "admin" => Ok(Self::Admin),
-                "collaborator" => Ok(Self::Collaborator),
-                "viewer" => Ok(Self::Viewer),
-                _ => Err("invalid value"),
-            }
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for OrganizationRole {
-        type Error = &'static str;
-        fn try_from(value: &str) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for OrganizationRole {
-        type Error = &'static str;
-        fn try_from(value: &String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for OrganizationRole {
-        type Error = &'static str;
-        fn try_from(value: String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    #[doc = "Client view of a [`Policy`], which describes how this resource may be accessed\n\nNote that the Policy only describes access granted explicitly for this resource.  The policies of parent resources can also cause a user to have access to this resource."]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct OrganizationRolePolicy {
-        #[doc = "Roles directly assigned on this resource"]
-        pub role_assignments: Vec<OrganizationRoleRoleAssignment>,
-    }
-
-    impl From<&OrganizationRolePolicy> for OrganizationRolePolicy {
-        fn from(value: &OrganizationRolePolicy) -> Self {
-            value.clone()
-        }
-    }
-
-    impl OrganizationRolePolicy {
-        pub fn builder() -> builder::OrganizationRolePolicy {
-            builder::OrganizationRolePolicy::default()
-        }
-    }
-
-    #[doc = "Describes the assignment of a particular role on a particular resource to a particular identity (user, group, etc.)\n\nThe resource is not part of this structure.  Rather, [`RoleAssignment`]s are put into a [`Policy`] and that Policy is applied to a particular resource."]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct OrganizationRoleRoleAssignment {
-        pub identity_id: uuid::Uuid,
-        pub identity_type: IdentityType,
-        pub role_name: OrganizationRole,
-    }
-
-    impl From<&OrganizationRoleRoleAssignment> for OrganizationRoleRoleAssignment {
-        fn from(value: &OrganizationRoleRoleAssignment) -> Self {
-            value.clone()
-        }
-    }
-
-    impl OrganizationRoleRoleAssignment {
-        pub fn builder() -> builder::OrganizationRoleRoleAssignment {
-            builder::OrganizationRoleRoleAssignment::default()
-        }
-    }
-
-    #[doc = "Updateable properties of an [`Organization`](crate::external_api::views::Organization)"]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct OrganizationUpdate {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub description: Option<String>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub name: Option<Name>,
-    }
-
-    impl From<&OrganizationUpdate> for OrganizationUpdate {
-        fn from(value: &OrganizationUpdate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl OrganizationUpdate {
-        pub fn builder() -> builder::OrganizationUpdate {
-            builder::OrganizationUpdate::default()
-        }
-    }
-
     #[doc = "Passwords may be subject to additional constraints."]
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
     pub struct Password(String);
@@ -3548,7 +3067,6 @@ pub mod types {
         pub id: uuid::Uuid,
         #[doc = "unique, mutable, user-controlled identifier for each resource"]
         pub name: Name,
-        pub organization_id: uuid::Uuid,
         #[doc = "timestamp when this resource was created"]
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         #[doc = "timestamp when this resource was last modified"]
@@ -4667,18 +4185,22 @@ pub mod types {
         }
     }
 
-    #[doc = "Client view of a [`Sled`]"]
+    #[doc = "An operator's view of a Sled."]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Sled {
         pub baseboard: Baseboard,
         #[doc = "unique, immutable, system-controlled identifier for each resource"]
         pub id: uuid::Uuid,
+        #[doc = "The rack to which this Sled is currently attached"]
         pub rack_id: uuid::Uuid,
-        pub service_address: String,
         #[doc = "timestamp when this resource was created"]
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         #[doc = "timestamp when this resource was last modified"]
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        #[doc = "The number of hardware threads which can execute on this sled"]
+        pub usable_hardware_threads: u32,
+        #[doc = "Amount of RAM which may be used by the Sled's OS"]
+        pub usable_physical_ram: ByteCount,
     }
 
     impl From<&Sled> for Sled {
@@ -5104,119 +4626,6 @@ pub mod types {
     impl SystemVersion {
         pub fn builder() -> builder::SystemVersion {
             builder::SystemVersion::default()
-        }
-    }
-
-    #[doc = "Names are constructed by concatenating the target and metric names with ':'. Target and metric names must be lowercase alphanumeric characters with '_' separating words."]
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
-    pub struct TimeseriesName(String);
-    impl std::ops::Deref for TimeseriesName {
-        type Target = String;
-        fn deref(&self) -> &String {
-            &self.0
-        }
-    }
-
-    impl From<TimeseriesName> for String {
-        fn from(value: TimeseriesName) -> Self {
-            value.0
-        }
-    }
-
-    impl From<&TimeseriesName> for TimeseriesName {
-        fn from(value: &TimeseriesName) -> Self {
-            value.clone()
-        }
-    }
-
-    impl std::str::FromStr for TimeseriesName {
-        type Err = &'static str;
-        fn from_str(value: &str) -> Result<Self, &'static str> {
-            if regress::Regex::new(
-                "(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*):(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*)",
-            )
-            .unwrap()
-            .find(value)
-            .is_none()
-            {
-                return Err ("doesn't match pattern \"(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*):(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*)\"") ;
-            }
-            Ok(Self(value.to_string()))
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for TimeseriesName {
-        type Error = &'static str;
-        fn try_from(value: &str) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for TimeseriesName {
-        type Error = &'static str;
-        fn try_from(value: &String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for TimeseriesName {
-        type Error = &'static str;
-        fn try_from(value: String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl<'de> serde::Deserialize<'de> for TimeseriesName {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: serde::Deserializer<'de>,
-        {
-            String::deserialize(deserializer)?
-                .parse()
-                .map_err(|e: &'static str| <D::Error as serde::de::Error>::custom(e.to_string()))
-        }
-    }
-
-    #[doc = "The schema for a timeseries.\n\nThis includes the name of the timeseries, as well as the datum type of its metric and the schema for each field."]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct TimeseriesSchema {
-        pub created: chrono::DateTime<chrono::offset::Utc>,
-        pub datum_type: DatumType,
-        pub field_schema: Vec<FieldSchema>,
-        pub timeseries_name: TimeseriesName,
-    }
-
-    impl From<&TimeseriesSchema> for TimeseriesSchema {
-        fn from(value: &TimeseriesSchema) -> Self {
-            value.clone()
-        }
-    }
-
-    impl TimeseriesSchema {
-        pub fn builder() -> builder::TimeseriesSchema {
-            builder::TimeseriesSchema::default()
-        }
-    }
-
-    #[doc = "A single page of results"]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct TimeseriesSchemaResultsPage {
-        #[doc = "list of items on this page of results"]
-        pub items: Vec<TimeseriesSchema>,
-        #[doc = "token used to fetch the next page of results (if any)"]
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
-    }
-
-    impl From<&TimeseriesSchemaResultsPage> for TimeseriesSchemaResultsPage {
-        fn from(value: &TimeseriesSchemaResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl TimeseriesSchemaResultsPage {
-        pub fn builder() -> builder::TimeseriesSchemaResultsPage {
-            builder::TimeseriesSchemaResultsPage::default()
         }
     }
 
@@ -7592,38 +7001,6 @@ pub mod types {
             }
         }
 
-        pub struct DiskIdentifier {
-            name: Result<super::Name, String>,
-        }
-
-        impl Default for DiskIdentifier {
-            fn default() -> Self {
-                Self {
-                    name: Err("no value supplied for name".to_string()),
-                }
-            }
-        }
-
-        impl DiskIdentifier {
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::Name>,
-                T::Error: std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<DiskIdentifier> for super::DiskIdentifier {
-            type Error = String;
-            fn try_from(value: DiskIdentifier) -> Result<Self, String> {
-                Ok(Self { name: value.name? })
-            }
-        }
-
         pub struct DiskPath {
             disk: Result<super::NameOrId, String>,
         }
@@ -7900,66 +7277,6 @@ pub mod types {
                 Ok(Self {
                     items: value.items?,
                     next_page: value.next_page?,
-                })
-            }
-        }
-
-        pub struct FieldSchema {
-            name: Result<String, String>,
-            source: Result<super::FieldSource, String>,
-            ty: Result<super::FieldType, String>,
-        }
-
-        impl Default for FieldSchema {
-            fn default() -> Self {
-                Self {
-                    name: Err("no value supplied for name".to_string()),
-                    source: Err("no value supplied for source".to_string()),
-                    ty: Err("no value supplied for ty".to_string()),
-                }
-            }
-        }
-
-        impl FieldSchema {
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<String>,
-                T::Error: std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn source<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::FieldSource>,
-                T::Error: std::fmt::Display,
-            {
-                self.source = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for source: {}", e));
-                self
-            }
-            pub fn ty<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::FieldType>,
-                T::Error: std::fmt::Display,
-            {
-                self.ty = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for ty: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<FieldSchema> for super::FieldSchema {
-            type Error = String;
-            fn try_from(value: FieldSchema) -> Result<Self, String> {
-                Ok(Self {
-                    name: value.name?,
-                    source: value.source?,
-                    ty: value.ty?,
                 })
             }
         }
@@ -10387,332 +9704,6 @@ pub mod types {
             }
         }
 
-        pub struct Organization {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            name: Result<super::Name, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-        }
-
-        impl Default for Organization {
-            fn default() -> Self {
-                Self {
-                    description: Err("no value supplied for description".to_string()),
-                    id: Err("no value supplied for id".to_string()),
-                    name: Err("no value supplied for name".to_string()),
-                    time_created: Err("no value supplied for time_created".to_string()),
-                    time_modified: Err("no value supplied for time_modified".to_string()),
-                }
-            }
-        }
-
-        impl Organization {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<String>,
-                T::Error: std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::Name>,
-                T::Error: std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn time_created<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_created = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_created: {}", e)
-                });
-                self
-            }
-            pub fn time_modified<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_modified = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_modified: {}", e)
-                });
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<Organization> for super::Organization {
-            type Error = String;
-            fn try_from(value: Organization) -> Result<Self, String> {
-                Ok(Self {
-                    description: value.description?,
-                    id: value.id?,
-                    name: value.name?,
-                    time_created: value.time_created?,
-                    time_modified: value.time_modified?,
-                })
-            }
-        }
-
-        pub struct OrganizationCreate {
-            description: Result<String, String>,
-            name: Result<super::Name, String>,
-        }
-
-        impl Default for OrganizationCreate {
-            fn default() -> Self {
-                Self {
-                    description: Err("no value supplied for description".to_string()),
-                    name: Err("no value supplied for name".to_string()),
-                }
-            }
-        }
-
-        impl OrganizationCreate {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<String>,
-                T::Error: std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::Name>,
-                T::Error: std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<OrganizationCreate> for super::OrganizationCreate {
-            type Error = String;
-            fn try_from(value: OrganizationCreate) -> Result<Self, String> {
-                Ok(Self {
-                    description: value.description?,
-                    name: value.name?,
-                })
-            }
-        }
-
-        pub struct OrganizationResultsPage {
-            items: Result<Vec<super::Organization>, String>,
-            next_page: Result<Option<String>, String>,
-        }
-
-        impl Default for OrganizationResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl OrganizationResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::Organization>>,
-                T::Error: std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<OrganizationResultsPage> for super::OrganizationResultsPage {
-            type Error = String;
-            fn try_from(value: OrganizationResultsPage) -> Result<Self, String> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
-                })
-            }
-        }
-
-        pub struct OrganizationRolePolicy {
-            role_assignments: Result<Vec<super::OrganizationRoleRoleAssignment>, String>,
-        }
-
-        impl Default for OrganizationRolePolicy {
-            fn default() -> Self {
-                Self {
-                    role_assignments: Err("no value supplied for role_assignments".to_string()),
-                }
-            }
-        }
-
-        impl OrganizationRolePolicy {
-            pub fn role_assignments<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::OrganizationRoleRoleAssignment>>,
-                T::Error: std::fmt::Display,
-            {
-                self.role_assignments = value.try_into().map_err(|e| {
-                    format!(
-                        "error converting supplied value for role_assignments: {}",
-                        e
-                    )
-                });
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<OrganizationRolePolicy> for super::OrganizationRolePolicy {
-            type Error = String;
-            fn try_from(value: OrganizationRolePolicy) -> Result<Self, String> {
-                Ok(Self {
-                    role_assignments: value.role_assignments?,
-                })
-            }
-        }
-
-        pub struct OrganizationRoleRoleAssignment {
-            identity_id: Result<uuid::Uuid, String>,
-            identity_type: Result<super::IdentityType, String>,
-            role_name: Result<super::OrganizationRole, String>,
-        }
-
-        impl Default for OrganizationRoleRoleAssignment {
-            fn default() -> Self {
-                Self {
-                    identity_id: Err("no value supplied for identity_id".to_string()),
-                    identity_type: Err("no value supplied for identity_type".to_string()),
-                    role_name: Err("no value supplied for role_name".to_string()),
-                }
-            }
-        }
-
-        impl OrganizationRoleRoleAssignment {
-            pub fn identity_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.identity_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for identity_id: {}", e));
-                self
-            }
-            pub fn identity_type<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::IdentityType>,
-                T::Error: std::fmt::Display,
-            {
-                self.identity_type = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for identity_type: {}", e)
-                });
-                self
-            }
-            pub fn role_name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::OrganizationRole>,
-                T::Error: std::fmt::Display,
-            {
-                self.role_name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for role_name: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<OrganizationRoleRoleAssignment>
-            for super::OrganizationRoleRoleAssignment
-        {
-            type Error = String;
-            fn try_from(value: OrganizationRoleRoleAssignment) -> Result<Self, String> {
-                Ok(Self {
-                    identity_id: value.identity_id?,
-                    identity_type: value.identity_type?,
-                    role_name: value.role_name?,
-                })
-            }
-        }
-
-        pub struct OrganizationUpdate {
-            description: Result<Option<String>, String>,
-            name: Result<Option<super::Name>, String>,
-        }
-
-        impl Default for OrganizationUpdate {
-            fn default() -> Self {
-                Self {
-                    description: Ok(Default::default()),
-                    name: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl OrganizationUpdate {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<super::Name>>,
-                T::Error: std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<OrganizationUpdate> for super::OrganizationUpdate {
-            type Error = String;
-            fn try_from(value: OrganizationUpdate) -> Result<Self, String> {
-                Ok(Self {
-                    description: value.description?,
-                    name: value.name?,
-                })
-            }
-        }
-
         pub struct PhysicalDisk {
             disk_type: Result<super::PhysicalDiskType, String>,
             id: Result<uuid::Uuid, String>,
@@ -10889,7 +9880,6 @@ pub mod types {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
             name: Result<super::Name, String>,
-            organization_id: Result<uuid::Uuid, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
         }
@@ -10900,7 +9890,6 @@ pub mod types {
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     name: Err("no value supplied for name".to_string()),
-                    organization_id: Err("no value supplied for organization_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                 }
@@ -10938,16 +9927,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
-            pub fn organization_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.organization_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for organization_id: {}", e)
-                });
-                self
-            }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
@@ -10977,7 +9956,6 @@ pub mod types {
                     description: value.description?,
                     id: value.id?,
                     name: value.name?,
-                    organization_id: value.organization_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                 })
@@ -12530,9 +11508,10 @@ pub mod types {
             baseboard: Result<super::Baseboard, String>,
             id: Result<uuid::Uuid, String>,
             rack_id: Result<uuid::Uuid, String>,
-            service_address: Result<String, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            usable_hardware_threads: Result<u32, String>,
+            usable_physical_ram: Result<super::ByteCount, String>,
         }
 
         impl Default for Sled {
@@ -12541,9 +11520,14 @@ pub mod types {
                     baseboard: Err("no value supplied for baseboard".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
-                    service_address: Err("no value supplied for service_address".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
+                    usable_hardware_threads: Err(
+                        "no value supplied for usable_hardware_threads".to_string()
+                    ),
+                    usable_physical_ram: Err(
+                        "no value supplied for usable_physical_ram".to_string()
+                    ),
                 }
             }
         }
@@ -12579,16 +11563,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
                 self
             }
-            pub fn service_address<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<String>,
-                T::Error: std::fmt::Display,
-            {
-                self.service_address = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for service_address: {}", e)
-                });
-                self
-            }
             pub fn time_created<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
@@ -12609,6 +11583,32 @@ pub mod types {
                 });
                 self
             }
+            pub fn usable_hardware_threads<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.usable_hardware_threads = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for usable_hardware_threads: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn usable_physical_ram<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ByteCount>,
+                T::Error: std::fmt::Display,
+            {
+                self.usable_physical_ram = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for usable_physical_ram: {}",
+                        e
+                    )
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Sled> for super::Sled {
@@ -12618,9 +11618,10 @@ pub mod types {
                     baseboard: value.baseboard?,
                     id: value.id?,
                     rack_id: value.rack_id?,
-                    service_address: value.service_address?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
+                    usable_hardware_threads: value.usable_hardware_threads?,
+                    usable_physical_ram: value.usable_physical_ram?,
                 })
             }
         }
@@ -13367,126 +12368,6 @@ pub mod types {
                 Ok(Self {
                     status: value.status?,
                     version_range: value.version_range?,
-                })
-            }
-        }
-
-        pub struct TimeseriesSchema {
-            created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            datum_type: Result<super::DatumType, String>,
-            field_schema: Result<Vec<super::FieldSchema>, String>,
-            timeseries_name: Result<super::TimeseriesName, String>,
-        }
-
-        impl Default for TimeseriesSchema {
-            fn default() -> Self {
-                Self {
-                    created: Err("no value supplied for created".to_string()),
-                    datum_type: Err("no value supplied for datum_type".to_string()),
-                    field_schema: Err("no value supplied for field_schema".to_string()),
-                    timeseries_name: Err("no value supplied for timeseries_name".to_string()),
-                }
-            }
-        }
-
-        impl TimeseriesSchema {
-            pub fn created<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.created = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for created: {}", e));
-                self
-            }
-            pub fn datum_type<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::DatumType>,
-                T::Error: std::fmt::Display,
-            {
-                self.datum_type = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for datum_type: {}", e));
-                self
-            }
-            pub fn field_schema<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::FieldSchema>>,
-                T::Error: std::fmt::Display,
-            {
-                self.field_schema = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for field_schema: {}", e)
-                });
-                self
-            }
-            pub fn timeseries_name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::TimeseriesName>,
-                T::Error: std::fmt::Display,
-            {
-                self.timeseries_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for timeseries_name: {}", e)
-                });
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<TimeseriesSchema> for super::TimeseriesSchema {
-            type Error = String;
-            fn try_from(value: TimeseriesSchema) -> Result<Self, String> {
-                Ok(Self {
-                    created: value.created?,
-                    datum_type: value.datum_type?,
-                    field_schema: value.field_schema?,
-                    timeseries_name: value.timeseries_name?,
-                })
-            }
-        }
-
-        pub struct TimeseriesSchemaResultsPage {
-            items: Result<Vec<super::TimeseriesSchema>, String>,
-            next_page: Result<Option<String>, String>,
-        }
-
-        impl Default for TimeseriesSchemaResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl TimeseriesSchemaResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::TimeseriesSchema>>,
-                T::Error: std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<TimeseriesSchemaResultsPage> for super::TimeseriesSchemaResultsPage {
-            type Error = String;
-            fn try_from(value: TimeseriesSchemaResultsPage) -> Result<Self, String> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
                 })
             }
         }
@@ -15536,35 +14417,19 @@ impl Client {
 }
 
 pub trait ClientDisksExt {
-    #[doc = "Fetch a disk by id\n\nUse `GET /v1/disks/{disk}` instead\n\nSends a `GET` request to `/by-id/disks/{id}`\n\n```ignore\nlet response = client.disk_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn disk_view_by_id(&self) -> builder::DiskViewById;
-    #[doc = "List disks\n\nUse `GET /v1/disks` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/disks`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.disk_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List disks\n\nSends a `GET` request to `/v1/disks`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.disk_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn disk_list(&self) -> builder::DiskList;
-    #[doc = "Use `POST /v1/disks` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/disks`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `body`\n```ignore\nlet response = client.disk_create()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a disk\n\nSends a `POST` request to `/v1/disks`\n\n```ignore\nlet response = client.disk_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn disk_create(&self) -> builder::DiskCreate;
-    #[doc = "Fetch a disk\n\nUse `GET /v1/disks/{disk}` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/disks/{disk_name}`\n\n```ignore\nlet response = client.disk_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .disk_name(disk_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a disk\n\nSends a `GET` request to `/v1/disks/{disk}`\n\n```ignore\nlet response = client.disk_view()\n    .disk(disk)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn disk_view(&self) -> builder::DiskView;
-    #[doc = "Use `DELETE /v1/disks/{disk}` instead\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/disks/{disk_name}`\n\n```ignore\nlet response = client.disk_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .disk_name(disk_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a disk\n\nSends a `DELETE` request to `/v1/disks/{disk}`\n\n```ignore\nlet response = client.disk_delete()\n    .disk(disk)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn disk_delete(&self) -> builder::DiskDelete;
-    #[doc = "Fetch disk metrics\n\nUse `/v1/disks/{disk}/{metric}` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/disks/{disk_name}/metrics/{metric_name}`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `disk_name`\n- `metric_name`\n- `end_time`: An exclusive end time of metrics.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.disk_metrics_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .disk_name(disk_name)\n    .metric_name(metric_name)\n    .end_time(end_time)\n    .limit(limit)\n    .page_token(page_token)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch disk metrics\n\nSends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`\n\nArguments:\n- `disk`\n- `metric`\n- `end_time`: An exclusive end time of metrics.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.disk_metrics_list()\n    .disk(disk)\n    .metric(metric)\n    .end_time(end_time)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
     fn disk_metrics_list(&self) -> builder::DiskMetricsList;
-    #[doc = "List disks\n\nSends a `GET` request to `/v1/disks`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.disk_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn disk_list_v1(&self) -> builder::DiskListV1;
-    #[doc = "Create a disk\n\nSends a `POST` request to `/v1/disks`\n\n```ignore\nlet response = client.disk_create_v1()\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn disk_create_v1(&self) -> builder::DiskCreateV1;
-    #[doc = "Fetch a disk\n\nSends a `GET` request to `/v1/disks/{disk}`\n\n```ignore\nlet response = client.disk_view_v1()\n    .disk(disk)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn disk_view_v1(&self) -> builder::DiskViewV1;
-    #[doc = "Delete a disk\n\nSends a `DELETE` request to `/v1/disks/{disk}`\n\n```ignore\nlet response = client.disk_delete_v1()\n    .disk(disk)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn disk_delete_v1(&self) -> builder::DiskDeleteV1;
-    #[doc = "Fetch disk metrics\n\nSends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`\n\nArguments:\n- `disk`\n- `metric`\n- `end_time`: An exclusive end time of metrics.\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.disk_metrics_list_v1()\n    .disk(disk)\n    .metric(metric)\n    .end_time(end_time)\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
-    fn disk_metrics_list_v1(&self) -> builder::DiskMetricsListV1;
 }
 
 impl ClientDisksExt for Client {
-    fn disk_view_by_id(&self) -> builder::DiskViewById {
-        builder::DiskViewById::new(self)
-    }
-
     fn disk_list(&self) -> builder::DiskList {
         builder::DiskList::new(self)
     }
@@ -15584,26 +14449,6 @@ impl ClientDisksExt for Client {
     fn disk_metrics_list(&self) -> builder::DiskMetricsList {
         builder::DiskMetricsList::new(self)
     }
-
-    fn disk_list_v1(&self) -> builder::DiskListV1 {
-        builder::DiskListV1::new(self)
-    }
-
-    fn disk_create_v1(&self) -> builder::DiskCreateV1 {
-        builder::DiskCreateV1::new(self)
-    }
-
-    fn disk_view_v1(&self) -> builder::DiskViewV1 {
-        builder::DiskViewV1::new(self)
-    }
-
-    fn disk_delete_v1(&self) -> builder::DiskDeleteV1 {
-        builder::DiskDeleteV1::new(self)
-    }
-
-    fn disk_metrics_list_v1(&self) -> builder::DiskMetricsListV1 {
-        builder::DiskMetricsListV1::new(self)
-    }
 }
 
 pub trait ClientHiddenExt {
@@ -15617,10 +14462,6 @@ pub trait ClientHiddenExt {
     fn login_spoof(&self) -> builder::LoginSpoof;
     #[doc = "Sends a `POST` request to `/logout`\n\n```ignore\nlet response = client.logout()\n    .send()\n    .await;\n```"]
     fn logout(&self) -> builder::Logout;
-    #[doc = "Fetch the user associated with the current session\n\nUse `GET /v1/me` instead\n\nSends a `GET` request to `/session/me`\n\n```ignore\nlet response = client.session_me()\n    .send()\n    .await;\n```"]
-    fn session_me(&self) -> builder::SessionMe;
-    #[doc = "Fetch the silo\u{a0}groups the current user belongs to\n\nUse `GET /v1/me/groups` instead\n\nSends a `GET` request to `/session/me/groups`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.session_me_groups()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn session_me_groups(&self) -> builder::SessionMeGroups;
 }
 
 impl ClientHiddenExt for Client {
@@ -15643,42 +14484,20 @@ impl ClientHiddenExt for Client {
     fn logout(&self) -> builder::Logout {
         builder::Logout::new(self)
     }
-
-    fn session_me(&self) -> builder::SessionMe {
-        builder::SessionMe::new(self)
-    }
-
-    fn session_me_groups(&self) -> builder::SessionMeGroups {
-        builder::SessionMeGroups::new(self)
-    }
 }
 
 pub trait ClientImagesExt {
-    #[doc = "Fetch an image by id\n\nSends a `GET` request to `/by-id/images/{id}`\n\n```ignore\nlet response = client.image_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn image_view_by_id(&self) -> builder::ImageViewById;
-    #[doc = "List images\n\nList images in a project. The images are returned sorted by creation date, with the most recent images appearing first. Use `GET /v1/images` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/images`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.image_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.\n\nSends a `GET` request to `/v1/images`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.image_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn image_list(&self) -> builder::ImageList;
-    #[doc = "Create an image\n\nCreate a new image in a project.\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/images`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `body`\n```ignore\nlet response = client.image_create()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create an image\n\nCreate a new image in a project.\n\nSends a `POST` request to `/v1/images`\n\n```ignore\nlet response = client.image_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn image_create(&self) -> builder::ImageCreate;
-    #[doc = "Fetch an image\n\nFetch the details for a specific image in a project.\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/images/{image_name}`\n\n```ignore\nlet response = client.image_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .image_name(image_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an image\n\nFetch the details for a specific image in a project.\n\nSends a `GET` request to `/v1/images/{image}`\n\n```ignore\nlet response = client.image_view()\n    .image(image)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn image_view(&self) -> builder::ImageView;
-    #[doc = "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/images/{image_name}`\n\n```ignore\nlet response = client.image_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .image_name(image_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.\n\nSends a `DELETE` request to `/v1/images/{image}`\n\n```ignore\nlet response = client.image_delete()\n    .image(image)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn image_delete(&self) -> builder::ImageDelete;
-    #[doc = "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.\n\nSends a `GET` request to `/v1/images`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.image_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn image_list_v1(&self) -> builder::ImageListV1;
-    #[doc = "Create an image\n\nCreate a new image in a project.\n\nSends a `POST` request to `/v1/images`\n\n```ignore\nlet response = client.image_create_v1()\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn image_create_v1(&self) -> builder::ImageCreateV1;
-    #[doc = "Fetch an image\n\nFetch the details for a specific image in a project.\n\nSends a `GET` request to `/v1/images/{image}`\n\n```ignore\nlet response = client.image_view_v1()\n    .image(image)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn image_view_v1(&self) -> builder::ImageViewV1;
-    #[doc = "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.\n\nSends a `DELETE` request to `/v1/images/{image}`\n\n```ignore\nlet response = client.image_delete_v1()\n    .image(image)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn image_delete_v1(&self) -> builder::ImageDeleteV1;
 }
 
 impl ClientImagesExt for Client {
-    fn image_view_by_id(&self) -> builder::ImageViewById {
-        builder::ImageViewById::new(self)
-    }
-
     fn image_list(&self) -> builder::ImageList {
         builder::ImageList::new(self)
     }
@@ -15694,116 +14513,50 @@ impl ClientImagesExt for Client {
     fn image_delete(&self) -> builder::ImageDelete {
         builder::ImageDelete::new(self)
     }
-
-    fn image_list_v1(&self) -> builder::ImageListV1 {
-        builder::ImageListV1::new(self)
-    }
-
-    fn image_create_v1(&self) -> builder::ImageCreateV1 {
-        builder::ImageCreateV1::new(self)
-    }
-
-    fn image_view_v1(&self) -> builder::ImageViewV1 {
-        builder::ImageViewV1::new(self)
-    }
-
-    fn image_delete_v1(&self) -> builder::ImageDeleteV1 {
-        builder::ImageDeleteV1::new(self)
-    }
 }
 
 pub trait ClientInstancesExt {
-    #[doc = "Fetch an instance by id\n\nUse `GET /v1/instances/{instance}` instead\n\nSends a `GET` request to `/by-id/instances/{id}`\n\n```ignore\nlet response = client.instance_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn instance_view_by_id(&self) -> builder::InstanceViewById;
-    #[doc = "Fetch a network interface by id\n\nUse `GET /v1/network-interfaces/{interface}` instead\n\nSends a `GET` request to `/by-id/network-interfaces/{id}`\n\n```ignore\nlet response = client.instance_network_interface_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_view_by_id(&self) -> builder::InstanceNetworkInterfaceViewById;
-    #[doc = "List instances\n\nUse `GET /v1/instances` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.instance_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List instances\n\nSends a `GET` request to `/v1/instances`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.instance_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn instance_list(&self) -> builder::InstanceList;
-    #[doc = "Create an instance\n\nUse `POST /v1/instances` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `body`\n```ignore\nlet response = client.instance_create()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create an instance\n\nSends a `POST` request to `/v1/instances`\n\n```ignore\nlet response = client.instance_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_create(&self) -> builder::InstanceCreate;
-    #[doc = "Fetch an instance\n\nUse `GET /v1/instances/{instance}` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}`\n\n```ignore\nlet response = client.instance_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an instance\n\nSends a `GET` request to `/v1/instances/{instance}`\n\n```ignore\nlet response = client.instance_view()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_view(&self) -> builder::InstanceView;
-    #[doc = "Delete an instance\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}`\n\n```ignore\nlet response = client.instance_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete an instance\n\nSends a `DELETE` request to `/v1/instances/{instance}`\n\n```ignore\nlet response = client.instance_delete()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_delete(&self) -> builder::InstanceDelete;
-    #[doc = "List an instance's disks\n\nUse `GET /v1/instances/{instance}/disks` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/disks`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `instance_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.instance_disk_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List an instance's disks\n\nSends a `GET` request to `/v1/instances/{instance}/disks`\n\nArguments:\n- `instance`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.instance_disk_list()\n    .instance(instance)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn instance_disk_list(&self) -> builder::InstanceDiskList;
-    #[doc = "Attach a disk to an instance\n\nUse `POST /v1/instances/{instance}/disks/attach` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/disks/attach`\n\n```ignore\nlet response = client.instance_disk_attach()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Attach a disk to an instance\n\nSends a `POST` request to `/v1/instances/{instance}/disks/attach`\n\n```ignore\nlet response = client.instance_disk_attach()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_disk_attach(&self) -> builder::InstanceDiskAttach;
-    #[doc = "Detach a disk from an instance\n\nUse `POST /v1/disks/{disk}/detach` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/disks/detach`\n\n```ignore\nlet response = client.instance_disk_detach()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Detach a disk from an instance\n\nSends a `POST` request to `/v1/instances/{instance}/disks/detach`\n\n```ignore\nlet response = client.instance_disk_detach()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_disk_detach(&self) -> builder::InstanceDiskDetach;
-    #[doc = "List external IP addresses\n\nUse `/v1/instances/{instance}/external-ips` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/external-ips`\n\n```ignore\nlet response = client.instance_external_ip_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .send()\n    .await;\n```"]
+    #[doc = "List external IP addresses\n\nSends a `GET` request to `/v1/instances/{instance}/external-ips`\n\n```ignore\nlet response = client.instance_external_ip_list()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_external_ip_list(&self) -> builder::InstanceExternalIpList;
-    #[doc = "Migrate an instance\n\nUse `POST /v1/instances/{instance}/migrate` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/migrate`\n\n```ignore\nlet response = client.instance_migrate()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Migrate an instance\n\nSends a `POST` request to `/v1/instances/{instance}/migrate`\n\n```ignore\nlet response = client.instance_migrate()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_migrate(&self) -> builder::InstanceMigrate;
-    #[doc = "List network interfaces\n\nUse `GET /v1/network-interfaces` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `instance_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.instance_network_interface_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList;
-    #[doc = "Create a network interface\n\nUse `POST /v1/network-interfaces` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces`\n\n```ignore\nlet response = client.instance_network_interface_create()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate;
-    #[doc = "Fetch a network interface\n\nUse `GET /v1/network-interfaces/{interface}` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces/{interface_name}`\n\n```ignore\nlet response = client.instance_network_interface_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .interface_name(interface_name)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView;
-    #[doc = "Update a network interface\n\nUse `PUT /v1/network-interfaces/{interface}` instead\n\nSends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces/{interface_name}`\n\n```ignore\nlet response = client.instance_network_interface_update()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .interface_name(interface_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate;
-    #[doc = "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.\nUse `DELETE /v1/network-interfaces/{interface}` instead\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces/{interface_name}`\n\n```ignore\nlet response = client.instance_network_interface_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .interface_name(interface_name)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_delete(&self) -> builder::InstanceNetworkInterfaceDelete;
-    #[doc = "Reboot an instance\n\nUse `POST /v1/instances/{instance}/reboot` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/reboot`\n\n```ignore\nlet response = client.instance_reboot()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Reboot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/reboot`\n\n```ignore\nlet response = client.instance_reboot()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_reboot(&self) -> builder::InstanceReboot;
-    #[doc = "Fetch an instance's serial console\n\nUse `GET /v1/instances/{instance}/serial-console` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/serial-console`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `instance_name`\n- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.\n- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`.\n- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)\n```ignore\nlet response = client.instance_serial_console()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .from_start(from_start)\n    .max_bytes(max_bytes)\n    .most_recent(most_recent)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console`\n\nArguments:\n- `instance`\n- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.\n- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`.\n- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)\n- `project`\n```ignore\nlet response = client.instance_serial_console()\n    .instance(instance)\n    .from_start(from_start)\n    .max_bytes(max_bytes)\n    .most_recent(most_recent)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_serial_console(&self) -> builder::InstanceSerialConsole;
-    #[doc = "Connect to an instance's serial console\n\nUse `GET /v1/instances/{instance}/serial-console/stream` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/serial-console/stream`\n\n```ignore\nlet response = client.instance_serial_console_stream()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Stream an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console/stream`\n\n```ignore\nlet response = client.instance_serial_console_stream()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream;
-    #[doc = "Boot an instance\n\nUse `POST /v1/instances/{instance}/start` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/start`\n\n```ignore\nlet response = client.instance_start()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Boot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/start`\n\n```ignore\nlet response = client.instance_start()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_start(&self) -> builder::InstanceStart;
-    #[doc = "Halt an instance\n\nUse `POST /v1/instances/{instance}/stop` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/stop`\n\n```ignore\nlet response = client.instance_stop()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .instance_name(instance_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Stop an instance\n\nSends a `POST` request to `/v1/instances/{instance}/stop`\n\n```ignore\nlet response = client.instance_stop()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_stop(&self) -> builder::InstanceStop;
-    #[doc = "List instances\n\nSends a `GET` request to `/v1/instances`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.instance_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn instance_list_v1(&self) -> builder::InstanceListV1;
-    #[doc = "Create an instance\n\nSends a `POST` request to `/v1/instances`\n\n```ignore\nlet response = client.instance_create_v1()\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn instance_create_v1(&self) -> builder::InstanceCreateV1;
-    #[doc = "Fetch an instance\n\nSends a `GET` request to `/v1/instances/{instance}`\n\n```ignore\nlet response = client.instance_view_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn instance_view_v1(&self) -> builder::InstanceViewV1;
-    #[doc = "Delete an instance\n\nSends a `DELETE` request to `/v1/instances/{instance}`\n\n```ignore\nlet response = client.instance_delete_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn instance_delete_v1(&self) -> builder::InstanceDeleteV1;
-    #[doc = "List an instance's disks\n\nSends a `GET` request to `/v1/instances/{instance}/disks`\n\nArguments:\n- `instance`\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.instance_disk_list_v1()\n    .instance(instance)\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn instance_disk_list_v1(&self) -> builder::InstanceDiskListV1;
-    #[doc = "Attach a disk to an instance\n\nSends a `POST` request to `/v1/instances/{instance}/disks/attach`\n\n```ignore\nlet response = client.instance_disk_attach_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn instance_disk_attach_v1(&self) -> builder::InstanceDiskAttachV1;
-    #[doc = "Detach a disk from an instance\n\nSends a `POST` request to `/v1/instances/{instance}/disks/detach`\n\n```ignore\nlet response = client.instance_disk_detach_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn instance_disk_detach_v1(&self) -> builder::InstanceDiskDetachV1;
-    #[doc = "List external IP addresses\n\nSends a `GET` request to `/v1/instances/{instance}/external-ips`\n\n```ignore\nlet response = client.instance_external_ip_list_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn instance_external_ip_list_v1(&self) -> builder::InstanceExternalIpListV1;
-    #[doc = "Migrate an instance\n\nSends a `POST` request to `/v1/instances/{instance}/migrate`\n\n```ignore\nlet response = client.instance_migrate_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn instance_migrate_v1(&self) -> builder::InstanceMigrateV1;
-    #[doc = "Reboot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/reboot`\n\n```ignore\nlet response = client.instance_reboot_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn instance_reboot_v1(&self) -> builder::InstanceRebootV1;
-    #[doc = "Fetch an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console`\n\nArguments:\n- `instance`\n- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.\n- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`.\n- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)\n- `organization`\n- `project`\n```ignore\nlet response = client.instance_serial_console_v1()\n    .instance(instance)\n    .from_start(from_start)\n    .max_bytes(max_bytes)\n    .most_recent(most_recent)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn instance_serial_console_v1(&self) -> builder::InstanceSerialConsoleV1;
-    #[doc = "Stream an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console/stream`\n\n```ignore\nlet response = client.instance_serial_console_stream_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn instance_serial_console_stream_v1(&self) -> builder::InstanceSerialConsoleStreamV1;
-    #[doc = "Boot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/start`\n\n```ignore\nlet response = client.instance_start_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn instance_start_v1(&self) -> builder::InstanceStartV1;
-    #[doc = "Stop an instance\n\nSends a `POST` request to `/v1/instances/{instance}/stop`\n\n```ignore\nlet response = client.instance_stop_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn instance_stop_v1(&self) -> builder::InstanceStopV1;
-    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/network-interfaces`\n\nArguments:\n- `instance`\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.instance_network_interface_list_v1()\n    .instance(instance)\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_list_v1(&self) -> builder::InstanceNetworkInterfaceListV1;
-    #[doc = "Create a network interface\n\nSends a `POST` request to `/v1/network-interfaces`\n\n```ignore\nlet response = client.instance_network_interface_create_v1()\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_create_v1(&self) -> builder::InstanceNetworkInterfaceCreateV1;
-    #[doc = "Fetch a network interface\n\nSends a `GET` request to `/v1/network-interfaces/{interface}`\n\n```ignore\nlet response = client.instance_network_interface_view_v1()\n    .interface(interface)\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_view_v1(&self) -> builder::InstanceNetworkInterfaceViewV1;
-    #[doc = "Update a network interface\n\nSends a `PUT` request to `/v1/network-interfaces/{interface}`\n\n```ignore\nlet response = client.instance_network_interface_update_v1()\n    .interface(interface)\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_update_v1(&self) -> builder::InstanceNetworkInterfaceUpdateV1;
-    #[doc = "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.\n\nSends a `DELETE` request to `/v1/network-interfaces/{interface}`\n\n```ignore\nlet response = client.instance_network_interface_delete_v1()\n    .interface(interface)\n    .instance(instance)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn instance_network_interface_delete_v1(&self) -> builder::InstanceNetworkInterfaceDeleteV1;
+    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/network-interfaces`\n\nArguments:\n- `instance`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.instance_network_interface_list()\n    .instance(instance)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList;
+    #[doc = "Create a network interface\n\nSends a `POST` request to `/v1/network-interfaces`\n\n```ignore\nlet response = client.instance_network_interface_create()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate;
+    #[doc = "Fetch a network interface\n\nSends a `GET` request to `/v1/network-interfaces/{interface}`\n\n```ignore\nlet response = client.instance_network_interface_view()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView;
+    #[doc = "Update a network interface\n\nSends a `PUT` request to `/v1/network-interfaces/{interface}`\n\n```ignore\nlet response = client.instance_network_interface_update()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate;
+    #[doc = "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.\n\nSends a `DELETE` request to `/v1/network-interfaces/{interface}`\n\n```ignore\nlet response = client.instance_network_interface_delete()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    fn instance_network_interface_delete(&self) -> builder::InstanceNetworkInterfaceDelete;
 }
 
 impl ClientInstancesExt for Client {
-    fn instance_view_by_id(&self) -> builder::InstanceViewById {
-        builder::InstanceViewById::new(self)
-    }
-
-    fn instance_network_interface_view_by_id(&self) -> builder::InstanceNetworkInterfaceViewById {
-        builder::InstanceNetworkInterfaceViewById::new(self)
-    }
-
     fn instance_list(&self) -> builder::InstanceList {
         builder::InstanceList::new(self)
     }
@@ -15840,26 +14593,6 @@ impl ClientInstancesExt for Client {
         builder::InstanceMigrate::new(self)
     }
 
-    fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList {
-        builder::InstanceNetworkInterfaceList::new(self)
-    }
-
-    fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate {
-        builder::InstanceNetworkInterfaceCreate::new(self)
-    }
-
-    fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView {
-        builder::InstanceNetworkInterfaceView::new(self)
-    }
-
-    fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate {
-        builder::InstanceNetworkInterfaceUpdate::new(self)
-    }
-
-    fn instance_network_interface_delete(&self) -> builder::InstanceNetworkInterfaceDelete {
-        builder::InstanceNetworkInterfaceDelete::new(self)
-    }
-
     fn instance_reboot(&self) -> builder::InstanceReboot {
         builder::InstanceReboot::new(self)
     }
@@ -15880,80 +14613,24 @@ impl ClientInstancesExt for Client {
         builder::InstanceStop::new(self)
     }
 
-    fn instance_list_v1(&self) -> builder::InstanceListV1 {
-        builder::InstanceListV1::new(self)
+    fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList {
+        builder::InstanceNetworkInterfaceList::new(self)
     }
 
-    fn instance_create_v1(&self) -> builder::InstanceCreateV1 {
-        builder::InstanceCreateV1::new(self)
+    fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate {
+        builder::InstanceNetworkInterfaceCreate::new(self)
     }
 
-    fn instance_view_v1(&self) -> builder::InstanceViewV1 {
-        builder::InstanceViewV1::new(self)
+    fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView {
+        builder::InstanceNetworkInterfaceView::new(self)
     }
 
-    fn instance_delete_v1(&self) -> builder::InstanceDeleteV1 {
-        builder::InstanceDeleteV1::new(self)
+    fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate {
+        builder::InstanceNetworkInterfaceUpdate::new(self)
     }
 
-    fn instance_disk_list_v1(&self) -> builder::InstanceDiskListV1 {
-        builder::InstanceDiskListV1::new(self)
-    }
-
-    fn instance_disk_attach_v1(&self) -> builder::InstanceDiskAttachV1 {
-        builder::InstanceDiskAttachV1::new(self)
-    }
-
-    fn instance_disk_detach_v1(&self) -> builder::InstanceDiskDetachV1 {
-        builder::InstanceDiskDetachV1::new(self)
-    }
-
-    fn instance_external_ip_list_v1(&self) -> builder::InstanceExternalIpListV1 {
-        builder::InstanceExternalIpListV1::new(self)
-    }
-
-    fn instance_migrate_v1(&self) -> builder::InstanceMigrateV1 {
-        builder::InstanceMigrateV1::new(self)
-    }
-
-    fn instance_reboot_v1(&self) -> builder::InstanceRebootV1 {
-        builder::InstanceRebootV1::new(self)
-    }
-
-    fn instance_serial_console_v1(&self) -> builder::InstanceSerialConsoleV1 {
-        builder::InstanceSerialConsoleV1::new(self)
-    }
-
-    fn instance_serial_console_stream_v1(&self) -> builder::InstanceSerialConsoleStreamV1 {
-        builder::InstanceSerialConsoleStreamV1::new(self)
-    }
-
-    fn instance_start_v1(&self) -> builder::InstanceStartV1 {
-        builder::InstanceStartV1::new(self)
-    }
-
-    fn instance_stop_v1(&self) -> builder::InstanceStopV1 {
-        builder::InstanceStopV1::new(self)
-    }
-
-    fn instance_network_interface_list_v1(&self) -> builder::InstanceNetworkInterfaceListV1 {
-        builder::InstanceNetworkInterfaceListV1::new(self)
-    }
-
-    fn instance_network_interface_create_v1(&self) -> builder::InstanceNetworkInterfaceCreateV1 {
-        builder::InstanceNetworkInterfaceCreateV1::new(self)
-    }
-
-    fn instance_network_interface_view_v1(&self) -> builder::InstanceNetworkInterfaceViewV1 {
-        builder::InstanceNetworkInterfaceViewV1::new(self)
-    }
-
-    fn instance_network_interface_update_v1(&self) -> builder::InstanceNetworkInterfaceUpdateV1 {
-        builder::InstanceNetworkInterfaceUpdateV1::new(self)
-    }
-
-    fn instance_network_interface_delete_v1(&self) -> builder::InstanceNetworkInterfaceDeleteV1 {
-        builder::InstanceNetworkInterfaceDeleteV1::new(self)
+    fn instance_network_interface_delete(&self) -> builder::InstanceNetworkInterfaceDelete {
+        builder::InstanceNetworkInterfaceDelete::new(self)
     }
 }
 
@@ -15980,121 +14657,11 @@ impl ClientLoginExt for Client {
     }
 }
 
-pub trait ClientMetricsExt {
-    #[doc = "List timeseries schema\n\nSends a `GET` request to `/timeseries/schema`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.timeseries_schema_get()\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
-    fn timeseries_schema_get(&self) -> builder::TimeseriesSchemaGet;
-}
-
-impl ClientMetricsExt for Client {
-    fn timeseries_schema_get(&self) -> builder::TimeseriesSchemaGet {
-        builder::TimeseriesSchemaGet::new(self)
-    }
-}
-
-pub trait ClientOrganizationsExt {
-    #[doc = "Fetch an organization by id\n\nUse `GET /v1/organizations/{organization}` instead\n\nSends a `GET` request to `/by-id/organizations/{id}`\n\n```ignore\nlet response = client.organization_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn organization_view_by_id(&self) -> builder::OrganizationViewById;
-    #[doc = "List organizations\n\nUse `GET /v1/organizations` instead\n\nSends a `GET` request to `/organizations`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.organization_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn organization_list(&self) -> builder::OrganizationList;
-    #[doc = "Create an organization\n\nUse `POST /v1/organizations` instead\n\nSends a `POST` request to `/organizations`\n\n```ignore\nlet response = client.organization_create()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn organization_create(&self) -> builder::OrganizationCreate;
-    #[doc = "Fetch an organization\n\nUse `GET /v1/organizations/{organization}` instead\n\nSends a `GET` request to `/organizations/{organization_name}`\n\nArguments:\n- `organization_name`: The organization's unique name.\n```ignore\nlet response = client.organization_view()\n    .organization_name(organization_name)\n    .send()\n    .await;\n```"]
-    fn organization_view(&self) -> builder::OrganizationView;
-    #[doc = "Update an organization\n\nUse `PUT /v1/organizations/{organization}` instead\n\nSends a `PUT` request to `/organizations/{organization_name}`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `body`\n```ignore\nlet response = client.organization_update()\n    .organization_name(organization_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn organization_update(&self) -> builder::OrganizationUpdate;
-    #[doc = "Delete an organization\n\nUse `DELETE /v1/organizations/{organization}` instead\n\nSends a `DELETE` request to `/organizations/{organization_name}`\n\nArguments:\n- `organization_name`: The organization's unique name.\n```ignore\nlet response = client.organization_delete()\n    .organization_name(organization_name)\n    .send()\n    .await;\n```"]
-    fn organization_delete(&self) -> builder::OrganizationDelete;
-    #[doc = "Fetch an organization's IAM policy\n\nUse `GET /v1/organizations/{organization}/policy` instead\n\nSends a `GET` request to `/organizations/{organization_name}/policy`\n\nArguments:\n- `organization_name`: The organization's unique name.\n```ignore\nlet response = client.organization_policy_view()\n    .organization_name(organization_name)\n    .send()\n    .await;\n```"]
-    fn organization_policy_view(&self) -> builder::OrganizationPolicyView;
-    #[doc = "Update an organization's IAM policy\n\nUse `PUT /v1/organizations/{organization}/policy` instead\n\nSends a `PUT` request to `/organizations/{organization_name}/policy`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `body`\n```ignore\nlet response = client.organization_policy_update()\n    .organization_name(organization_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn organization_policy_update(&self) -> builder::OrganizationPolicyUpdate;
-    #[doc = "List organizations\n\nSends a `GET` request to `/v1/organizations`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.organization_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn organization_list_v1(&self) -> builder::OrganizationListV1;
-    #[doc = "Create an organization\n\nSends a `POST` request to `/v1/organizations`\n\n```ignore\nlet response = client.organization_create_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn organization_create_v1(&self) -> builder::OrganizationCreateV1;
-    #[doc = "Fetch an organization\n\nSends a `GET` request to `/v1/organizations/{organization}`\n\n```ignore\nlet response = client.organization_view_v1()\n    .organization(organization)\n    .send()\n    .await;\n```"]
-    fn organization_view_v1(&self) -> builder::OrganizationViewV1;
-    #[doc = "Update an organization\n\nSends a `PUT` request to `/v1/organizations/{organization}`\n\n```ignore\nlet response = client.organization_update_v1()\n    .organization(organization)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn organization_update_v1(&self) -> builder::OrganizationUpdateV1;
-    #[doc = "Delete an organization\n\nSends a `DELETE` request to `/v1/organizations/{organization}`\n\n```ignore\nlet response = client.organization_delete_v1()\n    .organization(organization)\n    .send()\n    .await;\n```"]
-    fn organization_delete_v1(&self) -> builder::OrganizationDeleteV1;
-    #[doc = "Fetch an organization's IAM policy\n\nSends a `GET` request to `/v1/organizations/{organization}/policy`\n\n```ignore\nlet response = client.organization_policy_view_v1()\n    .organization(organization)\n    .send()\n    .await;\n```"]
-    fn organization_policy_view_v1(&self) -> builder::OrganizationPolicyViewV1;
-    #[doc = "Update an organization's IAM policy\n\nSends a `PUT` request to `/v1/organizations/{organization}/policy`\n\n```ignore\nlet response = client.organization_policy_update_v1()\n    .organization(organization)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn organization_policy_update_v1(&self) -> builder::OrganizationPolicyUpdateV1;
-}
-
-impl ClientOrganizationsExt for Client {
-    fn organization_view_by_id(&self) -> builder::OrganizationViewById {
-        builder::OrganizationViewById::new(self)
-    }
-
-    fn organization_list(&self) -> builder::OrganizationList {
-        builder::OrganizationList::new(self)
-    }
-
-    fn organization_create(&self) -> builder::OrganizationCreate {
-        builder::OrganizationCreate::new(self)
-    }
-
-    fn organization_view(&self) -> builder::OrganizationView {
-        builder::OrganizationView::new(self)
-    }
-
-    fn organization_update(&self) -> builder::OrganizationUpdate {
-        builder::OrganizationUpdate::new(self)
-    }
-
-    fn organization_delete(&self) -> builder::OrganizationDelete {
-        builder::OrganizationDelete::new(self)
-    }
-
-    fn organization_policy_view(&self) -> builder::OrganizationPolicyView {
-        builder::OrganizationPolicyView::new(self)
-    }
-
-    fn organization_policy_update(&self) -> builder::OrganizationPolicyUpdate {
-        builder::OrganizationPolicyUpdate::new(self)
-    }
-
-    fn organization_list_v1(&self) -> builder::OrganizationListV1 {
-        builder::OrganizationListV1::new(self)
-    }
-
-    fn organization_create_v1(&self) -> builder::OrganizationCreateV1 {
-        builder::OrganizationCreateV1::new(self)
-    }
-
-    fn organization_view_v1(&self) -> builder::OrganizationViewV1 {
-        builder::OrganizationViewV1::new(self)
-    }
-
-    fn organization_update_v1(&self) -> builder::OrganizationUpdateV1 {
-        builder::OrganizationUpdateV1::new(self)
-    }
-
-    fn organization_delete_v1(&self) -> builder::OrganizationDeleteV1 {
-        builder::OrganizationDeleteV1::new(self)
-    }
-
-    fn organization_policy_view_v1(&self) -> builder::OrganizationPolicyViewV1 {
-        builder::OrganizationPolicyViewV1::new(self)
-    }
-
-    fn organization_policy_update_v1(&self) -> builder::OrganizationPolicyUpdateV1 {
-        builder::OrganizationPolicyUpdateV1::new(self)
-    }
-}
-
 pub trait ClientPolicyExt {
-    #[doc = "Fetch the top-level IAM policy\n\nUse `GET /v1/system/policy` instead\n\nSends a `GET` request to `/system/policy`\n\n```ignore\nlet response = client.system_policy_view()\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch the top-level IAM policy\n\nSends a `GET` request to `/v1/system/policy`\n\n```ignore\nlet response = client.system_policy_view()\n    .send()\n    .await;\n```"]
     fn system_policy_view(&self) -> builder::SystemPolicyView;
-    #[doc = "Update the top-level IAM policy\n\nUse 'PUT /v1/system/policy' instead\n\nSends a `PUT` request to `/system/policy`\n\n```ignore\nlet response = client.system_policy_update()\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update the top-level IAM policy\n\nSends a `PUT` request to `/v1/system/policy`\n\n```ignore\nlet response = client.system_policy_update()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn system_policy_update(&self) -> builder::SystemPolicyUpdate;
-    #[doc = "Fetch the top-level IAM policy\n\nSends a `GET` request to `/v1/system/policy`\n\n```ignore\nlet response = client.system_policy_view_v1()\n    .send()\n    .await;\n```"]
-    fn system_policy_view_v1(&self) -> builder::SystemPolicyViewV1;
-    #[doc = "Update the top-level IAM policy\n\nSends a `PUT` request to `/v1/system/policy`\n\n```ignore\nlet response = client.system_policy_update_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn system_policy_update_v1(&self) -> builder::SystemPolicyUpdateV1;
 }
 
 impl ClientPolicyExt for Client {
@@ -16105,54 +14672,26 @@ impl ClientPolicyExt for Client {
     fn system_policy_update(&self) -> builder::SystemPolicyUpdate {
         builder::SystemPolicyUpdate::new(self)
     }
-
-    fn system_policy_view_v1(&self) -> builder::SystemPolicyViewV1 {
-        builder::SystemPolicyViewV1::new(self)
-    }
-
-    fn system_policy_update_v1(&self) -> builder::SystemPolicyUpdateV1 {
-        builder::SystemPolicyUpdateV1::new(self)
-    }
 }
 
 pub trait ClientProjectsExt {
-    #[doc = "Fetch a project by id\n\nUse `GET /v1/projects/{project}` instead\n\nSends a `GET` request to `/by-id/projects/{id}`\n\n```ignore\nlet response = client.project_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn project_view_by_id(&self) -> builder::ProjectViewById;
-    #[doc = "List projects\n\nUse `GET /v1/projects` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.project_list()\n    .organization_name(organization_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List projects\n\nSends a `GET` request to `/v1/projects`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.project_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn project_list(&self) -> builder::ProjectList;
-    #[doc = "Create a project\n\nUse `POST /v1/projects` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `body`\n```ignore\nlet response = client.project_create()\n    .organization_name(organization_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a project\n\nSends a `POST` request to `/v1/projects`\n\n```ignore\nlet response = client.project_create()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn project_create(&self) -> builder::ProjectCreate;
-    #[doc = "Fetch a project\n\nUse `GET /v1/projects/{project}` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n```ignore\nlet response = client.project_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a project\n\nSends a `GET` request to `/v1/projects/{project}`\n\n```ignore\nlet response = client.project_view()\n    .project(project)\n    .send()\n    .await;\n```"]
     fn project_view(&self) -> builder::ProjectView;
-    #[doc = "Update a project\n\nUse `PUT /v1/projects/{project}` instead\n\nSends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `body`\n```ignore\nlet response = client.project_update()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a project\n\nSends a `PUT` request to `/v1/projects/{project}`\n\n```ignore\nlet response = client.project_update()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn project_update(&self) -> builder::ProjectUpdate;
-    #[doc = "Delete a project\n\nUse `DELETE /v1/projects/{project}` instead\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n```ignore\nlet response = client.project_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a project\n\nSends a `DELETE` request to `/v1/projects/{project}`\n\n```ignore\nlet response = client.project_delete()\n    .project(project)\n    .send()\n    .await;\n```"]
     fn project_delete(&self) -> builder::ProjectDelete;
-    #[doc = "Fetch a project's IAM policy\n\nUse `GET /v1/projects/{project}/policy` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/policy`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n```ignore\nlet response = client.project_policy_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a project's IAM policy\n\nSends a `GET` request to `/v1/projects/{project}/policy`\n\n```ignore\nlet response = client.project_policy_view()\n    .project(project)\n    .send()\n    .await;\n```"]
     fn project_policy_view(&self) -> builder::ProjectPolicyView;
-    #[doc = "Update a project's IAM policy\n\nSends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/policy`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `body`\n```ignore\nlet response = client.project_policy_update()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a project's IAM policy\n\nSends a `PUT` request to `/v1/projects/{project}/policy`\n\n```ignore\nlet response = client.project_policy_update()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn project_policy_update(&self) -> builder::ProjectPolicyUpdate;
-    #[doc = "List projects\n\nSends a `GET` request to `/v1/projects`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.project_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn project_list_v1(&self) -> builder::ProjectListV1;
-    #[doc = "Create a project\n\nSends a `POST` request to `/v1/projects`\n\n```ignore\nlet response = client.project_create_v1()\n    .organization(organization)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn project_create_v1(&self) -> builder::ProjectCreateV1;
-    #[doc = "Fetch a project\n\nSends a `GET` request to `/v1/projects/{project}`\n\n```ignore\nlet response = client.project_view_v1()\n    .project(project)\n    .organization(organization)\n    .send()\n    .await;\n```"]
-    fn project_view_v1(&self) -> builder::ProjectViewV1;
-    #[doc = "Update a project\n\nSends a `PUT` request to `/v1/projects/{project}`\n\n```ignore\nlet response = client.project_update_v1()\n    .project(project)\n    .organization(organization)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn project_update_v1(&self) -> builder::ProjectUpdateV1;
-    #[doc = "Delete a project\n\nSends a `DELETE` request to `/v1/projects/{project}`\n\n```ignore\nlet response = client.project_delete_v1()\n    .project(project)\n    .organization(organization)\n    .send()\n    .await;\n```"]
-    fn project_delete_v1(&self) -> builder::ProjectDeleteV1;
-    #[doc = "Fetch a project's IAM policy\n\nSends a `GET` request to `/v1/projects/{project}/policy`\n\n```ignore\nlet response = client.project_policy_view_v1()\n    .project(project)\n    .organization(organization)\n    .send()\n    .await;\n```"]
-    fn project_policy_view_v1(&self) -> builder::ProjectPolicyViewV1;
-    #[doc = "Update a project's IAM policy\n\nSends a `PUT` request to `/v1/projects/{project}/policy`\n\n```ignore\nlet response = client.project_policy_update_v1()\n    .project(project)\n    .organization(organization)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn project_policy_update_v1(&self) -> builder::ProjectPolicyUpdateV1;
 }
 
 impl ClientProjectsExt for Client {
-    fn project_view_by_id(&self) -> builder::ProjectViewById {
-        builder::ProjectViewById::new(self)
-    }
-
     fn project_list(&self) -> builder::ProjectList {
         builder::ProjectList::new(self)
     }
@@ -16180,40 +14719,12 @@ impl ClientProjectsExt for Client {
     fn project_policy_update(&self) -> builder::ProjectPolicyUpdate {
         builder::ProjectPolicyUpdate::new(self)
     }
-
-    fn project_list_v1(&self) -> builder::ProjectListV1 {
-        builder::ProjectListV1::new(self)
-    }
-
-    fn project_create_v1(&self) -> builder::ProjectCreateV1 {
-        builder::ProjectCreateV1::new(self)
-    }
-
-    fn project_view_v1(&self) -> builder::ProjectViewV1 {
-        builder::ProjectViewV1::new(self)
-    }
-
-    fn project_update_v1(&self) -> builder::ProjectUpdateV1 {
-        builder::ProjectUpdateV1::new(self)
-    }
-
-    fn project_delete_v1(&self) -> builder::ProjectDeleteV1 {
-        builder::ProjectDeleteV1::new(self)
-    }
-
-    fn project_policy_view_v1(&self) -> builder::ProjectPolicyViewV1 {
-        builder::ProjectPolicyViewV1::new(self)
-    }
-
-    fn project_policy_update_v1(&self) -> builder::ProjectPolicyUpdateV1 {
-        builder::ProjectPolicyUpdateV1::new(self)
-    }
 }
 
 pub trait ClientRolesExt {
-    #[doc = "List built-in roles\n\nSends a `GET` request to `/roles`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.role_list()\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
+    #[doc = "List built-in roles\n\nSends a `GET` request to `/v1/system/roles`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.role_list()\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
     fn role_list(&self) -> builder::RoleList;
-    #[doc = "Fetch a built-in role\n\nSends a `GET` request to `/roles/{role_name}`\n\nArguments:\n- `role_name`: The built-in role's unique name.\n```ignore\nlet response = client.role_view()\n    .role_name(role_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a built-in role\n\nSends a `GET` request to `/v1/system/roles/{role_name}`\n\nArguments:\n- `role_name`: The built-in role's unique name.\n```ignore\nlet response = client.role_view()\n    .role_name(role_name)\n    .send()\n    .await;\n```"]
     fn role_view(&self) -> builder::RoleView;
 }
 
@@ -16228,94 +14739,66 @@ impl ClientRolesExt for Client {
 }
 
 pub trait ClientSessionExt {
-    #[doc = "List SSH public keys\n\nLists SSH public keys for the currently authenticated user.\n\nSends a `GET` request to `/session/me/sshkeys`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.session_sshkey_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn session_sshkey_list(&self) -> builder::SessionSshkeyList;
-    #[doc = "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.\n\nSends a `POST` request to `/session/me/sshkeys`\n\n```ignore\nlet response = client.session_sshkey_create()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn session_sshkey_create(&self) -> builder::SessionSshkeyCreate;
-    #[doc = "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user. Use `GET /v1/me/ssh-keys` instead\n\nSends a `GET` request to `/session/me/sshkeys/{ssh_key_name}`\n\n```ignore\nlet response = client.session_sshkey_view()\n    .ssh_key_name(ssh_key_name)\n    .send()\n    .await;\n```"]
-    fn session_sshkey_view(&self) -> builder::SessionSshkeyView;
-    #[doc = "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.\n\nSends a `DELETE` request to `/session/me/sshkeys/{ssh_key_name}`\n\n```ignore\nlet response = client.session_sshkey_delete()\n    .ssh_key_name(ssh_key_name)\n    .send()\n    .await;\n```"]
-    fn session_sshkey_delete(&self) -> builder::SessionSshkeyDelete;
-    #[doc = "Fetch the user associated with the current session\n\nSends a `GET` request to `/v1/me`\n\n```ignore\nlet response = client.current_user_view_v1()\n    .send()\n    .await;\n```"]
-    fn current_user_view_v1(&self) -> builder::CurrentUserViewV1;
-    #[doc = "Fetch the silo\u{a0}groups the current user belongs to\n\nSends a `GET` request to `/v1/me/groups`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.current_user_groups_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn current_user_groups_v1(&self) -> builder::CurrentUserGroupsV1;
-    #[doc = "List SSH public keys\n\nLists SSH public keys for the currently authenticated user.\n\nSends a `GET` request to `/v1/me/ssh-keys`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.current_user_ssh_key_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn current_user_ssh_key_list_v1(&self) -> builder::CurrentUserSshKeyListV1;
-    #[doc = "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.\n\nSends a `POST` request to `/v1/me/ssh-keys`\n\n```ignore\nlet response = client.current_user_ssh_key_create_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn current_user_ssh_key_create_v1(&self) -> builder::CurrentUserSshKeyCreateV1;
-    #[doc = "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.\n\nSends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`\n\n```ignore\nlet response = client.current_user_ssh_key_view_v1()\n    .ssh_key(ssh_key)\n    .send()\n    .await;\n```"]
-    fn current_user_ssh_key_view_v1(&self) -> builder::CurrentUserSshKeyViewV1;
-    #[doc = "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.\n\nSends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`\n\n```ignore\nlet response = client.current_user_ssh_key_delete_v1()\n    .ssh_key(ssh_key)\n    .send()\n    .await;\n```"]
-    fn current_user_ssh_key_delete_v1(&self) -> builder::CurrentUserSshKeyDeleteV1;
+    #[doc = "Fetch the user associated with the current session\n\nSends a `GET` request to `/v1/me`\n\n```ignore\nlet response = client.current_user_view()\n    .send()\n    .await;\n```"]
+    fn current_user_view(&self) -> builder::CurrentUserView;
+    #[doc = "Fetch the silo\u{a0}groups the current user belongs to\n\nSends a `GET` request to `/v1/me/groups`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.current_user_groups()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn current_user_groups(&self) -> builder::CurrentUserGroups;
+    #[doc = "List SSH public keys\n\nLists SSH public keys for the currently authenticated user.\n\nSends a `GET` request to `/v1/me/ssh-keys`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.current_user_ssh_key_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList;
+    #[doc = "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.\n\nSends a `POST` request to `/v1/me/ssh-keys`\n\n```ignore\nlet response = client.current_user_ssh_key_create()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate;
+    #[doc = "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.\n\nSends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`\n\n```ignore\nlet response = client.current_user_ssh_key_view()\n    .ssh_key(ssh_key)\n    .send()\n    .await;\n```"]
+    fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView;
+    #[doc = "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.\n\nSends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`\n\n```ignore\nlet response = client.current_user_ssh_key_delete()\n    .ssh_key(ssh_key)\n    .send()\n    .await;\n```"]
+    fn current_user_ssh_key_delete(&self) -> builder::CurrentUserSshKeyDelete;
 }
 
 impl ClientSessionExt for Client {
-    fn session_sshkey_list(&self) -> builder::SessionSshkeyList {
-        builder::SessionSshkeyList::new(self)
+    fn current_user_view(&self) -> builder::CurrentUserView {
+        builder::CurrentUserView::new(self)
     }
 
-    fn session_sshkey_create(&self) -> builder::SessionSshkeyCreate {
-        builder::SessionSshkeyCreate::new(self)
+    fn current_user_groups(&self) -> builder::CurrentUserGroups {
+        builder::CurrentUserGroups::new(self)
     }
 
-    fn session_sshkey_view(&self) -> builder::SessionSshkeyView {
-        builder::SessionSshkeyView::new(self)
+    fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList {
+        builder::CurrentUserSshKeyList::new(self)
     }
 
-    fn session_sshkey_delete(&self) -> builder::SessionSshkeyDelete {
-        builder::SessionSshkeyDelete::new(self)
+    fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate {
+        builder::CurrentUserSshKeyCreate::new(self)
     }
 
-    fn current_user_view_v1(&self) -> builder::CurrentUserViewV1 {
-        builder::CurrentUserViewV1::new(self)
+    fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView {
+        builder::CurrentUserSshKeyView::new(self)
     }
 
-    fn current_user_groups_v1(&self) -> builder::CurrentUserGroupsV1 {
-        builder::CurrentUserGroupsV1::new(self)
-    }
-
-    fn current_user_ssh_key_list_v1(&self) -> builder::CurrentUserSshKeyListV1 {
-        builder::CurrentUserSshKeyListV1::new(self)
-    }
-
-    fn current_user_ssh_key_create_v1(&self) -> builder::CurrentUserSshKeyCreateV1 {
-        builder::CurrentUserSshKeyCreateV1::new(self)
-    }
-
-    fn current_user_ssh_key_view_v1(&self) -> builder::CurrentUserSshKeyViewV1 {
-        builder::CurrentUserSshKeyViewV1::new(self)
-    }
-
-    fn current_user_ssh_key_delete_v1(&self) -> builder::CurrentUserSshKeyDeleteV1 {
-        builder::CurrentUserSshKeyDeleteV1::new(self)
+    fn current_user_ssh_key_delete(&self) -> builder::CurrentUserSshKeyDelete {
+        builder::CurrentUserSshKeyDelete::new(self)
     }
 }
 
 pub trait ClientSilosExt {
-    #[doc = "List groups\n\nUse `GET /v1/groups` instead\n\nSends a `GET` request to `/groups`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.group_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn group_list(&self) -> builder::GroupList;
-    #[doc = "Fetch the current silo's IAM policy\n\nUse `GET /v1/policy` instead\n\nSends a `GET` request to `/policy`\n\n```ignore\nlet response = client.policy_view()\n    .send()\n    .await;\n```"]
-    fn policy_view(&self) -> builder::PolicyView;
-    #[doc = "Update the current silo's IAM policy\n\nUse `PUT /v1/policy` instead\n\nSends a `PUT` request to `/policy`\n\n```ignore\nlet response = client.policy_update()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn policy_update(&self) -> builder::PolicyUpdate;
-    #[doc = "List users\n\nUse `GET /v1/users` instead\n\nSends a `GET` request to `/users`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.user_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn user_list(&self) -> builder::UserList;
     #[doc = "List groups\n\nSends a `GET` request to `/v1/groups`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.group_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn group_list_v1(&self) -> builder::GroupListV1;
     #[doc = "Fetch group\n\nSends a `GET` request to `/v1/groups/{group}`\n\n```ignore\nlet response = client.group_view()\n    .group(group)\n    .send()\n    .await;\n```"]
     fn group_view(&self) -> builder::GroupView;
-    #[doc = "Fetch the current silo's IAM policy\n\nSends a `GET` request to `/v1/policy`\n\n```ignore\nlet response = client.policy_view_v1()\n    .send()\n    .await;\n```"]
-    fn policy_view_v1(&self) -> builder::PolicyViewV1;
-    #[doc = "Update the current silo's IAM policy\n\nSends a `PUT` request to `/v1/policy`\n\n```ignore\nlet response = client.policy_update_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn policy_update_v1(&self) -> builder::PolicyUpdateV1;
+    #[doc = "Fetch the current silo's IAM policy\n\nSends a `GET` request to `/v1/policy`\n\n```ignore\nlet response = client.policy_view()\n    .send()\n    .await;\n```"]
+    fn policy_view(&self) -> builder::PolicyView;
+    #[doc = "Update the current silo's IAM policy\n\nSends a `PUT` request to `/v1/policy`\n\n```ignore\nlet response = client.policy_update()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn policy_update(&self) -> builder::PolicyUpdate;
     #[doc = "List users\n\nSends a `GET` request to `/v1/users`\n\nArguments:\n- `group`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.user_list_v1()\n    .group(group)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn user_list_v1(&self) -> builder::UserListV1;
 }
 
 impl ClientSilosExt for Client {
-    fn group_list(&self) -> builder::GroupList {
-        builder::GroupList::new(self)
+    fn group_list_v1(&self) -> builder::GroupListV1 {
+        builder::GroupListV1::new(self)
+    }
+
+    fn group_view(&self) -> builder::GroupView {
+        builder::GroupView::new(self)
     }
 
     fn policy_view(&self) -> builder::PolicyView {
@@ -16326,57 +14809,23 @@ impl ClientSilosExt for Client {
         builder::PolicyUpdate::new(self)
     }
 
-    fn user_list(&self) -> builder::UserList {
-        builder::UserList::new(self)
-    }
-
-    fn group_list_v1(&self) -> builder::GroupListV1 {
-        builder::GroupListV1::new(self)
-    }
-
-    fn group_view(&self) -> builder::GroupView {
-        builder::GroupView::new(self)
-    }
-
-    fn policy_view_v1(&self) -> builder::PolicyViewV1 {
-        builder::PolicyViewV1::new(self)
-    }
-
-    fn policy_update_v1(&self) -> builder::PolicyUpdateV1 {
-        builder::PolicyUpdateV1::new(self)
-    }
-
     fn user_list_v1(&self) -> builder::UserListV1 {
         builder::UserListV1::new(self)
     }
 }
 
 pub trait ClientSnapshotsExt {
-    #[doc = "Fetch a snapshot by id\n\nUse `GET /v1/snapshots/{snapshot}` instead.\n\nSends a `GET` request to `/by-id/snapshots/{id}`\n\n```ignore\nlet response = client.snapshot_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn snapshot_view_by_id(&self) -> builder::SnapshotViewById;
-    #[doc = "List snapshots\n\nUse `GET /v1/snapshots` instead.\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/snapshots`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.snapshot_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List snapshots\n\nSends a `GET` request to `/v1/snapshots`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.snapshot_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn snapshot_list(&self) -> builder::SnapshotList;
-    #[doc = "Create a snapshot\n\nUse `POST /v1/snapshots` instead.\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/snapshots`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `body`\n```ignore\nlet response = client.snapshot_create()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a snapshot\n\nCreates a point-in-time snapshot from a disk.\n\nSends a `POST` request to `/v1/snapshots`\n\n```ignore\nlet response = client.snapshot_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn snapshot_create(&self) -> builder::SnapshotCreate;
-    #[doc = "Fetch a snapshot\n\nUse `GET /v1/snapshots/{snapshot}` instead.\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/snapshots/{snapshot_name}`\n\n```ignore\nlet response = client.snapshot_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .snapshot_name(snapshot_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a snapshot\n\nSends a `GET` request to `/v1/snapshots/{snapshot}`\n\n```ignore\nlet response = client.snapshot_view()\n    .snapshot(snapshot)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn snapshot_view(&self) -> builder::SnapshotView;
-    #[doc = "Delete a snapshot\n\nUse `DELETE /v1/snapshots/{snapshot}` instead.\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/snapshots/{snapshot_name}`\n\n```ignore\nlet response = client.snapshot_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .snapshot_name(snapshot_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a snapshot\n\nSends a `DELETE` request to `/v1/snapshots/{snapshot}`\n\n```ignore\nlet response = client.snapshot_delete()\n    .snapshot(snapshot)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn snapshot_delete(&self) -> builder::SnapshotDelete;
-    #[doc = "List snapshots\n\nSends a `GET` request to `/v1/snapshots`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.snapshot_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn snapshot_list_v1(&self) -> builder::SnapshotListV1;
-    #[doc = "Create a snapshot\n\nCreates a point-in-time snapshot from a disk.\n\nSends a `POST` request to `/v1/snapshots`\n\n```ignore\nlet response = client.snapshot_create_v1()\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn snapshot_create_v1(&self) -> builder::SnapshotCreateV1;
-    #[doc = "Fetch a snapshot\n\nSends a `GET` request to `/v1/snapshots/{snapshot}`\n\n```ignore\nlet response = client.snapshot_view_v1()\n    .snapshot(snapshot)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn snapshot_view_v1(&self) -> builder::SnapshotViewV1;
-    #[doc = "Delete a snapshot\n\nSends a `DELETE` request to `/v1/snapshots/{snapshot}`\n\n```ignore\nlet response = client.snapshot_delete_v1()\n    .snapshot(snapshot)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn snapshot_delete_v1(&self) -> builder::SnapshotDeleteV1;
 }
 
 impl ClientSnapshotsExt for Client {
-    fn snapshot_view_by_id(&self) -> builder::SnapshotViewById {
-        builder::SnapshotViewById::new(self)
-    }
-
     fn snapshot_list(&self) -> builder::SnapshotList {
         builder::SnapshotList::new(self)
     }
@@ -16392,39 +14841,13 @@ impl ClientSnapshotsExt for Client {
     fn snapshot_delete(&self) -> builder::SnapshotDelete {
         builder::SnapshotDelete::new(self)
     }
-
-    fn snapshot_list_v1(&self) -> builder::SnapshotListV1 {
-        builder::SnapshotListV1::new(self)
-    }
-
-    fn snapshot_create_v1(&self) -> builder::SnapshotCreateV1 {
-        builder::SnapshotCreateV1::new(self)
-    }
-
-    fn snapshot_view_v1(&self) -> builder::SnapshotViewV1 {
-        builder::SnapshotViewV1::new(self)
-    }
-
-    fn snapshot_delete_v1(&self) -> builder::SnapshotDeleteV1 {
-        builder::SnapshotDeleteV1::new(self)
-    }
 }
 
 pub trait ClientSystemExt {
     #[doc = "Fetch a system-wide image by id\n\nSends a `GET` request to `/system/by-id/images/{id}`\n\n```ignore\nlet response = client.system_image_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
     fn system_image_view_by_id(&self) -> builder::SystemImageViewById;
-    #[doc = "Fetch an IP pool by id\n\nUse `GET /v1/system/ip-pools/{pool}` instead\n\nSends a `GET` request to `/system/by-id/ip-pools/{id}`\n\n```ignore\nlet response = client.ip_pool_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn ip_pool_view_by_id(&self) -> builder::IpPoolViewById;
     #[doc = "Fetch a silo by id\n\nUse `GET /v1/system/silos/{id}` instead.\n\nSends a `GET` request to `/system/by-id/silos/{id}`\n\n```ignore\nlet response = client.silo_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
     fn silo_view_by_id(&self) -> builder::SiloViewById;
-    #[doc = "List system-wide certificates\n\nReturns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first. Use `GET /v1/system/certificates` instead\n\nSends a `GET` request to `/system/certificates`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.certificate_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn certificate_list(&self) -> builder::CertificateList;
-    #[doc = "Create a new system-wide x.509 certificate\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections. Use `POST /v1/system/certificates` instead\n\nSends a `POST` request to `/system/certificates`\n\n```ignore\nlet response = client.certificate_create()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn certificate_create(&self) -> builder::CertificateCreate;
-    #[doc = "Fetch a certificate\n\nReturns the details of a specific certificate Use `GET /v1/system/certificates/{certificate}` instead\n\nSends a `GET` request to `/system/certificates/{certificate}`\n\n```ignore\nlet response = client.certificate_view()\n    .certificate(certificate)\n    .send()\n    .await;\n```"]
-    fn certificate_view(&self) -> builder::CertificateView;
-    #[doc = "Delete a certificate\n\nPermanently delete a certificate. This operation cannot be undone. Use `DELETE /v1/system/certificates/{certificate}` instead\n\nSends a `DELETE` request to `/system/certificates/{certificate}`\n\n```ignore\nlet response = client.certificate_delete()\n    .certificate(certificate)\n    .send()\n    .await;\n```"]
-    fn certificate_delete(&self) -> builder::CertificateDelete;
     #[doc = "List physical disks\n\nUse `GET /v1/system/hardware/disks` instead\n\nSends a `GET` request to `/system/hardware/disks`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.physical_disk_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn physical_disk_list(&self) -> builder::PhysicalDiskList;
     #[doc = "List racks\n\nUse `GET /v1/system/hardware/racks` instead\n\nSends a `GET` request to `/system/hardware/racks`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.rack_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
@@ -16445,32 +14868,6 @@ pub trait ClientSystemExt {
     fn system_image_view(&self) -> builder::SystemImageView;
     #[doc = "Delete a system-wide image\n\nPermanently delete a system-wide image. This operation cannot be undone. Any instances using the system-wide image will continue to run, however new instances can not be created with this image.\n\nSends a `DELETE` request to `/system/images/{image_name}`\n\n```ignore\nlet response = client.system_image_delete()\n    .image_name(image_name)\n    .send()\n    .await;\n```"]
     fn system_image_delete(&self) -> builder::SystemImageDelete;
-    #[doc = "List IP pools\n\nUse `GET /v1/system/ip-pools` instead\n\nSends a `GET` request to `/system/ip-pools`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.ip_pool_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn ip_pool_list(&self) -> builder::IpPoolList;
-    #[doc = "Create an IP pool\n\nUse `POST /v1/system/ip-pools` instead\n\nSends a `POST` request to `/system/ip-pools`\n\n```ignore\nlet response = client.ip_pool_create()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_create(&self) -> builder::IpPoolCreate;
-    #[doc = "Fetch an IP pool\n\nUse `GET /v1/system/ip-pools/{pool}` instead\n\nSends a `GET` request to `/system/ip-pools/{pool_name}`\n\n```ignore\nlet response = client.ip_pool_view()\n    .pool_name(pool_name)\n    .send()\n    .await;\n```"]
-    fn ip_pool_view(&self) -> builder::IpPoolView;
-    #[doc = "Update an IP Pool\n\nUse `PUT /v1/system/ip-pools/{pool}` instead\n\nSends a `PUT` request to `/system/ip-pools/{pool_name}`\n\n```ignore\nlet response = client.ip_pool_update()\n    .pool_name(pool_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_update(&self) -> builder::IpPoolUpdate;
-    #[doc = "Delete an IP Pool\n\nUse `DELETE /v1/system/ip-pools/{pool}` instead\n\nSends a `DELETE` request to `/system/ip-pools/{pool_name}`\n\n```ignore\nlet response = client.ip_pool_delete()\n    .pool_name(pool_name)\n    .send()\n    .await;\n```"]
-    fn ip_pool_delete(&self) -> builder::IpPoolDelete;
-    #[doc = "List ranges for an IP pool\n\nRanges are ordered by their first address. Use `GET /v1/system/ip-pools/{pool}/ranges` instead\n\nSends a `GET` request to `/system/ip-pools/{pool_name}/ranges`\n\nArguments:\n- `pool_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_range_list()\n    .pool_name(pool_name)\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
-    fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
-    #[doc = "Add a range to an IP pool\n\nUse `POST /v1/system/ip-pools/{pool}/ranges/add` instead\n\nSends a `POST` request to `/system/ip-pools/{pool_name}/ranges/add`\n\n```ignore\nlet response = client.ip_pool_range_add()\n    .pool_name(pool_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd;
-    #[doc = "Remove a range from an IP pool\n\nUse `POST /v1/system/ip-pools/{pool}/ranges/remove` instead.\n\nSends a `POST` request to `/system/ip-pools/{pool_name}/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_range_remove()\n    .pool_name(pool_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove;
-    #[doc = "Fetch the IP pool used for Oxide services\n\nUse `GET /v1/system/ip-pools-service` instead\n\nSends a `GET` request to `/system/ip-pools-service`\n\n```ignore\nlet response = client.ip_pool_service_view()\n    .send()\n    .await;\n```"]
-    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
-    #[doc = "List ranges for the IP pool used for Oxide services\n\nRanges are ordered by their first address. Use `GET /v1/system/ip-pools-service/ranges` instead.\n\nSends a `GET` request to `/system/ip-pools-service/ranges`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_service_range_list()\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
-    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
-    #[doc = "Add a range to an IP pool used for Oxide services\n\nUse `POST /v1/system/ip-pools-service/ranges/add` instead\n\nSends a `POST` request to `/system/ip-pools-service/ranges/add`\n\n```ignore\nlet response = client.ip_pool_service_range_add()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd;
-    #[doc = "Remove a range from an IP pool used for Oxide services\n\nUse `POST /v1/system/ip-pools-service/ranges/remove` instead\n\nSends a `POST` request to `/system/ip-pools-service/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_service_range_remove()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
-    #[doc = "Access metrics data\n\nSends a `GET` request to `/system/metrics/{metric_name}`\n\nArguments:\n- `metric_name`\n- `end_time`: An exclusive end time of metrics.\n- `id`: The UUID of the container being queried\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.system_metric()\n    .metric_name(metric_name)\n    .end_time(end_time)\n    .id(id)\n    .limit(limit)\n    .page_token(page_token)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
-    fn system_metric(&self) -> builder::SystemMetric;
     #[doc = "List sagas\n\nUse `GET v1/system/sagas` instead\n\nSends a `GET` request to `/system/sagas`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.saga_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn saga_list(&self) -> builder::SagaList;
     #[doc = "Fetch a saga\n\nUse `GET v1/system/sagas/{saga_id}` instead\n\nSends a `GET` request to `/system/sagas/{saga_id}`\n\n```ignore\nlet response = client.saga_view()\n    .saga_id(saga_id)\n    .send()\n    .await;\n```"]
@@ -16483,38 +14880,18 @@ pub trait ClientSystemExt {
     fn silo_view(&self) -> builder::SiloView;
     #[doc = "Delete a silo\n\nDelete a silo by name. Use `DELETE /v1/system/silos/{silo}` instead.\n\nSends a `DELETE` request to `/system/silos/{silo_name}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n```ignore\nlet response = client.silo_delete()\n    .silo_name(silo_name)\n    .send()\n    .await;\n```"]
     fn silo_delete(&self) -> builder::SiloDelete;
-    #[doc = "List a silo's IDPs\n\nUse `/v1/system/silos/{silo}/identity-providers` instead.\n\nSends a `GET` request to `/system/silos/{silo_name}/identity-providers`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.silo_identity_provider_list()\n    .silo_name(silo_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
-    #[doc = "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.\n\nSends a `POST` request to `/system/silos/{silo_name}/identity-providers/local/users`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `body`\n```ignore\nlet response = client.local_idp_user_create()\n    .silo_name(silo_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
-    #[doc = "Delete a user\n\nUse `DELETE /v1/system/identity-providers/local/users/{user_id}` instead\n\nSends a `DELETE` request to `/system/silos/{silo_name}/identity-providers/local/users/{user_id}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `user_id`: The user's internal id\n```ignore\nlet response = client.local_idp_user_delete()\n    .silo_name(silo_name)\n    .user_id(user_id)\n    .send()\n    .await;\n```"]
-    fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
-    #[doc = "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`. Use `POST /v1/system/identity-providers/local/users/{user_id}/set-password` instead\n\nSends a `POST` request to `/system/silos/{silo_name}/identity-providers/local/users/{user_id}/set-password`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `user_id`: The user's internal id\n- `body`\n```ignore\nlet response = client.local_idp_user_set_password()\n    .silo_name(silo_name)\n    .user_id(user_id)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
-    #[doc = "Create a SAML IDP\n\nUse `POST /v1/system/identity-providers/saml` instead.\n\nSends a `POST` request to `/system/silos/{silo_name}/identity-providers/saml`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `body`\n```ignore\nlet response = client.saml_identity_provider_create()\n    .silo_name(silo_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
-    #[doc = "Fetch a SAML IDP\n\nUse `GET /v1/system/identity-providers/saml/{provider_name}` instead\n\nSends a `GET` request to `/system/silos/{silo_name}/identity-providers/saml/{provider_name}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `provider_name`: The SAML identity provider's name\n```ignore\nlet response = client.saml_identity_provider_view()\n    .silo_name(silo_name)\n    .provider_name(provider_name)\n    .send()\n    .await;\n```"]
-    fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView;
     #[doc = "Fetch a silo's IAM policy\n\nUse `GET /v1/system/silos/{silo}/policy` instead.\n\nSends a `GET` request to `/system/silos/{silo_name}/policy`\n\nArguments:\n- `silo_name`: The silo's unique name.\n```ignore\nlet response = client.silo_policy_view()\n    .silo_name(silo_name)\n    .send()\n    .await;\n```"]
     fn silo_policy_view(&self) -> builder::SiloPolicyView;
     #[doc = "Update a silo's IAM policy\n\nUse `PUT /v1/system/silos/{silo}/policy` instead\n\nSends a `PUT` request to `/system/silos/{silo_name}/policy`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `body`\n```ignore\nlet response = client.silo_policy_update()\n    .silo_name(silo_name)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate;
-    #[doc = "List users in a silo\n\nUse `GET /v1/system/users` instead.\n\nSends a `GET` request to `/system/silos/{silo_name}/users/all`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.silo_users_list()\n    .silo_name(silo_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn silo_users_list(&self) -> builder::SiloUsersList;
-    #[doc = "Fetch a user\n\nUse `GET /v1/system/users/{user_id}` instead\n\nSends a `GET` request to `/system/silos/{silo_name}/users/id/{user_id}`\n\nArguments:\n- `silo_name`: The silo's unique name.\n- `user_id`: The user's internal id\n```ignore\nlet response = client.silo_user_view()\n    .silo_name(silo_name)\n    .user_id(user_id)\n    .send()\n    .await;\n```"]
-    fn silo_user_view(&self) -> builder::SiloUserView;
-    #[doc = "List built-in users\n\nSends a `GET` request to `/system/user`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.system_user_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn system_user_list(&self) -> builder::SystemUserList;
-    #[doc = "Fetch a built-in user\n\nSends a `GET` request to `/system/user/{user_name}`\n\nArguments:\n- `user_name`: The built-in user's unique name.\n```ignore\nlet response = client.system_user_view()\n    .user_name(user_name)\n    .send()\n    .await;\n```"]
-    fn system_user_view(&self) -> builder::SystemUserView;
-    #[doc = "List system-wide certificates\n\nReturns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.\n\nSends a `GET` request to `/v1/system/certificates`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.certificate_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn certificate_list_v1(&self) -> builder::CertificateListV1;
-    #[doc = "Create a new system-wide x.509 certificate\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.\n\nSends a `POST` request to `/v1/system/certificates`\n\n```ignore\nlet response = client.certificate_create_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn certificate_create_v1(&self) -> builder::CertificateCreateV1;
-    #[doc = "Fetch a certificate\n\nReturns the details of a specific certificate\n\nSends a `GET` request to `/v1/system/certificates/{certificate}`\n\n```ignore\nlet response = client.certificate_view_v1()\n    .certificate(certificate)\n    .send()\n    .await;\n```"]
-    fn certificate_view_v1(&self) -> builder::CertificateViewV1;
-    #[doc = "Delete a certificate\n\nPermanently delete a certificate. This operation cannot be undone.\n\nSends a `DELETE` request to `/v1/system/certificates/{certificate}`\n\n```ignore\nlet response = client.certificate_delete_v1()\n    .certificate(certificate)\n    .send()\n    .await;\n```"]
-    fn certificate_delete_v1(&self) -> builder::CertificateDeleteV1;
+    #[doc = "List system-wide certificates\n\nReturns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.\n\nSends a `GET` request to `/v1/system/certificates`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.certificate_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn certificate_list(&self) -> builder::CertificateList;
+    #[doc = "Create a new system-wide x.509 certificate\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.\n\nSends a `POST` request to `/v1/system/certificates`\n\n```ignore\nlet response = client.certificate_create()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn certificate_create(&self) -> builder::CertificateCreate;
+    #[doc = "Fetch a certificate\n\nReturns the details of a specific certificate\n\nSends a `GET` request to `/v1/system/certificates/{certificate}`\n\n```ignore\nlet response = client.certificate_view()\n    .certificate(certificate)\n    .send()\n    .await;\n```"]
+    fn certificate_view(&self) -> builder::CertificateView;
+    #[doc = "Delete a certificate\n\nPermanently delete a certificate. This operation cannot be undone.\n\nSends a `DELETE` request to `/v1/system/certificates/{certificate}`\n\n```ignore\nlet response = client.certificate_delete()\n    .certificate(certificate)\n    .send()\n    .await;\n```"]
+    fn certificate_delete(&self) -> builder::CertificateDelete;
     #[doc = "List physical disks\n\nSends a `GET` request to `/v1/system/hardware/disks`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.physical_disk_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn physical_disk_list_v1(&self) -> builder::PhysicalDiskListV1;
     #[doc = "List racks\n\nSends a `GET` request to `/v1/system/hardware/racks`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.rack_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
@@ -16527,42 +14904,44 @@ pub trait ClientSystemExt {
     fn sled_view_v1(&self) -> builder::SledViewV1;
     #[doc = "List physical disks attached to sleds\n\nSends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/disks`\n\nArguments:\n- `sled_id`: The sled's unique ID.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.sled_physical_disk_list_v1()\n    .sled_id(sled_id)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn sled_physical_disk_list_v1(&self) -> builder::SledPhysicalDiskListV1;
-    #[doc = "List a silo's IDPs_name\n\nSends a `GET` request to `/v1/system/identity-providers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `silo`\n- `sort_by`\n```ignore\nlet response = client.silo_identity_provider_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .silo(silo)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn silo_identity_provider_list_v1(&self) -> builder::SiloIdentityProviderListV1;
-    #[doc = "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider. Use `POST /v1/system/identity-providers/local/users` instead\n\nSends a `POST` request to `/v1/system/identity-providers/local/users`\n\n```ignore\nlet response = client.local_idp_user_create_v1()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn local_idp_user_create_v1(&self) -> builder::LocalIdpUserCreateV1;
-    #[doc = "Delete a user\n\nSends a `DELETE` request to `/v1/system/identity-providers/local/users/{user_id}`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n```ignore\nlet response = client.local_idp_user_delete_v1()\n    .user_id(user_id)\n    .silo(silo)\n    .send()\n    .await;\n```"]
-    fn local_idp_user_delete_v1(&self) -> builder::LocalIdpUserDeleteV1;
-    #[doc = "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.\n\nSends a `POST` request to `/v1/system/identity-providers/local/users/{user_id}/set-password`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n- `body`\n```ignore\nlet response = client.local_idp_user_set_password_v1()\n    .user_id(user_id)\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn local_idp_user_set_password_v1(&self) -> builder::LocalIdpUserSetPasswordV1;
-    #[doc = "Create a SAML IDP\n\nSends a `POST` request to `/v1/system/identity-providers/saml`\n\n```ignore\nlet response = client.saml_identity_provider_create_v1()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn saml_identity_provider_create_v1(&self) -> builder::SamlIdentityProviderCreateV1;
-    #[doc = "Fetch a SAML IDP\n\nSends a `GET` request to `/v1/system/identity-providers/saml/{provider}`\n\n```ignore\nlet response = client.saml_identity_provider_view_v1()\n    .provider(provider)\n    .silo(silo)\n    .send()\n    .await;\n```"]
-    fn saml_identity_provider_view_v1(&self) -> builder::SamlIdentityProviderViewV1;
-    #[doc = "List IP pools\n\nSends a `GET` request to `/v1/system/ip-pools`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.ip_pool_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn ip_pool_list_v1(&self) -> builder::IpPoolListV1;
-    #[doc = "Create an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools`\n\n```ignore\nlet response = client.ip_pool_create_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_create_v1(&self) -> builder::IpPoolCreateV1;
-    #[doc = "Fetch an IP pool\n\nSends a `GET` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_view_v1()\n    .pool(pool)\n    .send()\n    .await;\n```"]
-    fn ip_pool_view_v1(&self) -> builder::IpPoolViewV1;
-    #[doc = "Update an IP Pool\n\nSends a `PUT` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_update_v1()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_update_v1(&self) -> builder::IpPoolUpdateV1;
-    #[doc = "Delete an IP Pool\n\nSends a `DELETE` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_delete_v1()\n    .pool(pool)\n    .send()\n    .await;\n```"]
-    fn ip_pool_delete_v1(&self) -> builder::IpPoolDeleteV1;
-    #[doc = "List ranges for an IP pool\n\nRanges are ordered by their first address.\n\nSends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`\n\nArguments:\n- `pool`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_range_list_v1()\n    .pool(pool)\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
-    fn ip_pool_range_list_v1(&self) -> builder::IpPoolRangeListV1;
-    #[doc = "Add a range to an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`\n\n```ignore\nlet response = client.ip_pool_range_add_v1()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_range_add_v1(&self) -> builder::IpPoolRangeAddV1;
-    #[doc = "Remove a range from an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_range_remove_v1()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_range_remove_v1(&self) -> builder::IpPoolRangeRemoveV1;
-    #[doc = "Fetch the IP pool used for Oxide services\n\nSends a `GET` request to `/v1/system/ip-pools-service`\n\n```ignore\nlet response = client.ip_pool_service_view_v1()\n    .send()\n    .await;\n```"]
-    fn ip_pool_service_view_v1(&self) -> builder::IpPoolServiceViewV1;
-    #[doc = "List ranges for the IP pool used for Oxide services\n\nRanges are ordered by their first address.\n\nSends a `GET` request to `/v1/system/ip-pools-service/ranges`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_service_range_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
-    fn ip_pool_service_range_list_v1(&self) -> builder::IpPoolServiceRangeListV1;
-    #[doc = "Add a range to an IP pool used for Oxide services\n\nSends a `POST` request to `/v1/system/ip-pools-service/ranges/add`\n\n```ignore\nlet response = client.ip_pool_service_range_add_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_service_range_add_v1(&self) -> builder::IpPoolServiceRangeAddV1;
-    #[doc = "Remove a range from an IP pool used for Oxide services\n\nSends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_service_range_remove_v1()\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn ip_pool_service_range_remove_v1(&self) -> builder::IpPoolServiceRangeRemoveV1;
+    #[doc = "List a silo's IDPs_name\n\nSends a `GET` request to `/v1/system/identity-providers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `silo`\n- `sort_by`\n```ignore\nlet response = client.silo_identity_provider_list()\n    .limit(limit)\n    .page_token(page_token)\n    .silo(silo)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
+    #[doc = "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider. Use `POST /v1/system/identity-providers/local/users` instead\n\nSends a `POST` request to `/v1/system/identity-providers/local/users`\n\n```ignore\nlet response = client.local_idp_user_create()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
+    #[doc = "Delete a user\n\nSends a `DELETE` request to `/v1/system/identity-providers/local/users/{user_id}`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n```ignore\nlet response = client.local_idp_user_delete()\n    .user_id(user_id)\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
+    #[doc = "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.\n\nSends a `POST` request to `/v1/system/identity-providers/local/users/{user_id}/set-password`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n- `body`\n```ignore\nlet response = client.local_idp_user_set_password()\n    .user_id(user_id)\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
+    #[doc = "Create a SAML IDP\n\nSends a `POST` request to `/v1/system/identity-providers/saml`\n\n```ignore\nlet response = client.saml_identity_provider_create()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
+    #[doc = "Fetch a SAML IDP\n\nSends a `GET` request to `/v1/system/identity-providers/saml/{provider}`\n\n```ignore\nlet response = client.saml_identity_provider_view()\n    .provider(provider)\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView;
+    #[doc = "List IP pools\n\nSends a `GET` request to `/v1/system/ip-pools`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.ip_pool_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn ip_pool_list(&self) -> builder::IpPoolList;
+    #[doc = "Create an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools`\n\n```ignore\nlet response = client.ip_pool_create()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_create(&self) -> builder::IpPoolCreate;
+    #[doc = "Fetch an IP pool\n\nSends a `GET` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_view()\n    .pool(pool)\n    .send()\n    .await;\n```"]
+    fn ip_pool_view(&self) -> builder::IpPoolView;
+    #[doc = "Update an IP Pool\n\nSends a `PUT` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_update()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_update(&self) -> builder::IpPoolUpdate;
+    #[doc = "Delete an IP Pool\n\nSends a `DELETE` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_delete()\n    .pool(pool)\n    .send()\n    .await;\n```"]
+    fn ip_pool_delete(&self) -> builder::IpPoolDelete;
+    #[doc = "List ranges for an IP pool\n\nRanges are ordered by their first address.\n\nSends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`\n\nArguments:\n- `pool`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_range_list()\n    .pool(pool)\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
+    fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
+    #[doc = "Add a range to an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`\n\n```ignore\nlet response = client.ip_pool_range_add()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd;
+    #[doc = "Remove a range from an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_range_remove()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove;
+    #[doc = "Fetch the IP pool used for Oxide services\n\nSends a `GET` request to `/v1/system/ip-pools-service`\n\n```ignore\nlet response = client.ip_pool_service_view()\n    .send()\n    .await;\n```"]
+    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
+    #[doc = "List ranges for the IP pool used for Oxide services\n\nRanges are ordered by their first address.\n\nSends a `GET` request to `/v1/system/ip-pools-service/ranges`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_service_range_list()\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
+    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
+    #[doc = "Add a range to an IP pool used for Oxide services\n\nSends a `POST` request to `/v1/system/ip-pools-service/ranges/add`\n\n```ignore\nlet response = client.ip_pool_service_range_add()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd;
+    #[doc = "Remove a range from an IP pool used for Oxide services\n\nSends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_service_range_remove()\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
+    #[doc = "Access metrics data\n\nSends a `GET` request to `/v1/system/metrics/{metric_name}`\n\nArguments:\n- `metric_name`\n- `end_time`: An exclusive end time of metrics.\n- `id`: The UUID of the container being queried\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.system_metric()\n    .metric_name(metric_name)\n    .end_time(end_time)\n    .id(id)\n    .limit(limit)\n    .page_token(page_token)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
+    fn system_metric(&self) -> builder::SystemMetric;
     #[doc = "List sagas\n\nSends a `GET` request to `/v1/system/sagas`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.saga_list_v1()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn saga_list_v1(&self) -> builder::SagaListV1;
     #[doc = "Fetch a saga\n\nSends a `GET` request to `/v1/system/sagas/{saga_id}`\n\n```ignore\nlet response = client.saga_view_v1()\n    .saga_id(saga_id)\n    .send()\n    .await;\n```"]
@@ -16603,6 +14982,10 @@ pub trait ClientSystemExt {
     fn silo_user_list_v1(&self) -> builder::SiloUserListV1;
     #[doc = "Fetch a user\n\nSends a `GET` request to `/v1/system/users/{user_id}`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n```ignore\nlet response = client.silo_user_view_v1()\n    .user_id(user_id)\n    .silo(silo)\n    .send()\n    .await;\n```"]
     fn silo_user_view_v1(&self) -> builder::SiloUserViewV1;
+    #[doc = "List built-in users\n\nSends a `GET` request to `/v1/system/users-builtin`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.user_builtin_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn user_builtin_list(&self) -> builder::UserBuiltinList;
+    #[doc = "Fetch a built-in user\n\nSends a `GET` request to `/v1/system/users-builtin/{user}`\n\n```ignore\nlet response = client.user_builtin_view()\n    .user(user)\n    .send()\n    .await;\n```"]
+    fn user_builtin_view(&self) -> builder::UserBuiltinView;
 }
 
 impl ClientSystemExt for Client {
@@ -16610,28 +14993,8 @@ impl ClientSystemExt for Client {
         builder::SystemImageViewById::new(self)
     }
 
-    fn ip_pool_view_by_id(&self) -> builder::IpPoolViewById {
-        builder::IpPoolViewById::new(self)
-    }
-
     fn silo_view_by_id(&self) -> builder::SiloViewById {
         builder::SiloViewById::new(self)
-    }
-
-    fn certificate_list(&self) -> builder::CertificateList {
-        builder::CertificateList::new(self)
-    }
-
-    fn certificate_create(&self) -> builder::CertificateCreate {
-        builder::CertificateCreate::new(self)
-    }
-
-    fn certificate_view(&self) -> builder::CertificateView {
-        builder::CertificateView::new(self)
-    }
-
-    fn certificate_delete(&self) -> builder::CertificateDelete {
-        builder::CertificateDelete::new(self)
     }
 
     fn physical_disk_list(&self) -> builder::PhysicalDiskList {
@@ -16672,6 +15035,102 @@ impl ClientSystemExt for Client {
 
     fn system_image_delete(&self) -> builder::SystemImageDelete {
         builder::SystemImageDelete::new(self)
+    }
+
+    fn saga_list(&self) -> builder::SagaList {
+        builder::SagaList::new(self)
+    }
+
+    fn saga_view(&self) -> builder::SagaView {
+        builder::SagaView::new(self)
+    }
+
+    fn silo_list(&self) -> builder::SiloList {
+        builder::SiloList::new(self)
+    }
+
+    fn silo_create(&self) -> builder::SiloCreate {
+        builder::SiloCreate::new(self)
+    }
+
+    fn silo_view(&self) -> builder::SiloView {
+        builder::SiloView::new(self)
+    }
+
+    fn silo_delete(&self) -> builder::SiloDelete {
+        builder::SiloDelete::new(self)
+    }
+
+    fn silo_policy_view(&self) -> builder::SiloPolicyView {
+        builder::SiloPolicyView::new(self)
+    }
+
+    fn silo_policy_update(&self) -> builder::SiloPolicyUpdate {
+        builder::SiloPolicyUpdate::new(self)
+    }
+
+    fn certificate_list(&self) -> builder::CertificateList {
+        builder::CertificateList::new(self)
+    }
+
+    fn certificate_create(&self) -> builder::CertificateCreate {
+        builder::CertificateCreate::new(self)
+    }
+
+    fn certificate_view(&self) -> builder::CertificateView {
+        builder::CertificateView::new(self)
+    }
+
+    fn certificate_delete(&self) -> builder::CertificateDelete {
+        builder::CertificateDelete::new(self)
+    }
+
+    fn physical_disk_list_v1(&self) -> builder::PhysicalDiskListV1 {
+        builder::PhysicalDiskListV1::new(self)
+    }
+
+    fn rack_list_v1(&self) -> builder::RackListV1 {
+        builder::RackListV1::new(self)
+    }
+
+    fn rack_view_v1(&self) -> builder::RackViewV1 {
+        builder::RackViewV1::new(self)
+    }
+
+    fn sled_list_v1(&self) -> builder::SledListV1 {
+        builder::SledListV1::new(self)
+    }
+
+    fn sled_view_v1(&self) -> builder::SledViewV1 {
+        builder::SledViewV1::new(self)
+    }
+
+    fn sled_physical_disk_list_v1(&self) -> builder::SledPhysicalDiskListV1 {
+        builder::SledPhysicalDiskListV1::new(self)
+    }
+
+    fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList {
+        builder::SiloIdentityProviderList::new(self)
+    }
+
+    fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate {
+        builder::LocalIdpUserCreate::new(self)
+    }
+
+    fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete {
+        builder::LocalIdpUserDelete::new(self)
+    }
+
+    fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword {
+        builder::LocalIdpUserSetPassword::new(self)
+    }
+
+    fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate {
+        builder::SamlIdentityProviderCreate::new(self)
+    }
+
+    fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView {
+        builder::SamlIdentityProviderView::new(self)
     }
 
     fn ip_pool_list(&self) -> builder::IpPoolList {
@@ -16724,190 +15183,6 @@ impl ClientSystemExt for Client {
 
     fn system_metric(&self) -> builder::SystemMetric {
         builder::SystemMetric::new(self)
-    }
-
-    fn saga_list(&self) -> builder::SagaList {
-        builder::SagaList::new(self)
-    }
-
-    fn saga_view(&self) -> builder::SagaView {
-        builder::SagaView::new(self)
-    }
-
-    fn silo_list(&self) -> builder::SiloList {
-        builder::SiloList::new(self)
-    }
-
-    fn silo_create(&self) -> builder::SiloCreate {
-        builder::SiloCreate::new(self)
-    }
-
-    fn silo_view(&self) -> builder::SiloView {
-        builder::SiloView::new(self)
-    }
-
-    fn silo_delete(&self) -> builder::SiloDelete {
-        builder::SiloDelete::new(self)
-    }
-
-    fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList {
-        builder::SiloIdentityProviderList::new(self)
-    }
-
-    fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate {
-        builder::LocalIdpUserCreate::new(self)
-    }
-
-    fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete {
-        builder::LocalIdpUserDelete::new(self)
-    }
-
-    fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword {
-        builder::LocalIdpUserSetPassword::new(self)
-    }
-
-    fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate {
-        builder::SamlIdentityProviderCreate::new(self)
-    }
-
-    fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView {
-        builder::SamlIdentityProviderView::new(self)
-    }
-
-    fn silo_policy_view(&self) -> builder::SiloPolicyView {
-        builder::SiloPolicyView::new(self)
-    }
-
-    fn silo_policy_update(&self) -> builder::SiloPolicyUpdate {
-        builder::SiloPolicyUpdate::new(self)
-    }
-
-    fn silo_users_list(&self) -> builder::SiloUsersList {
-        builder::SiloUsersList::new(self)
-    }
-
-    fn silo_user_view(&self) -> builder::SiloUserView {
-        builder::SiloUserView::new(self)
-    }
-
-    fn system_user_list(&self) -> builder::SystemUserList {
-        builder::SystemUserList::new(self)
-    }
-
-    fn system_user_view(&self) -> builder::SystemUserView {
-        builder::SystemUserView::new(self)
-    }
-
-    fn certificate_list_v1(&self) -> builder::CertificateListV1 {
-        builder::CertificateListV1::new(self)
-    }
-
-    fn certificate_create_v1(&self) -> builder::CertificateCreateV1 {
-        builder::CertificateCreateV1::new(self)
-    }
-
-    fn certificate_view_v1(&self) -> builder::CertificateViewV1 {
-        builder::CertificateViewV1::new(self)
-    }
-
-    fn certificate_delete_v1(&self) -> builder::CertificateDeleteV1 {
-        builder::CertificateDeleteV1::new(self)
-    }
-
-    fn physical_disk_list_v1(&self) -> builder::PhysicalDiskListV1 {
-        builder::PhysicalDiskListV1::new(self)
-    }
-
-    fn rack_list_v1(&self) -> builder::RackListV1 {
-        builder::RackListV1::new(self)
-    }
-
-    fn rack_view_v1(&self) -> builder::RackViewV1 {
-        builder::RackViewV1::new(self)
-    }
-
-    fn sled_list_v1(&self) -> builder::SledListV1 {
-        builder::SledListV1::new(self)
-    }
-
-    fn sled_view_v1(&self) -> builder::SledViewV1 {
-        builder::SledViewV1::new(self)
-    }
-
-    fn sled_physical_disk_list_v1(&self) -> builder::SledPhysicalDiskListV1 {
-        builder::SledPhysicalDiskListV1::new(self)
-    }
-
-    fn silo_identity_provider_list_v1(&self) -> builder::SiloIdentityProviderListV1 {
-        builder::SiloIdentityProviderListV1::new(self)
-    }
-
-    fn local_idp_user_create_v1(&self) -> builder::LocalIdpUserCreateV1 {
-        builder::LocalIdpUserCreateV1::new(self)
-    }
-
-    fn local_idp_user_delete_v1(&self) -> builder::LocalIdpUserDeleteV1 {
-        builder::LocalIdpUserDeleteV1::new(self)
-    }
-
-    fn local_idp_user_set_password_v1(&self) -> builder::LocalIdpUserSetPasswordV1 {
-        builder::LocalIdpUserSetPasswordV1::new(self)
-    }
-
-    fn saml_identity_provider_create_v1(&self) -> builder::SamlIdentityProviderCreateV1 {
-        builder::SamlIdentityProviderCreateV1::new(self)
-    }
-
-    fn saml_identity_provider_view_v1(&self) -> builder::SamlIdentityProviderViewV1 {
-        builder::SamlIdentityProviderViewV1::new(self)
-    }
-
-    fn ip_pool_list_v1(&self) -> builder::IpPoolListV1 {
-        builder::IpPoolListV1::new(self)
-    }
-
-    fn ip_pool_create_v1(&self) -> builder::IpPoolCreateV1 {
-        builder::IpPoolCreateV1::new(self)
-    }
-
-    fn ip_pool_view_v1(&self) -> builder::IpPoolViewV1 {
-        builder::IpPoolViewV1::new(self)
-    }
-
-    fn ip_pool_update_v1(&self) -> builder::IpPoolUpdateV1 {
-        builder::IpPoolUpdateV1::new(self)
-    }
-
-    fn ip_pool_delete_v1(&self) -> builder::IpPoolDeleteV1 {
-        builder::IpPoolDeleteV1::new(self)
-    }
-
-    fn ip_pool_range_list_v1(&self) -> builder::IpPoolRangeListV1 {
-        builder::IpPoolRangeListV1::new(self)
-    }
-
-    fn ip_pool_range_add_v1(&self) -> builder::IpPoolRangeAddV1 {
-        builder::IpPoolRangeAddV1::new(self)
-    }
-
-    fn ip_pool_range_remove_v1(&self) -> builder::IpPoolRangeRemoveV1 {
-        builder::IpPoolRangeRemoveV1::new(self)
-    }
-
-    fn ip_pool_service_view_v1(&self) -> builder::IpPoolServiceViewV1 {
-        builder::IpPoolServiceViewV1::new(self)
-    }
-
-    fn ip_pool_service_range_list_v1(&self) -> builder::IpPoolServiceRangeListV1 {
-        builder::IpPoolServiceRangeListV1::new(self)
-    }
-
-    fn ip_pool_service_range_add_v1(&self) -> builder::IpPoolServiceRangeAddV1 {
-        builder::IpPoolServiceRangeAddV1::new(self)
-    }
-
-    fn ip_pool_service_range_remove_v1(&self) -> builder::IpPoolServiceRangeRemoveV1 {
-        builder::IpPoolServiceRangeRemoveV1::new(self)
     }
 
     fn saga_list_v1(&self) -> builder::SagaListV1 {
@@ -16989,174 +15264,72 @@ impl ClientSystemExt for Client {
     fn silo_user_view_v1(&self) -> builder::SiloUserViewV1 {
         builder::SiloUserViewV1::new(self)
     }
+
+    fn user_builtin_list(&self) -> builder::UserBuiltinList {
+        builder::UserBuiltinList::new(self)
+    }
+
+    fn user_builtin_view(&self) -> builder::UserBuiltinView {
+        builder::UserBuiltinView::new(self)
+    }
 }
 
 pub trait ClientVpcsExt {
-    #[doc = "Fetch a route by id\n\nUse `GET /v1/vpc-router-routes/{route}` instead\n\nSends a `GET` request to `/by-id/vpc-router-routes/{id}`\n\n```ignore\nlet response = client.vpc_router_route_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn vpc_router_route_view_by_id(&self) -> builder::VpcRouterRouteViewById;
-    #[doc = "Get a router by id\n\nUse `GET /v1/vpc-routers/{router}` instead\n\nSends a `GET` request to `/by-id/vpc-routers/{id}`\n\n```ignore\nlet response = client.vpc_router_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn vpc_router_view_by_id(&self) -> builder::VpcRouterViewById;
-    #[doc = "Fetch a subnet by id\n\nUse `GET /v1/vpc-subnets/{id}` instead\n\nSends a `GET` request to `/by-id/vpc-subnets/{id}`\n\n```ignore\nlet response = client.vpc_subnet_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn vpc_subnet_view_by_id(&self) -> builder::VpcSubnetViewById;
-    #[doc = "Fetch a VPC\n\nUse `GET /v1/vpcs/{id}` instead\n\nSends a `GET` request to `/by-id/vpcs/{id}`\n\n```ignore\nlet response = client.vpc_view_by_id()\n    .id(id)\n    .send()\n    .await;\n```"]
-    fn vpc_view_by_id(&self) -> builder::VpcViewById;
-    #[doc = "List VPCs\n\nUse `GET /v1/vpcs` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.vpc_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn vpc_list(&self) -> builder::VpcList;
-    #[doc = "Create a VPC\n\nUse `POST /v1/vpcs` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/vpcs`\n\nArguments:\n- `organization_name`: The organization's unique name.\n- `project_name`: The project's unique name within the organization.\n- `body`\n```ignore\nlet response = client.vpc_create()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_create(&self) -> builder::VpcCreate;
-    #[doc = "Fetch a VPC\n\nUse `GET /v1/vpcs/{vpc}` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}`\n\n```ignore\nlet response = client.vpc_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .send()\n    .await;\n```"]
-    fn vpc_view(&self) -> builder::VpcView;
-    #[doc = "Update a VPC\n\nUse `PUT /v1/vpcs/{vpc}` instead\n\nSends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}`\n\n```ignore\nlet response = client.vpc_update()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_update(&self) -> builder::VpcUpdate;
-    #[doc = "Delete a VPC\n\nUse `DELETE /v1/vpcs/{vpc}` instead\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}`\n\n```ignore\nlet response = client.vpc_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .send()\n    .await;\n```"]
-    fn vpc_delete(&self) -> builder::VpcDelete;
-    #[doc = "List firewall rules\n\nUse `GET /v1/vpc-firewall-rules` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/firewall/rules`\n\n```ignore\nlet response = client.vpc_firewall_rules_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .send()\n    .await;\n```"]
+    #[doc = "List firewall rules\n\nSends a `GET` request to `/v1/vpc-firewall-rules`\n\n```ignore\nlet response = client.vpc_firewall_rules_view()\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_firewall_rules_view(&self) -> builder::VpcFirewallRulesView;
-    #[doc = "Replace firewall rules\n\nUse `PUT /v1/vpc-firewall-rules` instead\n\nSends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/firewall/rules`\n\n```ignore\nlet response = client.vpc_firewall_rules_update()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Replace firewall rules\n\nSends a `PUT` request to `/v1/vpc-firewall-rules`\n\n```ignore\nlet response = client.vpc_firewall_rules_update()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_firewall_rules_update(&self) -> builder::VpcFirewallRulesUpdate;
-    #[doc = "List routers\n\nUse `GET /v1/vpc-routers` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `vpc_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.vpc_router_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn vpc_router_list(&self) -> builder::VpcRouterList;
-    #[doc = "Create a router\n\nUse `POST /v1/vpc-routers` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers`\n\n```ignore\nlet response = client.vpc_router_create()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_router_create(&self) -> builder::VpcRouterCreate;
-    #[doc = "Get a router\n\nUse `GET /v1/vpc-routers/{router}` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}`\n\n```ignore\nlet response = client.vpc_router_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .router_name(router_name)\n    .send()\n    .await;\n```"]
-    fn vpc_router_view(&self) -> builder::VpcRouterView;
-    #[doc = "Update a router\n\nSends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}`\n\n```ignore\nlet response = client.vpc_router_update()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .router_name(router_name)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_router_update(&self) -> builder::VpcRouterUpdate;
-    #[doc = "Delete a router\n\nUse `DELETE /v1/vpc-routers/{router}` instead\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}`\n\n```ignore\nlet response = client.vpc_router_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .router_name(router_name)\n    .send()\n    .await;\n```"]
-    fn vpc_router_delete(&self) -> builder::VpcRouterDelete;
-    #[doc = "List routes\n\nList the routes associated with a router in a particular VPC. Use `GET /v1/vpc-router-routes` instead.\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `vpc_name`\n- `router_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.vpc_router_route_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .router_name(router_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List routes\n\nList the routes associated with a router in a particular VPC.\n\nSends a `GET` request to `/v1/vpc-router-routes`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `router`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_router_route_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .router(router)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_list(&self) -> builder::VpcRouterRouteList;
-    #[doc = "Create a router\n\nUse `POST /v1/vpc-router-routes` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes`\n\n```ignore\nlet response = client.vpc_router_route_create()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .router_name(router_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a router\n\nSends a `POST` request to `/v1/vpc-router-routes`\n\n```ignore\nlet response = client.vpc_router_route_create()\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_create(&self) -> builder::VpcRouterRouteCreate;
-    #[doc = "Fetch a route\n\nUse `GET /v1/vpc-router-routes/{route}` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes/{route_name}`\n\n```ignore\nlet response = client.vpc_router_route_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .router_name(router_name)\n    .route_name(route_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a route\n\nSends a `GET` request to `/v1/vpc-router-routes/{route}`\n\n```ignore\nlet response = client.vpc_router_route_view()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_view(&self) -> builder::VpcRouterRouteView;
-    #[doc = "Update a route\n\nUse `PUT /v1/vpc-router-routes/{route}` instead\n\nSends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes/{route_name}`\n\n```ignore\nlet response = client.vpc_router_route_update()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .router_name(router_name)\n    .route_name(route_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a route\n\nSends a `PUT` request to `/v1/vpc-router-routes/{route}`\n\n```ignore\nlet response = client.vpc_router_route_update()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_update(&self) -> builder::VpcRouterRouteUpdate;
-    #[doc = "Delete a route\n\nUse `DELETE /v1/vpc-router-routes/{route}` instead\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes/{route_name}`\n\n```ignore\nlet response = client.vpc_router_route_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .router_name(router_name)\n    .route_name(route_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a route\n\nSends a `DELETE` request to `/v1/vpc-router-routes/{route}`\n\n```ignore\nlet response = client.vpc_router_route_delete()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_delete(&self) -> builder::VpcRouterRouteDelete;
-    #[doc = "List subnets\n\nUse `GET /v1/vpc-subnets` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `vpc_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.vpc_subnet_list()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List routers\n\nSends a `GET` request to `/v1/vpc-routers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_router_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    fn vpc_router_list(&self) -> builder::VpcRouterList;
+    #[doc = "Create a VPC router\n\nSends a `POST` request to `/v1/vpc-routers`\n\n```ignore\nlet response = client.vpc_router_create()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn vpc_router_create(&self) -> builder::VpcRouterCreate;
+    #[doc = "Get a router\n\nSends a `GET` request to `/v1/vpc-routers/{router}`\n\n```ignore\nlet response = client.vpc_router_view()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    fn vpc_router_view(&self) -> builder::VpcRouterView;
+    #[doc = "Update a router\n\nSends a `PUT` request to `/v1/vpc-routers/{router}`\n\n```ignore\nlet response = client.vpc_router_update()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn vpc_router_update(&self) -> builder::VpcRouterUpdate;
+    #[doc = "Delete a router\n\nSends a `DELETE` request to `/v1/vpc-routers/{router}`\n\n```ignore\nlet response = client.vpc_router_delete()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    fn vpc_router_delete(&self) -> builder::VpcRouterDelete;
+    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_subnet_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_list(&self) -> builder::VpcSubnetList;
-    #[doc = "Create a subnet\n\nUse `POST /v1/vpc-subnets` instead\n\nSends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets`\n\n```ignore\nlet response = client.vpc_subnet_create()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a subnet\n\nSends a `POST` request to `/v1/vpc-subnets`\n\n```ignore\nlet response = client.vpc_subnet_create()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_create(&self) -> builder::VpcSubnetCreate;
-    #[doc = "Fetch a subnet\n\nUse `GET /v1/vpc-subnets/{subnet}` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}`\n\n```ignore\nlet response = client.vpc_subnet_view()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .subnet_name(subnet_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}`\n\n```ignore\nlet response = client.vpc_subnet_view()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_view(&self) -> builder::VpcSubnetView;
-    #[doc = "Update a subnet\n\nUse `PUT /v1/vpc-subnets/{subnet}` instead\n\nSends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}`\n\n```ignore\nlet response = client.vpc_subnet_update()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .subnet_name(subnet_name)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a subnet\n\nSends a `PUT` request to `/v1/vpc-subnets/{subnet}`\n\n```ignore\nlet response = client.vpc_subnet_update()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_update(&self) -> builder::VpcSubnetUpdate;
-    #[doc = "Delete a subnet\n\nUse `DELETE /v1/vpc-subnets/{subnet}` instead\n\nSends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}`\n\n```ignore\nlet response = client.vpc_subnet_delete()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .subnet_name(subnet_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a subnet\n\nSends a `DELETE` request to `/v1/vpc-subnets/{subnet}`\n\n```ignore\nlet response = client.vpc_subnet_delete()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_delete(&self) -> builder::VpcSubnetDelete;
-    #[doc = "List network interfaces for a VPC subnet\n\nUse `/v1/vpc-subnets/{subnet}/network-interfaces` instead\n\nSends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}/network-interfaces`\n\nArguments:\n- `organization_name`\n- `project_name`\n- `vpc_name`\n- `subnet_name`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.vpc_subnet_list_network_interfaces()\n    .organization_name(organization_name)\n    .project_name(project_name)\n    .vpc_name(vpc_name)\n    .subnet_name(subnet_name)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`\n\nArguments:\n- `subnet`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_subnet_list_network_interfaces()\n    .subnet(subnet)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_list_network_interfaces(&self) -> builder::VpcSubnetListNetworkInterfaces;
-    #[doc = "List firewall rules\n\nSends a `GET` request to `/v1/vpc-firewall-rules`\n\n```ignore\nlet response = client.vpc_firewall_rules_view_v1()\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_firewall_rules_view_v1(&self) -> builder::VpcFirewallRulesViewV1;
-    #[doc = "Replace firewall rules\n\nSends a `PUT` request to `/v1/vpc-firewall-rules`\n\n```ignore\nlet response = client.vpc_firewall_rules_update_v1()\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_firewall_rules_update_v1(&self) -> builder::VpcFirewallRulesUpdateV1;
-    #[doc = "List routes\n\nList the routes associated with a router in a particular VPC.\n\nSends a `GET` request to `/v1/vpc-router-routes`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `router`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_router_route_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .router(router)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_router_route_list_v1(&self) -> builder::VpcRouterRouteListV1;
-    #[doc = "Create a router\n\nSends a `POST` request to `/v1/vpc-router-routes`\n\n```ignore\nlet response = client.vpc_router_route_create_v1()\n    .organization(organization)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_router_route_create_v1(&self) -> builder::VpcRouterRouteCreateV1;
-    #[doc = "Fetch a route\n\nSends a `GET` request to `/v1/vpc-router-routes/{route}`\n\n```ignore\nlet response = client.vpc_router_route_view_v1()\n    .route(route)\n    .organization(organization)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_router_route_view_v1(&self) -> builder::VpcRouterRouteViewV1;
-    #[doc = "Update a route\n\nSends a `PUT` request to `/v1/vpc-router-routes/{route}`\n\n```ignore\nlet response = client.vpc_router_route_update_v1()\n    .route(route)\n    .organization(organization)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_router_route_update_v1(&self) -> builder::VpcRouterRouteUpdateV1;
-    #[doc = "Delete a route\n\nSends a `DELETE` request to `/v1/vpc-router-routes/{route}`\n\n```ignore\nlet response = client.vpc_router_route_delete_v1()\n    .route(route)\n    .organization(organization)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_router_route_delete_v1(&self) -> builder::VpcRouterRouteDeleteV1;
-    #[doc = "List routers\n\nSends a `GET` request to `/v1/vpc-routers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_router_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_router_list_v1(&self) -> builder::VpcRouterListV1;
-    #[doc = "Create a VPC router\n\nSends a `POST` request to `/v1/vpc-routers`\n\n```ignore\nlet response = client.vpc_router_create_v1()\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_router_create_v1(&self) -> builder::VpcRouterCreateV1;
-    #[doc = "Get a router\n\nSends a `GET` request to `/v1/vpc-routers/{router}`\n\n```ignore\nlet response = client.vpc_router_view_v1()\n    .router(router)\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_router_view_v1(&self) -> builder::VpcRouterViewV1;
-    #[doc = "Update a router\n\nSends a `PUT` request to `/v1/vpc-routers/{router}`\n\n```ignore\nlet response = client.vpc_router_update_v1()\n    .router(router)\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_router_update_v1(&self) -> builder::VpcRouterUpdateV1;
-    #[doc = "Delete a router\n\nSends a `DELETE` request to `/v1/vpc-routers/{router}`\n\n```ignore\nlet response = client.vpc_router_delete_v1()\n    .router(router)\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_router_delete_v1(&self) -> builder::VpcRouterDeleteV1;
-    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_subnet_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_subnet_list_v1(&self) -> builder::VpcSubnetListV1;
-    #[doc = "Create a subnet\n\nSends a `POST` request to `/v1/vpc-subnets`\n\n```ignore\nlet response = client.vpc_subnet_create_v1()\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_subnet_create_v1(&self) -> builder::VpcSubnetCreateV1;
-    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}`\n\n```ignore\nlet response = client.vpc_subnet_view_v1()\n    .subnet(subnet)\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_subnet_view_v1(&self) -> builder::VpcSubnetViewV1;
-    #[doc = "Update a subnet\n\nSends a `PUT` request to `/v1/vpc-subnets/{subnet}`\n\n```ignore\nlet response = client.vpc_subnet_update_v1()\n    .subnet(subnet)\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_subnet_update_v1(&self) -> builder::VpcSubnetUpdateV1;
-    #[doc = "Delete a subnet\n\nSends a `DELETE` request to `/v1/vpc-subnets/{subnet}`\n\n```ignore\nlet response = client.vpc_subnet_delete_v1()\n    .subnet(subnet)\n    .organization(organization)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_subnet_delete_v1(&self) -> builder::VpcSubnetDeleteV1;
-    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`\n\nArguments:\n- `subnet`\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_subnet_list_network_interfaces_v1()\n    .subnet(subnet)\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
-    fn vpc_subnet_list_network_interfaces_v1(&self) -> builder::VpcSubnetListNetworkInterfacesV1;
-    #[doc = "List VPCs\n\nSends a `GET` request to `/v1/vpcs`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `organization`\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.vpc_list_v1()\n    .limit(limit)\n    .organization(organization)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
-    fn vpc_list_v1(&self) -> builder::VpcListV1;
-    #[doc = "Create a VPC\n\nSends a `POST` request to `/v1/vpcs`\n\n```ignore\nlet response = client.vpc_create_v1()\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_create_v1(&self) -> builder::VpcCreateV1;
-    #[doc = "Fetch a VPC\n\nSends a `GET` request to `/v1/vpcs/{vpc}`\n\n```ignore\nlet response = client.vpc_view_v1()\n    .vpc(vpc)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn vpc_view_v1(&self) -> builder::VpcViewV1;
-    #[doc = "Update a VPC\n\nSends a `PUT` request to `/v1/vpcs/{vpc}`\n\n```ignore\nlet response = client.vpc_update_v1()\n    .vpc(vpc)\n    .organization(organization)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
-    fn vpc_update_v1(&self) -> builder::VpcUpdateV1;
-    #[doc = "Delete a VPC\n\nSends a `DELETE` request to `/v1/vpcs/{vpc}`\n\n```ignore\nlet response = client.vpc_delete_v1()\n    .vpc(vpc)\n    .organization(organization)\n    .project(project)\n    .send()\n    .await;\n```"]
-    fn vpc_delete_v1(&self) -> builder::VpcDeleteV1;
+    #[doc = "List VPCs\n\nSends a `GET` request to `/v1/vpcs`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.vpc_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    fn vpc_list(&self) -> builder::VpcList;
+    #[doc = "Create a VPC\n\nSends a `POST` request to `/v1/vpcs`\n\n```ignore\nlet response = client.vpc_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn vpc_create(&self) -> builder::VpcCreate;
+    #[doc = "Fetch a VPC\n\nSends a `GET` request to `/v1/vpcs/{vpc}`\n\n```ignore\nlet response = client.vpc_view()\n    .vpc(vpc)\n    .project(project)\n    .send()\n    .await;\n```"]
+    fn vpc_view(&self) -> builder::VpcView;
+    #[doc = "Update a VPC\n\nSends a `PUT` request to `/v1/vpcs/{vpc}`\n\n```ignore\nlet response = client.vpc_update()\n    .vpc(vpc)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn vpc_update(&self) -> builder::VpcUpdate;
+    #[doc = "Delete a VPC\n\nSends a `DELETE` request to `/v1/vpcs/{vpc}`\n\n```ignore\nlet response = client.vpc_delete()\n    .vpc(vpc)\n    .project(project)\n    .send()\n    .await;\n```"]
+    fn vpc_delete(&self) -> builder::VpcDelete;
 }
 
 impl ClientVpcsExt for Client {
-    fn vpc_router_route_view_by_id(&self) -> builder::VpcRouterRouteViewById {
-        builder::VpcRouterRouteViewById::new(self)
-    }
-
-    fn vpc_router_view_by_id(&self) -> builder::VpcRouterViewById {
-        builder::VpcRouterViewById::new(self)
-    }
-
-    fn vpc_subnet_view_by_id(&self) -> builder::VpcSubnetViewById {
-        builder::VpcSubnetViewById::new(self)
-    }
-
-    fn vpc_view_by_id(&self) -> builder::VpcViewById {
-        builder::VpcViewById::new(self)
-    }
-
-    fn vpc_list(&self) -> builder::VpcList {
-        builder::VpcList::new(self)
-    }
-
-    fn vpc_create(&self) -> builder::VpcCreate {
-        builder::VpcCreate::new(self)
-    }
-
-    fn vpc_view(&self) -> builder::VpcView {
-        builder::VpcView::new(self)
-    }
-
-    fn vpc_update(&self) -> builder::VpcUpdate {
-        builder::VpcUpdate::new(self)
-    }
-
-    fn vpc_delete(&self) -> builder::VpcDelete {
-        builder::VpcDelete::new(self)
-    }
-
     fn vpc_firewall_rules_view(&self) -> builder::VpcFirewallRulesView {
         builder::VpcFirewallRulesView::new(self)
     }
 
     fn vpc_firewall_rules_update(&self) -> builder::VpcFirewallRulesUpdate {
         builder::VpcFirewallRulesUpdate::new(self)
-    }
-
-    fn vpc_router_list(&self) -> builder::VpcRouterList {
-        builder::VpcRouterList::new(self)
-    }
-
-    fn vpc_router_create(&self) -> builder::VpcRouterCreate {
-        builder::VpcRouterCreate::new(self)
-    }
-
-    fn vpc_router_view(&self) -> builder::VpcRouterView {
-        builder::VpcRouterView::new(self)
-    }
-
-    fn vpc_router_update(&self) -> builder::VpcRouterUpdate {
-        builder::VpcRouterUpdate::new(self)
-    }
-
-    fn vpc_router_delete(&self) -> builder::VpcRouterDelete {
-        builder::VpcRouterDelete::new(self)
     }
 
     fn vpc_router_route_list(&self) -> builder::VpcRouterRouteList {
@@ -17177,6 +15350,26 @@ impl ClientVpcsExt for Client {
 
     fn vpc_router_route_delete(&self) -> builder::VpcRouterRouteDelete {
         builder::VpcRouterRouteDelete::new(self)
+    }
+
+    fn vpc_router_list(&self) -> builder::VpcRouterList {
+        builder::VpcRouterList::new(self)
+    }
+
+    fn vpc_router_create(&self) -> builder::VpcRouterCreate {
+        builder::VpcRouterCreate::new(self)
+    }
+
+    fn vpc_router_view(&self) -> builder::VpcRouterView {
+        builder::VpcRouterView::new(self)
+    }
+
+    fn vpc_router_update(&self) -> builder::VpcRouterUpdate {
+        builder::VpcRouterUpdate::new(self)
+    }
+
+    fn vpc_router_delete(&self) -> builder::VpcRouterDelete {
+        builder::VpcRouterDelete::new(self)
     }
 
     fn vpc_subnet_list(&self) -> builder::VpcSubnetList {
@@ -17203,96 +15396,24 @@ impl ClientVpcsExt for Client {
         builder::VpcSubnetListNetworkInterfaces::new(self)
     }
 
-    fn vpc_firewall_rules_view_v1(&self) -> builder::VpcFirewallRulesViewV1 {
-        builder::VpcFirewallRulesViewV1::new(self)
+    fn vpc_list(&self) -> builder::VpcList {
+        builder::VpcList::new(self)
     }
 
-    fn vpc_firewall_rules_update_v1(&self) -> builder::VpcFirewallRulesUpdateV1 {
-        builder::VpcFirewallRulesUpdateV1::new(self)
+    fn vpc_create(&self) -> builder::VpcCreate {
+        builder::VpcCreate::new(self)
     }
 
-    fn vpc_router_route_list_v1(&self) -> builder::VpcRouterRouteListV1 {
-        builder::VpcRouterRouteListV1::new(self)
+    fn vpc_view(&self) -> builder::VpcView {
+        builder::VpcView::new(self)
     }
 
-    fn vpc_router_route_create_v1(&self) -> builder::VpcRouterRouteCreateV1 {
-        builder::VpcRouterRouteCreateV1::new(self)
+    fn vpc_update(&self) -> builder::VpcUpdate {
+        builder::VpcUpdate::new(self)
     }
 
-    fn vpc_router_route_view_v1(&self) -> builder::VpcRouterRouteViewV1 {
-        builder::VpcRouterRouteViewV1::new(self)
-    }
-
-    fn vpc_router_route_update_v1(&self) -> builder::VpcRouterRouteUpdateV1 {
-        builder::VpcRouterRouteUpdateV1::new(self)
-    }
-
-    fn vpc_router_route_delete_v1(&self) -> builder::VpcRouterRouteDeleteV1 {
-        builder::VpcRouterRouteDeleteV1::new(self)
-    }
-
-    fn vpc_router_list_v1(&self) -> builder::VpcRouterListV1 {
-        builder::VpcRouterListV1::new(self)
-    }
-
-    fn vpc_router_create_v1(&self) -> builder::VpcRouterCreateV1 {
-        builder::VpcRouterCreateV1::new(self)
-    }
-
-    fn vpc_router_view_v1(&self) -> builder::VpcRouterViewV1 {
-        builder::VpcRouterViewV1::new(self)
-    }
-
-    fn vpc_router_update_v1(&self) -> builder::VpcRouterUpdateV1 {
-        builder::VpcRouterUpdateV1::new(self)
-    }
-
-    fn vpc_router_delete_v1(&self) -> builder::VpcRouterDeleteV1 {
-        builder::VpcRouterDeleteV1::new(self)
-    }
-
-    fn vpc_subnet_list_v1(&self) -> builder::VpcSubnetListV1 {
-        builder::VpcSubnetListV1::new(self)
-    }
-
-    fn vpc_subnet_create_v1(&self) -> builder::VpcSubnetCreateV1 {
-        builder::VpcSubnetCreateV1::new(self)
-    }
-
-    fn vpc_subnet_view_v1(&self) -> builder::VpcSubnetViewV1 {
-        builder::VpcSubnetViewV1::new(self)
-    }
-
-    fn vpc_subnet_update_v1(&self) -> builder::VpcSubnetUpdateV1 {
-        builder::VpcSubnetUpdateV1::new(self)
-    }
-
-    fn vpc_subnet_delete_v1(&self) -> builder::VpcSubnetDeleteV1 {
-        builder::VpcSubnetDeleteV1::new(self)
-    }
-
-    fn vpc_subnet_list_network_interfaces_v1(&self) -> builder::VpcSubnetListNetworkInterfacesV1 {
-        builder::VpcSubnetListNetworkInterfacesV1::new(self)
-    }
-
-    fn vpc_list_v1(&self) -> builder::VpcListV1 {
-        builder::VpcListV1::new(self)
-    }
-
-    fn vpc_create_v1(&self) -> builder::VpcCreateV1 {
-        builder::VpcCreateV1::new(self)
-    }
-
-    fn vpc_view_v1(&self) -> builder::VpcViewV1 {
-        builder::VpcViewV1::new(self)
-    }
-
-    fn vpc_update_v1(&self) -> builder::VpcUpdateV1 {
-        builder::VpcUpdateV1::new(self)
-    }
-
-    fn vpc_delete_v1(&self) -> builder::VpcDeleteV1 {
-        builder::VpcDeleteV1::new(self)
+    fn vpc_delete(&self) -> builder::VpcDelete {
+        builder::VpcDelete::new(self)
     }
 }
 
@@ -17302,558 +15423,6 @@ pub mod builder {
     use super::{
         encode_path, ByteStream, Error, HeaderMap, HeaderValue, RequestBuilderExt, ResponseValue,
     };
-    #[doc = "Builder for [`ClientDisksExt::disk_view_by_id`]\n\n[`ClientDisksExt::disk_view_by_id`]: super::ClientDisksExt::disk_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct DiskViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> DiskViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/disks/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/disks/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientImagesExt::image_view_by_id`]\n\n[`ClientImagesExt::image_view_by_id`]: super::ClientImagesExt::image_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct ImageViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> ImageViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/images/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/images/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_view_by_id`]\n\n[`ClientInstancesExt::instance_view_by_id`]: super::ClientInstancesExt::instance_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> InstanceViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/instances/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/instances/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_view_by_id`]\n\n[`ClientInstancesExt::instance_network_interface_view_by_id`]: super::ClientInstancesExt::instance_network_interface_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> InstanceNetworkInterfaceViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/network-interfaces/{id}`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::NetworkInterface>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/network-interfaces/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_view_by_id`]\n\n[`ClientOrganizationsExt::organization_view_by_id`]: super::ClientOrganizationsExt::organization_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> OrganizationViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/organizations/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Organization>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/organizations/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientProjectsExt::project_view_by_id`]\n\n[`ClientProjectsExt::project_view_by_id`]: super::ClientProjectsExt::project_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct ProjectViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> ProjectViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/projects/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/projects/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_view_by_id`]\n\n[`ClientSnapshotsExt::snapshot_view_by_id`]: super::ClientSnapshotsExt::snapshot_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct SnapshotViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> SnapshotViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/snapshots/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Snapshot>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/snapshots/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_view_by_id`]\n\n[`ClientVpcsExt::vpc_router_route_view_by_id`]: super::ClientVpcsExt::vpc_router_route_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> VpcRouterRouteViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/vpc-router-routes/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/vpc-router-routes/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_view_by_id`]\n\n[`ClientVpcsExt::vpc_router_view_by_id`]: super::ClientVpcsExt::vpc_router_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> VpcRouterViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/vpc-routers/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/vpc-routers/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_view_by_id`]\n\n[`ClientVpcsExt::vpc_subnet_view_by_id`]: super::ClientVpcsExt::vpc_subnet_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct VpcSubnetViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> VpcSubnetViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/vpc-subnets/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/vpc-subnets/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_view_by_id`]\n\n[`ClientVpcsExt::vpc_view_by_id`]: super::ClientVpcsExt::vpc_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct VpcViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> VpcViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/by-id/vpcs/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/by-id/vpcs/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
     #[doc = "Builder for [`ClientHiddenExt::device_auth_request`]\n\n[`ClientHiddenExt::device_auth_request`]: super::ClientHiddenExt::device_auth_request"]
     #[derive(Debug, Clone)]
     pub struct DeviceAuthRequest<'a> {
@@ -17977,144 +15546,6 @@ pub mod builder {
                 200..=299 => Ok(ResponseValue::stream(response)),
                 _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
             }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSilosExt::group_list`]\n\n[`ClientSilosExt::group_list`]: super::ClientSilosExt::group_list"]
-    #[derive(Debug, Clone)]
-    pub struct GroupList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
-    }
-
-    impl<'a> GroupList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/groups`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::GroupResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/groups", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/groups`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Group, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
         }
     }
 
@@ -18420,8073 +15851,6 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_list`]\n\n[`ClientOrganizationsExt::organization_list`]: super::ClientOrganizationsExt::organization_list"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
-    }
-
-    impl<'a> OrganizationList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::OrganizationResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/organizations", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Organization, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_create`]\n\n[`ClientOrganizationsExt::organization_create`]: super::ClientOrganizationsExt::organization_create"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationCreate<'a> {
-        client: &'a super::Client,
-        body: Result<types::OrganizationCreate, String>,
-    }
-
-    impl<'a> OrganizationCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::OrganizationCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `OrganizationCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Organization>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/organizations", client.baseurl,);
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_view`]\n\n[`ClientOrganizationsExt::organization_view`]: super::ClientOrganizationsExt::organization_view"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-    }
-
-    impl<'a> OrganizationView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Organization>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_update`]\n\n[`ClientOrganizationsExt::organization_update`]: super::ClientOrganizationsExt::organization_update"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationUpdate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        body: Result<types::OrganizationUpdate, String>,
-    }
-
-    impl<'a> OrganizationUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::OrganizationUpdate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `OrganizationUpdate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/organizations/{organization_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Organization>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_delete`]\n\n[`ClientOrganizationsExt::organization_delete`]: super::ClientOrganizationsExt::organization_delete"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-    }
-
-    impl<'a> OrganizationDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_policy_view`]\n\n[`ClientOrganizationsExt::organization_policy_view`]: super::ClientOrganizationsExt::organization_policy_view"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationPolicyView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-    }
-
-    impl<'a> OrganizationPolicyView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/policy`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::OrganizationRolePolicy>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/policy",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_policy_update`]\n\n[`ClientOrganizationsExt::organization_policy_update`]: super::ClientOrganizationsExt::organization_policy_update"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationPolicyUpdate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        body: Result<types::OrganizationRolePolicy, String>,
-    }
-
-    impl<'a> OrganizationPolicyUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::OrganizationRolePolicy>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `OrganizationRolePolicy` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/organizations/{organization_name}/policy`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::OrganizationRolePolicy>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/policy",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientProjectsExt::project_list`]\n\n[`ClientProjectsExt::project_list`]: super::ClientProjectsExt::project_list"]
-    #[derive(Debug, Clone)]
-    pub struct ProjectList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
-    }
-
-    impl<'a> ProjectList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::ProjectResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Project, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientProjectsExt::project_create`]\n\n[`ClientProjectsExt::project_create`]: super::ClientProjectsExt::project_create"]
-    #[derive(Debug, Clone)]
-    pub struct ProjectCreate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        body: Result<types::ProjectCreate, String>,
-    }
-
-    impl<'a> ProjectCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::ProjectCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `ProjectCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientProjectsExt::project_view`]\n\n[`ClientProjectsExt::project_view`]: super::ClientProjectsExt::project_view"]
-    #[derive(Debug, Clone)]
-    pub struct ProjectView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-    }
-
-    impl<'a> ProjectView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientProjectsExt::project_update`]\n\n[`ClientProjectsExt::project_update`]: super::ClientProjectsExt::project_update"]
-    #[derive(Debug, Clone)]
-    pub struct ProjectUpdate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        body: Result<types::ProjectUpdate, String>,
-    }
-
-    impl<'a> ProjectUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::ProjectUpdate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `ProjectUpdate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientProjectsExt::project_delete`]\n\n[`ClientProjectsExt::project_delete`]: super::ClientProjectsExt::project_delete"]
-    #[derive(Debug, Clone)]
-    pub struct ProjectDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-    }
-
-    impl<'a> ProjectDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientDisksExt::disk_list`]\n\n[`ClientDisksExt::disk_list`]: super::ClientDisksExt::disk_list"]
-    #[derive(Debug, Clone)]
-    pub struct DiskList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> DiskList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/disks`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::DiskResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/disks",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/disks`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Disk, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientDisksExt::disk_create`]\n\n[`ClientDisksExt::disk_create`]: super::ClientDisksExt::disk_create"]
-    #[derive(Debug, Clone)]
-    pub struct DiskCreate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        body: Result<types::DiskCreate, String>,
-    }
-
-    impl<'a> DiskCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::DiskCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `DiskCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/disks`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/disks",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientDisksExt::disk_view`]\n\n[`ClientDisksExt::disk_view`]: super::ClientDisksExt::disk_view"]
-    #[derive(Debug, Clone)]
-    pub struct DiskView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        disk_name: Result<types::Name, String>,
-    }
-
-    impl<'a> DiskView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                disk_name: Err("disk_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn disk_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.disk_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for disk_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/disks/{disk_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                disk_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let disk_name = disk_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/disks/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&disk_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientDisksExt::disk_delete`]\n\n[`ClientDisksExt::disk_delete`]: super::ClientDisksExt::disk_delete"]
-    #[derive(Debug, Clone)]
-    pub struct DiskDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        disk_name: Result<types::Name, String>,
-    }
-
-    impl<'a> DiskDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                disk_name: Err("disk_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn disk_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.disk_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for disk_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/disks/{disk_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                disk_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let disk_name = disk_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/disks/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&disk_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientDisksExt::disk_metrics_list`]\n\n[`ClientDisksExt::disk_metrics_list`]: super::ClientDisksExt::disk_metrics_list"]
-    #[derive(Debug, Clone)]
-    pub struct DiskMetricsList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        disk_name: Result<types::Name, String>,
-        metric_name: Result<types::DiskMetricName, String>,
-        end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-    }
-
-    impl<'a> DiskMetricsList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                disk_name: Err("disk_name was not initialized".to_string()),
-                metric_name: Err("metric_name was not initialized".to_string()),
-                end_time: Ok(None),
-                limit: Ok(None),
-                page_token: Ok(None),
-                start_time: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn disk_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.disk_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for disk_name failed".to_string());
-            self
-        }
-
-        pub fn metric_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::DiskMetricName>,
-        {
-            self.metric_name = value
-                .try_into()
-                .map_err(|_| "conversion to `DiskMetricName` for metric_name failed".to_string());
-            self
-        }
-
-        pub fn end_time<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-        {
-            self . end_time = value . try_into () . map (Some) . map_err (| _ | "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed" . to_string ()) ;
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn start_time<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-        {
-            self . start_time = value . try_into () . map (Some) . map_err (| _ | "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for start_time failed" . to_string ()) ;
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/disks/{disk_name}/metrics/{metric_name}`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                disk_name,
-                metric_name,
-                end_time,
-                limit,
-                page_token,
-                start_time,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let disk_name = disk_name.map_err(Error::InvalidRequest)?;
-            let metric_name = metric_name.map_err(Error::InvalidRequest)?;
-            let end_time = end_time.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let start_time = start_time.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/disks/{}/metrics/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&disk_name.to_string()),
-                encode_path(&metric_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
-            }
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/disks/{disk_name}/metrics/{metric_name}`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Measurement, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                end_time: Ok(None),
-                limit: Ok(None),
-                page_token: Ok(None),
-                start_time: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientImagesExt::image_list`]\n\n[`ClientImagesExt::image_list`]: super::ClientImagesExt::image_list"]
-    #[derive(Debug, Clone)]
-    pub struct ImageList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> ImageList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/images`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::ImageResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/images",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/images`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Image, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientImagesExt::image_create`]\n\n[`ClientImagesExt::image_create`]: super::ClientImagesExt::image_create"]
-    #[derive(Debug, Clone)]
-    pub struct ImageCreate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        body: Result<types::ImageCreate, String>,
-    }
-
-    impl<'a> ImageCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::ImageCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `ImageCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/images`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/images",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientImagesExt::image_view`]\n\n[`ClientImagesExt::image_view`]: super::ClientImagesExt::image_view"]
-    #[derive(Debug, Clone)]
-    pub struct ImageView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        image_name: Result<types::Name, String>,
-    }
-
-    impl<'a> ImageView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                image_name: Err("image_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn image_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.image_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for image_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/images/{image_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                image_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let image_name = image_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/images/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&image_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientImagesExt::image_delete`]\n\n[`ClientImagesExt::image_delete`]: super::ClientImagesExt::image_delete"]
-    #[derive(Debug, Clone)]
-    pub struct ImageDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        image_name: Result<types::Name, String>,
-    }
-
-    impl<'a> ImageDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                image_name: Err("image_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn image_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.image_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for image_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/images/{image_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                image_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let image_name = image_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/images/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&image_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_list`]\n\n[`ClientInstancesExt::instance_list`]: super::ClientInstancesExt::instance_list"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> InstanceList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::InstanceResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/instances`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Instance, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_create`]\n\n[`ClientInstancesExt::instance_create`]: super::ClientInstancesExt::instance_create"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceCreate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        body: Result<types::InstanceCreate, String>,
-    }
-
-    impl<'a> InstanceCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::InstanceCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `InstanceCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_view`]\n\n[`ClientInstancesExt::instance_view`]: super::ClientInstancesExt::instance_view"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-    }
-
-    impl<'a> InstanceView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_delete`]\n\n[`ClientInstancesExt::instance_delete`]: super::ClientInstancesExt::instance_delete"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-    }
-
-    impl<'a> InstanceDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_disk_list`]\n\n[`ClientInstancesExt::instance_disk_list`]: super::ClientInstancesExt::instance_disk_list"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceDiskList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> InstanceDiskList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/disks`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::DiskResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/disks",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/disks`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Disk, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_disk_attach`]\n\n[`ClientInstancesExt::instance_disk_attach`]: super::ClientInstancesExt::instance_disk_attach"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceDiskAttach<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-        body: Result<types::DiskIdentifier, String>,
-    }
-
-    impl<'a> InstanceDiskAttach<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::DiskIdentifier>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `DiskIdentifier` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/disks/attach`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/disks/attach",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_disk_detach`]\n\n[`ClientInstancesExt::instance_disk_detach`]: super::ClientInstancesExt::instance_disk_detach"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceDiskDetach<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-        body: Result<types::DiskIdentifier, String>,
-    }
-
-    impl<'a> InstanceDiskDetach<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::DiskIdentifier>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `DiskIdentifier` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/disks/detach`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/disks/detach",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_external_ip_list`]\n\n[`ClientInstancesExt::instance_external_ip_list`]: super::ClientInstancesExt::instance_external_ip_list"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceExternalIpList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-    }
-
-    impl<'a> InstanceExternalIpList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/external-ips`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::ExternalIpResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/external-ips",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_migrate`]\n\n[`ClientInstancesExt::instance_migrate`]: super::ClientInstancesExt::instance_migrate"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceMigrate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-        body: Result<types::InstanceMigrate, String>,
-    }
-
-    impl<'a> InstanceMigrate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::InstanceMigrate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `InstanceMigrate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/migrate`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/migrate",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_list`]\n\n[`ClientInstancesExt::instance_network_interface_list`]: super::ClientInstancesExt::instance_network_interface_list"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> InstanceNetworkInterfaceList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::NetworkInterfaceResultsPage>, Error<types::Error>>
-        {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/network-interfaces",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::NetworkInterface, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_create`]\n\n[`ClientInstancesExt::instance_network_interface_create`]: super::ClientInstancesExt::instance_network_interface_create"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceCreate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-        body: Result<types::NetworkInterfaceCreate, String>,
-    }
-
-    impl<'a> InstanceNetworkInterfaceCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NetworkInterfaceCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `NetworkInterfaceCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::NetworkInterface>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/network-interfaces",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_view`]\n\n[`ClientInstancesExt::instance_network_interface_view`]: super::ClientInstancesExt::instance_network_interface_view"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-        interface_name: Result<types::Name, String>,
-    }
-
-    impl<'a> InstanceNetworkInterfaceView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-                interface_name: Err("interface_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        pub fn interface_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces/{interface_name}`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::NetworkInterface>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-                interface_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let interface_name = interface_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/network-interfaces/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-                encode_path(&interface_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_update`]\n\n[`ClientInstancesExt::instance_network_interface_update`]: super::ClientInstancesExt::instance_network_interface_update"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceUpdate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-        interface_name: Result<types::Name, String>,
-        body: Result<types::NetworkInterfaceUpdate, String>,
-    }
-
-    impl<'a> InstanceNetworkInterfaceUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-                interface_name: Err("interface_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        pub fn interface_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NetworkInterfaceUpdate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `NetworkInterfaceUpdate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces/{interface_name}`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::NetworkInterface>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-                interface_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let interface_name = interface_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/network-interfaces/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-                encode_path(&interface_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_delete`]\n\n[`ClientInstancesExt::instance_network_interface_delete`]: super::ClientInstancesExt::instance_network_interface_delete"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-        interface_name: Result<types::Name, String>,
-    }
-
-    impl<'a> InstanceNetworkInterfaceDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-                interface_name: Err("interface_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        pub fn interface_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.interface_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for interface_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/network-interfaces/{interface_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-                interface_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let interface_name = interface_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/network-interfaces/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-                encode_path(&interface_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_reboot`]\n\n[`ClientInstancesExt::instance_reboot`]: super::ClientInstancesExt::instance_reboot"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceReboot<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-    }
-
-    impl<'a> InstanceReboot<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/reboot`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/reboot",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client.client.post(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_serial_console`]\n\n[`ClientInstancesExt::instance_serial_console`]: super::ClientInstancesExt::instance_serial_console"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceSerialConsole<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-        from_start: Result<Option<u64>, String>,
-        max_bytes: Result<Option<u64>, String>,
-        most_recent: Result<Option<u64>, String>,
-    }
-
-    impl<'a> InstanceSerialConsole<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-                from_start: Ok(None),
-                max_bytes: Ok(None),
-                most_recent: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        pub fn from_start<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<u64>,
-        {
-            self.from_start = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `u64` for from_start failed".to_string());
-            self
-        }
-
-        pub fn max_bytes<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<u64>,
-        {
-            self.max_bytes = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `u64` for max_bytes failed".to_string());
-            self
-        }
-
-        pub fn most_recent<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<u64>,
-        {
-            self.most_recent = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `u64` for most_recent failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/serial-console`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::InstanceSerialConsoleData>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-                from_start,
-                max_bytes,
-                most_recent,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let from_start = from_start.map_err(Error::InvalidRequest)?;
-            let max_bytes = max_bytes.map_err(Error::InvalidRequest)?;
-            let most_recent = most_recent.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/serial-console",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &from_start {
-                query.push(("from_start", v.to_string()));
-            }
-            if let Some(v) = &max_bytes {
-                query.push(("max_bytes", v.to_string()));
-            }
-            if let Some(v) = &most_recent {
-                query.push(("most_recent", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_serial_console_stream`]\n\n[`ClientInstancesExt::instance_serial_console_stream`]: super::ClientInstancesExt::instance_serial_console_stream"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceSerialConsoleStream<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-    }
-
-    impl<'a> InstanceSerialConsoleStream<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/serial-console/stream`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<reqwest::Upgraded>, Error<reqwest::Upgraded>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/serial-console/stream",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client
-                .client
-                .get(url)
-                .header(reqwest::header::CONNECTION, "Upgrade")
-                .header(reqwest::header::UPGRADE, "websocket")
-                .header(reqwest::header::SEC_WEBSOCKET_VERSION, "13")
-                .header(
-                    reqwest::header::SEC_WEBSOCKET_KEY,
-                    base64::Engine::encode(
-                        &base64::engine::general_purpose::STANDARD,
-                        rand::random::<[u8; 16]>(),
-                    ),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                101u16 => ResponseValue::upgrade(response).await,
-                200..=299 => ResponseValue::upgrade(response).await,
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_start`]\n\n[`ClientInstancesExt::instance_start`]: super::ClientInstancesExt::instance_start"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceStart<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-    }
-
-    impl<'a> InstanceStart<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/start`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/start",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client.client.post(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientInstancesExt::instance_stop`]\n\n[`ClientInstancesExt::instance_stop`]: super::ClientInstancesExt::instance_stop"]
-    #[derive(Debug, Clone)]
-    pub struct InstanceStop<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        instance_name: Result<types::Name, String>,
-    }
-
-    impl<'a> InstanceStop<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                instance_name: Err("instance_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn instance_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.instance_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for instance_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/instances/{instance_name}/stop`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                instance_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let instance_name = instance_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/instances/{}/stop",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&instance_name.to_string()),
-            );
-            let request = client.client.post(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientProjectsExt::project_policy_view`]\n\n[`ClientProjectsExt::project_policy_view`]: super::ClientProjectsExt::project_policy_view"]
-    #[derive(Debug, Clone)]
-    pub struct ProjectPolicyView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-    }
-
-    impl<'a> ProjectPolicyView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/policy`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::ProjectRolePolicy>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/policy",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientProjectsExt::project_policy_update`]\n\n[`ClientProjectsExt::project_policy_update`]: super::ClientProjectsExt::project_policy_update"]
-    #[derive(Debug, Clone)]
-    pub struct ProjectPolicyUpdate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        body: Result<types::ProjectRolePolicy, String>,
-    }
-
-    impl<'a> ProjectPolicyUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::ProjectRolePolicy>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `ProjectRolePolicy` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/policy`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::ProjectRolePolicy>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/policy",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_list`]\n\n[`ClientSnapshotsExt::snapshot_list`]: super::ClientSnapshotsExt::snapshot_list"]
-    #[derive(Debug, Clone)]
-    pub struct SnapshotList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> SnapshotList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/snapshots`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SnapshotResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/snapshots",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/snapshots`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Snapshot, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_create`]\n\n[`ClientSnapshotsExt::snapshot_create`]: super::ClientSnapshotsExt::snapshot_create"]
-    #[derive(Debug, Clone)]
-    pub struct SnapshotCreate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        body: Result<types::SnapshotCreate, String>,
-    }
-
-    impl<'a> SnapshotCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SnapshotCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `SnapshotCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/snapshots`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Snapshot>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/snapshots",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_view`]\n\n[`ClientSnapshotsExt::snapshot_view`]: super::ClientSnapshotsExt::snapshot_view"]
-    #[derive(Debug, Clone)]
-    pub struct SnapshotView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        snapshot_name: Result<types::Name, String>,
-    }
-
-    impl<'a> SnapshotView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                snapshot_name: Err("snapshot_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn snapshot_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.snapshot_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for snapshot_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/snapshots/{snapshot_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Snapshot>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                snapshot_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let snapshot_name = snapshot_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/snapshots/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&snapshot_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_delete`]\n\n[`ClientSnapshotsExt::snapshot_delete`]: super::ClientSnapshotsExt::snapshot_delete"]
-    #[derive(Debug, Clone)]
-    pub struct SnapshotDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        snapshot_name: Result<types::Name, String>,
-    }
-
-    impl<'a> SnapshotDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                snapshot_name: Err("snapshot_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn snapshot_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.snapshot_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for snapshot_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/snapshots/{snapshot_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                snapshot_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let snapshot_name = snapshot_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/snapshots/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&snapshot_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_list`]\n\n[`ClientVpcsExt::vpc_list`]: super::ClientVpcsExt::vpc_list"]
-    #[derive(Debug, Clone)]
-    pub struct VpcList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> VpcList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::VpcResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/vpcs`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Vpc, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_create`]\n\n[`ClientVpcsExt::vpc_create`]: super::ClientVpcsExt::vpc_create"]
-    #[derive(Debug, Clone)]
-    pub struct VpcCreate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        body: Result<types::VpcCreate, String>,
-    }
-
-    impl<'a> VpcCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::VpcCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `VpcCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/vpcs`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_view`]\n\n[`ClientVpcsExt::vpc_view`]: super::ClientVpcsExt::vpc_view"]
-    #[derive(Debug, Clone)]
-    pub struct VpcView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-    }
-
-    impl<'a> VpcView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_update`]\n\n[`ClientVpcsExt::vpc_update`]: super::ClientVpcsExt::vpc_update"]
-    #[derive(Debug, Clone)]
-    pub struct VpcUpdate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        body: Result<types::VpcUpdate, String>,
-    }
-
-    impl<'a> VpcUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::VpcUpdate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `VpcUpdate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_delete`]\n\n[`ClientVpcsExt::vpc_delete`]: super::ClientVpcsExt::vpc_delete"]
-    #[derive(Debug, Clone)]
-    pub struct VpcDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-    }
-
-    impl<'a> VpcDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_firewall_rules_view`]\n\n[`ClientVpcsExt::vpc_firewall_rules_view`]: super::ClientVpcsExt::vpc_firewall_rules_view"]
-    #[derive(Debug, Clone)]
-    pub struct VpcFirewallRulesView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-    }
-
-    impl<'a> VpcFirewallRulesView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/firewall/rules`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::VpcFirewallRules>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/firewall/rules",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_firewall_rules_update`]\n\n[`ClientVpcsExt::vpc_firewall_rules_update`]: super::ClientVpcsExt::vpc_firewall_rules_update"]
-    #[derive(Debug, Clone)]
-    pub struct VpcFirewallRulesUpdate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        body: Result<types::VpcFirewallRuleUpdateParams, String>,
-    }
-
-    impl<'a> VpcFirewallRulesUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::VpcFirewallRuleUpdateParams>,
-        {
-            self.body = value.try_into().map_err(|_| {
-                "conversion to `VpcFirewallRuleUpdateParams` for body failed".to_string()
-            });
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/firewall/rules`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::VpcFirewallRules>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/firewall/rules",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_list`]\n\n[`ClientVpcsExt::vpc_router_list`]: super::ClientVpcsExt::vpc_router_list"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> VpcRouterList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::VpcRouterResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/routers",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::VpcRouter, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_create`]\n\n[`ClientVpcsExt::vpc_router_create`]: super::ClientVpcsExt::vpc_router_create"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterCreate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        body: Result<types::VpcRouterCreate, String>,
-    }
-
-    impl<'a> VpcRouterCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::VpcRouterCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `VpcRouterCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers`"]
-        pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/routers",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_view`]\n\n[`ClientVpcsExt::vpc_router_view`]: super::ClientVpcsExt::vpc_router_view"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        router_name: Result<types::Name, String>,
-    }
-
-    impl<'a> VpcRouterView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                router_name: Err("router_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn router_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.router_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for router_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                router_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let router_name = router_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/routers/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&router_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_update`]\n\n[`ClientVpcsExt::vpc_router_update`]: super::ClientVpcsExt::vpc_router_update"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterUpdate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        router_name: Result<types::Name, String>,
-        body: Result<types::VpcRouterUpdate, String>,
-    }
-
-    impl<'a> VpcRouterUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                router_name: Err("router_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn router_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.router_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for router_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::VpcRouterUpdate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `VpcRouterUpdate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                router_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let router_name = router_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/routers/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&router_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_delete`]\n\n[`ClientVpcsExt::vpc_router_delete`]: super::ClientVpcsExt::vpc_router_delete"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        router_name: Result<types::Name, String>,
-    }
-
-    impl<'a> VpcRouterDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                router_name: Err("router_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn router_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.router_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for router_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                router_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let router_name = router_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/routers/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&router_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_list`]\n\n[`ClientVpcsExt::vpc_router_route_list`]: super::ClientVpcsExt::vpc_router_route_list"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        router_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> VpcRouterRouteList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                router_name: Err("router_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn router_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.router_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for router_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::RouterRouteResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                router_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let router_name = router_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/routers/{}/routes",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&router_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::RouterRoute, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_create`]\n\n[`ClientVpcsExt::vpc_router_route_create`]: super::ClientVpcsExt::vpc_router_route_create"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteCreate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        router_name: Result<types::Name, String>,
-        body: Result<types::RouterRouteCreate, String>,
-    }
-
-    impl<'a> VpcRouterRouteCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                router_name: Err("router_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn router_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.router_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for router_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::RouterRouteCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `RouterRouteCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes`"]
-        pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                router_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let router_name = router_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/routers/{}/routes",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&router_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_view`]\n\n[`ClientVpcsExt::vpc_router_route_view`]: super::ClientVpcsExt::vpc_router_route_view"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        router_name: Result<types::Name, String>,
-        route_name: Result<types::Name, String>,
-    }
-
-    impl<'a> VpcRouterRouteView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                router_name: Err("router_name was not initialized".to_string()),
-                route_name: Err("route_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn router_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.router_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for router_name failed".to_string());
-            self
-        }
-
-        pub fn route_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.route_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for route_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes/{route_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                router_name,
-                route_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let router_name = router_name.map_err(Error::InvalidRequest)?;
-            let route_name = route_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/routers/{}/routes/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&router_name.to_string()),
-                encode_path(&route_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_update`]\n\n[`ClientVpcsExt::vpc_router_route_update`]: super::ClientVpcsExt::vpc_router_route_update"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteUpdate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        router_name: Result<types::Name, String>,
-        route_name: Result<types::Name, String>,
-        body: Result<types::RouterRouteUpdate, String>,
-    }
-
-    impl<'a> VpcRouterRouteUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                router_name: Err("router_name was not initialized".to_string()),
-                route_name: Err("route_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn router_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.router_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for router_name failed".to_string());
-            self
-        }
-
-        pub fn route_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.route_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for route_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::RouterRouteUpdate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `RouterRouteUpdate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes/{route_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                router_name,
-                route_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let router_name = router_name.map_err(Error::InvalidRequest)?;
-            let route_name = route_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/routers/{}/routes/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&router_name.to_string()),
-                encode_path(&route_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_delete`]\n\n[`ClientVpcsExt::vpc_router_route_delete`]: super::ClientVpcsExt::vpc_router_route_delete"]
-    #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        router_name: Result<types::Name, String>,
-        route_name: Result<types::Name, String>,
-    }
-
-    impl<'a> VpcRouterRouteDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                router_name: Err("router_name was not initialized".to_string()),
-                route_name: Err("route_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn router_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.router_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for router_name failed".to_string());
-            self
-        }
-
-        pub fn route_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.route_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for route_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/routers/{router_name}/routes/{route_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                router_name,
-                route_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let router_name = router_name.map_err(Error::InvalidRequest)?;
-            let route_name = route_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/routers/{}/routes/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&router_name.to_string()),
-                encode_path(&route_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_list`]\n\n[`ClientVpcsExt::vpc_subnet_list`]: super::ClientVpcsExt::vpc_subnet_list"]
-    #[derive(Debug, Clone)]
-    pub struct VpcSubnetList<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> VpcSubnetList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::VpcSubnetResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/subnets",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::VpcSubnet, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_create`]\n\n[`ClientVpcsExt::vpc_subnet_create`]: super::ClientVpcsExt::vpc_subnet_create"]
-    #[derive(Debug, Clone)]
-    pub struct VpcSubnetCreate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        body: Result<types::VpcSubnetCreate, String>,
-    }
-
-    impl<'a> VpcSubnetCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::VpcSubnetCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `VpcSubnetCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets`"]
-        pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/subnets",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_view`]\n\n[`ClientVpcsExt::vpc_subnet_view`]: super::ClientVpcsExt::vpc_subnet_view"]
-    #[derive(Debug, Clone)]
-    pub struct VpcSubnetView<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        subnet_name: Result<types::Name, String>,
-    }
-
-    impl<'a> VpcSubnetView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                subnet_name: Err("subnet_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn subnet_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.subnet_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for subnet_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                subnet_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let subnet_name = subnet_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/subnets/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&subnet_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_update`]\n\n[`ClientVpcsExt::vpc_subnet_update`]: super::ClientVpcsExt::vpc_subnet_update"]
-    #[derive(Debug, Clone)]
-    pub struct VpcSubnetUpdate<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        subnet_name: Result<types::Name, String>,
-        body: Result<types::VpcSubnetUpdate, String>,
-    }
-
-    impl<'a> VpcSubnetUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                subnet_name: Err("subnet_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn subnet_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.subnet_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for subnet_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::VpcSubnetUpdate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `VpcSubnetUpdate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                subnet_name,
-                body,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let subnet_name = subnet_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/subnets/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&subnet_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_delete`]\n\n[`ClientVpcsExt::vpc_subnet_delete`]: super::ClientVpcsExt::vpc_subnet_delete"]
-    #[derive(Debug, Clone)]
-    pub struct VpcSubnetDelete<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        subnet_name: Result<types::Name, String>,
-    }
-
-    impl<'a> VpcSubnetDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                subnet_name: Err("subnet_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn subnet_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.subnet_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for subnet_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                subnet_name,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let subnet_name = subnet_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/subnets/{}",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&subnet_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_list_network_interfaces`]\n\n[`ClientVpcsExt::vpc_subnet_list_network_interfaces`]: super::ClientVpcsExt::vpc_subnet_list_network_interfaces"]
-    #[derive(Debug, Clone)]
-    pub struct VpcSubnetListNetworkInterfaces<'a> {
-        client: &'a super::Client,
-        organization_name: Result<types::Name, String>,
-        project_name: Result<types::Name, String>,
-        vpc_name: Result<types::Name, String>,
-        subnet_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
-    }
-
-    impl<'a> VpcSubnetListNetworkInterfaces<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization_name: Err("organization_name was not initialized".to_string()),
-                project_name: Err("project_name was not initialized".to_string()),
-                vpc_name: Err("vpc_name was not initialized".to_string()),
-                subnet_name: Err("subnet_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn organization_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.organization_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for organization_name failed".to_string());
-            self
-        }
-
-        pub fn project_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.project_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for project_name failed".to_string());
-            self
-        }
-
-        pub fn vpc_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.vpc_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for vpc_name failed".to_string());
-            self
-        }
-
-        pub fn subnet_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.subnet_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for subnet_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}/network-interfaces`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::NetworkInterfaceResultsPage>, Error<types::Error>>
-        {
-            let Self {
-                client,
-                organization_name,
-                project_name,
-                vpc_name,
-                subnet_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let organization_name = organization_name.map_err(Error::InvalidRequest)?;
-            let project_name = project_name.map_err(Error::InvalidRequest)?;
-            let vpc_name = vpc_name.map_err(Error::InvalidRequest)?;
-            let subnet_name = subnet_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/organizations/{}/projects/{}/vpcs/{}/subnets/{}/network-interfaces",
-                client.baseurl,
-                encode_path(&organization_name.to_string()),
-                encode_path(&project_name.to_string()),
-                encode_path(&vpc_name.to_string()),
-                encode_path(&subnet_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/organizations/{organization_name}/projects/{project_name}/vpcs/{vpc_name}/subnets/{subnet_name}/network-interfaces`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::NetworkInterface, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSilosExt::policy_view`]\n\n[`ClientSilosExt::policy_view`]: super::ClientSilosExt::policy_view"]
-    #[derive(Debug, Clone)]
-    pub struct PolicyView<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> PolicyView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
-        }
-
-        #[doc = "Sends a `GET` request to `/policy`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/policy", client.baseurl,);
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSilosExt::policy_update`]\n\n[`ClientSilosExt::policy_update`]: super::ClientSilosExt::policy_update"]
-    #[derive(Debug, Clone)]
-    pub struct PolicyUpdate<'a> {
-        client: &'a super::Client,
-        body: Result<types::SiloRolePolicy, String>,
-    }
-
-    impl<'a> PolicyUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SiloRolePolicy>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `SiloRolePolicy` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/policy`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/policy", client.baseurl,);
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientRolesExt::role_list`]\n\n[`ClientRolesExt::role_list`]: super::ClientRolesExt::role_list"]
-    #[derive(Debug, Clone)]
-    pub struct RoleList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-    }
-
-    impl<'a> RoleList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/roles`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::RoleResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/roles", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/roles`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Role, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientRolesExt::role_view`]\n\n[`ClientRolesExt::role_view`]: super::ClientRolesExt::role_view"]
-    #[derive(Debug, Clone)]
-    pub struct RoleView<'a> {
-        client: &'a super::Client,
-        role_name: Result<String, String>,
-    }
-
-    impl<'a> RoleView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                role_name: Err("role_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn role_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.role_name = value
-                .try_into()
-                .map_err(|_| "conversion to `String` for role_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/roles/{role_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Role>, Error<types::Error>> {
-            let Self { client, role_name } = self;
-            let role_name = role_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/roles/{}",
-                client.baseurl,
-                encode_path(&role_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientHiddenExt::session_me`]\n\n[`ClientHiddenExt::session_me`]: super::ClientHiddenExt::session_me"]
-    #[derive(Debug, Clone)]
-    pub struct SessionMe<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> SessionMe<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
-        }
-
-        #[doc = "Sends a `GET` request to `/session/me`"]
-        pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/session/me", client.baseurl,);
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientHiddenExt::session_me_groups`]\n\n[`ClientHiddenExt::session_me_groups`]: super::ClientHiddenExt::session_me_groups"]
-    #[derive(Debug, Clone)]
-    pub struct SessionMeGroups<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
-    }
-
-    impl<'a> SessionMeGroups<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/session/me/groups`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::GroupResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/session/me/groups", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/session/me/groups`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Group, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSessionExt::session_sshkey_list`]\n\n[`ClientSessionExt::session_sshkey_list`]: super::ClientSessionExt::session_sshkey_list"]
-    #[derive(Debug, Clone)]
-    pub struct SessionSshkeyList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> SessionSshkeyList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/session/me/sshkeys`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SshKeyResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/session/me/sshkeys", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/session/me/sshkeys`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::SshKey, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSessionExt::session_sshkey_create`]\n\n[`ClientSessionExt::session_sshkey_create`]: super::ClientSessionExt::session_sshkey_create"]
-    #[derive(Debug, Clone)]
-    pub struct SessionSshkeyCreate<'a> {
-        client: &'a super::Client,
-        body: Result<types::SshKeyCreate, String>,
-    }
-
-    impl<'a> SessionSshkeyCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SshKeyCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `SshKeyCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/session/me/sshkeys`"]
-        pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/session/me/sshkeys", client.baseurl,);
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSessionExt::session_sshkey_view`]\n\n[`ClientSessionExt::session_sshkey_view`]: super::ClientSessionExt::session_sshkey_view"]
-    #[derive(Debug, Clone)]
-    pub struct SessionSshkeyView<'a> {
-        client: &'a super::Client,
-        ssh_key_name: Result<types::Name, String>,
-    }
-
-    impl<'a> SessionSshkeyView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                ssh_key_name: Err("ssh_key_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn ssh_key_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.ssh_key_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for ssh_key_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/session/me/sshkeys/{ssh_key_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
-            let Self {
-                client,
-                ssh_key_name,
-            } = self;
-            let ssh_key_name = ssh_key_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/session/me/sshkeys/{}",
-                client.baseurl,
-                encode_path(&ssh_key_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSessionExt::session_sshkey_delete`]\n\n[`ClientSessionExt::session_sshkey_delete`]: super::ClientSessionExt::session_sshkey_delete"]
-    #[derive(Debug, Clone)]
-    pub struct SessionSshkeyDelete<'a> {
-        client: &'a super::Client,
-        ssh_key_name: Result<types::Name, String>,
-    }
-
-    impl<'a> SessionSshkeyDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                ssh_key_name: Err("ssh_key_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn ssh_key_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.ssh_key_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for ssh_key_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/session/me/sshkeys/{ssh_key_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                ssh_key_name,
-            } = self;
-            let ssh_key_name = ssh_key_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/session/me/sshkeys/{}",
-                client.baseurl,
-                encode_path(&ssh_key_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
     #[doc = "Builder for [`ClientSystemExt::system_image_view_by_id`]\n\n[`ClientSystemExt::system_image_view_by_id`]: super::ClientSystemExt::system_image_view_by_id"]
     #[derive(Debug, Clone)]
     pub struct SystemImageViewById<'a> {
@@ -26518,56 +15882,6 @@ pub mod builder {
             let id = id.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/system/by-id/images/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_view_by_id`]\n\n[`ClientSystemExt::ip_pool_view_by_id`]: super::ClientSystemExt::ip_pool_view_by_id"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolViewById<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> IpPoolViewById<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/by-id/ip-pools/{id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/by-id/ip-pools/{}",
                 client.baseurl,
                 encode_path(&id.to_string()),
             );
@@ -26626,296 +15940,6 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::certificate_list`]\n\n[`ClientSystemExt::certificate_list`]: super::ClientSystemExt::certificate_list"]
-    #[derive(Debug, Clone)]
-    pub struct CertificateList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
-    }
-
-    impl<'a> CertificateList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/certificates`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::CertificateResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/system/certificates", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/system/certificates`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Certificate, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::certificate_create`]\n\n[`ClientSystemExt::certificate_create`]: super::ClientSystemExt::certificate_create"]
-    #[derive(Debug, Clone)]
-    pub struct CertificateCreate<'a> {
-        client: &'a super::Client,
-        body: Result<types::CertificateCreate, String>,
-    }
-
-    impl<'a> CertificateCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::CertificateCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `CertificateCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/system/certificates`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/system/certificates", client.baseurl,);
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::certificate_view`]\n\n[`ClientSystemExt::certificate_view`]: super::ClientSystemExt::certificate_view"]
-    #[derive(Debug, Clone)]
-    pub struct CertificateView<'a> {
-        client: &'a super::Client,
-        certificate: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> CertificateView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                certificate: Err("certificate was not initialized".to_string()),
-            }
-        }
-
-        pub fn certificate<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.certificate = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for certificate failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/certificates/{certificate}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
-            let Self {
-                client,
-                certificate,
-            } = self;
-            let certificate = certificate.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/certificates/{}",
-                client.baseurl,
-                encode_path(&certificate.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::certificate_delete`]\n\n[`ClientSystemExt::certificate_delete`]: super::ClientSystemExt::certificate_delete"]
-    #[derive(Debug, Clone)]
-    pub struct CertificateDelete<'a> {
-        client: &'a super::Client,
-        certificate: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> CertificateDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                certificate: Err("certificate was not initialized".to_string()),
-            }
-        }
-
-        pub fn certificate<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.certificate = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for certificate failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/system/certificates/{certificate}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                certificate,
-            } = self;
-            let certificate = certificate.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/certificates/{}",
-                client.baseurl,
-                encode_path(&certificate.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -27881,1087 +16905,6 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_list`]\n\n[`ClientSystemExt::ip_pool_list`]: super::ClientSystemExt::ip_pool_list"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
-    }
-
-    impl<'a> IpPoolList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/ip-pools`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::IpPoolResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/system/ip-pools", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/system/ip-pools`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::IpPool, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_create`]\n\n[`ClientSystemExt::ip_pool_create`]: super::ClientSystemExt::ip_pool_create"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolCreate<'a> {
-        client: &'a super::Client,
-        body: Result<types::IpPoolCreate, String>,
-    }
-
-    impl<'a> IpPoolCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IpPoolCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `IpPoolCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/system/ip-pools`"]
-        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/system/ip-pools", client.baseurl,);
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_view`]\n\n[`ClientSystemExt::ip_pool_view`]: super::ClientSystemExt::ip_pool_view"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolView<'a> {
-        client: &'a super::Client,
-        pool_name: Result<types::Name, String>,
-    }
-
-    impl<'a> IpPoolView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                pool_name: Err("pool_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn pool_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.pool_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for pool_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/ip-pools/{pool_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self { client, pool_name } = self;
-            let pool_name = pool_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/ip-pools/{}",
-                client.baseurl,
-                encode_path(&pool_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_update`]\n\n[`ClientSystemExt::ip_pool_update`]: super::ClientSystemExt::ip_pool_update"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolUpdate<'a> {
-        client: &'a super::Client,
-        pool_name: Result<types::Name, String>,
-        body: Result<types::IpPoolUpdate, String>,
-    }
-
-    impl<'a> IpPoolUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                pool_name: Err("pool_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn pool_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.pool_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for pool_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IpPoolUpdate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `IpPoolUpdate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/system/ip-pools/{pool_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self {
-                client,
-                pool_name,
-                body,
-            } = self;
-            let pool_name = pool_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/ip-pools/{}",
-                client.baseurl,
-                encode_path(&pool_name.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_delete`]\n\n[`ClientSystemExt::ip_pool_delete`]: super::ClientSystemExt::ip_pool_delete"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolDelete<'a> {
-        client: &'a super::Client,
-        pool_name: Result<types::Name, String>,
-    }
-
-    impl<'a> IpPoolDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                pool_name: Err("pool_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn pool_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.pool_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for pool_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/system/ip-pools/{pool_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, pool_name } = self;
-            let pool_name = pool_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/ip-pools/{}",
-                client.baseurl,
-                encode_path(&pool_name.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_list`]\n\n[`ClientSystemExt::ip_pool_range_list`]: super::ClientSystemExt::ip_pool_range_list"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolRangeList<'a> {
-        client: &'a super::Client,
-        pool_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-    }
-
-    impl<'a> IpPoolRangeList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                pool_name: Err("pool_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-            }
-        }
-
-        pub fn pool_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.pool_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for pool_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/ip-pools/{pool_name}/ranges`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                pool_name,
-                limit,
-                page_token,
-            } = self;
-            let pool_name = pool_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/ip-pools/{}/ranges",
-                client.baseurl,
-                encode_path(&pool_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/system/ip-pools/{pool_name}/ranges`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::IpPoolRange, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_add`]\n\n[`ClientSystemExt::ip_pool_range_add`]: super::ClientSystemExt::ip_pool_range_add"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolRangeAdd<'a> {
-        client: &'a super::Client,
-        pool_name: Result<types::Name, String>,
-        body: Result<types::IpRange, String>,
-    }
-
-    impl<'a> IpPoolRangeAdd<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                pool_name: Err("pool_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn pool_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.pool_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for pool_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IpRange>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/system/ip-pools/{pool_name}/ranges/add`"]
-        pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
-            let Self {
-                client,
-                pool_name,
-                body,
-            } = self;
-            let pool_name = pool_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/ip-pools/{}/ranges/add",
-                client.baseurl,
-                encode_path(&pool_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_remove`]\n\n[`ClientSystemExt::ip_pool_range_remove`]: super::ClientSystemExt::ip_pool_range_remove"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolRangeRemove<'a> {
-        client: &'a super::Client,
-        pool_name: Result<types::Name, String>,
-        body: Result<types::IpRange, String>,
-    }
-
-    impl<'a> IpPoolRangeRemove<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                pool_name: Err("pool_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn pool_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.pool_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for pool_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IpRange>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/system/ip-pools/{pool_name}/ranges/remove`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                pool_name,
-                body,
-            } = self;
-            let pool_name = pool_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/ip-pools/{}/ranges/remove",
-                client.baseurl,
-                encode_path(&pool_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_view`]\n\n[`ClientSystemExt::ip_pool_service_view`]: super::ClientSystemExt::ip_pool_service_view"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolServiceView<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> IpPoolServiceView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
-        }
-
-        #[doc = "Sends a `GET` request to `/system/ip-pools-service`"]
-        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/system/ip-pools-service", client.baseurl,);
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_list`]\n\n[`ClientSystemExt::ip_pool_service_range_list`]: super::ClientSystemExt::ip_pool_service_range_list"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-    }
-
-    impl<'a> IpPoolServiceRangeList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/ip-pools-service/ranges`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/system/ip-pools-service/ranges", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/system/ip-pools-service/ranges`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::IpPoolRange, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_add`]\n\n[`ClientSystemExt::ip_pool_service_range_add`]: super::ClientSystemExt::ip_pool_service_range_add"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeAdd<'a> {
-        client: &'a super::Client,
-        body: Result<types::IpRange, String>,
-    }
-
-    impl<'a> IpPoolServiceRangeAdd<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IpRange>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/system/ip-pools-service/ranges/add`"]
-        pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/system/ip-pools-service/ranges/add", client.baseurl,);
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_remove`]\n\n[`ClientSystemExt::ip_pool_service_range_remove`]: super::ClientSystemExt::ip_pool_service_range_remove"]
-    #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeRemove<'a> {
-        client: &'a super::Client,
-        body: Result<types::IpRange, String>,
-    }
-
-    impl<'a> IpPoolServiceRangeRemove<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IpRange>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/system/ip-pools-service/ranges/remove`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/system/ip-pools-service/ranges/remove", client.baseurl,);
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::system_metric`]\n\n[`ClientSystemExt::system_metric`]: super::ClientSystemExt::system_metric"]
-    #[derive(Debug, Clone)]
-    pub struct SystemMetric<'a> {
-        client: &'a super::Client,
-        metric_name: Result<types::SystemMetricName, String>,
-        end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-        id: Result<uuid::Uuid, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-    }
-
-    impl<'a> SystemMetric<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                metric_name: Err("metric_name was not initialized".to_string()),
-                end_time: Ok(None),
-                id: Err("id was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                start_time: Ok(None),
-            }
-        }
-
-        pub fn metric_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SystemMetricName>,
-        {
-            self.metric_name = value
-                .try_into()
-                .map_err(|_| "conversion to `SystemMetricName` for metric_name failed".to_string());
-            self
-        }
-
-        pub fn end_time<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-        {
-            self . end_time = value . try_into () . map (Some) . map_err (| _ | "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed" . to_string ()) ;
-            self
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn start_time<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-        {
-            self . start_time = value . try_into () . map (Some) . map_err (| _ | "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for start_time failed" . to_string ()) ;
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/metrics/{metric_name}`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                metric_name,
-                end_time,
-                id,
-                limit,
-                page_token,
-                start_time,
-            } = self;
-            let metric_name = metric_name.map_err(Error::InvalidRequest)?;
-            let end_time = end_time.map_err(Error::InvalidRequest)?;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let start_time = start_time.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/metrics/{}",
-                client.baseurl,
-                encode_path(&metric_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(5usize);
-            if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
-            }
-            query.push(("id", id.to_string()));
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientPolicyExt::system_policy_view`]\n\n[`ClientPolicyExt::system_policy_view`]: super::ClientPolicyExt::system_policy_view"]
-    #[derive(Debug, Clone)]
-    pub struct SystemPolicyView<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> SystemPolicyView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
-        }
-
-        #[doc = "Sends a `GET` request to `/system/policy`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::FleetRolePolicy>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/system/policy", client.baseurl,);
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientPolicyExt::system_policy_update`]\n\n[`ClientPolicyExt::system_policy_update`]: super::ClientPolicyExt::system_policy_update"]
-    #[derive(Debug, Clone)]
-    pub struct SystemPolicyUpdate<'a> {
-        client: &'a super::Client,
-        body: Result<types::FleetRolePolicy, String>,
-    }
-
-    impl<'a> SystemPolicyUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::FleetRolePolicy>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `FleetRolePolicy` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/system/policy`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::FleetRolePolicy>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/system/policy", client.baseurl,);
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
     #[doc = "Builder for [`ClientSystemExt::saga_list`]\n\n[`ClientSystemExt::saga_list`]: super::ClientSystemExt::saga_list"]
     #[derive(Debug, Clone)]
     pub struct SagaList<'a> {
@@ -29434,519 +17377,6 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::silo_identity_provider_list`]\n\n[`ClientSystemExt::silo_identity_provider_list`]: super::ClientSystemExt::silo_identity_provider_list"]
-    #[derive(Debug, Clone)]
-    pub struct SiloIdentityProviderList<'a> {
-        client: &'a super::Client,
-        silo_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> SiloIdentityProviderList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                silo_name: Err("silo_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn silo_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.silo_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/silos/{silo_name}/identity-providers`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::IdentityProviderResultsPage>, Error<types::Error>>
-        {
-            let Self {
-                client,
-                silo_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/silos/{}/identity-providers",
-                client.baseurl,
-                encode_path(&silo_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/system/silos/{silo_name}/identity-providers`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::IdentityProvider, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::local_idp_user_create`]\n\n[`ClientSystemExt::local_idp_user_create`]: super::ClientSystemExt::local_idp_user_create"]
-    #[derive(Debug, Clone)]
-    pub struct LocalIdpUserCreate<'a> {
-        client: &'a super::Client,
-        silo_name: Result<types::Name, String>,
-        body: Result<types::UserCreate, String>,
-    }
-
-    impl<'a> LocalIdpUserCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                silo_name: Err("silo_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn silo_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.silo_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::UserCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `UserCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/system/silos/{silo_name}/identity-providers/local/users`"]
-        pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
-            let Self {
-                client,
-                silo_name,
-                body,
-            } = self;
-            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/silos/{}/identity-providers/local/users",
-                client.baseurl,
-                encode_path(&silo_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::local_idp_user_delete`]\n\n[`ClientSystemExt::local_idp_user_delete`]: super::ClientSystemExt::local_idp_user_delete"]
-    #[derive(Debug, Clone)]
-    pub struct LocalIdpUserDelete<'a> {
-        client: &'a super::Client,
-        silo_name: Result<types::Name, String>,
-        user_id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> LocalIdpUserDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                silo_name: Err("silo_name was not initialized".to_string()),
-                user_id: Err("user_id was not initialized".to_string()),
-            }
-        }
-
-        pub fn silo_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.silo_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
-            self
-        }
-
-        pub fn user_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.user_id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/system/silos/{silo_name}/identity-providers/local/users/{user_id}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                silo_name,
-                user_id,
-            } = self;
-            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let user_id = user_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/silos/{}/identity-providers/local/users/{}",
-                client.baseurl,
-                encode_path(&silo_name.to_string()),
-                encode_path(&user_id.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::local_idp_user_set_password`]\n\n[`ClientSystemExt::local_idp_user_set_password`]: super::ClientSystemExt::local_idp_user_set_password"]
-    #[derive(Debug, Clone)]
-    pub struct LocalIdpUserSetPassword<'a> {
-        client: &'a super::Client,
-        silo_name: Result<types::Name, String>,
-        user_id: Result<uuid::Uuid, String>,
-        body: Result<types::UserPassword, String>,
-    }
-
-    impl<'a> LocalIdpUserSetPassword<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                silo_name: Err("silo_name was not initialized".to_string()),
-                user_id: Err("user_id was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn silo_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.silo_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
-            self
-        }
-
-        pub fn user_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.user_id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::UserPassword>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `UserPassword` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/system/silos/{silo_name}/identity-providers/local/users/{user_id}/set-password`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                silo_name,
-                user_id,
-                body,
-            } = self;
-            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let user_id = user_id.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/silos/{}/identity-providers/local/users/{}/set-password",
-                client.baseurl,
-                encode_path(&silo_name.to_string()),
-                encode_path(&user_id.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::saml_identity_provider_create`]\n\n[`ClientSystemExt::saml_identity_provider_create`]: super::ClientSystemExt::saml_identity_provider_create"]
-    #[derive(Debug, Clone)]
-    pub struct SamlIdentityProviderCreate<'a> {
-        client: &'a super::Client,
-        silo_name: Result<types::Name, String>,
-        body: Result<types::SamlIdentityProviderCreate, String>,
-    }
-
-    impl<'a> SamlIdentityProviderCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                silo_name: Err("silo_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn silo_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.silo_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SamlIdentityProviderCreate>,
-        {
-            self.body = value.try_into().map_err(|_| {
-                "conversion to `SamlIdentityProviderCreate` for body failed".to_string()
-            });
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/system/silos/{silo_name}/identity-providers/saml`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SamlIdentityProvider>, Error<types::Error>> {
-            let Self {
-                client,
-                silo_name,
-                body,
-            } = self;
-            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/silos/{}/identity-providers/saml",
-                client.baseurl,
-                encode_path(&silo_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::saml_identity_provider_view`]\n\n[`ClientSystemExt::saml_identity_provider_view`]: super::ClientSystemExt::saml_identity_provider_view"]
-    #[derive(Debug, Clone)]
-    pub struct SamlIdentityProviderView<'a> {
-        client: &'a super::Client,
-        silo_name: Result<types::Name, String>,
-        provider_name: Result<types::Name, String>,
-    }
-
-    impl<'a> SamlIdentityProviderView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                silo_name: Err("silo_name was not initialized".to_string()),
-                provider_name: Err("provider_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn silo_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.silo_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
-            self
-        }
-
-        pub fn provider_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.provider_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for provider_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/silos/{silo_name}/identity-providers/saml/{provider_name}`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SamlIdentityProvider>, Error<types::Error>> {
-            let Self {
-                client,
-                silo_name,
-                provider_name,
-            } = self;
-            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let provider_name = provider_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/silos/{}/identity-providers/saml/{}",
-                client.baseurl,
-                encode_path(&silo_name.to_string()),
-                encode_path(&provider_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
     #[doc = "Builder for [`ClientSystemExt::silo_policy_view`]\n\n[`ClientSystemExt::silo_policy_view`]: super::ClientSystemExt::silo_policy_view"]
     #[derive(Debug, Clone)]
     pub struct SiloPolicyView<'a> {
@@ -30068,693 +17498,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::silo_users_list`]\n\n[`ClientSystemExt::silo_users_list`]: super::ClientSystemExt::silo_users_list"]
+    #[doc = "Builder for [`ClientDisksExt::disk_list`]\n\n[`ClientDisksExt::disk_list`]: super::ClientDisksExt::disk_list"]
     #[derive(Debug, Clone)]
-    pub struct SiloUsersList<'a> {
-        client: &'a super::Client,
-        silo_name: Result<types::Name, String>,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
-    }
-
-    impl<'a> SiloUsersList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                silo_name: Err("silo_name was not initialized".to_string()),
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn silo_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.silo_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
-            self
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/silos/{silo_name}/users/all`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::UserResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                silo_name,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/silos/{}/users/all",
-                client.baseurl,
-                encode_path(&silo_name.to_string()),
-            );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/system/silos/{silo_name}/users/all`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::User, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::silo_user_view`]\n\n[`ClientSystemExt::silo_user_view`]: super::ClientSystemExt::silo_user_view"]
-    #[derive(Debug, Clone)]
-    pub struct SiloUserView<'a> {
-        client: &'a super::Client,
-        silo_name: Result<types::Name, String>,
-        user_id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> SiloUserView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                silo_name: Err("silo_name was not initialized".to_string()),
-                user_id: Err("user_id was not initialized".to_string()),
-            }
-        }
-
-        pub fn silo_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.silo_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
-            self
-        }
-
-        pub fn user_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.user_id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/silos/{silo_name}/users/id/{user_id}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
-            let Self {
-                client,
-                silo_name,
-                user_id,
-            } = self;
-            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let user_id = user_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/silos/{}/users/id/{}",
-                client.baseurl,
-                encode_path(&silo_name.to_string()),
-                encode_path(&user_id.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::system_user_list`]\n\n[`ClientSystemExt::system_user_list`]: super::ClientSystemExt::system_user_list"]
-    #[derive(Debug, Clone)]
-    pub struct SystemUserList<'a> {
+    pub struct DiskList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameSortMode>, String>,
-    }
-
-    impl<'a> SystemUserList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/user`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::UserBuiltinResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/system/user", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/system/user`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::UserBuiltin, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSystemExt::system_user_view`]\n\n[`ClientSystemExt::system_user_view`]: super::ClientSystemExt::system_user_view"]
-    #[derive(Debug, Clone)]
-    pub struct SystemUserView<'a> {
-        client: &'a super::Client,
-        user_name: Result<types::Name, String>,
-    }
-
-    impl<'a> SystemUserView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                user_name: Err("user_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn user_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.user_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for user_name failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/system/user/{user_name}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::UserBuiltin>, Error<types::Error>> {
-            let Self { client, user_name } = self;
-            let user_name = user_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/system/user/{}",
-                client.baseurl,
-                encode_path(&user_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientMetricsExt::timeseries_schema_get`]\n\n[`ClientMetricsExt::timeseries_schema_get`]: super::ClientMetricsExt::timeseries_schema_get"]
-    #[derive(Debug, Clone)]
-    pub struct TimeseriesSchemaGet<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-    }
-
-    impl<'a> TimeseriesSchemaGet<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/timeseries/schema`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::TimeseriesSchemaResultsPage>, Error<types::Error>>
-        {
-            let Self {
-                client,
-                limit,
-                page_token,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/timeseries/schema", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/timeseries/schema`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::TimeseriesSchema, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientSilosExt::user_list`]\n\n[`ClientSilosExt::user_list`]: super::ClientSilosExt::user_list"]
-    #[derive(Debug, Clone)]
-    pub struct UserList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
-    }
-
-    impl<'a> UserList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/users`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::UserResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/users", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/users`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::User, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientDisksExt::disk_list_v1`]\n\n[`ClientDisksExt::disk_list_v1`]: super::ClientDisksExt::disk_list_v1"]
-    #[derive(Debug, Clone)]
-    pub struct DiskListV1<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> DiskListV1<'a> {
+    impl<'a> DiskList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -30768,17 +17526,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -30822,23 +17569,18 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                organization,
                 page_token,
                 project,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let mut query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -30874,7 +17616,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -30914,34 +17655,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientDisksExt::disk_create_v1`]\n\n[`ClientDisksExt::disk_create_v1`]: super::ClientDisksExt::disk_create_v1"]
+    #[doc = "Builder for [`ClientDisksExt::disk_create`]\n\n[`ClientDisksExt::disk_create`]: super::ClientDisksExt::disk_create"]
     #[derive(Debug, Clone)]
-    pub struct DiskCreateV1<'a> {
+    pub struct DiskCreate<'a> {
         client: &'a super::Client,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<types::NameOrId, String>,
         body: Result<types::DiskCreate, String>,
     }
 
-    impl<'a> DiskCreateV1<'a> {
+    impl<'a> DiskCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Ok(None),
                 project: Err("project was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn project<V>(mut self, value: V) -> Self
@@ -30968,18 +17696,13 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
             let Self {
                 client,
-                organization,
                 project,
                 body,
             } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             query.push(("project", project.to_string()));
             let request = client.client.post(url).json(&body).query(&query).build()?;
             let result = client.client.execute(request).await;
@@ -30997,21 +17720,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientDisksExt::disk_view_v1`]\n\n[`ClientDisksExt::disk_view_v1`]: super::ClientDisksExt::disk_view_v1"]
+    #[doc = "Builder for [`ClientDisksExt::disk_view`]\n\n[`ClientDisksExt::disk_view`]: super::ClientDisksExt::disk_view"]
     #[derive(Debug, Clone)]
-    pub struct DiskViewV1<'a> {
+    pub struct DiskView<'a> {
         client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> DiskViewV1<'a> {
+    impl<'a> DiskView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 disk: Err("disk was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -31023,17 +17744,6 @@ pub mod builder {
             self.disk = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for disk failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -31053,21 +17763,16 @@ pub mod builder {
             let Self {
                 client,
                 disk,
-                organization,
                 project,
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/disks/{}",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -31087,21 +17792,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientDisksExt::disk_delete_v1`]\n\n[`ClientDisksExt::disk_delete_v1`]: super::ClientDisksExt::disk_delete_v1"]
+    #[doc = "Builder for [`ClientDisksExt::disk_delete`]\n\n[`ClientDisksExt::disk_delete`]: super::ClientDisksExt::disk_delete"]
     #[derive(Debug, Clone)]
-    pub struct DiskDeleteV1<'a> {
+    pub struct DiskDelete<'a> {
         client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> DiskDeleteV1<'a> {
+    impl<'a> DiskDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 disk: Err("disk was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -31113,17 +17816,6 @@ pub mod builder {
             self.disk = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for disk failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -31143,21 +17835,16 @@ pub mod builder {
             let Self {
                 client,
                 disk,
-                organization,
                 project,
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/disks/{}",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -31177,21 +17864,20 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientDisksExt::disk_metrics_list_v1`]\n\n[`ClientDisksExt::disk_metrics_list_v1`]: super::ClientDisksExt::disk_metrics_list_v1"]
+    #[doc = "Builder for [`ClientDisksExt::disk_metrics_list`]\n\n[`ClientDisksExt::disk_metrics_list`]: super::ClientDisksExt::disk_metrics_list"]
     #[derive(Debug, Clone)]
-    pub struct DiskMetricsListV1<'a> {
+    pub struct DiskMetricsList<'a> {
         client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         metric: Result<types::DiskMetricName, String>,
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
     }
 
-    impl<'a> DiskMetricsListV1<'a> {
+    impl<'a> DiskMetricsList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -31199,7 +17885,6 @@ pub mod builder {
                 metric: Err("metric was not initialized".to_string()),
                 end_time: Ok(None),
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 start_time: Ok(None),
@@ -31244,17 +17929,6 @@ pub mod builder {
             self
         }
 
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
         pub fn page_token<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<String>,
@@ -31295,7 +17969,6 @@ pub mod builder {
                 metric,
                 end_time,
                 limit,
-                organization,
                 page_token,
                 project,
                 start_time,
@@ -31304,7 +17977,6 @@ pub mod builder {
             let metric = metric.map_err(Error::InvalidRequest)?;
             let end_time = end_time.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
@@ -31314,15 +17986,12 @@ pub mod builder {
                 encode_path(&disk.to_string()),
                 encode_path(&metric.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
+            let mut query = Vec::with_capacity(5usize);
             if let Some(v) = &end_time {
                 query.push(("end_time", v.to_string()));
             }
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -31359,7 +18028,6 @@ pub mod builder {
             let next = Self {
                 end_time: Ok(None),
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 start_time: Ok(None),
@@ -31587,23 +18255,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientImagesExt::image_list_v1`]\n\n[`ClientImagesExt::image_list_v1`]: super::ClientImagesExt::image_list_v1"]
+    #[doc = "Builder for [`ClientImagesExt::image_list`]\n\n[`ClientImagesExt::image_list`]: super::ClientImagesExt::image_list"]
     #[derive(Debug, Clone)]
-    pub struct ImageListV1<'a> {
+    pub struct ImageList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> ImageListV1<'a> {
+    impl<'a> ImageList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -31617,17 +18283,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -31671,23 +18326,18 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                organization,
                 page_token,
                 project,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/images", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let mut query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -31723,7 +18373,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -31763,34 +18412,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientImagesExt::image_create_v1`]\n\n[`ClientImagesExt::image_create_v1`]: super::ClientImagesExt::image_create_v1"]
+    #[doc = "Builder for [`ClientImagesExt::image_create`]\n\n[`ClientImagesExt::image_create`]: super::ClientImagesExt::image_create"]
     #[derive(Debug, Clone)]
-    pub struct ImageCreateV1<'a> {
+    pub struct ImageCreate<'a> {
         client: &'a super::Client,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<types::NameOrId, String>,
         body: Result<types::ImageCreate, String>,
     }
 
-    impl<'a> ImageCreateV1<'a> {
+    impl<'a> ImageCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Ok(None),
                 project: Err("project was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn project<V>(mut self, value: V) -> Self
@@ -31817,18 +18453,13 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
             let Self {
                 client,
-                organization,
                 project,
                 body,
             } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/images", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             query.push(("project", project.to_string()));
             let request = client.client.post(url).json(&body).query(&query).build()?;
             let result = client.client.execute(request).await;
@@ -31846,21 +18477,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientImagesExt::image_view_v1`]\n\n[`ClientImagesExt::image_view_v1`]: super::ClientImagesExt::image_view_v1"]
+    #[doc = "Builder for [`ClientImagesExt::image_view`]\n\n[`ClientImagesExt::image_view`]: super::ClientImagesExt::image_view"]
     #[derive(Debug, Clone)]
-    pub struct ImageViewV1<'a> {
+    pub struct ImageView<'a> {
         client: &'a super::Client,
         image: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> ImageViewV1<'a> {
+    impl<'a> ImageView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 image: Err("image was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -31872,17 +18501,6 @@ pub mod builder {
             self.image = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for image failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -31902,21 +18520,16 @@ pub mod builder {
             let Self {
                 client,
                 image,
-                organization,
                 project,
             } = self;
             let image = image.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/images/{}",
                 client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -31936,21 +18549,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientImagesExt::image_delete_v1`]\n\n[`ClientImagesExt::image_delete_v1`]: super::ClientImagesExt::image_delete_v1"]
+    #[doc = "Builder for [`ClientImagesExt::image_delete`]\n\n[`ClientImagesExt::image_delete`]: super::ClientImagesExt::image_delete"]
     #[derive(Debug, Clone)]
-    pub struct ImageDeleteV1<'a> {
+    pub struct ImageDelete<'a> {
         client: &'a super::Client,
         image: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> ImageDeleteV1<'a> {
+    impl<'a> ImageDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 image: Err("image was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -31962,17 +18573,6 @@ pub mod builder {
             self.image = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for image failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -31992,21 +18592,16 @@ pub mod builder {
             let Self {
                 client,
                 image,
-                organization,
                 project,
             } = self;
             let image = image.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/images/{}",
                 client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -32026,23 +18621,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_list_v1`]\n\n[`ClientInstancesExt::instance_list_v1`]: super::ClientInstancesExt::instance_list_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_list`]\n\n[`ClientInstancesExt::instance_list`]: super::ClientInstancesExt::instance_list"]
     #[derive(Debug, Clone)]
-    pub struct InstanceListV1<'a> {
+    pub struct InstanceList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> InstanceListV1<'a> {
+    impl<'a> InstanceList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -32056,17 +18649,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -32110,23 +18692,18 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                organization,
                 page_token,
                 project,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/instances", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let mut query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -32162,7 +18739,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -32202,34 +18778,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_create_v1`]\n\n[`ClientInstancesExt::instance_create_v1`]: super::ClientInstancesExt::instance_create_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_create`]\n\n[`ClientInstancesExt::instance_create`]: super::ClientInstancesExt::instance_create"]
     #[derive(Debug, Clone)]
-    pub struct InstanceCreateV1<'a> {
+    pub struct InstanceCreate<'a> {
         client: &'a super::Client,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<types::NameOrId, String>,
         body: Result<types::InstanceCreate, String>,
     }
 
-    impl<'a> InstanceCreateV1<'a> {
+    impl<'a> InstanceCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Ok(None),
                 project: Err("project was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn project<V>(mut self, value: V) -> Self
@@ -32256,18 +18819,13 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
                 client,
-                organization,
                 project,
                 body,
             } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/instances", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             query.push(("project", project.to_string()));
             let request = client.client.post(url).json(&body).query(&query).build()?;
             let result = client.client.execute(request).await;
@@ -32285,21 +18843,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_view_v1`]\n\n[`ClientInstancesExt::instance_view_v1`]: super::ClientInstancesExt::instance_view_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_view`]\n\n[`ClientInstancesExt::instance_view`]: super::ClientInstancesExt::instance_view"]
     #[derive(Debug, Clone)]
-    pub struct InstanceViewV1<'a> {
+    pub struct InstanceView<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> InstanceViewV1<'a> {
+    impl<'a> InstanceView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -32311,17 +18867,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -32341,21 +18886,16 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -32375,21 +18915,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_delete_v1`]\n\n[`ClientInstancesExt::instance_delete_v1`]: super::ClientInstancesExt::instance_delete_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_delete`]\n\n[`ClientInstancesExt::instance_delete`]: super::ClientInstancesExt::instance_delete"]
     #[derive(Debug, Clone)]
-    pub struct InstanceDeleteV1<'a> {
+    pub struct InstanceDelete<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> InstanceDeleteV1<'a> {
+    impl<'a> InstanceDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -32401,17 +18939,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -32431,21 +18958,16 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -32465,25 +18987,23 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_disk_list_v1`]\n\n[`ClientInstancesExt::instance_disk_list_v1`]: super::ClientInstancesExt::instance_disk_list_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_disk_list`]\n\n[`ClientInstancesExt::instance_disk_list`]: super::ClientInstancesExt::instance_disk_list"]
     #[derive(Debug, Clone)]
-    pub struct InstanceDiskListV1<'a> {
+    pub struct InstanceDiskList<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> InstanceDiskListV1<'a> {
+    impl<'a> InstanceDiskList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -32507,17 +19027,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -32562,14 +19071,12 @@ pub mod builder {
                 client,
                 instance,
                 limit,
-                organization,
                 page_token,
                 project,
                 sort_by,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
@@ -32578,12 +19085,9 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(5usize);
+            let mut query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -32619,7 +19123,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -32659,22 +19162,20 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_disk_attach_v1`]\n\n[`ClientInstancesExt::instance_disk_attach_v1`]: super::ClientInstancesExt::instance_disk_attach_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_disk_attach`]\n\n[`ClientInstancesExt::instance_disk_attach`]: super::ClientInstancesExt::instance_disk_attach"]
     #[derive(Debug, Clone)]
-    pub struct InstanceDiskAttachV1<'a> {
+    pub struct InstanceDiskAttach<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::DiskPath, String>,
     }
 
-    impl<'a> InstanceDiskAttachV1<'a> {
+    impl<'a> InstanceDiskAttach<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 body: Err("body was not initialized".to_string()),
             }
@@ -32687,17 +19188,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -32727,12 +19217,10 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
                 body,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -32740,10 +19228,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -32763,22 +19248,20 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_disk_detach_v1`]\n\n[`ClientInstancesExt::instance_disk_detach_v1`]: super::ClientInstancesExt::instance_disk_detach_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_disk_detach`]\n\n[`ClientInstancesExt::instance_disk_detach`]: super::ClientInstancesExt::instance_disk_detach"]
     #[derive(Debug, Clone)]
-    pub struct InstanceDiskDetachV1<'a> {
+    pub struct InstanceDiskDetach<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::DiskPath, String>,
     }
 
-    impl<'a> InstanceDiskDetachV1<'a> {
+    impl<'a> InstanceDiskDetach<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 body: Err("body was not initialized".to_string()),
             }
@@ -32791,17 +19274,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -32831,12 +19303,10 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
                 body,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -32844,10 +19314,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -32867,21 +19334,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_external_ip_list_v1`]\n\n[`ClientInstancesExt::instance_external_ip_list_v1`]: super::ClientInstancesExt::instance_external_ip_list_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_external_ip_list`]\n\n[`ClientInstancesExt::instance_external_ip_list`]: super::ClientInstancesExt::instance_external_ip_list"]
     #[derive(Debug, Clone)]
-    pub struct InstanceExternalIpListV1<'a> {
+    pub struct InstanceExternalIpList<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> InstanceExternalIpListV1<'a> {
+    impl<'a> InstanceExternalIpList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -32893,17 +19358,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -32925,21 +19379,16 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/external-ips",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -32959,22 +19408,20 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_migrate_v1`]\n\n[`ClientInstancesExt::instance_migrate_v1`]: super::ClientInstancesExt::instance_migrate_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_migrate`]\n\n[`ClientInstancesExt::instance_migrate`]: super::ClientInstancesExt::instance_migrate"]
     #[derive(Debug, Clone)]
-    pub struct InstanceMigrateV1<'a> {
+    pub struct InstanceMigrate<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::InstanceMigrate, String>,
     }
 
-    impl<'a> InstanceMigrateV1<'a> {
+    impl<'a> InstanceMigrate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 body: Err("body was not initialized".to_string()),
             }
@@ -32987,17 +19434,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -33027,12 +19463,10 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
                 body,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -33040,10 +19474,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -33063,21 +19494,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_reboot_v1`]\n\n[`ClientInstancesExt::instance_reboot_v1`]: super::ClientInstancesExt::instance_reboot_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_reboot`]\n\n[`ClientInstancesExt::instance_reboot`]: super::ClientInstancesExt::instance_reboot"]
     #[derive(Debug, Clone)]
-    pub struct InstanceRebootV1<'a> {
+    pub struct InstanceReboot<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> InstanceRebootV1<'a> {
+    impl<'a> InstanceReboot<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -33089,17 +19518,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -33119,21 +19537,16 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/reboot",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -33153,19 +19566,18 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_serial_console_v1`]\n\n[`ClientInstancesExt::instance_serial_console_v1`]: super::ClientInstancesExt::instance_serial_console_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_serial_console`]\n\n[`ClientInstancesExt::instance_serial_console`]: super::ClientInstancesExt::instance_serial_console"]
     #[derive(Debug, Clone)]
-    pub struct InstanceSerialConsoleV1<'a> {
+    pub struct InstanceSerialConsole<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         from_start: Result<Option<u64>, String>,
         max_bytes: Result<Option<u64>, String>,
         most_recent: Result<Option<u64>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> InstanceSerialConsoleV1<'a> {
+    impl<'a> InstanceSerialConsole<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -33173,7 +19585,6 @@ pub mod builder {
                 from_start: Ok(None),
                 max_bytes: Ok(None),
                 most_recent: Ok(None),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -33221,17 +19632,6 @@ pub mod builder {
             self
         }
 
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
         pub fn project<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<types::NameOrId>,
@@ -33253,21 +19653,19 @@ pub mod builder {
                 from_start,
                 max_bytes,
                 most_recent,
-                organization,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let from_start = from_start.map_err(Error::InvalidRequest)?;
             let max_bytes = max_bytes.map_err(Error::InvalidRequest)?;
             let most_recent = most_recent.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/serial-console",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(5usize);
+            let mut query = Vec::with_capacity(4usize);
             if let Some(v) = &from_start {
                 query.push(("from_start", v.to_string()));
             }
@@ -33276,9 +19674,6 @@ pub mod builder {
             }
             if let Some(v) = &most_recent {
                 query.push(("most_recent", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
@@ -33299,21 +19694,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_serial_console_stream_v1`]\n\n[`ClientInstancesExt::instance_serial_console_stream_v1`]: super::ClientInstancesExt::instance_serial_console_stream_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_serial_console_stream`]\n\n[`ClientInstancesExt::instance_serial_console_stream`]: super::ClientInstancesExt::instance_serial_console_stream"]
     #[derive(Debug, Clone)]
-    pub struct InstanceSerialConsoleStreamV1<'a> {
+    pub struct InstanceSerialConsoleStream<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> InstanceSerialConsoleStreamV1<'a> {
+    impl<'a> InstanceSerialConsoleStream<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -33325,17 +19718,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -33357,21 +19739,16 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/serial-console/stream",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -33400,21 +19777,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_start_v1`]\n\n[`ClientInstancesExt::instance_start_v1`]: super::ClientInstancesExt::instance_start_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_start`]\n\n[`ClientInstancesExt::instance_start`]: super::ClientInstancesExt::instance_start"]
     #[derive(Debug, Clone)]
-    pub struct InstanceStartV1<'a> {
+    pub struct InstanceStart<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> InstanceStartV1<'a> {
+    impl<'a> InstanceStart<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -33426,17 +19801,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -33456,21 +19820,16 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/start",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -33490,21 +19849,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_stop_v1`]\n\n[`ClientInstancesExt::instance_stop_v1`]: super::ClientInstancesExt::instance_stop_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_stop`]\n\n[`ClientInstancesExt::instance_stop`]: super::ClientInstancesExt::instance_stop"]
     #[derive(Debug, Clone)]
-    pub struct InstanceStopV1<'a> {
+    pub struct InstanceStop<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> InstanceStopV1<'a> {
+    impl<'a> InstanceStop<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -33516,17 +19873,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -33546,21 +19892,16 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/stop",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -33580,13 +19921,13 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSessionExt::current_user_view_v1`]\n\n[`ClientSessionExt::current_user_view_v1`]: super::ClientSessionExt::current_user_view_v1"]
+    #[doc = "Builder for [`ClientSessionExt::current_user_view`]\n\n[`ClientSessionExt::current_user_view`]: super::ClientSessionExt::current_user_view"]
     #[derive(Debug, Clone)]
-    pub struct CurrentUserViewV1<'a> {
+    pub struct CurrentUserView<'a> {
         client: &'a super::Client,
     }
 
-    impl<'a> CurrentUserViewV1<'a> {
+    impl<'a> CurrentUserView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client }
         }
@@ -33611,16 +19952,16 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSessionExt::current_user_groups_v1`]\n\n[`ClientSessionExt::current_user_groups_v1`]: super::ClientSessionExt::current_user_groups_v1"]
+    #[doc = "Builder for [`ClientSessionExt::current_user_groups`]\n\n[`ClientSessionExt::current_user_groups`]: super::ClientSessionExt::current_user_groups"]
     #[derive(Debug, Clone)]
-    pub struct CurrentUserGroupsV1<'a> {
+    pub struct CurrentUserGroups<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
     }
 
-    impl<'a> CurrentUserGroupsV1<'a> {
+    impl<'a> CurrentUserGroups<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -33749,16 +20090,16 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_list_v1`]\n\n[`ClientSessionExt::current_user_ssh_key_list_v1`]: super::ClientSessionExt::current_user_ssh_key_list_v1"]
+    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_list`]\n\n[`ClientSessionExt::current_user_ssh_key_list`]: super::ClientSessionExt::current_user_ssh_key_list"]
     #[derive(Debug, Clone)]
-    pub struct CurrentUserSshKeyListV1<'a> {
+    pub struct CurrentUserSshKeyList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> CurrentUserSshKeyListV1<'a> {
+    impl<'a> CurrentUserSshKeyList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -33887,14 +20228,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_create_v1`]\n\n[`ClientSessionExt::current_user_ssh_key_create_v1`]: super::ClientSessionExt::current_user_ssh_key_create_v1"]
+    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_create`]\n\n[`ClientSessionExt::current_user_ssh_key_create`]: super::ClientSessionExt::current_user_ssh_key_create"]
     #[derive(Debug, Clone)]
-    pub struct CurrentUserSshKeyCreateV1<'a> {
+    pub struct CurrentUserSshKeyCreate<'a> {
         client: &'a super::Client,
         body: Result<types::SshKeyCreate, String>,
     }
 
-    impl<'a> CurrentUserSshKeyCreateV1<'a> {
+    impl<'a> CurrentUserSshKeyCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -33933,14 +20274,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_view_v1`]\n\n[`ClientSessionExt::current_user_ssh_key_view_v1`]: super::ClientSessionExt::current_user_ssh_key_view_v1"]
+    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_view`]\n\n[`ClientSessionExt::current_user_ssh_key_view`]: super::ClientSessionExt::current_user_ssh_key_view"]
     #[derive(Debug, Clone)]
-    pub struct CurrentUserSshKeyViewV1<'a> {
+    pub struct CurrentUserSshKeyView<'a> {
         client: &'a super::Client,
         ssh_key: Result<types::NameOrId, String>,
     }
 
-    impl<'a> CurrentUserSshKeyViewV1<'a> {
+    impl<'a> CurrentUserSshKeyView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -33983,14 +20324,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_delete_v1`]\n\n[`ClientSessionExt::current_user_ssh_key_delete_v1`]: super::ClientSessionExt::current_user_ssh_key_delete_v1"]
+    #[doc = "Builder for [`ClientSessionExt::current_user_ssh_key_delete`]\n\n[`ClientSessionExt::current_user_ssh_key_delete`]: super::ClientSessionExt::current_user_ssh_key_delete"]
     #[derive(Debug, Clone)]
-    pub struct CurrentUserSshKeyDeleteV1<'a> {
+    pub struct CurrentUserSshKeyDelete<'a> {
         client: &'a super::Client,
         ssh_key: Result<types::NameOrId, String>,
     }
 
-    impl<'a> CurrentUserSshKeyDeleteV1<'a> {
+    impl<'a> CurrentUserSshKeyDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -34033,25 +20374,23 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_list_v1`]\n\n[`ClientInstancesExt::instance_network_interface_list_v1`]: super::ClientInstancesExt::instance_network_interface_list_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_list`]\n\n[`ClientInstancesExt::instance_network_interface_list`]: super::ClientInstancesExt::instance_network_interface_list"]
     #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceListV1<'a> {
+    pub struct InstanceNetworkInterfaceList<'a> {
         client: &'a super::Client,
         instance: Result<Option<types::NameOrId>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> InstanceNetworkInterfaceListV1<'a> {
+    impl<'a> InstanceNetworkInterfaceList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Ok(None),
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -34076,17 +20415,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -34132,27 +20460,22 @@ pub mod builder {
                 client,
                 instance,
                 limit,
-                organization,
                 page_token,
                 project,
                 sort_by,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/network-interfaces", client.baseurl,);
-            let mut query = Vec::with_capacity(6usize);
+            let mut query = Vec::with_capacity(5usize);
             if let Some(v) = &instance {
                 query.push(("instance", v.to_string()));
             }
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -34189,7 +20512,6 @@ pub mod builder {
             let next = Self {
                 instance: Ok(None),
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -34229,22 +20551,20 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_create_v1`]\n\n[`ClientInstancesExt::instance_network_interface_create_v1`]: super::ClientInstancesExt::instance_network_interface_create_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_create`]\n\n[`ClientInstancesExt::instance_network_interface_create`]: super::ClientInstancesExt::instance_network_interface_create"]
     #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceCreateV1<'a> {
+    pub struct InstanceNetworkInterfaceCreate<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::NetworkInterfaceCreate, String>,
     }
 
-    impl<'a> InstanceNetworkInterfaceCreateV1<'a> {
+    impl<'a> InstanceNetworkInterfaceCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 body: Err("body was not initialized".to_string()),
             }
@@ -34257,17 +20577,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -34299,20 +20608,15 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                organization,
                 project,
                 body,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/network-interfaces", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let mut query = Vec::with_capacity(2usize);
             query.push(("instance", instance.to_string()));
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -34332,23 +20636,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_view_v1`]\n\n[`ClientInstancesExt::instance_network_interface_view_v1`]: super::ClientInstancesExt::instance_network_interface_view_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_view`]\n\n[`ClientInstancesExt::instance_network_interface_view`]: super::ClientInstancesExt::instance_network_interface_view"]
     #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceViewV1<'a> {
+    pub struct InstanceNetworkInterfaceView<'a> {
         client: &'a super::Client,
         interface: Result<types::NameOrId, String>,
         instance: Result<Option<types::NameOrId>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> InstanceNetworkInterfaceViewV1<'a> {
+    impl<'a> InstanceNetworkInterfaceView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 interface: Err("interface was not initialized".to_string()),
                 instance: Ok(None),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -34374,17 +20676,6 @@ pub mod builder {
             self
         }
 
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
         pub fn project<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<types::NameOrId>,
@@ -34404,24 +20695,19 @@ pub mod builder {
                 client,
                 interface,
                 instance,
-                organization,
                 project,
             } = self;
             let interface = interface.map_err(Error::InvalidRequest)?;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/network-interfaces/{}",
                 client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &instance {
                 query.push(("instance", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
@@ -34442,24 +20728,22 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_update_v1`]\n\n[`ClientInstancesExt::instance_network_interface_update_v1`]: super::ClientInstancesExt::instance_network_interface_update_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_update`]\n\n[`ClientInstancesExt::instance_network_interface_update`]: super::ClientInstancesExt::instance_network_interface_update"]
     #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceUpdateV1<'a> {
+    pub struct InstanceNetworkInterfaceUpdate<'a> {
         client: &'a super::Client,
         interface: Result<types::NameOrId, String>,
         instance: Result<Option<types::NameOrId>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::NetworkInterfaceUpdate, String>,
     }
 
-    impl<'a> InstanceNetworkInterfaceUpdateV1<'a> {
+    impl<'a> InstanceNetworkInterfaceUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 interface: Err("interface was not initialized".to_string()),
                 instance: Ok(None),
-                organization: Ok(None),
                 project: Ok(None),
                 body: Err("body was not initialized".to_string()),
             }
@@ -34483,17 +20767,6 @@ pub mod builder {
                 .try_into()
                 .map(Some)
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -34526,13 +20799,11 @@ pub mod builder {
                 client,
                 interface,
                 instance,
-                organization,
                 project,
                 body,
             } = self;
             let interface = interface.map_err(Error::InvalidRequest)?;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -34540,12 +20811,9 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &instance {
                 query.push(("instance", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
@@ -34566,23 +20834,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_delete_v1`]\n\n[`ClientInstancesExt::instance_network_interface_delete_v1`]: super::ClientInstancesExt::instance_network_interface_delete_v1"]
+    #[doc = "Builder for [`ClientInstancesExt::instance_network_interface_delete`]\n\n[`ClientInstancesExt::instance_network_interface_delete`]: super::ClientInstancesExt::instance_network_interface_delete"]
     #[derive(Debug, Clone)]
-    pub struct InstanceNetworkInterfaceDeleteV1<'a> {
+    pub struct InstanceNetworkInterfaceDelete<'a> {
         client: &'a super::Client,
         interface: Result<types::NameOrId, String>,
         instance: Result<Option<types::NameOrId>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> InstanceNetworkInterfaceDeleteV1<'a> {
+    impl<'a> InstanceNetworkInterfaceDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 interface: Err("interface was not initialized".to_string()),
                 instance: Ok(None),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -34608,17 +20874,6 @@ pub mod builder {
             self
         }
 
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
         pub fn project<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<types::NameOrId>,
@@ -34636,24 +20891,19 @@ pub mod builder {
                 client,
                 interface,
                 instance,
-                organization,
                 project,
             } = self;
             let interface = interface.map_err(Error::InvalidRequest)?;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/network-interfaces/{}",
                 client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &instance {
                 query.push(("instance", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
@@ -34674,494 +20924,13 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_list_v1`]\n\n[`ClientOrganizationsExt::organization_list_v1`]: super::ClientOrganizationsExt::organization_list_v1"]
+    #[doc = "Builder for [`ClientSilosExt::policy_view`]\n\n[`ClientSilosExt::policy_view`]: super::ClientSilosExt::policy_view"]
     #[derive(Debug, Clone)]
-    pub struct OrganizationListV1<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
-    }
-
-    impl<'a> OrganizationListV1<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/v1/organizations`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::OrganizationResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/organizations", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        #[doc = "Streams `GET` requests to `/v1/organizations`"]
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Organization, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_create_v1`]\n\n[`ClientOrganizationsExt::organization_create_v1`]: super::ClientOrganizationsExt::organization_create_v1"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationCreateV1<'a> {
-        client: &'a super::Client,
-        body: Result<types::OrganizationCreate, String>,
-    }
-
-    impl<'a> OrganizationCreateV1<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::OrganizationCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `OrganizationCreate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `POST` request to `/v1/organizations`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Organization>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/organizations", client.baseurl,);
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_view_v1`]\n\n[`ClientOrganizationsExt::organization_view_v1`]: super::ClientOrganizationsExt::organization_view_v1"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationViewV1<'a> {
-        client: &'a super::Client,
-        organization: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> OrganizationViewV1<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization: Err("organization was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/v1/organizations/{organization}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Organization>, Error<types::Error>> {
-            let Self {
-                client,
-                organization,
-            } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/organizations/{}",
-                client.baseurl,
-                encode_path(&organization.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_update_v1`]\n\n[`ClientOrganizationsExt::organization_update_v1`]: super::ClientOrganizationsExt::organization_update_v1"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationUpdateV1<'a> {
-        client: &'a super::Client,
-        organization: Result<types::NameOrId, String>,
-        body: Result<types::OrganizationUpdate, String>,
-    }
-
-    impl<'a> OrganizationUpdateV1<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization: Err("organization was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::OrganizationUpdate>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `OrganizationUpdate` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/v1/organizations/{organization}`"]
-        pub async fn send(self) -> Result<ResponseValue<types::Organization>, Error<types::Error>> {
-            let Self {
-                client,
-                organization,
-                body,
-            } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/organizations/{}",
-                client.baseurl,
-                encode_path(&organization.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_delete_v1`]\n\n[`ClientOrganizationsExt::organization_delete_v1`]: super::ClientOrganizationsExt::organization_delete_v1"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationDeleteV1<'a> {
-        client: &'a super::Client,
-        organization: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> OrganizationDeleteV1<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization: Err("organization was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `DELETE` request to `/v1/organizations/{organization}`"]
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                organization,
-            } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/organizations/{}",
-                client.baseurl,
-                encode_path(&organization.to_string()),
-            );
-            let request = client.client.delete(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_policy_view_v1`]\n\n[`ClientOrganizationsExt::organization_policy_view_v1`]: super::ClientOrganizationsExt::organization_policy_view_v1"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationPolicyViewV1<'a> {
-        client: &'a super::Client,
-        organization: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> OrganizationPolicyViewV1<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization: Err("organization was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `GET` request to `/v1/organizations/{organization}/policy`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::OrganizationRolePolicy>, Error<types::Error>> {
-            let Self {
-                client,
-                organization,
-            } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/organizations/{}/policy",
-                client.baseurl,
-                encode_path(&organization.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientOrganizationsExt::organization_policy_update_v1`]\n\n[`ClientOrganizationsExt::organization_policy_update_v1`]: super::ClientOrganizationsExt::organization_policy_update_v1"]
-    #[derive(Debug, Clone)]
-    pub struct OrganizationPolicyUpdateV1<'a> {
-        client: &'a super::Client,
-        organization: Result<types::NameOrId, String>,
-        body: Result<types::OrganizationRolePolicy, String>,
-    }
-
-    impl<'a> OrganizationPolicyUpdateV1<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                organization: Err("organization was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::OrganizationRolePolicy>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `OrganizationRolePolicy` for body failed".to_string());
-            self
-        }
-
-        #[doc = "Sends a `PUT` request to `/v1/organizations/{organization}/policy`"]
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::OrganizationRolePolicy>, Error<types::Error>> {
-            let Self {
-                client,
-                organization,
-                body,
-            } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/organizations/{}/policy",
-                client.baseurl,
-                encode_path(&organization.to_string()),
-            );
-            let request = client.client.put(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    #[doc = "Builder for [`ClientSilosExt::policy_view_v1`]\n\n[`ClientSilosExt::policy_view_v1`]: super::ClientSilosExt::policy_view_v1"]
-    #[derive(Debug, Clone)]
-    pub struct PolicyViewV1<'a> {
+    pub struct PolicyView<'a> {
         client: &'a super::Client,
     }
 
-    impl<'a> PolicyViewV1<'a> {
+    impl<'a> PolicyView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client }
         }
@@ -35188,14 +20957,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSilosExt::policy_update_v1`]\n\n[`ClientSilosExt::policy_update_v1`]: super::ClientSilosExt::policy_update_v1"]
+    #[doc = "Builder for [`ClientSilosExt::policy_update`]\n\n[`ClientSilosExt::policy_update`]: super::ClientSilosExt::policy_update"]
     #[derive(Debug, Clone)]
-    pub struct PolicyUpdateV1<'a> {
+    pub struct PolicyUpdate<'a> {
         client: &'a super::Client,
         body: Result<types::SiloRolePolicy, String>,
     }
 
-    impl<'a> PolicyUpdateV1<'a> {
+    impl<'a> PolicyUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -35236,22 +21005,20 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientProjectsExt::project_list_v1`]\n\n[`ClientProjectsExt::project_list_v1`]: super::ClientProjectsExt::project_list_v1"]
+    #[doc = "Builder for [`ClientProjectsExt::project_list`]\n\n[`ClientProjectsExt::project_list`]: super::ClientProjectsExt::project_list"]
     #[derive(Debug, Clone)]
-    pub struct ProjectListV1<'a> {
+    pub struct ProjectList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> ProjectListV1<'a> {
+    impl<'a> ProjectList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
             }
@@ -35264,17 +21031,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -35307,21 +21063,16 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                organization,
                 page_token,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/projects", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -35354,7 +21105,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
                 ..self.clone()
@@ -35393,31 +21143,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientProjectsExt::project_create_v1`]\n\n[`ClientProjectsExt::project_create_v1`]: super::ClientProjectsExt::project_create_v1"]
+    #[doc = "Builder for [`ClientProjectsExt::project_create`]\n\n[`ClientProjectsExt::project_create`]: super::ClientProjectsExt::project_create"]
     #[derive(Debug, Clone)]
-    pub struct ProjectCreateV1<'a> {
+    pub struct ProjectCreate<'a> {
         client: &'a super::Client,
-        organization: Result<types::NameOrId, String>,
         body: Result<types::ProjectCreate, String>,
     }
 
-    impl<'a> ProjectCreateV1<'a> {
+    impl<'a> ProjectCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Err("organization was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn body<V>(mut self, value: V) -> Self
@@ -35432,17 +21170,10 @@ pub mod builder {
 
         #[doc = "Sends a `POST` request to `/v1/projects`"]
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
-            let Self {
-                client,
-                organization,
-                body,
-            } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
+            let Self { client, body } = self;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/projects", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("organization", organization.to_string()));
-            let request = client.client.post(url).json(&body).query(&query).build()?;
+            let request = client.client.post(url).json(&body).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -35458,20 +21189,18 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientProjectsExt::project_view_v1`]\n\n[`ClientProjectsExt::project_view_v1`]: super::ClientProjectsExt::project_view_v1"]
+    #[doc = "Builder for [`ClientProjectsExt::project_view`]\n\n[`ClientProjectsExt::project_view`]: super::ClientProjectsExt::project_view"]
     #[derive(Debug, Clone)]
-    pub struct ProjectViewV1<'a> {
+    pub struct ProjectView<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> ProjectViewV1<'a> {
+    impl<'a> ProjectView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                organization: Ok(None),
             }
         }
 
@@ -35485,36 +21214,16 @@ pub mod builder {
             self
         }
 
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
         #[doc = "Sends a `GET` request to `/v1/projects/{project}`"]
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
-            let Self {
-                client,
-                project,
-                organization,
-            } = self;
+            let Self { client, project } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}",
                 client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
+            let request = client.client.get(url).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -35530,21 +21239,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientProjectsExt::project_update_v1`]\n\n[`ClientProjectsExt::project_update_v1`]: super::ClientProjectsExt::project_update_v1"]
+    #[doc = "Builder for [`ClientProjectsExt::project_update`]\n\n[`ClientProjectsExt::project_update`]: super::ClientProjectsExt::project_update"]
     #[derive(Debug, Clone)]
-    pub struct ProjectUpdateV1<'a> {
+    pub struct ProjectUpdate<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         body: Result<types::ProjectUpdate, String>,
     }
 
-    impl<'a> ProjectUpdateV1<'a> {
+    impl<'a> ProjectUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                organization: Ok(None),
                 body: Err("body was not initialized".to_string()),
             }
         }
@@ -35556,17 +21263,6 @@ pub mod builder {
             self.project = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -35585,22 +21281,16 @@ pub mod builder {
             let Self {
                 client,
                 project,
-                organization,
                 body,
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}",
                 client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
-            let request = client.client.put(url).json(&body).query(&query).build()?;
+            let request = client.client.put(url).json(&body).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -35616,20 +21306,18 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientProjectsExt::project_delete_v1`]\n\n[`ClientProjectsExt::project_delete_v1`]: super::ClientProjectsExt::project_delete_v1"]
+    #[doc = "Builder for [`ClientProjectsExt::project_delete`]\n\n[`ClientProjectsExt::project_delete`]: super::ClientProjectsExt::project_delete"]
     #[derive(Debug, Clone)]
-    pub struct ProjectDeleteV1<'a> {
+    pub struct ProjectDelete<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> ProjectDeleteV1<'a> {
+    impl<'a> ProjectDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                organization: Ok(None),
             }
         }
 
@@ -35643,36 +21331,16 @@ pub mod builder {
             self
         }
 
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
         #[doc = "Sends a `DELETE` request to `/v1/projects/{project}`"]
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                project,
-                organization,
-            } = self;
+            let Self { client, project } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}",
                 client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
-            let request = client.client.delete(url).query(&query).build()?;
+            let request = client.client.delete(url).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -35688,20 +21356,18 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientProjectsExt::project_policy_view_v1`]\n\n[`ClientProjectsExt::project_policy_view_v1`]: super::ClientProjectsExt::project_policy_view_v1"]
+    #[doc = "Builder for [`ClientProjectsExt::project_policy_view`]\n\n[`ClientProjectsExt::project_policy_view`]: super::ClientProjectsExt::project_policy_view"]
     #[derive(Debug, Clone)]
-    pub struct ProjectPolicyViewV1<'a> {
+    pub struct ProjectPolicyView<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> ProjectPolicyViewV1<'a> {
+    impl<'a> ProjectPolicyView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                organization: Ok(None),
             }
         }
 
@@ -35715,38 +21381,18 @@ pub mod builder {
             self
         }
 
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
-        }
-
         #[doc = "Sends a `GET` request to `/v1/projects/{project}/policy`"]
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::ProjectRolePolicy>, Error<types::Error>> {
-            let Self {
-                client,
-                project,
-                organization,
-            } = self;
+            let Self { client, project } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}/policy",
                 client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
-            let request = client.client.get(url).query(&query).build()?;
+            let request = client.client.get(url).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -35762,21 +21408,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientProjectsExt::project_policy_update_v1`]\n\n[`ClientProjectsExt::project_policy_update_v1`]: super::ClientProjectsExt::project_policy_update_v1"]
+    #[doc = "Builder for [`ClientProjectsExt::project_policy_update`]\n\n[`ClientProjectsExt::project_policy_update`]: super::ClientProjectsExt::project_policy_update"]
     #[derive(Debug, Clone)]
-    pub struct ProjectPolicyUpdateV1<'a> {
+    pub struct ProjectPolicyUpdate<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         body: Result<types::ProjectRolePolicy, String>,
     }
 
-    impl<'a> ProjectPolicyUpdateV1<'a> {
+    impl<'a> ProjectPolicyUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                organization: Ok(None),
                 body: Err("body was not initialized".to_string()),
             }
         }
@@ -35788,17 +21432,6 @@ pub mod builder {
             self.project = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -35819,22 +21452,16 @@ pub mod builder {
             let Self {
                 client,
                 project,
-                organization,
                 body,
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}/policy",
                 client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
-            let request = client.client.put(url).json(&body).query(&query).build()?;
+            let request = client.client.put(url).json(&body).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -35850,23 +21477,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_list_v1`]\n\n[`ClientSnapshotsExt::snapshot_list_v1`]: super::ClientSnapshotsExt::snapshot_list_v1"]
+    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_list`]\n\n[`ClientSnapshotsExt::snapshot_list`]: super::ClientSnapshotsExt::snapshot_list"]
     #[derive(Debug, Clone)]
-    pub struct SnapshotListV1<'a> {
+    pub struct SnapshotList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> SnapshotListV1<'a> {
+    impl<'a> SnapshotList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -35880,17 +21505,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -35934,23 +21548,18 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                organization,
                 page_token,
                 project,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/snapshots", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let mut query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -35986,7 +21595,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -36026,34 +21634,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_create_v1`]\n\n[`ClientSnapshotsExt::snapshot_create_v1`]: super::ClientSnapshotsExt::snapshot_create_v1"]
+    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_create`]\n\n[`ClientSnapshotsExt::snapshot_create`]: super::ClientSnapshotsExt::snapshot_create"]
     #[derive(Debug, Clone)]
-    pub struct SnapshotCreateV1<'a> {
+    pub struct SnapshotCreate<'a> {
         client: &'a super::Client,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<types::NameOrId, String>,
         body: Result<types::SnapshotCreate, String>,
     }
 
-    impl<'a> SnapshotCreateV1<'a> {
+    impl<'a> SnapshotCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Ok(None),
                 project: Err("project was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn project<V>(mut self, value: V) -> Self
@@ -36080,18 +21675,13 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Snapshot>, Error<types::Error>> {
             let Self {
                 client,
-                organization,
                 project,
                 body,
             } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/snapshots", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             query.push(("project", project.to_string()));
             let request = client.client.post(url).json(&body).query(&query).build()?;
             let result = client.client.execute(request).await;
@@ -36109,21 +21699,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_view_v1`]\n\n[`ClientSnapshotsExt::snapshot_view_v1`]: super::ClientSnapshotsExt::snapshot_view_v1"]
+    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_view`]\n\n[`ClientSnapshotsExt::snapshot_view`]: super::ClientSnapshotsExt::snapshot_view"]
     #[derive(Debug, Clone)]
-    pub struct SnapshotViewV1<'a> {
+    pub struct SnapshotView<'a> {
         client: &'a super::Client,
         snapshot: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> SnapshotViewV1<'a> {
+    impl<'a> SnapshotView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 snapshot: Err("snapshot was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -36135,17 +21723,6 @@ pub mod builder {
             self.snapshot = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for snapshot failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -36165,21 +21742,16 @@ pub mod builder {
             let Self {
                 client,
                 snapshot,
-                organization,
                 project,
             } = self;
             let snapshot = snapshot.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/snapshots/{}",
                 client.baseurl,
                 encode_path(&snapshot.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -36199,21 +21771,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_delete_v1`]\n\n[`ClientSnapshotsExt::snapshot_delete_v1`]: super::ClientSnapshotsExt::snapshot_delete_v1"]
+    #[doc = "Builder for [`ClientSnapshotsExt::snapshot_delete`]\n\n[`ClientSnapshotsExt::snapshot_delete`]: super::ClientSnapshotsExt::snapshot_delete"]
     #[derive(Debug, Clone)]
-    pub struct SnapshotDeleteV1<'a> {
+    pub struct SnapshotDelete<'a> {
         client: &'a super::Client,
         snapshot: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> SnapshotDeleteV1<'a> {
+    impl<'a> SnapshotDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 snapshot: Err("snapshot was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -36225,17 +21795,6 @@ pub mod builder {
             self.snapshot = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for snapshot failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -36255,21 +21814,16 @@ pub mod builder {
             let Self {
                 client,
                 snapshot,
-                organization,
                 project,
             } = self;
             let snapshot = snapshot.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/snapshots/{}",
                 client.baseurl,
                 encode_path(&snapshot.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -36289,16 +21843,16 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::certificate_list_v1`]\n\n[`ClientSystemExt::certificate_list_v1`]: super::ClientSystemExt::certificate_list_v1"]
+    #[doc = "Builder for [`ClientSystemExt::certificate_list`]\n\n[`ClientSystemExt::certificate_list`]: super::ClientSystemExt::certificate_list"]
     #[derive(Debug, Clone)]
-    pub struct CertificateListV1<'a> {
+    pub struct CertificateList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> CertificateListV1<'a> {
+    impl<'a> CertificateList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -36427,14 +21981,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::certificate_create_v1`]\n\n[`ClientSystemExt::certificate_create_v1`]: super::ClientSystemExt::certificate_create_v1"]
+    #[doc = "Builder for [`ClientSystemExt::certificate_create`]\n\n[`ClientSystemExt::certificate_create`]: super::ClientSystemExt::certificate_create"]
     #[derive(Debug, Clone)]
-    pub struct CertificateCreateV1<'a> {
+    pub struct CertificateCreate<'a> {
         client: &'a super::Client,
         body: Result<types::CertificateCreate, String>,
     }
 
-    impl<'a> CertificateCreateV1<'a> {
+    impl<'a> CertificateCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -36473,14 +22027,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::certificate_view_v1`]\n\n[`ClientSystemExt::certificate_view_v1`]: super::ClientSystemExt::certificate_view_v1"]
+    #[doc = "Builder for [`ClientSystemExt::certificate_view`]\n\n[`ClientSystemExt::certificate_view`]: super::ClientSystemExt::certificate_view"]
     #[derive(Debug, Clone)]
-    pub struct CertificateViewV1<'a> {
+    pub struct CertificateView<'a> {
         client: &'a super::Client,
         certificate: Result<types::NameOrId, String>,
     }
 
-    impl<'a> CertificateViewV1<'a> {
+    impl<'a> CertificateView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -36526,14 +22080,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::certificate_delete_v1`]\n\n[`ClientSystemExt::certificate_delete_v1`]: super::ClientSystemExt::certificate_delete_v1"]
+    #[doc = "Builder for [`ClientSystemExt::certificate_delete`]\n\n[`ClientSystemExt::certificate_delete`]: super::ClientSystemExt::certificate_delete"]
     #[derive(Debug, Clone)]
-    pub struct CertificateDeleteV1<'a> {
+    pub struct CertificateDelete<'a> {
         client: &'a super::Client,
         certificate: Result<types::NameOrId, String>,
     }
 
-    impl<'a> CertificateDeleteV1<'a> {
+    impl<'a> CertificateDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -37249,9 +22803,9 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::silo_identity_provider_list_v1`]\n\n[`ClientSystemExt::silo_identity_provider_list_v1`]: super::ClientSystemExt::silo_identity_provider_list_v1"]
+    #[doc = "Builder for [`ClientSystemExt::silo_identity_provider_list`]\n\n[`ClientSystemExt::silo_identity_provider_list`]: super::ClientSystemExt::silo_identity_provider_list"]
     #[derive(Debug, Clone)]
-    pub struct SiloIdentityProviderListV1<'a> {
+    pub struct SiloIdentityProviderList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
@@ -37259,7 +22813,7 @@ pub mod builder {
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> SiloIdentityProviderListV1<'a> {
+    impl<'a> SiloIdentityProviderList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -37407,15 +22961,15 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::local_idp_user_create_v1`]\n\n[`ClientSystemExt::local_idp_user_create_v1`]: super::ClientSystemExt::local_idp_user_create_v1"]
+    #[doc = "Builder for [`ClientSystemExt::local_idp_user_create`]\n\n[`ClientSystemExt::local_idp_user_create`]: super::ClientSystemExt::local_idp_user_create"]
     #[derive(Debug, Clone)]
-    pub struct LocalIdpUserCreateV1<'a> {
+    pub struct LocalIdpUserCreate<'a> {
         client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
         body: Result<types::UserCreate, String>,
     }
 
-    impl<'a> LocalIdpUserCreateV1<'a> {
+    impl<'a> LocalIdpUserCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -37471,15 +23025,15 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::local_idp_user_delete_v1`]\n\n[`ClientSystemExt::local_idp_user_delete_v1`]: super::ClientSystemExt::local_idp_user_delete_v1"]
+    #[doc = "Builder for [`ClientSystemExt::local_idp_user_delete`]\n\n[`ClientSystemExt::local_idp_user_delete`]: super::ClientSystemExt::local_idp_user_delete"]
     #[derive(Debug, Clone)]
-    pub struct LocalIdpUserDeleteV1<'a> {
+    pub struct LocalIdpUserDelete<'a> {
         client: &'a super::Client,
         user_id: Result<uuid::Uuid, String>,
         silo: Result<types::NameOrId, String>,
     }
 
-    impl<'a> LocalIdpUserDeleteV1<'a> {
+    impl<'a> LocalIdpUserDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -37540,16 +23094,16 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::local_idp_user_set_password_v1`]\n\n[`ClientSystemExt::local_idp_user_set_password_v1`]: super::ClientSystemExt::local_idp_user_set_password_v1"]
+    #[doc = "Builder for [`ClientSystemExt::local_idp_user_set_password`]\n\n[`ClientSystemExt::local_idp_user_set_password`]: super::ClientSystemExt::local_idp_user_set_password"]
     #[derive(Debug, Clone)]
-    pub struct LocalIdpUserSetPasswordV1<'a> {
+    pub struct LocalIdpUserSetPassword<'a> {
         client: &'a super::Client,
         user_id: Result<uuid::Uuid, String>,
         silo: Result<types::NameOrId, String>,
         body: Result<types::UserPassword, String>,
     }
 
-    impl<'a> LocalIdpUserSetPasswordV1<'a> {
+    impl<'a> LocalIdpUserSetPassword<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -37623,15 +23177,15 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::saml_identity_provider_create_v1`]\n\n[`ClientSystemExt::saml_identity_provider_create_v1`]: super::ClientSystemExt::saml_identity_provider_create_v1"]
+    #[doc = "Builder for [`ClientSystemExt::saml_identity_provider_create`]\n\n[`ClientSystemExt::saml_identity_provider_create`]: super::ClientSystemExt::saml_identity_provider_create"]
     #[derive(Debug, Clone)]
-    pub struct SamlIdentityProviderCreateV1<'a> {
+    pub struct SamlIdentityProviderCreate<'a> {
         client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
         body: Result<types::SamlIdentityProviderCreate, String>,
     }
 
-    impl<'a> SamlIdentityProviderCreateV1<'a> {
+    impl<'a> SamlIdentityProviderCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -37686,15 +23240,15 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::saml_identity_provider_view_v1`]\n\n[`ClientSystemExt::saml_identity_provider_view_v1`]: super::ClientSystemExt::saml_identity_provider_view_v1"]
+    #[doc = "Builder for [`ClientSystemExt::saml_identity_provider_view`]\n\n[`ClientSystemExt::saml_identity_provider_view`]: super::ClientSystemExt::saml_identity_provider_view"]
     #[derive(Debug, Clone)]
-    pub struct SamlIdentityProviderViewV1<'a> {
+    pub struct SamlIdentityProviderView<'a> {
         client: &'a super::Client,
         provider: Result<types::NameOrId, String>,
         silo: Result<types::NameOrId, String>,
     }
 
-    impl<'a> SamlIdentityProviderViewV1<'a> {
+    impl<'a> SamlIdentityProviderView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -37757,16 +23311,16 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_list_v1`]\n\n[`ClientSystemExt::ip_pool_list_v1`]: super::ClientSystemExt::ip_pool_list_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_list`]\n\n[`ClientSystemExt::ip_pool_list`]: super::ClientSystemExt::ip_pool_list"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolListV1<'a> {
+    pub struct IpPoolList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> IpPoolListV1<'a> {
+    impl<'a> IpPoolList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -37895,14 +23449,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_create_v1`]\n\n[`ClientSystemExt::ip_pool_create_v1`]: super::ClientSystemExt::ip_pool_create_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_create`]\n\n[`ClientSystemExt::ip_pool_create`]: super::ClientSystemExt::ip_pool_create"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolCreateV1<'a> {
+    pub struct IpPoolCreate<'a> {
         client: &'a super::Client,
         body: Result<types::IpPoolCreate, String>,
     }
 
-    impl<'a> IpPoolCreateV1<'a> {
+    impl<'a> IpPoolCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -37941,14 +23495,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_view_v1`]\n\n[`ClientSystemExt::ip_pool_view_v1`]: super::ClientSystemExt::ip_pool_view_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_view`]\n\n[`ClientSystemExt::ip_pool_view`]: super::ClientSystemExt::ip_pool_view"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolViewV1<'a> {
+    pub struct IpPoolView<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
-    impl<'a> IpPoolViewV1<'a> {
+    impl<'a> IpPoolView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -37991,15 +23545,15 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_update_v1`]\n\n[`ClientSystemExt::ip_pool_update_v1`]: super::ClientSystemExt::ip_pool_update_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_update`]\n\n[`ClientSystemExt::ip_pool_update`]: super::ClientSystemExt::ip_pool_update"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolUpdateV1<'a> {
+    pub struct IpPoolUpdate<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::IpPoolUpdate, String>,
     }
 
-    impl<'a> IpPoolUpdateV1<'a> {
+    impl<'a> IpPoolUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -38054,14 +23608,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_delete_v1`]\n\n[`ClientSystemExt::ip_pool_delete_v1`]: super::ClientSystemExt::ip_pool_delete_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_delete`]\n\n[`ClientSystemExt::ip_pool_delete`]: super::ClientSystemExt::ip_pool_delete"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolDeleteV1<'a> {
+    pub struct IpPoolDelete<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
-    impl<'a> IpPoolDeleteV1<'a> {
+    impl<'a> IpPoolDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -38104,16 +23658,16 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_list_v1`]\n\n[`ClientSystemExt::ip_pool_range_list_v1`]: super::ClientSystemExt::ip_pool_range_list_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_list`]\n\n[`ClientSystemExt::ip_pool_range_list`]: super::ClientSystemExt::ip_pool_range_list"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolRangeListV1<'a> {
+    pub struct IpPoolRangeList<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
     }
 
-    impl<'a> IpPoolRangeListV1<'a> {
+    impl<'a> IpPoolRangeList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -38241,15 +23795,15 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_add_v1`]\n\n[`ClientSystemExt::ip_pool_range_add_v1`]: super::ClientSystemExt::ip_pool_range_add_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_add`]\n\n[`ClientSystemExt::ip_pool_range_add`]: super::ClientSystemExt::ip_pool_range_add"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolRangeAddV1<'a> {
+    pub struct IpPoolRangeAdd<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::IpRange, String>,
     }
 
-    impl<'a> IpPoolRangeAddV1<'a> {
+    impl<'a> IpPoolRangeAdd<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -38304,15 +23858,15 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_remove_v1`]\n\n[`ClientSystemExt::ip_pool_range_remove_v1`]: super::ClientSystemExt::ip_pool_range_remove_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_range_remove`]\n\n[`ClientSystemExt::ip_pool_range_remove`]: super::ClientSystemExt::ip_pool_range_remove"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolRangeRemoveV1<'a> {
+    pub struct IpPoolRangeRemove<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::IpRange, String>,
     }
 
-    impl<'a> IpPoolRangeRemoveV1<'a> {
+    impl<'a> IpPoolRangeRemove<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -38367,13 +23921,13 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_view_v1`]\n\n[`ClientSystemExt::ip_pool_service_view_v1`]: super::ClientSystemExt::ip_pool_service_view_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_view`]\n\n[`ClientSystemExt::ip_pool_service_view`]: super::ClientSystemExt::ip_pool_service_view"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolServiceViewV1<'a> {
+    pub struct IpPoolServiceView<'a> {
         client: &'a super::Client,
     }
 
-    impl<'a> IpPoolServiceViewV1<'a> {
+    impl<'a> IpPoolServiceView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client }
         }
@@ -38398,15 +23952,15 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_list_v1`]\n\n[`ClientSystemExt::ip_pool_service_range_list_v1`]: super::ClientSystemExt::ip_pool_service_range_list_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_list`]\n\n[`ClientSystemExt::ip_pool_service_range_list`]: super::ClientSystemExt::ip_pool_service_range_list"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeListV1<'a> {
+    pub struct IpPoolServiceRangeList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
     }
 
-    impl<'a> IpPoolServiceRangeListV1<'a> {
+    impl<'a> IpPoolServiceRangeList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -38517,14 +24071,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_add_v1`]\n\n[`ClientSystemExt::ip_pool_service_range_add_v1`]: super::ClientSystemExt::ip_pool_service_range_add_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_add`]\n\n[`ClientSystemExt::ip_pool_service_range_add`]: super::ClientSystemExt::ip_pool_service_range_add"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeAddV1<'a> {
+    pub struct IpPoolServiceRangeAdd<'a> {
         client: &'a super::Client,
         body: Result<types::IpRange, String>,
     }
 
-    impl<'a> IpPoolServiceRangeAddV1<'a> {
+    impl<'a> IpPoolServiceRangeAdd<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -38563,14 +24117,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_remove_v1`]\n\n[`ClientSystemExt::ip_pool_service_range_remove_v1`]: super::ClientSystemExt::ip_pool_service_range_remove_v1"]
+    #[doc = "Builder for [`ClientSystemExt::ip_pool_service_range_remove`]\n\n[`ClientSystemExt::ip_pool_service_range_remove`]: super::ClientSystemExt::ip_pool_service_range_remove"]
     #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeRemoveV1<'a> {
+    pub struct IpPoolServiceRangeRemove<'a> {
         client: &'a super::Client,
         body: Result<types::IpRange, String>,
     }
 
-    impl<'a> IpPoolServiceRangeRemoveV1<'a> {
+    impl<'a> IpPoolServiceRangeRemove<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -38612,13 +24166,149 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientPolicyExt::system_policy_view_v1`]\n\n[`ClientPolicyExt::system_policy_view_v1`]: super::ClientPolicyExt::system_policy_view_v1"]
+    #[doc = "Builder for [`ClientSystemExt::system_metric`]\n\n[`ClientSystemExt::system_metric`]: super::ClientSystemExt::system_metric"]
     #[derive(Debug, Clone)]
-    pub struct SystemPolicyViewV1<'a> {
+    pub struct SystemMetric<'a> {
+        client: &'a super::Client,
+        metric_name: Result<types::SystemMetricName, String>,
+        end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+        id: Result<uuid::Uuid, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+    }
+
+    impl<'a> SystemMetric<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                metric_name: Err("metric_name was not initialized".to_string()),
+                end_time: Ok(None),
+                id: Err("id was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                start_time: Ok(None),
+            }
+        }
+
+        pub fn metric_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SystemMetricName>,
+        {
+            self.metric_name = value
+                .try_into()
+                .map_err(|_| "conversion to `SystemMetricName` for metric_name failed".to_string());
+            self
+        }
+
+        pub fn end_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+        {
+            self . end_time = value . try_into () . map (Some) . map_err (| _ | "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed" . to_string ()) ;
+            self
+        }
+
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn start_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+        {
+            self . start_time = value . try_into () . map (Some) . map_err (| _ | "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for start_time failed" . to_string ()) ;
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/metrics/{metric_name}`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                metric_name,
+                end_time,
+                id,
+                limit,
+                page_token,
+                start_time,
+            } = self;
+            let metric_name = metric_name.map_err(Error::InvalidRequest)?;
+            let end_time = end_time.map_err(Error::InvalidRequest)?;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let start_time = start_time.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/metrics/{}",
+                client.baseurl,
+                encode_path(&metric_name.to_string()),
+            );
+            let mut query = Vec::with_capacity(5usize);
+            if let Some(v) = &end_time {
+                query.push(("end_time", v.to_string()));
+            }
+            query.push(("id", id.to_string()));
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &start_time {
+                query.push(("start_time", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientPolicyExt::system_policy_view`]\n\n[`ClientPolicyExt::system_policy_view`]: super::ClientPolicyExt::system_policy_view"]
+    #[derive(Debug, Clone)]
+    pub struct SystemPolicyView<'a> {
         client: &'a super::Client,
     }
 
-    impl<'a> SystemPolicyViewV1<'a> {
+    impl<'a> SystemPolicyView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client }
         }
@@ -38645,14 +24335,14 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientPolicyExt::system_policy_update_v1`]\n\n[`ClientPolicyExt::system_policy_update_v1`]: super::ClientPolicyExt::system_policy_update_v1"]
+    #[doc = "Builder for [`ClientPolicyExt::system_policy_update`]\n\n[`ClientPolicyExt::system_policy_update`]: super::ClientPolicyExt::system_policy_update"]
     #[derive(Debug, Clone)]
-    pub struct SystemPolicyUpdateV1<'a> {
+    pub struct SystemPolicyUpdate<'a> {
         client: &'a super::Client,
         body: Result<types::FleetRolePolicy, String>,
     }
 
-    impl<'a> SystemPolicyUpdateV1<'a> {
+    impl<'a> SystemPolicyUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -38678,6 +24368,175 @@ pub mod builder {
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/policy", client.baseurl,);
             let request = client.client.put(url).json(&body).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientRolesExt::role_list`]\n\n[`ClientRolesExt::role_list`]: super::ClientRolesExt::role_list"]
+    #[derive(Debug, Clone)]
+    pub struct RoleList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+    }
+
+    impl<'a> RoleList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/roles`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::RoleResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/roles", client.baseurl,);
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/system/roles`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Role, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientRolesExt::role_view`]\n\n[`ClientRolesExt::role_view`]: super::ClientRolesExt::role_view"]
+    #[derive(Debug, Clone)]
+    pub struct RoleView<'a> {
+        client: &'a super::Client,
+        role_name: Result<String, String>,
+    }
+
+    impl<'a> RoleView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                role_name: Err("role_name was not initialized".to_string()),
+            }
+        }
+
+        pub fn role_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.role_name = value
+                .try_into()
+                .map_err(|_| "conversion to `String` for role_name failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/roles/{role_name}`"]
+        pub async fn send(self) -> Result<ResponseValue<types::Role>, Error<types::Error>> {
+            let Self { client, role_name } = self;
+            let role_name = role_name.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/roles/{}",
+                client.baseurl,
+                encode_path(&role_name.to_string()),
+            );
+            let request = client.client.get(url).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -40222,6 +26081,194 @@ pub mod builder {
         }
     }
 
+    #[doc = "Builder for [`ClientSystemExt::user_builtin_list`]\n\n[`ClientSystemExt::user_builtin_list`]: super::ClientSystemExt::user_builtin_list"]
+    #[derive(Debug, Clone)]
+    pub struct UserBuiltinList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::NameSortMode>, String>,
+    }
+
+    impl<'a> UserBuiltinList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/users-builtin`"]
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::UserBuiltinResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/users-builtin", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client.client.get(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        #[doc = "Streams `GET` requests to `/v1/system/users-builtin`"]
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::UserBuiltin, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .boxed()
+        }
+    }
+
+    #[doc = "Builder for [`ClientSystemExt::user_builtin_view`]\n\n[`ClientSystemExt::user_builtin_view`]: super::ClientSystemExt::user_builtin_view"]
+    #[derive(Debug, Clone)]
+    pub struct UserBuiltinView<'a> {
+        client: &'a super::Client,
+        user: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> UserBuiltinView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                user: Err("user was not initialized".to_string()),
+            }
+        }
+
+        pub fn user<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.user = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for user failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `GET` request to `/v1/system/users-builtin/{user}`"]
+        pub async fn send(self) -> Result<ResponseValue<types::UserBuiltin>, Error<types::Error>> {
+            let Self { client, user } = self;
+            let user = user.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/users-builtin/{}",
+                client.baseurl,
+                encode_path(&user.to_string()),
+            );
+            let request = client.client.get(url).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     #[doc = "Builder for [`ClientSilosExt::user_list_v1`]\n\n[`ClientSilosExt::user_list_v1`]: super::ClientSilosExt::user_list_v1"]
     #[derive(Debug, Clone)]
     pub struct UserListV1<'a> {
@@ -40379,34 +26426,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_firewall_rules_view_v1`]\n\n[`ClientVpcsExt::vpc_firewall_rules_view_v1`]: super::ClientVpcsExt::vpc_firewall_rules_view_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_firewall_rules_view`]\n\n[`ClientVpcsExt::vpc_firewall_rules_view`]: super::ClientVpcsExt::vpc_firewall_rules_view"]
     #[derive(Debug, Clone)]
-    pub struct VpcFirewallRulesViewV1<'a> {
+    pub struct VpcFirewallRulesView<'a> {
         client: &'a super::Client,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
     }
 
-    impl<'a> VpcFirewallRulesViewV1<'a> {
+    impl<'a> VpcFirewallRulesView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Ok(None),
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn project<V>(mut self, value: V) -> Self
@@ -40436,18 +26470,13 @@ pub mod builder {
         ) -> Result<ResponseValue<types::VpcFirewallRules>, Error<types::Error>> {
             let Self {
                 client,
-                organization,
                 project,
                 vpc,
             } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -40468,36 +26497,23 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_firewall_rules_update_v1`]\n\n[`ClientVpcsExt::vpc_firewall_rules_update_v1`]: super::ClientVpcsExt::vpc_firewall_rules_update_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_firewall_rules_update`]\n\n[`ClientVpcsExt::vpc_firewall_rules_update`]: super::ClientVpcsExt::vpc_firewall_rules_update"]
     #[derive(Debug, Clone)]
-    pub struct VpcFirewallRulesUpdateV1<'a> {
+    pub struct VpcFirewallRulesUpdate<'a> {
         client: &'a super::Client,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
         body: Result<types::VpcFirewallRuleUpdateParams, String>,
     }
 
-    impl<'a> VpcFirewallRulesUpdateV1<'a> {
+    impl<'a> VpcFirewallRulesUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Ok(None),
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn project<V>(mut self, value: V) -> Self
@@ -40537,20 +26553,15 @@ pub mod builder {
         ) -> Result<ResponseValue<types::VpcFirewallRules>, Error<types::Error>> {
             let Self {
                 client,
-                organization,
                 project,
                 vpc,
                 body,
             } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -40571,12 +26582,11 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_list_v1`]\n\n[`ClientVpcsExt::vpc_router_route_list_v1`]: super::ClientVpcsExt::vpc_router_route_list_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_list`]\n\n[`ClientVpcsExt::vpc_router_route_list`]: super::ClientVpcsExt::vpc_router_route_list"]
     #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteListV1<'a> {
+    pub struct VpcRouterRouteList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<Option<types::NameOrId>, String>,
@@ -40584,12 +26594,11 @@ pub mod builder {
         vpc: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcRouterRouteListV1<'a> {
+    impl<'a> VpcRouterRouteList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 router: Ok(None),
@@ -40605,17 +26614,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -40681,7 +26679,6 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                organization,
                 page_token,
                 project,
                 router,
@@ -40689,19 +26686,15 @@ pub mod builder {
                 vpc,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
-            let mut query = Vec::with_capacity(7usize);
+            let mut query = Vec::with_capacity(6usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -40743,7 +26736,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 router: Ok(None),
@@ -40785,38 +26777,25 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_create_v1`]\n\n[`ClientVpcsExt::vpc_router_route_create_v1`]: super::ClientVpcsExt::vpc_router_route_create_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_create`]\n\n[`ClientVpcsExt::vpc_router_route_create`]: super::ClientVpcsExt::vpc_router_route_create"]
     #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteCreateV1<'a> {
+    pub struct VpcRouterRouteCreate<'a> {
         client: &'a super::Client,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<types::NameOrId, String>,
         vpc: Result<Option<types::NameOrId>, String>,
         body: Result<types::RouterRouteCreate, String>,
     }
 
-    impl<'a> VpcRouterRouteCreateV1<'a> {
+    impl<'a> VpcRouterRouteCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Ok(None),
                 project: Ok(None),
                 router: Err("router was not initialized".to_string()),
                 vpc: Ok(None),
                 body: Err("body was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn project<V>(mut self, value: V) -> Self
@@ -40865,22 +26844,17 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
             let Self {
                 client,
-                organization,
                 project,
                 router,
                 vpc,
                 body,
             } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -40904,23 +26878,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_view_v1`]\n\n[`ClientVpcsExt::vpc_router_route_view_v1`]: super::ClientVpcsExt::vpc_router_route_view_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_view`]\n\n[`ClientVpcsExt::vpc_router_route_view`]: super::ClientVpcsExt::vpc_router_route_view"]
     #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteViewV1<'a> {
+    pub struct VpcRouterRouteView<'a> {
         client: &'a super::Client,
         route: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<types::NameOrId, String>,
         vpc: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcRouterRouteViewV1<'a> {
+    impl<'a> VpcRouterRouteView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 route: Err("route was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 router: Err("router was not initialized".to_string()),
                 vpc: Ok(None),
@@ -40934,17 +26906,6 @@ pub mod builder {
             self.route = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for route failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -40985,13 +26946,11 @@ pub mod builder {
             let Self {
                 client,
                 route,
-                organization,
                 project,
                 router,
                 vpc,
             } = self;
             let route = route.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
@@ -41000,10 +26959,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -41027,24 +26983,22 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_update_v1`]\n\n[`ClientVpcsExt::vpc_router_route_update_v1`]: super::ClientVpcsExt::vpc_router_route_update_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_update`]\n\n[`ClientVpcsExt::vpc_router_route_update`]: super::ClientVpcsExt::vpc_router_route_update"]
     #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteUpdateV1<'a> {
+    pub struct VpcRouterRouteUpdate<'a> {
         client: &'a super::Client,
         route: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
         body: Result<types::RouterRouteUpdate, String>,
     }
 
-    impl<'a> VpcRouterRouteUpdateV1<'a> {
+    impl<'a> VpcRouterRouteUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 route: Err("route was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 router: Ok(None),
                 vpc: Ok(None),
@@ -41059,17 +27013,6 @@ pub mod builder {
             self.route = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for route failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -41121,14 +27064,12 @@ pub mod builder {
             let Self {
                 client,
                 route,
-                organization,
                 project,
                 router,
                 vpc,
                 body,
             } = self;
             let route = route.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
@@ -41138,10 +27079,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -41167,23 +27105,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_delete_v1`]\n\n[`ClientVpcsExt::vpc_router_route_delete_v1`]: super::ClientVpcsExt::vpc_router_route_delete_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_router_route_delete`]\n\n[`ClientVpcsExt::vpc_router_route_delete`]: super::ClientVpcsExt::vpc_router_route_delete"]
     #[derive(Debug, Clone)]
-    pub struct VpcRouterRouteDeleteV1<'a> {
+    pub struct VpcRouterRouteDelete<'a> {
         client: &'a super::Client,
         route: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcRouterRouteDeleteV1<'a> {
+    impl<'a> VpcRouterRouteDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 route: Err("route was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 router: Ok(None),
                 vpc: Ok(None),
@@ -41197,17 +27133,6 @@ pub mod builder {
             self.route = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for route failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -41249,13 +27174,11 @@ pub mod builder {
             let Self {
                 client,
                 route,
-                organization,
                 project,
                 router,
                 vpc,
             } = self;
             let route = route.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
@@ -41264,10 +27187,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -41293,24 +27213,22 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_list_v1`]\n\n[`ClientVpcsExt::vpc_router_list_v1`]: super::ClientVpcsExt::vpc_router_list_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_router_list`]\n\n[`ClientVpcsExt::vpc_router_list`]: super::ClientVpcsExt::vpc_router_list"]
     #[derive(Debug, Clone)]
-    pub struct VpcRouterListV1<'a> {
+    pub struct VpcRouterList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcRouterListV1<'a> {
+    impl<'a> VpcRouterList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -41325,17 +27243,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -41390,25 +27297,20 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                organization,
                 page_token,
                 project,
                 sort_by,
                 vpc,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-routers", client.baseurl,);
-            let mut query = Vec::with_capacity(6usize);
+            let mut query = Vec::with_capacity(5usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -41447,7 +27349,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -41488,36 +27389,23 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_create_v1`]\n\n[`ClientVpcsExt::vpc_router_create_v1`]: super::ClientVpcsExt::vpc_router_create_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_router_create`]\n\n[`ClientVpcsExt::vpc_router_create`]: super::ClientVpcsExt::vpc_router_create"]
     #[derive(Debug, Clone)]
-    pub struct VpcRouterCreateV1<'a> {
+    pub struct VpcRouterCreate<'a> {
         client: &'a super::Client,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
         body: Result<types::VpcRouterCreate, String>,
     }
 
-    impl<'a> VpcRouterCreateV1<'a> {
+    impl<'a> VpcRouterCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Ok(None),
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn project<V>(mut self, value: V) -> Self
@@ -41555,20 +27443,15 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
             let Self {
                 client,
-                organization,
                 project,
                 vpc,
                 body,
             } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-routers", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -41589,24 +27472,22 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_view_v1`]\n\n[`ClientVpcsExt::vpc_router_view_v1`]: super::ClientVpcsExt::vpc_router_view_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_router_view`]\n\n[`ClientVpcsExt::vpc_router_view`]: super::ClientVpcsExt::vpc_router_view"]
     #[derive(Debug, Clone)]
-    pub struct VpcRouterViewV1<'a> {
+    pub struct VpcRouterView<'a> {
         client: &'a super::Client,
         router: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
-        vpc: Result<types::NameOrId, String>,
+        vpc: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcRouterViewV1<'a> {
+    impl<'a> VpcRouterView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 router: Err("router was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
-                vpc: Err("vpc was not initialized".to_string()),
+                vpc: Ok(None),
             }
         }
 
@@ -41617,17 +27498,6 @@ pub mod builder {
             self.router = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -41648,6 +27518,7 @@ pub mod builder {
         {
             self.vpc = value
                 .try_into()
+                .map(Some)
                 .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
             self
         }
@@ -41657,12 +27528,10 @@ pub mod builder {
             let Self {
                 client,
                 router,
-                organization,
                 project,
                 vpc,
             } = self;
             let router = router.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -41670,14 +27539,13 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
-            query.push(("vpc", vpc.to_string()));
+            if let Some(v) = &vpc {
+                query.push(("vpc", v.to_string()));
+            }
             let request = client.client.get(url).query(&query).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -41694,23 +27562,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_update_v1`]\n\n[`ClientVpcsExt::vpc_router_update_v1`]: super::ClientVpcsExt::vpc_router_update_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_router_update`]\n\n[`ClientVpcsExt::vpc_router_update`]: super::ClientVpcsExt::vpc_router_update"]
     #[derive(Debug, Clone)]
-    pub struct VpcRouterUpdateV1<'a> {
+    pub struct VpcRouterUpdate<'a> {
         client: &'a super::Client,
         router: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
         body: Result<types::VpcRouterUpdate, String>,
     }
 
-    impl<'a> VpcRouterUpdateV1<'a> {
+    impl<'a> VpcRouterUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 router: Err("router was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 vpc: Ok(None),
                 body: Err("body was not initialized".to_string()),
@@ -41724,17 +27590,6 @@ pub mod builder {
             self.router = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -41775,13 +27630,11 @@ pub mod builder {
             let Self {
                 client,
                 router,
-                organization,
                 project,
                 vpc,
                 body,
             } = self;
             let router = router.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
@@ -41790,10 +27643,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -41816,22 +27666,20 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_router_delete_v1`]\n\n[`ClientVpcsExt::vpc_router_delete_v1`]: super::ClientVpcsExt::vpc_router_delete_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_router_delete`]\n\n[`ClientVpcsExt::vpc_router_delete`]: super::ClientVpcsExt::vpc_router_delete"]
     #[derive(Debug, Clone)]
-    pub struct VpcRouterDeleteV1<'a> {
+    pub struct VpcRouterDelete<'a> {
         client: &'a super::Client,
         router: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcRouterDeleteV1<'a> {
+    impl<'a> VpcRouterDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 router: Err("router was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 vpc: Ok(None),
             }
@@ -41844,17 +27692,6 @@ pub mod builder {
             self.router = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for router failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -41885,12 +27722,10 @@ pub mod builder {
             let Self {
                 client,
                 router,
-                organization,
                 project,
                 vpc,
             } = self;
             let router = router.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -41898,10 +27733,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -41924,24 +27756,22 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_list_v1`]\n\n[`ClientVpcsExt::vpc_subnet_list_v1`]: super::ClientVpcsExt::vpc_subnet_list_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_list`]\n\n[`ClientVpcsExt::vpc_subnet_list`]: super::ClientVpcsExt::vpc_subnet_list"]
     #[derive(Debug, Clone)]
-    pub struct VpcSubnetListV1<'a> {
+    pub struct VpcSubnetList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcSubnetListV1<'a> {
+    impl<'a> VpcSubnetList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -41956,17 +27786,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -42021,25 +27840,20 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                organization,
                 page_token,
                 project,
                 sort_by,
                 vpc,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-subnets", client.baseurl,);
-            let mut query = Vec::with_capacity(6usize);
+            let mut query = Vec::with_capacity(5usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -42078,7 +27892,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -42119,36 +27932,23 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_create_v1`]\n\n[`ClientVpcsExt::vpc_subnet_create_v1`]: super::ClientVpcsExt::vpc_subnet_create_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_create`]\n\n[`ClientVpcsExt::vpc_subnet_create`]: super::ClientVpcsExt::vpc_subnet_create"]
     #[derive(Debug, Clone)]
-    pub struct VpcSubnetCreateV1<'a> {
+    pub struct VpcSubnetCreate<'a> {
         client: &'a super::Client,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
         body: Result<types::VpcSubnetCreate, String>,
     }
 
-    impl<'a> VpcSubnetCreateV1<'a> {
+    impl<'a> VpcSubnetCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Ok(None),
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn project<V>(mut self, value: V) -> Self
@@ -42186,20 +27986,15 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
             let Self {
                 client,
-                organization,
                 project,
                 vpc,
                 body,
             } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-subnets", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -42220,22 +28015,20 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_view_v1`]\n\n[`ClientVpcsExt::vpc_subnet_view_v1`]: super::ClientVpcsExt::vpc_subnet_view_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_view`]\n\n[`ClientVpcsExt::vpc_subnet_view`]: super::ClientVpcsExt::vpc_subnet_view"]
     #[derive(Debug, Clone)]
-    pub struct VpcSubnetViewV1<'a> {
+    pub struct VpcSubnetView<'a> {
         client: &'a super::Client,
         subnet: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcSubnetViewV1<'a> {
+    impl<'a> VpcSubnetView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 subnet: Err("subnet was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 vpc: Ok(None),
             }
@@ -42248,17 +28041,6 @@ pub mod builder {
             self.subnet = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for subnet failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -42289,12 +28071,10 @@ pub mod builder {
             let Self {
                 client,
                 subnet,
-                organization,
                 project,
                 vpc,
             } = self;
             let subnet = subnet.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -42302,10 +28082,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -42328,23 +28105,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_update_v1`]\n\n[`ClientVpcsExt::vpc_subnet_update_v1`]: super::ClientVpcsExt::vpc_subnet_update_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_update`]\n\n[`ClientVpcsExt::vpc_subnet_update`]: super::ClientVpcsExt::vpc_subnet_update"]
     #[derive(Debug, Clone)]
-    pub struct VpcSubnetUpdateV1<'a> {
+    pub struct VpcSubnetUpdate<'a> {
         client: &'a super::Client,
         subnet: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
         body: Result<types::VpcSubnetUpdate, String>,
     }
 
-    impl<'a> VpcSubnetUpdateV1<'a> {
+    impl<'a> VpcSubnetUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 subnet: Err("subnet was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 vpc: Ok(None),
                 body: Err("body was not initialized".to_string()),
@@ -42358,17 +28133,6 @@ pub mod builder {
             self.subnet = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for subnet failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -42409,13 +28173,11 @@ pub mod builder {
             let Self {
                 client,
                 subnet,
-                organization,
                 project,
                 vpc,
                 body,
             } = self;
             let subnet = subnet.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
@@ -42424,10 +28186,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -42450,22 +28209,20 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_delete_v1`]\n\n[`ClientVpcsExt::vpc_subnet_delete_v1`]: super::ClientVpcsExt::vpc_subnet_delete_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_delete`]\n\n[`ClientVpcsExt::vpc_subnet_delete`]: super::ClientVpcsExt::vpc_subnet_delete"]
     #[derive(Debug, Clone)]
-    pub struct VpcSubnetDeleteV1<'a> {
+    pub struct VpcSubnetDelete<'a> {
         client: &'a super::Client,
         subnet: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcSubnetDeleteV1<'a> {
+    impl<'a> VpcSubnetDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 subnet: Err("subnet was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 vpc: Ok(None),
             }
@@ -42478,17 +28235,6 @@ pub mod builder {
             self.subnet = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for subnet failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -42519,12 +28265,10 @@ pub mod builder {
             let Self {
                 client,
                 subnet,
-                organization,
                 project,
                 vpc,
             } = self;
             let subnet = subnet.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -42532,10 +28276,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -42558,26 +28299,24 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_list_network_interfaces_v1`]\n\n[`ClientVpcsExt::vpc_subnet_list_network_interfaces_v1`]: super::ClientVpcsExt::vpc_subnet_list_network_interfaces_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_subnet_list_network_interfaces`]\n\n[`ClientVpcsExt::vpc_subnet_list_network_interfaces`]: super::ClientVpcsExt::vpc_subnet_list_network_interfaces"]
     #[derive(Debug, Clone)]
-    pub struct VpcSubnetListNetworkInterfacesV1<'a> {
+    pub struct VpcSubnetListNetworkInterfaces<'a> {
         client: &'a super::Client,
         subnet: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcSubnetListNetworkInterfacesV1<'a> {
+    impl<'a> VpcSubnetListNetworkInterfaces<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 subnet: Err("subnet was not initialized".to_string()),
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -42602,17 +28341,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -42669,7 +28397,6 @@ pub mod builder {
                 client,
                 subnet,
                 limit,
-                organization,
                 page_token,
                 project,
                 sort_by,
@@ -42677,7 +28404,6 @@ pub mod builder {
             } = self;
             let subnet = subnet.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
@@ -42687,12 +28413,9 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
+            let mut query = Vec::with_capacity(5usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -42731,7 +28454,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -42772,23 +28494,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_list_v1`]\n\n[`ClientVpcsExt::vpc_list_v1`]: super::ClientVpcsExt::vpc_list_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_list`]\n\n[`ClientVpcsExt::vpc_list`]: super::ClientVpcsExt::vpc_list"]
     #[derive(Debug, Clone)]
-    pub struct VpcListV1<'a> {
+    pub struct VpcList<'a> {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
-    impl<'a> VpcListV1<'a> {
+    impl<'a> VpcList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -42802,17 +28522,6 @@ pub mod builder {
             self.limit = value.try_into().map(Some).map_err(|_| {
                 "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
             });
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -42856,23 +28565,18 @@ pub mod builder {
             let Self {
                 client,
                 limit,
-                organization,
                 page_token,
                 project,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpcs", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let mut query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -42908,7 +28612,6 @@ pub mod builder {
             use futures::TryStreamExt;
             let next = Self {
                 limit: Ok(None),
-                organization: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
@@ -42948,34 +28651,21 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_create_v1`]\n\n[`ClientVpcsExt::vpc_create_v1`]: super::ClientVpcsExt::vpc_create_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_create`]\n\n[`ClientVpcsExt::vpc_create`]: super::ClientVpcsExt::vpc_create"]
     #[derive(Debug, Clone)]
-    pub struct VpcCreateV1<'a> {
+    pub struct VpcCreate<'a> {
         client: &'a super::Client,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<types::NameOrId, String>,
         body: Result<types::VpcCreate, String>,
     }
 
-    impl<'a> VpcCreateV1<'a> {
+    impl<'a> VpcCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                organization: Ok(None),
                 project: Err("project was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
-            self
         }
 
         pub fn project<V>(mut self, value: V) -> Self
@@ -43002,18 +28692,13 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
             let Self {
                 client,
-                organization,
                 project,
                 body,
             } = self;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpcs", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             query.push(("project", project.to_string()));
             let request = client.client.post(url).json(&body).query(&query).build()?;
             let result = client.client.execute(request).await;
@@ -43031,21 +28716,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_view_v1`]\n\n[`ClientVpcsExt::vpc_view_v1`]: super::ClientVpcsExt::vpc_view_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_view`]\n\n[`ClientVpcsExt::vpc_view`]: super::ClientVpcsExt::vpc_view"]
     #[derive(Debug, Clone)]
-    pub struct VpcViewV1<'a> {
+    pub struct VpcView<'a> {
         client: &'a super::Client,
         vpc: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcViewV1<'a> {
+    impl<'a> VpcView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 vpc: Err("vpc was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -43057,17 +28740,6 @@ pub mod builder {
             self.vpc = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -43087,21 +28759,16 @@ pub mod builder {
             let Self {
                 client,
                 vpc,
-                organization,
                 project,
             } = self;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpcs/{}",
                 client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -43121,22 +28788,20 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_update_v1`]\n\n[`ClientVpcsExt::vpc_update_v1`]: super::ClientVpcsExt::vpc_update_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_update`]\n\n[`ClientVpcsExt::vpc_update`]: super::ClientVpcsExt::vpc_update"]
     #[derive(Debug, Clone)]
-    pub struct VpcUpdateV1<'a> {
+    pub struct VpcUpdate<'a> {
         client: &'a super::Client,
         vpc: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::VpcUpdate, String>,
     }
 
-    impl<'a> VpcUpdateV1<'a> {
+    impl<'a> VpcUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 vpc: Err("vpc was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
                 body: Err("body was not initialized".to_string()),
             }
@@ -43149,17 +28814,6 @@ pub mod builder {
             self.vpc = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -43189,12 +28843,10 @@ pub mod builder {
             let Self {
                 client,
                 vpc,
-                organization,
                 project,
                 body,
             } = self;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -43202,10 +28854,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -43225,21 +28874,19 @@ pub mod builder {
         }
     }
 
-    #[doc = "Builder for [`ClientVpcsExt::vpc_delete_v1`]\n\n[`ClientVpcsExt::vpc_delete_v1`]: super::ClientVpcsExt::vpc_delete_v1"]
+    #[doc = "Builder for [`ClientVpcsExt::vpc_delete`]\n\n[`ClientVpcsExt::vpc_delete`]: super::ClientVpcsExt::vpc_delete"]
     #[derive(Debug, Clone)]
-    pub struct VpcDeleteV1<'a> {
+    pub struct VpcDelete<'a> {
         client: &'a super::Client,
         vpc: Result<types::NameOrId, String>,
-        organization: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
-    impl<'a> VpcDeleteV1<'a> {
+    impl<'a> VpcDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
                 vpc: Err("vpc was not initialized".to_string()),
-                organization: Ok(None),
                 project: Ok(None),
             }
         }
@@ -43251,17 +28898,6 @@ pub mod builder {
             self.vpc = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for vpc failed".to_string());
-            self
-        }
-
-        pub fn organization<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.organization = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for organization failed".to_string());
             self
         }
 
@@ -43281,21 +28917,16 @@ pub mod builder {
             let Self {
                 client,
                 vpc,
-                organization,
                 project,
             } = self;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let organization = organization.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpcs/{}",
                 client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &organization {
-                query.push(("organization", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -43323,8 +28954,6 @@ pub mod prelude {
     pub use super::ClientImagesExt;
     pub use super::ClientInstancesExt;
     pub use super::ClientLoginExt;
-    pub use super::ClientMetricsExt;
-    pub use super::ClientOrganizationsExt;
     pub use super::ClientPolicyExt;
     pub use super::ClientProjectsExt;
     pub use super::ClientRolesExt;
