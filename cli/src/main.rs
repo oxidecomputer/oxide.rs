@@ -123,59 +123,51 @@ async fn main() {
 
 fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
     let x = match command {
-        CliCommand::InstanceListV1 => Some("instance list"),
-        CliCommand::InstanceCreateV1 => Some("instance create"),
-        CliCommand::InstanceViewV1 => Some("instance view"),
-        CliCommand::InstanceDeleteV1 => Some("instance delete"),
-        CliCommand::InstanceMigrateV1 => None, // TODO delete from API?
-        CliCommand::InstanceRebootV1 => Some("instance reboot"),
-        CliCommand::InstanceSerialConsoleV1 => None, // TODO not sure how to handle this
-        CliCommand::InstanceSerialConsoleStreamV1 => None, // Ditto
-        CliCommand::InstanceStartV1 => Some("instance start"),
-        CliCommand::InstanceStopV1 => Some("instance stop"),
-        CliCommand::InstanceExternalIpListV1 => Some("instance external-ip list"),
+        CliCommand::InstanceList => Some("instance list"),
+        CliCommand::InstanceCreate => Some("instance create"),
+        CliCommand::InstanceView => Some("instance view"),
+        CliCommand::InstanceDelete => Some("instance delete"),
+        CliCommand::InstanceMigrate => None, // TODO delete from API?
+        CliCommand::InstanceReboot => Some("instance reboot"),
+        CliCommand::InstanceSerialConsole => None, // TODO not sure how to handle this
+        CliCommand::InstanceSerialConsoleStream => None, // Ditto
+        CliCommand::InstanceStart => Some("instance start"),
+        CliCommand::InstanceStop => Some("instance stop"),
+        CliCommand::InstanceExternalIpList => Some("instance external-ip list"),
 
-        CliCommand::OrganizationListV1 => Some("org list"),
-        CliCommand::OrganizationCreateV1 => Some("org create"),
-        CliCommand::OrganizationViewV1 => Some("org view"),
-        CliCommand::OrganizationUpdateV1 => Some("org update"),
-        CliCommand::OrganizationDeleteV1 => Some("org delete"),
-        CliCommand::OrganizationPolicyViewV1 => Some("org policy view"),
-        CliCommand::OrganizationPolicyUpdateV1 => Some("org policy update"),
+        CliCommand::ProjectList => Some("project list"),
+        CliCommand::ProjectCreate => Some("project create"),
+        CliCommand::ProjectView => Some("project view"),
+        CliCommand::ProjectUpdate => Some("project update"),
+        CliCommand::ProjectDelete => Some("project delete"),
+        CliCommand::ProjectPolicyView => Some("project policy view"),
+        CliCommand::ProjectPolicyUpdate => Some("project policy update"),
 
-        CliCommand::ProjectListV1 => Some("project list"),
-        CliCommand::ProjectCreateV1 => Some("project create"),
-        CliCommand::ProjectViewV1 => Some("project view"),
-        CliCommand::ProjectUpdateV1 => Some("project update"),
-        CliCommand::ProjectDeleteV1 => Some("project delete"),
-        CliCommand::ProjectPolicyViewV1 => Some("project policy view"),
-        CliCommand::ProjectPolicyUpdateV1 => Some("project policy update"),
+        CliCommand::DiskMetricsList => Some("disk metrics list"),
+        CliCommand::ImageList => Some("image list"),
+        CliCommand::ImageCreate => Some("image create"),
+        CliCommand::ImageView => Some("image view"),
+        CliCommand::ImageDelete => Some("image delete"),
 
-        CliCommand::DiskMetricsListV1 => Some("disk metrics list"),
-        CliCommand::ImageListV1 => Some("image list"),
-        CliCommand::ImageCreateV1 => Some("image create"),
-        CliCommand::ImageViewV1 => Some("image view"),
-        CliCommand::ImageDeleteV1 => Some("image delete"),
+        CliCommand::SiloIdentityProviderList => Some("silo idp list"),
+        CliCommand::LocalIdpUserCreate => Some("silo idp local user create"),
+        CliCommand::LocalIdpUserDelete => Some("silo idp local user delete"),
+        CliCommand::LocalIdpUserSetPassword => Some("silo idp local user set-password"),
+        CliCommand::SamlIdentityProviderCreate => Some("silo idp saml create"),
+        CliCommand::SamlIdentityProviderView => Some("silo idp saml view"),
 
-        CliCommand::SiloIdentityProviderListV1 => Some("silo idp list"),
-        CliCommand::LocalIdpUserCreateV1 => Some("silo idp local user create"),
-        CliCommand::LocalIdpUserDeleteV1 => Some("silo idp local user delete"),
-        CliCommand::LocalIdpUserSetPasswordV1 => Some("silo idp local user set-password"),
-        CliCommand::SamlIdentityProviderCreateV1 => Some("silo idp saml create"),
-        CliCommand::SamlIdentityProviderViewV1 => Some("silo idp saml view"),
-
-        CliCommand::IpPoolListV1 => Some("ip-pool list"),
-        CliCommand::IpPoolCreateV1 => Some("ip-pool create"),
-        CliCommand::IpPoolViewV1 => Some("ip-pool view"),
-        CliCommand::IpPoolUpdateV1 => Some("ip-pool update"),
-        CliCommand::IpPoolDeleteV1 => Some("ip-pool delete"),
-        CliCommand::IpPoolRangeListV1 => Some("ip-pool range list"),
-        CliCommand::IpPoolRangeAddV1 => Some("ip-pool range add"),
-        CliCommand::IpPoolRangeRemoveV1 => Some("ip-pool range remove"),
-        CliCommand::IpPoolServiceViewV1 => Some("ip-pool service view"),
-        CliCommand::IpPoolServiceRangeListV1 => Some("ip-pool service range list"),
-        CliCommand::IpPoolServiceRangeAddV1 => Some("ip-pool service range add"),
-        CliCommand::IpPoolServiceRangeRemoveV1 => Some("ip-pool service remove"),
+        CliCommand::IpPoolList => Some("ip-pool list"),
+        CliCommand::IpPoolCreate => Some("ip-pool create"),
+        CliCommand::IpPoolView => Some("ip-pool view"),
+        CliCommand::IpPoolUpdate => Some("ip-pool update"),
+        CliCommand::IpPoolDelete => Some("ip-pool delete"),
+        CliCommand::IpPoolRangeList => Some("ip-pool range list"),
+        CliCommand::IpPoolRangeAdd => Some("ip-pool range add"),
+        CliCommand::IpPoolRangeRemove => Some("ip-pool range remove"),
+        CliCommand::IpPoolServiceView => Some("ip-pool service view"),
+        CliCommand::IpPoolServiceRangeList => Some("ip-pool service range list"),
+        CliCommand::IpPoolServiceRangeAdd => Some("ip-pool service range add"),
+        CliCommand::IpPoolServiceRangeRemove => Some("ip-pool service remove"),
         CliCommand::SiloListV1 => Some("silo list"),
         CliCommand::SiloCreateV1 => Some("silo create"),
         CliCommand::SiloViewV1 => Some("silo view"),
@@ -188,237 +180,119 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::UserListV1 => Some("user list"),
 
         // VPCs
-        CliCommand::VpcListV1 => Some("vpc list"),
-        CliCommand::VpcCreateV1 => Some("vpc create"),
-        CliCommand::VpcViewV1 => Some("vpc view"),
-        CliCommand::VpcUpdateV1 => Some("vpc update"),
-        CliCommand::VpcDeleteV1 => Some("vpc delete"),
+        CliCommand::VpcList => Some("vpc list"),
+        CliCommand::VpcCreate => Some("vpc create"),
+        CliCommand::VpcView => Some("vpc view"),
+        CliCommand::VpcUpdate => Some("vpc update"),
+        CliCommand::VpcDelete => Some("vpc delete"),
 
-        CliCommand::VpcFirewallRulesViewV1 => Some("vpc firewall-rules view"),
-        CliCommand::VpcFirewallRulesUpdateV1 => Some("vpc firewall-rules update"),
+        CliCommand::VpcFirewallRulesView => Some("vpc firewall-rules view"),
+        CliCommand::VpcFirewallRulesUpdate => Some("vpc firewall-rules update"),
 
-        CliCommand::VpcRouterListV1 => Some("vpc router list"),
-        CliCommand::VpcRouterCreateV1 => Some("vpc router create"),
-        CliCommand::VpcRouterViewV1 => Some("vpc router view"),
-        CliCommand::VpcRouterUpdateV1 => Some("vpc router update"),
-        CliCommand::VpcRouterDeleteV1 => Some("vpc router delete"),
+        CliCommand::VpcRouterList => Some("vpc router list"),
+        CliCommand::VpcRouterCreate => Some("vpc router create"),
+        CliCommand::VpcRouterView => Some("vpc router view"),
+        CliCommand::VpcRouterUpdate => Some("vpc router update"),
+        CliCommand::VpcRouterDelete => Some("vpc router delete"),
 
-        CliCommand::VpcRouterRouteListV1 => Some("vpc router route list"),
-        CliCommand::VpcRouterRouteCreateV1 => Some("vpc router route create"),
-        CliCommand::VpcRouterRouteViewV1 => Some("vpc router route view"),
-        CliCommand::VpcRouterRouteUpdateV1 => Some("vpc router route update"),
-        CliCommand::VpcRouterRouteDeleteV1 => Some("vpc router route delete"),
+        CliCommand::VpcRouterRouteList => Some("vpc router route list"),
+        CliCommand::VpcRouterRouteCreate => Some("vpc router route create"),
+        CliCommand::VpcRouterRouteView => Some("vpc router route view"),
+        CliCommand::VpcRouterRouteUpdate => Some("vpc router route update"),
+        CliCommand::VpcRouterRouteDelete => Some("vpc router route delete"),
 
-        CliCommand::VpcSubnetListV1 => Some("vpc subnet list"),
-        CliCommand::VpcSubnetCreateV1 => Some("vpc subnet create"),
-        CliCommand::VpcSubnetViewV1 => Some("vpc subnet view"),
-        CliCommand::VpcSubnetUpdateV1 => Some("vpc subnet update"),
-        CliCommand::VpcSubnetDeleteV1 => Some("vpc subnet delete"),
-        CliCommand::VpcSubnetListNetworkInterfacesV1 => Some("vpc subnet nic list"),
+        CliCommand::VpcSubnetList => Some("vpc subnet list"),
+        CliCommand::VpcSubnetCreate => Some("vpc subnet create"),
+        CliCommand::VpcSubnetView => Some("vpc subnet view"),
+        CliCommand::VpcSubnetUpdate => Some("vpc subnet update"),
+        CliCommand::VpcSubnetDelete => Some("vpc subnet delete"),
+        CliCommand::VpcSubnetListNetworkInterfaces => Some("vpc subnet nic list"),
 
-        CliCommand::DiskListV1 => Some("disk list"),
-        CliCommand::DiskCreateV1 => Some("disk create"),
-        CliCommand::DiskViewV1 => Some("disk view"),
-        CliCommand::DiskDeleteV1 => Some("disk delete"),
+        CliCommand::DiskList => Some("disk list"),
+        CliCommand::DiskCreate => Some("disk create"),
+        CliCommand::DiskView => Some("disk view"),
+        CliCommand::DiskDelete => Some("disk delete"),
         CliCommand::GroupListV1 => Some("group list"),
-        CliCommand::InstanceDiskListV1 => Some("instance disk list"),
-        CliCommand::InstanceDiskAttachV1 => Some("instance disk attach"),
-        CliCommand::InstanceDiskDetachV1 => Some("instance disk detach"),
-        CliCommand::InstanceNetworkInterfaceListV1 => Some("instance nic list"),
-        CliCommand::InstanceNetworkInterfaceCreateV1 => Some("instance nic create"),
-        CliCommand::InstanceNetworkInterfaceViewV1 => Some("instance nic view"),
-        CliCommand::InstanceNetworkInterfaceUpdateV1 => Some("instance nic update"),
-        CliCommand::InstanceNetworkInterfaceDeleteV1 => Some("instance nic delete"),
-        CliCommand::PolicyViewV1 => Some("policy view"),
-        CliCommand::PolicyUpdateV1 => Some("policy update"),
-        CliCommand::SnapshotListV1 => Some("snapshot list"),
-        CliCommand::SnapshotCreateV1 => Some("snapshot create"),
-        CliCommand::SnapshotViewV1 => Some("snapshot view"),
-        CliCommand::SnapshotDeleteV1 => Some("snapshot delete"),
-        CliCommand::CertificateListV1 => Some("certificate list"),
-        CliCommand::CertificateCreateV1 => Some("certificate create"),
-        CliCommand::CertificateViewV1 => Some("certificate view"),
-        CliCommand::CertificateDeleteV1 => Some("certificate delete"),
+        CliCommand::InstanceDiskList => Some("instance disk list"),
+        CliCommand::InstanceDiskAttach => Some("instance disk attach"),
+        CliCommand::InstanceDiskDetach => Some("instance disk detach"),
+        CliCommand::InstanceNetworkInterfaceList => Some("instance nic list"),
+        CliCommand::InstanceNetworkInterfaceCreate => Some("instance nic create"),
+        CliCommand::InstanceNetworkInterfaceView => Some("instance nic view"),
+        CliCommand::InstanceNetworkInterfaceUpdate => Some("instance nic update"),
+        CliCommand::InstanceNetworkInterfaceDelete => Some("instance nic delete"),
+        CliCommand::PolicyView => Some("policy view"),
+        CliCommand::PolicyUpdate => Some("policy update"),
+        CliCommand::SnapshotList => Some("snapshot list"),
+        CliCommand::SnapshotCreate => Some("snapshot create"),
+        CliCommand::SnapshotView => Some("snapshot view"),
+        CliCommand::SnapshotDelete => Some("snapshot delete"),
+        CliCommand::CertificateList => Some("certificate list"),
+        CliCommand::CertificateCreate => Some("certificate create"),
+        CliCommand::CertificateView => Some("certificate view"),
+        CliCommand::CertificateDelete => Some("certificate delete"),
         CliCommand::PhysicalDiskListV1 => Some("physical-disk list"),
         CliCommand::RackListV1 => Some("rack list"),
         CliCommand::RackViewV1 => Some("rack view"),
         CliCommand::SledListV1 => Some("sled list"),
         CliCommand::SledViewV1 => Some("sled view"),
         CliCommand::SledPhysicalDiskListV1 => Some("sled disk-led"),
-        CliCommand::SystemPolicyViewV1 => Some("system policy view"),
-        CliCommand::SystemPolicyUpdateV1 => Some("system policy update"),
+        CliCommand::SystemPolicyView => Some("system policy view"),
+        CliCommand::SystemPolicyUpdate => Some("system policy update"),
         CliCommand::SagaListV1 => Some("saga list"),
         CliCommand::SagaViewV1 => Some("saga view"),
 
-        CliCommand::CurrentUserViewV1 => Some("current-user view"),
-        CliCommand::CurrentUserGroupsV1 => Some("current-user groups"),
-        CliCommand::CurrentUserSshKeyListV1 => Some("current-user ssh-key list"),
-        CliCommand::CurrentUserSshKeyCreateV1 => Some("current-user ssh-key create"),
-        CliCommand::CurrentUserSshKeyViewV1 => Some("current-user ssh-key view"),
-        CliCommand::CurrentUserSshKeyDeleteV1 => Some("current-user ssh-key delete"),
+        CliCommand::CurrentUserView => Some("current-user view"),
+        CliCommand::CurrentUserGroups => Some("current-user groups"),
+        CliCommand::CurrentUserSshKeyList => Some("current-user ssh-key list"),
+        CliCommand::CurrentUserSshKeyCreate => Some("current-user ssh-key create"),
+        CliCommand::CurrentUserSshKeyView => Some("current-user ssh-key view"),
+        CliCommand::CurrentUserSshKeyDelete => Some("current-user ssh-key delete"),
 
         // Pre-v1 operations
-        CliCommand::DiskViewById
-        | CliCommand::ImageViewById
-        | CliCommand::InstanceViewById
-        | CliCommand::InstanceNetworkInterfaceViewById
-        | CliCommand::OrganizationViewById
-        | CliCommand::ProjectViewById
-        | CliCommand::SnapshotViewById
-        | CliCommand::VpcRouterRouteViewById
-        | CliCommand::VpcRouterViewById
-        | CliCommand::VpcSubnetViewById
-        | CliCommand::VpcViewById
-        | CliCommand::DeviceAuthRequest
-        | CliCommand::DeviceAuthConfirm
         | CliCommand::DeviceAccessToken
-        | CliCommand::GroupList
-        | CliCommand::LoginSpoof
+        | CliCommand::DeviceAuthConfirm
+        | CliCommand::DeviceAuthRequest
+        | CliCommand::GroupView
         | CliCommand::LoginLocal
-        | CliCommand::LoginSamlBegin
         | CliCommand::LoginSaml
+        | CliCommand::LoginSamlBegin
+        | CliCommand::LoginSpoof
         | CliCommand::Logout
-        | CliCommand::OrganizationList
-        | CliCommand::OrganizationCreate
-        | CliCommand::OrganizationView
-        | CliCommand::OrganizationUpdate
-        | CliCommand::OrganizationDelete
-        | CliCommand::OrganizationPolicyView
-        | CliCommand::OrganizationPolicyUpdate
-        | CliCommand::ProjectList
-        | CliCommand::ProjectCreate
-        | CliCommand::ProjectView
-        | CliCommand::ProjectUpdate
-        | CliCommand::ProjectDelete
-        | CliCommand::DiskList
-        | CliCommand::DiskCreate
-        | CliCommand::DiskView
-        | CliCommand::DiskDelete
-        | CliCommand::DiskMetricsList
-        | CliCommand::ImageList
-        | CliCommand::ImageCreate
-        | CliCommand::ImageView
-        | CliCommand::ImageDelete
-        | CliCommand::InstanceList
-        | CliCommand::InstanceCreate
-        | CliCommand::InstanceView
-        | CliCommand::InstanceDelete
-        | CliCommand::InstanceDiskList
-        | CliCommand::InstanceDiskAttach
-        | CliCommand::InstanceDiskDetach
-        | CliCommand::InstanceExternalIpList
-        | CliCommand::InstanceMigrate
-        | CliCommand::InstanceNetworkInterfaceList
-        | CliCommand::InstanceNetworkInterfaceCreate
-        | CliCommand::InstanceNetworkInterfaceView
-        | CliCommand::InstanceNetworkInterfaceUpdate
-        | CliCommand::InstanceNetworkInterfaceDelete
-        | CliCommand::InstanceReboot
-        | CliCommand::InstanceSerialConsole
-        | CliCommand::InstanceSerialConsoleStream
-        | CliCommand::InstanceStart
-        | CliCommand::InstanceStop
-        | CliCommand::ProjectPolicyView
-        | CliCommand::ProjectPolicyUpdate
-        | CliCommand::SnapshotList
-        | CliCommand::SnapshotCreate
-        | CliCommand::SnapshotView
-        | CliCommand::SnapshotDelete
-        | CliCommand::VpcList
-        | CliCommand::VpcCreate
-        | CliCommand::VpcView
-        | CliCommand::VpcUpdate
-        | CliCommand::VpcDelete
-        | CliCommand::VpcFirewallRulesView
-        | CliCommand::VpcFirewallRulesUpdate
-        | CliCommand::VpcRouterList
-        | CliCommand::VpcRouterCreate
-        | CliCommand::VpcRouterView
-        | CliCommand::VpcRouterUpdate
-        | CliCommand::VpcRouterDelete
-        | CliCommand::VpcRouterRouteList
-        | CliCommand::VpcRouterRouteCreate
-        | CliCommand::VpcRouterRouteView
-        | CliCommand::VpcRouterRouteUpdate
-        | CliCommand::VpcRouterRouteDelete
-        | CliCommand::VpcSubnetList
-        | CliCommand::VpcSubnetCreate
-        | CliCommand::VpcSubnetView
-        | CliCommand::VpcSubnetUpdate
-        | CliCommand::VpcSubnetDelete
-        | CliCommand::VpcSubnetListNetworkInterfaces
-        | CliCommand::PolicyView
-        | CliCommand::PolicyUpdate
-        | CliCommand::RoleList
-        | CliCommand::RoleView
-        | CliCommand::SessionMe
-        | CliCommand::SessionMeGroups
-        | CliCommand::SessionSshkeyList
-        | CliCommand::SessionSshkeyCreate
-        | CliCommand::SessionSshkeyView
-        | CliCommand::SessionSshkeyDelete
-        | CliCommand::SystemImageViewById
-        | CliCommand::IpPoolViewById
-        | CliCommand::SiloViewById
+        | CliCommand::PhysicalDiskList
         | CliCommand::RackList
         | CliCommand::RackView
-        | CliCommand::SledList
-        | CliCommand::SledView
-        | CliCommand::SystemImageList
-        | CliCommand::SystemImageCreate
-        | CliCommand::SystemImageView
-        | CliCommand::SystemImageDelete
-        | CliCommand::IpPoolList
-        | CliCommand::IpPoolCreate
-        | CliCommand::IpPoolView
-        | CliCommand::IpPoolUpdate
-        | CliCommand::IpPoolDelete
-        | CliCommand::IpPoolRangeList
-        | CliCommand::IpPoolRangeAdd
-        | CliCommand::IpPoolRangeRemove
-        | CliCommand::IpPoolServiceView
-        | CliCommand::IpPoolServiceRangeList
-        | CliCommand::IpPoolServiceRangeAdd
-        | CliCommand::IpPoolServiceRangeRemove
-        | CliCommand::SystemPolicyView
-        | CliCommand::SystemPolicyUpdate
+        | CliCommand::RoleList
+        | CliCommand::RoleView
         | CliCommand::SagaList
         | CliCommand::SagaView
-        | CliCommand::SiloList
         | CliCommand::SiloCreate
-        | CliCommand::SiloView
         | CliCommand::SiloDelete
-        | CliCommand::SiloIdentityProviderList
-        | CliCommand::LocalIdpUserCreate
-        | CliCommand::LocalIdpUserDelete
-        | CliCommand::LocalIdpUserSetPassword
-        | CliCommand::SamlIdentityProviderCreate
-        | CliCommand::SamlIdentityProviderView
-        | CliCommand::SiloPolicyView
+        | CliCommand::SiloList
         | CliCommand::SiloPolicyUpdate
-        | CliCommand::SiloUsersList
-        | CliCommand::SiloUserView
-        | CliCommand::SystemUserList
-        | CliCommand::SystemUserView
-        | CliCommand::TimeseriesSchemaGet
-        | CliCommand::UserList
-        | CliCommand::CertificateList
-        | CliCommand::CertificateCreate
-        | CliCommand::CertificateView
-        | CliCommand::CertificateDelete
-        | CliCommand::PhysicalDiskList
+        | CliCommand::SiloPolicyView
+        | CliCommand::SiloView
+        | CliCommand::SiloViewById
+        | CliCommand::SledList
         | CliCommand::SledPhysicalDiskList
-        | CliCommand::SystemMetric
-        | CliCommand::GroupView
+        | CliCommand::SledView
         | CliCommand::SystemComponentVersionList
-        | CliCommand::UpdateDeploymentsList
-        | CliCommand::UpdateDeploymentView
+        | CliCommand::SystemImageCreate
+        | CliCommand::SystemImageDelete
+        | CliCommand::SystemImageList
+        | CliCommand::SystemImageView
+        | CliCommand::SystemImageViewById
+        | CliCommand::SystemMetric
+        | CliCommand::SystemUpdateComponentsList
+        | CliCommand::SystemUpdateList
         | CliCommand::SystemUpdateRefresh
         | CliCommand::SystemUpdateStart
         | CliCommand::SystemUpdateStop
-        | CliCommand::SystemUpdateList
         | CliCommand::SystemUpdateView
-        | CliCommand::SystemUpdateComponentsList
+        | CliCommand::UpdateDeploymentsList
+        | CliCommand::UpdateDeploymentView
+        | CliCommand::UserBuiltinList
+        | CliCommand::UserBuiltinView
         | CliCommand::SystemVersion => None,
     };
 
