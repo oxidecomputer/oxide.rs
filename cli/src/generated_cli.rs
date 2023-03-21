@@ -338,262 +338,6 @@ impl Cli {
         }
     }
 
-    pub fn cli_silo_view_by_id() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("id")
-                    .long("id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
-            )
-            .about("Fetch a silo by id\n\nUse `GET /v1/system/silos/{id}` instead.")
-    }
-
-    pub async fn execute_silo_view_by_id(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_view_by_id();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("id") {
-            request = request.id(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_physical_disk_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
-                    .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
-            )
-            .about("List physical disks\n\nUse `GET /v1/system/hardware/disks` instead")
-    }
-
-    pub async fn execute_physical_disk_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.physical_disk_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
-            request = request.sort_by(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_rack_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
-                    .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
-            )
-            .about("List racks\n\nUse `GET /v1/system/hardware/racks` instead")
-    }
-
-    pub async fn execute_rack_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.rack_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
-            request = request.sort_by(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_rack_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("rack_id")
-                    .long("rack_id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid))
-                    .help("The rack's unique ID."),
-            )
-            .about("Fetch a rack\n\nUse `GET /v1/system/hardware/racks/{rack_id}` instead")
-    }
-
-    pub async fn execute_rack_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.rack_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack_id") {
-            request = request.rack_id(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_sled_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
-                    .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
-            )
-            .about("List sleds\n\nUse `GET /v1/system/hardware/sleds instead`")
-    }
-
-    pub async fn execute_sled_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.sled_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
-            request = request.sort_by(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_sled_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("sled_id")
-                    .long("sled_id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid))
-                    .help("The sled's unique ID."),
-            )
-            .about("Fetch a sled\n\nUse `GET /v1/system/hardware/sleds/{sled_id}` instead")
-    }
-
-    pub async fn execute_sled_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.sled_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("sled_id") {
-            request = request.sled_id(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_sled_physical_disk_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("sled_id")
-                    .long("sled_id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid))
-                    .help("The sled's unique ID."),
-            )
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
-                    .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
-            )
-            .about(
-                "List physical disks attached to sleds\n\nUse `GET \
-                 /v1/system/hardware/sleds/{sled_id}/disks` instead",
-            )
-    }
-
-    pub async fn execute_sled_physical_disk_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.sled_physical_disk_list();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("sled_id") {
-            request = request.sled_id(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
-            request = request.sort_by(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
     pub fn cli_system_image_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -731,298 +475,6 @@ impl Cli {
             request = request.image_name(value.clone());
         }
 
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_saga_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
-                    .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
-            )
-            .about("List sagas\n\nUse `GET v1/system/sagas` instead")
-    }
-
-    pub async fn execute_saga_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.saga_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
-            request = request.sort_by(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_saga_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("saga_id")
-                    .long("saga_id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
-            )
-            .about("Fetch a saga\n\nUse `GET v1/system/sagas/{saga_id}` instead")
-    }
-
-    pub async fn execute_saga_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.saga_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("saga_id") {
-            request = request.saga_id(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_silo_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
-                    .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
-            )
-            .about(
-                "List silos\n\nLists silos that are discoverable based on the current \
-                 permissions. Use `GET /v1/system/silos` instead",
-            )
-    }
-
-    pub async fn execute_silo_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
-            request = request.sort_by(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_silo_create() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("description")
-                    .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
-            )
-            .arg(
-                clap::Arg::new("discoverable")
-                    .long("discoverable")
-                    .required(true)
-                    .value_parser(clap::value_parser!(bool)),
-            )
-            .arg(
-                clap::Arg::new("identity_mode")
-                    .long("identity_mode")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::SiloIdentityMode)),
-            )
-            .arg(
-                clap::Arg::new("name")
-                    .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
-            )
-            .about("Create a silo\n\nUse `POST /v1/system/silos` instead")
-    }
-
-    pub async fn execute_silo_create(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_create();
-        let request = request.body({
-            let mut body = types::SiloCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<bool>("discoverable") {
-                body = body.discoverable(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::SiloIdentityMode>("identity_mode") {
-                body = body.identity_mode(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            body
-        });
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_silo_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("silo_name")
-                    .long("silo_name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name))
-                    .help("The silo's unique name."),
-            )
-            .about(
-                "Fetch a silo\n\nFetch a silo by name. Use `GET /v1/system/silos/{silo}` instead.",
-            )
-    }
-
-    pub async fn execute_silo_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_view();
-        if let Some(value) = matches.get_one::<types::Name>("silo_name") {
-            request = request.silo_name(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_silo_delete() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("silo_name")
-                    .long("silo_name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name))
-                    .help("The silo's unique name."),
-            )
-            .about(
-                "Delete a silo\n\nDelete a silo by name. Use `DELETE /v1/system/silos/{silo}` \
-                 instead.",
-            )
-    }
-
-    pub async fn execute_silo_delete(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_delete();
-        if let Some(value) = matches.get_one::<types::Name>("silo_name") {
-            request = request.silo_name(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_silo_policy_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("silo_name")
-                    .long("silo_name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name))
-                    .help("The silo's unique name."),
-            )
-            .about("Fetch a silo's IAM policy\n\nUse `GET /v1/system/silos/{silo}/policy` instead.")
-    }
-
-    pub async fn execute_silo_policy_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_policy_view();
-        if let Some(value) = matches.get_one::<types::Name>("silo_name") {
-            request = request.silo_name(value.clone());
-        }
-
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub fn cli_silo_policy_update() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("silo_name")
-                    .long("silo_name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name))
-                    .help("The silo's unique name."),
-            )
-            .about("Update a silo's IAM policy\n\nUse `PUT /v1/system/silos/{silo}/policy` instead")
-    }
-
-    pub async fn execute_silo_policy_update(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_policy_update();
-        if let Some(value) = matches.get_one::<types::Name>("silo_name") {
-            request = request.silo_name(value.clone());
-        }
-
-        let request = request.body({
-            let mut body = types::SiloRolePolicy::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -1301,7 +753,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_group_list_v1() -> clap::Command {
+    pub fn cli_group_list() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("limit")
@@ -1319,8 +771,8 @@ impl Cli {
             .about("List groups")
     }
 
-    pub async fn execute_group_list_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.group_list_v1();
+    pub async fn execute_group_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.group_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -3412,7 +2864,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_physical_disk_list_v1() -> clap::Command {
+    pub fn cli_physical_disk_list() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("limit")
@@ -3430,8 +2882,8 @@ impl Cli {
             .about("List physical disks")
     }
 
-    pub async fn execute_physical_disk_list_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.physical_disk_list_v1();
+    pub async fn execute_physical_disk_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.physical_disk_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -3451,7 +2903,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_rack_list_v1() -> clap::Command {
+    pub fn cli_rack_list() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("limit")
@@ -3469,8 +2921,8 @@ impl Cli {
             .about("List racks")
     }
 
-    pub async fn execute_rack_list_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.rack_list_v1();
+    pub async fn execute_rack_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.rack_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -3490,7 +2942,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_rack_view_v1() -> clap::Command {
+    pub fn cli_rack_view() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("rack_id")
@@ -3502,8 +2954,8 @@ impl Cli {
             .about("Fetch a rack")
     }
 
-    pub async fn execute_rack_view_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.rack_view_v1();
+    pub async fn execute_rack_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.rack_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("rack_id") {
             request = request.rack_id(value.clone());
         }
@@ -3519,7 +2971,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_sled_list_v1() -> clap::Command {
+    pub fn cli_sled_list() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("limit")
@@ -3537,8 +2989,8 @@ impl Cli {
             .about("List sleds")
     }
 
-    pub async fn execute_sled_list_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.sled_list_v1();
+    pub async fn execute_sled_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.sled_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -3558,7 +3010,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_sled_view_v1() -> clap::Command {
+    pub fn cli_sled_view() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("sled_id")
@@ -3570,8 +3022,8 @@ impl Cli {
             .about("Fetch a sled")
     }
 
-    pub async fn execute_sled_view_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.sled_view_v1();
+    pub async fn execute_sled_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.sled_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled_id") {
             request = request.sled_id(value.clone());
         }
@@ -3587,7 +3039,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_sled_physical_disk_list_v1() -> clap::Command {
+    pub fn cli_sled_physical_disk_list() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("sled_id")
@@ -3612,8 +3064,8 @@ impl Cli {
             .about("List physical disks attached to sleds")
     }
 
-    pub async fn execute_sled_physical_disk_list_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.sled_physical_disk_list_v1();
+    pub async fn execute_sled_physical_disk_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.sled_physical_disk_list();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled_id") {
             request = request.sled_id(value.clone());
         }
@@ -3704,8 +3156,7 @@ impl Cli {
             .about(
                 "Create a user\n\nUsers can only be created in Silos with `provision_type` == \
                  `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user \
-                 first logs in using an external Identity Provider. Use `POST \
-                 /v1/system/identity-providers/local/users` instead",
+                 first logs in using an external Identity Provider.",
             )
     }
 
@@ -4477,7 +3928,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_saga_list_v1() -> clap::Command {
+    pub fn cli_saga_list() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("limit")
@@ -4495,8 +3946,8 @@ impl Cli {
             .about("List sagas")
     }
 
-    pub async fn execute_saga_list_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.saga_list_v1();
+    pub async fn execute_saga_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.saga_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -4516,7 +3967,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_saga_view_v1() -> clap::Command {
+    pub fn cli_saga_view() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("saga_id")
@@ -4527,8 +3978,8 @@ impl Cli {
             .about("Fetch a saga")
     }
 
-    pub async fn execute_saga_view_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.saga_view_v1();
+    pub async fn execute_saga_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.saga_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("saga_id") {
             request = request.saga_id(value.clone());
         }
@@ -4544,7 +3995,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_silo_list_v1() -> clap::Command {
+    pub fn cli_silo_list() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("limit")
@@ -4564,8 +4015,8 @@ impl Cli {
             )
     }
 
-    pub async fn execute_silo_list_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_list_v1();
+    pub async fn execute_silo_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -4585,7 +4036,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_silo_create_v1() -> clap::Command {
+    pub fn cli_silo_create() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("description")
@@ -4614,8 +4065,8 @@ impl Cli {
             .about("Create a silo")
     }
 
-    pub async fn execute_silo_create_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_create_v1();
+    pub async fn execute_silo_create(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_create();
         let request = request.body({
             let mut body = types::SiloCreate::builder();
             if let Some(value) = matches.get_one::<String>("description") {
@@ -4643,7 +4094,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_silo_view_v1() -> clap::Command {
+    pub fn cli_silo_view() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("silo")
@@ -4654,8 +4105,8 @@ impl Cli {
             .about("Fetch a silo\n\nFetch a silo by name.")
     }
 
-    pub async fn execute_silo_view_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_view_v1();
+    pub async fn execute_silo_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
@@ -4671,7 +4122,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_silo_delete_v1() -> clap::Command {
+    pub fn cli_silo_delete() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("silo")
@@ -4682,8 +4133,8 @@ impl Cli {
             .about("Delete a silo\n\nDelete a silo by name.")
     }
 
-    pub async fn execute_silo_delete_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_delete_v1();
+    pub async fn execute_silo_delete(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
@@ -4699,7 +4150,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_silo_policy_view_v1() -> clap::Command {
+    pub fn cli_silo_policy_view() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("silo")
@@ -4710,8 +4161,8 @@ impl Cli {
             .about("Fetch a silo's IAM policy")
     }
 
-    pub async fn execute_silo_policy_view_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_policy_view_v1();
+    pub async fn execute_silo_policy_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_policy_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
@@ -4727,7 +4178,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_silo_policy_update_v1() -> clap::Command {
+    pub fn cli_silo_policy_update() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("silo")
@@ -4738,8 +4189,8 @@ impl Cli {
             .about("Update a silo's IAM policy")
     }
 
-    pub async fn execute_silo_policy_update_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_policy_update_v1();
+    pub async fn execute_silo_policy_update(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_policy_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
@@ -5043,7 +4494,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_silo_user_list_v1() -> clap::Command {
+    pub fn cli_silo_user_list() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("limit")
@@ -5067,8 +4518,8 @@ impl Cli {
             .about("List users in a silo")
     }
 
-    pub async fn execute_silo_user_list_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_user_list_v1();
+    pub async fn execute_silo_user_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_user_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -5092,7 +4543,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_silo_user_view_v1() -> clap::Command {
+    pub fn cli_silo_user_view() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("user_id")
@@ -5110,8 +4561,8 @@ impl Cli {
             .about("Fetch a user")
     }
 
-    pub async fn execute_silo_user_view_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_user_view_v1();
+    pub async fn execute_silo_user_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_user_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("user_id") {
             request = request.user_id(value.clone());
         }
@@ -5198,7 +4649,7 @@ impl Cli {
         }
     }
 
-    pub fn cli_user_list_v1() -> clap::Command {
+    pub fn cli_user_list() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("group")
@@ -5222,8 +4673,8 @@ impl Cli {
             .about("List users")
     }
 
-    pub async fn execute_user_list_v1(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.user_list_v1();
+    pub async fn execute_user_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.user_list();
         if let Some(value) = matches.get_one::<uuid::Uuid>("group") {
             request = request.group(value.clone());
         }
@@ -6498,31 +5949,16 @@ impl Cli {
             CliCommand::LoginSaml => Self::cli_login_saml(),
             CliCommand::Logout => Self::cli_logout(),
             CliCommand::SystemImageViewById => Self::cli_system_image_view_by_id(),
-            CliCommand::SiloViewById => Self::cli_silo_view_by_id(),
-            CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
-            CliCommand::RackList => Self::cli_rack_list(),
-            CliCommand::RackView => Self::cli_rack_view(),
-            CliCommand::SledList => Self::cli_sled_list(),
-            CliCommand::SledView => Self::cli_sled_view(),
-            CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SystemImageList => Self::cli_system_image_list(),
             CliCommand::SystemImageCreate => Self::cli_system_image_create(),
             CliCommand::SystemImageView => Self::cli_system_image_view(),
             CliCommand::SystemImageDelete => Self::cli_system_image_delete(),
-            CliCommand::SagaList => Self::cli_saga_list(),
-            CliCommand::SagaView => Self::cli_saga_view(),
-            CliCommand::SiloList => Self::cli_silo_list(),
-            CliCommand::SiloCreate => Self::cli_silo_create(),
-            CliCommand::SiloView => Self::cli_silo_view(),
-            CliCommand::SiloDelete => Self::cli_silo_delete(),
-            CliCommand::SiloPolicyView => Self::cli_silo_policy_view(),
-            CliCommand::SiloPolicyUpdate => Self::cli_silo_policy_update(),
             CliCommand::DiskList => Self::cli_disk_list(),
             CliCommand::DiskCreate => Self::cli_disk_create(),
             CliCommand::DiskView => Self::cli_disk_view(),
             CliCommand::DiskDelete => Self::cli_disk_delete(),
             CliCommand::DiskMetricsList => Self::cli_disk_metrics_list(),
-            CliCommand::GroupListV1 => Self::cli_group_list_v1(),
+            CliCommand::GroupList => Self::cli_group_list(),
             CliCommand::GroupView => Self::cli_group_view(),
             CliCommand::ImageList => Self::cli_image_list(),
             CliCommand::ImageCreate => Self::cli_image_create(),
@@ -6576,12 +6012,12 @@ impl Cli {
             CliCommand::CertificateCreate => Self::cli_certificate_create(),
             CliCommand::CertificateView => Self::cli_certificate_view(),
             CliCommand::CertificateDelete => Self::cli_certificate_delete(),
-            CliCommand::PhysicalDiskListV1 => Self::cli_physical_disk_list_v1(),
-            CliCommand::RackListV1 => Self::cli_rack_list_v1(),
-            CliCommand::RackViewV1 => Self::cli_rack_view_v1(),
-            CliCommand::SledListV1 => Self::cli_sled_list_v1(),
-            CliCommand::SledViewV1 => Self::cli_sled_view_v1(),
-            CliCommand::SledPhysicalDiskListV1 => Self::cli_sled_physical_disk_list_v1(),
+            CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
+            CliCommand::RackList => Self::cli_rack_list(),
+            CliCommand::RackView => Self::cli_rack_view(),
+            CliCommand::SledList => Self::cli_sled_list(),
+            CliCommand::SledView => Self::cli_sled_view(),
+            CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SiloIdentityProviderList => Self::cli_silo_identity_provider_list(),
             CliCommand::LocalIdpUserCreate => Self::cli_local_idp_user_create(),
             CliCommand::LocalIdpUserDelete => Self::cli_local_idp_user_delete(),
@@ -6605,14 +6041,14 @@ impl Cli {
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
             CliCommand::RoleList => Self::cli_role_list(),
             CliCommand::RoleView => Self::cli_role_view(),
-            CliCommand::SagaListV1 => Self::cli_saga_list_v1(),
-            CliCommand::SagaViewV1 => Self::cli_saga_view_v1(),
-            CliCommand::SiloListV1 => Self::cli_silo_list_v1(),
-            CliCommand::SiloCreateV1 => Self::cli_silo_create_v1(),
-            CliCommand::SiloViewV1 => Self::cli_silo_view_v1(),
-            CliCommand::SiloDeleteV1 => Self::cli_silo_delete_v1(),
-            CliCommand::SiloPolicyViewV1 => Self::cli_silo_policy_view_v1(),
-            CliCommand::SiloPolicyUpdateV1 => Self::cli_silo_policy_update_v1(),
+            CliCommand::SagaList => Self::cli_saga_list(),
+            CliCommand::SagaView => Self::cli_saga_view(),
+            CliCommand::SiloList => Self::cli_silo_list(),
+            CliCommand::SiloCreate => Self::cli_silo_create(),
+            CliCommand::SiloView => Self::cli_silo_view(),
+            CliCommand::SiloDelete => Self::cli_silo_delete(),
+            CliCommand::SiloPolicyView => Self::cli_silo_policy_view(),
+            CliCommand::SiloPolicyUpdate => Self::cli_silo_policy_update(),
             CliCommand::SystemComponentVersionList => Self::cli_system_component_version_list(),
             CliCommand::UpdateDeploymentsList => Self::cli_update_deployments_list(),
             CliCommand::UpdateDeploymentView => Self::cli_update_deployment_view(),
@@ -6623,11 +6059,11 @@ impl Cli {
             CliCommand::SystemUpdateView => Self::cli_system_update_view(),
             CliCommand::SystemUpdateComponentsList => Self::cli_system_update_components_list(),
             CliCommand::SystemVersion => Self::cli_system_version(),
-            CliCommand::SiloUserListV1 => Self::cli_silo_user_list_v1(),
-            CliCommand::SiloUserViewV1 => Self::cli_silo_user_view_v1(),
+            CliCommand::SiloUserList => Self::cli_silo_user_list(),
+            CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::UserBuiltinList => Self::cli_user_builtin_list(),
             CliCommand::UserBuiltinView => Self::cli_user_builtin_view(),
-            CliCommand::UserListV1 => Self::cli_user_list_v1(),
+            CliCommand::UserList => Self::cli_user_list(),
             CliCommand::VpcFirewallRulesView => Self::cli_vpc_firewall_rules_view(),
             CliCommand::VpcFirewallRulesUpdate => Self::cli_vpc_firewall_rules_update(),
             CliCommand::VpcRouterRouteList => Self::cli_vpc_router_route_list(),
@@ -6685,27 +6121,6 @@ impl Cli {
             CliCommand::SystemImageViewById => {
                 self.execute_system_image_view_by_id(matches).await;
             }
-            CliCommand::SiloViewById => {
-                self.execute_silo_view_by_id(matches).await;
-            }
-            CliCommand::PhysicalDiskList => {
-                self.execute_physical_disk_list(matches).await;
-            }
-            CliCommand::RackList => {
-                self.execute_rack_list(matches).await;
-            }
-            CliCommand::RackView => {
-                self.execute_rack_view(matches).await;
-            }
-            CliCommand::SledList => {
-                self.execute_sled_list(matches).await;
-            }
-            CliCommand::SledView => {
-                self.execute_sled_view(matches).await;
-            }
-            CliCommand::SledPhysicalDiskList => {
-                self.execute_sled_physical_disk_list(matches).await;
-            }
             CliCommand::SystemImageList => {
                 self.execute_system_image_list(matches).await;
             }
@@ -6717,30 +6132,6 @@ impl Cli {
             }
             CliCommand::SystemImageDelete => {
                 self.execute_system_image_delete(matches).await;
-            }
-            CliCommand::SagaList => {
-                self.execute_saga_list(matches).await;
-            }
-            CliCommand::SagaView => {
-                self.execute_saga_view(matches).await;
-            }
-            CliCommand::SiloList => {
-                self.execute_silo_list(matches).await;
-            }
-            CliCommand::SiloCreate => {
-                self.execute_silo_create(matches).await;
-            }
-            CliCommand::SiloView => {
-                self.execute_silo_view(matches).await;
-            }
-            CliCommand::SiloDelete => {
-                self.execute_silo_delete(matches).await;
-            }
-            CliCommand::SiloPolicyView => {
-                self.execute_silo_policy_view(matches).await;
-            }
-            CliCommand::SiloPolicyUpdate => {
-                self.execute_silo_policy_update(matches).await;
             }
             CliCommand::DiskList => {
                 self.execute_disk_list(matches).await;
@@ -6757,8 +6148,8 @@ impl Cli {
             CliCommand::DiskMetricsList => {
                 self.execute_disk_metrics_list(matches).await;
             }
-            CliCommand::GroupListV1 => {
-                self.execute_group_list_v1(matches).await;
+            CliCommand::GroupList => {
+                self.execute_group_list(matches).await;
             }
             CliCommand::GroupView => {
                 self.execute_group_view(matches).await;
@@ -6904,23 +6295,23 @@ impl Cli {
             CliCommand::CertificateDelete => {
                 self.execute_certificate_delete(matches).await;
             }
-            CliCommand::PhysicalDiskListV1 => {
-                self.execute_physical_disk_list_v1(matches).await;
+            CliCommand::PhysicalDiskList => {
+                self.execute_physical_disk_list(matches).await;
             }
-            CliCommand::RackListV1 => {
-                self.execute_rack_list_v1(matches).await;
+            CliCommand::RackList => {
+                self.execute_rack_list(matches).await;
             }
-            CliCommand::RackViewV1 => {
-                self.execute_rack_view_v1(matches).await;
+            CliCommand::RackView => {
+                self.execute_rack_view(matches).await;
             }
-            CliCommand::SledListV1 => {
-                self.execute_sled_list_v1(matches).await;
+            CliCommand::SledList => {
+                self.execute_sled_list(matches).await;
             }
-            CliCommand::SledViewV1 => {
-                self.execute_sled_view_v1(matches).await;
+            CliCommand::SledView => {
+                self.execute_sled_view(matches).await;
             }
-            CliCommand::SledPhysicalDiskListV1 => {
-                self.execute_sled_physical_disk_list_v1(matches).await;
+            CliCommand::SledPhysicalDiskList => {
+                self.execute_sled_physical_disk_list(matches).await;
             }
             CliCommand::SiloIdentityProviderList => {
                 self.execute_silo_identity_provider_list(matches).await;
@@ -6991,29 +6382,29 @@ impl Cli {
             CliCommand::RoleView => {
                 self.execute_role_view(matches).await;
             }
-            CliCommand::SagaListV1 => {
-                self.execute_saga_list_v1(matches).await;
+            CliCommand::SagaList => {
+                self.execute_saga_list(matches).await;
             }
-            CliCommand::SagaViewV1 => {
-                self.execute_saga_view_v1(matches).await;
+            CliCommand::SagaView => {
+                self.execute_saga_view(matches).await;
             }
-            CliCommand::SiloListV1 => {
-                self.execute_silo_list_v1(matches).await;
+            CliCommand::SiloList => {
+                self.execute_silo_list(matches).await;
             }
-            CliCommand::SiloCreateV1 => {
-                self.execute_silo_create_v1(matches).await;
+            CliCommand::SiloCreate => {
+                self.execute_silo_create(matches).await;
             }
-            CliCommand::SiloViewV1 => {
-                self.execute_silo_view_v1(matches).await;
+            CliCommand::SiloView => {
+                self.execute_silo_view(matches).await;
             }
-            CliCommand::SiloDeleteV1 => {
-                self.execute_silo_delete_v1(matches).await;
+            CliCommand::SiloDelete => {
+                self.execute_silo_delete(matches).await;
             }
-            CliCommand::SiloPolicyViewV1 => {
-                self.execute_silo_policy_view_v1(matches).await;
+            CliCommand::SiloPolicyView => {
+                self.execute_silo_policy_view(matches).await;
             }
-            CliCommand::SiloPolicyUpdateV1 => {
-                self.execute_silo_policy_update_v1(matches).await;
+            CliCommand::SiloPolicyUpdate => {
+                self.execute_silo_policy_update(matches).await;
             }
             CliCommand::SystemComponentVersionList => {
                 self.execute_system_component_version_list(matches).await;
@@ -7045,11 +6436,11 @@ impl Cli {
             CliCommand::SystemVersion => {
                 self.execute_system_version(matches).await;
             }
-            CliCommand::SiloUserListV1 => {
-                self.execute_silo_user_list_v1(matches).await;
+            CliCommand::SiloUserList => {
+                self.execute_silo_user_list(matches).await;
             }
-            CliCommand::SiloUserViewV1 => {
-                self.execute_silo_user_view_v1(matches).await;
+            CliCommand::SiloUserView => {
+                self.execute_silo_user_view(matches).await;
             }
             CliCommand::UserBuiltinList => {
                 self.execute_user_builtin_list(matches).await;
@@ -7057,8 +6448,8 @@ impl Cli {
             CliCommand::UserBuiltinView => {
                 self.execute_user_builtin_view(matches).await;
             }
-            CliCommand::UserListV1 => {
-                self.execute_user_list_v1(matches).await;
+            CliCommand::UserList => {
+                self.execute_user_list(matches).await;
             }
             CliCommand::VpcFirewallRulesView => {
                 self.execute_vpc_firewall_rules_view(matches).await;
@@ -7145,31 +6536,16 @@ pub enum CliCommand {
     LoginSaml,
     Logout,
     SystemImageViewById,
-    SiloViewById,
-    PhysicalDiskList,
-    RackList,
-    RackView,
-    SledList,
-    SledView,
-    SledPhysicalDiskList,
     SystemImageList,
     SystemImageCreate,
     SystemImageView,
     SystemImageDelete,
-    SagaList,
-    SagaView,
-    SiloList,
-    SiloCreate,
-    SiloView,
-    SiloDelete,
-    SiloPolicyView,
-    SiloPolicyUpdate,
     DiskList,
     DiskCreate,
     DiskView,
     DiskDelete,
     DiskMetricsList,
-    GroupListV1,
+    GroupList,
     GroupView,
     ImageList,
     ImageCreate,
@@ -7217,12 +6593,12 @@ pub enum CliCommand {
     CertificateCreate,
     CertificateView,
     CertificateDelete,
-    PhysicalDiskListV1,
-    RackListV1,
-    RackViewV1,
-    SledListV1,
-    SledViewV1,
-    SledPhysicalDiskListV1,
+    PhysicalDiskList,
+    RackList,
+    RackView,
+    SledList,
+    SledView,
+    SledPhysicalDiskList,
     SiloIdentityProviderList,
     LocalIdpUserCreate,
     LocalIdpUserDelete,
@@ -7246,14 +6622,14 @@ pub enum CliCommand {
     SystemPolicyUpdate,
     RoleList,
     RoleView,
-    SagaListV1,
-    SagaViewV1,
-    SiloListV1,
-    SiloCreateV1,
-    SiloViewV1,
-    SiloDeleteV1,
-    SiloPolicyViewV1,
-    SiloPolicyUpdateV1,
+    SagaList,
+    SagaView,
+    SiloList,
+    SiloCreate,
+    SiloView,
+    SiloDelete,
+    SiloPolicyView,
+    SiloPolicyUpdate,
     SystemComponentVersionList,
     UpdateDeploymentsList,
     UpdateDeploymentView,
@@ -7264,11 +6640,11 @@ pub enum CliCommand {
     SystemUpdateView,
     SystemUpdateComponentsList,
     SystemVersion,
-    SiloUserListV1,
-    SiloUserViewV1,
+    SiloUserList,
+    SiloUserView,
     UserBuiltinList,
     UserBuiltinView,
-    UserListV1,
+    UserList,
     VpcFirewallRulesView,
     VpcFirewallRulesUpdate,
     VpcRouterRouteList,
@@ -7306,31 +6682,16 @@ impl CliCommand {
             CliCommand::LoginSaml,
             CliCommand::Logout,
             CliCommand::SystemImageViewById,
-            CliCommand::SiloViewById,
-            CliCommand::PhysicalDiskList,
-            CliCommand::RackList,
-            CliCommand::RackView,
-            CliCommand::SledList,
-            CliCommand::SledView,
-            CliCommand::SledPhysicalDiskList,
             CliCommand::SystemImageList,
             CliCommand::SystemImageCreate,
             CliCommand::SystemImageView,
             CliCommand::SystemImageDelete,
-            CliCommand::SagaList,
-            CliCommand::SagaView,
-            CliCommand::SiloList,
-            CliCommand::SiloCreate,
-            CliCommand::SiloView,
-            CliCommand::SiloDelete,
-            CliCommand::SiloPolicyView,
-            CliCommand::SiloPolicyUpdate,
             CliCommand::DiskList,
             CliCommand::DiskCreate,
             CliCommand::DiskView,
             CliCommand::DiskDelete,
             CliCommand::DiskMetricsList,
-            CliCommand::GroupListV1,
+            CliCommand::GroupList,
             CliCommand::GroupView,
             CliCommand::ImageList,
             CliCommand::ImageCreate,
@@ -7378,12 +6739,12 @@ impl CliCommand {
             CliCommand::CertificateCreate,
             CliCommand::CertificateView,
             CliCommand::CertificateDelete,
-            CliCommand::PhysicalDiskListV1,
-            CliCommand::RackListV1,
-            CliCommand::RackViewV1,
-            CliCommand::SledListV1,
-            CliCommand::SledViewV1,
-            CliCommand::SledPhysicalDiskListV1,
+            CliCommand::PhysicalDiskList,
+            CliCommand::RackList,
+            CliCommand::RackView,
+            CliCommand::SledList,
+            CliCommand::SledView,
+            CliCommand::SledPhysicalDiskList,
             CliCommand::SiloIdentityProviderList,
             CliCommand::LocalIdpUserCreate,
             CliCommand::LocalIdpUserDelete,
@@ -7407,14 +6768,14 @@ impl CliCommand {
             CliCommand::SystemPolicyUpdate,
             CliCommand::RoleList,
             CliCommand::RoleView,
-            CliCommand::SagaListV1,
-            CliCommand::SagaViewV1,
-            CliCommand::SiloListV1,
-            CliCommand::SiloCreateV1,
-            CliCommand::SiloViewV1,
-            CliCommand::SiloDeleteV1,
-            CliCommand::SiloPolicyViewV1,
-            CliCommand::SiloPolicyUpdateV1,
+            CliCommand::SagaList,
+            CliCommand::SagaView,
+            CliCommand::SiloList,
+            CliCommand::SiloCreate,
+            CliCommand::SiloView,
+            CliCommand::SiloDelete,
+            CliCommand::SiloPolicyView,
+            CliCommand::SiloPolicyUpdate,
             CliCommand::SystemComponentVersionList,
             CliCommand::UpdateDeploymentsList,
             CliCommand::UpdateDeploymentView,
@@ -7425,11 +6786,11 @@ impl CliCommand {
             CliCommand::SystemUpdateView,
             CliCommand::SystemUpdateComponentsList,
             CliCommand::SystemVersion,
-            CliCommand::SiloUserListV1,
-            CliCommand::SiloUserViewV1,
+            CliCommand::SiloUserList,
+            CliCommand::SiloUserView,
             CliCommand::UserBuiltinList,
             CliCommand::UserBuiltinView,
-            CliCommand::UserListV1,
+            CliCommand::UserList,
             CliCommand::VpcFirewallRulesView,
             CliCommand::VpcFirewallRulesUpdate,
             CliCommand::VpcRouterRouteList,
