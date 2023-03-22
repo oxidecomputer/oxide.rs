@@ -6,7 +6,7 @@ members = [
 ]
 
 [workspace.dependencies]
-anyhow = "1.0.69"
+anyhow = "1.0.70"
 base64 = "0.21.0"
 chrono = { version = "0.4.24", features = ["serde"] }
 clap = { version = "4.1.11", features = ["derive", "string", "env"] }
