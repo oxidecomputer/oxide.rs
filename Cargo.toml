@@ -9,7 +9,7 @@ members = [
 anyhow = "1.0.69"
 base64 = "0.21.0"
 chrono = { version = "0.4.24", features = ["serde"] }
-clap = { version = "4.1.4", features = ["derive", "string", "env"] }
+clap = { version = "4.1.11", features = ["derive", "string", "env"] }
 dialoguer = "0.10.3"
 dirs = "4.0.0"
 futures = "0.3.27"
@@ -23,9 +23,9 @@ progenitor = { git = "https://github.com/oxidecomputer/progenitor", branch = "cl
 progenitor-client = { git = "https://github.com/oxidecomputer/progenitor", branch = "cli" }
 rand = "0.8.5"
 regress = "0.4.1"
-reqwest = "0.11.14"
+reqwest = "0.11.15"
 schemars = { version = "0.8.12", features = ["chrono", "uuid1"] }
-serde = { version = "1.0.156", features = ["derive"] }
+serde = { version = "1.0.158", features = ["derive"] }
 serde_json = "1.0.94"
 serial_test = "1.0.0"
 similar = "2.2.1"
