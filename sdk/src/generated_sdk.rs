@@ -407,6 +407,54 @@ pub mod types {
         }
     }
 
+    impl From<bool> for Datum {
+        fn from(value: bool) -> Self {
+            Self::Bool(value)
+        }
+    }
+
+    impl From<i64> for Datum {
+        fn from(value: i64) -> Self {
+            Self::I64(value)
+        }
+    }
+
+    impl From<f64> for Datum {
+        fn from(value: f64) -> Self {
+            Self::F64(value)
+        }
+    }
+
+    impl From<Vec<u8>> for Datum {
+        fn from(value: Vec<u8>) -> Self {
+            Self::Bytes(value)
+        }
+    }
+
+    impl From<Cumulativeint64> for Datum {
+        fn from(value: Cumulativeint64) -> Self {
+            Self::CumulativeI64(value)
+        }
+    }
+
+    impl From<Cumulativedouble> for Datum {
+        fn from(value: Cumulativedouble) -> Self {
+            Self::CumulativeF64(value)
+        }
+    }
+
+    impl From<Histogramint64> for Datum {
+        fn from(value: Histogramint64) -> Self {
+            Self::HistogramI64(value)
+        }
+    }
+
+    impl From<Histogramdouble> for Datum {
+        fn from(value: Histogramdouble) -> Self {
+            Self::HistogramF64(value)
+        }
+    }
+
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct DerEncodedKeyPair {
         #[doc = "request signing private key (base64 encoded der file)"]
@@ -1688,6 +1736,12 @@ pub mod types {
         }
     }
 
+    impl From<Vec<NetworkInterfaceCreate>> for InstanceNetworkInterfaceAttachment {
+        fn from(value: Vec<NetworkInterfaceCreate>) -> Self {
+            Self::Create(value)
+        }
+    }
+
     #[doc = "A single page of results"]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceResultsPage {
@@ -1965,6 +2019,18 @@ pub mod types {
         }
     }
 
+    impl From<Ipv4Net> for IpNet {
+        fn from(value: Ipv4Net) -> Self {
+            Self::V4(value)
+        }
+    }
+
+    impl From<Ipv6Net> for IpNet {
+        fn from(value: Ipv6Net) -> Self {
+            Self::V6(value)
+        }
+    }
+
     #[doc = "Identity-related metadata that's included in nearly all public API objects"]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPool {
@@ -2105,6 +2171,18 @@ pub mod types {
     impl From<&IpRange> for IpRange {
         fn from(value: &IpRange) -> Self {
             value.clone()
+        }
+    }
+
+    impl From<Ipv4Range> for IpRange {
+        fn from(value: Ipv4Range) -> Self {
+            Self::V4(value)
+        }
+    }
+
+    impl From<Ipv6Range> for IpRange {
+        fn from(value: Ipv6Range) -> Self {
+            Self::V6(value)
         }
     }
 
@@ -2580,6 +2658,18 @@ pub mod types {
                 Self::Id(x) => x.to_string(),
                 Self::Name(x) => x.to_string(),
             }
+        }
+    }
+
+    impl From<uuid::Uuid> for NameOrId {
+        fn from(value: uuid::Uuid) -> Self {
+            Self::Id(value)
+        }
+    }
+
+    impl From<Name> for NameOrId {
+        fn from(value: Name) -> Self {
+            Self::Name(value)
         }
     }
 
@@ -3438,6 +3528,18 @@ pub mod types {
         }
     }
 
+    impl From<std::net::IpAddr> for RouteDestination {
+        fn from(value: std::net::IpAddr) -> Self {
+            Self::Ip(value)
+        }
+    }
+
+    impl From<IpNet> for RouteDestination {
+        fn from(value: IpNet) -> Self {
+            Self::IpNet(value)
+        }
+    }
+
     #[doc = "A `RouteTarget` describes the possible locations that traffic matching a route destination can be sent."]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
@@ -3462,6 +3564,12 @@ pub mod types {
     impl From<&RouteTarget> for RouteTarget {
         fn from(value: &RouteTarget) -> Self {
             value.clone()
+        }
+    }
+
+    impl From<std::net::IpAddr> for RouteTarget {
+        fn from(value: std::net::IpAddr) -> Self {
+            Self::Ip(value)
         }
     }
 
@@ -5078,6 +5186,12 @@ pub mod types {
         }
     }
 
+    impl From<Password> for UserPassword {
+        fn from(value: Password) -> Self {
+            Self::Password(value)
+        }
+    }
+
     #[doc = "A single page of results"]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UserResultsPage {
@@ -5423,6 +5537,18 @@ pub mod types {
         }
     }
 
+    impl From<std::net::IpAddr> for VpcFirewallRuleHostFilter {
+        fn from(value: std::net::IpAddr) -> Self {
+            Self::Ip(value)
+        }
+    }
+
+    impl From<IpNet> for VpcFirewallRuleHostFilter {
+        fn from(value: IpNet) -> Self {
+            Self::IpNet(value)
+        }
+    }
+
     #[doc = "The protocols that may be specified in a firewall rule's filter"]
     #[derive(
         Clone,
@@ -5586,6 +5712,18 @@ pub mod types {
     impl From<&VpcFirewallRuleTarget> for VpcFirewallRuleTarget {
         fn from(value: &VpcFirewallRuleTarget) -> Self {
             value.clone()
+        }
+    }
+
+    impl From<std::net::IpAddr> for VpcFirewallRuleTarget {
+        fn from(value: std::net::IpAddr) -> Self {
+            Self::Ip(value)
+        }
+    }
+
+    impl From<IpNet> for VpcFirewallRuleTarget {
+        fn from(value: IpNet) -> Self {
+            Self::IpNet(value)
         }
     }
 
@@ -6023,6 +6161,16 @@ pub mod types {
             }
         }
 
+        impl From<super::Baseboard> for Baseboard {
+            fn from(value: super::Baseboard) -> Self {
+                Self {
+                    part: Ok(value.part),
+                    revision: Ok(value.revision),
+                    serial: Ok(value.serial),
+                }
+            }
+        }
+
         pub struct Bindouble {
             count: Result<u64, String>,
             range: Result<super::BinRangedouble, String>,
@@ -6070,6 +6218,15 @@ pub mod types {
             }
         }
 
+        impl From<super::Bindouble> for Bindouble {
+            fn from(value: super::Bindouble) -> Self {
+                Self {
+                    count: Ok(value.count),
+                    range: Ok(value.range),
+                }
+            }
+        }
+
         pub struct Binint64 {
             count: Result<u64, String>,
             range: Result<super::BinRangeint64, String>,
@@ -6114,6 +6271,15 @@ pub mod types {
                     count: value.count?,
                     range: value.range?,
                 })
+            }
+        }
+
+        impl From<super::Binint64> for Binint64 {
+            fn from(value: super::Binint64) -> Self {
+                Self {
+                    count: Ok(value.count),
+                    range: Ok(value.range),
+                }
             }
         }
 
@@ -6216,6 +6382,19 @@ pub mod types {
             }
         }
 
+        impl From<super::Certificate> for Certificate {
+            fn from(value: super::Certificate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    service: Ok(value.service),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct CertificateCreate {
             cert: Result<Vec<u8>, String>,
             description: Result<String, String>,
@@ -6302,6 +6481,18 @@ pub mod types {
             }
         }
 
+        impl From<super::CertificateCreate> for CertificateCreate {
+            fn from(value: super::CertificateCreate) -> Self {
+                Self {
+                    cert: Ok(value.cert),
+                    description: Ok(value.description),
+                    key: Ok(value.key),
+                    name: Ok(value.name),
+                    service: Ok(value.service),
+                }
+            }
+        }
+
         pub struct CertificateResultsPage {
             items: Result<Vec<super::Certificate>, String>,
             next_page: Result<Option<String>, String>,
@@ -6346,6 +6537,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::CertificateResultsPage> for CertificateResultsPage {
+            fn from(value: super::CertificateResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -6435,6 +6635,18 @@ pub mod types {
             }
         }
 
+        impl From<super::ComponentUpdate> for ComponentUpdate {
+            fn from(value: super::ComponentUpdate) -> Self {
+                Self {
+                    component_type: Ok(value.component_type),
+                    id: Ok(value.id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    version: Ok(value.version),
+                }
+            }
+        }
+
         pub struct ComponentUpdateResultsPage {
             items: Result<Vec<super::ComponentUpdate>, String>,
             next_page: Result<Option<String>, String>,
@@ -6479,6 +6691,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::ComponentUpdateResultsPage> for ComponentUpdateResultsPage {
+            fn from(value: super::ComponentUpdateResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -6529,6 +6750,15 @@ pub mod types {
             }
         }
 
+        impl From<super::Cumulativedouble> for Cumulativedouble {
+            fn from(value: super::Cumulativedouble) -> Self {
+                Self {
+                    start_time: Ok(value.start_time),
+                    value: Ok(value.value),
+                }
+            }
+        }
+
         pub struct Cumulativeint64 {
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             value: Result<i64, String>,
@@ -6576,6 +6806,15 @@ pub mod types {
             }
         }
 
+        impl From<super::Cumulativeint64> for Cumulativeint64 {
+            fn from(value: super::Cumulativeint64) -> Self {
+                Self {
+                    start_time: Ok(value.start_time),
+                    value: Ok(value.value),
+                }
+            }
+        }
+
         pub struct DerEncodedKeyPair {
             private_key: Result<String, String>,
             public_cert: Result<String, String>,
@@ -6620,6 +6859,15 @@ pub mod types {
                     private_key: value.private_key?,
                     public_cert: value.public_cert?,
                 })
+            }
+        }
+
+        impl From<super::DerEncodedKeyPair> for DerEncodedKeyPair {
+            fn from(value: super::DerEncodedKeyPair) -> Self {
+                Self {
+                    private_key: Ok(value.private_key),
+                    public_cert: Ok(value.public_cert),
+                }
             }
         }
 
@@ -6683,6 +6931,16 @@ pub mod types {
             }
         }
 
+        impl From<super::DeviceAccessTokenRequest> for DeviceAccessTokenRequest {
+            fn from(value: super::DeviceAccessTokenRequest) -> Self {
+                Self {
+                    client_id: Ok(value.client_id),
+                    device_code: Ok(value.device_code),
+                    grant_type: Ok(value.grant_type),
+                }
+            }
+        }
+
         pub struct DeviceAuthRequest {
             client_id: Result<uuid::Uuid, String>,
         }
@@ -6717,6 +6975,14 @@ pub mod types {
             }
         }
 
+        impl From<super::DeviceAuthRequest> for DeviceAuthRequest {
+            fn from(value: super::DeviceAuthRequest) -> Self {
+                Self {
+                    client_id: Ok(value.client_id),
+                }
+            }
+        }
+
         pub struct DeviceAuthVerify {
             user_code: Result<String, String>,
         }
@@ -6748,6 +7014,14 @@ pub mod types {
                 Ok(Self {
                     user_code: value.user_code?,
                 })
+            }
+        }
+
+        impl From<super::DeviceAuthVerify> for DeviceAuthVerify {
+            fn from(value: super::DeviceAuthVerify) -> Self {
+                Self {
+                    user_code: Ok(value.user_code),
+                }
             }
         }
 
@@ -6928,6 +7202,25 @@ pub mod types {
             }
         }
 
+        impl From<super::Disk> for Disk {
+            fn from(value: super::Disk) -> Self {
+                Self {
+                    block_size: Ok(value.block_size),
+                    description: Ok(value.description),
+                    device_path: Ok(value.device_path),
+                    id: Ok(value.id),
+                    image_id: Ok(value.image_id),
+                    name: Ok(value.name),
+                    project_id: Ok(value.project_id),
+                    size: Ok(value.size),
+                    snapshot_id: Ok(value.snapshot_id),
+                    state: Ok(value.state),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct DiskCreate {
             description: Result<String, String>,
             disk_source: Result<super::DiskSource, String>,
@@ -7001,6 +7294,17 @@ pub mod types {
             }
         }
 
+        impl From<super::DiskCreate> for DiskCreate {
+            fn from(value: super::DiskCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    disk_source: Ok(value.disk_source),
+                    name: Ok(value.name),
+                    size: Ok(value.size),
+                }
+            }
+        }
+
         pub struct DiskPath {
             disk: Result<super::NameOrId, String>,
         }
@@ -7030,6 +7334,14 @@ pub mod types {
             type Error = String;
             fn try_from(value: DiskPath) -> Result<Self, String> {
                 Ok(Self { disk: value.disk? })
+            }
+        }
+
+        impl From<super::DiskPath> for DiskPath {
+            fn from(value: super::DiskPath) -> Self {
+                Self {
+                    disk: Ok(value.disk),
+                }
             }
         }
 
@@ -7080,6 +7392,15 @@ pub mod types {
             }
         }
 
+        impl From<super::DiskResultsPage> for DiskResultsPage {
+            fn from(value: super::DiskResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
         pub struct Distribution {
             name: Result<super::Name, String>,
             version: Result<String, String>,
@@ -7124,6 +7445,15 @@ pub mod types {
                     name: value.name?,
                     version: value.version?,
                 })
+            }
+        }
+
+        impl From<super::Distribution> for Distribution {
+            fn from(value: super::Distribution) -> Self {
+                Self {
+                    name: Ok(value.name),
+                    version: Ok(value.version),
+                }
             }
         }
 
@@ -7187,6 +7517,16 @@ pub mod types {
             }
         }
 
+        impl From<super::Error> for Error {
+            fn from(value: super::Error) -> Self {
+                Self {
+                    error_code: Ok(value.error_code),
+                    message: Ok(value.message),
+                    request_id: Ok(value.request_id),
+                }
+            }
+        }
+
         pub struct ExternalIp {
             ip: Result<std::net::IpAddr, String>,
             kind: Result<super::IpKind, String>,
@@ -7231,6 +7571,15 @@ pub mod types {
                     ip: value.ip?,
                     kind: value.kind?,
                 })
+            }
+        }
+
+        impl From<super::ExternalIp> for ExternalIp {
+            fn from(value: super::ExternalIp) -> Self {
+                Self {
+                    ip: Ok(value.ip),
+                    kind: Ok(value.kind),
+                }
             }
         }
 
@@ -7281,6 +7630,15 @@ pub mod types {
             }
         }
 
+        impl From<super::ExternalIpResultsPage> for ExternalIpResultsPage {
+            fn from(value: super::ExternalIpResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
         pub struct FleetRolePolicy {
             role_assignments: Result<Vec<super::FleetRoleRoleAssignment>, String>,
         }
@@ -7315,6 +7673,14 @@ pub mod types {
                 Ok(Self {
                     role_assignments: value.role_assignments?,
                 })
+            }
+        }
+
+        impl From<super::FleetRolePolicy> for FleetRolePolicy {
+            fn from(value: super::FleetRolePolicy) -> Self {
+                Self {
+                    role_assignments: Ok(value.role_assignments),
+                }
             }
         }
 
@@ -7375,6 +7741,16 @@ pub mod types {
                     identity_type: value.identity_type?,
                     role_name: value.role_name?,
                 })
+            }
+        }
+
+        impl From<super::FleetRoleRoleAssignment> for FleetRoleRoleAssignment {
+            fn from(value: super::FleetRoleRoleAssignment) -> Self {
+                Self {
+                    identity_id: Ok(value.identity_id),
+                    identity_type: Ok(value.identity_type),
+                    role_name: Ok(value.role_name),
+                }
             }
         }
 
@@ -7542,6 +7918,24 @@ pub mod types {
             }
         }
 
+        impl From<super::GlobalImage> for GlobalImage {
+            fn from(value: super::GlobalImage) -> Self {
+                Self {
+                    block_size: Ok(value.block_size),
+                    description: Ok(value.description),
+                    digest: Ok(value.digest),
+                    distribution: Ok(value.distribution),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    size: Ok(value.size),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    url: Ok(value.url),
+                    version: Ok(value.version),
+                }
+            }
+        }
+
         pub struct GlobalImageCreate {
             block_size: Result<super::BlockSize, String>,
             description: Result<String, String>,
@@ -7628,6 +8022,18 @@ pub mod types {
             }
         }
 
+        impl From<super::GlobalImageCreate> for GlobalImageCreate {
+            fn from(value: super::GlobalImageCreate) -> Self {
+                Self {
+                    block_size: Ok(value.block_size),
+                    description: Ok(value.description),
+                    distribution: Ok(value.distribution),
+                    name: Ok(value.name),
+                    source: Ok(value.source),
+                }
+            }
+        }
+
         pub struct GlobalImageResultsPage {
             items: Result<Vec<super::GlobalImage>, String>,
             next_page: Result<Option<String>, String>,
@@ -7672,6 +8078,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::GlobalImageResultsPage> for GlobalImageResultsPage {
+            fn from(value: super::GlobalImageResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -7735,6 +8150,16 @@ pub mod types {
             }
         }
 
+        impl From<super::Group> for Group {
+            fn from(value: super::Group) -> Self {
+                Self {
+                    display_name: Ok(value.display_name),
+                    id: Ok(value.id),
+                    silo_id: Ok(value.silo_id),
+                }
+            }
+        }
+
         pub struct GroupResultsPage {
             items: Result<Vec<super::Group>, String>,
             next_page: Result<Option<String>, String>,
@@ -7779,6 +8204,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::GroupResultsPage> for GroupResultsPage {
+            fn from(value: super::GroupResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -7842,6 +8276,16 @@ pub mod types {
             }
         }
 
+        impl From<super::Histogramdouble> for Histogramdouble {
+            fn from(value: super::Histogramdouble) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    n_samples: Ok(value.n_samples),
+                    start_time: Ok(value.start_time),
+                }
+            }
+        }
+
         pub struct Histogramint64 {
             bins: Result<Vec<super::Binint64>, String>,
             n_samples: Result<u64, String>,
@@ -7899,6 +8343,16 @@ pub mod types {
                     n_samples: value.n_samples?,
                     start_time: value.start_time?,
                 })
+            }
+        }
+
+        impl From<super::Histogramint64> for Histogramint64 {
+            fn from(value: super::Histogramint64) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    n_samples: Ok(value.n_samples),
+                    start_time: Ok(value.start_time),
+                }
             }
         }
 
@@ -8001,6 +8455,19 @@ pub mod types {
             }
         }
 
+        impl From<super::IdentityProvider> for IdentityProvider {
+            fn from(value: super::IdentityProvider) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    provider_type: Ok(value.provider_type),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct IdentityProviderResultsPage {
             items: Result<Vec<super::IdentityProvider>, String>,
             next_page: Result<Option<String>, String>,
@@ -8045,6 +8512,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::IdentityProviderResultsPage> for IdentityProviderResultsPage {
+            fn from(value: super::IdentityProviderResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -8225,6 +8701,25 @@ pub mod types {
             }
         }
 
+        impl From<super::Image> for Image {
+            fn from(value: super::Image) -> Self {
+                Self {
+                    block_size: Ok(value.block_size),
+                    description: Ok(value.description),
+                    digest: Ok(value.digest),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    os: Ok(value.os),
+                    project_id: Ok(value.project_id),
+                    size: Ok(value.size),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    url: Ok(value.url),
+                    version: Ok(value.version),
+                }
+            }
+        }
+
         pub struct ImageCreate {
             block_size: Result<super::BlockSize, String>,
             description: Result<String, String>,
@@ -8324,6 +8819,19 @@ pub mod types {
             }
         }
 
+        impl From<super::ImageCreate> for ImageCreate {
+            fn from(value: super::ImageCreate) -> Self {
+                Self {
+                    block_size: Ok(value.block_size),
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                    os: Ok(value.os),
+                    source: Ok(value.source),
+                    version: Ok(value.version),
+                }
+            }
+        }
+
         pub struct ImageResultsPage {
             items: Result<Vec<super::Image>, String>,
             next_page: Result<Option<String>, String>,
@@ -8368,6 +8876,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::ImageResultsPage> for ImageResultsPage {
+            fn from(value: super::ImageResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -8540,6 +9057,24 @@ pub mod types {
             }
         }
 
+        impl From<super::Instance> for Instance {
+            fn from(value: super::Instance) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    hostname: Ok(value.hostname),
+                    id: Ok(value.id),
+                    memory: Ok(value.memory),
+                    name: Ok(value.name),
+                    ncpus: Ok(value.ncpus),
+                    project_id: Ok(value.project_id),
+                    run_state: Ok(value.run_state),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    time_run_state_updated: Ok(value.time_run_state_updated),
+                }
+            }
+        }
+
         pub struct InstanceCreate {
             description: Result<String, String>,
             disks: Result<Vec<super::InstanceDiskAttachment>, String>,
@@ -8694,6 +9229,23 @@ pub mod types {
             }
         }
 
+        impl From<super::InstanceCreate> for InstanceCreate {
+            fn from(value: super::InstanceCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    disks: Ok(value.disks),
+                    external_ips: Ok(value.external_ips),
+                    hostname: Ok(value.hostname),
+                    memory: Ok(value.memory),
+                    name: Ok(value.name),
+                    ncpus: Ok(value.ncpus),
+                    network_interfaces: Ok(value.network_interfaces),
+                    start: Ok(value.start),
+                    user_data: Ok(value.user_data),
+                }
+            }
+        }
+
         pub struct InstanceMigrate {
             dst_sled_id: Result<uuid::Uuid, String>,
         }
@@ -8725,6 +9277,14 @@ pub mod types {
                 Ok(Self {
                     dst_sled_id: value.dst_sled_id?,
                 })
+            }
+        }
+
+        impl From<super::InstanceMigrate> for InstanceMigrate {
+            fn from(value: super::InstanceMigrate) -> Self {
+                Self {
+                    dst_sled_id: Ok(value.dst_sled_id),
+                }
             }
         }
 
@@ -8775,6 +9335,15 @@ pub mod types {
             }
         }
 
+        impl From<super::InstanceResultsPage> for InstanceResultsPage {
+            fn from(value: super::InstanceResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
         pub struct InstanceSerialConsoleData {
             data: Result<Vec<u8>, String>,
             last_byte_offset: Result<u64, String>,
@@ -8822,6 +9391,15 @@ pub mod types {
                     data: value.data?,
                     last_byte_offset: value.last_byte_offset?,
                 })
+            }
+        }
+
+        impl From<super::InstanceSerialConsoleData> for InstanceSerialConsoleData {
+            fn from(value: super::InstanceSerialConsoleData) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    last_byte_offset: Ok(value.last_byte_offset),
+                }
             }
         }
 
@@ -8911,6 +9489,18 @@ pub mod types {
             }
         }
 
+        impl From<super::IpPool> for IpPool {
+            fn from(value: super::IpPool) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct IpPoolCreate {
             description: Result<String, String>,
             name: Result<super::Name, String>,
@@ -8955,6 +9545,15 @@ pub mod types {
                     description: value.description?,
                     name: value.name?,
                 })
+            }
+        }
+
+        impl From<super::IpPoolCreate> for IpPoolCreate {
+            fn from(value: super::IpPoolCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
             }
         }
 
@@ -9018,6 +9617,16 @@ pub mod types {
             }
         }
 
+        impl From<super::IpPoolRange> for IpPoolRange {
+            fn from(value: super::IpPoolRange) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    range: Ok(value.range),
+                    time_created: Ok(value.time_created),
+                }
+            }
+        }
+
         pub struct IpPoolRangeResultsPage {
             items: Result<Vec<super::IpPoolRange>, String>,
             next_page: Result<Option<String>, String>,
@@ -9062,6 +9671,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::IpPoolRangeResultsPage> for IpPoolRangeResultsPage {
+            fn from(value: super::IpPoolRangeResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -9112,6 +9730,15 @@ pub mod types {
             }
         }
 
+        impl From<super::IpPoolResultsPage> for IpPoolResultsPage {
+            fn from(value: super::IpPoolResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
         pub struct IpPoolUpdate {
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
@@ -9156,6 +9783,15 @@ pub mod types {
                     description: value.description?,
                     name: value.name?,
                 })
+            }
+        }
+
+        impl From<super::IpPoolUpdate> for IpPoolUpdate {
+            fn from(value: super::IpPoolUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
             }
         }
 
@@ -9206,6 +9842,15 @@ pub mod types {
             }
         }
 
+        impl From<super::Ipv4Range> for Ipv4Range {
+            fn from(value: super::Ipv4Range) -> Self {
+                Self {
+                    first: Ok(value.first),
+                    last: Ok(value.last),
+                }
+            }
+        }
+
         pub struct Ipv6Range {
             first: Result<std::net::Ipv6Addr, String>,
             last: Result<std::net::Ipv6Addr, String>,
@@ -9250,6 +9895,15 @@ pub mod types {
                     first: value.first?,
                     last: value.last?,
                 })
+            }
+        }
+
+        impl From<super::Ipv6Range> for Ipv6Range {
+            fn from(value: super::Ipv6Range) -> Self {
+                Self {
+                    first: Ok(value.first),
+                    last: Ok(value.last),
+                }
             }
         }
 
@@ -9300,6 +9954,15 @@ pub mod types {
             }
         }
 
+        impl From<super::Measurement> for Measurement {
+            fn from(value: super::Measurement) -> Self {
+                Self {
+                    datum: Ok(value.datum),
+                    timestamp: Ok(value.timestamp),
+                }
+            }
+        }
+
         pub struct MeasurementResultsPage {
             items: Result<Vec<super::Measurement>, String>,
             next_page: Result<Option<String>, String>,
@@ -9344,6 +10007,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::MeasurementResultsPage> for MeasurementResultsPage {
+            fn from(value: super::MeasurementResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -9511,6 +10183,24 @@ pub mod types {
             }
         }
 
+        impl From<super::NetworkInterface> for NetworkInterface {
+            fn from(value: super::NetworkInterface) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    instance_id: Ok(value.instance_id),
+                    ip: Ok(value.ip),
+                    mac: Ok(value.mac),
+                    name: Ok(value.name),
+                    primary: Ok(value.primary),
+                    subnet_id: Ok(value.subnet_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vpc_id: Ok(value.vpc_id),
+                }
+            }
+        }
+
         pub struct NetworkInterfaceCreate {
             description: Result<String, String>,
             ip: Result<Option<std::net::IpAddr>, String>,
@@ -9597,6 +10287,18 @@ pub mod types {
             }
         }
 
+        impl From<super::NetworkInterfaceCreate> for NetworkInterfaceCreate {
+            fn from(value: super::NetworkInterfaceCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    ip: Ok(value.ip),
+                    name: Ok(value.name),
+                    subnet_name: Ok(value.subnet_name),
+                    vpc_name: Ok(value.vpc_name),
+                }
+            }
+        }
+
         pub struct NetworkInterfaceResultsPage {
             items: Result<Vec<super::NetworkInterface>, String>,
             next_page: Result<Option<String>, String>,
@@ -9641,6 +10343,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::NetworkInterfaceResultsPage> for NetworkInterfaceResultsPage {
+            fn from(value: super::NetworkInterfaceResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -9701,6 +10412,16 @@ pub mod types {
                     name: value.name?,
                     primary: value.primary?,
                 })
+            }
+        }
+
+        impl From<super::NetworkInterfaceUpdate> for NetworkInterfaceUpdate {
+            fn from(value: super::NetworkInterfaceUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                    primary: Ok(value.primary),
+                }
             }
         }
 
@@ -9829,6 +10550,21 @@ pub mod types {
             }
         }
 
+        impl From<super::PhysicalDisk> for PhysicalDisk {
+            fn from(value: super::PhysicalDisk) -> Self {
+                Self {
+                    disk_type: Ok(value.disk_type),
+                    id: Ok(value.id),
+                    model: Ok(value.model),
+                    serial: Ok(value.serial),
+                    sled_id: Ok(value.sled_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vendor: Ok(value.vendor),
+                }
+            }
+        }
+
         pub struct PhysicalDiskResultsPage {
             items: Result<Vec<super::PhysicalDisk>, String>,
             next_page: Result<Option<String>, String>,
@@ -9873,6 +10609,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::PhysicalDiskResultsPage> for PhysicalDiskResultsPage {
+            fn from(value: super::PhysicalDiskResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -9962,6 +10707,18 @@ pub mod types {
             }
         }
 
+        impl From<super::Project> for Project {
+            fn from(value: super::Project) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct ProjectCreate {
             description: Result<String, String>,
             name: Result<super::Name, String>,
@@ -10006,6 +10763,15 @@ pub mod types {
                     description: value.description?,
                     name: value.name?,
                 })
+            }
+        }
+
+        impl From<super::ProjectCreate> for ProjectCreate {
+            fn from(value: super::ProjectCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
             }
         }
 
@@ -10056,6 +10822,15 @@ pub mod types {
             }
         }
 
+        impl From<super::ProjectResultsPage> for ProjectResultsPage {
+            fn from(value: super::ProjectResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
         pub struct ProjectRolePolicy {
             role_assignments: Result<Vec<super::ProjectRoleRoleAssignment>, String>,
         }
@@ -10090,6 +10865,14 @@ pub mod types {
                 Ok(Self {
                     role_assignments: value.role_assignments?,
                 })
+            }
+        }
+
+        impl From<super::ProjectRolePolicy> for ProjectRolePolicy {
+            fn from(value: super::ProjectRolePolicy) -> Self {
+                Self {
+                    role_assignments: Ok(value.role_assignments),
+                }
             }
         }
 
@@ -10153,6 +10936,16 @@ pub mod types {
             }
         }
 
+        impl From<super::ProjectRoleRoleAssignment> for ProjectRoleRoleAssignment {
+            fn from(value: super::ProjectRoleRoleAssignment) -> Self {
+                Self {
+                    identity_id: Ok(value.identity_id),
+                    identity_type: Ok(value.identity_type),
+                    role_name: Ok(value.role_name),
+                }
+            }
+        }
+
         pub struct ProjectUpdate {
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
@@ -10197,6 +10990,15 @@ pub mod types {
                     description: value.description?,
                     name: value.name?,
                 })
+            }
+        }
+
+        impl From<super::ProjectUpdate> for ProjectUpdate {
+            fn from(value: super::ProjectUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
             }
         }
 
@@ -10260,6 +11062,16 @@ pub mod types {
             }
         }
 
+        impl From<super::Rack> for Rack {
+            fn from(value: super::Rack) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct RackResultsPage {
             items: Result<Vec<super::Rack>, String>,
             next_page: Result<Option<String>, String>,
@@ -10304,6 +11116,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::RackResultsPage> for RackResultsPage {
+            fn from(value: super::RackResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -10354,6 +11175,15 @@ pub mod types {
             }
         }
 
+        impl From<super::Role> for Role {
+            fn from(value: super::Role) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
         pub struct RoleResultsPage {
             items: Result<Vec<super::Role>, String>,
             next_page: Result<Option<String>, String>,
@@ -10398,6 +11228,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::RoleResultsPage> for RoleResultsPage {
+            fn from(value: super::RoleResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -10539,6 +11378,22 @@ pub mod types {
             }
         }
 
+        impl From<super::RouterRoute> for RouterRoute {
+            fn from(value: super::RouterRoute) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    destination: Ok(value.destination),
+                    id: Ok(value.id),
+                    kind: Ok(value.kind),
+                    name: Ok(value.name),
+                    target: Ok(value.target),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vpc_router_id: Ok(value.vpc_router_id),
+                }
+            }
+        }
+
         pub struct RouterRouteCreate {
             description: Result<String, String>,
             destination: Result<super::RouteDestination, String>,
@@ -10612,6 +11467,17 @@ pub mod types {
             }
         }
 
+        impl From<super::RouterRouteCreate> for RouterRouteCreate {
+            fn from(value: super::RouterRouteCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    destination: Ok(value.destination),
+                    name: Ok(value.name),
+                    target: Ok(value.target),
+                }
+            }
+        }
+
         pub struct RouterRouteResultsPage {
             items: Result<Vec<super::RouterRoute>, String>,
             next_page: Result<Option<String>, String>,
@@ -10656,6 +11522,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::RouterRouteResultsPage> for RouterRouteResultsPage {
+            fn from(value: super::RouterRouteResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -10732,6 +11607,17 @@ pub mod types {
             }
         }
 
+        impl From<super::RouterRouteUpdate> for RouterRouteUpdate {
+            fn from(value: super::RouterRouteUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    destination: Ok(value.destination),
+                    name: Ok(value.name),
+                    target: Ok(value.target),
+                }
+            }
+        }
+
         pub struct Saga {
             id: Result<uuid::Uuid, String>,
             state: Result<super::SagaState, String>,
@@ -10779,6 +11665,15 @@ pub mod types {
             }
         }
 
+        impl From<super::Saga> for Saga {
+            fn from(value: super::Saga) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    state: Ok(value.state),
+                }
+            }
+        }
+
         pub struct SagaResultsPage {
             items: Result<Vec<super::Saga>, String>,
             next_page: Result<Option<String>, String>,
@@ -10823,6 +11718,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::SagaResultsPage> for SagaResultsPage {
+            fn from(value: super::SagaResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -10995,6 +11899,24 @@ pub mod types {
             }
         }
 
+        impl From<super::SamlIdentityProvider> for SamlIdentityProvider {
+            fn from(value: super::SamlIdentityProvider) -> Self {
+                Self {
+                    acs_url: Ok(value.acs_url),
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    idp_entity_id: Ok(value.idp_entity_id),
+                    name: Ok(value.name),
+                    public_cert: Ok(value.public_cert),
+                    slo_url: Ok(value.slo_url),
+                    sp_client_id: Ok(value.sp_client_id),
+                    technical_contact_email: Ok(value.technical_contact_email),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct SamlIdentityProviderCreate {
             acs_url: Result<String, String>,
             description: Result<String, String>,
@@ -11159,6 +12081,23 @@ pub mod types {
             }
         }
 
+        impl From<super::SamlIdentityProviderCreate> for SamlIdentityProviderCreate {
+            fn from(value: super::SamlIdentityProviderCreate) -> Self {
+                Self {
+                    acs_url: Ok(value.acs_url),
+                    description: Ok(value.description),
+                    group_attribute_name: Ok(value.group_attribute_name),
+                    idp_entity_id: Ok(value.idp_entity_id),
+                    idp_metadata_source: Ok(value.idp_metadata_source),
+                    name: Ok(value.name),
+                    signing_keypair: Ok(value.signing_keypair),
+                    slo_url: Ok(value.slo_url),
+                    sp_client_id: Ok(value.sp_client_id),
+                    technical_contact_email: Ok(value.technical_contact_email),
+                }
+            }
+        }
+
         pub struct Silo {
             description: Result<String, String>,
             discoverable: Result<bool, String>,
@@ -11271,6 +12210,20 @@ pub mod types {
             }
         }
 
+        impl From<super::Silo> for Silo {
+            fn from(value: super::Silo) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    discoverable: Ok(value.discoverable),
+                    id: Ok(value.id),
+                    identity_mode: Ok(value.identity_mode),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct SiloCreate {
             admin_group_name: Result<Option<String>, String>,
             description: Result<String, String>,
@@ -11360,6 +12313,18 @@ pub mod types {
             }
         }
 
+        impl From<super::SiloCreate> for SiloCreate {
+            fn from(value: super::SiloCreate) -> Self {
+                Self {
+                    admin_group_name: Ok(value.admin_group_name),
+                    description: Ok(value.description),
+                    discoverable: Ok(value.discoverable),
+                    identity_mode: Ok(value.identity_mode),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
         pub struct SiloResultsPage {
             items: Result<Vec<super::Silo>, String>,
             next_page: Result<Option<String>, String>,
@@ -11407,6 +12372,15 @@ pub mod types {
             }
         }
 
+        impl From<super::SiloResultsPage> for SiloResultsPage {
+            fn from(value: super::SiloResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
         pub struct SiloRolePolicy {
             role_assignments: Result<Vec<super::SiloRoleRoleAssignment>, String>,
         }
@@ -11441,6 +12415,14 @@ pub mod types {
                 Ok(Self {
                     role_assignments: value.role_assignments?,
                 })
+            }
+        }
+
+        impl From<super::SiloRolePolicy> for SiloRolePolicy {
+            fn from(value: super::SiloRolePolicy) -> Self {
+                Self {
+                    role_assignments: Ok(value.role_assignments),
+                }
             }
         }
 
@@ -11501,6 +12483,16 @@ pub mod types {
                     identity_type: value.identity_type?,
                     role_name: value.role_name?,
                 })
+            }
+        }
+
+        impl From<super::SiloRoleRoleAssignment> for SiloRoleRoleAssignment {
+            fn from(value: super::SiloRoleRoleAssignment) -> Self {
+                Self {
+                    identity_id: Ok(value.identity_id),
+                    identity_type: Ok(value.identity_type),
+                    role_name: Ok(value.role_name),
+                }
             }
         }
 
@@ -11626,6 +12618,20 @@ pub mod types {
             }
         }
 
+        impl From<super::Sled> for Sled {
+            fn from(value: super::Sled) -> Self {
+                Self {
+                    baseboard: Ok(value.baseboard),
+                    id: Ok(value.id),
+                    rack_id: Ok(value.rack_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    usable_hardware_threads: Ok(value.usable_hardware_threads),
+                    usable_physical_ram: Ok(value.usable_physical_ram),
+                }
+            }
+        }
+
         pub struct SledResultsPage {
             items: Result<Vec<super::Sled>, String>,
             next_page: Result<Option<String>, String>,
@@ -11670,6 +12676,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::SledResultsPage> for SledResultsPage {
+            fn from(value: super::SledResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -11811,6 +12826,22 @@ pub mod types {
             }
         }
 
+        impl From<super::Snapshot> for Snapshot {
+            fn from(value: super::Snapshot) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    disk_id: Ok(value.disk_id),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    project_id: Ok(value.project_id),
+                    size: Ok(value.size),
+                    state: Ok(value.state),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct SnapshotCreate {
             description: Result<String, String>,
             disk: Result<super::Name, String>,
@@ -11871,6 +12902,16 @@ pub mod types {
             }
         }
 
+        impl From<super::SnapshotCreate> for SnapshotCreate {
+            fn from(value: super::SnapshotCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    disk: Ok(value.disk),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
         pub struct SnapshotResultsPage {
             items: Result<Vec<super::Snapshot>, String>,
             next_page: Result<Option<String>, String>,
@@ -11918,6 +12959,15 @@ pub mod types {
             }
         }
 
+        impl From<super::SnapshotResultsPage> for SnapshotResultsPage {
+            fn from(value: super::SnapshotResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
         pub struct SpoofLoginBody {
             username: Result<String, String>,
         }
@@ -11949,6 +12999,14 @@ pub mod types {
                 Ok(Self {
                     username: value.username?,
                 })
+            }
+        }
+
+        impl From<super::SpoofLoginBody> for SpoofLoginBody {
+            fn from(value: super::SpoofLoginBody) -> Self {
+                Self {
+                    username: Ok(value.username),
+                }
             }
         }
 
@@ -12064,6 +13122,20 @@ pub mod types {
             }
         }
 
+        impl From<super::SshKey> for SshKey {
+            fn from(value: super::SshKey) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    public_key: Ok(value.public_key),
+                    silo_user_id: Ok(value.silo_user_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct SshKeyCreate {
             description: Result<String, String>,
             name: Result<super::Name, String>,
@@ -12124,6 +13196,16 @@ pub mod types {
             }
         }
 
+        impl From<super::SshKeyCreate> for SshKeyCreate {
+            fn from(value: super::SshKeyCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                    public_key: Ok(value.public_key),
+                }
+            }
+        }
+
         pub struct SshKeyResultsPage {
             items: Result<Vec<super::SshKey>, String>,
             next_page: Result<Option<String>, String>,
@@ -12168,6 +13250,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::SshKeyResultsPage> for SshKeyResultsPage {
+            fn from(value: super::SshKeyResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -12244,6 +13335,17 @@ pub mod types {
             }
         }
 
+        impl From<super::SystemUpdate> for SystemUpdate {
+            fn from(value: super::SystemUpdate) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    version: Ok(value.version),
+                }
+            }
+        }
+
         pub struct SystemUpdateResultsPage {
             items: Result<Vec<super::SystemUpdate>, String>,
             next_page: Result<Option<String>, String>,
@@ -12291,6 +13393,15 @@ pub mod types {
             }
         }
 
+        impl From<super::SystemUpdateResultsPage> for SystemUpdateResultsPage {
+            fn from(value: super::SystemUpdateResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
         pub struct SystemUpdateStart {
             version: Result<super::SemverVersion, String>,
         }
@@ -12322,6 +13433,14 @@ pub mod types {
                 Ok(Self {
                     version: value.version?,
                 })
+            }
+        }
+
+        impl From<super::SystemUpdateStart> for SystemUpdateStart {
+            fn from(value: super::SystemUpdateStart) -> Self {
+                Self {
+                    version: Ok(value.version),
+                }
             }
         }
 
@@ -12369,6 +13488,15 @@ pub mod types {
                     status: value.status?,
                     version_range: value.version_range?,
                 })
+            }
+        }
+
+        impl From<super::SystemVersion> for SystemVersion {
+            fn from(value: super::SystemVersion) -> Self {
+                Self {
+                    status: Ok(value.status),
+                    version_range: Ok(value.version_range),
+                }
             }
         }
 
@@ -12458,6 +13586,18 @@ pub mod types {
             }
         }
 
+        impl From<super::UpdateDeployment> for UpdateDeployment {
+            fn from(value: super::UpdateDeployment) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    status: Ok(value.status),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    version: Ok(value.version),
+                }
+            }
+        }
+
         pub struct UpdateDeploymentResultsPage {
             items: Result<Vec<super::UpdateDeployment>, String>,
             next_page: Result<Option<String>, String>,
@@ -12502,6 +13642,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::UpdateDeploymentResultsPage> for UpdateDeploymentResultsPage {
+            fn from(value: super::UpdateDeploymentResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -12630,6 +13779,21 @@ pub mod types {
             }
         }
 
+        impl From<super::UpdateableComponent> for UpdateableComponent {
+            fn from(value: super::UpdateableComponent) -> Self {
+                Self {
+                    component_type: Ok(value.component_type),
+                    device_id: Ok(value.device_id),
+                    id: Ok(value.id),
+                    status: Ok(value.status),
+                    system_version: Ok(value.system_version),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    version: Ok(value.version),
+                }
+            }
+        }
+
         pub struct UpdateableComponentResultsPage {
             items: Result<Vec<super::UpdateableComponent>, String>,
             next_page: Result<Option<String>, String>,
@@ -12676,6 +13840,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::UpdateableComponentResultsPage> for UpdateableComponentResultsPage {
+            fn from(value: super::UpdateableComponentResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -12736,6 +13909,16 @@ pub mod types {
                     id: value.id?,
                     silo_id: value.silo_id?,
                 })
+            }
+        }
+
+        impl From<super::User> for User {
+            fn from(value: super::User) -> Self {
+                Self {
+                    display_name: Ok(value.display_name),
+                    id: Ok(value.id),
+                    silo_id: Ok(value.silo_id),
+                }
             }
         }
 
@@ -12825,6 +14008,18 @@ pub mod types {
             }
         }
 
+        impl From<super::UserBuiltin> for UserBuiltin {
+            fn from(value: super::UserBuiltin) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct UserBuiltinResultsPage {
             items: Result<Vec<super::UserBuiltin>, String>,
             next_page: Result<Option<String>, String>,
@@ -12869,6 +14064,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::UserBuiltinResultsPage> for UserBuiltinResultsPage {
+            fn from(value: super::UserBuiltinResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -12919,6 +14123,15 @@ pub mod types {
             }
         }
 
+        impl From<super::UserCreate> for UserCreate {
+            fn from(value: super::UserCreate) -> Self {
+                Self {
+                    external_id: Ok(value.external_id),
+                    password: Ok(value.password),
+                }
+            }
+        }
+
         pub struct UserResultsPage {
             items: Result<Vec<super::User>, String>,
             next_page: Result<Option<String>, String>,
@@ -12963,6 +14176,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::UserResultsPage> for UserResultsPage {
+            fn from(value: super::UserResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -13013,6 +14235,15 @@ pub mod types {
             }
         }
 
+        impl From<super::UsernamePasswordCredentials> for UsernamePasswordCredentials {
+            fn from(value: super::UsernamePasswordCredentials) -> Self {
+                Self {
+                    password: Ok(value.password),
+                    username: Ok(value.username),
+                }
+            }
+        }
+
         pub struct VersionRange {
             high: Result<super::SemverVersion, String>,
             low: Result<super::SemverVersion, String>,
@@ -13057,6 +14288,15 @@ pub mod types {
                     high: value.high?,
                     low: value.low?,
                 })
+            }
+        }
+
+        impl From<super::VersionRange> for VersionRange {
+            fn from(value: super::VersionRange) -> Self {
+                Self {
+                    high: Ok(value.high),
+                    low: Ok(value.low),
+                }
             }
         }
 
@@ -13201,6 +14441,22 @@ pub mod types {
             }
         }
 
+        impl From<super::Vpc> for Vpc {
+            fn from(value: super::Vpc) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    dns_name: Ok(value.dns_name),
+                    id: Ok(value.id),
+                    ipv6_prefix: Ok(value.ipv6_prefix),
+                    name: Ok(value.name),
+                    project_id: Ok(value.project_id),
+                    system_router_id: Ok(value.system_router_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
         pub struct VpcCreate {
             description: Result<String, String>,
             dns_name: Result<super::Name, String>,
@@ -13271,6 +14527,17 @@ pub mod types {
                     ipv6_prefix: value.ipv6_prefix?,
                     name: value.name?,
                 })
+            }
+        }
+
+        impl From<super::VpcCreate> for VpcCreate {
+            fn from(value: super::VpcCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    dns_name: Ok(value.dns_name),
+                    ipv6_prefix: Ok(value.ipv6_prefix),
+                    name: Ok(value.name),
+                }
             }
         }
 
@@ -13451,6 +14718,25 @@ pub mod types {
             }
         }
 
+        impl From<super::VpcFirewallRule> for VpcFirewallRule {
+            fn from(value: super::VpcFirewallRule) -> Self {
+                Self {
+                    action: Ok(value.action),
+                    description: Ok(value.description),
+                    direction: Ok(value.direction),
+                    filters: Ok(value.filters),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    priority: Ok(value.priority),
+                    status: Ok(value.status),
+                    targets: Ok(value.targets),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vpc_id: Ok(value.vpc_id),
+                }
+            }
+        }
+
         pub struct VpcFirewallRuleFilter {
             hosts: Result<Option<Vec<super::VpcFirewallRuleHostFilter>>, String>,
             ports: Result<Option<Vec<super::L4PortRange>>, String>,
@@ -13508,6 +14794,16 @@ pub mod types {
                     ports: value.ports?,
                     protocols: value.protocols?,
                 })
+            }
+        }
+
+        impl From<super::VpcFirewallRuleFilter> for VpcFirewallRuleFilter {
+            fn from(value: super::VpcFirewallRuleFilter) -> Self {
+                Self {
+                    hosts: Ok(value.hosts),
+                    ports: Ok(value.ports),
+                    protocols: Ok(value.protocols),
+                }
             }
         }
 
@@ -13636,6 +14932,21 @@ pub mod types {
             }
         }
 
+        impl From<super::VpcFirewallRuleUpdate> for VpcFirewallRuleUpdate {
+            fn from(value: super::VpcFirewallRuleUpdate) -> Self {
+                Self {
+                    action: Ok(value.action),
+                    description: Ok(value.description),
+                    direction: Ok(value.direction),
+                    filters: Ok(value.filters),
+                    name: Ok(value.name),
+                    priority: Ok(value.priority),
+                    status: Ok(value.status),
+                    targets: Ok(value.targets),
+                }
+            }
+        }
+
         pub struct VpcFirewallRuleUpdateParams {
             rules: Result<Vec<super::VpcFirewallRuleUpdate>, String>,
         }
@@ -13670,6 +14981,14 @@ pub mod types {
             }
         }
 
+        impl From<super::VpcFirewallRuleUpdateParams> for VpcFirewallRuleUpdateParams {
+            fn from(value: super::VpcFirewallRuleUpdateParams) -> Self {
+                Self {
+                    rules: Ok(value.rules),
+                }
+            }
+        }
+
         pub struct VpcFirewallRules {
             rules: Result<Vec<super::VpcFirewallRule>, String>,
         }
@@ -13701,6 +15020,14 @@ pub mod types {
                 Ok(Self {
                     rules: value.rules?,
                 })
+            }
+        }
+
+        impl From<super::VpcFirewallRules> for VpcFirewallRules {
+            fn from(value: super::VpcFirewallRules) -> Self {
+                Self {
+                    rules: Ok(value.rules),
+                }
             }
         }
 
@@ -13748,6 +15075,15 @@ pub mod types {
                     items: value.items?,
                     next_page: value.next_page?,
                 })
+            }
+        }
+
+        impl From<super::VpcResultsPage> for VpcResultsPage {
+            fn from(value: super::VpcResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
             }
         }
 
@@ -13863,6 +15199,20 @@ pub mod types {
             }
         }
 
+        impl From<super::VpcRouter> for VpcRouter {
+            fn from(value: super::VpcRouter) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    kind: Ok(value.kind),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vpc_id: Ok(value.vpc_id),
+                }
+            }
+        }
+
         pub struct VpcRouterCreate {
             description: Result<String, String>,
             name: Result<super::Name, String>,
@@ -13907,6 +15257,15 @@ pub mod types {
                     description: value.description?,
                     name: value.name?,
                 })
+            }
+        }
+
+        impl From<super::VpcRouterCreate> for VpcRouterCreate {
+            fn from(value: super::VpcRouterCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
             }
         }
 
@@ -13957,6 +15316,15 @@ pub mod types {
             }
         }
 
+        impl From<super::VpcRouterResultsPage> for VpcRouterResultsPage {
+            fn from(value: super::VpcRouterResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
         pub struct VpcRouterUpdate {
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
@@ -14001,6 +15369,15 @@ pub mod types {
                     description: value.description?,
                     name: value.name?,
                 })
+            }
+        }
+
+        impl From<super::VpcRouterUpdate> for VpcRouterUpdate {
+            fn from(value: super::VpcRouterUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
             }
         }
 
@@ -14129,6 +15506,21 @@ pub mod types {
             }
         }
 
+        impl From<super::VpcSubnet> for VpcSubnet {
+            fn from(value: super::VpcSubnet) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    ipv4_block: Ok(value.ipv4_block),
+                    ipv6_block: Ok(value.ipv6_block),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vpc_id: Ok(value.vpc_id),
+                }
+            }
+        }
+
         pub struct VpcSubnetCreate {
             description: Result<String, String>,
             ipv4_block: Result<super::Ipv4Net, String>,
@@ -14202,6 +15594,17 @@ pub mod types {
             }
         }
 
+        impl From<super::VpcSubnetCreate> for VpcSubnetCreate {
+            fn from(value: super::VpcSubnetCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    ipv4_block: Ok(value.ipv4_block),
+                    ipv6_block: Ok(value.ipv6_block),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
         pub struct VpcSubnetResultsPage {
             items: Result<Vec<super::VpcSubnet>, String>,
             next_page: Result<Option<String>, String>,
@@ -14249,6 +15652,15 @@ pub mod types {
             }
         }
 
+        impl From<super::VpcSubnetResultsPage> for VpcSubnetResultsPage {
+            fn from(value: super::VpcSubnetResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
         pub struct VpcSubnetUpdate {
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
@@ -14293,6 +15705,15 @@ pub mod types {
                     description: value.description?,
                     name: value.name?,
                 })
+            }
+        }
+
+        impl From<super::VpcSubnetUpdate> for VpcSubnetUpdate {
+            fn from(value: super::VpcSubnetUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
             }
         }
 
@@ -14353,6 +15774,16 @@ pub mod types {
                     dns_name: value.dns_name?,
                     name: value.name?,
                 })
+            }
+        }
+
+        impl From<super::VpcUpdate> for VpcUpdate {
+            fn from(value: super::VpcUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    dns_name: Ok(value.dns_name),
+                    name: Ok(value.name),
+                }
             }
         }
     }
