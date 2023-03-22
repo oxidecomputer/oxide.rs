@@ -14,8 +14,8 @@ impl Cli {
     pub fn cli_device_auth_request() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("client_id")
-                    .long("client_id")
+                clap::Arg::new("client-id")
+                    .long("client-id")
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid)),
             )
@@ -31,7 +31,7 @@ impl Cli {
         let mut request = self.client.device_auth_request();
         let request = request.body({
             let mut body = types::DeviceAuthRequest::builder();
-            if let Some(value) = matches.get_one::<uuid::Uuid>("client_id") {
+            if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
                 body = body.client_id(value.clone());
             }
             body
@@ -50,8 +50,8 @@ impl Cli {
     pub fn cli_device_auth_confirm() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("user_code")
-                    .long("user_code")
+                clap::Arg::new("user-code")
+                    .long("user-code")
                     .required(true)
                     .value_parser(clap::value_parser!(String)),
             )
@@ -67,7 +67,7 @@ impl Cli {
         let mut request = self.client.device_auth_confirm();
         let request = request.body({
             let mut body = types::DeviceAuthVerify::builder();
-            if let Some(value) = matches.get_one::<String>("user_code") {
+            if let Some(value) = matches.get_one::<String>("user-code") {
                 body = body.user_code(value.clone());
             }
             body
@@ -86,20 +86,20 @@ impl Cli {
     pub fn cli_device_access_token() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("client_id")
-                    .long("client_id")
+                clap::Arg::new("client-id")
+                    .long("client-id")
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid)),
             )
             .arg(
-                clap::Arg::new("device_code")
-                    .long("device_code")
+                clap::Arg::new("device-code")
+                    .long("device-code")
                     .required(true)
                     .value_parser(clap::value_parser!(String)),
             )
             .arg(
-                clap::Arg::new("grant_type")
-                    .long("grant_type")
+                clap::Arg::new("grant-type")
+                    .long("grant-type")
                     .required(true)
                     .value_parser(clap::value_parser!(String)),
             )
@@ -113,13 +113,13 @@ impl Cli {
         let mut request = self.client.device_access_token();
         let request = request.body({
             let mut body = types::DeviceAccessTokenRequest::builder();
-            if let Some(value) = matches.get_one::<uuid::Uuid>("client_id") {
+            if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
                 body = body.client_id(value.clone());
             }
-            if let Some(value) = matches.get_one::<String>("device_code") {
+            if let Some(value) = matches.get_one::<String>("device-code") {
                 body = body.device_code(value.clone());
             }
-            if let Some(value) = matches.get_one::<String>("grant_type") {
+            if let Some(value) = matches.get_one::<String>("grant-type") {
                 body = body.grant_type(value.clone());
             }
             body
@@ -167,8 +167,8 @@ impl Cli {
     pub fn cli_login_local() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("silo_name")
-                    .long("silo_name")
+                clap::Arg::new("silo-name")
+                    .long("silo-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
@@ -189,7 +189,7 @@ impl Cli {
 
     pub async fn execute_login_local(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.login_local();
-        if let Some(value) = matches.get_one::<types::Name>("silo_name") {
+        if let Some(value) = matches.get_one::<types::Name>("silo-name") {
             request = request.silo_name(value.clone());
         }
 
@@ -217,14 +217,14 @@ impl Cli {
     pub fn cli_login_saml_begin() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("silo_name")
-                    .long("silo_name")
+                clap::Arg::new("silo-name")
+                    .long("silo-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
             .arg(
-                clap::Arg::new("provider_name")
-                    .long("provider_name")
+                clap::Arg::new("provider-name")
+                    .long("provider-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
@@ -236,11 +236,11 @@ impl Cli {
 
     pub async fn execute_login_saml_begin(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.login_saml_begin();
-        if let Some(value) = matches.get_one::<types::Name>("silo_name") {
+        if let Some(value) = matches.get_one::<types::Name>("silo-name") {
             request = request.silo_name(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("provider_name") {
+        if let Some(value) = matches.get_one::<types::Name>("provider-name") {
             request = request.provider_name(value.clone());
         }
 
@@ -258,14 +258,14 @@ impl Cli {
     pub fn cli_login_saml() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("silo_name")
-                    .long("silo_name")
+                clap::Arg::new("silo-name")
+                    .long("silo-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
             .arg(
-                clap::Arg::new("provider_name")
-                    .long("provider_name")
+                clap::Arg::new("provider-name")
+                    .long("provider-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
@@ -274,11 +274,11 @@ impl Cli {
 
     pub async fn execute_login_saml(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.login_saml();
-        if let Some(value) = matches.get_one::<types::Name>("silo_name") {
+        if let Some(value) = matches.get_one::<types::Name>("silo-name") {
             request = request.silo_name(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("provider_name") {
+        if let Some(value) = matches.get_one::<types::Name>("provider-name") {
             request = request.provider_name(value.clone());
         }
 
@@ -348,8 +348,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameSortMode)),
             )
@@ -366,7 +366,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -427,8 +427,8 @@ impl Cli {
     pub fn cli_system_image_view() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("image_name")
-                    .long("image_name")
+                clap::Arg::new("image-name")
+                    .long("image-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
@@ -439,7 +439,7 @@ impl Cli {
 
     pub async fn execute_system_image_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.system_image_view();
-        if let Some(value) = matches.get_one::<types::Name>("image_name") {
+        if let Some(value) = matches.get_one::<types::Name>("image-name") {
             request = request.image_name(value.clone());
         }
 
@@ -457,8 +457,8 @@ impl Cli {
     pub fn cli_system_image_delete() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("image_name")
-                    .long("image_name")
+                clap::Arg::new("image-name")
+                    .long("image-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
@@ -471,7 +471,7 @@ impl Cli {
 
     pub async fn execute_system_image_delete(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.system_image_delete();
-        if let Some(value) = matches.get_one::<types::Name>("image_name") {
+        if let Some(value) = matches.get_one::<types::Name>("image-name") {
             request = request.image_name(value.clone());
         }
 
@@ -502,8 +502,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -520,7 +520,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -686,8 +686,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::DiskMetricName)),
             )
             .arg(
-                clap::Arg::new("end_time")
-                    .long("end_time")
+                clap::Arg::new("end-time")
+                    .long("end-time")
                     .required(false)
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .help("An exclusive end time of metrics."),
@@ -706,8 +706,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("start_time")
-                    .long("start_time")
+                clap::Arg::new("start-time")
+                    .long("start-time")
                     .required(false)
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .help("An inclusive start time of metrics."),
@@ -725,7 +725,7 @@ impl Cli {
             request = request.metric(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end_time") {
+        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
             request = request.end_time(value.clone());
         }
 
@@ -737,7 +737,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start_time")
+        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start-time")
         {
             request = request.start_time(value.clone());
         }
@@ -763,8 +763,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -777,7 +777,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -836,8 +836,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -858,7 +858,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -1039,8 +1039,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -1057,7 +1057,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -1118,8 +1118,8 @@ impl Cli {
                     .help("Should this instance be started upon creation; true by default."),
             )
             .arg(
-                clap::Arg::new("user_data")
-                    .long("user_data")
+                clap::Arg::new("user-data")
+                    .long("user-data")
                     .required(false)
                     .value_parser(clap::value_parser!(String))
                     .help(
@@ -1157,7 +1157,7 @@ impl Cli {
             if let Some(value) = matches.get_one::<bool>("start") {
                 body = body.start(value.clone());
             }
-            if let Some(value) = matches.get_one::<String>("user_data") {
+            if let Some(value) = matches.get_one::<String>("user-data") {
                 body = body.user_data(value.clone());
             }
             body
@@ -1271,8 +1271,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -1293,7 +1293,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -1463,8 +1463,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("dst_sled_id")
-                    .long("dst_sled_id")
+                clap::Arg::new("dst-sled-id")
+                    .long("dst-sled-id")
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid)),
             )
@@ -1483,7 +1483,7 @@ impl Cli {
 
         let request = request.body({
             let mut body = types::InstanceMigrate::builder();
-            if let Some(value) = matches.get_one::<uuid::Uuid>("dst_sled_id") {
+            if let Some(value) = matches.get_one::<uuid::Uuid>("dst-sled-id") {
                 body = body.dst_sled_id(value.clone());
             }
             body
@@ -1546,8 +1546,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("from_start")
-                    .long("from_start")
+                clap::Arg::new("from-start")
+                    .long("from-start")
                     .required(false)
                     .value_parser(clap::value_parser!(u64))
                     .help(
@@ -1558,8 +1558,8 @@ impl Cli {
                     ),
             )
             .arg(
-                clap::Arg::new("max_bytes")
-                    .long("max_bytes")
+                clap::Arg::new("max-bytes")
+                    .long("max-bytes")
                     .required(false)
                     .value_parser(clap::value_parser!(u64))
                     .help(
@@ -1569,8 +1569,8 @@ impl Cli {
                     ),
             )
             .arg(
-                clap::Arg::new("most_recent")
-                    .long("most_recent")
+                clap::Arg::new("most-recent")
+                    .long("most-recent")
                     .required(false)
                     .value_parser(clap::value_parser!(u64))
                     .help(
@@ -1594,15 +1594,15 @@ impl Cli {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<u64>("from_start") {
+        if let Some(value) = matches.get_one::<u64>("from-start") {
             request = request.from_start(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<u64>("max_bytes") {
+        if let Some(value) = matches.get_one::<u64>("max-bytes") {
             request = request.max_bytes(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<u64>("most_recent") {
+        if let Some(value) = matches.get_one::<u64>("most-recent") {
             request = request.most_recent(value.clone());
         }
 
@@ -1762,8 +1762,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -1776,7 +1776,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -1801,8 +1801,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -1818,7 +1818,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -1848,8 +1848,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::Name)),
             )
             .arg(
-                clap::Arg::new("public_key")
-                    .long("public_key")
+                clap::Arg::new("public-key")
+                    .long("public-key")
                     .required(true)
                     .value_parser(clap::value_parser!(String))
                     .help("SSH public key, e.g., `\"ssh-ed25519 AAAAC3NzaC...\"`"),
@@ -1870,7 +1870,7 @@ impl Cli {
             if let Some(value) = matches.get_one::<types::Name>("name") {
                 body = body.name(value.clone());
             }
-            if let Some(value) = matches.get_one::<String>("public_key") {
+            if let Some(value) = matches.get_one::<String>("public-key") {
                 body = body.public_key(value.clone());
             }
             body
@@ -1889,8 +1889,8 @@ impl Cli {
     pub fn cli_current_user_ssh_key_view() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("ssh_key")
-                    .long("ssh_key")
+                clap::Arg::new("ssh-key")
+                    .long("ssh-key")
                     .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
@@ -1902,7 +1902,7 @@ impl Cli {
 
     pub async fn execute_current_user_ssh_key_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.current_user_ssh_key_view();
-        if let Some(value) = matches.get_one::<types::NameOrId>("ssh_key") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("ssh-key") {
             request = request.ssh_key(value.clone());
         }
 
@@ -1920,8 +1920,8 @@ impl Cli {
     pub fn cli_current_user_ssh_key_delete() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("ssh_key")
-                    .long("ssh_key")
+                clap::Arg::new("ssh-key")
+                    .long("ssh-key")
                     .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
@@ -1933,7 +1933,7 @@ impl Cli {
 
     pub async fn execute_current_user_ssh_key_delete(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.current_user_ssh_key_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId>("ssh_key") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("ssh-key") {
             request = request.ssh_key(value.clone());
         }
 
@@ -1970,8 +1970,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -1992,7 +1992,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -2034,15 +2034,15 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::Name)),
             )
             .arg(
-                clap::Arg::new("subnet_name")
-                    .long("subnet_name")
+                clap::Arg::new("subnet-name")
+                    .long("subnet-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name))
                     .help("The VPC Subnet in which to create the interface."),
             )
             .arg(
-                clap::Arg::new("vpc_name")
-                    .long("vpc_name")
+                clap::Arg::new("vpc-name")
+                    .long("vpc-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name))
                     .help("The VPC in which to create the interface."),
@@ -2068,10 +2068,10 @@ impl Cli {
             if let Some(value) = matches.get_one::<types::Name>("name") {
                 body = body.name(value.clone());
             }
-            if let Some(value) = matches.get_one::<types::Name>("subnet_name") {
+            if let Some(value) = matches.get_one::<types::Name>("subnet-name") {
                 body = body.subnet_name(value.clone());
             }
-            if let Some(value) = matches.get_one::<types::Name>("vpc_name") {
+            if let Some(value) = matches.get_one::<types::Name>("vpc-name") {
                 body = body.vpc_name(value.clone());
             }
             body
@@ -2307,8 +2307,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -2321,7 +2321,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -2540,8 +2540,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -2558,7 +2558,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -2719,8 +2719,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -2737,7 +2737,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -2874,8 +2874,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -2888,7 +2888,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -2913,8 +2913,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -2927,7 +2927,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -2945,8 +2945,8 @@ impl Cli {
     pub fn cli_rack_view() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("rack_id")
-                    .long("rack_id")
+                clap::Arg::new("rack-id")
+                    .long("rack-id")
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .help("The rack's unique ID."),
@@ -2956,7 +2956,7 @@ impl Cli {
 
     pub async fn execute_rack_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.rack_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack_id") {
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
         }
 
@@ -2981,8 +2981,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -2995,7 +2995,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -3013,8 +3013,8 @@ impl Cli {
     pub fn cli_sled_view() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("sled_id")
-                    .long("sled_id")
+                clap::Arg::new("sled-id")
+                    .long("sled-id")
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .help("The sled's unique ID."),
@@ -3024,7 +3024,7 @@ impl Cli {
 
     pub async fn execute_sled_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.sled_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("sled_id") {
+        if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
         }
 
@@ -3042,8 +3042,8 @@ impl Cli {
     pub fn cli_sled_physical_disk_list() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("sled_id")
-                    .long("sled_id")
+                clap::Arg::new("sled-id")
+                    .long("sled-id")
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .help("The sled's unique ID."),
@@ -3056,8 +3056,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -3066,7 +3066,7 @@ impl Cli {
 
     pub async fn execute_sled_physical_disk_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.sled_physical_disk_list();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("sled_id") {
+        if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
         }
 
@@ -3074,7 +3074,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -3105,8 +3105,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -3123,7 +3123,7 @@ impl Cli {
             request = request.silo(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -3147,8 +3147,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("external_id")
-                    .long("external_id")
+                clap::Arg::new("external-id")
+                    .long("external-id")
                     .required(true)
                     .value_parser(clap::value_parser!(types::UserId))
                     .help("username used to log in"),
@@ -3168,7 +3168,7 @@ impl Cli {
 
         let request = request.body({
             let mut body = types::UserCreate::builder();
-            if let Some(value) = matches.get_one::<types::UserId>("external_id") {
+            if let Some(value) = matches.get_one::<types::UserId>("external-id") {
                 body = body.external_id(value.clone());
             }
             body
@@ -3187,8 +3187,8 @@ impl Cli {
     pub fn cli_local_idp_user_delete() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("user_id")
-                    .long("user_id")
+                clap::Arg::new("user-id")
+                    .long("user-id")
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .help("The user's internal id"),
@@ -3204,7 +3204,7 @@ impl Cli {
 
     pub async fn execute_local_idp_user_delete(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.local_idp_user_delete();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("user_id") {
+        if let Some(value) = matches.get_one::<uuid::Uuid>("user-id") {
             request = request.user_id(value.clone());
         }
 
@@ -3226,8 +3226,8 @@ impl Cli {
     pub fn cli_local_idp_user_set_password() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("user_id")
-                    .long("user_id")
+                clap::Arg::new("user-id")
+                    .long("user-id")
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .help("The user's internal id"),
@@ -3246,7 +3246,7 @@ impl Cli {
 
     pub async fn execute_local_idp_user_set_password(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.local_idp_user_set_password();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("user_id") {
+        if let Some(value) = matches.get_one::<uuid::Uuid>("user-id") {
             request = request.user_id(value.clone());
         }
 
@@ -3274,8 +3274,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("acs_url")
-                    .long("acs_url")
+                clap::Arg::new("acs-url")
+                    .long("acs-url")
                     .required(true)
                     .value_parser(clap::value_parser!(String))
                     .help("service provider endpoint where the response will be sent"),
@@ -3287,8 +3287,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(String)),
             )
             .arg(
-                clap::Arg::new("idp_entity_id")
-                    .long("idp_entity_id")
+                clap::Arg::new("idp-entity-id")
+                    .long("idp-entity-id")
                     .required(true)
                     .value_parser(clap::value_parser!(String))
                     .help("idp's entity id"),
@@ -3300,22 +3300,22 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::Name)),
             )
             .arg(
-                clap::Arg::new("slo_url")
-                    .long("slo_url")
+                clap::Arg::new("slo-url")
+                    .long("slo-url")
                     .required(true)
                     .value_parser(clap::value_parser!(String))
                     .help("service provider endpoint where the idp should send log out requests"),
             )
             .arg(
-                clap::Arg::new("sp_client_id")
-                    .long("sp_client_id")
+                clap::Arg::new("sp-client-id")
+                    .long("sp-client-id")
                     .required(true)
                     .value_parser(clap::value_parser!(String))
                     .help("sp's client id"),
             )
             .arg(
-                clap::Arg::new("technical_contact_email")
-                    .long("technical_contact_email")
+                clap::Arg::new("technical-contact-email")
+                    .long("technical-contact-email")
                     .required(true)
                     .value_parser(clap::value_parser!(String))
                     .help("customer's technical contact for saml configuration"),
@@ -3331,25 +3331,25 @@ impl Cli {
 
         let request = request.body({
             let mut body = types::SamlIdentityProviderCreate::builder();
-            if let Some(value) = matches.get_one::<String>("acs_url") {
+            if let Some(value) = matches.get_one::<String>("acs-url") {
                 body = body.acs_url(value.clone());
             }
             if let Some(value) = matches.get_one::<String>("description") {
                 body = body.description(value.clone());
             }
-            if let Some(value) = matches.get_one::<String>("idp_entity_id") {
+            if let Some(value) = matches.get_one::<String>("idp-entity-id") {
                 body = body.idp_entity_id(value.clone());
             }
             if let Some(value) = matches.get_one::<types::Name>("name") {
                 body = body.name(value.clone());
             }
-            if let Some(value) = matches.get_one::<String>("slo_url") {
+            if let Some(value) = matches.get_one::<String>("slo-url") {
                 body = body.slo_url(value.clone());
             }
-            if let Some(value) = matches.get_one::<String>("sp_client_id") {
+            if let Some(value) = matches.get_one::<String>("sp-client-id") {
                 body = body.sp_client_id(value.clone());
             }
-            if let Some(value) = matches.get_one::<String>("technical_contact_email") {
+            if let Some(value) = matches.get_one::<String>("technical-contact-email") {
                 body = body.technical_contact_email(value.clone());
             }
             body
@@ -3413,8 +3413,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -3427,7 +3427,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -3751,14 +3751,14 @@ impl Cli {
     pub fn cli_system_metric() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("metric_name")
-                    .long("metric_name")
+                clap::Arg::new("metric-name")
+                    .long("metric-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::SystemMetricName)),
             )
             .arg(
-                clap::Arg::new("end_time")
-                    .long("end_time")
+                clap::Arg::new("end-time")
+                    .long("end-time")
                     .required(false)
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .help("An exclusive end time of metrics."),
@@ -3778,15 +3778,15 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("page_token")
-                    .long("page_token")
+                clap::Arg::new("page-token")
+                    .long("page-token")
                     .required(false)
                     .value_parser(clap::value_parser!(String))
                     .help("Token returned by previous call to retrieve the subsequent page"),
             )
             .arg(
-                clap::Arg::new("start_time")
-                    .long("start_time")
+                clap::Arg::new("start-time")
+                    .long("start-time")
                     .required(false)
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
                     .help("An inclusive start time of metrics."),
@@ -3796,11 +3796,11 @@ impl Cli {
 
     pub async fn execute_system_metric(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.system_metric();
-        if let Some(value) = matches.get_one::<types::SystemMetricName>("metric_name") {
+        if let Some(value) = matches.get_one::<types::SystemMetricName>("metric-name") {
             request = request.metric_name(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end_time") {
+        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
             request = request.end_time(value.clone());
         }
 
@@ -3812,11 +3812,11 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<String>("page_token") {
+        if let Some(value) = matches.get_one::<String>("page-token") {
             request = request.page_token(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start_time")
+        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start-time")
         {
             request = request.start_time(value.clone());
         }
@@ -3902,8 +3902,8 @@ impl Cli {
     pub fn cli_role_view() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("role_name")
-                    .long("role_name")
+                clap::Arg::new("role-name")
+                    .long("role-name")
                     .required(true)
                     .value_parser(clap::value_parser!(String))
                     .help("The built-in role's unique name."),
@@ -3913,7 +3913,7 @@ impl Cli {
 
     pub async fn execute_role_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.role_view();
-        if let Some(value) = matches.get_one::<String>("role_name") {
+        if let Some(value) = matches.get_one::<String>("role-name") {
             request = request.role_name(value.clone());
         }
 
@@ -3938,8 +3938,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -3952,7 +3952,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -3970,8 +3970,8 @@ impl Cli {
     pub fn cli_saga_view() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("saga_id")
-                    .long("saga_id")
+                clap::Arg::new("saga-id")
+                    .long("saga-id")
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid)),
             )
@@ -3980,7 +3980,7 @@ impl Cli {
 
     pub async fn execute_saga_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.saga_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("saga_id") {
+        if let Some(value) = matches.get_one::<uuid::Uuid>("saga-id") {
             request = request.saga_id(value.clone());
         }
 
@@ -4005,8 +4005,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -4021,7 +4021,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -4051,8 +4051,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(bool)),
             )
             .arg(
-                clap::Arg::new("identity_mode")
-                    .long("identity_mode")
+                clap::Arg::new("identity-mode")
+                    .long("identity-mode")
                     .required(true)
                     .value_parser(clap::value_parser!(types::SiloIdentityMode)),
             )
@@ -4075,7 +4075,7 @@ impl Cli {
             if let Some(value) = matches.get_one::<bool>("discoverable") {
                 body = body.discoverable(value.clone());
             }
-            if let Some(value) = matches.get_one::<types::SiloIdentityMode>("identity_mode") {
+            if let Some(value) = matches.get_one::<types::SiloIdentityMode>("identity-mode") {
                 body = body.identity_mode(value.clone());
             }
             if let Some(value) = matches.get_one::<types::Name>("name") {
@@ -4220,8 +4220,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -4234,7 +4234,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -4259,8 +4259,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -4273,7 +4273,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -4392,8 +4392,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -4406,7 +4406,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -4510,8 +4510,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -4528,7 +4528,7 @@ impl Cli {
             request = request.silo(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -4546,8 +4546,8 @@ impl Cli {
     pub fn cli_silo_user_view() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("user_id")
-                    .long("user_id")
+                clap::Arg::new("user-id")
+                    .long("user-id")
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .help("The user's internal id"),
@@ -4563,7 +4563,7 @@ impl Cli {
 
     pub async fn execute_silo_user_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.silo_user_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("user_id") {
+        if let Some(value) = matches.get_one::<uuid::Uuid>("user-id") {
             request = request.user_id(value.clone());
         }
 
@@ -4592,8 +4592,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameSortMode)),
             )
@@ -4606,7 +4606,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -4665,8 +4665,8 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::IdSortMode)),
             )
@@ -4683,7 +4683,7 @@ impl Cli {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -4800,8 +4800,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -4828,7 +4828,7 @@ impl Cli {
             request = request.router(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -5111,8 +5111,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -5135,7 +5135,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -5378,8 +5378,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -5402,7 +5402,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -5442,8 +5442,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(String)),
             )
             .arg(
-                clap::Arg::new("ipv4_block")
-                    .long("ipv4_block")
+                clap::Arg::new("ipv4-block")
+                    .long("ipv4-block")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Ipv4Net))
                     .help(
@@ -5476,7 +5476,7 @@ impl Cli {
             if let Some(value) = matches.get_one::<String>("description") {
                 body = body.description(value.clone());
             }
-            if let Some(value) = matches.get_one::<types::Ipv4Net>("ipv4_block") {
+            if let Some(value) = matches.get_one::<types::Ipv4Net>("ipv4-block") {
                 body = body.ipv4_block(value.clone());
             }
             if let Some(value) = matches.get_one::<types::Name>("name") {
@@ -5665,8 +5665,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -5693,7 +5693,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -5728,8 +5728,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
             .arg(
-                clap::Arg::new("sort_by")
-                    .long("sort_by")
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
             )
@@ -5746,7 +5746,7 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort_by") {
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
 
@@ -5776,8 +5776,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(String)),
             )
             .arg(
-                clap::Arg::new("dns_name")
-                    .long("dns_name")
+                clap::Arg::new("dns-name")
+                    .long("dns-name")
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
@@ -5801,7 +5801,7 @@ impl Cli {
             if let Some(value) = matches.get_one::<String>("description") {
                 body = body.description(value.clone());
             }
-            if let Some(value) = matches.get_one::<types::Name>("dns_name") {
+            if let Some(value) = matches.get_one::<types::Name>("dns-name") {
                 body = body.dns_name(value.clone());
             }
             if let Some(value) = matches.get_one::<types::Name>("name") {
@@ -6522,6 +6522,1841 @@ impl Cli {
                 self.execute_vpc_delete(matches).await;
             }
         };
+    }
+}
+
+pub trait CliOverride {
+    fn cli_device_auth_request(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_device_auth_request(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_device_auth_confirm(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_device_auth_confirm(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_device_access_token(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_device_access_token(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_login_spoof(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_login_spoof(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_login_local(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_login_local(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_login_saml_begin(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_login_saml_begin(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_login_saml(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_login_saml(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_logout(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_logout(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_image_view_by_id(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_image_view_by_id(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_image_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_image_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_image_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_image_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_image_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_image_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_image_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_image_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_disk_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_disk_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_disk_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_disk_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_disk_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_disk_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_disk_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_disk_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_disk_metrics_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_disk_metrics_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_group_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_group_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_group_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_group_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_image_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_image_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_image_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_image_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_image_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_image_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_image_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_image_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_disk_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_disk_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_disk_attach(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_disk_attach(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_disk_detach(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_disk_detach(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_external_ip_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_external_ip_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_migrate(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_migrate(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_reboot(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_reboot(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_serial_console(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_serial_console(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_serial_console_stream(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_serial_console_stream(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_start(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_start(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_stop(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_stop(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_current_user_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_current_user_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_current_user_groups(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_current_user_groups(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_current_user_ssh_key_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_current_user_ssh_key_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_current_user_ssh_key_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_current_user_ssh_key_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_current_user_ssh_key_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_current_user_ssh_key_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_current_user_ssh_key_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_current_user_ssh_key_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_network_interface_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_network_interface_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_network_interface_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_network_interface_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_network_interface_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_network_interface_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_network_interface_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_network_interface_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_instance_network_interface_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_instance_network_interface_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_policy_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_policy_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_policy_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_policy_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_project_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_project_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_project_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_project_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_project_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_project_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_project_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_project_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_project_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_project_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_project_policy_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_project_policy_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_project_policy_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_project_policy_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_snapshot_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_snapshot_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_snapshot_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_snapshot_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_snapshot_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_snapshot_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_snapshot_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_snapshot_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_certificate_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_certificate_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_certificate_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_certificate_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_certificate_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_certificate_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_certificate_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_certificate_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_physical_disk_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_physical_disk_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_rack_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_rack_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_rack_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_rack_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_sled_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_sled_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_sled_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_sled_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_sled_physical_disk_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_sled_physical_disk_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_silo_identity_provider_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_silo_identity_provider_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_local_idp_user_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_local_idp_user_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_local_idp_user_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_local_idp_user_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_local_idp_user_set_password(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_local_idp_user_set_password(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_saml_identity_provider_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_saml_identity_provider_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_saml_identity_provider_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_saml_identity_provider_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_range_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_range_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_range_add(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_range_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_range_remove(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_range_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_service_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_service_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_service_range_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_service_range_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_service_range_add(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_service_range_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_ip_pool_service_range_remove(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_ip_pool_service_range_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_metric(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_metric(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_policy_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_policy_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_policy_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_policy_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_role_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_role_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_role_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_role_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_saga_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_saga_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_saga_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_saga_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_silo_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_silo_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_silo_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_silo_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_silo_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_silo_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_silo_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_silo_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_silo_policy_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_silo_policy_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_silo_policy_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_silo_policy_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_component_version_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_component_version_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_update_deployments_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_update_deployments_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_update_deployment_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_update_deployment_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_update_refresh(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_update_refresh(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_update_start(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_update_start(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_update_stop(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_update_stop(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_update_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_update_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_update_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_update_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_update_components_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_update_components_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_system_version(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_system_version(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_silo_user_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_silo_user_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_silo_user_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_silo_user_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_user_builtin_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_user_builtin_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_user_builtin_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_user_builtin_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_user_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_user_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_firewall_rules_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_firewall_rules_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_firewall_rules_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_firewall_rules_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_router_route_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_router_route_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_router_route_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_router_route_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_router_route_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_router_route_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_router_route_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_router_route_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_router_route_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_router_route_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_router_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_router_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_router_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_router_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_router_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_router_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_router_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_router_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_router_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_router_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_subnet_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_subnet_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_subnet_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_subnet_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_subnet_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_subnet_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_subnet_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_subnet_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_subnet_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_subnet_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_subnet_list_network_interfaces(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_subnet_list_network_interfaces(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_list(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_create(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_view(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_update(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn cli_vpc_delete(cmd: clap::Command) -> clap::Command {
+        cmd
+    }
+
+    fn execute_vpc_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut (),
+        body: &mut (),
+    ) -> Result<(), String> {
+        Ok(())
     }
 }
 
