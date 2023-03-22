@@ -5,8 +5,7 @@
 // Copyright 2023 Oxide Computer Company
 
 use std::collections::HashMap;
-use std::fs::{create_dir_all, OpenOptions};
-use std::io::Read;
+use std::fs::create_dir_all;
 
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
@@ -49,13 +48,8 @@ impl Default for Config {
         dir.push("oxide");
         create_dir_all(&dir).unwrap();
 
-        let mut hosts_path = OpenOptions::new()
-            .write(true)
-            .create(true)
-            .open(dir.join("hosts.toml"))
-            .unwrap();
-        let mut contents = String::new();
-        let hosts = if let Ok(_) = hosts_path.read_to_string(&mut contents) {
+        let hosts_path = dir.join("hosts.toml");
+        let hosts = if let Ok(contents) = std::fs::read_to_string(hosts_path) {
             toml::from_str(&contents).unwrap()
         } else {
             Default::default()
@@ -75,13 +69,8 @@ impl Config {
         dir.push("oxide");
         create_dir_all(&dir).unwrap();
 
-        let mut hosts_path = OpenOptions::new()
-            .write(true)
-            .create(true)
-            .open(dir.join("hosts.toml"))
-            .unwrap();
-        let mut contents = String::new();
-        let mut hosts = if let Ok(_) = hosts_path.read_to_string(&mut contents) {
+        let hosts_path = dir.join("hosts.toml");
+        let mut hosts = if let Ok(contents) = std::fs::read_to_string(hosts_path.clone()) {
             contents.parse::<toml_edit::Document>()?
         } else {
             Default::default()
@@ -106,7 +95,6 @@ impl Config {
             table.insert("default", toml_edit::value(default));
         }
 
-        let hosts_path = dir.join("hosts.toml");
         std::fs::write(hosts_path, hosts.to_string())?;
 
         Ok(())
