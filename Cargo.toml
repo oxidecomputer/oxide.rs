@@ -22,7 +22,7 @@ pretty_assertions = "1.3.0"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor", branch = "cli" }
 progenitor-client = { git = "https://github.com/oxidecomputer/progenitor", branch = "cli" }
 rand = "0.8.5"
-regress = "0.4.1"
+regress = "0.5.0"
 reqwest = "0.11.15"
 schemars = { version = "0.8.12", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.158", features = ["derive"] }
