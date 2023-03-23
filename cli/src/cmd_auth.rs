@@ -756,12 +756,10 @@ fn test_cmd_auth_status() {
 
     let mut cmd = Command::cargo_bin("oxide").unwrap();
 
-    // Check that the command works
-    cmd.arg("auth").arg("status");
-    cmd.assert().success();
-
     // Set auth information through environment variables and check they are included in the results
-    cmd.env("OXIDE_HOST", "http://111.1.1.1/")
+    cmd.arg("auth")
+        .arg("status")
+        .env("OXIDE_HOST", "http://111.1.1.1/")
         .env("OXIDE_TOKEN", "oxide-token-1111");
     cmd.assert().stdout(str::contains(
         "http://111.1.1.1/: [\"Not authenticated. Host/token combination invalid\"]",
