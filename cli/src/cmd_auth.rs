@@ -442,7 +442,8 @@ impl CmdAuthLogout {
 /// Verifies and displays information about your authentication state.
 ///
 /// This command will test your authentication state for each Oxide host that `oxide`
-/// knows about and report on any issues.
+/// knows about and report on any issues. These hosts may be from your hosts.toml file and/or
+/// environment variables.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthStatus {
@@ -463,16 +464,30 @@ impl CmdAuthStatus {
 
         let host_list = &mut ctx.config.hosts.hosts;
 
+        // Include login information from environment variables if set
+        if let (Some(h), Some(t)) = (
+            std::env::var_os("OXIDE_HOST"),
+            std::env::var_os("OXIDE_TOKEN"),
+        ) {
+            let info = Host {
+                token: t.into_string().unwrap(),
+                user: String::from(""),
+                default: false,
+            };
+            host_list.insert(h.into_string().unwrap(), info);
+        }
+
         if host_list.is_empty() {
             return Err(anyhow!("You are not logged into any Oxide hosts."));
         }
 
+        // Return a single result if the --host flag has been set
         if let Some(url) = &self.host {
             if host_list.contains_key(url.as_ref()) {
                 host_list.retain(|k, _| k == url.as_str())
             } else {
                 return Err(anyhow!(
-                    "Host {} Not found in hosts.toml file.",
+                    "Host {} Not found in hosts.toml file or environment variables.",
                     url.as_str()
                 ));
             }
@@ -517,12 +532,7 @@ impl CmdAuthStatus {
 
             // TODO: Once tokens have expiry dates, let them know if their token is invalid.
 
-            host_status.push(format!(
-                "Logged in to {} as {}",
-                host,
-                &email,
-                // token_source
-            ));
+            host_status.push(format!("Logged in to {} as {}", host, &email,));
             let mut token_display = "*******************".to_string();
             if self.show_token {
                 token_display = info.token.to_string();
