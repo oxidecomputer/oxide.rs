@@ -450,9 +450,7 @@ pub struct CmdAuthStatus {
     #[clap(short = 't', long)]
     pub show_token: bool,
 
-    /// Check a specific hostname's auth status.
-    // TODO: Using the env var is so confusing let's just keep it without it
-    // #[clap(short = 'H', long, env = "OXIDE_HOST", value_parser = parse_host)]
+    /// Check a specific hostname's authentication status.
     #[clap(short = 'H', long, value_parser = parse_host)]
     pub host: Option<url::Url>,
 }
@@ -463,32 +461,24 @@ impl CmdAuthStatus {
     pub async fn run(&self, ctx: &mut Context) -> Result<()> {
         let mut status_info: HashMap<String, Vec<String>> = HashMap::new();
 
-        // let hostnames = ctx.config.hosts()?;
+        let host_list = &mut ctx.config.hosts.hosts;
 
-        // if hostnames.is_empty() {
-        //     writeln!(
-        //         ctx.io.out,
-        //         "You are not logged into any Oxide hosts. Run {} to authenticate.",
-        //         cs.bold("oxide auth login")
-        //     )?;
-        //     return Ok(());
-        // }
+        if host_list.is_empty() {
+            return Err(anyhow!("You are not logged into any Oxide hosts."));
+        }
 
-        let mut failed = false;
-        let mut hostname_found = false;
+        if let Some(url) = &self.host {
+            if host_list.contains_key(url.as_ref()) {
+                host_list.retain(|k, _| k == url.as_str())
+            } else {
+                return Err(anyhow!(
+                    "Host {} Not found in hosts.toml file.",
+                    url.as_str()
+                ));
+            }
+        }
 
-        // Check if host from flag matches any hostnames in the hosts.toml file
-        // for hostname in &hostnames {
-        //     if matches!(&self.host, Some(host) if host.as_str() != *hostname) {
-        //         continue;
-        //     }
-
-        //     hostname_found = true;
-
-        //     let (token, token_source) = ctx.config.get_with_source(hostname, "token")?;
-
-        // TODO: Create a client with each host
-        for (host, info) in ctx.config.hosts.hosts.iter() {
+        for (host, info) in host_list.iter() {
             // Construct a client with each host/token combination
             let auth = format!("Bearer {}", info.token);
             let dur = std::time::Duration::from_secs(15);
@@ -531,7 +521,7 @@ impl CmdAuthStatus {
                 "Logged in to {} as {}",
                 host,
                 &email,
-                //            token_source
+                // token_source
             ));
             let mut token_display = "*******************".to_string();
             if self.show_token {
@@ -540,33 +530,6 @@ impl CmdAuthStatus {
             host_status.push(format!("Token: {}", token_display));
 
             status_info.insert(host.to_string(), host_status);
-
-            // if !hostname_found {
-            //     writeln!(
-            //         ctx.io.err_out,
-            //         "Hostname {} not found among authenticated Oxide hosts",
-            //         self.host.as_ref().unwrap().as_str(),
-            //     )?;
-            //     return Err(anyhow!(""));
-            // }
-
-            // for hostname in hostnames {
-            //     match status_info.get(&hostname) {
-            //         Some(status) => {
-            //             writeln!(ctx.io.out, "{}", cs.bold(&hostname))?;
-            //             for line in status {
-            //                 writeln!(ctx.io.out, "{}", line)?;
-            //             }
-            //         }
-            //         None => {
-            //             writeln!(ctx.io.err_out, "No status information for {}", hostname)?;
-            //         }
-            //     }
-            // }
-
-            if failed {
-                return Err(anyhow!(""));
-            }
         }
 
         for (key, value) in &status_info {
