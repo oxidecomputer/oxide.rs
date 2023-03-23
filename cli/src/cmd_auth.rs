@@ -15,7 +15,10 @@ use oauth2::{
 };
 use oxide_api::{ClientHiddenExt, ClientSessionExt};
 
-use crate::{config::Host, context::Context};
+use crate::{
+    config::{Config, Host},
+    context::Context,
+};
 
 /// Login, logout, and get the status of your authentication.
 ///
@@ -40,7 +43,7 @@ impl CmdAuth {
         match &self.subcmd {
             SubCommand::Login(cmd) => cmd.run(ctx).await,
             SubCommand::Logout(cmd) => cmd.run().await,
-            SubCommand::Status(cmd) => cmd.run(ctx).await,
+            SubCommand::Status(cmd) => cmd.run().await,
         }
     }
 }
@@ -443,7 +446,7 @@ impl CmdAuthLogout {
 ///
 /// This command will test your authentication state for each Oxide host that `oxide`
 /// knows about and report on any issues. These hosts may be from your hosts.toml file and/or
-/// environment variables.
+/// OXIDE_HOST environment variable.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthStatus {
@@ -459,18 +462,21 @@ pub struct CmdAuthStatus {
 // #[async_trait::async_trait]
 // impl crate::cmd::Command for CmdAuthStatus {
 impl CmdAuthStatus {
-    pub async fn run(&self, ctx: &mut Context) -> Result<()> {
+    pub async fn run(&self) -> Result<()> {
         let mut status_info: HashMap<String, Vec<String>> = HashMap::new();
 
-        let host_list = &mut ctx.config.hosts.hosts;
+        let config = Config::default();
+        let mut host_list = config.hosts.hosts;
 
         // Include login information from environment variables if set
-        if let (Some(h), Some(t)) = (
-            std::env::var_os("OXIDE_HOST"),
-            std::env::var_os("OXIDE_TOKEN"),
-        ) {
+        if let Some(h) = std::env::var_os("OXIDE_HOST") {
+            let env_token;
+            match std::env::var_os("OXIDE_TOKEN") {
+                Some(t) => env_token = t.into_string().unwrap(),
+                None => env_token = String::from(""),
+            };
             let info = Host {
-                token: t.into_string().unwrap(),
+                token: env_token,
                 user: String::from(""),
                 default: false,
             };
