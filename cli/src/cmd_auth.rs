@@ -748,3 +748,29 @@ mod test {
         ));
     }
 }
+
+#[test]
+fn test_cmd_auth_status() {
+    use assert_cmd::Command;
+    use predicates::str;
+
+    let mut cmd = Command::cargo_bin("oxide").unwrap();
+
+    // Check that the command works
+    cmd.arg("auth").arg("status");
+    cmd.assert().success();
+
+    // Set auth information through environment variables and check they are included in the results
+    cmd.env("OXIDE_HOST", "http://111.1.1.1/")
+        .env("OXIDE_TOKEN", "oxide-token-1111");
+    cmd.assert().stdout(str::contains(
+        "http://111.1.1.1/: [\"Not authenticated. Host/token combination invalid\"]",
+    ));
+
+    // Make sure the command only returns information about the specified host
+    cmd.arg("-H").arg("http://111.1.1.1/");
+    cmd.assert()
+        .stdout("http://111.1.1.1/: [\"Not authenticated. Host/token combination invalid\"]\n");
+
+    // TODO: Add tests checking for logged in hosts once we have an environment we can log into
+}

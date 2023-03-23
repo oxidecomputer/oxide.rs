@@ -11,6 +11,7 @@ default-run = "oxide"
 
 [dependencies]
 anyhow = { workspace = true }
+assert_cmd = { workspace = true }
 chrono = { workspace = true }
 clap = { workspace = true }
 dialoguer = { workspace = true }
@@ -20,6 +21,7 @@ http = { workspace = true }
 oauth2 = { workspace = true }
 open = { workspace = true }
 oxide-api = { workspace = true }
+predicates = { workspace = true }
 reqwest = { workspace = true }
 schemars = { workspace = true }
 serde = { workspace = true }
