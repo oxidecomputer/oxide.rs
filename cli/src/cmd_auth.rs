@@ -40,7 +40,7 @@ impl CmdAuth {
         match &self.subcmd {
             SubCommand::Login(cmd) => cmd.run(ctx).await,
             SubCommand::Logout(cmd) => cmd.run().await,
-            SubCommand::Status(cmd) => cmd.run().await,
+            SubCommand::Status(cmd) => cmd.run(ctx).await,
         }
     }
 }
@@ -451,16 +451,16 @@ pub struct CmdAuthStatus {
     pub show_token: bool,
 
     /// Check a specific hostname's auth status.
-    #[clap(short = 'H', long, env = "OXIDE_HOST", value_parser = parse_host)]
+    // TODO: Using the env var is so confusing let's just keep it without it
+    // #[clap(short = 'H', long, env = "OXIDE_HOST", value_parser = parse_host)]
+    #[clap(short = 'H', long, value_parser = parse_host)]
     pub host: Option<url::Url>,
 }
 
 // #[async_trait::async_trait]
 // impl crate::cmd::Command for CmdAuthStatus {
 impl CmdAuthStatus {
-    pub async fn run(&self) -> Result<()> {
-        // let cs = ctx.io.color_scheme();
-
+    pub async fn run(&self, ctx: &mut Context) -> Result<()> {
         let mut status_info: HashMap<String, Vec<String>> = HashMap::new();
 
         // let hostnames = ctx.config.hosts()?;
@@ -477,6 +477,7 @@ impl CmdAuthStatus {
         let mut failed = false;
         let mut hostname_found = false;
 
+        // Check if host from flag matches any hostnames in the hosts.toml file
         // for hostname in &hostnames {
         //     if matches!(&self.host, Some(host) if host.as_str() != *hostname) {
         //         continue;
@@ -486,80 +487,90 @@ impl CmdAuthStatus {
 
         //     let (token, token_source) = ctx.config.get_with_source(hostname, "token")?;
 
-        //     let client = ctx.api_client(hostname)?;
+        // TODO: Create a client with each host
+        for (host, info) in ctx.config.hosts.hosts.iter() {
+            // Construct a client with each host/token combination
+            let auth = format!("Bearer {}", info.token);
+            let dur = std::time::Duration::from_secs(15);
+            let rclient = reqwest::Client::builder()
+                .connect_timeout(dur)
+                .timeout(dur)
+                .default_headers(
+                    [(http::header::AUTHORIZATION, auth.try_into().unwrap())]
+                        .into_iter()
+                        .collect(),
+                )
+                .build()
+                .unwrap();
+            let client = oxide_api::Client::new_with_client(host.as_ref(), rclient);
 
-        //     let mut host_status: Vec<String> = vec![];
+            let mut host_status: Vec<String> = vec![];
 
-        //     match client.hidden().session_me().await {
-        //         Ok(session) => {
-        //             // TODO: this should be the users email or something consistent with login
-        //             // and logout.
-        //             let email = session.id.to_string();
-        //             // Let the user know if their token is invalid.
-        //             /*if !session.is_valid() {
-        //             host_status.push(format!(
-        //                 "{} Logged in to {} as {} ({}) with an invalid token",
-        //                 cs.failure_icon(),
-        //                 hostname,
-        //                 cs.bold(&email),
-        //                 token_source
-        //             ));
-        //             failed = true;
-        //             continue;
-        //             }*/
-        //             host_status.push(format!(
-        //                 "{} Logged in to {} as {} ({})",
-        //                 cs.success_icon(),
-        //                 hostname,
-        //                 cs.bold(&email),
-        //                 token_source
-        //             ));
-        //             let mut token_display = "*******************".to_string();
-        //             if self.show_token {
-        //                 token_display = token.to_string();
-        //             }
-        //             host_status.push(format!("{} Token: {}", cs.success_icon(), token_display));
-        //         }
-        //         Err(err) => {
-        //             host_status.push(format!(
-        //                 "{} {}: api call failed: {}",
-        //                 cs.failure_icon(),
-        //                 hostname,
-        //                 err
-        //             ));
-        //             failed = true;
-        //             continue;
-        //         }
-        //     }
+            let user;
+            let result = client.current_user_view().send().await;
+            match result {
+                Ok(usr) => {
+                    user = usr;
+                }
+                Err(_) => {
+                    host_status.push(String::from(
+                        "Not authenticated. Host/token combination invalid",
+                    ));
+                    status_info.insert(host.to_string(), host_status.clone());
+                    continue;
+                }
+            }
 
-        //     status_info.insert(hostname.to_string(), host_status);
-        // }
+            // TODO: this should be the users email or something consistent with login
+            // and logout.
+            let email = user.id.to_string();
 
-        // if !hostname_found {
-        //     writeln!(
-        //         ctx.io.err_out,
-        //         "Hostname {} not found among authenticated Oxide hosts",
-        //         self.host.as_ref().unwrap().as_str(),
-        //     )?;
-        //     return Err(anyhow!(""));
-        // }
+            // TODO: Once tokens have expiry dates, let them know if their token is invalid.
 
-        // for hostname in hostnames {
-        //     match status_info.get(&hostname) {
-        //         Some(status) => {
-        //             writeln!(ctx.io.out, "{}", cs.bold(&hostname))?;
-        //             for line in status {
-        //                 writeln!(ctx.io.out, "{}", line)?;
-        //             }
-        //         }
-        //         None => {
-        //             writeln!(ctx.io.err_out, "No status information for {}", hostname)?;
-        //         }
-        //     }
-        // }
+            host_status.push(format!(
+                "Logged in to {} as {}",
+                host,
+                &email,
+                //            token_source
+            ));
+            let mut token_display = "*******************".to_string();
+            if self.show_token {
+                token_display = info.token.to_string();
+            }
+            host_status.push(format!("Token: {}", token_display));
 
-        if failed {
-            return Err(anyhow!(""));
+            status_info.insert(host.to_string(), host_status);
+
+            // if !hostname_found {
+            //     writeln!(
+            //         ctx.io.err_out,
+            //         "Hostname {} not found among authenticated Oxide hosts",
+            //         self.host.as_ref().unwrap().as_str(),
+            //     )?;
+            //     return Err(anyhow!(""));
+            // }
+
+            // for hostname in hostnames {
+            //     match status_info.get(&hostname) {
+            //         Some(status) => {
+            //             writeln!(ctx.io.out, "{}", cs.bold(&hostname))?;
+            //             for line in status {
+            //                 writeln!(ctx.io.out, "{}", line)?;
+            //             }
+            //         }
+            //         None => {
+            //             writeln!(ctx.io.err_out, "No status information for {}", hostname)?;
+            //         }
+            //     }
+            // }
+
+            if failed {
+                return Err(anyhow!(""));
+            }
+        }
+
+        for (key, value) in &status_info {
+            println!("{}: {:?}", key, value);
         }
 
         Ok(())
