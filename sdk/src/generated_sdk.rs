@@ -6100,7 +6100,8 @@ pub mod types {
         }
     }
 
-    mod builder {
+    pub mod builder {
+        #[derive(Clone, Debug)]
         pub struct Baseboard {
             part: Result<String, String>,
             revision: Result<i64, String>,
@@ -6171,6 +6172,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Bindouble {
             count: Result<u64, String>,
             range: Result<super::BinRangedouble, String>,
@@ -6227,6 +6229,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Binint64 {
             count: Result<u64, String>,
             range: Result<super::BinRangeint64, String>,
@@ -6283,6 +6286,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Certificate {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -6395,6 +6399,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct CertificateCreate {
             cert: Result<Vec<u8>, String>,
             description: Result<String, String>,
@@ -6493,6 +6498,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct CertificateResultsPage {
             items: Result<Vec<super::Certificate>, String>,
             next_page: Result<Option<String>, String>,
@@ -6549,6 +6555,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ComponentUpdate {
             component_type: Result<super::UpdateableComponentType, String>,
             id: Result<uuid::Uuid, String>,
@@ -6647,6 +6654,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ComponentUpdateResultsPage {
             items: Result<Vec<super::ComponentUpdate>, String>,
             next_page: Result<Option<String>, String>,
@@ -6703,6 +6711,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Cumulativedouble {
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             value: Result<f64, String>,
@@ -6759,6 +6768,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Cumulativeint64 {
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             value: Result<i64, String>,
@@ -6815,6 +6825,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct DerEncodedKeyPair {
             private_key: Result<String, String>,
             public_cert: Result<String, String>,
@@ -6871,6 +6882,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct DeviceAccessTokenRequest {
             client_id: Result<uuid::Uuid, String>,
             device_code: Result<String, String>,
@@ -6941,6 +6953,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct DeviceAuthRequest {
             client_id: Result<uuid::Uuid, String>,
         }
@@ -6983,6 +6996,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct DeviceAuthVerify {
             user_code: Result<String, String>,
         }
@@ -7025,6 +7039,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Disk {
             block_size: Result<super::ByteCount, String>,
             description: Result<String, String>,
@@ -7221,6 +7236,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct DiskCreate {
             description: Result<String, String>,
             disk_source: Result<super::DiskSource, String>,
@@ -7305,6 +7321,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct DiskPath {
             disk: Result<super::NameOrId, String>,
         }
@@ -7345,6 +7362,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct DiskResultsPage {
             items: Result<Vec<super::Disk>, String>,
             next_page: Result<Option<String>, String>,
@@ -7401,6 +7419,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Distribution {
             name: Result<super::Name, String>,
             version: Result<String, String>,
@@ -7457,6 +7476,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Error {
             error_code: Result<Option<String>, String>,
             message: Result<String, String>,
@@ -7527,6 +7547,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ExternalIp {
             ip: Result<std::net::IpAddr, String>,
             kind: Result<super::IpKind, String>,
@@ -7583,6 +7604,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ExternalIpResultsPage {
             items: Result<Vec<super::ExternalIp>, String>,
             next_page: Result<Option<String>, String>,
@@ -7639,6 +7661,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct FleetRolePolicy {
             role_assignments: Result<Vec<super::FleetRoleRoleAssignment>, String>,
         }
@@ -7684,6 +7707,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct FleetRoleRoleAssignment {
             identity_id: Result<uuid::Uuid, String>,
             identity_type: Result<super::IdentityType, String>,
@@ -7754,6 +7778,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct GlobalImage {
             block_size: Result<super::ByteCount, String>,
             description: Result<String, String>,
@@ -7936,6 +7961,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct GlobalImageCreate {
             block_size: Result<super::BlockSize, String>,
             description: Result<String, String>,
@@ -8034,6 +8060,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct GlobalImageResultsPage {
             items: Result<Vec<super::GlobalImage>, String>,
             next_page: Result<Option<String>, String>,
@@ -8090,6 +8117,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Group {
             display_name: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -8160,6 +8188,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct GroupResultsPage {
             items: Result<Vec<super::Group>, String>,
             next_page: Result<Option<String>, String>,
@@ -8216,6 +8245,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Histogramdouble {
             bins: Result<Vec<super::Bindouble>, String>,
             n_samples: Result<u64, String>,
@@ -8286,6 +8316,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Histogramint64 {
             bins: Result<Vec<super::Binint64>, String>,
             n_samples: Result<u64, String>,
@@ -8356,6 +8387,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct IdentityProvider {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -8468,6 +8500,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct IdentityProviderResultsPage {
             items: Result<Vec<super::IdentityProvider>, String>,
             next_page: Result<Option<String>, String>,
@@ -8524,6 +8557,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Image {
             block_size: Result<super::ByteCount, String>,
             description: Result<String, String>,
@@ -8720,6 +8754,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ImageCreate {
             block_size: Result<super::BlockSize, String>,
             description: Result<String, String>,
@@ -8832,6 +8867,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ImageResultsPage {
             items: Result<Vec<super::Image>, String>,
             next_page: Result<Option<String>, String>,
@@ -8888,6 +8924,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Instance {
             description: Result<String, String>,
             hostname: Result<String, String>,
@@ -9075,6 +9112,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct InstanceCreate {
             description: Result<String, String>,
             disks: Result<Vec<super::InstanceDiskAttachment>, String>,
@@ -9246,6 +9284,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct InstanceMigrate {
             dst_sled_id: Result<uuid::Uuid, String>,
         }
@@ -9288,6 +9327,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct InstanceResultsPage {
             items: Result<Vec<super::Instance>, String>,
             next_page: Result<Option<String>, String>,
@@ -9344,6 +9384,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct InstanceSerialConsoleData {
             data: Result<Vec<u8>, String>,
             last_byte_offset: Result<u64, String>,
@@ -9403,6 +9444,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct IpPool {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -9501,6 +9543,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct IpPoolCreate {
             description: Result<String, String>,
             name: Result<super::Name, String>,
@@ -9557,6 +9600,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct IpPoolRange {
             id: Result<uuid::Uuid, String>,
             range: Result<super::IpRange, String>,
@@ -9627,6 +9671,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct IpPoolRangeResultsPage {
             items: Result<Vec<super::IpPoolRange>, String>,
             next_page: Result<Option<String>, String>,
@@ -9683,6 +9728,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct IpPoolResultsPage {
             items: Result<Vec<super::IpPool>, String>,
             next_page: Result<Option<String>, String>,
@@ -9739,6 +9785,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct IpPoolUpdate {
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
@@ -9795,6 +9842,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Ipv4Range {
             first: Result<std::net::Ipv4Addr, String>,
             last: Result<std::net::Ipv4Addr, String>,
@@ -9851,6 +9899,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Ipv6Range {
             first: Result<std::net::Ipv6Addr, String>,
             last: Result<std::net::Ipv6Addr, String>,
@@ -9907,6 +9956,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Measurement {
             datum: Result<super::Datum, String>,
             timestamp: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -9963,6 +10013,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct MeasurementResultsPage {
             items: Result<Vec<super::Measurement>, String>,
             next_page: Result<Option<String>, String>,
@@ -10019,6 +10070,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct NetworkInterface {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -10201,6 +10253,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct NetworkInterfaceCreate {
             description: Result<String, String>,
             ip: Result<Option<std::net::IpAddr>, String>,
@@ -10299,6 +10352,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct NetworkInterfaceResultsPage {
             items: Result<Vec<super::NetworkInterface>, String>,
             next_page: Result<Option<String>, String>,
@@ -10355,6 +10409,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct NetworkInterfaceUpdate {
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
@@ -10425,6 +10480,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct PhysicalDisk {
             disk_type: Result<super::PhysicalDiskType, String>,
             id: Result<uuid::Uuid, String>,
@@ -10565,6 +10621,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct PhysicalDiskResultsPage {
             items: Result<Vec<super::PhysicalDisk>, String>,
             next_page: Result<Option<String>, String>,
@@ -10621,6 +10678,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Project {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -10719,6 +10777,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ProjectCreate {
             description: Result<String, String>,
             name: Result<super::Name, String>,
@@ -10775,6 +10834,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ProjectResultsPage {
             items: Result<Vec<super::Project>, String>,
             next_page: Result<Option<String>, String>,
@@ -10831,6 +10891,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ProjectRolePolicy {
             role_assignments: Result<Vec<super::ProjectRoleRoleAssignment>, String>,
         }
@@ -10876,6 +10937,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ProjectRoleRoleAssignment {
             identity_id: Result<uuid::Uuid, String>,
             identity_type: Result<super::IdentityType, String>,
@@ -10946,6 +11008,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct ProjectUpdate {
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
@@ -11002,6 +11065,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Rack {
             id: Result<uuid::Uuid, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -11072,6 +11136,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct RackResultsPage {
             items: Result<Vec<super::Rack>, String>,
             next_page: Result<Option<String>, String>,
@@ -11128,6 +11193,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Role {
             description: Result<String, String>,
             name: Result<super::RoleName, String>,
@@ -11184,6 +11250,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct RoleResultsPage {
             items: Result<Vec<super::Role>, String>,
             next_page: Result<Option<String>, String>,
@@ -11240,6 +11307,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct RouterRoute {
             description: Result<String, String>,
             destination: Result<super::RouteDestination, String>,
@@ -11394,6 +11462,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct RouterRouteCreate {
             description: Result<String, String>,
             destination: Result<super::RouteDestination, String>,
@@ -11478,6 +11547,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct RouterRouteResultsPage {
             items: Result<Vec<super::RouterRoute>, String>,
             next_page: Result<Option<String>, String>,
@@ -11534,6 +11604,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct RouterRouteUpdate {
             description: Result<Option<String>, String>,
             destination: Result<super::RouteDestination, String>,
@@ -11618,6 +11689,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Saga {
             id: Result<uuid::Uuid, String>,
             state: Result<super::SagaState, String>,
@@ -11674,6 +11746,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SagaResultsPage {
             items: Result<Vec<super::Saga>, String>,
             next_page: Result<Option<String>, String>,
@@ -11730,6 +11803,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SamlIdentityProvider {
             acs_url: Result<String, String>,
             description: Result<String, String>,
@@ -11917,6 +11991,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SamlIdentityProviderCreate {
             acs_url: Result<String, String>,
             description: Result<String, String>,
@@ -12098,6 +12173,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Silo {
             description: Result<String, String>,
             discoverable: Result<bool, String>,
@@ -12224,6 +12300,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SiloCreate {
             admin_group_name: Result<Option<String>, String>,
             description: Result<String, String>,
@@ -12325,6 +12402,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SiloResultsPage {
             items: Result<Vec<super::Silo>, String>,
             next_page: Result<Option<String>, String>,
@@ -12381,6 +12459,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SiloRolePolicy {
             role_assignments: Result<Vec<super::SiloRoleRoleAssignment>, String>,
         }
@@ -12426,6 +12505,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SiloRoleRoleAssignment {
             identity_id: Result<uuid::Uuid, String>,
             identity_type: Result<super::IdentityType, String>,
@@ -12496,6 +12576,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Sled {
             baseboard: Result<super::Baseboard, String>,
             id: Result<uuid::Uuid, String>,
@@ -12632,6 +12713,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SledResultsPage {
             items: Result<Vec<super::Sled>, String>,
             next_page: Result<Option<String>, String>,
@@ -12688,6 +12770,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Snapshot {
             description: Result<String, String>,
             disk_id: Result<uuid::Uuid, String>,
@@ -12842,6 +12925,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SnapshotCreate {
             description: Result<String, String>,
             disk: Result<super::Name, String>,
@@ -12912,6 +12996,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SnapshotResultsPage {
             items: Result<Vec<super::Snapshot>, String>,
             next_page: Result<Option<String>, String>,
@@ -12968,6 +13053,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SpoofLoginBody {
             username: Result<String, String>,
         }
@@ -13010,6 +13096,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SshKey {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -13136,6 +13223,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SshKeyCreate {
             description: Result<String, String>,
             name: Result<super::Name, String>,
@@ -13206,6 +13294,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SshKeyResultsPage {
             items: Result<Vec<super::SshKey>, String>,
             next_page: Result<Option<String>, String>,
@@ -13262,6 +13351,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SystemUpdate {
             id: Result<uuid::Uuid, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -13346,6 +13436,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SystemUpdateResultsPage {
             items: Result<Vec<super::SystemUpdate>, String>,
             next_page: Result<Option<String>, String>,
@@ -13402,6 +13493,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SystemUpdateStart {
             version: Result<super::SemverVersion, String>,
         }
@@ -13444,6 +13536,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct SystemVersion {
             status: Result<super::UpdateStatus, String>,
             version_range: Result<super::VersionRange, String>,
@@ -13500,6 +13593,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct UpdateDeployment {
             id: Result<uuid::Uuid, String>,
             status: Result<super::UpdateStatus, String>,
@@ -13598,6 +13692,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct UpdateDeploymentResultsPage {
             items: Result<Vec<super::UpdateDeployment>, String>,
             next_page: Result<Option<String>, String>,
@@ -13654,6 +13749,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct UpdateableComponent {
             component_type: Result<super::UpdateableComponentType, String>,
             device_id: Result<String, String>,
@@ -13794,6 +13890,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct UpdateableComponentResultsPage {
             items: Result<Vec<super::UpdateableComponent>, String>,
             next_page: Result<Option<String>, String>,
@@ -13852,6 +13949,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct User {
             display_name: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -13922,6 +14020,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct UserBuiltin {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -14020,6 +14119,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct UserBuiltinResultsPage {
             items: Result<Vec<super::UserBuiltin>, String>,
             next_page: Result<Option<String>, String>,
@@ -14076,6 +14176,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct UserCreate {
             external_id: Result<super::UserId, String>,
             password: Result<super::UserPassword, String>,
@@ -14132,6 +14233,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct UserResultsPage {
             items: Result<Vec<super::User>, String>,
             next_page: Result<Option<String>, String>,
@@ -14188,6 +14290,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct UsernamePasswordCredentials {
             password: Result<super::Password, String>,
             username: Result<super::UserId, String>,
@@ -14244,6 +14347,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VersionRange {
             high: Result<super::SemverVersion, String>,
             low: Result<super::SemverVersion, String>,
@@ -14300,6 +14404,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct Vpc {
             description: Result<String, String>,
             dns_name: Result<super::Name, String>,
@@ -14457,6 +14562,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcCreate {
             description: Result<String, String>,
             dns_name: Result<super::Name, String>,
@@ -14541,6 +14647,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcFirewallRule {
             action: Result<super::VpcFirewallRuleAction, String>,
             description: Result<String, String>,
@@ -14737,6 +14844,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcFirewallRuleFilter {
             hosts: Result<Option<Vec<super::VpcFirewallRuleHostFilter>>, String>,
             ports: Result<Option<Vec<super::L4PortRange>>, String>,
@@ -14807,6 +14915,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcFirewallRuleUpdate {
             action: Result<super::VpcFirewallRuleAction, String>,
             description: Result<String, String>,
@@ -14947,6 +15056,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcFirewallRuleUpdateParams {
             rules: Result<Vec<super::VpcFirewallRuleUpdate>, String>,
         }
@@ -14989,6 +15099,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcFirewallRules {
             rules: Result<Vec<super::VpcFirewallRule>, String>,
         }
@@ -15031,6 +15142,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcResultsPage {
             items: Result<Vec<super::Vpc>, String>,
             next_page: Result<Option<String>, String>,
@@ -15087,6 +15199,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcRouter {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -15213,6 +15326,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcRouterCreate {
             description: Result<String, String>,
             name: Result<super::Name, String>,
@@ -15269,6 +15383,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcRouterResultsPage {
             items: Result<Vec<super::VpcRouter>, String>,
             next_page: Result<Option<String>, String>,
@@ -15325,6 +15440,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcRouterUpdate {
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
@@ -15381,6 +15497,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcSubnet {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -15521,6 +15638,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcSubnetCreate {
             description: Result<String, String>,
             ipv4_block: Result<super::Ipv4Net, String>,
@@ -15605,6 +15723,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcSubnetResultsPage {
             items: Result<Vec<super::VpcSubnet>, String>,
             next_page: Result<Option<String>, String>,
@@ -15661,6 +15780,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcSubnetUpdate {
             description: Result<Option<String>, String>,
             name: Result<Option<super::Name>, String>,
@@ -15717,6 +15837,7 @@ pub mod types {
             }
         }
 
+        #[derive(Clone, Debug)]
         pub struct VpcUpdate {
             description: Result<Option<String>, String>,
             dns_name: Result<Option<super::Name>, String>,
@@ -15788,7 +15909,7 @@ pub mod types {
         }
     }
 
-    mod defaults {
+    pub mod defaults {
         pub(super) fn default_bool<const V: bool>() -> bool {
             V
         }
@@ -16768,14 +16889,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct DeviceAuthRequest<'a> {
         client: &'a super::Client,
-        body: Result<types::DeviceAuthRequest, String>,
+        body: Result<types::builder::DeviceAuthRequest, String>,
     }
 
     impl<'a> DeviceAuthRequest<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::DeviceAuthRequest::default()),
             }
         }
 
@@ -16785,14 +16906,27 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `DeviceAuthRequest` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::DeviceAuthRequest,
+            ) -> types::builder::DeviceAuthRequest,
+        {
+            self.body = self.body.map(f);
             self
         }
 
         #[doc = "Sends a `POST` request to `/device/auth`"]
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::DeviceAuthRequest::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/device/auth", client.baseurl,);
             let request = client.client.post(url).form_urlencoded(&body)?.build()?;
             let result = client.client.execute(request).await;
@@ -16808,14 +16942,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct DeviceAuthConfirm<'a> {
         client: &'a super::Client,
-        body: Result<types::DeviceAuthVerify, String>,
+        body: Result<types::builder::DeviceAuthVerify, String>,
     }
 
     impl<'a> DeviceAuthConfirm<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::DeviceAuthVerify::default()),
             }
         }
 
@@ -16825,14 +16959,27 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `DeviceAuthVerify` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::DeviceAuthVerify,
+            ) -> types::builder::DeviceAuthVerify,
+        {
+            self.body = self.body.map(f);
             self
         }
 
         #[doc = "Sends a `POST` request to `/device/confirm`"]
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::DeviceAuthVerify::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/device/confirm", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -16854,14 +17001,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct DeviceAccessToken<'a> {
         client: &'a super::Client,
-        body: Result<types::DeviceAccessTokenRequest, String>,
+        body: Result<types::builder::DeviceAccessTokenRequest, String>,
     }
 
     impl<'a> DeviceAccessToken<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::DeviceAccessTokenRequest::default()),
             }
         }
 
@@ -16869,16 +17016,28 @@ pub mod builder {
         where
             V: std::convert::TryInto<types::DeviceAccessTokenRequest>,
         {
-            self.body = value.try_into().map_err(|_| {
+            self.body = value.try_into().map(From::from).map_err(|_| {
                 "conversion to `DeviceAccessTokenRequest` for body failed".to_string()
             });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::DeviceAccessTokenRequest,
+            ) -> types::builder::DeviceAccessTokenRequest,
+        {
+            self.body = self.body.map(f);
             self
         }
 
         #[doc = "Sends a `POST` request to `/device/token`"]
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::DeviceAccessTokenRequest::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/device/token", client.baseurl,);
             let request = client.client.post(url).form_urlencoded(&body)?.build()?;
             let result = client.client.execute(request).await;
@@ -16894,14 +17053,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct LoginSpoof<'a> {
         client: &'a super::Client,
-        body: Result<types::SpoofLoginBody, String>,
+        body: Result<types::builder::SpoofLoginBody, String>,
     }
 
     impl<'a> LoginSpoof<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::SpoofLoginBody::default()),
             }
         }
 
@@ -16911,14 +17070,25 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `SpoofLoginBody` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::SpoofLoginBody) -> types::builder::SpoofLoginBody,
+        {
+            self.body = self.body.map(f);
             self
         }
 
         #[doc = "Sends a `POST` request to `/login`"]
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::SpoofLoginBody::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/login", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -16941,7 +17111,7 @@ pub mod builder {
     pub struct LoginLocal<'a> {
         client: &'a super::Client,
         silo_name: Result<types::Name, String>,
-        body: Result<types::UsernamePasswordCredentials, String>,
+        body: Result<types::builder::UsernamePasswordCredentials, String>,
     }
 
     impl<'a> LoginLocal<'a> {
@@ -16949,7 +17119,7 @@ pub mod builder {
             Self {
                 client,
                 silo_name: Err("silo_name was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::UsernamePasswordCredentials::default()),
             }
         }
 
@@ -16967,9 +17137,19 @@ pub mod builder {
         where
             V: std::convert::TryInto<types::UsernamePasswordCredentials>,
         {
-            self.body = value.try_into().map_err(|_| {
+            self.body = value.try_into().map(From::from).map_err(|_| {
                 "conversion to `UsernamePasswordCredentials` for body failed".to_string()
             });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::UsernamePasswordCredentials,
+            ) -> types::builder::UsernamePasswordCredentials,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -16981,7 +17161,9 @@ pub mod builder {
                 body,
             } = self;
             let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::UsernamePasswordCredentials::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/login/{}/local",
                 client.baseurl,
@@ -17384,14 +17566,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SystemImageCreate<'a> {
         client: &'a super::Client,
-        body: Result<types::GlobalImageCreate, String>,
+        body: Result<types::builder::GlobalImageCreate, String>,
     }
 
     impl<'a> SystemImageCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::GlobalImageCreate::default()),
             }
         }
 
@@ -17401,14 +17583,27 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `GlobalImageCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::GlobalImageCreate,
+            ) -> types::builder::GlobalImageCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
         #[doc = "Sends a `POST` request to `/system/images`"]
         pub async fn send(self) -> Result<ResponseValue<types::GlobalImage>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::GlobalImageCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/system/images", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -17688,7 +17883,7 @@ pub mod builder {
     pub struct DiskCreate<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        body: Result<types::DiskCreate, String>,
+        body: Result<types::builder::DiskCreate, String>,
     }
 
     impl<'a> DiskCreate<'a> {
@@ -17696,7 +17891,7 @@ pub mod builder {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::DiskCreate::default()),
             }
         }
 
@@ -17716,7 +17911,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `DiskCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::DiskCreate) -> types::builder::DiskCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -17728,7 +17932,9 @@ pub mod builder {
                 body,
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::DiskCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/disks", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
             query.push(("project", project.to_string()));
@@ -18445,7 +18651,7 @@ pub mod builder {
     pub struct ImageCreate<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        body: Result<types::ImageCreate, String>,
+        body: Result<types::builder::ImageCreate, String>,
     }
 
     impl<'a> ImageCreate<'a> {
@@ -18453,7 +18659,7 @@ pub mod builder {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::ImageCreate::default()),
             }
         }
 
@@ -18473,7 +18679,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `ImageCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::ImageCreate) -> types::builder::ImageCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -18485,7 +18700,9 @@ pub mod builder {
                 body,
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::ImageCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/images", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
             query.push(("project", project.to_string()));
@@ -18811,7 +19028,7 @@ pub mod builder {
     pub struct InstanceCreate<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        body: Result<types::InstanceCreate, String>,
+        body: Result<types::builder::InstanceCreate, String>,
     }
 
     impl<'a> InstanceCreate<'a> {
@@ -18819,7 +19036,7 @@ pub mod builder {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::InstanceCreate::default()),
             }
         }
 
@@ -18839,7 +19056,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `InstanceCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::InstanceCreate) -> types::builder::InstanceCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -18851,7 +19077,9 @@ pub mod builder {
                 body,
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::InstanceCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/instances", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
             query.push(("project", project.to_string()));
@@ -19196,7 +19424,7 @@ pub mod builder {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::DiskPath, String>,
+        body: Result<types::builder::DiskPath, String>,
     }
 
     impl<'a> InstanceDiskAttach<'a> {
@@ -19205,7 +19433,7 @@ pub mod builder {
                 client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::DiskPath::default()),
             }
         }
 
@@ -19236,7 +19464,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `DiskPath` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::DiskPath) -> types::builder::DiskPath,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -19250,7 +19487,9 @@ pub mod builder {
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::DiskPath::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/disks/attach",
                 client.baseurl,
@@ -19282,7 +19521,7 @@ pub mod builder {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::DiskPath, String>,
+        body: Result<types::builder::DiskPath, String>,
     }
 
     impl<'a> InstanceDiskDetach<'a> {
@@ -19291,7 +19530,7 @@ pub mod builder {
                 client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::DiskPath::default()),
             }
         }
 
@@ -19322,7 +19561,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `DiskPath` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::DiskPath) -> types::builder::DiskPath,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -19336,7 +19584,9 @@ pub mod builder {
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::DiskPath::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/disks/detach",
                 client.baseurl,
@@ -19442,7 +19692,7 @@ pub mod builder {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::InstanceMigrate, String>,
+        body: Result<types::builder::InstanceMigrate, String>,
     }
 
     impl<'a> InstanceMigrate<'a> {
@@ -19451,7 +19701,7 @@ pub mod builder {
                 client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::InstanceMigrate::default()),
             }
         }
 
@@ -19482,7 +19732,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `InstanceMigrate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::InstanceMigrate) -> types::builder::InstanceMigrate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -19496,7 +19755,9 @@ pub mod builder {
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::InstanceMigrate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/migrate",
                 client.baseurl,
@@ -20260,14 +20521,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyCreate<'a> {
         client: &'a super::Client,
-        body: Result<types::SshKeyCreate, String>,
+        body: Result<types::builder::SshKeyCreate, String>,
     }
 
     impl<'a> CurrentUserSshKeyCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::SshKeyCreate::default()),
             }
         }
 
@@ -20277,14 +20538,25 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `SshKeyCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::SshKeyCreate) -> types::builder::SshKeyCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
         #[doc = "Sends a `POST` request to `/v1/me/ssh-keys`"]
         pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::SshKeyCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/me/ssh-keys", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -20585,7 +20857,7 @@ pub mod builder {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::NetworkInterfaceCreate, String>,
+        body: Result<types::builder::NetworkInterfaceCreate, String>,
     }
 
     impl<'a> InstanceNetworkInterfaceCreate<'a> {
@@ -20594,7 +20866,7 @@ pub mod builder {
                 client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::NetworkInterfaceCreate::default()),
             }
         }
 
@@ -20625,7 +20897,18 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `NetworkInterfaceCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::NetworkInterfaceCreate,
+            ) -> types::builder::NetworkInterfaceCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -20641,7 +20924,9 @@ pub mod builder {
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::NetworkInterfaceCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/network-interfaces", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
             query.push(("instance", instance.to_string()));
@@ -20763,7 +21048,7 @@ pub mod builder {
         interface: Result<types::NameOrId, String>,
         instance: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::NetworkInterfaceUpdate, String>,
+        body: Result<types::builder::NetworkInterfaceUpdate, String>,
     }
 
     impl<'a> InstanceNetworkInterfaceUpdate<'a> {
@@ -20773,7 +21058,7 @@ pub mod builder {
                 interface: Err("interface was not initialized".to_string()),
                 instance: Ok(None),
                 project: Ok(None),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::NetworkInterfaceUpdate::default()),
             }
         }
 
@@ -20815,7 +21100,18 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `NetworkInterfaceUpdate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::NetworkInterfaceUpdate,
+            ) -> types::builder::NetworkInterfaceUpdate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -20833,7 +21129,9 @@ pub mod builder {
             let interface = interface.map_err(Error::InvalidRequest)?;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::NetworkInterfaceUpdate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/network-interfaces/{}",
                 client.baseurl,
@@ -20989,14 +21287,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct PolicyUpdate<'a> {
         client: &'a super::Client,
-        body: Result<types::SiloRolePolicy, String>,
+        body: Result<types::builder::SiloRolePolicy, String>,
     }
 
     impl<'a> PolicyUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::SiloRolePolicy::default()),
             }
         }
 
@@ -21006,7 +21304,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `SiloRolePolicy` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::SiloRolePolicy) -> types::builder::SiloRolePolicy,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -21015,7 +21322,9 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::SiloRolePolicy::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/policy", client.baseurl,);
             let request = client.client.put(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -21175,14 +21484,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct ProjectCreate<'a> {
         client: &'a super::Client,
-        body: Result<types::ProjectCreate, String>,
+        body: Result<types::builder::ProjectCreate, String>,
     }
 
     impl<'a> ProjectCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::ProjectCreate::default()),
             }
         }
 
@@ -21192,14 +21501,25 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `ProjectCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::ProjectCreate) -> types::builder::ProjectCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
         #[doc = "Sends a `POST` request to `/v1/projects`"]
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::ProjectCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/projects", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -21272,7 +21592,7 @@ pub mod builder {
     pub struct ProjectUpdate<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        body: Result<types::ProjectUpdate, String>,
+        body: Result<types::builder::ProjectUpdate, String>,
     }
 
     impl<'a> ProjectUpdate<'a> {
@@ -21280,7 +21600,7 @@ pub mod builder {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::ProjectUpdate::default()),
             }
         }
 
@@ -21300,7 +21620,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `ProjectUpdate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::ProjectUpdate) -> types::builder::ProjectUpdate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -21312,7 +21641,9 @@ pub mod builder {
                 body,
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::ProjectUpdate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}",
                 client.baseurl,
@@ -21441,7 +21772,7 @@ pub mod builder {
     pub struct ProjectPolicyUpdate<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        body: Result<types::ProjectRolePolicy, String>,
+        body: Result<types::builder::ProjectRolePolicy, String>,
     }
 
     impl<'a> ProjectPolicyUpdate<'a> {
@@ -21449,7 +21780,7 @@ pub mod builder {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::ProjectRolePolicy::default()),
             }
         }
 
@@ -21469,7 +21800,18 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `ProjectRolePolicy` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::ProjectRolePolicy,
+            ) -> types::builder::ProjectRolePolicy,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -21483,7 +21825,9 @@ pub mod builder {
                 body,
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::ProjectRolePolicy::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}/policy",
                 client.baseurl,
@@ -21667,7 +22011,7 @@ pub mod builder {
     pub struct SnapshotCreate<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        body: Result<types::SnapshotCreate, String>,
+        body: Result<types::builder::SnapshotCreate, String>,
     }
 
     impl<'a> SnapshotCreate<'a> {
@@ -21675,7 +22019,7 @@ pub mod builder {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::SnapshotCreate::default()),
             }
         }
 
@@ -21695,7 +22039,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `SnapshotCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::SnapshotCreate) -> types::builder::SnapshotCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -21707,7 +22060,9 @@ pub mod builder {
                 body,
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::SnapshotCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/snapshots", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
             query.push(("project", project.to_string()));
@@ -22013,14 +22368,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct CertificateCreate<'a> {
         client: &'a super::Client,
-        body: Result<types::CertificateCreate, String>,
+        body: Result<types::builder::CertificateCreate, String>,
     }
 
     impl<'a> CertificateCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::CertificateCreate::default()),
             }
         }
 
@@ -22030,14 +22385,27 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `CertificateCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::CertificateCreate,
+            ) -> types::builder::CertificateCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
         #[doc = "Sends a `POST` request to `/v1/system/certificates`"]
         pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::CertificateCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/certificates", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -22994,7 +23362,7 @@ pub mod builder {
     pub struct LocalIdpUserCreate<'a> {
         client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
-        body: Result<types::UserCreate, String>,
+        body: Result<types::builder::UserCreate, String>,
     }
 
     impl<'a> LocalIdpUserCreate<'a> {
@@ -23002,7 +23370,7 @@ pub mod builder {
             Self {
                 client,
                 silo: Err("silo was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::UserCreate::default()),
             }
         }
 
@@ -23022,7 +23390,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `UserCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::UserCreate) -> types::builder::UserCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -23030,7 +23407,9 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::UserCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/identity-providers/local/users",
                 client.baseurl,
@@ -23210,7 +23589,7 @@ pub mod builder {
     pub struct SamlIdentityProviderCreate<'a> {
         client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
-        body: Result<types::SamlIdentityProviderCreate, String>,
+        body: Result<types::builder::SamlIdentityProviderCreate, String>,
     }
 
     impl<'a> SamlIdentityProviderCreate<'a> {
@@ -23218,7 +23597,7 @@ pub mod builder {
             Self {
                 client,
                 silo: Err("silo was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::SamlIdentityProviderCreate::default()),
             }
         }
 
@@ -23236,9 +23615,19 @@ pub mod builder {
         where
             V: std::convert::TryInto<types::SamlIdentityProviderCreate>,
         {
-            self.body = value.try_into().map_err(|_| {
+            self.body = value.try_into().map(From::from).map_err(|_| {
                 "conversion to `SamlIdentityProviderCreate` for body failed".to_string()
             });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SamlIdentityProviderCreate,
+            ) -> types::builder::SamlIdentityProviderCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -23248,7 +23637,9 @@ pub mod builder {
         ) -> Result<ResponseValue<types::SamlIdentityProvider>, Error<types::Error>> {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::SamlIdentityProviderCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/identity-providers/saml", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
             query.push(("silo", silo.to_string()));
@@ -23481,14 +23872,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct IpPoolCreate<'a> {
         client: &'a super::Client,
-        body: Result<types::IpPoolCreate, String>,
+        body: Result<types::builder::IpPoolCreate, String>,
     }
 
     impl<'a> IpPoolCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::IpPoolCreate::default()),
             }
         }
 
@@ -23498,14 +23889,25 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `IpPoolCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::IpPoolCreate) -> types::builder::IpPoolCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
         #[doc = "Sends a `POST` request to `/v1/system/ip-pools`"]
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::IpPoolCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/ip-pools", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -23578,7 +23980,7 @@ pub mod builder {
     pub struct IpPoolUpdate<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
-        body: Result<types::IpPoolUpdate, String>,
+        body: Result<types::builder::IpPoolUpdate, String>,
     }
 
     impl<'a> IpPoolUpdate<'a> {
@@ -23586,7 +23988,7 @@ pub mod builder {
             Self {
                 client,
                 pool: Err("pool was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::IpPoolUpdate::default()),
             }
         }
 
@@ -23606,7 +24008,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `IpPoolUpdate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::IpPoolUpdate) -> types::builder::IpPoolUpdate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -23614,7 +24025,9 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self { client, pool, body } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::IpPoolUpdate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/ip-pools/{}",
                 client.baseurl,
@@ -24367,14 +24780,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SystemPolicyUpdate<'a> {
         client: &'a super::Client,
-        body: Result<types::FleetRolePolicy, String>,
+        body: Result<types::builder::FleetRolePolicy, String>,
     }
 
     impl<'a> SystemPolicyUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::FleetRolePolicy::default()),
             }
         }
 
@@ -24384,7 +24797,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `FleetRolePolicy` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::FleetRolePolicy) -> types::builder::FleetRolePolicy,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -24393,7 +24815,9 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::FleetRolePolicy>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::FleetRolePolicy::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/policy", client.baseurl,);
             let request = client.client.put(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -24910,14 +25334,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SiloCreate<'a> {
         client: &'a super::Client,
-        body: Result<types::SiloCreate, String>,
+        body: Result<types::builder::SiloCreate, String>,
     }
 
     impl<'a> SiloCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::SiloCreate::default()),
             }
         }
 
@@ -24927,14 +25351,25 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `SiloCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::SiloCreate) -> types::builder::SiloCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
         #[doc = "Sends a `POST` request to `/v1/system/silos`"]
         pub async fn send(self) -> Result<ResponseValue<types::Silo>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::SiloCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/silos", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -25109,7 +25544,7 @@ pub mod builder {
     pub struct SiloPolicyUpdate<'a> {
         client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
-        body: Result<types::SiloRolePolicy, String>,
+        body: Result<types::builder::SiloRolePolicy, String>,
     }
 
     impl<'a> SiloPolicyUpdate<'a> {
@@ -25117,7 +25552,7 @@ pub mod builder {
             Self {
                 client,
                 silo: Err("silo was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::SiloRolePolicy::default()),
             }
         }
 
@@ -25137,7 +25572,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `SiloRolePolicy` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::SiloRolePolicy) -> types::builder::SiloRolePolicy,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -25147,7 +25591,9 @@ pub mod builder {
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::SiloRolePolicy::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/silos/{}/policy",
                 client.baseurl,
@@ -25535,14 +25981,14 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SystemUpdateStart<'a> {
         client: &'a super::Client,
-        body: Result<types::SystemUpdateStart, String>,
+        body: Result<types::builder::SystemUpdateStart, String>,
     }
 
     impl<'a> SystemUpdateStart<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::SystemUpdateStart::default()),
             }
         }
 
@@ -25552,7 +25998,18 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `SystemUpdateStart` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SystemUpdateStart,
+            ) -> types::builder::SystemUpdateStart,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -25561,7 +26018,9 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::UpdateDeployment>, Error<types::Error>> {
             let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::SystemUpdateStart::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/update/start", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
             let result = client.client.execute(request).await;
@@ -26531,7 +26990,7 @@ pub mod builder {
         client: &'a super::Client,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
-        body: Result<types::VpcFirewallRuleUpdateParams, String>,
+        body: Result<types::builder::VpcFirewallRuleUpdateParams, String>,
     }
 
     impl<'a> VpcFirewallRulesUpdate<'a> {
@@ -26540,7 +26999,7 @@ pub mod builder {
                 client,
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::VpcFirewallRuleUpdateParams::default()),
             }
         }
 
@@ -26569,9 +27028,19 @@ pub mod builder {
         where
             V: std::convert::TryInto<types::VpcFirewallRuleUpdateParams>,
         {
-            self.body = value.try_into().map_err(|_| {
+            self.body = value.try_into().map(From::from).map_err(|_| {
                 "conversion to `VpcFirewallRuleUpdateParams` for body failed".to_string()
             });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::VpcFirewallRuleUpdateParams,
+            ) -> types::builder::VpcFirewallRuleUpdateParams,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -26587,7 +27056,9 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::VpcFirewallRuleUpdateParams::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
@@ -26812,7 +27283,7 @@ pub mod builder {
         project: Result<Option<types::NameOrId>, String>,
         router: Result<types::NameOrId, String>,
         vpc: Result<Option<types::NameOrId>, String>,
-        body: Result<types::RouterRouteCreate, String>,
+        body: Result<types::builder::RouterRouteCreate, String>,
     }
 
     impl<'a> VpcRouterRouteCreate<'a> {
@@ -26822,7 +27293,7 @@ pub mod builder {
                 project: Ok(None),
                 router: Err("router was not initialized".to_string()),
                 vpc: Ok(None),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::RouterRouteCreate::default()),
             }
         }
 
@@ -26864,7 +27335,18 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `RouterRouteCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::RouterRouteCreate,
+            ) -> types::builder::RouterRouteCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -26880,7 +27362,9 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::RouterRouteCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
             let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
@@ -27019,7 +27503,7 @@ pub mod builder {
         project: Result<Option<types::NameOrId>, String>,
         router: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
-        body: Result<types::RouterRouteUpdate, String>,
+        body: Result<types::builder::RouterRouteUpdate, String>,
     }
 
     impl<'a> VpcRouterRouteUpdate<'a> {
@@ -27030,7 +27514,7 @@ pub mod builder {
                 project: Ok(None),
                 router: Ok(None),
                 vpc: Ok(None),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::RouterRouteUpdate::default()),
             }
         }
 
@@ -27083,7 +27567,18 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `RouterRouteUpdate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::RouterRouteUpdate,
+            ) -> types::builder::RouterRouteUpdate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -27101,7 +27596,9 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::RouterRouteUpdate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpc-router-routes/{}",
                 client.baseurl,
@@ -27423,7 +27920,7 @@ pub mod builder {
         client: &'a super::Client,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
-        body: Result<types::VpcRouterCreate, String>,
+        body: Result<types::builder::VpcRouterCreate, String>,
     }
 
     impl<'a> VpcRouterCreate<'a> {
@@ -27432,7 +27929,7 @@ pub mod builder {
                 client,
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::VpcRouterCreate::default()),
             }
         }
 
@@ -27463,7 +27960,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `VpcRouterCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::VpcRouterCreate) -> types::builder::VpcRouterCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -27477,7 +27983,9 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::VpcRouterCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-routers", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
@@ -27597,7 +28105,7 @@ pub mod builder {
         router: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
-        body: Result<types::VpcRouterUpdate, String>,
+        body: Result<types::builder::VpcRouterUpdate, String>,
     }
 
     impl<'a> VpcRouterUpdate<'a> {
@@ -27607,7 +28115,7 @@ pub mod builder {
                 router: Err("router was not initialized".to_string()),
                 project: Ok(None),
                 vpc: Ok(None),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::VpcRouterUpdate::default()),
             }
         }
 
@@ -27649,7 +28157,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `VpcRouterUpdate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::VpcRouterUpdate) -> types::builder::VpcRouterUpdate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -27665,7 +28182,9 @@ pub mod builder {
             let router = router.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::VpcRouterUpdate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpc-routers/{}",
                 client.baseurl,
@@ -27966,7 +28485,7 @@ pub mod builder {
         client: &'a super::Client,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
-        body: Result<types::VpcSubnetCreate, String>,
+        body: Result<types::builder::VpcSubnetCreate, String>,
     }
 
     impl<'a> VpcSubnetCreate<'a> {
@@ -27975,7 +28494,7 @@ pub mod builder {
                 client,
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::VpcSubnetCreate::default()),
             }
         }
 
@@ -28006,7 +28525,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `VpcSubnetCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::VpcSubnetCreate) -> types::builder::VpcSubnetCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -28020,7 +28548,9 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::VpcSubnetCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-subnets", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
@@ -28140,7 +28670,7 @@ pub mod builder {
         subnet: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
-        body: Result<types::VpcSubnetUpdate, String>,
+        body: Result<types::builder::VpcSubnetUpdate, String>,
     }
 
     impl<'a> VpcSubnetUpdate<'a> {
@@ -28150,7 +28680,7 @@ pub mod builder {
                 subnet: Err("subnet was not initialized".to_string()),
                 project: Ok(None),
                 vpc: Ok(None),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::VpcSubnetUpdate::default()),
             }
         }
 
@@ -28192,7 +28722,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `VpcSubnetUpdate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::VpcSubnetUpdate) -> types::builder::VpcSubnetUpdate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -28208,7 +28747,9 @@ pub mod builder {
             let subnet = subnet.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::VpcSubnetUpdate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpc-subnets/{}",
                 client.baseurl,
@@ -28684,7 +29225,7 @@ pub mod builder {
     pub struct VpcCreate<'a> {
         client: &'a super::Client,
         project: Result<types::NameOrId, String>,
-        body: Result<types::VpcCreate, String>,
+        body: Result<types::builder::VpcCreate, String>,
     }
 
     impl<'a> VpcCreate<'a> {
@@ -28692,7 +29233,7 @@ pub mod builder {
             Self {
                 client,
                 project: Err("project was not initialized".to_string()),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::VpcCreate::default()),
             }
         }
 
@@ -28712,7 +29253,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `VpcCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::VpcCreate) -> types::builder::VpcCreate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -28724,7 +29274,9 @@ pub mod builder {
                 body,
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::VpcCreate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpcs", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
             query.push(("project", project.to_string()));
@@ -28822,7 +29374,7 @@ pub mod builder {
         client: &'a super::Client,
         vpc: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::VpcUpdate, String>,
+        body: Result<types::builder::VpcUpdate, String>,
     }
 
     impl<'a> VpcUpdate<'a> {
@@ -28831,7 +29383,7 @@ pub mod builder {
                 client,
                 vpc: Err("vpc was not initialized".to_string()),
                 project: Ok(None),
-                body: Err("body was not initialized".to_string()),
+                body: Ok(types::builder::VpcUpdate::default()),
             }
         }
 
@@ -28862,7 +29414,16 @@ pub mod builder {
         {
             self.body = value
                 .try_into()
+                .map(From::from)
                 .map_err(|_| "conversion to `VpcUpdate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::VpcUpdate) -> types::builder::VpcUpdate,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -28876,7 +29437,9 @@ pub mod builder {
             } = self;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let body = body.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(types::VpcUpdate::try_from)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpcs/{}",
                 client.baseurl,
