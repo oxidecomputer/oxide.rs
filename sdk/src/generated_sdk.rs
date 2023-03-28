@@ -16925,7 +16925,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::DeviceAuthRequest::try_from)
+                .and_then(std::convert::TryInto::<types::DeviceAuthRequest>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/device/auth", client.baseurl,);
             let request = client.client.post(url).form_urlencoded(&body)?.build()?;
@@ -16978,7 +16978,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::DeviceAuthVerify::try_from)
+                .and_then(std::convert::TryInto::<types::DeviceAuthVerify>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/device/confirm", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
@@ -17036,7 +17036,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::DeviceAccessTokenRequest::try_from)
+                .and_then(std::convert::TryInto::<types::DeviceAccessTokenRequest>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/device/token", client.baseurl,);
             let request = client.client.post(url).form_urlencoded(&body)?.build()?;
@@ -17087,7 +17087,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::SpoofLoginBody::try_from)
+                .and_then(std::convert::TryInto::<types::SpoofLoginBody>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/login", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
@@ -17162,7 +17162,7 @@ pub mod builder {
             } = self;
             let silo_name = silo_name.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::UsernamePasswordCredentials::try_from)
+                .and_then(std::convert::TryInto::<types::UsernamePasswordCredentials>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/login/{}/local",
@@ -17602,7 +17602,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::GlobalImage>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::GlobalImageCreate::try_from)
+                .and_then(std::convert::TryInto::<types::GlobalImageCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/system/images", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
@@ -17933,7 +17933,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::DiskCreate::try_from)
+                .and_then(std::convert::TryInto::<types::DiskCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/disks", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -18701,7 +18701,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::ImageCreate::try_from)
+                .and_then(std::convert::TryInto::<types::ImageCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/images", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -19078,7 +19078,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::InstanceCreate::try_from)
+                .and_then(std::convert::TryInto::<types::InstanceCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/instances", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -19488,7 +19488,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::DiskPath::try_from)
+                .and_then(std::convert::TryInto::<types::DiskPath>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/disks/attach",
@@ -19585,7 +19585,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::DiskPath::try_from)
+                .and_then(std::convert::TryInto::<types::DiskPath>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/disks/detach",
@@ -19756,7 +19756,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::InstanceMigrate::try_from)
+                .and_then(std::convert::TryInto::<types::InstanceMigrate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/migrate",
@@ -20555,7 +20555,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::SshKeyCreate::try_from)
+                .and_then(std::convert::TryInto::<types::SshKeyCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/me/ssh-keys", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
@@ -20925,7 +20925,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::NetworkInterfaceCreate::try_from)
+                .and_then(std::convert::TryInto::<types::NetworkInterfaceCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/network-interfaces", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
@@ -21130,7 +21130,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::NetworkInterfaceUpdate::try_from)
+                .and_then(std::convert::TryInto::<types::NetworkInterfaceUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/network-interfaces/{}",
@@ -21323,7 +21323,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::SiloRolePolicy::try_from)
+                .and_then(std::convert::TryInto::<types::SiloRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/policy", client.baseurl,);
             let request = client.client.put(url).json(&body).build()?;
@@ -21518,7 +21518,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::ProjectCreate::try_from)
+                .and_then(std::convert::TryInto::<types::ProjectCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/projects", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
@@ -21642,7 +21642,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::ProjectUpdate::try_from)
+                .and_then(std::convert::TryInto::<types::ProjectUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}",
@@ -21826,7 +21826,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::ProjectRolePolicy::try_from)
+                .and_then(std::convert::TryInto::<types::ProjectRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}/policy",
@@ -22061,7 +22061,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::SnapshotCreate::try_from)
+                .and_then(std::convert::TryInto::<types::SnapshotCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/snapshots", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -22404,7 +22404,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::CertificateCreate::try_from)
+                .and_then(std::convert::TryInto::<types::CertificateCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/certificates", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
@@ -23408,7 +23408,7 @@ pub mod builder {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::UserCreate::try_from)
+                .and_then(std::convert::TryInto::<types::UserCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/identity-providers/local/users",
@@ -23638,7 +23638,7 @@ pub mod builder {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::SamlIdentityProviderCreate::try_from)
+                .and_then(std::convert::TryInto::<types::SamlIdentityProviderCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/identity-providers/saml", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -23906,7 +23906,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::IpPoolCreate::try_from)
+                .and_then(std::convert::TryInto::<types::IpPoolCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/ip-pools", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
@@ -24026,7 +24026,7 @@ pub mod builder {
             let Self { client, pool, body } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::IpPoolUpdate::try_from)
+                .and_then(std::convert::TryInto::<types::IpPoolUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/ip-pools/{}",
@@ -24816,7 +24816,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::FleetRolePolicy>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::FleetRolePolicy::try_from)
+                .and_then(std::convert::TryInto::<types::FleetRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/policy", client.baseurl,);
             let request = client.client.put(url).json(&body).build()?;
@@ -25368,7 +25368,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Silo>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::SiloCreate::try_from)
+                .and_then(std::convert::TryInto::<types::SiloCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/silos", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
@@ -25592,7 +25592,7 @@ pub mod builder {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::SiloRolePolicy::try_from)
+                .and_then(std::convert::TryInto::<types::SiloRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/silos/{}/policy",
@@ -26019,7 +26019,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::UpdateDeployment>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(types::SystemUpdateStart::try_from)
+                .and_then(std::convert::TryInto::<types::SystemUpdateStart>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/update/start", client.baseurl,);
             let request = client.client.post(url).json(&body).build()?;
@@ -27057,7 +27057,7 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::VpcFirewallRuleUpdateParams::try_from)
+                .and_then(std::convert::TryInto::<types::VpcFirewallRuleUpdateParams>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
@@ -27363,7 +27363,7 @@ pub mod builder {
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::RouterRouteCreate::try_from)
+                .and_then(std::convert::TryInto::<types::RouterRouteCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
             let mut query = Vec::with_capacity(3usize);
@@ -27597,7 +27597,7 @@ pub mod builder {
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::RouterRouteUpdate::try_from)
+                .and_then(std::convert::TryInto::<types::RouterRouteUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpc-router-routes/{}",
@@ -27984,7 +27984,7 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::VpcRouterCreate::try_from)
+                .and_then(std::convert::TryInto::<types::VpcRouterCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-routers", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
@@ -28183,7 +28183,7 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::VpcRouterUpdate::try_from)
+                .and_then(std::convert::TryInto::<types::VpcRouterUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpc-routers/{}",
@@ -28549,7 +28549,7 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::VpcSubnetCreate::try_from)
+                .and_then(std::convert::TryInto::<types::VpcSubnetCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-subnets", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
@@ -28748,7 +28748,7 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::VpcSubnetUpdate::try_from)
+                .and_then(std::convert::TryInto::<types::VpcSubnetUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpc-subnets/{}",
@@ -29275,7 +29275,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::VpcCreate::try_from)
+                .and_then(std::convert::TryInto::<types::VpcCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpcs", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -29438,7 +29438,7 @@ pub mod builder {
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(types::VpcUpdate::try_from)
+                .and_then(std::convert::TryInto::<types::VpcUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpcs/{}",
