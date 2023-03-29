@@ -452,7 +452,7 @@ pub struct CmdAuthStatus {
     #[clap(short = 't', long)]
     pub show_token: bool,
 
-    /// Check a specific hostname's authentication status.
+    /// Specific hostname to validate.
     #[clap(short = 'H', long, value_parser = parse_host)]
     pub host: Option<url::Url>,
 }
