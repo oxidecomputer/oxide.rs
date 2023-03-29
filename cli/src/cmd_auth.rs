@@ -4,7 +4,7 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::HashMap, io::Read};
+use std::{collections::HashMap, io::Read, time::Duration};
 
 use anyhow::{anyhow, bail, Result};
 use clap::Parser;
@@ -13,7 +13,11 @@ use oauth2::{
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
     TokenUrl,
 };
-use oxide_api::{ClientHiddenExt, ClientSessionExt};
+use oxide_api::{Client, ClientHiddenExt, ClientSessionExt};
+use reqwest::{
+    header::{HeaderMap, HeaderValue, AUTHORIZATION},
+    ClientBuilder,
+};
 
 use crate::{
     config::{Config, Host},
@@ -89,6 +93,20 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
         }
         Err(err) => anyhow::bail!(err),
     }
+}
+
+fn custom_client(host: &str, token: String) -> Client {
+    let mut bearer = HeaderValue::from_str(format!("Bearer {}", token).as_str()).unwrap();
+    bearer.set_sensitive(true);
+    let mut headers = HeaderMap::new();
+    headers.insert(AUTHORIZATION, bearer);
+
+    let rclient = ClientBuilder::new()
+        .connect_timeout(Duration::from_secs(15))
+        .default_headers(headers)
+        .build()
+        .unwrap();
+    Client::new_with_client(host, rclient)
 }
 
 // fn parse_host_interactively(ctx: &mut crate::context::Context) -> Result<url::Url> {
@@ -266,19 +284,7 @@ impl CmdAuthLogin {
         // Construct a one-off API client, authenticated with the token
         // returned in the previous step, so that we can extract and save the
         // identity of the authenticated user.
-        let auth = format!("Bearer {}", token);
-        let dur = std::time::Duration::from_secs(15);
-        let rclient = reqwest::Client::builder()
-            .connect_timeout(dur)
-            .timeout(dur)
-            .default_headers(
-                [(http::header::AUTHORIZATION, auth.try_into().unwrap())]
-                    .into_iter()
-                    .collect(),
-            )
-            .build()
-            .unwrap();
-        let client = oxide_api::Client::new_with_client(self.host.as_ref(), rclient);
+        let client = custom_client(self.host.as_ref(), token.clone());
 
         let user = client.current_user_view().send().await?;
 
@@ -499,19 +505,7 @@ impl CmdAuthStatus {
 
         for (host, info) in host_list.iter() {
             // Construct a client with each host/token combination
-            let auth = format!("Bearer {}", info.token);
-            let dur = std::time::Duration::from_secs(15);
-            let rclient = reqwest::Client::builder()
-                .connect_timeout(dur)
-                .timeout(dur)
-                .default_headers(
-                    [(http::header::AUTHORIZATION, auth.try_into().unwrap())]
-                        .into_iter()
-                        .collect(),
-                )
-                .build()
-                .unwrap();
-            let client = oxide_api::Client::new_with_client(host.as_ref(), rclient);
+            let client = custom_client(host, info.token.clone());
 
             let mut host_status: Vec<String> = vec![];
 
