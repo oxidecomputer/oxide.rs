@@ -155,8 +155,8 @@ impl CmdApi {
             }
         }
 
-        let client = ctx.client.client();
-        let uri = format!("{}{}", ctx.client.baseurl(), endpoint_with_query);
+        let client = ctx.client().client();
+        let uri = format!("{}{}", ctx.client().baseurl(), endpoint_with_query);
 
         // Make the request.
         let mut req = client.request(method.clone(), uri);
@@ -219,7 +219,7 @@ impl CmdApi {
                                 // TODO deal with limit
                                 let uri = format!(
                                     "{}{}?page_token={}",
-                                    ctx.client.baseurl(),
+                                    ctx.client().baseurl(),
                                     endpoint,
                                     next_page,
                                 );

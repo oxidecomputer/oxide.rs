@@ -114,7 +114,7 @@ async fn main() {
                 sm = sub_matches;
             }
 
-            let cli = Cli::new(ctx.client.clone());
+            let cli = Cli::new(ctx.client().clone());
 
             cli.execute(node.cmd.unwrap(), sm).await;
         }
