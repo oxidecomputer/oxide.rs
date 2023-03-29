@@ -515,12 +515,9 @@ impl CmdAuthStatus {
 
             let mut host_status: Vec<String> = vec![];
 
-            let user;
             let result = client.current_user_view().send().await;
-            match result {
-                Ok(usr) => {
-                    user = usr;
-                }
+            let user = match result {
+                Ok(usr) => usr,
                 Err(_) => {
                     host_status.push(String::from(
                         "Not authenticated. Host/token combination invalid",
@@ -528,7 +525,7 @@ impl CmdAuthStatus {
                     status_info.insert(host.to_string(), host_status.clone());
                     continue;
                 }
-            }
+            };
 
             // TODO: this should be the users email or something consistent with login
             // and logout.
