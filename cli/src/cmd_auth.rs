@@ -534,10 +534,12 @@ impl CmdAuthStatus {
             // TODO: Once tokens have expiry dates, report expired tokens.
 
             host_status.push(format!("Logged in to {} as {}", host, &email,));
-            let mut token_display = "*******************".to_string();
+            let token_display = 
             if self.show_token {
-                token_display = info.token.to_string();
-            }
+                info.token.to_string();
+            } else {
+            "*******************".to_string()
+            };
             host_status.push(format!("Token: {}", token_display));
 
             status_info.insert(host.to_string(), host_status);
