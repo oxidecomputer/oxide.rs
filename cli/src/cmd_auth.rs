@@ -443,9 +443,8 @@ impl CmdAuthLogout {
 }
 
 /// Verifies and displays information about your authentication state.
-/// This command will test the authentication state for each Oxide host that `oxide`
-/// knows about and report on any issues. These hosts may be from your hosts.toml file and/or
-/// OXIDE_HOST environment variable.
+/// This command validates the authentication state for each Oxide environment in the current configuration. These hosts may be from your hosts.toml file and/or
+/// $OXIDE_HOST environment variable.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthStatus {
