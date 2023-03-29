@@ -531,7 +531,7 @@ impl CmdAuthStatus {
             // and logout.
             let email = user.id.to_string();
 
-            // TODO: Once tokens have expiry dates, let them know if their token is invalid.
+            // TODO: Once tokens have expiry dates, report expired tokens.
 
             host_status.push(format!("Logged in to {} as {}", host, &email,));
             let mut token_display = "*******************".to_string();
