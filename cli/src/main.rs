@@ -4,13 +4,14 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::collections::HashMap;
+use std::{collections::HashMap, net::IpAddr};
 
 use clap::{Command, CommandFactory, FromArgMatches};
 
 use config::Config;
 use context::Context;
-use generated_cli::{Cli, CliCommand};
+use generated_cli::{Cli, CliCommand, CliOverride};
+use oxide_api::types::{IpRange, Ipv4Range, Ipv6Range};
 
 mod cmd_api;
 #[allow(unused_mut)] // TODO
@@ -34,7 +35,26 @@ impl<'a> Tree<'a> {
     fn cmd(&self, name: &str) -> Command {
         let mut cmd = if let Some(op) = self.cmd {
             // Command node
-            Cli::get_command(op).name(name.to_owned())
+            // TODO
+            let cmd = Cli::<MyCliOverride>::get_command(op).name(name.to_owned());
+            if let CliCommand::IpPoolRangeAdd = op {
+                cmd.arg(
+                    clap::Arg::new("first")
+                        .long("first")
+                        .value_name("ip-addr")
+                        .required(true)
+                        .value_parser(clap::value_parser!(std::net::IpAddr)),
+                )
+                .arg(
+                    clap::Arg::new("last")
+                        .long("last")
+                        .value_name("ip-addr")
+                        .required(true)
+                        .value_parser(clap::value_parser!(std::net::IpAddr)),
+                )
+            } else {
+                cmd
+            }
         } else {
             // Internal node
             Command::new(name.to_owned()).subcommand_required(true)
@@ -114,7 +134,7 @@ async fn main() {
                 sm = sub_matches;
             }
 
-            let cli = Cli::new(ctx.client.clone());
+            let cli = Cli::new(ctx.client.clone(), MyCliOverride);
 
             cli.execute(node.cmd.unwrap(), sm).await;
         }
@@ -122,7 +142,7 @@ async fn main() {
 }
 
 fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
-    let x = match command {
+    match command {
         CliCommand::InstanceList => Some("instance list"),
         CliCommand::InstanceCreate => Some("instance create"),
         CliCommand::InstanceView => Some("instance view"),
@@ -279,9 +299,40 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::UserBuiltinList
         | CliCommand::UserBuiltinView
         | CliCommand::SystemVersion => None,
-    };
+    }
+}
 
-    x
+struct MyCliOverride;
+
+impl CliOverride for MyCliOverride {
+    fn execute_ip_pool_range_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut oxide_api::builder::IpPoolRangeAdd,
+    ) -> Result<(), String> {
+        let first = matches.get_one::<IpAddr>("first").unwrap();
+        let last = matches.get_one::<IpAddr>("last").unwrap();
+
+        let range: IpRange = match (first, last) {
+            (IpAddr::V4(first), IpAddr::V4(last)) => {
+                let range: Ipv4Range = Ipv4Range::builder().first(*first).last(*last).try_into()?;
+                range.into()
+            }
+            (IpAddr::V6(first), IpAddr::V6(last)) => {
+                let range: Ipv6Range = Ipv6Range::builder().first(*first).last(*last).try_into()?;
+                range.into()
+            }
+            _ => {
+                return Err("first and last must either both be ipv4 or ipv6 addresses".to_string())
+            }
+        };
+
+        *request = request.to_owned().body(range);
+
+        println!("{:#?}", request);
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]

@@ -2,13 +2,14 @@
 
 use oxide_api::*;
 
-pub struct Cli {
+pub struct Cli<C: CliOverride> {
     client: oxide_api::Client,
+    over: C,
 }
 
-impl Cli {
-    pub fn new(client: oxide_api::Client) -> Self {
-        Self { client }
+impl<C: CliOverride> Cli<C> {
+    pub fn new(client: oxide_api::Client, over: C) -> Self {
+        Self { client, over }
     }
 
     pub fn cli_device_auth_request() -> clap::Command {
@@ -29,13 +30,10 @@ impl Cli {
 
     pub async fn execute_device_auth_request(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.device_auth_request();
-        let request = request.body({
-            let mut body = types::DeviceAuthRequest::builder();
-            if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
-                body = body.client_id(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
+            request = request.body_map(|body| body.client_id(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -65,13 +63,10 @@ impl Cli {
 
     pub async fn execute_device_auth_confirm(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.device_auth_confirm();
-        let request = request.body({
-            let mut body = types::DeviceAuthVerify::builder();
-            if let Some(value) = matches.get_one::<String>("user-code") {
-                body = body.user_code(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("user-code") {
+            request = request.body_map(|body| body.user_code(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -111,19 +106,18 @@ impl Cli {
 
     pub async fn execute_device_access_token(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.device_access_token();
-        let request = request.body({
-            let mut body = types::DeviceAccessTokenRequest::builder();
-            if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
-                body = body.client_id(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("device-code") {
-                body = body.device_code(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("grant-type") {
-                body = body.grant_type(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
+            request = request.body_map(|body| body.client_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("device-code") {
+            request = request.body_map(|body| body.device_code(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("grant-type") {
+            request = request.body_map(|body| body.grant_type(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -146,13 +140,10 @@ impl Cli {
 
     pub async fn execute_login_spoof(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.login_spoof();
-        let request = request.body({
-            let mut body = types::SpoofLoginBody::builder();
-            if let Some(value) = matches.get_one::<String>("username") {
-                body = body.username(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("username") {
+            request = request.body_map(|body| body.username(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -193,16 +184,14 @@ impl Cli {
             request = request.silo_name(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::UsernamePasswordCredentials::builder();
-            if let Some(value) = matches.get_one::<types::Password>("password") {
-                body = body.password(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::UserId>("username") {
-                body = body.username(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<types::Password>("password") {
+            request = request.body_map(|body| body.password(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::UserId>("username") {
+            request = request.body_map(|body| body.username(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -403,16 +392,14 @@ impl Cli {
 
     pub async fn execute_system_image_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.system_image_create();
-        let request = request.body({
-            let mut body = types::GlobalImageCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -571,19 +558,18 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::DiskCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::ByteCount>("size") {
-                body = body.size(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::ByteCount>("size") {
+            request = request.body_map(|body| body.size(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -916,22 +902,22 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::ImageCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("os") {
-                body = body.os(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("version") {
-                body = body.version(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("os") {
+            request = request.body_map(|body| body.os(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("version") {
+            request = request.body_map(|body| body.version(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -1137,31 +1123,34 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::InstanceCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("hostname") {
-                body = body.hostname(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::ByteCount>("memory") {
-                body = body.memory(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::InstanceCpuCount>("ncpus") {
-                body = body.ncpus(value.clone());
-            }
-            if let Some(value) = matches.get_one::<bool>("start") {
-                body = body.start(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("user-data") {
-                body = body.user_data(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("hostname") {
+            request = request.body_map(|body| body.hostname(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::ByteCount>("memory") {
+            request = request.body_map(|body| body.memory(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::InstanceCpuCount>("ncpus") {
+            request = request.body_map(|body| body.ncpus(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<bool>("start") {
+            request = request.body_map(|body| body.start(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("user-data") {
+            request = request.body_map(|body| body.user_data(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -1341,13 +1330,10 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::DiskPath::builder();
-            if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
-                body = body.disk(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
+            request = request.body_map(|body| body.disk(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -1392,13 +1378,10 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::DiskPath::builder();
-            if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
-                body = body.disk(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
+            request = request.body_map(|body| body.disk(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -1481,13 +1464,10 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::InstanceMigrate::builder();
-            if let Some(value) = matches.get_one::<uuid::Uuid>("dst-sled-id") {
-                body = body.dst_sled_id(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<uuid::Uuid>("dst-sled-id") {
+            request = request.body_map(|body| body.dst_sled_id(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -1862,19 +1842,18 @@ impl Cli {
 
     pub async fn execute_current_user_ssh_key_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.current_user_ssh_key_create();
-        let request = request.body({
-            let mut body = types::SshKeyCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("public-key") {
-                body = body.public_key(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("public-key") {
+            request = request.body_map(|body| body.public_key(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -2060,22 +2039,22 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::NetworkInterfaceCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("subnet-name") {
-                body = body.subnet_name(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("vpc-name") {
-                body = body.vpc_name(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("subnet-name") {
+            request = request.body_map(|body| body.subnet_name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("vpc-name") {
+            request = request.body_map(|body| body.vpc_name(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -2188,13 +2167,10 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::NetworkInterfaceUpdate::builder();
-            if let Some(value) = matches.get_one::<bool>("primary") {
-                body = body.primary(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<bool>("primary") {
+            request = request.body_map(|body| body.primary(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -2282,10 +2258,6 @@ impl Cli {
 
     pub async fn execute_policy_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.policy_update();
-        let request = request.body({
-            let mut body = types::SiloRolePolicy::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -2355,16 +2327,14 @@ impl Cli {
 
     pub async fn execute_project_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.project_create();
-        let request = request.body({
-            let mut body = types::ProjectCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -2421,10 +2391,6 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::ProjectUpdate::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -2509,10 +2475,6 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::ProjectRolePolicy::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -2609,19 +2571,18 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::SnapshotCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("disk") {
-                body = body.disk(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("disk") {
+            request = request.body_map(|body| body.disk(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -2781,19 +2742,18 @@ impl Cli {
 
     pub async fn execute_certificate_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.certificate_create();
-        let request = request.body({
-            let mut body = types::CertificateCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::ServiceUsingCertificate>("service") {
-                body = body.service(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::ServiceUsingCertificate>("service") {
+            request = request.body_map(|body| body.service(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -3166,13 +3126,10 @@ impl Cli {
             request = request.silo(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::UserCreate::builder();
-            if let Some(value) = matches.get_one::<types::UserId>("external-id") {
-                body = body.external_id(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<types::UserId>("external-id") {
+            request = request.body_map(|body| body.external_id(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -3329,31 +3286,34 @@ impl Cli {
             request = request.silo(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::SamlIdentityProviderCreate::builder();
-            if let Some(value) = matches.get_one::<String>("acs-url") {
-                body = body.acs_url(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("idp-entity-id") {
-                body = body.idp_entity_id(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("slo-url") {
-                body = body.slo_url(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("sp-client-id") {
-                body = body.sp_client_id(value.clone());
-            }
-            if let Some(value) = matches.get_one::<String>("technical-contact-email") {
-                body = body.technical_contact_email(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("acs-url") {
+            request = request.body_map(|body| body.acs_url(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("idp-entity-id") {
+            request = request.body_map(|body| body.idp_entity_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("slo-url") {
+            request = request.body_map(|body| body.slo_url(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("sp-client-id") {
+            request = request.body_map(|body| body.sp_client_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("technical-contact-email") {
+            request = request.body_map(|body| body.technical_contact_email(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -3461,16 +3421,14 @@ impl Cli {
 
     pub async fn execute_ip_pool_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.ip_pool_create();
-        let request = request.body({
-            let mut body = types::IpPoolCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -3527,10 +3485,6 @@ impl Cli {
             request = request.pool(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::IpPoolUpdate::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -3625,6 +3579,10 @@ impl Cli {
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
+
+        self.over
+            .execute_ip_pool_range_add(matches, &mut request)
+            .unwrap();
 
         let result = request.send().await;
         match result {
@@ -3855,10 +3813,6 @@ impl Cli {
 
     pub async fn execute_system_policy_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.system_policy_update();
-        let request = request.body({
-            let mut body = types::FleetRolePolicy::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -4067,22 +4021,22 @@ impl Cli {
 
     pub async fn execute_silo_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.silo_create();
-        let request = request.body({
-            let mut body = types::SiloCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<bool>("discoverable") {
-                body = body.discoverable(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::SiloIdentityMode>("identity-mode") {
-                body = body.identity_mode(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<bool>("discoverable") {
+            request = request.body_map(|body| body.discoverable(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::SiloIdentityMode>("identity-mode") {
+            request = request.body_map(|body| body.identity_mode(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -4195,10 +4149,6 @@ impl Cli {
             request = request.silo(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::SiloRolePolicy::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -4346,13 +4296,10 @@ impl Cli {
 
     pub async fn execute_system_update_start(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.system_update_start();
-        let request = request.body({
-            let mut body = types::SystemUpdateStart::builder();
-            if let Some(value) = matches.get_one::<types::SemverVersion>("version") {
-                body = body.version(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<types::SemverVersion>("version") {
+            request = request.body_map(|body| body.version(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -4763,10 +4710,6 @@ impl Cli {
             request = request.vpc(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::VpcFirewallRuleUpdateParams::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -4896,16 +4839,14 @@ impl Cli {
             request = request.vpc(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::RouterRouteCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -5022,10 +4963,6 @@ impl Cli {
             request = request.vpc(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::RouterRouteUpdate::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -5193,16 +5130,14 @@ impl Cli {
             request = request.vpc(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::VpcRouterCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -5299,10 +5234,6 @@ impl Cli {
             request = request.vpc(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::VpcRouterUpdate::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -5471,19 +5402,18 @@ impl Cli {
             request = request.vpc(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::VpcSubnetCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Ipv4Net>("ipv4-block") {
-                body = body.ipv4_block(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Ipv4Net>("ipv4-block") {
+            request = request.body_map(|body| body.ipv4_block(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -5580,10 +5510,6 @@ impl Cli {
             request = request.vpc(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::VpcSubnetUpdate::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -5796,19 +5722,18 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::VpcCreate::builder();
-            if let Some(value) = matches.get_one::<String>("description") {
-                body = body.description(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("dns-name") {
-                body = body.dns_name(value.clone());
-            }
-            if let Some(value) = matches.get_one::<types::Name>("name") {
-                body = body.name(value.clone());
-            }
-            body
-        });
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("dns-name") {
+            request = request.body_map(|body| body.dns_name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -5885,10 +5810,6 @@ impl Cli {
             request = request.project(value.clone());
         }
 
-        let request = request.body({
-            let mut body = types::VpcUpdate::builder();
-            body
-        });
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -6533,8 +6454,7 @@ pub trait CliOverride {
     fn execute_device_auth_request(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::DeviceAuthRequest,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6546,8 +6466,7 @@ pub trait CliOverride {
     fn execute_device_auth_confirm(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::DeviceAuthConfirm,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6559,8 +6478,7 @@ pub trait CliOverride {
     fn execute_device_access_token(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::DeviceAccessToken,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6572,8 +6490,7 @@ pub trait CliOverride {
     fn execute_login_spoof(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::LoginSpoof,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6585,8 +6502,7 @@ pub trait CliOverride {
     fn execute_login_local(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::LoginLocal,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6598,8 +6514,7 @@ pub trait CliOverride {
     fn execute_login_saml_begin(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::LoginSamlBegin,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6611,8 +6526,7 @@ pub trait CliOverride {
     fn execute_login_saml(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::LoginSaml,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6624,8 +6538,7 @@ pub trait CliOverride {
     fn execute_logout(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::Logout,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6637,8 +6550,7 @@ pub trait CliOverride {
     fn execute_system_image_view_by_id(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemImageViewById,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6650,8 +6562,7 @@ pub trait CliOverride {
     fn execute_system_image_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemImageList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6663,8 +6574,7 @@ pub trait CliOverride {
     fn execute_system_image_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemImageCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6676,8 +6586,7 @@ pub trait CliOverride {
     fn execute_system_image_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemImageView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6689,8 +6598,7 @@ pub trait CliOverride {
     fn execute_system_image_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemImageDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6702,8 +6610,7 @@ pub trait CliOverride {
     fn execute_disk_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::DiskList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6715,8 +6622,7 @@ pub trait CliOverride {
     fn execute_disk_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::DiskCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6728,8 +6634,7 @@ pub trait CliOverride {
     fn execute_disk_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::DiskView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6741,8 +6646,7 @@ pub trait CliOverride {
     fn execute_disk_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::DiskDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6754,8 +6658,7 @@ pub trait CliOverride {
     fn execute_disk_metrics_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::DiskMetricsList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6767,8 +6670,7 @@ pub trait CliOverride {
     fn execute_group_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::GroupList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6780,8 +6682,7 @@ pub trait CliOverride {
     fn execute_group_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::GroupView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6793,8 +6694,7 @@ pub trait CliOverride {
     fn execute_image_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ImageList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6806,8 +6706,7 @@ pub trait CliOverride {
     fn execute_image_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ImageCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6819,8 +6718,7 @@ pub trait CliOverride {
     fn execute_image_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ImageView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6832,8 +6730,7 @@ pub trait CliOverride {
     fn execute_image_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ImageDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6845,8 +6742,7 @@ pub trait CliOverride {
     fn execute_instance_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6858,8 +6754,7 @@ pub trait CliOverride {
     fn execute_instance_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6871,8 +6766,7 @@ pub trait CliOverride {
     fn execute_instance_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6884,8 +6778,7 @@ pub trait CliOverride {
     fn execute_instance_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6897,8 +6790,7 @@ pub trait CliOverride {
     fn execute_instance_disk_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceDiskList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6910,8 +6802,7 @@ pub trait CliOverride {
     fn execute_instance_disk_attach(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceDiskAttach,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6923,8 +6814,7 @@ pub trait CliOverride {
     fn execute_instance_disk_detach(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceDiskDetach,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6936,8 +6826,7 @@ pub trait CliOverride {
     fn execute_instance_external_ip_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceExternalIpList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6949,8 +6838,7 @@ pub trait CliOverride {
     fn execute_instance_migrate(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceMigrate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6962,8 +6850,7 @@ pub trait CliOverride {
     fn execute_instance_reboot(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceReboot,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6975,8 +6862,7 @@ pub trait CliOverride {
     fn execute_instance_serial_console(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceSerialConsole,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -6988,8 +6874,7 @@ pub trait CliOverride {
     fn execute_instance_serial_console_stream(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceSerialConsoleStream,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7001,8 +6886,7 @@ pub trait CliOverride {
     fn execute_instance_start(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceStart,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7014,8 +6898,7 @@ pub trait CliOverride {
     fn execute_instance_stop(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceStop,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7027,8 +6910,7 @@ pub trait CliOverride {
     fn execute_current_user_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::CurrentUserView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7040,8 +6922,7 @@ pub trait CliOverride {
     fn execute_current_user_groups(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::CurrentUserGroups,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7053,8 +6934,7 @@ pub trait CliOverride {
     fn execute_current_user_ssh_key_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::CurrentUserSshKeyList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7066,8 +6946,7 @@ pub trait CliOverride {
     fn execute_current_user_ssh_key_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::CurrentUserSshKeyCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7079,8 +6958,7 @@ pub trait CliOverride {
     fn execute_current_user_ssh_key_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::CurrentUserSshKeyView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7092,8 +6970,7 @@ pub trait CliOverride {
     fn execute_current_user_ssh_key_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::CurrentUserSshKeyDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7105,8 +6982,7 @@ pub trait CliOverride {
     fn execute_instance_network_interface_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceNetworkInterfaceList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7118,8 +6994,7 @@ pub trait CliOverride {
     fn execute_instance_network_interface_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceNetworkInterfaceCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7131,8 +7006,7 @@ pub trait CliOverride {
     fn execute_instance_network_interface_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceNetworkInterfaceView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7144,8 +7018,7 @@ pub trait CliOverride {
     fn execute_instance_network_interface_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceNetworkInterfaceUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7157,8 +7030,7 @@ pub trait CliOverride {
     fn execute_instance_network_interface_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::InstanceNetworkInterfaceDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7170,8 +7042,7 @@ pub trait CliOverride {
     fn execute_policy_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::PolicyView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7183,8 +7054,7 @@ pub trait CliOverride {
     fn execute_policy_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::PolicyUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7196,8 +7066,7 @@ pub trait CliOverride {
     fn execute_project_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ProjectList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7209,8 +7078,7 @@ pub trait CliOverride {
     fn execute_project_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ProjectCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7222,8 +7090,7 @@ pub trait CliOverride {
     fn execute_project_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ProjectView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7235,8 +7102,7 @@ pub trait CliOverride {
     fn execute_project_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ProjectUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7248,8 +7114,7 @@ pub trait CliOverride {
     fn execute_project_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ProjectDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7261,8 +7126,7 @@ pub trait CliOverride {
     fn execute_project_policy_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ProjectPolicyView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7274,8 +7138,7 @@ pub trait CliOverride {
     fn execute_project_policy_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::ProjectPolicyUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7287,8 +7150,7 @@ pub trait CliOverride {
     fn execute_snapshot_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SnapshotList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7300,8 +7162,7 @@ pub trait CliOverride {
     fn execute_snapshot_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SnapshotCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7313,8 +7174,7 @@ pub trait CliOverride {
     fn execute_snapshot_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SnapshotView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7326,8 +7186,7 @@ pub trait CliOverride {
     fn execute_snapshot_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SnapshotDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7339,8 +7198,7 @@ pub trait CliOverride {
     fn execute_certificate_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::CertificateList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7352,8 +7210,7 @@ pub trait CliOverride {
     fn execute_certificate_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::CertificateCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7365,8 +7222,7 @@ pub trait CliOverride {
     fn execute_certificate_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::CertificateView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7378,8 +7234,7 @@ pub trait CliOverride {
     fn execute_certificate_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::CertificateDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7391,8 +7246,7 @@ pub trait CliOverride {
     fn execute_physical_disk_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::PhysicalDiskList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7404,8 +7258,7 @@ pub trait CliOverride {
     fn execute_rack_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::RackList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7417,8 +7270,7 @@ pub trait CliOverride {
     fn execute_rack_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::RackView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7430,8 +7282,7 @@ pub trait CliOverride {
     fn execute_sled_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SledList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7443,8 +7294,7 @@ pub trait CliOverride {
     fn execute_sled_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SledView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7456,8 +7306,7 @@ pub trait CliOverride {
     fn execute_sled_physical_disk_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SledPhysicalDiskList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7469,8 +7318,7 @@ pub trait CliOverride {
     fn execute_silo_identity_provider_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SiloIdentityProviderList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7482,8 +7330,7 @@ pub trait CliOverride {
     fn execute_local_idp_user_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::LocalIdpUserCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7495,8 +7342,7 @@ pub trait CliOverride {
     fn execute_local_idp_user_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::LocalIdpUserDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7508,8 +7354,7 @@ pub trait CliOverride {
     fn execute_local_idp_user_set_password(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::LocalIdpUserSetPassword,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7521,8 +7366,7 @@ pub trait CliOverride {
     fn execute_saml_identity_provider_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SamlIdentityProviderCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7534,8 +7378,7 @@ pub trait CliOverride {
     fn execute_saml_identity_provider_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SamlIdentityProviderView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7547,8 +7390,7 @@ pub trait CliOverride {
     fn execute_ip_pool_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7560,8 +7402,7 @@ pub trait CliOverride {
     fn execute_ip_pool_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7573,8 +7414,7 @@ pub trait CliOverride {
     fn execute_ip_pool_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7586,8 +7426,7 @@ pub trait CliOverride {
     fn execute_ip_pool_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7599,8 +7438,7 @@ pub trait CliOverride {
     fn execute_ip_pool_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7612,8 +7450,7 @@ pub trait CliOverride {
     fn execute_ip_pool_range_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolRangeList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7625,8 +7462,7 @@ pub trait CliOverride {
     fn execute_ip_pool_range_add(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolRangeAdd,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7638,8 +7474,7 @@ pub trait CliOverride {
     fn execute_ip_pool_range_remove(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolRangeRemove,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7651,8 +7486,7 @@ pub trait CliOverride {
     fn execute_ip_pool_service_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolServiceView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7664,8 +7498,7 @@ pub trait CliOverride {
     fn execute_ip_pool_service_range_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolServiceRangeList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7677,8 +7510,7 @@ pub trait CliOverride {
     fn execute_ip_pool_service_range_add(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolServiceRangeAdd,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7690,8 +7522,7 @@ pub trait CliOverride {
     fn execute_ip_pool_service_range_remove(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::IpPoolServiceRangeRemove,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7703,8 +7534,7 @@ pub trait CliOverride {
     fn execute_system_metric(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemMetric,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7716,8 +7546,7 @@ pub trait CliOverride {
     fn execute_system_policy_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemPolicyView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7729,8 +7558,7 @@ pub trait CliOverride {
     fn execute_system_policy_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemPolicyUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7742,8 +7570,7 @@ pub trait CliOverride {
     fn execute_role_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::RoleList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7755,8 +7582,7 @@ pub trait CliOverride {
     fn execute_role_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::RoleView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7768,8 +7594,7 @@ pub trait CliOverride {
     fn execute_saga_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SagaList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7781,8 +7606,7 @@ pub trait CliOverride {
     fn execute_saga_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SagaView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7794,8 +7618,7 @@ pub trait CliOverride {
     fn execute_silo_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SiloList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7807,8 +7630,7 @@ pub trait CliOverride {
     fn execute_silo_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SiloCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7820,8 +7642,7 @@ pub trait CliOverride {
     fn execute_silo_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SiloView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7833,8 +7654,7 @@ pub trait CliOverride {
     fn execute_silo_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SiloDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7846,8 +7666,7 @@ pub trait CliOverride {
     fn execute_silo_policy_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SiloPolicyView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7859,8 +7678,7 @@ pub trait CliOverride {
     fn execute_silo_policy_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SiloPolicyUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7872,8 +7690,7 @@ pub trait CliOverride {
     fn execute_system_component_version_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemComponentVersionList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7885,8 +7702,7 @@ pub trait CliOverride {
     fn execute_update_deployments_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::UpdateDeploymentsList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7898,8 +7714,7 @@ pub trait CliOverride {
     fn execute_update_deployment_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::UpdateDeploymentView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7911,8 +7726,7 @@ pub trait CliOverride {
     fn execute_system_update_refresh(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemUpdateRefresh,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7924,8 +7738,7 @@ pub trait CliOverride {
     fn execute_system_update_start(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemUpdateStart,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7937,8 +7750,7 @@ pub trait CliOverride {
     fn execute_system_update_stop(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemUpdateStop,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7950,8 +7762,7 @@ pub trait CliOverride {
     fn execute_system_update_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemUpdateList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7963,8 +7774,7 @@ pub trait CliOverride {
     fn execute_system_update_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemUpdateView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7976,8 +7786,7 @@ pub trait CliOverride {
     fn execute_system_update_components_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemUpdateComponentsList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -7989,8 +7798,7 @@ pub trait CliOverride {
     fn execute_system_version(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SystemVersion,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8002,8 +7810,7 @@ pub trait CliOverride {
     fn execute_silo_user_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SiloUserList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8015,8 +7822,7 @@ pub trait CliOverride {
     fn execute_silo_user_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::SiloUserView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8028,8 +7834,7 @@ pub trait CliOverride {
     fn execute_user_builtin_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::UserBuiltinList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8041,8 +7846,7 @@ pub trait CliOverride {
     fn execute_user_builtin_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::UserBuiltinView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8054,8 +7858,7 @@ pub trait CliOverride {
     fn execute_user_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::UserList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8067,8 +7870,7 @@ pub trait CliOverride {
     fn execute_vpc_firewall_rules_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcFirewallRulesView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8080,8 +7882,7 @@ pub trait CliOverride {
     fn execute_vpc_firewall_rules_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcFirewallRulesUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8093,8 +7894,7 @@ pub trait CliOverride {
     fn execute_vpc_router_route_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcRouterRouteList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8106,8 +7906,7 @@ pub trait CliOverride {
     fn execute_vpc_router_route_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcRouterRouteCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8119,8 +7918,7 @@ pub trait CliOverride {
     fn execute_vpc_router_route_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcRouterRouteView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8132,8 +7930,7 @@ pub trait CliOverride {
     fn execute_vpc_router_route_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcRouterRouteUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8145,8 +7942,7 @@ pub trait CliOverride {
     fn execute_vpc_router_route_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcRouterRouteDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8158,8 +7954,7 @@ pub trait CliOverride {
     fn execute_vpc_router_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcRouterList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8171,8 +7966,7 @@ pub trait CliOverride {
     fn execute_vpc_router_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcRouterCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8184,8 +7978,7 @@ pub trait CliOverride {
     fn execute_vpc_router_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcRouterView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8197,8 +7990,7 @@ pub trait CliOverride {
     fn execute_vpc_router_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcRouterUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8210,8 +8002,7 @@ pub trait CliOverride {
     fn execute_vpc_router_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcRouterDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8223,8 +8014,7 @@ pub trait CliOverride {
     fn execute_vpc_subnet_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcSubnetList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8236,8 +8026,7 @@ pub trait CliOverride {
     fn execute_vpc_subnet_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcSubnetCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8249,8 +8038,7 @@ pub trait CliOverride {
     fn execute_vpc_subnet_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcSubnetView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8262,8 +8050,7 @@ pub trait CliOverride {
     fn execute_vpc_subnet_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcSubnetUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8275,8 +8062,7 @@ pub trait CliOverride {
     fn execute_vpc_subnet_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcSubnetDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8288,8 +8074,7 @@ pub trait CliOverride {
     fn execute_vpc_subnet_list_network_interfaces(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcSubnetListNetworkInterfaces,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8301,8 +8086,7 @@ pub trait CliOverride {
     fn execute_vpc_list(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8314,8 +8098,7 @@ pub trait CliOverride {
     fn execute_vpc_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcCreate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8327,8 +8110,7 @@ pub trait CliOverride {
     fn execute_vpc_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8340,8 +8122,7 @@ pub trait CliOverride {
     fn execute_vpc_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8353,8 +8134,7 @@ pub trait CliOverride {
     fn execute_vpc_delete(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut (),
-        body: &mut (),
+        request: &mut builder::VpcDelete,
     ) -> Result<(), String> {
         Ok(())
     }
