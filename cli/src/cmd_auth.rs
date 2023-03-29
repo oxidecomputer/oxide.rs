@@ -522,7 +522,7 @@ impl CmdAuthStatus {
                     host_status.push(String::from(
                         "Not authenticated. Host/token combination invalid",
                     ));
-                    status_info.insert(host.to_string(), host_status.clone());
+                    status_info.insert(host.to_string(), host_status);
                     continue;
                 }
             };
@@ -534,11 +534,10 @@ impl CmdAuthStatus {
             // TODO: Once tokens have expiry dates, report expired tokens.
 
             host_status.push(format!("Logged in to {} as {}", host, &email,));
-            let token_display = 
-            if self.show_token {
-                info.token.to_string();
+            let token_display = if self.show_token {
+                info.token.to_string()
             } else {
-            "*******************".to_string()
+                "*******************".to_string()
             };
             host_status.push(format!("Token: {}", token_display));
 
