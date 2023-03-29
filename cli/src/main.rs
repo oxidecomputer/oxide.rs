@@ -36,7 +36,7 @@ impl<'a> Tree<'a> {
         let mut cmd = if let Some(op) = self.cmd {
             // Command node
             // TODO
-            let cmd = Cli::<MyCliOverride>::get_command(op).name(name.to_owned());
+            let cmd = Cli::get_command(op).name(name.to_owned());
             match op {
                 CliCommand::IpPoolRangeAdd => cmd
                     .arg(
@@ -134,7 +134,7 @@ async fn main() {
                 sm = sub_matches;
             }
 
-            let cli = Cli::new(ctx.client.clone(), MyCliOverride);
+            let cli = Cli::new_with_override(ctx.client.clone(), MyCliOverride);
 
             cli.execute(node.cmd.unwrap(), sm).await;
         }
