@@ -37,23 +37,23 @@ impl<'a> Tree<'a> {
             // Command node
             // TODO
             let cmd = Cli::<MyCliOverride>::get_command(op).name(name.to_owned());
-            if let CliCommand::IpPoolRangeAdd = op {
-                cmd.arg(
-                    clap::Arg::new("first")
-                        .long("first")
-                        .value_name("ip-addr")
-                        .required(true)
-                        .value_parser(clap::value_parser!(std::net::IpAddr)),
-                )
-                .arg(
-                    clap::Arg::new("last")
-                        .long("last")
-                        .value_name("ip-addr")
-                        .required(true)
-                        .value_parser(clap::value_parser!(std::net::IpAddr)),
-                )
-            } else {
-                cmd
+            match op {
+                CliCommand::IpPoolRangeAdd => cmd
+                    .arg(
+                        clap::Arg::new("first")
+                            .long("first")
+                            .value_name("ip-addr")
+                            .required(true)
+                            .value_parser(clap::value_parser!(std::net::IpAddr)),
+                    )
+                    .arg(
+                        clap::Arg::new("last")
+                            .long("last")
+                            .value_name("ip-addr")
+                            .required(true)
+                            .value_parser(clap::value_parser!(std::net::IpAddr)),
+                    ),
+                _ => cmd,
             }
         } else {
             // Internal node

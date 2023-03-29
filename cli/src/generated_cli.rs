@@ -3580,6 +3580,7 @@ impl<C: CliOverride> Cli<C> {
             request = request.pool(value.clone());
         }
 
+        // HAND WRITTEN
         self.over
             .execute_ip_pool_range_add(matches, &mut request)
             .unwrap();
