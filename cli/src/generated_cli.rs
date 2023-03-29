@@ -2925,7 +2925,7 @@ impl<T: CliOverride> Cli<T> {
     }
 
     pub async fn execute(&self, cmd: CliCommand, matches: &clap::ArgMatches) {
-        let _ = match cmd {
+        match cmd {
             CliCommand::DeviceAuthRequest => {
                 self.execute_device_auth_request(matches).await;
             }
@@ -3353,7 +3353,7 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::VpcDelete => {
                 self.execute_vpc_delete(matches).await;
             }
-        };
+        }
     }
 
     pub async fn execute_device_auth_request(&self, matches: &clap::ArgMatches) {

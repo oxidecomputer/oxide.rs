@@ -53,6 +53,8 @@ impl<'a> Tree<'a> {
                             .required(true)
                             .value_parser(clap::value_parser!(std::net::IpAddr)),
                     ),
+
+                // Command is fine as-is.
                 _ => cmd,
             }
         } else {
