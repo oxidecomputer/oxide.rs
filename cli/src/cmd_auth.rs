@@ -200,29 +200,16 @@ impl CmdAuthLogin {
                 .request_async(async_http_client)
                 .await?;
 
-            // TODO ahl kludge
-            if let Some(uri) = details.verification_uri_complete() {
-                open::that(uri.secret())?;
-            }
+            match open::that(details.verification_uri().to_string()) {
+                Ok(()) => println!("Opened this URL in your browser:",),
+                _ => println!("Open this URL in your browser:",),
+            };
 
-            // if let Some(uri) = details.verification_uri_complete() {
-            //     writeln!(
-            //         ctx.io.out,
-            //         "Opening {} in your browser.\n\
-            //          Please verify user code: {}\n",
-            //         uri.secret(),
-            //         details.user_code().secret()
-            //     )?;
-            //     let _ = ctx.browser(host, uri.secret());
-            // } else {
-            //     writeln!(
-            //         ctx.io.out,
-            //         "Open this URL in your browser:\n{}\n\
-            //          And enter the code: {}\n",
-            //         **details.verification_uri(),
-            //         details.user_code().secret()
-            //     )?;
-            // }
+            println!(
+                "\n  {}\n\nEnter the code: {}\n",
+                **details.verification_uri(),
+                details.user_code().secret()
+            );
 
             auth_client
                 .exchange_device_access_token(&details)
