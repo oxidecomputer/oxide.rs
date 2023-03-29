@@ -136,7 +136,7 @@ async fn main() {
                 sm = sub_matches;
             }
 
-            let cli = Cli::new_with_override(ctx.client.clone(), MyCliOverride);
+            let cli = Cli::new_with_override(ctx.client.clone(), OxideOverride);
 
             cli.execute(node.cmd.unwrap(), sm).await;
         }
@@ -304,9 +304,9 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
     }
 }
 
-struct MyCliOverride;
+struct OxideOverride;
 
-impl CliOverride for MyCliOverride {
+impl CliOverride for OxideOverride {
     fn execute_ip_pool_range_add(
         &self,
         matches: &clap::ArgMatches,
