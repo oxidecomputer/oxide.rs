@@ -8,6 +8,7 @@ use std::{collections::HashMap, io::Read, time::Duration};
 
 use anyhow::{anyhow, bail, Result};
 use clap::Parser;
+use httpmock::Method::GET;
 use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse,
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
@@ -750,11 +751,39 @@ mod test {
 #[test]
 fn test_cmd_auth_status() {
     use assert_cmd::Command;
+    use httpmock::MockServer;
     use predicates::str;
+    use serde_json::json;
 
+    let server = MockServer::start();
+    let oxide_mock = server.mock(|when, then| {
+        when.method(GET).path("/v1/me");
+        then.status(200).json_body(json!({"id":"001de000-05e4-4000-8000-000000004007","display_name":"privileged","silo_id":"001de000-5110-4000-8000-000000000000"}));
+    });
+
+    // Validate a successful login
     let mut cmd = Command::cargo_bin("oxide").unwrap();
+    cmd.arg("auth")
+        .arg("status")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "oxide-token-1111");
+    cmd.assert().success().stdout(str::contains(format!(
+        "{}: [\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\", \"Token: *******************\"]",
+        server.url(""), server.url("")
+    )));
+
+    // Validate a successful login with token displayed in plain text
+    cmd.arg("-t");
+    cmd.assert().success().stdout(str::contains(format!(
+    "{}: [\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\", \"Token: oxide-token-1111\"]",
+    server.url(""), server.url("")
+    )));
+
+    // Assert the mock received the provided number of requests which matched all the request requirements
+    oxide_mock.assert_hits(2);
 
     // Set auth information through environment variables and check they are included in the results
+    let mut cmd = Command::cargo_bin("oxide").unwrap();
     cmd.arg("auth")
         .arg("status")
         .env("OXIDE_HOST", "http://111.1.1.1/")
@@ -768,6 +797,4 @@ fn test_cmd_auth_status() {
     cmd.assert()
         .success()
         .stdout("http://111.1.1.1/: [\"Not authenticated. Host/token combination invalid\"]\n");
-
-    // TODO: Add tests checking for logged in hosts once we have an environment we can log into
 }
