@@ -124,7 +124,6 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
 ///     $ oxide auth login --host http://oxide.internal
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
-#[command(group(ArgGroup::new("browser-opt").args(["browser", "no_browser"])))]
 pub struct CmdAuthLogin {
     /// Read token from standard input.
     #[clap(long)]
@@ -136,11 +135,11 @@ pub struct CmdAuthLogin {
     host: url::Url,
 
     /// Override the default browser when opening the authentication URL.
-    #[clap(long)]
+    #[clap(long, group = "browser-options")]
     browser: Option<String>,
 
     /// Print the authentication URL rather than opening a browser window.
-    #[clap(long = "no-browser")]
+    #[clap(long = "no-browser", group = "browser-options")]
     no_browser: bool,
 }
 
