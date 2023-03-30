@@ -7,7 +7,7 @@
 use std::{collections::HashMap, io::Read};
 
 use anyhow::{anyhow, bail, Result};
-use clap::Parser;
+use clap::{ArgGroup, Parser};
 use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse,
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
@@ -124,15 +124,24 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
 ///     $ oxide auth login --host http://oxide.internal
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
+#[command(group(ArgGroup::new("b").args(["browser", "no_browser"])))]
 pub struct CmdAuthLogin {
     /// Read token from standard input.
     #[clap(long)]
-    pub with_token: bool,
+    with_token: bool,
 
     /// The host of the Oxide instance to authenticate with.
     /// This assumes http; specify an `http://` prefix if needed.
     #[clap(short = 'H', long, env = "OXIDE_HOST", value_parser = parse_host)]
-    pub host: url::Url,
+    host: url::Url,
+
+    /// Override the default browser when opening the authentication URL.
+    #[clap(long)]
+    browser: Option<String>,
+
+    /// Print the authentication URL rather than opening a browser window.
+    #[clap(long = "no-browser")]
+    no_browser: bool,
 }
 
 // #[async_trait::async_trait]
