@@ -14,7 +14,6 @@ anyhow = { workspace = true }
 assert_cmd = { workspace = true }
 chrono = { workspace = true }
 clap = { workspace = true }
-cargo_metadata = { workspace = true }
 dialoguer = { workspace = true }
 dirs = { workspace = true }
 futures = { workspace = true }
@@ -37,3 +36,6 @@ uuid = { workspace = true }
 [dev-dependencies]
 pretty_assertions = { workspace = true }
 serial_test = { workspace = true }
+
+[build-dependencies]
+built = { workspace = true }

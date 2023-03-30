@@ -4,10 +4,13 @@
 
 // Copyright 2023 Oxide Computer Company
 use anyhow::Result;
-use cargo_metadata::MetadataCommand;
 use clap::Parser;
 
-/// Prints version information about the CLI, associated API and source code location.
+pub mod built_info {
+    include!(concat!(env!("OUT_DIR"), "/built.rs"));
+}
+
+/// Prints version information about the CLI.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 #[clap(name = "version")]
@@ -15,21 +18,11 @@ pub struct CmdVersion;
 
 impl CmdVersion {
     pub async fn run(&self) -> Result<()> {
-        println!("oxide CLI {}", env!("CARGO_PKG_VERSION"));
+        println!("Oxide CLI {}", env!("CARGO_PKG_VERSION"));
 
-        let path = env!("CARGO_MANIFEST_DIR");
-        let meta = MetadataCommand::new()
-            .manifest_path("./Cargo.toml")
-            .current_dir(&path)
-            .no_deps()
-            .exec()
-            .unwrap();
-
-        let root = meta.workspace_packages();
-        let api = root.into_iter().find(|&x| x.name == "oxide-api").unwrap();
-        println!("{} {}", api.name, api.version);
-
-        println!("source {}", env!("CARGO_PKG_REPOSITORY"));
+        if let Some(hash) = built_info::GIT_COMMIT_HASH {
+            println!("Built from commit: {}", hash);
+        }
 
         Ok(())
     }
@@ -38,11 +31,12 @@ impl CmdVersion {
 #[test]
 fn version_success() {
     use assert_cmd::Command;
+    use predicates::str;
 
     let mut cmd = Command::cargo_bin("oxide").unwrap();
 
     cmd.arg("version");
-    cmd.assert().success().stdout(
-        "oxide CLI 0.1.0\noxide-api 0.1.0\nsource https://github.com/oxidecomputer/oxide-sdk-and-cli\n",
-    );
+    cmd.assert()
+        .success()
+        .stdout(str::contains("Oxide CLI 0.1.0\nBuilt from commit:"));
 }
