@@ -95,7 +95,7 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
     }
 }
 
-fn custom_client(host: &str, token: String) -> Client {
+fn custom_authentication_client(host: &str, token: String) -> Client {
     let mut bearer = HeaderValue::from_str(format!("Bearer {}", token).as_str()).unwrap();
     bearer.set_sensitive(true);
     let mut headers = HeaderMap::new();
@@ -284,7 +284,7 @@ impl CmdAuthLogin {
         // Construct a one-off API client, authenticated with the token
         // returned in the previous step, so that we can extract and save the
         // identity of the authenticated user.
-        let client = custom_client(self.host.as_ref(), token.clone());
+        let client = custom_authentication_client(self.host.as_ref(), token.clone());
 
         let user = client.current_user_view().send().await?;
 
@@ -469,6 +469,13 @@ impl CmdAuthStatus {
     pub async fn run(&self) -> Result<()> {
         let mut status_info: HashMap<String, Vec<String>> = HashMap::new();
 
+        // Initialising a new Config here instead of taking ctx (&Context) because
+        // ctx already has an initialised oxide_api::Client. This would give the CLI
+        // a chance to return an error before the status checks have even started.
+        //
+        // For example: the user has the OXIDE_HOST env var set but hasn't set OXIDE_TOKEN
+        // nor do they have a corresponding token for that host on the hosts.toml file,
+        // the CLI would return an error even if other host/token combinations on the hosts.toml file are valid.
         let config = Config::default();
         let mut host_list = config.hosts.hosts;
 
@@ -505,7 +512,7 @@ impl CmdAuthStatus {
 
         for (host, info) in host_list.iter() {
             // Construct a client with each host/token combination
-            let client = custom_client(host, info.token.clone());
+            let client = custom_authentication_client(host, info.token.clone());
 
             let mut host_status: Vec<String> = vec![];
 
@@ -752,13 +759,14 @@ fn test_cmd_auth_status() {
         .arg("status")
         .env("OXIDE_HOST", "http://111.1.1.1/")
         .env("OXIDE_TOKEN", "oxide-token-1111");
-    cmd.assert().stdout(str::contains(
+    cmd.assert().success().stdout(str::contains(
         "http://111.1.1.1/: [\"Not authenticated. Host/token combination invalid\"]",
     ));
 
     // Make sure the command only returns information about the specified host
     cmd.arg("-H").arg("http://111.1.1.1/");
     cmd.assert()
+        .success()
         .stdout("http://111.1.1.1/: [\"Not authenticated. Host/token combination invalid\"]\n");
 
     // TODO: Add tests checking for logged in hosts once we have an environment we can log into
