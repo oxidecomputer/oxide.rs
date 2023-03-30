@@ -8,7 +8,6 @@ use std::{collections::HashMap, io::Read, time::Duration};
 
 use anyhow::{anyhow, bail, Result};
 use clap::Parser;
-use httpmock::Method::GET;
 use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse,
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
@@ -751,7 +750,7 @@ mod test {
 #[test]
 fn test_cmd_auth_status() {
     use assert_cmd::Command;
-    use httpmock::MockServer;
+    use httpmock::{Method::GET, MockServer};
     use predicates::str;
     use serde_json::json;
 
