@@ -159,7 +159,7 @@ impl CmdAuthLogin {
             token
         } else {
             let existing_token = ctx
-                .config
+                .config()
                 .hosts
                 .get(&self.host)
                 .map(|host_entry| &host_entry.token);
@@ -185,7 +185,7 @@ impl CmdAuthLogin {
             // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
             let device_auth_url =
                 DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
-            let client_id = &ctx.config.client_id;
+            let client_id = &ctx.config().client_id;
             let auth_client = BasicClient::new(
                 ClientId::new(client_id.to_string()),
                 None,
@@ -287,7 +287,8 @@ impl CmdAuthLogin {
             default: false,
         };
 
-        ctx.config.update_host(self.host.to_string(), host_entry)?;
+        ctx.config()
+            .update_host(self.host.to_string(), host_entry)?;
 
         Ok(())
     }
