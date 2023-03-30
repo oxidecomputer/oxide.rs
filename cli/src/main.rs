@@ -136,7 +136,7 @@ async fn main() {
                 sm = sub_matches;
             }
 
-            let cli = Cli::new_with_override(ctx.client.clone(), OxideOverride);
+            let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
 
             cli.execute(node.cmd.unwrap(), sm).await;
         }

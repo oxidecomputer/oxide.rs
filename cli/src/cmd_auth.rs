@@ -159,7 +159,7 @@ impl CmdAuthLogin {
             token
         } else {
             let existing_token = ctx
-                .config
+                .config()
                 .hosts
                 .get(&self.host)
                 .map(|host_entry| &host_entry.token);
@@ -185,7 +185,7 @@ impl CmdAuthLogin {
             // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
             let device_auth_url =
                 DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
-            let client_id = &ctx.config.client_id;
+            let client_id = &ctx.config().client_id;
             let auth_client = BasicClient::new(
                 ClientId::new(client_id.to_string()),
                 None,
@@ -200,29 +200,16 @@ impl CmdAuthLogin {
                 .request_async(async_http_client)
                 .await?;
 
-            // TODO ahl kludge
-            if let Some(uri) = details.verification_uri_complete() {
-                open::that(uri.secret())?;
-            }
+            match open::that(details.verification_uri().to_string()) {
+                Ok(()) => println!("Opened this URL in your browser:",),
+                _ => println!("Open this URL in your browser:",),
+            };
 
-            // if let Some(uri) = details.verification_uri_complete() {
-            //     writeln!(
-            //         ctx.io.out,
-            //         "Opening {} in your browser.\n\
-            //          Please verify user code: {}\n",
-            //         uri.secret(),
-            //         details.user_code().secret()
-            //     )?;
-            //     let _ = ctx.browser(host, uri.secret());
-            // } else {
-            //     writeln!(
-            //         ctx.io.out,
-            //         "Open this URL in your browser:\n{}\n\
-            //          And enter the code: {}\n",
-            //         **details.verification_uri(),
-            //         details.user_code().secret()
-            //     )?;
-            // }
+            println!(
+                "\n  {}\n\nEnter the code: {}\n",
+                **details.verification_uri(),
+                details.user_code().secret()
+            );
 
             auth_client
                 .exchange_device_access_token(&details)
@@ -300,7 +287,8 @@ impl CmdAuthLogin {
             default: false,
         };
 
-        ctx.config.update_host(self.host.to_string(), host_entry)?;
+        ctx.config()
+            .update_host(self.host.to_string(), host_entry)?;
 
         Ok(())
     }
