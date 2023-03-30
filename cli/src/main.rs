@@ -110,9 +110,9 @@ async fn main() {
 
     let matches = cmd.get_matches();
 
-    // Construct the global config
-    // TODO I think this has to come between parsing and execution in that the
-    // parsed options may change where we get config from.
+    // Construct the global config. We do this **after** parsing options,
+    // anticipating that top-level options may impact e.g. where we look for
+    // config files.
     let config = Config::default();
     let mut ctx = Context::new(config).unwrap();
 

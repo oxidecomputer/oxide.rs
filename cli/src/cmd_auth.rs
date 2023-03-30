@@ -124,7 +124,7 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
 ///     $ oxide auth login --host http://oxide.internal
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
-#[command(group(ArgGroup::new("b").args(["browser", "no_browser"])))]
+#[command(group(ArgGroup::new("browser-opt").args(["browser", "no_browser"])))]
 pub struct CmdAuthLogin {
     /// Read token from standard input.
     #[clap(long)]
@@ -144,9 +144,6 @@ pub struct CmdAuthLogin {
     no_browser: bool,
 }
 
-// #[async_trait::async_trait]
-// impl crate::cmd::Command for CmdAuthLogin {
-//     async fn run(&self, ctx: &mut crate::context::Context) -> Result<()> {
 impl CmdAuthLogin {
     pub async fn run(&self, ctx: &mut Context) -> Result<()> {
         // if !ctx.io.can_prompt() && !self.with_token {
@@ -209,16 +206,22 @@ impl CmdAuthLogin {
                 .request_async(async_http_client)
                 .await?;
 
-            match open::that(details.verification_uri().to_string()) {
-                Ok(()) => println!("Opened this URL in your browser:",),
-                _ => println!("Open this URL in your browser:",),
+            let uri = details.verification_uri().to_string();
+
+            let opened = match (&self.browser, self.no_browser) {
+                (None, false) => open::that(&uri).is_ok(),
+                (Some(app), false) => open::with(&uri, app).is_ok(),
+                (None, true) => false,
+                (Some(_), true) => unreachable!(),
             };
 
-            println!(
-                "\n  {}\n\nEnter the code: {}\n",
-                **details.verification_uri(),
-                details.user_code().secret()
-            );
+            if opened {
+                println!("Opened this URL in your browser:\n  {}", uri);
+            } else {
+                println!("Open this URL in your browser:\n  {}", uri);
+            }
+
+            println!("\nEnter the code: {}\n", details.user_code().secret());
 
             auth_client
                 .exchange_device_access_token(&details)
