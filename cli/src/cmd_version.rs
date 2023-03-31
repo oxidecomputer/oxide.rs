@@ -3,6 +3,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 // Copyright 2023 Oxide Computer Company
+
 use anyhow::Result;
 use clap::Parser;
 
@@ -18,11 +19,17 @@ pub struct CmdVersion;
 
 impl CmdVersion {
     pub async fn run(&self) -> Result<()> {
-        println!("Oxide CLI {}", env!("CARGO_PKG_VERSION"));
+        println!("Oxide CLI {}", clap::crate_version!());
 
-        if let Some(hash) = built_info::GIT_COMMIT_HASH {
-            println!("Built from commit: {}", hash);
-        }
+        println!(
+            "Built from commit: {} {}",
+            built_info::GIT_COMMIT_HASH.unwrap(),
+            if matches!(built_info::GIT_DIRTY, Some(true)) {
+                "(dirty)"
+            } else {
+                ""
+            }
+        );
 
         Ok(())
     }
@@ -31,12 +38,17 @@ impl CmdVersion {
 #[test]
 fn version_success() {
     use assert_cmd::Command;
-    use predicates::str;
 
     let mut cmd = Command::cargo_bin("oxide").unwrap();
 
     cmd.arg("version");
-    cmd.assert()
-        .success()
-        .stdout(str::contains("Oxide CLI 0.1.0\nBuilt from commit:"));
+    cmd.assert().success().stdout(format!(
+        "Oxide CLI 0.1.0\nBuilt from commit: {} {}\n",
+        built_info::GIT_COMMIT_HASH.unwrap(),
+        if matches!(built_info::GIT_DIRTY, Some(true)) {
+            "(dirty)"
+        } else {
+            ""
+        }
+    ));
 }
