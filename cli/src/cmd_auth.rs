@@ -95,7 +95,7 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
     }
 }
 
-fn custom_authentication_client(host: &str, token: String) -> Client {
+fn make_client(host: &str, token: String) -> Client {
     let mut bearer = HeaderValue::from_str(format!("Bearer {}", token).as_str()).unwrap();
     bearer.set_sensitive(true);
     let mut headers = HeaderMap::new();
@@ -284,7 +284,7 @@ impl CmdAuthLogin {
         // Construct a one-off API client, authenticated with the token
         // returned in the previous step, so that we can extract and save the
         // identity of the authenticated user.
-        let client = custom_authentication_client(self.host.as_ref(), token.clone());
+        let client = make_client(self.host.as_ref(), token.clone());
 
         let user = client.current_user_view().send().await?;
 
@@ -512,18 +512,18 @@ impl CmdAuthStatus {
 
         for (host, info) in host_list.iter() {
             // Construct a client with each host/token combination
-            let client = custom_authentication_client(host, info.token.clone());
-
-            let mut host_status: Vec<String> = vec![];
+            let client = make_client(host, info.token.clone());
 
             let result = client.current_user_view().send().await;
             let user = match result {
                 Ok(usr) => usr,
                 Err(_) => {
-                    host_status.push(String::from(
-                        "Not authenticated. Host/token combination invalid",
-                    ));
-                    status_info.insert(host.to_string(), host_status);
+                    status_info.insert(
+                        host.to_string(),
+                        vec![String::from(
+                            "Not authenticated. Host/token combination invalid",
+                        )],
+                    );
                     continue;
                 }
             };
@@ -533,8 +533,7 @@ impl CmdAuthStatus {
             let email = user.id.to_string();
 
             // TODO: Once tokens have expiry dates, report expired tokens.
-
-            host_status.push(format!("Logged in to {} as {}", host, &email,));
+            let mut host_status = vec![format!("Logged in to {} as {}", host, &email,)];
             let token_display = if self.show_token {
                 info.token.to_string()
             } else {
@@ -778,10 +777,12 @@ fn test_cmd_auth_status() {
     server.url(""), server.url("")
     )));
 
-    // Assert the mock received the provided number of requests which matched all the request requirements
+    // Assert the mock received the provided number of requests which matched all
+    // the request requirements
     oxide_mock.assert_hits(2);
 
-    // Set auth information through environment variables and check they are included in the results
+    // Set auth information through environment variables and check they are included
+    // in the results
     let mut cmd = Command::cargo_bin("oxide").unwrap();
     cmd.arg("auth")
         .arg("status")
