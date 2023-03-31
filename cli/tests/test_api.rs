@@ -7,9 +7,10 @@
 use assert_cmd::Command;
 use httpmock::prelude::*;
 use predicates::prelude::*;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use serde_json::json;
 
+/// Validate `oxide api` for a simple GET with parameters.
 #[test]
 fn test_simple_api_call() {
     let server = MockServer::start();
@@ -36,7 +37,7 @@ fn test_simple_api_call() {
     mock.assert();
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Serialize)]
 struct Item {
     name: String,
 }
@@ -56,6 +57,7 @@ struct ItemResultsPage {
     pub next_page: Option<String>,
 }
 
+/// Validate a paginated, multi-page request with no errors.
 #[test]
 fn test_pagination_success() {
     let page1 = ItemResultsPage {
@@ -136,6 +138,9 @@ fn test_pagination_success() {
     mock_p4.assert();
 }
 
+/// Validate a paginated request where 2 pages return while the 3rd call
+/// results in an error. This should print the items we've already retrieved
+/// *and* print the error as well.
 #[test]
 fn test_pagination_midway_failure() {
     let page1 = ItemResultsPage {

@@ -12,7 +12,7 @@ use std::{
 use anyhow::{anyhow, Result};
 use clap::Parser;
 use futures::{StreamExt, TryStreamExt};
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 /// Makes an authenticated HTTP request to the Oxide API and prints the response.
 ///
@@ -80,7 +80,7 @@ pub struct CmdApi {
 }
 
 /// The JSON type for a paginated response.
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct PaginatedResponse {
     /// The items in the response.
     pub items: Vec<serde_json::Value>,
