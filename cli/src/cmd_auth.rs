@@ -474,7 +474,8 @@ impl CmdAuthStatus {
         //
         // For example: the user has the OXIDE_HOST env var set but hasn't set OXIDE_TOKEN
         // nor do they have a corresponding token for that host on the hosts.toml file,
-        // the CLI would return an error even if other host/token combinations on the hosts.toml file are valid.
+        // the CLI would return an error even if other host/token combinations on the
+        // hosts.toml file are valid.
         let config = Config::default();
         let mut host_list = config.hosts.hosts;
 
