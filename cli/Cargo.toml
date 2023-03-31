@@ -11,7 +11,6 @@ default-run = "oxide"
 
 [dependencies]
 anyhow = { workspace = true }
-assert_cmd = { workspace = true }
 chrono = { workspace = true }
 clap = { workspace = true }
 dialoguer = { workspace = true }
@@ -36,6 +35,7 @@ uuid = { workspace = true }
 [dev-dependencies]
 pretty_assertions = { workspace = true }
 serial_test = { workspace = true }
+assert_cmd = { workspace = true }
 
 [build-dependencies]
 built = { workspace = true }
