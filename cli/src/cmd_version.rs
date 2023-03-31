@@ -20,7 +20,7 @@ pub struct CmdVersion;
 
 impl CmdVersion {
     pub async fn run(&self) -> Result<()> {
-        println!("Oxide CLI {}", clap::crate_version!());
+        println!("Oxide CLI {}", built_info::PKG_VERSION);
 
         println!(
             "Built from commit: {} {}",
