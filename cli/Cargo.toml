@@ -37,3 +37,6 @@ uuid = { workspace = true }
 pretty_assertions = { workspace = true }
 serial_test = { workspace = true }
 assert_cmd = { workspace = true }
+
+[build-dependencies]
+built = { workspace = true }

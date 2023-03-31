@@ -15922,7 +15922,7 @@ pub mod types {
 }
 
 #[derive(Clone, Debug)]
-#[doc = "Client for Oxide Region API\n\nAPI for interacting with the Oxide control plane"]
+#[doc = "Client for Oxide Region API\n\nAPI for interacting with the Oxide control plane\n\nVersion: 0.0.1"]
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -15957,14 +15957,22 @@ impl Client {
         }
     }
 
-    #[doc = r" Return the base URL to which requests are made."]
+    #[doc = r" Get the base URL to which requests are made."]
     pub fn baseurl(&self) -> &String {
         &self.baseurl
     }
 
-    #[doc = r" Return the internal `reqwest::Client` used to make requests."]
+    #[doc = r" Get the internal `reqwest::Client` used to make requests."]
     pub fn client(&self) -> &reqwest::Client {
         &self.client
+    }
+
+    #[doc = r" Get the version of this API."]
+    #[doc = r""]
+    #[doc = r" This string is pulled directly from the source OpenAPI"]
+    #[doc = r" document and may be in any format the API selects."]
+    pub fn api_version(&self) -> &'static str {
+        "0.0.1"
     }
 }
 
