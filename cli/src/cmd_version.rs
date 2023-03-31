@@ -6,6 +6,7 @@
 
 use anyhow::Result;
 use clap::Parser;
+use oxide_api::Client;
 
 pub mod built_info {
     include!(concat!(env!("OUT_DIR"), "/built.rs"));
@@ -31,6 +32,9 @@ impl CmdVersion {
             }
         );
 
+        let client = Client::new("");
+        println!("Oxide API: {}", client.api_version());
+
         Ok(())
     }
 }
@@ -43,7 +47,7 @@ fn version_success() {
 
     cmd.arg("version");
     cmd.assert().success().stdout(format!(
-        "Oxide CLI 0.1.0\nBuilt from commit: {} {}\n",
+        "Oxide CLI 0.1.0\nBuilt from commit: {} {}\nOxide API: 0.0.1\n",
         built_info::GIT_COMMIT_HASH.unwrap(),
         if matches!(built_info::GIT_DIRTY, Some(true)) {
             "(dirty)"
