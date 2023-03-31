@@ -7,7 +7,7 @@
 use std::{collections::HashMap, io::Read};
 
 use anyhow::{anyhow, bail, Result};
-use clap::Parser;
+use clap::{ArgGroup, Parser};
 use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse,
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
@@ -127,17 +127,22 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
 pub struct CmdAuthLogin {
     /// Read token from standard input.
     #[clap(long)]
-    pub with_token: bool,
+    with_token: bool,
 
     /// The host of the Oxide instance to authenticate with.
     /// This assumes http; specify an `http://` prefix if needed.
     #[clap(short = 'H', long, env = "OXIDE_HOST", value_parser = parse_host)]
-    pub host: url::Url,
+    host: url::Url,
+
+    /// Override the default browser when opening the authentication URL.
+    #[clap(long, group = "browser-options")]
+    browser: Option<String>,
+
+    /// Print the authentication URL rather than opening a browser window.
+    #[clap(long = "no-browser", group = "browser-options")]
+    no_browser: bool,
 }
 
-// #[async_trait::async_trait]
-// impl crate::cmd::Command for CmdAuthLogin {
-//     async fn run(&self, ctx: &mut crate::context::Context) -> Result<()> {
 impl CmdAuthLogin {
     pub async fn run(&self, ctx: &mut Context) -> Result<()> {
         // if !ctx.io.can_prompt() && !self.with_token {
@@ -200,16 +205,22 @@ impl CmdAuthLogin {
                 .request_async(async_http_client)
                 .await?;
 
-            match open::that(details.verification_uri().to_string()) {
-                Ok(()) => println!("Opened this URL in your browser:",),
-                _ => println!("Open this URL in your browser:",),
+            let uri = details.verification_uri().to_string();
+
+            let opened = match (&self.browser, self.no_browser) {
+                (None, false) => open::that(&uri).is_ok(),
+                (Some(app), false) => open::with(&uri, app).is_ok(),
+                (None, true) => false,
+                (Some(_), true) => unreachable!(),
             };
 
-            println!(
-                "\n  {}\n\nEnter the code: {}\n",
-                **details.verification_uri(),
-                details.user_code().secret()
-            );
+            if opened {
+                println!("Opened this URL in your browser:\n  {}", uri);
+            } else {
+                println!("Open this URL in your browser:\n  {}", uri);
+            }
+
+            println!("\nEnter the code: {}\n", details.user_code().secret());
 
             auth_client
                 .exchange_device_access_token(&details)

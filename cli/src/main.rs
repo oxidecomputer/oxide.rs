@@ -4,13 +4,14 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::collections::HashMap;
+use std::{collections::HashMap, net::IpAddr};
 
 use clap::{Command, CommandFactory, FromArgMatches};
 
 use config::Config;
 use context::Context;
-use generated_cli::{Cli, CliCommand};
+use generated_cli::{Cli, CliCommand, CliOverride};
+use oxide_api::types::{IpRange, Ipv4Range, Ipv6Range};
 
 mod cmd_api;
 #[allow(unused_mut)] // TODO
@@ -35,7 +36,28 @@ impl<'a> Tree<'a> {
     fn cmd(&self, name: &str) -> Command {
         let mut cmd = if let Some(op) = self.cmd {
             // Command node
-            Cli::get_command(op).name(name.to_owned())
+            // TODO
+            let cmd = Cli::get_command(op).name(name.to_owned());
+            match op {
+                CliCommand::IpPoolRangeAdd => cmd
+                    .arg(
+                        clap::Arg::new("first")
+                            .long("first")
+                            .value_name("ip-addr")
+                            .required(true)
+                            .value_parser(clap::value_parser!(std::net::IpAddr)),
+                    )
+                    .arg(
+                        clap::Arg::new("last")
+                            .long("last")
+                            .value_name("ip-addr")
+                            .required(true)
+                            .value_parser(clap::value_parser!(std::net::IpAddr)),
+                    ),
+
+                // Command is fine as-is.
+                _ => cmd,
+            }
         } else {
             // Internal node
             Command::new(name.to_owned()).subcommand_required(true)
@@ -90,9 +112,9 @@ async fn main() {
 
     let matches = cmd.get_matches();
 
-    // Construct the global config
-    // TODO I think this has to come between parsing and execution in that the
-    // parsed options may change where we get config from.
+    // Construct the global config. We do this **after** parsing options,
+    // anticipating that top-level options may impact e.g. where we look for
+    // config files.
     let config = Config::default();
     let mut ctx = Context::new(config).unwrap();
 
@@ -121,7 +143,7 @@ async fn main() {
                 sm = sub_matches;
             }
 
-            let cli = Cli::new(ctx.client().clone());
+            let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
 
             cli.execute(node.cmd.unwrap(), sm).await;
         }
@@ -129,7 +151,7 @@ async fn main() {
 }
 
 fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
-    let x = match command {
+    match command {
         CliCommand::InstanceList => Some("instance list"),
         CliCommand::InstanceCreate => Some("instance create"),
         CliCommand::InstanceView => Some("instance view"),
@@ -286,9 +308,40 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::UserBuiltinList
         | CliCommand::UserBuiltinView
         | CliCommand::SystemVersion => None,
-    };
+    }
+}
 
-    x
+struct OxideOverride;
+
+impl CliOverride for OxideOverride {
+    fn execute_ip_pool_range_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut oxide_api::builder::IpPoolRangeAdd,
+    ) -> Result<(), String> {
+        let first = matches.get_one::<IpAddr>("first").unwrap();
+        let last = matches.get_one::<IpAddr>("last").unwrap();
+
+        let range: IpRange = match (first, last) {
+            (IpAddr::V4(first), IpAddr::V4(last)) => {
+                let range: Ipv4Range = Ipv4Range::builder().first(*first).last(*last).try_into()?;
+                range.into()
+            }
+            (IpAddr::V6(first), IpAddr::V6(last)) => {
+                let range: Ipv6Range = Ipv6Range::builder().first(*first).last(*last).try_into()?;
+                range.into()
+            }
+            _ => {
+                return Err("first and last must either both be ipv4 or ipv6 addresses".to_string())
+            }
+        };
+
+        *request = request.to_owned().body(range);
+
+        println!("{:#?}", request);
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]
