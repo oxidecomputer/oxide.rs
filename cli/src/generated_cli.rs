@@ -1143,6 +1143,16 @@ impl Cli {
                     .value_parser(clap::value_parser!(String)),
             )
             .arg(
+                clap::Arg::new("ip")
+                    .long("ip")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .help(
+                        "The IP address for the interface. One will be auto-assigned if not \
+                         provided.",
+                    ),
+            )
+            .arg(
                 clap::Arg::new("name")
                     .long("name")
                     .required(true)
@@ -1207,6 +1217,18 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::Name)),
             )
             .arg(
                 clap::Arg::new("primary")
@@ -1316,6 +1338,18 @@ impl Cli {
                     .long("project")
                     .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::Name)),
             )
             .about("Update a project")
     }
@@ -1725,6 +1759,17 @@ impl Cli {
                     .value_parser(clap::value_parser!(String)),
             )
             .arg(
+                clap::Arg::new("group-attribute-name")
+                    .long("group-attribute-name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String))
+                    .help(
+                        "If set, SAML attributes with this name will be considered to denote a \
+                         user's group membership, where the attribute value(s) should be a \
+                         comma-separated list of group names.",
+                    ),
+            )
+            .arg(
                 clap::Arg::new("idp-entity-id")
                     .long("idp-entity-id")
                     .required(true)
@@ -1831,6 +1876,18 @@ impl Cli {
                     .long("pool")
                     .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::Name)),
             )
             .about("Update an IP Pool")
     }
@@ -2042,6 +2099,20 @@ impl Cli {
 
     pub fn cli_silo_create() -> clap::Command {
         clap::Command::new("")
+            .arg(
+                clap::Arg::new("admin-group-name")
+                    .long("admin-group-name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String))
+                    .help(
+                        "If set, this group will be created during Silo creation and granted the \
+                         \"Silo Admin\" role. Identity providers can assert that users belong to \
+                         this group and those users can log in and further initialize the \
+                         Silo.\n\nNote that if configuring a SAML based identity provider, \
+                         group_attribute_name must be set for users to be considered part of a \
+                         group. See [`SamlIdentityProviderCreate`] for more information.",
+                    ),
+            )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
@@ -2479,6 +2550,18 @@ impl Cli {
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::Name)),
+            )
             .about("Update a route")
     }
 
@@ -2613,6 +2696,18 @@ impl Cli {
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::Name)),
+            )
             .about("Update a router")
     }
 
@@ -2701,6 +2796,18 @@ impl Cli {
                     ),
             )
             .arg(
+                clap::Arg::new("ipv6-block")
+                    .long("ipv6-block")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::Ipv6Net))
+                    .help(
+                        "The IPv6 address range for this subnet.\n\nIt must be allocated from the \
+                         RFC 4193 Unique Local Address range, with the prefix equal to the parent \
+                         VPC's prefix. A random `/64` block will be assigned if one is not \
+                         provided. It must not overlap with any existing subnet in the VPC.",
+                    ),
+            )
+            .arg(
                 clap::Arg::new("name")
                     .long("name")
                     .required(true)
@@ -2751,6 +2858,18 @@ impl Cli {
                     .long("vpc")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::Name)),
             )
             .about("Update a subnet")
     }
@@ -2859,6 +2978,18 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::Name)),
             )
             .arg(
+                clap::Arg::new("ipv6-prefix")
+                    .long("ipv6-prefix")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::Ipv6Net))
+                    .help(
+                        "The IPv6 prefix for this VPC.\n\nAll IPv6 subnets created from this VPC \
+                         must be taken from this range, which sould be a Unique Local Address in \
+                         the range `fd00::/48`. The default VPC Subnet will have the first `/64` \
+                         range from this prefix.",
+                    ),
+            )
+            .arg(
                 clap::Arg::new("name")
                     .long("name")
                     .required(true)
@@ -2897,6 +3028,24 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId)),
+            )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("dns-name")
+                    .long("dns-name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::Name)),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::Name)),
             )
             .about("Update a VPC")
     }
