@@ -17,6 +17,7 @@ mod cmd_api;
 #[allow(unused_mut)] // TODO
 #[allow(unused)] // TODO
 mod cmd_auth;
+mod cmd_version;
 mod config;
 mod context;
 #[allow(unused_mut)]
@@ -107,6 +108,7 @@ async fn main() {
     // could be placed under another subcommand if needed.
     cmd = cmd.subcommand(cmd_auth::CmdAuth::command());
     cmd = cmd.subcommand(cmd_api::CmdApi::command());
+    cmd = cmd.subcommand(cmd_version::CmdVersion::command());
 
     let matches = cmd.get_matches();
 
@@ -125,6 +127,11 @@ async fn main() {
         Some(("api", sub_matches)) => {
             let x = cmd_api::CmdApi::from_arg_matches(sub_matches).unwrap();
             x.run(&mut ctx).await.unwrap();
+        }
+
+        Some(("version", sub_matches)) => {
+            let x = cmd_version::CmdVersion::from_arg_matches(sub_matches).unwrap();
+            x.run().await.unwrap();
         }
 
         _ => {

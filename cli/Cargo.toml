@@ -20,6 +20,7 @@ http = { workspace = true }
 oauth2 = { workspace = true }
 open = { workspace = true }
 oxide-api = { workspace = true }
+predicates = { workspace = true }
 reqwest = { workspace = true }
 schemars = { workspace = true }
 serde = { workspace = true }
@@ -34,3 +35,7 @@ uuid = { workspace = true }
 [dev-dependencies]
 pretty_assertions = { workspace = true }
 serial_test = { workspace = true }
+assert_cmd = { workspace = true }
+
+[build-dependencies]
+built = { workspace = true }
