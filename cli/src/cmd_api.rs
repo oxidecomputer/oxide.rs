@@ -207,6 +207,12 @@ impl CmdApi {
             // print out the contents of each page to make a unified json array
             // as the output.
 
+            // Remove any query parameters for subsequent requests.
+            let endpoint = match endpoint.split_once('?') {
+                Some((prefix, _)) => prefix,
+                None => endpoint.as_str(),
+            };
+
             let result = futures::stream::try_unfold(Some(resp), |maybe_resp| async {
                 match maybe_resp {
                     None => Ok(None),
