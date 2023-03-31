@@ -118,20 +118,26 @@ async fn main() {
     let config = Config::default();
     let mut ctx = Context::new(config).unwrap();
 
-    match matches.subcommand() {
+    let result = match matches.subcommand() {
         Some(("auth", sub_matches)) => {
-            let x = cmd_auth::CmdAuth::from_arg_matches(sub_matches).unwrap();
-            x.run(&mut ctx).await.unwrap();
+            cmd_auth::CmdAuth::from_arg_matches(sub_matches)
+                .unwrap()
+                .run(&mut ctx)
+                .await
         }
 
         Some(("api", sub_matches)) => {
-            let x = cmd_api::CmdApi::from_arg_matches(sub_matches).unwrap();
-            x.run(&mut ctx).await.unwrap();
+            cmd_api::CmdApi::from_arg_matches(sub_matches)
+                .unwrap()
+                .run(&mut ctx)
+                .await
         }
 
         Some(("version", sub_matches)) => {
-            let x = cmd_version::CmdVersion::from_arg_matches(sub_matches).unwrap();
-            x.run().await.unwrap();
+            cmd_version::CmdVersion::from_arg_matches(sub_matches)
+                .unwrap()
+                .run()
+                .await
         }
 
         _ => {
@@ -145,8 +151,14 @@ async fn main() {
 
             let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
 
+            // TODO error handling
             cli.execute(node.cmd.unwrap(), sm).await;
+            Ok(())
         }
+    };
+
+    if result.is_err() {
+        std::process::exit(1)
     }
 }
 
