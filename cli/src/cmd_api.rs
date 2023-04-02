@@ -11,8 +11,8 @@ use std::{
 
 use anyhow::{anyhow, Result};
 use clap::Parser;
-use futures::TryStreamExt;
-use serde::{Deserialize, Serialize};
+use futures::{StreamExt, TryStreamExt};
+use serde::Deserialize;
 
 /// Makes an authenticated HTTP request to the Oxide API and prints the response.
 ///
@@ -65,7 +65,8 @@ pub struct CmdApi {
     #[clap(short = 'f', long)]
     pub raw_field: Vec<String>,
 
-    /// The file to use as body for the HTTP request (use "-" to read from standard input).
+    /// The file to use as body for the HTTP request (use "-" to read from
+    /// standard input).
     #[clap(long, default_value = "", conflicts_with = "paginate")]
     pub input: String,
 
@@ -79,12 +80,12 @@ pub struct CmdApi {
 }
 
 /// The JSON type for a paginated response.
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct PaginatedResponse {
     /// The items in the response.
-    #[serde(default)]
     pub items: Vec<serde_json::Value>,
     /// The pagination information for the response.
+    #[serde(default)]
     pub next_page: Option<String>,
 }
 
@@ -213,54 +214,52 @@ impl CmdApi {
                 None => endpoint.as_str(),
             };
 
-            let result = futures::stream::try_unfold(Some(resp), |maybe_resp| async {
-                match maybe_resp {
-                    None => Ok(None),
-                    Some(resp) => {
-                        let page = resp.json::<PaginatedResponse>().await?;
+            let first_page = resp.json::<PaginatedResponse>().await?;
+            let rest =
+                futures::stream::try_unfold(first_page.next_page, |maybe_page_token| async {
+                    if let Some(page_token) = maybe_page_token {
+                        // TODO deal with limit
+                        let uri = format!(
+                            "{}{}?page_token={}",
+                            ctx.client().baseurl(),
+                            endpoint,
+                            page_token,
+                        );
 
-                        match page.next_page {
-                            None => Ok(Some((page.items, None))),
-                            Some(next_page) => {
-                                // TODO deal with limit
-                                let uri = format!(
-                                    "{}{}?page_token={}",
-                                    ctx.client().baseurl(),
-                                    endpoint,
-                                    next_page,
-                                );
-
-                                let mut req = client.request(method.clone(), uri);
-                                for (key, value) in headers.clone() {
-                                    req = req.header(key, value);
-                                }
-
-                                let resp = req.send().await?.error_for_status()?;
-                                Ok(Some((page.items, Some(resp))))
-                            }
+                        let mut req = client.request(method.clone(), uri);
+                        for (key, value) in headers.clone() {
+                            req = req.header(key, value);
                         }
-                    }
-                }
-            })
-            .try_fold(false, |comma_needed, items| async move {
-                if items.is_empty() {
-                    Ok(false)
-                } else {
-                    let items_out = serde_json::to_string_pretty(&items)?;
-                    let len = items_out.len();
-                    assert_eq!(&items_out[0..2], "[\n");
-                    assert_eq!(&items_out[len - 2..], "\n]");
-                    let items_core = &items_out[2..len - 2];
 
-                    if comma_needed {
-                        print!(",");
+                        let resp = req.send().await?.error_for_status()?;
+                        let page = resp.json::<PaginatedResponse>().await?;
+                        Ok(Some((page.items, page.next_page)))
+                    } else {
+                        Ok(None)
                     }
-                    println!();
-                    print!("{}", items_core);
-                    Ok(true)
-                }
-            })
-            .await;
+                });
+
+            let result = futures::stream::once(async { Ok(first_page.items) })
+                .chain(rest)
+                .try_fold(false, |comma_needed, items| async move {
+                    if items.is_empty() {
+                        Ok(false)
+                    } else {
+                        let items_out = serde_json::to_string_pretty(&items)?;
+                        let len = items_out.len();
+                        assert_eq!(&items_out[0..2], "[\n");
+                        assert_eq!(&items_out[len - 2..], "\n]");
+                        let items_core = &items_out[2..len - 2];
+
+                        if comma_needed {
+                            print!(",");
+                        }
+                        println!();
+                        print!("{}", items_core);
+                        Ok(true)
+                    }
+                })
+                .await;
 
             if let Ok(true) = result {
                 print!(",")
@@ -268,8 +267,8 @@ impl CmdApi {
             println!();
             println!("]");
 
-            if result.is_err() {
-                println!("An error occurred during a paginated query")
+            if let Err(e) = &result {
+                println!("An error occurred during a paginated query:\n{}", e);
             }
 
             result.map(|_| ())
