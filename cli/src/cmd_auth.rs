@@ -4,7 +4,7 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::HashMap, io::Read};
+use std::{collections::HashMap, io::Read, time::Duration};
 
 use anyhow::{anyhow, bail, Result};
 use clap::{ArgGroup, Parser};
@@ -13,9 +13,16 @@ use oauth2::{
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
     TokenUrl,
 };
-use oxide_api::{ClientHiddenExt, ClientSessionExt};
+use oxide_api::{Client, ClientHiddenExt, ClientSessionExt};
+use reqwest::{
+    header::{HeaderMap, HeaderValue, AUTHORIZATION},
+    ClientBuilder,
+};
 
-use crate::{config::Host, context::Context};
+use crate::{
+    config::{Config, Host},
+    context::Context,
+};
 
 /// Login, logout, and get the status of your authentication.
 ///
@@ -86,6 +93,20 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
         }
         Err(err) => anyhow::bail!(err),
     }
+}
+
+fn make_client(host: &str, token: String) -> Client {
+    let mut bearer = HeaderValue::from_str(format!("Bearer {}", token).as_str()).unwrap();
+    bearer.set_sensitive(true);
+    let mut headers = HeaderMap::new();
+    headers.insert(AUTHORIZATION, bearer);
+
+    let rclient = ClientBuilder::new()
+        .connect_timeout(Duration::from_secs(15))
+        .default_headers(headers)
+        .build()
+        .unwrap();
+    Client::new_with_client(host, rclient)
 }
 
 // fn parse_host_interactively(ctx: &mut crate::context::Context) -> Result<url::Url> {
@@ -261,19 +282,7 @@ impl CmdAuthLogin {
         // Construct a one-off API client, authenticated with the token
         // returned in the previous step, so that we can extract and save the
         // identity of the authenticated user.
-        let auth = format!("Bearer {}", token);
-        let dur = std::time::Duration::from_secs(15);
-        let rclient = reqwest::Client::builder()
-            .connect_timeout(dur)
-            .timeout(dur)
-            .default_headers(
-                [(http::header::AUTHORIZATION, auth.try_into().unwrap())]
-                    .into_iter()
-                    .collect(),
-            )
-            .build()
-            .unwrap();
-        let client = oxide_api::Client::new_with_client(self.host.as_ref(), rclient);
+        let client = make_client(self.host.as_ref(), token.clone());
 
         let user = client.current_user_view().send().await?;
 
@@ -439,9 +448,8 @@ impl CmdAuthLogout {
 }
 
 /// Verifies and displays information about your authentication state.
-///
-/// This command will test your authentication state for each Oxide host that `oxide`
-/// knows about and report on any issues.
+/// This command validates the authentication state for each Oxide environment in the current configuration. These hosts may be from your hosts.toml file and/or
+/// $OXIDE_HOST environment variable.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthStatus {
@@ -449,8 +457,8 @@ pub struct CmdAuthStatus {
     #[clap(short = 't', long)]
     pub show_token: bool,
 
-    /// Check a specific hostname's auth status.
-    #[clap(short = 'H', long, env = "OXIDE_HOST", value_parser = parse_host)]
+    /// Specific hostname to validate.
+    #[clap(short = 'H', long, value_parser = parse_host)]
     pub host: Option<url::Url>,
 }
 
@@ -458,107 +466,90 @@ pub struct CmdAuthStatus {
 // impl crate::cmd::Command for CmdAuthStatus {
 impl CmdAuthStatus {
     pub async fn run(&self) -> Result<()> {
-        // let cs = ctx.io.color_scheme();
-
         let mut status_info: HashMap<String, Vec<String>> = HashMap::new();
 
-        // let hostnames = ctx.config.hosts()?;
+        // Initialising a new Config here instead of taking ctx (&Context) because
+        // ctx already has an initialised oxide_api::Client. This would give the CLI
+        // a chance to return an error before the status checks have even started.
+        //
+        // For example: the user has the OXIDE_HOST env var set but hasn't set OXIDE_TOKEN
+        // nor do they have a corresponding token for that host on the hosts.toml file,
+        // the CLI would return an error even if other host/token combinations on the
+        // hosts.toml file are valid.
+        let config = Config::default();
+        let mut host_list = config.hosts.hosts;
 
-        // if hostnames.is_empty() {
-        //     writeln!(
-        //         ctx.io.out,
-        //         "You are not logged into any Oxide hosts. Run {} to authenticate.",
-        //         cs.bold("oxide auth login")
-        //     )?;
-        //     return Ok(());
-        // }
+        // Include login information from environment variables if set
+        if let Some(h) = std::env::var_os("OXIDE_HOST") {
+            let env_token;
+            match std::env::var_os("OXIDE_TOKEN") {
+                Some(t) => env_token = t.into_string().unwrap(),
+                None => env_token = String::from(""),
+            };
+            let info = Host {
+                token: env_token,
+                user: String::from(""),
+                default: false,
+            };
+            host_list.insert(h.into_string().unwrap(), info);
+        }
 
-        let mut failed = false;
-        let mut hostname_found = false;
+        if host_list.is_empty() {
+            return Err(anyhow!("You are not logged into any Oxide hosts."));
+        }
 
-        // for hostname in &hostnames {
-        //     if matches!(&self.host, Some(host) if host.as_str() != *hostname) {
-        //         continue;
-        //     }
+        // Return a single result if the --host flag has been set
+        if let Some(url) = &self.host {
+            if host_list.contains_key(url.as_ref()) {
+                host_list.retain(|k, _| k == url.as_str())
+            } else {
+                return Err(anyhow!(
+                    "Host {} Not found in hosts.toml file or environment variables.",
+                    url.as_str()
+                ));
+            }
+        }
 
-        //     hostname_found = true;
+        for (host, info) in host_list.iter() {
+            // Construct a client with each host/token combination
+            let client = make_client(host, info.token.clone());
 
-        //     let (token, token_source) = ctx.config.get_with_source(hostname, "token")?;
+            let result = client.current_user_view().send().await;
+            let user = match result {
+                Ok(usr) => usr,
+                Err(_) => {
+                    status_info.insert(
+                        host.to_string(),
+                        vec![String::from(
+                            "Not authenticated. Host/token combination invalid",
+                        )],
+                    );
+                    continue;
+                }
+            };
 
-        //     let client = ctx.api_client(hostname)?;
+            // TODO: this should be the users email or something consistent with login
+            // and logout.
+            let email = user.id.to_string();
 
-        //     let mut host_status: Vec<String> = vec![];
+            // TODO: Once tokens have expiry dates, report expired tokens.
+            let token_display = if self.show_token {
+                info.token.to_string()
+            } else {
+                "*******************".to_string()
+            };
 
-        //     match client.hidden().session_me().await {
-        //         Ok(session) => {
-        //             // TODO: this should be the users email or something consistent with login
-        //             // and logout.
-        //             let email = session.id.to_string();
-        //             // Let the user know if their token is invalid.
-        //             /*if !session.is_valid() {
-        //             host_status.push(format!(
-        //                 "{} Logged in to {} as {} ({}) with an invalid token",
-        //                 cs.failure_icon(),
-        //                 hostname,
-        //                 cs.bold(&email),
-        //                 token_source
-        //             ));
-        //             failed = true;
-        //             continue;
-        //             }*/
-        //             host_status.push(format!(
-        //                 "{} Logged in to {} as {} ({})",
-        //                 cs.success_icon(),
-        //                 hostname,
-        //                 cs.bold(&email),
-        //                 token_source
-        //             ));
-        //             let mut token_display = "*******************".to_string();
-        //             if self.show_token {
-        //                 token_display = token.to_string();
-        //             }
-        //             host_status.push(format!("{} Token: {}", cs.success_icon(), token_display));
-        //         }
-        //         Err(err) => {
-        //             host_status.push(format!(
-        //                 "{} {}: api call failed: {}",
-        //                 cs.failure_icon(),
-        //                 hostname,
-        //                 err
-        //             ));
-        //             failed = true;
-        //             continue;
-        //         }
-        //     }
+            status_info.insert(
+                host.to_string(),
+                vec![
+                    format!("Logged in to {} as {}", host, &email),
+                    format!("Token: {}", token_display),
+                ],
+            );
+        }
 
-        //     status_info.insert(hostname.to_string(), host_status);
-        // }
-
-        // if !hostname_found {
-        //     writeln!(
-        //         ctx.io.err_out,
-        //         "Hostname {} not found among authenticated Oxide hosts",
-        //         self.host.as_ref().unwrap().as_str(),
-        //     )?;
-        //     return Err(anyhow!(""));
-        // }
-
-        // for hostname in hostnames {
-        //     match status_info.get(&hostname) {
-        //         Some(status) => {
-        //             writeln!(ctx.io.out, "{}", cs.bold(&hostname))?;
-        //             for line in status {
-        //                 writeln!(ctx.io.out, "{}", line)?;
-        //             }
-        //         }
-        //         None => {
-        //             writeln!(ctx.io.err_out, "No status information for {}", hostname)?;
-        //         }
-        //     }
-        // }
-
-        if failed {
-            return Err(anyhow!(""));
+        for (key, value) in &status_info {
+            println!("{}: {:?}", key, value);
         }
 
         Ok(())
@@ -757,4 +748,57 @@ mod test {
             Ok(host) if host == "http://example.com:8888/"
         ));
     }
+}
+
+#[test]
+fn test_cmd_auth_status() {
+    use assert_cmd::Command;
+    use httpmock::{Method::GET, MockServer};
+    use predicates::str;
+    use serde_json::json;
+
+    let server = MockServer::start();
+    let oxide_mock = server.mock(|when, then| {
+        when.method(GET).path("/v1/me");
+        then.status(200).json_body(json!({"id":"001de000-05e4-4000-8000-000000004007","display_name":"privileged","silo_id":"001de000-5110-4000-8000-000000000000"}));
+    });
+
+    // Validate a successful login
+    let mut cmd = Command::cargo_bin("oxide").unwrap();
+    cmd.arg("auth")
+        .arg("status")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "oxide-token-1111");
+    cmd.assert().success().stdout(str::contains(format!(
+        "{}: [\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\", \"Token: *******************\"]",
+        server.url(""), server.url("")
+    )));
+
+    // Validate a successful login with token displayed in plain text
+    cmd.arg("-t");
+    cmd.assert().success().stdout(str::contains(format!(
+    "{}: [\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\", \"Token: oxide-token-1111\"]",
+    server.url(""), server.url("")
+    )));
+
+    // Assert the mock received the provided number of requests which matched all
+    // the request requirements
+    oxide_mock.assert_hits(2);
+
+    // Set auth information through environment variables and check they are included
+    // in the results
+    let mut cmd = Command::cargo_bin("oxide").unwrap();
+    cmd.arg("auth")
+        .arg("status")
+        .env("OXIDE_HOST", "http://111.1.1.1/")
+        .env("OXIDE_TOKEN", "oxide-token-1111");
+    cmd.assert().success().stdout(str::contains(
+        "http://111.1.1.1/: [\"Not authenticated. Host/token combination invalid\"]",
+    ));
+
+    // Make sure the command only returns information about the specified host
+    cmd.arg("-H").arg("http://111.1.1.1/");
+    cmd.assert()
+        .success()
+        .stdout("http://111.1.1.1/: [\"Not authenticated. Host/token combination invalid\"]\n");
 }
