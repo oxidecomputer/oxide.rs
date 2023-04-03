@@ -38,6 +38,30 @@ pub struct JsonDoc {
     subcommands: Vec<JsonDoc>,
 }
 
+fn generate_json(cmd: &Command) -> Result<JsonDoc> {
+    let title = cmd.get_name().to_string().replace('_', " ");
+    let excerpt = cmd.get_about().unwrap_or_default().to_string();
+
+    Ok(JsonDoc {
+        title,
+        excerpt,
+        about: cmd.get_long_about().map(|s| s.to_string()),
+        args: cmd
+            .get_arguments()
+            .filter(|arg| arg.get_short().is_some() || arg.get_long().is_some())
+            .map(|arg| JsonArg {
+                short: arg.get_short().map(|char| char.to_string()),
+                long: arg.get_long().map(String::from),
+                help: arg.get_help().map(|s| s.to_string()),
+            })
+            .collect(),
+        subcommands: cmd
+            .get_subcommands()
+            .filter_map(|subcmd| generate_json(subcmd).ok())
+            .collect(),
+    })
+}
+
 impl CmdDocs {
     pub async fn run(&self, app: &Command) -> Result<()> {
         println!("Writing docs.json");
@@ -45,44 +69,23 @@ impl CmdDocs {
         // let title = app.get_name().to_string();
         // let filename = format!("{}.json", title);
 
-        let json = self.generate_json(app)?;
+        let json = generate_json(app)?;
         let pretty_json = serde_json::to_string_pretty(&json)?;
         println!("{}", pretty_json);
 
         Ok(())
-    }
-
-    fn generate_json(&self, cmd: &Command) -> Result<JsonDoc> {
-        let title = cmd.get_name().to_string().replace('_', " ");
-        let excerpt = cmd.get_about().unwrap_or_default().to_string();
-
-        Ok(JsonDoc {
-            title,
-            excerpt,
-            about: cmd.get_long_about().map(|s| s.to_string()),
-            args: cmd
-                .get_arguments()
-                .filter(|arg| arg.get_short().is_some() || arg.get_long().is_some())
-                .map(|arg| JsonArg {
-                    short: arg.get_short().map(|char| char.to_string()),
-                    long: arg.get_long().map(String::from),
-                    help: arg.get_help().map(|s| s.to_string()),
-                })
-                .collect(),
-            subcommands: cmd
-                .get_subcommands()
-                .filter_map(|subcmd| self.generate_json(subcmd).ok())
-                .collect(),
-        })
     }
 }
 
 #[test]
 fn docs_success() {
     use assert_cmd::Command;
+    use predicates::prelude::predicate;
 
     let mut cmd = Command::cargo_bin("oxide").unwrap();
 
     cmd.arg("docs");
-    cmd.assert().success().stdout(format!("Writing docs.json",));
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("\"title\": \"oxide\""));
 }
