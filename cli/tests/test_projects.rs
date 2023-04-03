@@ -6,7 +6,7 @@
 
 use assert_cmd::Command;
 use httpmock::{prelude::*, Then, When};
-use oxide_api::types::ProjectResultsPage;
+use oxide_api::types::{Project, ProjectResultsPage};
 use predicates::prelude::*;
 use serde::Serialize;
 use serde_json::json;
@@ -19,19 +19,9 @@ fn text_xxx() {
     let mock = server.project_list(|when, then| {
         when.limit(10.try_into().unwrap());
         then.success_ok(ProjectResultsPage {
-            items: vec![],
+            items: vec![Project::builder().try_into().unwrap()],
             next_page: None,
         });
-    });
-
-    let mock = server.mock(|when, then| {
-        when.method(GET)
-            .path("/simple/test/call")
-            .query_param("param1", "value1")
-            .query_param("param2", "value2");
-        then.status(http::StatusCode::OK.as_u16()).json_body(json!({
-            "a": "b"
-        }));
     });
 
     Command::cargo_bin("oxide")
