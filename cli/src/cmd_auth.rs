@@ -4,7 +4,7 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::HashMap, io::Read, time::Duration};
+use std::{collections::HashMap, fs::File, io::Read, path::Path, time::Duration};
 
 use anyhow::{anyhow, bail, Result};
 use clap::{ArgGroup, Parser};
@@ -46,7 +46,7 @@ impl CmdAuth {
     pub async fn run(&self, ctx: &mut Context) -> Result<()> {
         match &self.subcmd {
             SubCommand::Login(cmd) => cmd.run(ctx).await,
-            SubCommand::Logout(cmd) => cmd.run().await,
+            SubCommand::Logout(cmd) => cmd.run(ctx).await,
             SubCommand::Status(cmd) => cmd.run().await,
         }
     }
@@ -314,134 +314,59 @@ impl CmdAuthLogin {
     }
 }
 
-/// Log out of an Oxide host.
+/// Removes all authentication information saved in the hosts.toml file.
 ///
-/// This command removes the authentication configuration for a host either specified
-/// interactively or via `--host`.
-///
-///     $ oxide auth logout
-///     # => select what host to log out of via a prompt
-///
-///     $ oxide auth logout --host oxide.internal
-///     # => log out of specified host
+/// This command does not invalidate any tokens from the hosts, nor removes
+/// any authentication information saved in environment variables.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthLogout {
-    /// The hostname of the Oxide instance to log out of.
-    #[clap(short = 'H', long, env = "OXIDE_HOST", value_parser = parse_host)]
+    /// Remove authentication information for a single host.
+    #[clap(short = 'H', long, value_parser = parse_host)]
     pub host: Option<url::Url>,
+    /// Skip confirmation prompt.
+    #[clap(short = 'f', long)]
+    pub force: bool,
 }
 
-// #[async_trait::async_trait]
-// impl crate::cmd::Command for CmdAuthLogout {
 impl CmdAuthLogout {
-    // async fn run(&self, ctx: &mut crate::context::Context) -> Result<()> {
-    pub async fn run(&self) -> Result<()> {
-        // if self.host.is_none() && !ctx.io.can_prompt() {
-        //     return Err(anyhow!("--host required when not running interactively"));
-        // }
-
-        // let candidates = ctx.config.hosts()?;
-        // if candidates.is_empty() {
-        //     return Err(anyhow!("not logged in to any hosts"));
-        // }
-
-        let hostname = if self.host.is_none() {
-            // if candidates.len() == 1 {
-            //     candidates[0].to_string()
-            // } else {
-            //     let index =
-            //         dialoguer::Select::with_theme(&dialoguer::theme::ColorfulTheme::default())
-            //             .with_prompt("What account do you want to log out of?")
-            //             .default(0)
-            //             .items(&candidates[..])
-            //             .interact();
-
-            //     match index {
-            //         Ok(i) => candidates[i].to_string(),
-            //         Err(err) => {
-            //             return Err(anyhow!("prompt failed: {}", err));
-            //         }
-            //     }
-            // }
-            todo!()
-        } else {
-            let hostname = self.host.as_ref().unwrap().to_string();
-            let mut found = false;
-            // for c in candidates {
-            //     if c == hostname {
-            //         found = true;
-            //         break;
-            //     }
-            // }
-
-            if !found {
-                return Err(anyhow!("not logged into {}", hostname));
+    pub async fn run(&self, ctx: &mut Context) -> Result<()> {
+        if !self.force {
+            match dialoguer::Confirm::new()
+                .with_prompt("Confirm authentication information deletion:")
+                .interact()
+            {
+                Ok(true) => {}
+                Ok(false) => {
+                    println!("Action aborted. No changes have been made.");
+                    return Ok(());
+                }
+                Err(err) => {
+                    return Err(anyhow!("prompt failed: {}", err));
+                }
             }
+        }
 
-            hostname
-        };
+        match &self.host {
+            Some(host) => {
+                let host_entry = Host {
+                    token: String::from(""),
+                    user: String::from(""),
+                    default: false,
+                };
 
-        // if let Err(err) = ctx.config.check_writable(&hostname, "token") {
-        //     if let Some(crate::config_from_env::ReadOnlyEnvVarError::Variable(var)) =
-        //         err.downcast_ref()
-        //     {
-        //         writeln!(
-        //             ctx.io.err_out,
-        //             "The value of the {} environment variable is being used for authentication.",
-        //             var
-        //         )?;
-        //         writeln!(
-        //             ctx.io.err_out,
-        //             "To erase credentials stored in Oxide CLI, first clear the value from the environment."
-        //         )?;
-        //         return Err(anyhow!(""));
-        //     }
+                ctx.config().update_host(host.to_string(), host_entry)?;
 
-        //     return Err(err);
-        // }
+                println!("Removed authentication information from: {}", host);
+            }
+            None => {
+                let mut dir = dirs::home_dir().unwrap();
+                dir.push(".config/oxide/hosts.toml");
 
-        // let client = ctx.api_client(&hostname)?;
-
-        // Get the current user.
-        // let session = client.hidden().session_me().await?;
-
-        // TODO: this should be the users email or something better.
-        // make it consistent with login.
-        // let email = session.id;
-
-        // if ctx.io.can_prompt() {
-        //     match dialoguer::Confirm::new()
-        //         .with_prompt(format!(
-        //             "Are you sure you want to log out of {}{}?",
-        //             hostname, email
-        //         ))
-        //         .interact()
-        //     {
-        //         Ok(true) => {}
-        //         Ok(false) => {
-        //             return Ok(());
-        //         }
-        //         Err(err) => {
-        //             return Err(anyhow!("prompt failed: {}", err));
-        //         }
-        //     }
-        // }
-
-        // // Unset the host.
-        // ctx.config.unset_host(&hostname)?;
-
-        // // Write the changes to the config.
-        // ctx.config.write()?;
-
-        // let cs = ctx.io.color_scheme();
-        // writeln!(
-        //     ctx.io.out,
-        //     "{} Logged out of {} {}",
-        //     cs.success_icon(),
-        //     cs.bold(&hostname),
-        //     email
-        // )?;
+                let mut f = File::create(dir).unwrap();
+                println!("Removed all authentication information from hosts.toml file.");
+            }
+        }
 
         Ok(())
     }
@@ -462,8 +387,6 @@ pub struct CmdAuthStatus {
     pub host: Option<url::Url>,
 }
 
-// #[async_trait::async_trait]
-// impl crate::cmd::Command for CmdAuthStatus {
 impl CmdAuthStatus {
     pub async fn run(&self) -> Result<()> {
         let mut status_info: HashMap<String, Vec<String>> = HashMap::new();
