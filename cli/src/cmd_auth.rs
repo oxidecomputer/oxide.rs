@@ -314,14 +314,15 @@ impl CmdAuthLogin {
     }
 }
 
-/// Removes all authentication information saved in the hosts.toml file.
+/// Removes authentication information saved in the hosts.toml file.
 ///
 /// This command does not invalidate any tokens from the hosts, nor removes
 /// any authentication information saved in environment variables.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthLogout {
-    /// Remove authentication information for a single host.
+    /// Remove authentication information for a single host. If unset, authentication
+    /// information for all hosts will be deleted.
     #[clap(short = 'H', long, value_parser = parse_host)]
     pub host: Option<url::Url>,
     /// Skip confirmation prompt.
@@ -357,7 +358,10 @@ impl CmdAuthLogout {
 
                 ctx.config().update_host(host.to_string(), host_entry)?;
 
-                println!("Removed authentication information from: {}", host);
+                println!(
+                    "Removed authentication information from hosts.toml file for: {}",
+                    host
+                );
             }
             None => {
                 let mut dir = dirs::home_dir().unwrap();
