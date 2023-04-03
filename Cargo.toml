@@ -29,7 +29,7 @@ rand = "0.8.5"
 regress = "0.5.0"
 reqwest = "0.11.16"
 schemars = { version = "0.8.12", features = ["chrono", "uuid1"] }
-serde = { version = "1.0.158", features = ["derive"] }
+serde = { version = "1.0.159", features = ["derive"] }
 serde_json = "1.0.95"
 serial_test = "1.0.0"
 similar = "2.2.1"
