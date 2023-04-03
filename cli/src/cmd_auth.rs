@@ -321,8 +321,8 @@ impl CmdAuthLogin {
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthLogout {
-    /// Remove authentication information for a single host. If unset, authentication
-    /// information for all hosts will be deleted.
+    /// Remove authentication information for a single host. If unset, all known
+    /// hosts and authentication information will be deleted from the hosts.toml file.
     #[clap(short = 'H', long, value_parser = parse_host)]
     pub host: Option<url::Url>,
     /// Skip confirmation prompt.
@@ -350,12 +350,13 @@ impl CmdAuthLogout {
 
         match &self.host {
             Some(host) => {
+                // Setting the host with empty parameters so it will now be listed as
+                // "unauthenticated" when running `$ oxide auth status`.
                 let host_entry = Host {
                     token: String::from(""),
                     user: String::from(""),
                     default: false,
                 };
-
                 ctx.config().update_host(host.to_string(), host_entry)?;
 
                 println!(
@@ -367,6 +368,7 @@ impl CmdAuthLogout {
                 let mut dir = dirs::home_dir().unwrap();
                 dir.push(".config/oxide/hosts.toml");
 
+                // Clear the entire file for users who want to reset their known hosts.
                 let mut f = File::create(dir).unwrap();
                 println!("Removed all authentication information from hosts.toml file.");
             }
