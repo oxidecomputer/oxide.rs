@@ -11,9 +11,9 @@ on:
 
 jobs:
   check-style:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.5.0
       - name: Report cargo version
         run: cargo --version
       - name: Report rustfmt version
@@ -22,9 +22,9 @@ jobs:
         run: cargo fmt -- --check
 
   clippy-lint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.5.0
       - name: Report cargo version
         run: cargo --version
       - name: Report Clippy version
@@ -35,17 +35,11 @@ jobs:
         # rust-lang/rust-clippy#6610.
         run: cargo clippy --all-targets -- --deny warnings --allow clippy::style
 
-  build-and-test:
+  check-generation:
     runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, windows-2022, macos-12]
-        features: [ all, default ]
-        include:
-          - features: all
-            feature_flags: --all-features
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.5.0
       - name: Install nightly rustfmt
         uses: actions-rs/toolchain@v1
         with:
@@ -58,6 +52,22 @@ jobs:
         run: rustc --version
       - name: Check generation
         run: cargo xtask generate --check
+
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, windows-2022, macos-12]
+        features: [ all, default ]
+        include:
+          - features: all
+            feature_flags: --all-features
+    steps:
+      - uses: actions/checkout@v3.5.0
+      - name: Report cargo version
+        run: cargo --version
+      - name: Report rustc version
+        run: rustc --version
       - name: Build
         run: cargo build ${{ matrix.feature_flags }} --locked --all-targets --verbose
       - name: Run tests
