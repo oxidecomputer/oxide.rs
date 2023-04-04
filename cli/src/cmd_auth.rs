@@ -316,8 +316,9 @@ impl CmdAuthLogin {
 
 /// Removes authentication information saved in the hosts.toml file.
 ///
-/// This command does not invalidate any tokens from the hosts, nor removes
-/// any authentication information saved in environment variables.
+/// This command does not invalidate any tokens from the hosts, nor unset
+/// any authentication information saved in $OXIDE_HOST or $OXIDE_TOKEN
+/// environment variables.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthLogout {
