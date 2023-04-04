@@ -367,7 +367,9 @@ impl CmdAuthLogout {
             }
             None => {
                 let mut dir = dirs::home_dir().unwrap();
-                dir.push(".config/oxide/hosts.toml");
+                dir.push(".config");
+                dir.push("oxide");
+                dir.push("hosts.toml");
 
                 // Clear the entire file for users who want to reset their known hosts.
                 let mut f = File::create(dir).unwrap();
