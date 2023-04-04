@@ -4656,6 +4656,10 @@ impl<T: CliOverride> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("ip") {
+            request = request.body_map(|body| body.ip(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
@@ -4722,6 +4726,14 @@ impl<T: CliOverride> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<bool>("primary") {
@@ -4874,6 +4886,14 @@ impl<T: CliOverride> Cli<T> {
         let mut request = self.client.project_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
         }
 
         self.over
@@ -5396,6 +5416,10 @@ impl<T: CliOverride> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<String>("group-attribute-name") {
+            request = request.body_map(|body| body.group_attribute_name(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<String>("idp-entity-id") {
             request = request.body_map(|body| body.idp_entity_id(value.clone()))
         }
@@ -5526,6 +5550,14 @@ impl<T: CliOverride> Cli<T> {
         let mut request = self.client.ip_pool_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
         }
 
         self.over
@@ -5867,6 +5899,10 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_silo_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.silo_create();
+        if let Some(value) = matches.get_one::<String>("admin-group-name") {
+            request = request.body_map(|body| body.admin_group_name(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -6467,6 +6503,14 @@ impl<T: CliOverride> Cli<T> {
             request = request.vpc(value.clone());
         }
 
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         self.over
             .execute_vpc_router_route_update(matches, &mut request)
             .unwrap();
@@ -6619,6 +6663,14 @@ impl<T: CliOverride> Cli<T> {
             request = request.vpc(value.clone());
         }
 
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
         self.over
             .execute_vpc_router_update(matches, &mut request)
             .unwrap();
@@ -6711,6 +6763,10 @@ impl<T: CliOverride> Cli<T> {
             request = request.body_map(|body| body.ipv4_block(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<types::Ipv6Net>("ipv6-block") {
+            request = request.body_map(|body| body.ipv6_block(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
@@ -6769,6 +6825,14 @@ impl<T: CliOverride> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
         }
 
         self.over
@@ -6889,6 +6953,10 @@ impl<T: CliOverride> Cli<T> {
             request = request.body_map(|body| body.dns_name(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<types::Ipv6Net>("ipv6-prefix") {
+            request = request.body_map(|body| body.ipv6_prefix(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
         }
@@ -6935,6 +7003,18 @@ impl<T: CliOverride> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("dns-name") {
+            request = request.body_map(|body| body.dns_name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
         }
 
         self.over.execute_vpc_update(matches, &mut request).unwrap();
