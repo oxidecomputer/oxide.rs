@@ -36,7 +36,6 @@ jobs:
         run: cargo clippy --all-targets -- --deny warnings --allow clippy::style
 
   check-generation:
-    runs-on: ${{ matrix.os }}
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3.5.0
