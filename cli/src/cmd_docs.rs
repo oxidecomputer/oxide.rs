@@ -64,28 +64,9 @@ fn generate_json(cmd: &Command) -> Result<JsonDoc> {
 
 impl CmdDocs {
     pub async fn run(&self, app: &Command) -> Result<()> {
-        println!("Writing docs.json");
-
-        // let title = app.get_name().to_string();
-        // let filename = format!("{}.json", title);
-
         let json = generate_json(app)?;
         let pretty_json = serde_json::to_string_pretty(&json)?;
         println!("{}", pretty_json);
-
         Ok(())
     }
-}
-
-#[test]
-fn docs_success() {
-    use assert_cmd::Command;
-    use predicates::prelude::predicate;
-
-    let mut cmd = Command::cargo_bin("oxide").unwrap();
-
-    cmd.arg("docs");
-    cmd.assert()
-        .success()
-        .stdout(predicate::str::contains("\"title\": \"oxide\""));
 }

@@ -1,0 +1,1897 @@
+{
+  "title": "oxide",
+  "excerpt": "",
+  "subcommands": [
+    {
+      "title": "current-user",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "ssh-key",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "view",
+              "excerpt": "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.",
+              "args": [
+                {
+                  "long": "ssh-key"
+                }
+              ]
+            },
+            {
+              "title": "list",
+              "excerpt": "List SSH public keys\n\nLists SSH public keys for the currently authenticated user.",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "sort-by"
+                }
+              ]
+            },
+            {
+              "title": "delete",
+              "excerpt": "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.",
+              "args": [
+                {
+                  "long": "ssh-key"
+                }
+              ]
+            },
+            {
+              "title": "create",
+              "excerpt": "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.",
+              "args": [
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "public-key",
+                  "help": "SSH public key, e.g., `\"ssh-ed25519 AAAAC3NzaC...\"`"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "groups",
+          "excerpt": "Fetch the silo groups the current user belongs to",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "view",
+          "excerpt": "Fetch the user associated with the current session"
+        }
+      ]
+    },
+    {
+      "title": "policy",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "view",
+          "excerpt": "Fetch the current silo's IAM policy"
+        },
+        {
+          "title": "update",
+          "excerpt": "Update the current silo's IAM policy"
+        }
+      ]
+    },
+    {
+      "title": "instance",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "start",
+          "excerpt": "Boot an instance",
+          "args": [
+            {
+              "long": "instance"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "external-ip",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "list",
+              "excerpt": "List external IP addresses",
+              "args": [
+                {
+                  "long": "instance"
+                },
+                {
+                  "long": "project"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "disk",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "list",
+              "excerpt": "List an instance's disks",
+              "args": [
+                {
+                  "long": "instance"
+                },
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "sort-by"
+                }
+              ]
+            },
+            {
+              "title": "detach",
+              "excerpt": "Detach a disk from an instance",
+              "args": [
+                {
+                  "long": "instance"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "disk"
+                }
+              ]
+            },
+            {
+              "title": "attach",
+              "excerpt": "Attach a disk to an instance",
+              "args": [
+                {
+                  "long": "instance"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "disk"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "reboot",
+          "excerpt": "Reboot an instance",
+          "args": [
+            {
+              "long": "instance"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "list",
+          "excerpt": "List instances",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "project"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "delete",
+          "excerpt": "Delete an instance",
+          "args": [
+            {
+              "long": "instance"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "create",
+          "excerpt": "Create an instance",
+          "args": [
+            {
+              "long": "project"
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "hostname"
+            },
+            {
+              "long": "memory"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "ncpus"
+            },
+            {
+              "long": "start",
+              "help": "Should this instance be started upon creation; true by default."
+            },
+            {
+              "long": "user-data",
+              "help": "User data for instance initialization systems (such as cloud-init). Must be a Base64-encoded string, as specified in RFC 4648 § 4 (+ and / characters with padding). Maximum 32 KiB unencoded data."
+            }
+          ]
+        },
+        {
+          "title": "view",
+          "excerpt": "Fetch an instance",
+          "args": [
+            {
+              "long": "instance"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "stop",
+          "excerpt": "Stop an instance",
+          "args": [
+            {
+              "long": "instance"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "nic",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "update",
+              "excerpt": "Update a network interface",
+              "args": [
+                {
+                  "long": "interface"
+                },
+                {
+                  "long": "instance"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "primary",
+                  "help": "Make a secondary interface the instance's primary interface.\n\nIf applied to a secondary interface, that interface will become the primary on the next reboot of the instance. Note that this may have implications for routing between instances, as the new primary interface will be on a distinct subnet from the previous primary interface.\n\nNote that this can only be used to select a new primary interface for an instance. Requests to change the primary interface into a secondary will return an error."
+                }
+              ]
+            },
+            {
+              "title": "view",
+              "excerpt": "Fetch a network interface",
+              "args": [
+                {
+                  "long": "interface"
+                },
+                {
+                  "long": "instance"
+                },
+                {
+                  "long": "project"
+                }
+              ]
+            },
+            {
+              "title": "list",
+              "excerpt": "List network interfaces",
+              "args": [
+                {
+                  "long": "instance"
+                },
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "sort-by"
+                }
+              ]
+            },
+            {
+              "title": "create",
+              "excerpt": "Create a network interface",
+              "args": [
+                {
+                  "long": "instance"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "ip",
+                  "help": "The IP address for the interface. One will be auto-assigned if not provided."
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "subnet-name",
+                  "help": "The VPC Subnet in which to create the interface."
+                },
+                {
+                  "long": "vpc-name",
+                  "help": "The VPC in which to create the interface."
+                }
+              ]
+            },
+            {
+              "title": "delete",
+              "excerpt": "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
+              "args": [
+                {
+                  "long": "interface"
+                },
+                {
+                  "long": "instance"
+                },
+                {
+                  "long": "project"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "vpc",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "list",
+          "excerpt": "List VPCs",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "project"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "view",
+          "excerpt": "Fetch a VPC",
+          "args": [
+            {
+              "long": "vpc"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "router",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "update",
+              "excerpt": "Update a router",
+              "args": [
+                {
+                  "long": "router"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "vpc"
+                },
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "name"
+                }
+              ]
+            },
+            {
+              "title": "create",
+              "excerpt": "Create a VPC router",
+              "args": [
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "vpc"
+                },
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "name"
+                }
+              ]
+            },
+            {
+              "title": "view",
+              "excerpt": "Get a router",
+              "args": [
+                {
+                  "long": "router"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "vpc"
+                }
+              ]
+            },
+            {
+              "title": "route",
+              "excerpt": "",
+              "subcommands": [
+                {
+                  "title": "update",
+                  "excerpt": "Update a route",
+                  "args": [
+                    {
+                      "long": "route"
+                    },
+                    {
+                      "long": "project"
+                    },
+                    {
+                      "long": "router"
+                    },
+                    {
+                      "long": "vpc"
+                    },
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "name"
+                    }
+                  ]
+                },
+                {
+                  "title": "list",
+                  "excerpt": "List routes\n\nList the routes associated with a router in a particular VPC.",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "project"
+                    },
+                    {
+                      "long": "router"
+                    },
+                    {
+                      "long": "sort-by"
+                    },
+                    {
+                      "long": "vpc"
+                    }
+                  ]
+                },
+                {
+                  "title": "create",
+                  "excerpt": "Create a router",
+                  "args": [
+                    {
+                      "long": "project"
+                    },
+                    {
+                      "long": "router"
+                    },
+                    {
+                      "long": "vpc"
+                    },
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "name"
+                    }
+                  ]
+                },
+                {
+                  "title": "delete",
+                  "excerpt": "Delete a route",
+                  "args": [
+                    {
+                      "long": "route"
+                    },
+                    {
+                      "long": "project"
+                    },
+                    {
+                      "long": "router"
+                    },
+                    {
+                      "long": "vpc"
+                    }
+                  ]
+                },
+                {
+                  "title": "view",
+                  "excerpt": "Fetch a route",
+                  "args": [
+                    {
+                      "long": "route"
+                    },
+                    {
+                      "long": "project"
+                    },
+                    {
+                      "long": "router"
+                    },
+                    {
+                      "long": "vpc"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "delete",
+              "excerpt": "Delete a router",
+              "args": [
+                {
+                  "long": "router"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "vpc"
+                }
+              ]
+            },
+            {
+              "title": "list",
+              "excerpt": "List routers",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "sort-by"
+                },
+                {
+                  "long": "vpc"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "subnet",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "view",
+              "excerpt": "Fetch a subnet",
+              "args": [
+                {
+                  "long": "subnet"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "vpc"
+                }
+              ]
+            },
+            {
+              "title": "create",
+              "excerpt": "Create a subnet",
+              "args": [
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "vpc"
+                },
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "ipv4-block",
+                  "help": "The IPv4 address range for this subnet.\n\nIt must be allocated from an RFC 1918 private address range, and must not overlap with any other existing subnet in the VPC."
+                },
+                {
+                  "long": "ipv6-block",
+                  "help": "The IPv6 address range for this subnet.\n\nIt must be allocated from the RFC 4193 Unique Local Address range, with the prefix equal to the parent VPC's prefix. A random `/64` block will be assigned if one is not provided. It must not overlap with any existing subnet in the VPC."
+                },
+                {
+                  "long": "name"
+                }
+              ]
+            },
+            {
+              "title": "list",
+              "excerpt": "Fetch a subnet",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "sort-by"
+                },
+                {
+                  "long": "vpc"
+                }
+              ]
+            },
+            {
+              "title": "update",
+              "excerpt": "Update a subnet",
+              "args": [
+                {
+                  "long": "subnet"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "vpc"
+                },
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "name"
+                }
+              ]
+            },
+            {
+              "title": "nic",
+              "excerpt": "",
+              "subcommands": [
+                {
+                  "title": "list",
+                  "excerpt": "List network interfaces",
+                  "args": [
+                    {
+                      "long": "subnet"
+                    },
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "project"
+                    },
+                    {
+                      "long": "sort-by"
+                    },
+                    {
+                      "long": "vpc"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "delete",
+              "excerpt": "Delete a subnet",
+              "args": [
+                {
+                  "long": "subnet"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "vpc"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "create",
+          "excerpt": "Create a VPC",
+          "args": [
+            {
+              "long": "project"
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "dns-name"
+            },
+            {
+              "long": "ipv6-prefix",
+              "help": "The IPv6 prefix for this VPC.\n\nAll IPv6 subnets created from this VPC must be taken from this range, which sould be a Unique Local Address in the range `fd00::/48`. The default VPC Subnet will have the first `/64` range from this prefix."
+            },
+            {
+              "long": "name"
+            }
+          ]
+        },
+        {
+          "title": "firewall-rules",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "view",
+              "excerpt": "List firewall rules",
+              "args": [
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "vpc"
+                }
+              ]
+            },
+            {
+              "title": "update",
+              "excerpt": "Replace firewall rules",
+              "args": [
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "vpc"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "update",
+          "excerpt": "Update a VPC",
+          "args": [
+            {
+              "long": "vpc"
+            },
+            {
+              "long": "project"
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "dns-name"
+            },
+            {
+              "long": "name"
+            }
+          ]
+        },
+        {
+          "title": "delete",
+          "excerpt": "Delete a VPC",
+          "args": [
+            {
+              "long": "vpc"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "snapshot",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "view",
+          "excerpt": "Fetch a snapshot",
+          "args": [
+            {
+              "long": "snapshot"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "delete",
+          "excerpt": "Delete a snapshot",
+          "args": [
+            {
+              "long": "snapshot"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "list",
+          "excerpt": "List snapshots",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "project"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "create",
+          "excerpt": "Create a snapshot\n\nCreates a point-in-time snapshot from a disk.",
+          "args": [
+            {
+              "long": "project"
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "disk",
+              "help": "The name of the disk to be snapshotted"
+            },
+            {
+              "long": "name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "ip-pool",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "list",
+          "excerpt": "List IP pools",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "update",
+          "excerpt": "Update an IP Pool",
+          "args": [
+            {
+              "long": "pool"
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "name"
+            }
+          ]
+        },
+        {
+          "title": "service",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "remove",
+              "excerpt": "Remove a range from an IP pool used for Oxide services."
+            },
+            {
+              "title": "view",
+              "excerpt": "Fetch the IP pool used for Oxide services."
+            },
+            {
+              "title": "range",
+              "excerpt": "",
+              "subcommands": [
+                {
+                  "title": "list",
+                  "excerpt": "List ranges for the IP pool used for Oxide services.\n\nRanges are ordered by their first address.",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    }
+                  ]
+                },
+                {
+                  "title": "add",
+                  "excerpt": "Add a range to an IP pool used for Oxide services."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "range",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "add",
+              "excerpt": "Add a range to an IP pool",
+              "args": [
+                {
+                  "long": "pool"
+                },
+                {
+                  "long": "first"
+                },
+                {
+                  "long": "last"
+                }
+              ]
+            },
+            {
+              "title": "remove",
+              "excerpt": "Remove a range from an IP pool",
+              "args": [
+                {
+                  "long": "pool"
+                }
+              ]
+            },
+            {
+              "title": "list",
+              "excerpt": "List ranges for an IP pool\n\nRanges are ordered by their first address.",
+              "args": [
+                {
+                  "long": "pool"
+                },
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "delete",
+          "excerpt": "Delete an IP Pool",
+          "args": [
+            {
+              "long": "pool"
+            }
+          ]
+        },
+        {
+          "title": "create",
+          "excerpt": "Create an IP pool",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "name"
+            }
+          ]
+        },
+        {
+          "title": "view",
+          "excerpt": "Fetch an IP pool",
+          "args": [
+            {
+              "long": "pool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "physical-disk",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "list",
+          "excerpt": "List physical disks",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "disk",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "list",
+          "excerpt": "List disks",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "project"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "delete",
+          "excerpt": "Delete a disk",
+          "args": [
+            {
+              "long": "disk"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "create",
+          "excerpt": "Create a disk",
+          "args": [
+            {
+              "long": "project"
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "size",
+              "help": "total size of the Disk in bytes"
+            }
+          ]
+        },
+        {
+          "title": "view",
+          "excerpt": "Fetch a disk",
+          "args": [
+            {
+              "long": "disk"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "metrics",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "list",
+              "excerpt": "Fetch disk metrics",
+              "args": [
+                {
+                  "long": "disk"
+                },
+                {
+                  "long": "metric"
+                },
+                {
+                  "long": "end-time",
+                  "help": "An exclusive end time of metrics."
+                },
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "project"
+                },
+                {
+                  "long": "start-time",
+                  "help": "An inclusive start time of metrics."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "group",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "list",
+          "excerpt": "List groups",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "silo",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "list",
+          "excerpt": "List silos\n\nLists silos that are discoverable based on the current permissions.",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "idp",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "local",
+              "excerpt": "",
+              "subcommands": [
+                {
+                  "title": "user",
+                  "excerpt": "",
+                  "subcommands": [
+                    {
+                      "title": "create",
+                      "excerpt": "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
+                      "args": [
+                        {
+                          "long": "silo"
+                        },
+                        {
+                          "long": "external-id",
+                          "help": "username used to log in"
+                        }
+                      ]
+                    },
+                    {
+                      "title": "set-password",
+                      "excerpt": "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.",
+                      "args": [
+                        {
+                          "long": "user-id",
+                          "help": "The user's internal id"
+                        },
+                        {
+                          "long": "silo"
+                        }
+                      ]
+                    },
+                    {
+                      "title": "delete",
+                      "excerpt": "Delete a user",
+                      "args": [
+                        {
+                          "long": "user-id",
+                          "help": "The user's internal id"
+                        },
+                        {
+                          "long": "silo"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "list",
+              "excerpt": "List a silo's IDPs_name",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "silo"
+                },
+                {
+                  "long": "sort-by"
+                }
+              ]
+            },
+            {
+              "title": "saml",
+              "excerpt": "",
+              "subcommands": [
+                {
+                  "title": "create",
+                  "excerpt": "Create a SAML IDP",
+                  "args": [
+                    {
+                      "long": "silo"
+                    },
+                    {
+                      "long": "acs-url",
+                      "help": "service provider endpoint where the response will be sent"
+                    },
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "group-attribute-name",
+                      "help": "If set, SAML attributes with this name will be considered to denote a user's group membership, where the attribute value(s) should be a comma-separated list of group names."
+                    },
+                    {
+                      "long": "idp-entity-id",
+                      "help": "idp's entity id"
+                    },
+                    {
+                      "long": "name"
+                    },
+                    {
+                      "long": "slo-url",
+                      "help": "service provider endpoint where the idp should send log out requests"
+                    },
+                    {
+                      "long": "sp-client-id",
+                      "help": "sp's client id"
+                    },
+                    {
+                      "long": "technical-contact-email",
+                      "help": "customer's technical contact for saml configuration"
+                    }
+                  ]
+                },
+                {
+                  "title": "view",
+                  "excerpt": "Fetch a SAML IDP",
+                  "args": [
+                    {
+                      "long": "provider"
+                    },
+                    {
+                      "long": "silo"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "delete",
+          "excerpt": "Delete a silo\n\nDelete a silo by name.",
+          "args": [
+            {
+              "long": "silo"
+            }
+          ]
+        },
+        {
+          "title": "create",
+          "excerpt": "Create a silo",
+          "args": [
+            {
+              "long": "admin-group-name",
+              "help": "If set, this group will be created during Silo creation and granted the \"Silo Admin\" role. Identity providers can assert that users belong to this group and those users can log in and further initialize the Silo.\n\nNote that if configuring a SAML based identity provider, group_attribute_name must be set for users to be considered part of a group. See [`SamlIdentityProviderCreate`] for more information."
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "discoverable"
+            },
+            {
+              "long": "identity-mode"
+            },
+            {
+              "long": "name"
+            }
+          ]
+        },
+        {
+          "title": "policy",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "update",
+              "excerpt": "Update a silo's IAM policy",
+              "args": [
+                {
+                  "long": "silo"
+                }
+              ]
+            },
+            {
+              "title": "view",
+              "excerpt": "Fetch a silo's IAM policy",
+              "args": [
+                {
+                  "long": "silo"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "view",
+          "excerpt": "Fetch a silo\n\nFetch a silo by name.",
+          "args": [
+            {
+              "long": "silo"
+            }
+          ]
+        },
+        {
+          "title": "user",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "view",
+              "excerpt": "Fetch a user",
+              "args": [
+                {
+                  "long": "user-id",
+                  "help": "The user's internal id"
+                },
+                {
+                  "long": "silo"
+                }
+              ]
+            },
+            {
+              "title": "list",
+              "excerpt": "List users in a silo",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "silo"
+                },
+                {
+                  "long": "sort-by"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "system",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "policy",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "view",
+              "excerpt": "Fetch the top-level IAM policy"
+            },
+            {
+              "title": "update",
+              "excerpt": "Update the top-level IAM policy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "project",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "update",
+          "excerpt": "Update a project",
+          "args": [
+            {
+              "long": "project"
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "name"
+            }
+          ]
+        },
+        {
+          "title": "list",
+          "excerpt": "List projects",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "view",
+          "excerpt": "Fetch a project",
+          "args": [
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "delete",
+          "excerpt": "Delete a project",
+          "args": [
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "policy",
+          "excerpt": "",
+          "subcommands": [
+            {
+              "title": "update",
+              "excerpt": "Update a project's IAM policy",
+              "args": [
+                {
+                  "long": "project"
+                }
+              ]
+            },
+            {
+              "title": "view",
+              "excerpt": "Fetch a project's IAM policy",
+              "args": [
+                {
+                  "long": "project"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "create",
+          "excerpt": "Create a project",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "certificate",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "view",
+          "excerpt": "Fetch a certificate\n\nReturns the details of a specific certificate",
+          "args": [
+            {
+              "long": "certificate"
+            }
+          ]
+        },
+        {
+          "title": "create",
+          "excerpt": "Create a new system-wide x.509 certificate.\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "service",
+              "help": "The service using this certificate"
+            }
+          ]
+        },
+        {
+          "title": "delete",
+          "excerpt": "Delete a certificate\n\nPermanently delete a certificate. This operation cannot be undone.",
+          "args": [
+            {
+              "long": "certificate"
+            }
+          ]
+        },
+        {
+          "title": "list",
+          "excerpt": "List system-wide certificates\n\nReturns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "user",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "list",
+          "excerpt": "List users",
+          "args": [
+            {
+              "long": "group"
+            },
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "rack",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "view",
+          "excerpt": "Fetch a rack",
+          "args": [
+            {
+              "long": "rack-id",
+              "help": "The rack's unique ID."
+            }
+          ]
+        },
+        {
+          "title": "list",
+          "excerpt": "List racks",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "saga",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "list",
+          "excerpt": "List sagas",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "view",
+          "excerpt": "Fetch a saga",
+          "args": [
+            {
+              "long": "saga-id"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "image",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "view",
+          "excerpt": "Fetch an image\n\nFetch the details for a specific image in a project.",
+          "args": [
+            {
+              "long": "image"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "delete",
+          "excerpt": "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
+          "args": [
+            {
+              "long": "image"
+            },
+            {
+              "long": "project"
+            }
+          ]
+        },
+        {
+          "title": "list",
+          "excerpt": "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "project"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "create",
+          "excerpt": "Create an image\n\nCreate a new image in a project.",
+          "args": [
+            {
+              "long": "project"
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "os",
+              "help": "The family of the operating system (e.g. Debian, Ubuntu, etc.)"
+            },
+            {
+              "long": "version",
+              "help": "The version of the operating system (e.g. 18.04, 20.04, etc.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "sled",
+      "excerpt": "",
+      "subcommands": [
+        {
+          "title": "view",
+          "excerpt": "Fetch a sled",
+          "args": [
+            {
+              "long": "sled-id",
+              "help": "The sled's unique ID."
+            }
+          ]
+        },
+        {
+          "title": "disk-led",
+          "excerpt": "List physical disks attached to sleds",
+          "args": [
+            {
+              "long": "sled-id",
+              "help": "The sled's unique ID."
+            },
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "title": "list",
+          "excerpt": "List sleds",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "auth",
+      "excerpt": "Login, logout, and get the status of your authentication.",
+      "about": "Login, logout, and get the status of your authentication.\n\nManage `oxide`'s authentication state.",
+      "subcommands": [
+        {
+          "title": "login",
+          "excerpt": "Authenticate with an Oxide host.",
+          "about": "Authenticate with an Oxide host.\n\nAlternatively, pass in a token on standard input by using `--with-token`.\n\n    # start interactive setup\n    $ oxide auth login\n\n    # authenticate against a specific Oxide instance by reading the token\n    # from a file\n    $ oxide auth login --with-token --host oxide.internal < mytoken.txt\n\n    # authenticate with a specific Oxide instance\n    $ oxide auth login --host oxide.internal\n\n    # authenticate with an insecure Oxide instance (not recommended)\n    $ oxide auth login --host http://oxide.internal",
+          "args": [
+            {
+              "long": "with-token",
+              "help": "Read token from standard input"
+            },
+            {
+              "short": "H",
+              "long": "host",
+              "help": "The host of the Oxide instance to authenticate with. This assumes http; specify an `http://` prefix if needed"
+            },
+            {
+              "long": "browser",
+              "help": "Override the default browser when opening the authentication URL"
+            },
+            {
+              "long": "no-browser",
+              "help": "Print the authentication URL rather than opening a browser window"
+            }
+          ]
+        },
+        {
+          "title": "logout",
+          "excerpt": "Log out of an Oxide host.",
+          "about": "Log out of an Oxide host.\n\nThis command removes the authentication configuration for a host either specified\ninteractively or via `--host`.\n\n    $ oxide auth logout\n    # => select what host to log out of via a prompt\n\n    $ oxide auth logout --host oxide.internal\n    # => log out of specified host",
+          "args": [
+            {
+              "short": "H",
+              "long": "host",
+              "help": "The hostname of the Oxide instance to log out of"
+            }
+          ]
+        },
+        {
+          "title": "status",
+          "excerpt": "Verifies and displays information about your authentication state.\nThis command validates the authentication state for each Oxide environment in the current configuration. These hosts may be from your hosts.toml file and/or\n$OXIDE_HOST environment variable.",
+          "args": [
+            {
+              "short": "t",
+              "long": "show-token",
+              "help": "Display the auth token"
+            },
+            {
+              "short": "H",
+              "long": "host",
+              "help": "Specific hostname to validate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api",
+      "excerpt": "Makes an authenticated HTTP request to the Oxide API and prints the response.",
+      "about": "Makes an authenticated HTTP request to the Oxide API and prints the response.\n\nThe endpoint argument should be a path of a Oxide API endpoint.\n\nThe default HTTP request method is \"GET\" normally and \"POST\" if any\nparameters were added. Override the method with `--method`.\n\nPass one or more `-f/--raw-field` values in \"key=value\" format to add\nstatic string parameters to the request payload. To add non-string or\notherwise dynamic values, see `--field` below. Note that adding request\nparameters will automatically switch the request method to POST. To send\nthe parameters as a GET query string instead, use `--method GET`.\n\nThe `-F/--field` flag has magic type conversion based on the format of the\nvalue:\n\n- literal values \"true\", \"false\", \"null\", and integer/float numbers get\n  converted to appropriate JSON types;\n- if the value starts with \"@\", the rest of the value is interpreted as a\n  filename to read the value from. Pass \"-\" to read from standard input.\n\nRaw request body may be passed from the outside via a file specified by\n`--input`. Pass \"-\" to read from standard input. In this mode, parameters\nspecified via `--field` flags are serialized into URL query parameters.\n\nIn `--paginate` mode, all pages of results will sequentially be requested\nuntil there are no more pages of results.",
+      "args": [
+        {
+          "short": "X",
+          "long": "method",
+          "help": "The HTTP method for the request"
+        },
+        {
+          "long": "paginate",
+          "help": "Make additional HTTP requests to fetch all pages of results"
+        },
+        {
+          "short": "F",
+          "long": "field",
+          "help": "Add a typed parameter in key=value format"
+        },
+        {
+          "short": "f",
+          "long": "raw-field",
+          "help": "Add a string parameter in key=value format"
+        },
+        {
+          "long": "input",
+          "help": "The file to use as body for the HTTP request (use \"-\" to read from standard input)"
+        },
+        {
+          "short": "i",
+          "long": "include",
+          "help": "Include HTTP response headers in the output"
+        },
+        {
+          "short": "H",
+          "long": "header",
+          "help": "Add a HTTP request header in `key:value` format"
+        }
+      ]
+    },
+    {
+      "title": "docs",
+      "excerpt": "Generate CLI docs in JSON format"
+    },
+    {
+      "title": "version",
+      "excerpt": "Prints version information about the CLI."
+    }
+  ]
+}
