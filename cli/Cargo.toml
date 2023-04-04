@@ -18,7 +18,6 @@ dirs = { workspace = true }
 expectorate = { workspace = true }
 futures = { workspace = true }
 http = { workspace = true }
-httpmock = { workspace = true }
 oauth2 = { workspace = true }
 open = { workspace = true }
 oxide-api = { workspace = true }
