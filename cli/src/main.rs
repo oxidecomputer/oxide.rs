@@ -4,7 +4,7 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::HashMap, net::IpAddr};
+use std::{collections::BTreeMap, net::IpAddr};
 
 use clap::{Command, CommandFactory, FromArgMatches};
 
@@ -29,7 +29,7 @@ mod generated_cli;
 
 #[derive(Debug, Default)]
 struct Tree<'a> {
-    children: HashMap<&'a str, Tree<'a>>,
+    children: BTreeMap<&'a str, Tree<'a>>,
     cmd: Option<CliCommand>,
 }
 
