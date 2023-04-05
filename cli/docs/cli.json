@@ -1,14 +1,12 @@
 {
-  "title": "oxide",
-  "excerpt": "",
+  "name": "oxide",
   "subcommands": [
     {
-      "title": "certificate",
-      "excerpt": "",
+      "name": "certificate",
       "subcommands": [
         {
-          "title": "create",
-          "excerpt": "Create a new system-wide x.509 certificate.\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.",
+          "name": "create",
+          "about": "Create a new system-wide x.509 certificate.\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.",
           "args": [
             {
               "long": "description"
@@ -23,8 +21,8 @@
           ]
         },
         {
-          "title": "delete",
-          "excerpt": "Delete a certificate\n\nPermanently delete a certificate. This operation cannot be undone.",
+          "name": "delete",
+          "about": "Delete a certificate\n\nPermanently delete a certificate. This operation cannot be undone.",
           "args": [
             {
               "long": "certificate"
@@ -32,8 +30,8 @@
           ]
         },
         {
-          "title": "list",
-          "excerpt": "List system-wide certificates\n\nReturns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.",
+          "name": "list",
+          "about": "List system-wide certificates\n\nReturns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.",
           "args": [
             {
               "long": "limit",
@@ -45,8 +43,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch a certificate\n\nReturns the details of a specific certificate",
+          "name": "view",
+          "about": "Fetch a certificate\n\nReturns the details of a specific certificate",
           "args": [
             {
               "long": "certificate"
@@ -56,12 +54,11 @@
       ]
     },
     {
-      "title": "current-user",
-      "excerpt": "",
+      "name": "current-user",
       "subcommands": [
         {
-          "title": "groups",
-          "excerpt": "Fetch the silo groups the current user belongs to",
+          "name": "groups",
+          "about": "Fetch the silo groups the current user belongs to",
           "args": [
             {
               "long": "limit",
@@ -73,12 +70,11 @@
           ]
         },
         {
-          "title": "ssh-key",
-          "excerpt": "",
+          "name": "ssh-key",
           "subcommands": [
             {
-              "title": "create",
-              "excerpt": "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.",
+              "name": "create",
+              "about": "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.",
               "args": [
                 {
                   "long": "description"
@@ -93,8 +89,8 @@
               ]
             },
             {
-              "title": "delete",
-              "excerpt": "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.",
+              "name": "delete",
+              "about": "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.",
               "args": [
                 {
                   "long": "ssh-key"
@@ -102,8 +98,8 @@
               ]
             },
             {
-              "title": "list",
-              "excerpt": "List SSH public keys\n\nLists SSH public keys for the currently authenticated user.",
+              "name": "list",
+              "about": "List SSH public keys\n\nLists SSH public keys for the currently authenticated user.",
               "args": [
                 {
                   "long": "limit",
@@ -115,8 +111,8 @@
               ]
             },
             {
-              "title": "view",
-              "excerpt": "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.",
+              "name": "view",
+              "about": "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.",
               "args": [
                 {
                   "long": "ssh-key"
@@ -126,18 +122,17 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch the user associated with the current session"
+          "name": "view",
+          "about": "Fetch the user associated with the current session"
         }
       ]
     },
     {
-      "title": "disk",
-      "excerpt": "",
+      "name": "disk",
       "subcommands": [
         {
-          "title": "create",
-          "excerpt": "Create a disk",
+          "name": "create",
+          "about": "Create a disk",
           "args": [
             {
               "long": "project"
@@ -155,8 +150,8 @@
           ]
         },
         {
-          "title": "delete",
-          "excerpt": "Delete a disk",
+          "name": "delete",
+          "about": "Delete a disk",
           "args": [
             {
               "long": "disk"
@@ -167,8 +162,8 @@
           ]
         },
         {
-          "title": "list",
-          "excerpt": "List disks",
+          "name": "list",
+          "about": "List disks",
           "args": [
             {
               "long": "limit",
@@ -183,12 +178,11 @@
           ]
         },
         {
-          "title": "metrics",
-          "excerpt": "",
+          "name": "metrics",
           "subcommands": [
             {
-              "title": "list",
-              "excerpt": "Fetch disk metrics",
+              "name": "list",
+              "about": "Fetch disk metrics",
               "args": [
                 {
                   "long": "disk"
@@ -216,8 +210,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch a disk",
+          "name": "view",
+          "about": "Fetch a disk",
           "args": [
             {
               "long": "disk"
@@ -230,12 +224,11 @@
       ]
     },
     {
-      "title": "group",
-      "excerpt": "",
+      "name": "group",
       "subcommands": [
         {
-          "title": "list",
-          "excerpt": "List groups",
+          "name": "list",
+          "about": "List groups",
           "args": [
             {
               "long": "limit",
@@ -249,12 +242,11 @@
       ]
     },
     {
-      "title": "image",
-      "excerpt": "",
+      "name": "image",
       "subcommands": [
         {
-          "title": "create",
-          "excerpt": "Create an image\n\nCreate a new image in a project.",
+          "name": "create",
+          "about": "Create an image\n\nCreate a new image in a project.",
           "args": [
             {
               "long": "project"
@@ -276,8 +268,8 @@
           ]
         },
         {
-          "title": "delete",
-          "excerpt": "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
+          "name": "delete",
+          "about": "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
           "args": [
             {
               "long": "image"
@@ -288,8 +280,8 @@
           ]
         },
         {
-          "title": "list",
-          "excerpt": "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
+          "name": "list",
+          "about": "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
           "args": [
             {
               "long": "limit",
@@ -304,8 +296,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch an image\n\nFetch the details for a specific image in a project.",
+          "name": "view",
+          "about": "Fetch an image\n\nFetch the details for a specific image in a project.",
           "args": [
             {
               "long": "image"
@@ -318,12 +310,11 @@
       ]
     },
     {
-      "title": "instance",
-      "excerpt": "",
+      "name": "instance",
       "subcommands": [
         {
-          "title": "create",
-          "excerpt": "Create an instance",
+          "name": "create",
+          "about": "Create an instance",
           "args": [
             {
               "long": "project"
@@ -354,8 +345,8 @@
           ]
         },
         {
-          "title": "delete",
-          "excerpt": "Delete an instance",
+          "name": "delete",
+          "about": "Delete an instance",
           "args": [
             {
               "long": "instance"
@@ -366,12 +357,11 @@
           ]
         },
         {
-          "title": "disk",
-          "excerpt": "",
+          "name": "disk",
           "subcommands": [
             {
-              "title": "attach",
-              "excerpt": "Attach a disk to an instance",
+              "name": "attach",
+              "about": "Attach a disk to an instance",
               "args": [
                 {
                   "long": "instance"
@@ -385,8 +375,8 @@
               ]
             },
             {
-              "title": "detach",
-              "excerpt": "Detach a disk from an instance",
+              "name": "detach",
+              "about": "Detach a disk from an instance",
               "args": [
                 {
                   "long": "instance"
@@ -400,8 +390,8 @@
               ]
             },
             {
-              "title": "list",
-              "excerpt": "List an instance's disks",
+              "name": "list",
+              "about": "List an instance's disks",
               "args": [
                 {
                   "long": "instance"
@@ -421,12 +411,11 @@
           ]
         },
         {
-          "title": "external-ip",
-          "excerpt": "",
+          "name": "external-ip",
           "subcommands": [
             {
-              "title": "list",
-              "excerpt": "List external IP addresses",
+              "name": "list",
+              "about": "List external IP addresses",
               "args": [
                 {
                   "long": "instance"
@@ -439,8 +428,8 @@
           ]
         },
         {
-          "title": "list",
-          "excerpt": "List instances",
+          "name": "list",
+          "about": "List instances",
           "args": [
             {
               "long": "limit",
@@ -455,12 +444,11 @@
           ]
         },
         {
-          "title": "nic",
-          "excerpt": "",
+          "name": "nic",
           "subcommands": [
             {
-              "title": "create",
-              "excerpt": "Create a network interface",
+              "name": "create",
+              "about": "Create a network interface",
               "args": [
                 {
                   "long": "instance"
@@ -489,8 +477,8 @@
               ]
             },
             {
-              "title": "delete",
-              "excerpt": "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
+              "name": "delete",
+              "about": "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
               "args": [
                 {
                   "long": "interface"
@@ -504,8 +492,8 @@
               ]
             },
             {
-              "title": "list",
-              "excerpt": "List network interfaces",
+              "name": "list",
+              "about": "List network interfaces",
               "args": [
                 {
                   "long": "instance"
@@ -523,8 +511,8 @@
               ]
             },
             {
-              "title": "update",
-              "excerpt": "Update a network interface",
+              "name": "update",
+              "about": "Update a network interface",
               "args": [
                 {
                   "long": "interface"
@@ -548,8 +536,8 @@
               ]
             },
             {
-              "title": "view",
-              "excerpt": "Fetch a network interface",
+              "name": "view",
+              "about": "Fetch a network interface",
               "args": [
                 {
                   "long": "interface"
@@ -565,8 +553,8 @@
           ]
         },
         {
-          "title": "reboot",
-          "excerpt": "Reboot an instance",
+          "name": "reboot",
+          "about": "Reboot an instance",
           "args": [
             {
               "long": "instance"
@@ -577,8 +565,8 @@
           ]
         },
         {
-          "title": "start",
-          "excerpt": "Boot an instance",
+          "name": "start",
+          "about": "Boot an instance",
           "args": [
             {
               "long": "instance"
@@ -589,8 +577,8 @@
           ]
         },
         {
-          "title": "stop",
-          "excerpt": "Stop an instance",
+          "name": "stop",
+          "about": "Stop an instance",
           "args": [
             {
               "long": "instance"
@@ -601,8 +589,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch an instance",
+          "name": "view",
+          "about": "Fetch an instance",
           "args": [
             {
               "long": "instance"
@@ -615,12 +603,11 @@
       ]
     },
     {
-      "title": "ip-pool",
-      "excerpt": "",
+      "name": "ip-pool",
       "subcommands": [
         {
-          "title": "create",
-          "excerpt": "Create an IP pool",
+          "name": "create",
+          "about": "Create an IP pool",
           "args": [
             {
               "long": "description"
@@ -631,8 +618,8 @@
           ]
         },
         {
-          "title": "delete",
-          "excerpt": "Delete an IP Pool",
+          "name": "delete",
+          "about": "Delete an IP Pool",
           "args": [
             {
               "long": "pool"
@@ -640,8 +627,8 @@
           ]
         },
         {
-          "title": "list",
-          "excerpt": "List IP pools",
+          "name": "list",
+          "about": "List IP pools",
           "args": [
             {
               "long": "limit",
@@ -653,12 +640,11 @@
           ]
         },
         {
-          "title": "range",
-          "excerpt": "",
+          "name": "range",
           "subcommands": [
             {
-              "title": "add",
-              "excerpt": "Add a range to an IP pool",
+              "name": "add",
+              "about": "Add a range to an IP pool",
               "args": [
                 {
                   "long": "pool"
@@ -672,8 +658,8 @@
               ]
             },
             {
-              "title": "list",
-              "excerpt": "List ranges for an IP pool\n\nRanges are ordered by their first address.",
+              "name": "list",
+              "about": "List ranges for an IP pool\n\nRanges are ordered by their first address.",
               "args": [
                 {
                   "long": "pool"
@@ -685,8 +671,8 @@
               ]
             },
             {
-              "title": "remove",
-              "excerpt": "Remove a range from an IP pool",
+              "name": "remove",
+              "about": "Remove a range from an IP pool",
               "args": [
                 {
                   "long": "pool"
@@ -696,20 +682,18 @@
           ]
         },
         {
-          "title": "service",
-          "excerpt": "",
+          "name": "service",
           "subcommands": [
             {
-              "title": "range",
-              "excerpt": "",
+              "name": "range",
               "subcommands": [
                 {
-                  "title": "add",
-                  "excerpt": "Add a range to an IP pool used for Oxide services."
+                  "name": "add",
+                  "about": "Add a range to an IP pool used for Oxide services."
                 },
                 {
-                  "title": "list",
-                  "excerpt": "List ranges for the IP pool used for Oxide services.\n\nRanges are ordered by their first address.",
+                  "name": "list",
+                  "about": "List ranges for the IP pool used for Oxide services.\n\nRanges are ordered by their first address.",
                   "args": [
                     {
                       "long": "limit",
@@ -720,18 +704,18 @@
               ]
             },
             {
-              "title": "remove",
-              "excerpt": "Remove a range from an IP pool used for Oxide services."
+              "name": "remove",
+              "about": "Remove a range from an IP pool used for Oxide services."
             },
             {
-              "title": "view",
-              "excerpt": "Fetch the IP pool used for Oxide services."
+              "name": "view",
+              "about": "Fetch the IP pool used for Oxide services."
             }
           ]
         },
         {
-          "title": "update",
-          "excerpt": "Update an IP Pool",
+          "name": "update",
+          "about": "Update an IP Pool",
           "args": [
             {
               "long": "pool"
@@ -745,8 +729,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch an IP pool",
+          "name": "view",
+          "about": "Fetch an IP pool",
           "args": [
             {
               "long": "pool"
@@ -756,12 +740,11 @@
       ]
     },
     {
-      "title": "physical-disk",
-      "excerpt": "",
+      "name": "physical-disk",
       "subcommands": [
         {
-          "title": "list",
-          "excerpt": "List physical disks",
+          "name": "list",
+          "about": "List physical disks",
           "args": [
             {
               "long": "limit",
@@ -775,26 +758,24 @@
       ]
     },
     {
-      "title": "policy",
-      "excerpt": "",
+      "name": "policy",
       "subcommands": [
         {
-          "title": "update",
-          "excerpt": "Update the current silo's IAM policy"
+          "name": "update",
+          "about": "Update the current silo's IAM policy"
         },
         {
-          "title": "view",
-          "excerpt": "Fetch the current silo's IAM policy"
+          "name": "view",
+          "about": "Fetch the current silo's IAM policy"
         }
       ]
     },
     {
-      "title": "project",
-      "excerpt": "",
+      "name": "project",
       "subcommands": [
         {
-          "title": "create",
-          "excerpt": "Create a project",
+          "name": "create",
+          "about": "Create a project",
           "args": [
             {
               "long": "description"
@@ -805,8 +786,8 @@
           ]
         },
         {
-          "title": "delete",
-          "excerpt": "Delete a project",
+          "name": "delete",
+          "about": "Delete a project",
           "args": [
             {
               "long": "project"
@@ -814,8 +795,8 @@
           ]
         },
         {
-          "title": "list",
-          "excerpt": "List projects",
+          "name": "list",
+          "about": "List projects",
           "args": [
             {
               "long": "limit",
@@ -827,12 +808,11 @@
           ]
         },
         {
-          "title": "policy",
-          "excerpt": "",
+          "name": "policy",
           "subcommands": [
             {
-              "title": "update",
-              "excerpt": "Update a project's IAM policy",
+              "name": "update",
+              "about": "Update a project's IAM policy",
               "args": [
                 {
                   "long": "project"
@@ -840,8 +820,8 @@
               ]
             },
             {
-              "title": "view",
-              "excerpt": "Fetch a project's IAM policy",
+              "name": "view",
+              "about": "Fetch a project's IAM policy",
               "args": [
                 {
                   "long": "project"
@@ -851,8 +831,8 @@
           ]
         },
         {
-          "title": "update",
-          "excerpt": "Update a project",
+          "name": "update",
+          "about": "Update a project",
           "args": [
             {
               "long": "project"
@@ -866,8 +846,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch a project",
+          "name": "view",
+          "about": "Fetch a project",
           "args": [
             {
               "long": "project"
@@ -877,12 +857,11 @@
       ]
     },
     {
-      "title": "rack",
-      "excerpt": "",
+      "name": "rack",
       "subcommands": [
         {
-          "title": "list",
-          "excerpt": "List racks",
+          "name": "list",
+          "about": "List racks",
           "args": [
             {
               "long": "limit",
@@ -894,8 +873,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch a rack",
+          "name": "view",
+          "about": "Fetch a rack",
           "args": [
             {
               "long": "rack-id",
@@ -906,12 +885,11 @@
       ]
     },
     {
-      "title": "saga",
-      "excerpt": "",
+      "name": "saga",
       "subcommands": [
         {
-          "title": "list",
-          "excerpt": "List sagas",
+          "name": "list",
+          "about": "List sagas",
           "args": [
             {
               "long": "limit",
@@ -923,8 +901,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch a saga",
+          "name": "view",
+          "about": "Fetch a saga",
           "args": [
             {
               "long": "saga-id"
@@ -934,12 +912,11 @@
       ]
     },
     {
-      "title": "silo",
-      "excerpt": "",
+      "name": "silo",
       "subcommands": [
         {
-          "title": "create",
-          "excerpt": "Create a silo",
+          "name": "create",
+          "about": "Create a silo",
           "args": [
             {
               "long": "admin-group-name",
@@ -960,8 +937,8 @@
           ]
         },
         {
-          "title": "delete",
-          "excerpt": "Delete a silo\n\nDelete a silo by name.",
+          "name": "delete",
+          "about": "Delete a silo\n\nDelete a silo by name.",
           "args": [
             {
               "long": "silo"
@@ -969,12 +946,11 @@
           ]
         },
         {
-          "title": "idp",
-          "excerpt": "",
+          "name": "idp",
           "subcommands": [
             {
-              "title": "list",
-              "excerpt": "List a silo's IDPs_name",
+              "name": "list",
+              "about": "List a silo's IDPs_name",
               "args": [
                 {
                   "long": "limit",
@@ -989,16 +965,14 @@
               ]
             },
             {
-              "title": "local",
-              "excerpt": "",
+              "name": "local",
               "subcommands": [
                 {
-                  "title": "user",
-                  "excerpt": "",
+                  "name": "user",
                   "subcommands": [
                     {
-                      "title": "create",
-                      "excerpt": "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
+                      "name": "create",
+                      "about": "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
                       "args": [
                         {
                           "long": "silo"
@@ -1010,8 +984,8 @@
                       ]
                     },
                     {
-                      "title": "delete",
-                      "excerpt": "Delete a user",
+                      "name": "delete",
+                      "about": "Delete a user",
                       "args": [
                         {
                           "long": "user-id",
@@ -1023,8 +997,8 @@
                       ]
                     },
                     {
-                      "title": "set-password",
-                      "excerpt": "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.",
+                      "name": "set-password",
+                      "about": "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.",
                       "args": [
                         {
                           "long": "user-id",
@@ -1040,12 +1014,11 @@
               ]
             },
             {
-              "title": "saml",
-              "excerpt": "",
+              "name": "saml",
               "subcommands": [
                 {
-                  "title": "create",
-                  "excerpt": "Create a SAML IDP",
+                  "name": "create",
+                  "about": "Create a SAML IDP",
                   "args": [
                     {
                       "long": "silo"
@@ -1083,8 +1056,8 @@
                   ]
                 },
                 {
-                  "title": "view",
-                  "excerpt": "Fetch a SAML IDP",
+                  "name": "view",
+                  "about": "Fetch a SAML IDP",
                   "args": [
                     {
                       "long": "provider"
@@ -1099,8 +1072,8 @@
           ]
         },
         {
-          "title": "list",
-          "excerpt": "List silos\n\nLists silos that are discoverable based on the current permissions.",
+          "name": "list",
+          "about": "List silos\n\nLists silos that are discoverable based on the current permissions.",
           "args": [
             {
               "long": "limit",
@@ -1112,12 +1085,11 @@
           ]
         },
         {
-          "title": "policy",
-          "excerpt": "",
+          "name": "policy",
           "subcommands": [
             {
-              "title": "update",
-              "excerpt": "Update a silo's IAM policy",
+              "name": "update",
+              "about": "Update a silo's IAM policy",
               "args": [
                 {
                   "long": "silo"
@@ -1125,8 +1097,8 @@
               ]
             },
             {
-              "title": "view",
-              "excerpt": "Fetch a silo's IAM policy",
+              "name": "view",
+              "about": "Fetch a silo's IAM policy",
               "args": [
                 {
                   "long": "silo"
@@ -1136,12 +1108,11 @@
           ]
         },
         {
-          "title": "user",
-          "excerpt": "",
+          "name": "user",
           "subcommands": [
             {
-              "title": "list",
-              "excerpt": "List users in a silo",
+              "name": "list",
+              "about": "List users in a silo",
               "args": [
                 {
                   "long": "limit",
@@ -1156,8 +1127,8 @@
               ]
             },
             {
-              "title": "view",
-              "excerpt": "Fetch a user",
+              "name": "view",
+              "about": "Fetch a user",
               "args": [
                 {
                   "long": "user-id",
@@ -1171,8 +1142,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch a silo\n\nFetch a silo by name.",
+          "name": "view",
+          "about": "Fetch a silo\n\nFetch a silo by name.",
           "args": [
             {
               "long": "silo"
@@ -1182,12 +1153,11 @@
       ]
     },
     {
-      "title": "sled",
-      "excerpt": "",
+      "name": "sled",
       "subcommands": [
         {
-          "title": "disk-led",
-          "excerpt": "List physical disks attached to sleds",
+          "name": "disk-led",
+          "about": "List physical disks attached to sleds",
           "args": [
             {
               "long": "sled-id",
@@ -1203,8 +1173,8 @@
           ]
         },
         {
-          "title": "list",
-          "excerpt": "List sleds",
+          "name": "list",
+          "about": "List sleds",
           "args": [
             {
               "long": "limit",
@@ -1216,8 +1186,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch a sled",
+          "name": "view",
+          "about": "Fetch a sled",
           "args": [
             {
               "long": "sled-id",
@@ -1228,12 +1198,11 @@
       ]
     },
     {
-      "title": "snapshot",
-      "excerpt": "",
+      "name": "snapshot",
       "subcommands": [
         {
-          "title": "create",
-          "excerpt": "Create a snapshot\n\nCreates a point-in-time snapshot from a disk.",
+          "name": "create",
+          "about": "Create a snapshot\n\nCreates a point-in-time snapshot from a disk.",
           "args": [
             {
               "long": "project"
@@ -1251,8 +1220,8 @@
           ]
         },
         {
-          "title": "delete",
-          "excerpt": "Delete a snapshot",
+          "name": "delete",
+          "about": "Delete a snapshot",
           "args": [
             {
               "long": "snapshot"
@@ -1263,8 +1232,8 @@
           ]
         },
         {
-          "title": "list",
-          "excerpt": "List snapshots",
+          "name": "list",
+          "about": "List snapshots",
           "args": [
             {
               "long": "limit",
@@ -1279,8 +1248,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch a snapshot",
+          "name": "view",
+          "about": "Fetch a snapshot",
           "args": [
             {
               "long": "snapshot"
@@ -1293,32 +1262,29 @@
       ]
     },
     {
-      "title": "system",
-      "excerpt": "",
+      "name": "system",
       "subcommands": [
         {
-          "title": "policy",
-          "excerpt": "",
+          "name": "policy",
           "subcommands": [
             {
-              "title": "update",
-              "excerpt": "Update the top-level IAM policy"
+              "name": "update",
+              "about": "Update the top-level IAM policy"
             },
             {
-              "title": "view",
-              "excerpt": "Fetch the top-level IAM policy"
+              "name": "view",
+              "about": "Fetch the top-level IAM policy"
             }
           ]
         }
       ]
     },
     {
-      "title": "user",
-      "excerpt": "",
+      "name": "user",
       "subcommands": [
         {
-          "title": "list",
-          "excerpt": "List users",
+          "name": "list",
+          "about": "List users",
           "args": [
             {
               "long": "group"
@@ -1335,12 +1301,11 @@
       ]
     },
     {
-      "title": "vpc",
-      "excerpt": "",
+      "name": "vpc",
       "subcommands": [
         {
-          "title": "create",
-          "excerpt": "Create a VPC",
+          "name": "create",
+          "about": "Create a VPC",
           "args": [
             {
               "long": "project"
@@ -1361,8 +1326,8 @@
           ]
         },
         {
-          "title": "delete",
-          "excerpt": "Delete a VPC",
+          "name": "delete",
+          "about": "Delete a VPC",
           "args": [
             {
               "long": "vpc"
@@ -1373,12 +1338,11 @@
           ]
         },
         {
-          "title": "firewall-rules",
-          "excerpt": "",
+          "name": "firewall-rules",
           "subcommands": [
             {
-              "title": "update",
-              "excerpt": "Replace firewall rules",
+              "name": "update",
+              "about": "Replace firewall rules",
               "args": [
                 {
                   "long": "project"
@@ -1389,8 +1353,8 @@
               ]
             },
             {
-              "title": "view",
-              "excerpt": "List firewall rules",
+              "name": "view",
+              "about": "List firewall rules",
               "args": [
                 {
                   "long": "project"
@@ -1403,8 +1367,8 @@
           ]
         },
         {
-          "title": "list",
-          "excerpt": "List VPCs",
+          "name": "list",
+          "about": "List VPCs",
           "args": [
             {
               "long": "limit",
@@ -1419,12 +1383,11 @@
           ]
         },
         {
-          "title": "router",
-          "excerpt": "",
+          "name": "router",
           "subcommands": [
             {
-              "title": "create",
-              "excerpt": "Create a VPC router",
+              "name": "create",
+              "about": "Create a VPC router",
               "args": [
                 {
                   "long": "project"
@@ -1441,8 +1404,8 @@
               ]
             },
             {
-              "title": "delete",
-              "excerpt": "Delete a router",
+              "name": "delete",
+              "about": "Delete a router",
               "args": [
                 {
                   "long": "router"
@@ -1456,8 +1419,8 @@
               ]
             },
             {
-              "title": "list",
-              "excerpt": "List routers",
+              "name": "list",
+              "about": "List routers",
               "args": [
                 {
                   "long": "limit",
@@ -1475,12 +1438,11 @@
               ]
             },
             {
-              "title": "route",
-              "excerpt": "",
+              "name": "route",
               "subcommands": [
                 {
-                  "title": "create",
-                  "excerpt": "Create a router",
+                  "name": "create",
+                  "about": "Create a router",
                   "args": [
                     {
                       "long": "project"
@@ -1500,8 +1462,8 @@
                   ]
                 },
                 {
-                  "title": "delete",
-                  "excerpt": "Delete a route",
+                  "name": "delete",
+                  "about": "Delete a route",
                   "args": [
                     {
                       "long": "route"
@@ -1518,8 +1480,8 @@
                   ]
                 },
                 {
-                  "title": "list",
-                  "excerpt": "List routes\n\nList the routes associated with a router in a particular VPC.",
+                  "name": "list",
+                  "about": "List routes\n\nList the routes associated with a router in a particular VPC.",
                   "args": [
                     {
                       "long": "limit",
@@ -1540,8 +1502,8 @@
                   ]
                 },
                 {
-                  "title": "update",
-                  "excerpt": "Update a route",
+                  "name": "update",
+                  "about": "Update a route",
                   "args": [
                     {
                       "long": "route"
@@ -1564,8 +1526,8 @@
                   ]
                 },
                 {
-                  "title": "view",
-                  "excerpt": "Fetch a route",
+                  "name": "view",
+                  "about": "Fetch a route",
                   "args": [
                     {
                       "long": "route"
@@ -1584,8 +1546,8 @@
               ]
             },
             {
-              "title": "update",
-              "excerpt": "Update a router",
+              "name": "update",
+              "about": "Update a router",
               "args": [
                 {
                   "long": "router"
@@ -1605,8 +1567,8 @@
               ]
             },
             {
-              "title": "view",
-              "excerpt": "Get a router",
+              "name": "view",
+              "about": "Get a router",
               "args": [
                 {
                   "long": "router"
@@ -1622,12 +1584,11 @@
           ]
         },
         {
-          "title": "subnet",
-          "excerpt": "",
+          "name": "subnet",
           "subcommands": [
             {
-              "title": "create",
-              "excerpt": "Create a subnet",
+              "name": "create",
+              "about": "Create a subnet",
               "args": [
                 {
                   "long": "project"
@@ -1652,8 +1613,8 @@
               ]
             },
             {
-              "title": "delete",
-              "excerpt": "Delete a subnet",
+              "name": "delete",
+              "about": "Delete a subnet",
               "args": [
                 {
                   "long": "subnet"
@@ -1667,8 +1628,8 @@
               ]
             },
             {
-              "title": "list",
-              "excerpt": "Fetch a subnet",
+              "name": "list",
+              "about": "Fetch a subnet",
               "args": [
                 {
                   "long": "limit",
@@ -1686,12 +1647,11 @@
               ]
             },
             {
-              "title": "nic",
-              "excerpt": "",
+              "name": "nic",
               "subcommands": [
                 {
-                  "title": "list",
-                  "excerpt": "List network interfaces",
+                  "name": "list",
+                  "about": "List network interfaces",
                   "args": [
                     {
                       "long": "subnet"
@@ -1714,8 +1674,8 @@
               ]
             },
             {
-              "title": "update",
-              "excerpt": "Update a subnet",
+              "name": "update",
+              "about": "Update a subnet",
               "args": [
                 {
                   "long": "subnet"
@@ -1735,8 +1695,8 @@
               ]
             },
             {
-              "title": "view",
-              "excerpt": "Fetch a subnet",
+              "name": "view",
+              "about": "Fetch a subnet",
               "args": [
                 {
                   "long": "subnet"
@@ -1752,8 +1712,8 @@
           ]
         },
         {
-          "title": "update",
-          "excerpt": "Update a VPC",
+          "name": "update",
+          "about": "Update a VPC",
           "args": [
             {
               "long": "vpc"
@@ -1773,8 +1733,8 @@
           ]
         },
         {
-          "title": "view",
-          "excerpt": "Fetch a VPC",
+          "name": "view",
+          "about": "Fetch a VPC",
           "args": [
             {
               "long": "vpc"
@@ -1787,14 +1747,14 @@
       ]
     },
     {
-      "title": "auth",
-      "excerpt": "Login, logout, and get the status of your authentication.",
-      "about": "Login, logout, and get the status of your authentication.\n\nManage `oxide`'s authentication state.",
+      "name": "auth",
+      "about": "Login, logout, and get the status of your authentication.",
+      "long_about": "Login, logout, and get the status of your authentication.\n\nManage `oxide`'s authentication state.",
       "subcommands": [
         {
-          "title": "login",
-          "excerpt": "Authenticate with an Oxide host.",
-          "about": "Authenticate with an Oxide host.\n\nAlternatively, pass in a token on standard input by using `--with-token`.\n\n    # start interactive setup\n    $ oxide auth login\n\n    # authenticate against a specific Oxide instance by reading the token\n    # from a file\n    $ oxide auth login --with-token --host oxide.internal < mytoken.txt\n\n    # authenticate with a specific Oxide instance\n    $ oxide auth login --host oxide.internal\n\n    # authenticate with an insecure Oxide instance (not recommended)\n    $ oxide auth login --host http://oxide.internal",
+          "name": "login",
+          "about": "Authenticate with an Oxide host.",
+          "long_about": "Authenticate with an Oxide host.\n\nAlternatively, pass in a token on standard input by using `--with-token`.\n\n    # start interactive setup\n    $ oxide auth login\n\n    # authenticate against a specific Oxide instance by reading the token\n    # from a file\n    $ oxide auth login --with-token --host oxide.internal < mytoken.txt\n\n    # authenticate with a specific Oxide instance\n    $ oxide auth login --host oxide.internal\n\n    # authenticate with an insecure Oxide instance (not recommended)\n    $ oxide auth login --host http://oxide.internal",
           "args": [
             {
               "long": "with-token",
@@ -1816,9 +1776,9 @@
           ]
         },
         {
-          "title": "logout",
-          "excerpt": "Log out of an Oxide host.",
-          "about": "Log out of an Oxide host.\n\nThis command removes the authentication configuration for a host either specified\ninteractively or via `--host`.\n\n    $ oxide auth logout\n    # => select what host to log out of via a prompt\n\n    $ oxide auth logout --host oxide.internal\n    # => log out of specified host",
+          "name": "logout",
+          "about": "Log out of an Oxide host.",
+          "long_about": "Log out of an Oxide host.\n\nThis command removes the authentication configuration for a host either specified\ninteractively or via `--host`.\n\n    $ oxide auth logout\n    # => select what host to log out of via a prompt\n\n    $ oxide auth logout --host oxide.internal\n    # => log out of specified host",
           "args": [
             {
               "short": "H",
@@ -1828,8 +1788,8 @@
           ]
         },
         {
-          "title": "status",
-          "excerpt": "Verifies and displays information about your authentication state.\nThis command validates the authentication state for each Oxide environment in the current configuration. These hosts may be from your hosts.toml file and/or\n$OXIDE_HOST environment variable.",
+          "name": "status",
+          "about": "Verifies and displays information about your authentication state.\nThis command validates the authentication state for each Oxide environment in the current configuration. These hosts may be from your hosts.toml file and/or\n$OXIDE_HOST environment variable.",
           "args": [
             {
               "short": "t",
@@ -1846,9 +1806,9 @@
       ]
     },
     {
-      "title": "api",
-      "excerpt": "Makes an authenticated HTTP request to the Oxide API and prints the response.",
-      "about": "Makes an authenticated HTTP request to the Oxide API and prints the response.\n\nThe endpoint argument should be a path of a Oxide API endpoint.\n\nThe default HTTP request method is \"GET\" normally and \"POST\" if any\nparameters were added. Override the method with `--method`.\n\nPass one or more `-f/--raw-field` values in \"key=value\" format to add\nstatic string parameters to the request payload. To add non-string or\notherwise dynamic values, see `--field` below. Note that adding request\nparameters will automatically switch the request method to POST. To send\nthe parameters as a GET query string instead, use `--method GET`.\n\nThe `-F/--field` flag has magic type conversion based on the format of the\nvalue:\n\n- literal values \"true\", \"false\", \"null\", and integer/float numbers get\n  converted to appropriate JSON types;\n- if the value starts with \"@\", the rest of the value is interpreted as a\n  filename to read the value from. Pass \"-\" to read from standard input.\n\nRaw request body may be passed from the outside via a file specified by\n`--input`. Pass \"-\" to read from standard input. In this mode, parameters\nspecified via `--field` flags are serialized into URL query parameters.\n\nIn `--paginate` mode, all pages of results will sequentially be requested\nuntil there are no more pages of results.",
+      "name": "api",
+      "about": "Makes an authenticated HTTP request to the Oxide API and prints the response.",
+      "long_about": "Makes an authenticated HTTP request to the Oxide API and prints the response.\n\nThe endpoint argument should be a path of a Oxide API endpoint.\n\nThe default HTTP request method is \"GET\" normally and \"POST\" if any\nparameters were added. Override the method with `--method`.\n\nPass one or more `-f/--raw-field` values in \"key=value\" format to add\nstatic string parameters to the request payload. To add non-string or\notherwise dynamic values, see `--field` below. Note that adding request\nparameters will automatically switch the request method to POST. To send\nthe parameters as a GET query string instead, use `--method GET`.\n\nThe `-F/--field` flag has magic type conversion based on the format of the\nvalue:\n\n- literal values \"true\", \"false\", \"null\", and integer/float numbers get\n  converted to appropriate JSON types;\n- if the value starts with \"@\", the rest of the value is interpreted as a\n  filename to read the value from. Pass \"-\" to read from standard input.\n\nRaw request body may be passed from the outside via a file specified by\n`--input`. Pass \"-\" to read from standard input. In this mode, parameters\nspecified via `--field` flags are serialized into URL query parameters.\n\nIn `--paginate` mode, all pages of results will sequentially be requested\nuntil there are no more pages of results.",
       "args": [
         {
           "short": "X",
@@ -1886,12 +1846,12 @@
       ]
     },
     {
-      "title": "docs",
-      "excerpt": "Generate CLI docs in JSON format"
+      "name": "docs",
+      "about": "Generate CLI docs in JSON format"
     },
     {
-      "title": "version",
-      "excerpt": "Prints version information about the CLI."
+      "name": "version",
+      "about": "Prints version information about the CLI."
     }
   ]
 }

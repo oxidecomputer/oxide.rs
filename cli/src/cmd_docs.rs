@@ -28,44 +28,38 @@ pub struct JsonArg {
 /// CLI docs in JSON format
 #[derive(Serialize, Debug, PartialEq, Eq)]
 pub struct JsonDoc {
-    title: String,
-    excerpt: String,
+    name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     about: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    long_about: Option<String>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     args: Vec<JsonArg>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     subcommands: Vec<JsonDoc>,
 }
 
-fn generate_json(cmd: &Command) -> Result<JsonDoc> {
-    let title = cmd.get_name().to_string().replace('_', " ");
-    let excerpt = cmd.get_about().unwrap_or_default().to_string();
-
-    Ok(JsonDoc {
-        title,
-        excerpt,
-        about: cmd.get_long_about().map(|s| s.to_string()),
+fn to_json(cmd: &Command) -> JsonDoc {
+    JsonDoc {
+        name: cmd.get_name().to_string(),
+        about: cmd.get_about().map(ToString::to_string),
+        long_about: cmd.get_long_about().map(ToString::to_string),
         args: cmd
             .get_arguments()
             .filter(|arg| arg.get_short().is_some() || arg.get_long().is_some())
             .map(|arg| JsonArg {
                 short: arg.get_short().map(|char| char.to_string()),
-                long: arg.get_long().map(String::from),
-                help: arg.get_help().map(|s| s.to_string()),
+                long: arg.get_long().map(ToString::to_string),
+                help: arg.get_help().map(ToString::to_string),
             })
             .collect(),
-        subcommands: cmd
-            .get_subcommands()
-            .filter_map(|subcmd| generate_json(subcmd).ok())
-            .collect(),
-    })
+        subcommands: cmd.get_subcommands().map(to_json).collect(),
+    }
 }
 
 impl CmdDocs {
     pub async fn run(&self, app: &Command) -> Result<()> {
-        let json = generate_json(app)?;
-        let pretty_json = serde_json::to_string_pretty(&json)?;
+        let pretty_json = serde_json::to_string_pretty(&to_json(app))?;
         println!("{}", pretty_json);
         Ok(())
     }
