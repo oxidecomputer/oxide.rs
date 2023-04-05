@@ -314,7 +314,7 @@ impl CmdAuthLogin {
     }
 }
 
-/// Removes authentication information saved in the hosts.toml file.
+/// Removes saved authentication information.
 ///
 /// This command does not invalidate any tokens from the hosts.
 #[derive(Parser, Debug, Clone)]
@@ -375,10 +375,10 @@ impl CmdAuthLogout {
                 let mut dir = dirs::home_dir().unwrap();
                 dir.push(".config");
                 dir.push("oxide");
-                dir.push("hosts.toml");
+                let hosts_path = dir.join("hosts.toml");
 
                 // Clear the entire file for users who want to reset their known hosts.
-                let _ = File::create(dir).unwrap();
+                let _ = File::create(hosts_path)?;
                 println!("Removed all authentication information");
             }
         }
