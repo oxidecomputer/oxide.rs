@@ -4,16 +4,16 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::HashMap, io::Read, time::Duration};
+use std::{collections::HashMap, fs::File, io::Read, time::Duration};
 
 use anyhow::{anyhow, bail, Result};
-use clap::{ArgGroup, Parser};
+use clap::Parser;
 use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse,
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
     TokenUrl,
 };
-use oxide_api::{Client, ClientHiddenExt, ClientSessionExt};
+use oxide_api::{Client, ClientSessionExt};
 use reqwest::{
     header::{HeaderMap, HeaderValue, AUTHORIZATION},
     ClientBuilder,
@@ -46,7 +46,7 @@ impl CmdAuth {
     pub async fn run(&self, ctx: &mut Context) -> Result<()> {
         match &self.subcmd {
             SubCommand::Login(cmd) => cmd.run(ctx).await,
-            SubCommand::Logout(cmd) => cmd.run().await,
+            SubCommand::Logout(cmd) => cmd.run(ctx).await,
             SubCommand::Status(cmd) => cmd.run().await,
         }
     }
@@ -314,134 +314,74 @@ impl CmdAuthLogin {
     }
 }
 
-/// Log out of an Oxide host.
+/// Removes saved authentication information.
 ///
-/// This command removes the authentication configuration for a host either specified
-/// interactively or via `--host`.
-///
-///     $ oxide auth logout
-///     # => select what host to log out of via a prompt
-///
-///     $ oxide auth logout --host oxide.internal
-///     # => log out of specified host
+/// This command does not invalidate any tokens from the hosts.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthLogout {
-    /// The hostname of the Oxide instance to log out of.
-    #[clap(short = 'H', long, env = "OXIDE_HOST", value_parser = parse_host)]
+    /// Remove authentication information for a single host.
+    #[clap(
+        short = 'H', 
+        long, 
+        value_parser = parse_host, 
+        required_unless_present = "all",
+        conflicts_with = "all",
+    )]
     pub host: Option<url::Url>,
+    /// If set, all known hosts and authentication information will be deleted.
+    #[clap(short = 'a', long)]
+    pub all: bool,
+    /// Skip confirmation prompt.
+    #[clap(short = 'f', long)]
+    pub force: bool,
 }
 
-// #[async_trait::async_trait]
-// impl crate::cmd::Command for CmdAuthLogout {
 impl CmdAuthLogout {
-    // async fn run(&self, ctx: &mut crate::context::Context) -> Result<()> {
-    pub async fn run(&self) -> Result<()> {
-        // if self.host.is_none() && !ctx.io.can_prompt() {
-        //     return Err(anyhow!("--host required when not running interactively"));
-        // }
-
-        // let candidates = ctx.config.hosts()?;
-        // if candidates.is_empty() {
-        //     return Err(anyhow!("not logged in to any hosts"));
-        // }
-
-        let hostname = if self.host.is_none() {
-            // if candidates.len() == 1 {
-            //     candidates[0].to_string()
-            // } else {
-            //     let index =
-            //         dialoguer::Select::with_theme(&dialoguer::theme::ColorfulTheme::default())
-            //             .with_prompt("What account do you want to log out of?")
-            //             .default(0)
-            //             .items(&candidates[..])
-            //             .interact();
-
-            //     match index {
-            //         Ok(i) => candidates[i].to_string(),
-            //         Err(err) => {
-            //             return Err(anyhow!("prompt failed: {}", err));
-            //         }
-            //     }
-            // }
-            todo!()
-        } else {
-            let hostname = self.host.as_ref().unwrap().to_string();
-            let mut found = false;
-            // for c in candidates {
-            //     if c == hostname {
-            //         found = true;
-            //         break;
-            //     }
-            // }
-
-            if !found {
-                return Err(anyhow!("not logged into {}", hostname));
+    pub async fn run(&self, ctx: &mut Context) -> Result<()> {
+        if !self.force {
+            match dialoguer::Confirm::new()
+                .with_prompt("Confirm authentication information deletion:")
+                .interact()
+            {
+                Ok(true) => {}
+                Ok(false) => {
+                    println!("Action aborted. No changes have been made.");
+                    return Ok(());
+                }
+                Err(err) => {
+                    return Err(anyhow!("prompt failed: {}", err));
+                }
             }
+        }
 
-            hostname
-        };
+        match &self.host {
+            Some(host) => {
+                // Setting the host with empty parameters so it will now be listed as
+                // "unauthenticated" when running `$ oxide auth status`.
+                let host_entry = Host {
+                    token: String::from(""),
+                    user: String::from(""),
+                    default: false,
+                };
+                ctx.config().update_host(host.to_string(), host_entry)?;
 
-        // if let Err(err) = ctx.config.check_writable(&hostname, "token") {
-        //     if let Some(crate::config_from_env::ReadOnlyEnvVarError::Variable(var)) =
-        //         err.downcast_ref()
-        //     {
-        //         writeln!(
-        //             ctx.io.err_out,
-        //             "The value of the {} environment variable is being used for authentication.",
-        //             var
-        //         )?;
-        //         writeln!(
-        //             ctx.io.err_out,
-        //             "To erase credentials stored in Oxide CLI, first clear the value from the environment."
-        //         )?;
-        //         return Err(anyhow!(""));
-        //     }
+                println!(
+                    "Removed authentication information for: {}",
+                    host
+                );
+            }
+            None => {
+                let mut dir = dirs::home_dir().unwrap();
+                dir.push(".config");
+                dir.push("oxide");
+                let hosts_path = dir.join("hosts.toml");
 
-        //     return Err(err);
-        // }
-
-        // let client = ctx.api_client(&hostname)?;
-
-        // Get the current user.
-        // let session = client.hidden().session_me().await?;
-
-        // TODO: this should be the users email or something better.
-        // make it consistent with login.
-        // let email = session.id;
-
-        // if ctx.io.can_prompt() {
-        //     match dialoguer::Confirm::new()
-        //         .with_prompt(format!(
-        //             "Are you sure you want to log out of {}{}?",
-        //             hostname, email
-        //         ))
-        //         .interact()
-        //     {
-        //         Ok(true) => {}
-        //         Ok(false) => {
-        //             return Ok(());
-        //         }
-        //         Err(err) => {
-        //             return Err(anyhow!("prompt failed: {}", err));
-        //         }
-        //     }
-        // }
-
-        // // Unset the host.
-        // ctx.config.unset_host(&hostname)?;
-
-        // // Write the changes to the config.
-        // ctx.config.write()?;
-
-        // let cs = ctx.io.color_scheme();
-        // writeln!(
-        //     ctx.io.out,
-        //     "{} Logged out of {} {}",
-        //     cs.success_icon(),
-        //     cs.bold(&hostname),
-        //     email
-        // )?;
+                // Clear the entire file for users who want to reset their known hosts.
+                let _ = File::create(hosts_path)?;
+                println!("Removed all authentication information");
+            }
+        }
 
         Ok(())
     }
@@ -462,8 +402,6 @@ pub struct CmdAuthStatus {
     pub host: Option<url::Url>,
 }
 
-// #[async_trait::async_trait]
-// impl crate::cmd::Command for CmdAuthStatus {
 impl CmdAuthStatus {
     pub async fn run(&self) -> Result<()> {
         let mut status_info: HashMap<String, Vec<String>> = HashMap::new();
@@ -558,7 +496,7 @@ impl CmdAuthStatus {
 
 #[cfg(test)]
 mod test {
-    use pretty_assertions::assert_eq;
+    // use pretty_assertions::assert_eq;
 
     // use crate::cmd::Command;
 

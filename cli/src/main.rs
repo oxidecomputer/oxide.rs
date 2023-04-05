@@ -14,8 +14,6 @@ use generated_cli::{Cli, CliCommand, CliOverride};
 use oxide_api::types::{IpRange, Ipv4Range, Ipv6Range};
 
 mod cmd_api;
-#[allow(unused_mut)] // TODO
-#[allow(unused)] // TODO
 mod cmd_auth;
 mod cmd_docs;
 mod cmd_version;
