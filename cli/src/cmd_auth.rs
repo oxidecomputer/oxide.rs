@@ -322,9 +322,9 @@ impl CmdAuthLogin {
 pub struct CmdAuthLogout {
     /// Remove authentication information for a single host.
     #[clap(
-        short = 'H', 
-        long, 
-        value_parser = parse_host, 
+        short = 'H',
+        long,
+        value_parser = parse_host,
         required_unless_present = "all",
         conflicts_with = "all",
     )]
@@ -366,10 +366,7 @@ impl CmdAuthLogout {
                 };
                 ctx.config().update_host(host.to_string(), host_entry)?;
 
-                println!(
-                    "Removed authentication information for: {}",
-                    host
-                );
+                println!("Removed authentication information for: {}", host);
             }
             None => {
                 let mut dir = dirs::home_dir().unwrap();
@@ -500,13 +497,13 @@ mod test {
 
     // use crate::cmd::Command;
 
-    pub struct TestItem {
-        name: String,
-        cmd: crate::cmd_auth::SubCommand,
-        stdin: String,
-        want_out: String,
-        want_err: String,
-    }
+    // pub struct TestItem {
+    //     name: String,
+    //     cmd: crate::cmd_auth::SubCommand,
+    //     stdin: String,
+    //     want_out: String,
+    //     want_err: String,
+    // }
 
     // TODO: Auth is shaky with current docker container CI implementation.
     // remove ignore tag once tests run against mock API server
