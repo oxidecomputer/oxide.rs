@@ -1777,13 +1777,23 @@
         },
         {
           "name": "logout",
-          "about": "Log out of an Oxide host.",
-          "long_about": "Log out of an Oxide host.\n\nThis command removes the authentication configuration for a host either specified\ninteractively or via `--host`.\n\n    $ oxide auth logout\n    # => select what host to log out of via a prompt\n\n    $ oxide auth logout --host oxide.internal\n    # => log out of specified host",
+          "about": "Removes saved authentication information.",
+          "long_about": "Removes saved authentication information.\n\nThis command does not invalidate any tokens from the hosts.",
           "args": [
             {
               "short": "H",
               "long": "host",
-              "help": "The hostname of the Oxide instance to log out of"
+              "help": "Remove authentication information for a single host"
+            },
+            {
+              "short": "a",
+              "long": "all",
+              "help": "If set, all known hosts and authentication information will be deleted"
+            },
+            {
+              "short": "f",
+              "long": "force",
+              "help": "Skip confirmation prompt"
             }
           ]
         },
