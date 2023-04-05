@@ -4,16 +4,16 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::HashMap, fs::File, io::Read, path::Path, time::Duration};
+use std::{collections::HashMap, fs::File, io::Read, time::Duration};
 
 use anyhow::{anyhow, bail, Result};
-use clap::{ArgGroup, Parser};
+use clap::Parser;
 use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse,
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
     TokenUrl,
 };
-use oxide_api::{Client, ClientHiddenExt, ClientSessionExt};
+use oxide_api::{Client, ClientSessionExt};
 use reqwest::{
     header::{HeaderMap, HeaderValue, AUTHORIZATION},
     ClientBuilder,
@@ -316,16 +316,22 @@ impl CmdAuthLogin {
 
 /// Removes authentication information saved in the hosts.toml file.
 ///
-/// This command does not invalidate any tokens from the hosts, nor unset
-/// any authentication information saved in $OXIDE_HOST or $OXIDE_TOKEN
-/// environment variables.
+/// This command does not invalidate any tokens from the hosts.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthLogout {
-    /// Remove authentication information for a single host. If unset, all known
-    /// hosts and authentication information will be deleted from the hosts.toml file.
-    #[clap(short = 'H', long, value_parser = parse_host)]
+    /// Remove authentication information for a single host.
+    #[clap(
+        short = 'H', 
+        long, 
+        value_parser = parse_host, 
+        required_unless_present = "all",
+        conflicts_with = "all",
+    )]
     pub host: Option<url::Url>,
+    /// If set, all known hosts and authentication information will be deleted.
+    #[clap(short = 'a', long)]
+    pub all: bool,
     /// Skip confirmation prompt.
     #[clap(short = 'f', long)]
     pub force: bool,
@@ -361,7 +367,7 @@ impl CmdAuthLogout {
                 ctx.config().update_host(host.to_string(), host_entry)?;
 
                 println!(
-                    "Removed authentication information from hosts.toml file for: {}",
+                    "Removed authentication information for: {}",
                     host
                 );
             }
@@ -372,8 +378,8 @@ impl CmdAuthLogout {
                 dir.push("hosts.toml");
 
                 // Clear the entire file for users who want to reset their known hosts.
-                let mut f = File::create(dir).unwrap();
-                println!("Removed all authentication information from hosts.toml file.");
+                let _ = File::create(dir).unwrap();
+                println!("Removed all authentication information");
             }
         }
 
@@ -490,7 +496,7 @@ impl CmdAuthStatus {
 
 #[cfg(test)]
 mod test {
-    use pretty_assertions::assert_eq;
+    // use pretty_assertions::assert_eq;
 
     // use crate::cmd::Command;
 
