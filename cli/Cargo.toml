@@ -34,6 +34,7 @@ uuid = { workspace = true }
 
 [dev-dependencies]
 assert_cmd = { workspace = true }
+expectorate = { workspace = true }
 httpmock = { workspace = true }
 predicates = { workspace = true }
 pretty_assertions = { workspace = true }

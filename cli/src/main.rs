@@ -4,7 +4,7 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::HashMap, net::IpAddr};
+use std::{collections::BTreeMap, net::IpAddr};
 
 use clap::{Command, CommandFactory, FromArgMatches};
 
@@ -17,6 +17,7 @@ mod cmd_api;
 #[allow(unused_mut)] // TODO
 #[allow(unused)] // TODO
 mod cmd_auth;
+mod cmd_docs;
 mod cmd_version;
 mod config;
 mod context;
@@ -28,7 +29,7 @@ mod generated_cli;
 
 #[derive(Debug, Default)]
 struct Tree<'a> {
-    children: HashMap<&'a str, Tree<'a>>,
+    children: BTreeMap<&'a str, Tree<'a>>,
     cmd: Option<CliCommand>,
 }
 
@@ -101,16 +102,15 @@ async fn main() {
         }
     }
 
-    let mut cmd = root.cmd("oxide");
-    cmd = cmd.bin_name("oxide");
+    let cmd = root
+        .cmd("oxide")
+        .bin_name("oxide")
+        .subcommand(cmd_auth::CmdAuth::command())
+        .subcommand(cmd_api::CmdApi::command())
+        .subcommand(cmd_docs::CmdDocs::command())
+        .subcommand(cmd_version::CmdVersion::command());
 
-    // TODO Example of how to build a fully custom sub-command. Note that this
-    // could be placed under another subcommand if needed.
-    cmd = cmd.subcommand(cmd_auth::CmdAuth::command());
-    cmd = cmd.subcommand(cmd_api::CmdApi::command());
-    cmd = cmd.subcommand(cmd_version::CmdVersion::command());
-
-    let matches = cmd.get_matches();
+    let matches = cmd.clone().get_matches();
 
     // Construct the global config. We do this **after** parsing options,
     // anticipating that top-level options may impact e.g. where we look for
@@ -133,6 +133,12 @@ async fn main() {
                 .await
         }
 
+        Some(("docs", sub_matches)) => {
+            cmd_docs::CmdDocs::from_arg_matches(sub_matches)
+                .unwrap()
+                .run(&cmd)
+                .await
+        }
         Some(("version", sub_matches)) => {
             cmd_version::CmdVersion::from_arg_matches(sub_matches)
                 .unwrap()
