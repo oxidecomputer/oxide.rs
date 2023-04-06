@@ -15,12 +15,12 @@ use serde::Serialize;
 pub struct CmdDocs;
 
 /// Arg to CLI command for the JSON doc
-#[derive(Serialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct JsonArg {
     #[serde(skip_serializing_if = "Option::is_none")]
-    short: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     long: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    short: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     help: Option<String>,
 }
@@ -40,20 +40,24 @@ pub struct JsonDoc {
 }
 
 fn to_json(cmd: &Command) -> JsonDoc {
+    let mut subcommands = cmd.get_subcommands().map(to_json).collect::<Vec<_>>();
+    subcommands.sort_unstable_by(|a, b| a.name.cmp(&b.name));
+    let mut args = cmd
+        .get_arguments()
+        .filter(|arg| arg.get_short().is_some() || arg.get_long().is_some())
+        .map(|arg| JsonArg {
+            short: arg.get_short().map(|char| char.to_string()),
+            long: arg.get_long().map(ToString::to_string),
+            help: arg.get_help().map(ToString::to_string),
+        })
+        .collect::<Vec<_>>();
+    args.sort_unstable();
     JsonDoc {
         name: cmd.get_name().to_string(),
         about: cmd.get_about().map(ToString::to_string),
         long_about: cmd.get_long_about().map(ToString::to_string),
-        args: cmd
-            .get_arguments()
-            .filter(|arg| arg.get_short().is_some() || arg.get_long().is_some())
-            .map(|arg| JsonArg {
-                short: arg.get_short().map(|char| char.to_string()),
-                long: arg.get_long().map(ToString::to_string),
-                help: arg.get_help().map(ToString::to_string),
-            })
-            .collect(),
-        subcommands: cmd.get_subcommands().map(to_json).collect(),
+        args,
+        subcommands,
     }
 }
 
