@@ -15,6 +15,7 @@ use oxide_api::types::{IpRange, Ipv4Range, Ipv6Range};
 
 mod cmd_api;
 mod cmd_auth;
+mod cmd_disk;
 mod cmd_docs;
 mod cmd_version;
 mod config;
@@ -72,6 +73,8 @@ impl<'a> Tree<'a> {
 
 #[tokio::main]
 async fn main() {
+    env_logger::init();
+
     let mut root = Tree::default();
     for op in CliCommand::iter() {
         let mut node = &mut root;
@@ -106,7 +109,8 @@ async fn main() {
         .subcommand(cmd_auth::CmdAuth::command())
         .subcommand(cmd_api::CmdApi::command())
         .subcommand(cmd_docs::CmdDocs::command())
-        .subcommand(cmd_version::CmdVersion::command());
+        .subcommand(cmd_version::CmdVersion::command())
+        .add_subcommand("disk import", cmd_disk::CmdDiskImport::command());
 
     let matches = cmd.clone().get_matches();
 
@@ -117,6 +121,13 @@ async fn main() {
     let mut ctx = Context::new(config).unwrap();
 
     let result = match matches.subcommand() {
+        Some(("api", sub_matches)) => {
+            cmd_api::CmdApi::from_arg_matches(sub_matches)
+                .unwrap()
+                .run(&mut ctx)
+                .await
+        }
+
         Some(("auth", sub_matches)) => {
             cmd_auth::CmdAuth::from_arg_matches(sub_matches)
                 .unwrap()
@@ -124,8 +135,9 @@ async fn main() {
                 .await
         }
 
-        Some(("api", sub_matches)) => {
-            cmd_api::CmdApi::from_arg_matches(sub_matches)
+        // TODO this could be improved
+        Some(("disk", sub_matches)) if sub_matches.subcommand_name() == Some("import") => {
+            cmd_disk::CmdDiskImport::from_arg_matches(sub_matches)
                 .unwrap()
                 .run(&mut ctx)
                 .await
@@ -137,6 +149,7 @@ async fn main() {
                 .run(&cmd)
                 .await
         }
+
         Some(("version", sub_matches)) => {
             cmd_version::CmdVersion::from_arg_matches(sub_matches)
                 .unwrap()
@@ -253,10 +266,17 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::VpcSubnetDelete => Some("vpc subnet delete"),
         CliCommand::VpcSubnetListNetworkInterfaces => Some("vpc subnet nic list"),
 
+        // Subcommand: disk
         CliCommand::DiskList => Some("disk list"),
         CliCommand::DiskCreate => Some("disk create"),
         CliCommand::DiskView => Some("disk view"),
         CliCommand::DiskDelete => Some("disk delete"),
+        CliCommand::DiskBulkWriteImport
+        | CliCommand::DiskBulkWriteImportStart
+        | CliCommand::DiskBulkWriteImportStop
+        | CliCommand::DiskFinalizeImport
+        | CliCommand::DiskImportBlocksFromUrl => None,
+
         CliCommand::GroupList => Some("group list"),
         CliCommand::InstanceDiskList => Some("instance disk list"),
         CliCommand::InstanceDiskAttach => Some("instance disk attach"),
@@ -354,9 +374,24 @@ impl CliOverride for OxideOverride {
 
         *request = request.to_owned().body(range);
 
-        println!("{:#?}", request);
-
         Ok(())
+    }
+}
+
+trait CommandExt {
+    fn add_subcommand(self, path: &str, subcmd: impl Into<Command>) -> Self;
+}
+
+impl CommandExt for Command {
+    fn add_subcommand(self, path: &str, subcmd: impl Into<Command>) -> Self {
+        if let Some(index) = path.find(' ') {
+            let first = &path[..index];
+            let rest = &path[index + 1..];
+
+            self.mut_subcommand(first, |cmd| cmd.add_subcommand(rest, subcmd))
+        } else {
+            self.subcommand(subcmd)
+        }
     }
 }
 

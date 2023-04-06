@@ -52,6 +52,7 @@ fn get_client(config: &Config) -> Result<Option<Client>> {
         }
     };
 
+    // TODO use make_client()
     let auth = format!("Bearer {}", token);
     let mut auth_value = reqwest::header::HeaderValue::from_str(&auth)?;
     auth_value.set_sensitive(true);
