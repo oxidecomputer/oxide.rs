@@ -130,109 +130,6 @@
       ]
     },
     {
-      "name": "disk",
-      "subcommands": [
-        {
-          "name": "create",
-          "about": "Create a disk",
-          "args": [
-            {
-              "long": "project",
-              "help": "Name or ID of the project"
-            },
-            {
-              "long": "description"
-            },
-            {
-              "long": "name"
-            },
-            {
-              "long": "size",
-              "help": "total size of the Disk in bytes"
-            }
-          ]
-        },
-        {
-          "name": "delete",
-          "about": "Delete a disk",
-          "args": [
-            {
-              "long": "disk",
-              "help": "Name or ID of the disk"
-            },
-            {
-              "long": "project",
-              "help": "Name or ID of the project"
-            }
-          ]
-        },
-        {
-          "name": "list",
-          "about": "List disks",
-          "args": [
-            {
-              "long": "limit",
-              "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "project",
-              "help": "Name or ID of the project"
-            },
-            {
-              "long": "sort-by"
-            }
-          ]
-        },
-        {
-          "name": "metrics",
-          "subcommands": [
-            {
-              "name": "list",
-              "about": "Fetch disk metrics",
-              "args": [
-                {
-                  "long": "disk"
-                },
-                {
-                  "long": "metric"
-                },
-                {
-                  "long": "end-time",
-                  "help": "An exclusive end time of metrics."
-                },
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
-                },
-                {
-                  "long": "start-time",
-                  "help": "An inclusive start time of metrics."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "view",
-          "about": "Fetch a disk",
-          "args": [
-            {
-              "long": "disk",
-              "help": "Name or ID of the disk"
-            },
-            {
-              "long": "project",
-              "help": "Name or ID of the project"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "name": "group",
       "subcommands": [
         {
@@ -2002,6 +1899,112 @@
     {
       "name": "version",
       "about": "Prints version information about the CLI."
+    },
+    {
+      "name": "disk",
+      "subcommands": [
+        {
+          "name": "create",
+          "about": "Create a disk",
+          "args": [
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "size",
+              "help": "total size of the Disk in bytes"
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "about": "Delete a disk",
+          "args": [
+            {
+              "long": "disk",
+              "help": "Name or ID of the disk"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "list",
+          "about": "List disks",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "name": "metrics",
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "Fetch disk metrics",
+              "args": [
+                {
+                  "long": "disk"
+                },
+                {
+                  "long": "metric"
+                },
+                {
+                  "long": "end-time",
+                  "help": "An exclusive end time of metrics."
+                },
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "start-time",
+                  "help": "An inclusive start time of metrics."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch a disk",
+          "args": [
+            {
+              "long": "disk",
+              "help": "Name or ID of the disk"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "import"
+        }
+      ]
     }
   ]
 }
