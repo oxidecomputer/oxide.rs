@@ -385,8 +385,10 @@ impl CmdAuthLogout {
 }
 
 /// Verifies and displays information about your authentication state.
-/// This command validates the authentication state for each Oxide environment in the current configuration. These hosts may be from your hosts.toml file and/or
-/// $OXIDE_HOST environment variable.
+///
+/// This command validates the authentication state for each Oxide environment
+/// in the current configuration. These hosts may be from your hosts.toml file
+/// and/or $OXIDE_HOST environment variable.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 pub struct CmdAuthStatus {
@@ -403,23 +405,23 @@ impl CmdAuthStatus {
     pub async fn run(&self) -> Result<()> {
         let mut status_info: HashMap<String, Vec<String>> = HashMap::new();
 
-        // Initialising a new Config here instead of taking ctx (&Context) because
-        // ctx already has an initialised oxide_api::Client. This would give the CLI
-        // a chance to return an error before the status checks have even started.
+        // Initialising a new Config here instead of taking ctx (&Context)
+        // because ctx already has an initialised oxide_api::Client. This would
+        // give the CLI a chance to return an error before the status checks
+        // have even started.
         //
-        // For example: the user has the OXIDE_HOST env var set but hasn't set OXIDE_TOKEN
-        // nor do they have a corresponding token for that host on the hosts.toml file,
-        // the CLI would return an error even if other host/token combinations on the
-        // hosts.toml file are valid.
+        // For example: the user has the OXIDE_HOST env var set but hasn't set
+        // OXIDE_TOKEN nor do they have a corresponding token for that host on
+        // the hosts.toml file, the CLI would return an error even if other
+        // host/token combinations on the hosts.toml file are valid.
         let config = Config::default();
         let mut host_list = config.hosts.hosts;
 
         // Include login information from environment variables if set
         if let Some(h) = std::env::var_os("OXIDE_HOST") {
-            let env_token;
-            match std::env::var_os("OXIDE_TOKEN") {
-                Some(t) => env_token = t.into_string().unwrap(),
-                None => env_token = String::from(""),
+            let env_token = match std::env::var_os("OXIDE_TOKEN") {
+                Some(t) => t.into_string().unwrap(),
+                None => String::from(""),
             };
             let info = Host {
                 token: env_token,
@@ -453,7 +455,8 @@ impl CmdAuthStatus {
             let result = client.current_user_view().send().await;
             let user = match result {
                 Ok(usr) => usr,
-                Err(e) => {
+                Err(_) => {
+                    // TODO we need to examine the error
                     status_info.insert(
                         host.to_string(),
                         vec![String::from(
@@ -691,7 +694,6 @@ fn test_cmd_auth_status() {
     use assert_cmd::Command;
     use httpmock::{Method::GET, MockServer};
     use predicates::str;
-    use serde_json::json;
 
     let server = MockServer::start();
     let oxide_mock = server.mock(|when, then| {
@@ -708,7 +710,7 @@ fn test_cmd_auth_status() {
     });
 
     // Validate authenticated credentials.
-    let cmd = Command::cargo_bin("oxide")
+    Command::cargo_bin("oxide")
         .unwrap()
         .arg("auth")
         .arg("status")
@@ -727,7 +729,7 @@ fn test_cmd_auth_status() {
         )));
 
     // Validate authenticated credentials with the token displayed in plain text.
-    let cmd = Command::cargo_bin("oxide")
+    Command::cargo_bin("oxide")
         .unwrap()
         .arg("auth")
         .arg("status")
@@ -762,7 +764,7 @@ fn test_cmd_auth_status() {
     });
 
     // Try invalid credentials.
-    let cmd = Command::cargo_bin("oxide")
+    Command::cargo_bin("oxide")
         .unwrap()
         .arg("auth")
         .arg("status")

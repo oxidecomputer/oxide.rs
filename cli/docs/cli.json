@@ -93,7 +93,8 @@
               "about": "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.",
               "args": [
                 {
-                  "long": "ssh-key"
+                  "long": "ssh-key",
+                  "help": "Name or ID of the SSH key"
                 }
               ]
             },
@@ -115,7 +116,8 @@
               "about": "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.",
               "args": [
                 {
-                  "long": "ssh-key"
+                  "long": "ssh-key",
+                  "help": "Name or ID of the SSH key"
                 }
               ]
             }
@@ -135,7 +137,8 @@
           "about": "Create a disk",
           "args": [
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "description"
@@ -154,10 +157,12 @@
           "about": "Delete a disk",
           "args": [
             {
-              "long": "disk"
+              "long": "disk",
+              "help": "Name or ID of the disk"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         },
@@ -170,7 +175,8 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "sort-by"
@@ -199,7 +205,8 @@
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
                   "long": "start-time",
@@ -214,10 +221,12 @@
           "about": "Fetch a disk",
           "args": [
             {
-              "long": "disk"
+              "long": "disk",
+              "help": "Name or ID of the disk"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         }
@@ -249,7 +258,8 @@
           "about": "Create an image\n\nCreate a new image in a project.",
           "args": [
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "description"
@@ -272,10 +282,12 @@
           "about": "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
           "args": [
             {
-              "long": "image"
+              "long": "image",
+              "help": "Name or ID of the image"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         },
@@ -288,7 +300,8 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "sort-by"
@@ -300,10 +313,12 @@
           "about": "Fetch an image\n\nFetch the details for a specific image in a project.",
           "args": [
             {
-              "long": "image"
+              "long": "image",
+              "help": "Name or ID of the image"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         }
@@ -317,7 +332,8 @@
           "about": "Create an instance",
           "args": [
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "description"
@@ -349,10 +365,12 @@
           "about": "Delete an instance",
           "args": [
             {
-              "long": "instance"
+              "long": "instance",
+              "help": "Name or ID of the instance"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         },
@@ -364,13 +382,16 @@
               "about": "Attach a disk to an instance",
               "args": [
                 {
-                  "long": "instance"
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "disk"
+                  "long": "disk",
+                  "help": "Name or ID of the disk"
                 }
               ]
             },
@@ -379,13 +400,16 @@
               "about": "Detach a disk from an instance",
               "args": [
                 {
-                  "long": "instance"
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "disk"
+                  "long": "disk",
+                  "help": "Name or ID of the disk"
                 }
               ]
             },
@@ -394,14 +418,16 @@
               "about": "List an instance's disks",
               "args": [
                 {
-                  "long": "instance"
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
                 },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
                   "long": "sort-by"
@@ -418,10 +444,12 @@
               "about": "List external IP addresses",
               "args": [
                 {
-                  "long": "instance"
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 }
               ]
             }
@@ -436,7 +464,8 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "sort-by"
@@ -451,10 +480,12 @@
               "about": "Create a network interface",
               "args": [
                 {
-                  "long": "instance"
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
                   "long": "description"
@@ -481,13 +512,16 @@
               "about": "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
               "args": [
                 {
-                  "long": "interface"
+                  "long": "interface",
+                  "help": "Name or ID of the network interface"
                 },
                 {
-                  "long": "instance"
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 }
               ]
             },
@@ -496,14 +530,16 @@
               "about": "List network interfaces",
               "args": [
                 {
-                  "long": "instance"
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
                 },
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
                   "long": "sort-by"
@@ -515,13 +551,16 @@
               "about": "Update a network interface",
               "args": [
                 {
-                  "long": "interface"
+                  "long": "interface",
+                  "help": "Name or ID of the network interface"
                 },
                 {
-                  "long": "instance"
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
                   "long": "description"
@@ -540,13 +579,16 @@
               "about": "Fetch a network interface",
               "args": [
                 {
-                  "long": "interface"
+                  "long": "interface",
+                  "help": "Name or ID of the network interface"
                 },
                 {
-                  "long": "instance"
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 }
               ]
             }
@@ -557,10 +599,12 @@
           "about": "Reboot an instance",
           "args": [
             {
-              "long": "instance"
+              "long": "instance",
+              "help": "Name or ID of the instance"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         },
@@ -569,10 +613,12 @@
           "about": "Boot an instance",
           "args": [
             {
-              "long": "instance"
+              "long": "instance",
+              "help": "Name or ID of the instance"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         },
@@ -581,10 +627,12 @@
           "about": "Stop an instance",
           "args": [
             {
-              "long": "instance"
+              "long": "instance",
+              "help": "Name or ID of the instance"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         },
@@ -593,10 +641,12 @@
           "about": "Fetch an instance",
           "args": [
             {
-              "long": "instance"
+              "long": "instance",
+              "help": "Name or ID of the instance"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         }
@@ -622,7 +672,8 @@
           "about": "Delete an IP Pool",
           "args": [
             {
-              "long": "pool"
+              "long": "pool",
+              "help": "Name or ID of the IP pool"
             }
           ]
         },
@@ -647,7 +698,8 @@
               "about": "Add a range to an IP pool",
               "args": [
                 {
-                  "long": "pool"
+                  "long": "pool",
+                  "help": "Name or ID of the IP pool"
                 },
                 {
                   "long": "first"
@@ -662,7 +714,8 @@
               "about": "List ranges for an IP pool\n\nRanges are ordered by their first address.",
               "args": [
                 {
-                  "long": "pool"
+                  "long": "pool",
+                  "help": "Name or ID of the IP pool"
                 },
                 {
                   "long": "limit",
@@ -675,7 +728,8 @@
               "about": "Remove a range from an IP pool",
               "args": [
                 {
-                  "long": "pool"
+                  "long": "pool",
+                  "help": "Name or ID of the IP pool"
                 }
               ]
             }
@@ -718,7 +772,8 @@
           "about": "Update an IP Pool",
           "args": [
             {
-              "long": "pool"
+              "long": "pool",
+              "help": "Name or ID of the IP pool"
             },
             {
               "long": "description"
@@ -733,7 +788,8 @@
           "about": "Fetch an IP pool",
           "args": [
             {
-              "long": "pool"
+              "long": "pool",
+              "help": "Name or ID of the IP pool"
             }
           ]
         }
@@ -790,7 +846,8 @@
           "about": "Delete a project",
           "args": [
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         },
@@ -815,7 +872,8 @@
               "about": "Update a project's IAM policy",
               "args": [
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 }
               ]
             },
@@ -824,7 +882,8 @@
               "about": "Fetch a project's IAM policy",
               "args": [
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 }
               ]
             }
@@ -835,7 +894,8 @@
           "about": "Update a project",
           "args": [
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "description"
@@ -850,7 +910,8 @@
           "about": "Fetch a project",
           "args": [
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         }
@@ -941,7 +1002,8 @@
           "about": "Delete a silo\n\nDelete a silo by name.",
           "args": [
             {
-              "long": "silo"
+              "long": "silo",
+              "help": "Name or ID of the silo"
             }
           ]
         },
@@ -957,7 +1019,8 @@
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "silo"
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
                 },
                 {
                   "long": "sort-by"
@@ -975,7 +1038,8 @@
                       "about": "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
                       "args": [
                         {
-                          "long": "silo"
+                          "long": "silo",
+                          "help": "Name or ID of the silo"
                         },
                         {
                           "long": "external-id",
@@ -992,7 +1056,8 @@
                           "help": "The user's internal id"
                         },
                         {
-                          "long": "silo"
+                          "long": "silo",
+                          "help": "Name or ID of the silo"
                         }
                       ]
                     },
@@ -1005,7 +1070,8 @@
                           "help": "The user's internal id"
                         },
                         {
-                          "long": "silo"
+                          "long": "silo",
+                          "help": "Name or ID of the silo"
                         }
                       ]
                     }
@@ -1021,7 +1087,8 @@
                   "about": "Create a SAML IDP",
                   "args": [
                     {
-                      "long": "silo"
+                      "long": "silo",
+                      "help": "Name or ID of the silo"
                     },
                     {
                       "long": "acs-url",
@@ -1060,10 +1127,12 @@
                   "about": "Fetch a SAML IDP",
                   "args": [
                     {
-                      "long": "provider"
+                      "long": "provider",
+                      "help": "Name or ID of the SAML identity provider"
                     },
                     {
-                      "long": "silo"
+                      "long": "silo",
+                      "help": "Name or ID of the silo"
                     }
                   ]
                 }
@@ -1092,7 +1161,8 @@
               "about": "Update a silo's IAM policy",
               "args": [
                 {
-                  "long": "silo"
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
                 }
               ]
             },
@@ -1101,7 +1171,8 @@
               "about": "Fetch a silo's IAM policy",
               "args": [
                 {
-                  "long": "silo"
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
                 }
               ]
             }
@@ -1119,7 +1190,8 @@
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "silo"
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
                 },
                 {
                   "long": "sort-by"
@@ -1135,7 +1207,8 @@
                   "help": "The user's internal id"
                 },
                 {
-                  "long": "silo"
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
                 }
               ]
             }
@@ -1146,7 +1219,8 @@
           "about": "Fetch a silo\n\nFetch a silo by name.",
           "args": [
             {
-              "long": "silo"
+              "long": "silo",
+              "help": "Name or ID of the silo"
             }
           ]
         }
@@ -1205,7 +1279,8 @@
           "about": "Create a snapshot\n\nCreates a point-in-time snapshot from a disk.",
           "args": [
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "description"
@@ -1224,10 +1299,12 @@
           "about": "Delete a snapshot",
           "args": [
             {
-              "long": "snapshot"
+              "long": "snapshot",
+              "help": "Name or ID of the snapshot"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         },
@@ -1240,7 +1317,8 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "sort-by"
@@ -1252,10 +1330,12 @@
           "about": "Fetch a snapshot",
           "args": [
             {
-              "long": "snapshot"
+              "long": "snapshot",
+              "help": "Name or ID of the snapshot"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         }
@@ -1308,7 +1388,8 @@
           "about": "Create a VPC",
           "args": [
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "description"
@@ -1330,10 +1411,12 @@
           "about": "Delete a VPC",
           "args": [
             {
-              "long": "vpc"
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         },
@@ -1345,10 +1428,12 @@
               "about": "Replace firewall rules",
               "args": [
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 }
               ]
             },
@@ -1357,10 +1442,12 @@
               "about": "List firewall rules",
               "args": [
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 }
               ]
             }
@@ -1375,7 +1462,8 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "sort-by"
@@ -1390,10 +1478,12 @@
               "about": "Create a VPC router",
               "args": [
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 },
                 {
                   "long": "description"
@@ -1408,13 +1498,16 @@
               "about": "Delete a router",
               "args": [
                 {
-                  "long": "router"
+                  "long": "router",
+                  "help": "Name or ID of the router"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 }
               ]
             },
@@ -1427,13 +1520,15 @@
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
                   "long": "sort-by"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 }
               ]
             },
@@ -1445,13 +1540,16 @@
                   "about": "Create a router",
                   "args": [
                     {
-                      "long": "project"
+                      "long": "project",
+                      "help": "Name or ID of the project"
                     },
                     {
-                      "long": "router"
+                      "long": "router",
+                      "help": "Name or ID of the router"
                     },
                     {
-                      "long": "vpc"
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC"
                     },
                     {
                       "long": "description"
@@ -1466,16 +1564,20 @@
                   "about": "Delete a route",
                   "args": [
                     {
-                      "long": "route"
+                      "long": "route",
+                      "help": "Name or ID of the route"
                     },
                     {
-                      "long": "project"
+                      "long": "project",
+                      "help": "Name or ID of the project"
                     },
                     {
-                      "long": "router"
+                      "long": "router",
+                      "help": "Name or ID of the router"
                     },
                     {
-                      "long": "vpc"
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC"
                     }
                   ]
                 },
@@ -1488,16 +1590,19 @@
                       "help": "Maximum number of items returned by a single call"
                     },
                     {
-                      "long": "project"
+                      "long": "project",
+                      "help": "Name or ID of the project"
                     },
                     {
-                      "long": "router"
+                      "long": "router",
+                      "help": "Name or ID of the router"
                     },
                     {
                       "long": "sort-by"
                     },
                     {
-                      "long": "vpc"
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC"
                     }
                   ]
                 },
@@ -1506,16 +1611,20 @@
                   "about": "Update a route",
                   "args": [
                     {
-                      "long": "route"
+                      "long": "route",
+                      "help": "Name or ID of the route"
                     },
                     {
-                      "long": "project"
+                      "long": "project",
+                      "help": "Name or ID of the project"
                     },
                     {
-                      "long": "router"
+                      "long": "router",
+                      "help": "Name or ID of the router"
                     },
                     {
-                      "long": "vpc"
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC"
                     },
                     {
                       "long": "description"
@@ -1530,16 +1639,20 @@
                   "about": "Fetch a route",
                   "args": [
                     {
-                      "long": "route"
+                      "long": "route",
+                      "help": "Name or ID of the route"
                     },
                     {
-                      "long": "project"
+                      "long": "project",
+                      "help": "Name or ID of the project"
                     },
                     {
-                      "long": "router"
+                      "long": "router",
+                      "help": "Name or ID of the router"
                     },
                     {
-                      "long": "vpc"
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC"
                     }
                   ]
                 }
@@ -1550,13 +1663,16 @@
               "about": "Update a router",
               "args": [
                 {
-                  "long": "router"
+                  "long": "router",
+                  "help": "Name or ID of the router"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 },
                 {
                   "long": "description"
@@ -1571,13 +1687,16 @@
               "about": "Get a router",
               "args": [
                 {
-                  "long": "router"
+                  "long": "router",
+                  "help": "Name or ID of the router"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 }
               ]
             }
@@ -1591,10 +1710,12 @@
               "about": "Create a subnet",
               "args": [
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 },
                 {
                   "long": "description"
@@ -1617,13 +1738,16 @@
               "about": "Delete a subnet",
               "args": [
                 {
-                  "long": "subnet"
+                  "long": "subnet",
+                  "help": "Name or ID of the subnet"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 }
               ]
             },
@@ -1636,13 +1760,15 @@
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
                   "long": "sort-by"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 }
               ]
             },
@@ -1654,20 +1780,23 @@
                   "about": "List network interfaces",
                   "args": [
                     {
-                      "long": "subnet"
+                      "long": "subnet",
+                      "help": "Name or ID of the subnet"
                     },
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
                     },
                     {
-                      "long": "project"
+                      "long": "project",
+                      "help": "Name or ID of the project"
                     },
                     {
                       "long": "sort-by"
                     },
                     {
-                      "long": "vpc"
+                      "long": "vpc",
+                      "help": "Name or ID of the VPC"
                     }
                   ]
                 }
@@ -1678,13 +1807,16 @@
               "about": "Update a subnet",
               "args": [
                 {
-                  "long": "subnet"
+                  "long": "subnet",
+                  "help": "Name or ID of the subnet"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 },
                 {
                   "long": "description"
@@ -1699,13 +1831,16 @@
               "about": "Fetch a subnet",
               "args": [
                 {
-                  "long": "subnet"
+                  "long": "subnet",
+                  "help": "Name or ID of the subnet"
                 },
                 {
-                  "long": "project"
+                  "long": "project",
+                  "help": "Name or ID of the project"
                 },
                 {
-                  "long": "vpc"
+                  "long": "vpc",
+                  "help": "Name or ID of the VPC"
                 }
               ]
             }
@@ -1716,10 +1851,12 @@
           "about": "Update a VPC",
           "args": [
             {
-              "long": "vpc"
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             },
             {
               "long": "description"
@@ -1737,10 +1874,12 @@
           "about": "Fetch a VPC",
           "args": [
             {
-              "long": "vpc"
+              "long": "vpc",
+              "help": "Name or ID of the VPC"
             },
             {
-              "long": "project"
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         }
