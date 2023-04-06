@@ -72,6 +72,8 @@ impl<'a> Tree<'a> {
 
 #[tokio::main]
 async fn main() {
+    env_logger::init();
+
     let mut root = Tree::default();
     for op in CliCommand::iter() {
         let mut node = &mut root;
@@ -253,10 +255,17 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::VpcSubnetDelete => Some("vpc subnet delete"),
         CliCommand::VpcSubnetListNetworkInterfaces => Some("vpc subnet nic list"),
 
+        // Subcommand: disk
         CliCommand::DiskList => Some("disk list"),
         CliCommand::DiskCreate => Some("disk create"),
         CliCommand::DiskView => Some("disk view"),
         CliCommand::DiskDelete => Some("disk delete"),
+        CliCommand::DiskBulkWriteImport
+        | CliCommand::DiskBulkWriteImportStart
+        | CliCommand::DiskBulkWriteImportStop
+        | CliCommand::DiskFinalizeImport
+        | CliCommand::DiskImportBlocksFromUrl => None,
+
         CliCommand::GroupList => Some("group list"),
         CliCommand::InstanceDiskList => Some("instance disk list"),
         CliCommand::InstanceDiskAttach => Some("instance disk attach"),

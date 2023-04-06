@@ -152,7 +152,7 @@ pub struct CmdAuthLogin {
 
     /// The host of the Oxide instance to authenticate with.
     /// This assumes http; specify an `http://` prefix if needed.
-    #[clap(short = 'H', long, env = "OXIDE_HOST", value_parser = parse_host)]
+    #[clap(short = 'H', long, value_parser = parse_host)]
     host: url::Url,
 
     /// Override the default browser when opening the authentication URL.
@@ -426,6 +426,7 @@ impl CmdAuthStatus {
                 user: String::from(""),
                 default: false,
             };
+
             host_list.insert(h.into_string().unwrap(), info);
         }
 
@@ -452,7 +453,7 @@ impl CmdAuthStatus {
             let result = client.current_user_view().send().await;
             let user = match result {
                 Ok(usr) => usr,
-                Err(_) => {
+                Err(e) => {
                     status_info.insert(
                         host.to_string(),
                         vec![String::from(
@@ -694,46 +695,100 @@ fn test_cmd_auth_status() {
 
     let server = MockServer::start();
     let oxide_mock = server.mock(|when, then| {
-        when.method(GET).path("/v1/me");
-        then.status(200).json_body(json!({"id":"001de000-05e4-4000-8000-000000004007","display_name":"privileged","silo_id":"001de000-5110-4000-8000-000000000000"}));
+        when.method(GET)
+            .path("/v1/me")
+            .header("Authorization", "Bearer oxide-token-1111");
+        then.status(200)
+            .json_body_obj(&oxide_api::types::CurrentUser {
+                display_name: "privileged".to_string(),
+                id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
+                silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
+                silo_name: "funky-town".parse().unwrap(),
+            });
     });
 
-    // Validate a successful login
-    let mut cmd = Command::cargo_bin("oxide").unwrap();
-    cmd.arg("auth")
+    // Validate authenticated credentials.
+    let cmd = Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("auth")
         .arg("status")
         .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "oxide-token-1111");
-    cmd.assert().success().stdout(str::contains(format!(
-        "{}: [\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\", \"Token: *******************\"]",
-        server.url(""), server.url("")
-    )));
+        .env("OXIDE_TOKEN", "oxide-token-1111")
+        .assert()
+        .success()
+        .stdout(str::contains(format!(
+            "{}: [{}, {}]",
+            server.url(""),
+            format_args!(
+                "\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\"",
+                server.url("")
+            ),
+            "\"Token: *******************\"",
+        )));
 
-    // Validate a successful login with token displayed in plain text
-    cmd.arg("-t");
-    cmd.assert().success().stdout(str::contains(format!(
-    "{}: [\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\", \"Token: oxide-token-1111\"]",
-    server.url(""), server.url("")
-    )));
+    // Validate authenticated credentials with the token displayed in plain text.
+    let cmd = Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("auth")
+        .arg("status")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "oxide-token-1111")
+        .arg("-t")
+        .assert()
+        .success()
+        .stdout(str::contains(format!(
+            "{}: [{}, {}]",
+            server.url(""),
+            format_args!(
+                "\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\"",
+                server.url("")
+            ),
+            "\"Token: oxide-token-1111\"",
+        )));
 
-    // Assert the mock received the provided number of requests which matched all
-    // the request requirements
+    // Assert the mock received the provided number of requests which matched
+    // all the request requirements
     oxide_mock.assert_hits(2);
 
-    // Set auth information through environment variables and check they are included
-    // in the results
-    let mut cmd = Command::cargo_bin("oxide").unwrap();
-    cmd.arg("auth")
-        .arg("status")
-        .env("OXIDE_HOST", "http://111.1.1.1/")
-        .env("OXIDE_TOKEN", "oxide-token-1111");
-    cmd.assert().success().stdout(str::contains(
-        "http://111.1.1.1/: [\"Not authenticated. Host/token combination invalid\"]",
-    ));
+    let oxide_mock = server.mock(|when, then| {
+        when.method(GET)
+            .path("/v1/me")
+            .header("Authorization", "Bearer oxide-token-1112");
+        then.status(401).json_body_obj(&oxide_api::types::Error {
+            error_code: None,
+            message: "oops".to_string(),
+            request_id: "42".to_string(),
+        });
+    });
 
-    // Make sure the command only returns information about the specified host
-    cmd.arg("-H").arg("http://111.1.1.1/");
-    cmd.assert()
+    // Try invalid credentials.
+    let cmd = Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("auth")
+        .arg("status")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "oxide-token-1112")
+        .assert()
         .success()
-        .stdout("http://111.1.1.1/: [\"Not authenticated. Host/token combination invalid\"]\n");
+        .stdout(str::contains(format!(
+            "{}: [\"Not authenticated. Host/token combination invalid\"]",
+            server.url("")
+        )));
+
+    // Make sure the command only returns information about the specified host.
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .arg("auth")
+        .arg("status")
+        .env("OXIDE_HOST", server.url("/"))
+        .env("OXIDE_TOKEN", "oxide-token-1112")
+        .arg("-H")
+        .arg(server.url(""))
+        .assert()
+        .success()
+        .stdout(format!(
+            "{}: [\"Not authenticated. Host/token combination invalid\"]\n",
+            server.url("/")
+        ));
+    oxide_mock.assert();
 }

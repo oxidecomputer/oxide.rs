@@ -377,6 +377,30 @@ pub mod types {
         }
     }
 
+    #[doc = "Info about the current user"]
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct CurrentUser {
+        #[doc = "Human-readable name that can identify the user"]
+        pub display_name: String,
+        pub id: uuid::Uuid,
+        #[doc = "Uuid of the silo to which this user belongs"]
+        pub silo_id: uuid::Uuid,
+        #[doc = "Name of the silo to which this user belongs."]
+        pub silo_name: Name,
+    }
+
+    impl From<&CurrentUser> for CurrentUser {
+        fn from(value: &CurrentUser) -> Self {
+            value.clone()
+        }
+    }
+
+    impl CurrentUser {
+        pub fn builder() -> builder::CurrentUser {
+            builder::CurrentUser::default()
+        }
+    }
+
     #[doc = "A `Datum` is a single sampled data point from a metric."]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "datum")]
@@ -685,6 +709,7 @@ pub mod types {
 
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct DiskPath {
+        #[doc = "Name or ID of the disk"]
         pub disk: NameOrId,
     }
 
@@ -741,6 +766,9 @@ pub mod types {
         #[doc = "Create a disk from a global image"]
         #[serde(rename = "global_image")]
         GlobalImage { image_id: uuid::Uuid },
+        #[doc = "Create a blank disk that will accept bulk writes or pull blocks from an external source."]
+        #[serde(rename = "importing_blocks")]
+        ImportingBlocks { block_size: BlockSize },
     }
 
     impl From<&DiskSource> for DiskSource {
@@ -757,6 +785,14 @@ pub mod types {
         Creating,
         #[serde(rename = "detached")]
         Detached,
+        #[serde(rename = "import_ready")]
+        ImportReady,
+        #[serde(rename = "importing_from_url")]
+        ImportingFromUrl,
+        #[serde(rename = "importing_from_bulk_writes")]
+        ImportingFromBulkWrites,
+        #[serde(rename = "finalizing")]
+        Finalizing,
         #[serde(rename = "maintenance")]
         Maintenance,
         #[doc = "Disk is being attached to the given Instance"]
@@ -819,6 +855,18 @@ pub mod types {
     impl Error {
         pub fn builder() -> builder::Error {
             builder::Error::default()
+        }
+    }
+
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub enum ExpectedDigest {
+        #[serde(rename = "sha256")]
+        Sha256(String),
+    }
+
+    impl From<&ExpectedDigest> for ExpectedDigest {
+        fn from(value: &ExpectedDigest) -> Self {
+            value.clone()
         }
     }
 
@@ -1532,6 +1580,47 @@ pub mod types {
     impl From<&ImageSource> for ImageSource {
         fn from(value: &ImageSource) -> Self {
             value.clone()
+        }
+    }
+
+    #[doc = "Parameters for importing blocks with a bulk write"]
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct ImportBlocksBulkWrite {
+        pub base64_encoded_data: String,
+        pub offset: u64,
+    }
+
+    impl From<&ImportBlocksBulkWrite> for ImportBlocksBulkWrite {
+        fn from(value: &ImportBlocksBulkWrite) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ImportBlocksBulkWrite {
+        pub fn builder() -> builder::ImportBlocksBulkWrite {
+            builder::ImportBlocksBulkWrite::default()
+        }
+    }
+
+    #[doc = "Parameters for importing blocks from a URL to a disk"]
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct ImportBlocksFromUrl {
+        #[doc = "Expected digest of all blocks when importing from a URL"]
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub expected_digest: Option<ExpectedDigest>,
+        #[doc = "the source to pull blocks from"]
+        pub url: String,
+    }
+
+    impl From<&ImportBlocksFromUrl> for ImportBlocksFromUrl {
+        fn from(value: &ImportBlocksFromUrl) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ImportBlocksFromUrl {
+        pub fn builder() -> builder::ImportBlocksFromUrl {
+            builder::ImportBlocksFromUrl::default()
         }
     }
 
@@ -3887,7 +3976,7 @@ pub mod types {
         #[doc = "the source of an identity provider metadata descriptor"]
         pub idp_metadata_source: IdpMetadataSource,
         pub name: Name,
-        #[doc = "optional request signing key pair"]
+        #[doc = "request signing key pair"]
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub signing_keypair: Option<DerEncodedKeyPair>,
         #[doc = "service provider endpoint where the idp should send log out requests"]
@@ -6826,6 +6915,91 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct CurrentUser {
+            display_name: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            silo_id: Result<uuid::Uuid, String>,
+            silo_name: Result<super::Name, String>,
+        }
+
+        impl Default for CurrentUser {
+            fn default() -> Self {
+                Self {
+                    display_name: Err("no value supplied for display_name".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    silo_id: Err("no value supplied for silo_id".to_string()),
+                    silo_name: Err("no value supplied for silo_name".to_string()),
+                }
+            }
+        }
+
+        impl CurrentUser {
+            pub fn display_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.display_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for display_name: {}", e)
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn silo_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
+                self
+            }
+            pub fn silo_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<CurrentUser> for super::CurrentUser {
+            type Error = String;
+            fn try_from(value: CurrentUser) -> Result<Self, String> {
+                Ok(Self {
+                    display_name: value.display_name?,
+                    id: value.id?,
+                    silo_id: value.silo_id?,
+                    silo_name: value.silo_name?,
+                })
+            }
+        }
+
+        impl From<super::CurrentUser> for CurrentUser {
+            fn from(value: super::CurrentUser) -> Self {
+                Self {
+                    display_name: Ok(value.display_name),
+                    id: Ok(value.id),
+                    silo_id: Ok(value.silo_id),
+                    silo_name: Ok(value.silo_name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct DerEncodedKeyPair {
             private_key: Result<String, String>,
             public_cert: Result<String, String>,
@@ -8920,6 +9094,125 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ImportBlocksBulkWrite {
+            base64_encoded_data: Result<String, String>,
+            offset: Result<u64, String>,
+        }
+
+        impl Default for ImportBlocksBulkWrite {
+            fn default() -> Self {
+                Self {
+                    base64_encoded_data: Err(
+                        "no value supplied for base64_encoded_data".to_string()
+                    ),
+                    offset: Err("no value supplied for offset".to_string()),
+                }
+            }
+        }
+
+        impl ImportBlocksBulkWrite {
+            pub fn base64_encoded_data<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.base64_encoded_data = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for base64_encoded_data: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn offset<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.offset = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for offset: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<ImportBlocksBulkWrite> for super::ImportBlocksBulkWrite {
+            type Error = String;
+            fn try_from(value: ImportBlocksBulkWrite) -> Result<Self, String> {
+                Ok(Self {
+                    base64_encoded_data: value.base64_encoded_data?,
+                    offset: value.offset?,
+                })
+            }
+        }
+
+        impl From<super::ImportBlocksBulkWrite> for ImportBlocksBulkWrite {
+            fn from(value: super::ImportBlocksBulkWrite) -> Self {
+                Self {
+                    base64_encoded_data: Ok(value.base64_encoded_data),
+                    offset: Ok(value.offset),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ImportBlocksFromUrl {
+            expected_digest: Result<Option<super::ExpectedDigest>, String>,
+            url: Result<String, String>,
+        }
+
+        impl Default for ImportBlocksFromUrl {
+            fn default() -> Self {
+                Self {
+                    expected_digest: Ok(Default::default()),
+                    url: Err("no value supplied for url".to_string()),
+                }
+            }
+        }
+
+        impl ImportBlocksFromUrl {
+            pub fn expected_digest<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::ExpectedDigest>>,
+                T::Error: std::fmt::Display,
+            {
+                self.expected_digest = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for expected_digest: {}", e)
+                });
+                self
+            }
+            pub fn url<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.url = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for url: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<ImportBlocksFromUrl> for super::ImportBlocksFromUrl {
+            type Error = String;
+            fn try_from(value: ImportBlocksFromUrl) -> Result<Self, String> {
+                Ok(Self {
+                    expected_digest: value.expected_digest?,
+                    url: value.url?,
+                })
+            }
+        }
+
+        impl From<super::ImportBlocksFromUrl> for ImportBlocksFromUrl {
+            fn from(value: super::ImportBlocksFromUrl) -> Self {
+                Self {
+                    expected_digest: Ok(value.expected_digest),
+                    url: Ok(value.url),
                 }
             }
         }
@@ -15977,15 +16270,25 @@ impl Client {
 }
 
 pub trait ClientDisksExt {
-    #[doc = "List disks\n\nSends a `GET` request to `/v1/disks`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.disk_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List disks\n\nSends a `GET` request to `/v1/disks`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.disk_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn disk_list(&self) -> builder::DiskList;
-    #[doc = "Create a disk\n\nSends a `POST` request to `/v1/disks`\n\n```ignore\nlet response = client.disk_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a disk\n\nSends a `POST` request to `/v1/disks`\n\nArguments:\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.disk_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn disk_create(&self) -> builder::DiskCreate;
-    #[doc = "Fetch a disk\n\nSends a `GET` request to `/v1/disks/{disk}`\n\n```ignore\nlet response = client.disk_view()\n    .disk(disk)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a disk\n\nSends a `GET` request to `/v1/disks/{disk}`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n```ignore\nlet response = client.disk_view()\n    .disk(disk)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn disk_view(&self) -> builder::DiskView;
-    #[doc = "Delete a disk\n\nSends a `DELETE` request to `/v1/disks/{disk}`\n\n```ignore\nlet response = client.disk_delete()\n    .disk(disk)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a disk\n\nSends a `DELETE` request to `/v1/disks/{disk}`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n```ignore\nlet response = client.disk_delete()\n    .disk(disk)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn disk_delete(&self) -> builder::DiskDelete;
-    #[doc = "Fetch disk metrics\n\nSends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`\n\nArguments:\n- `disk`\n- `metric`\n- `end_time`: An exclusive end time of metrics.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.disk_metrics_list()\n    .disk(disk)\n    .metric(metric)\n    .end_time(end_time)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
+    #[doc = "Import blocks into a disk\n\nSends a `POST` request to `/v1/disks/{disk}/bulk-write`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.disk_bulk_write_import()\n    .disk(disk)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn disk_bulk_write_import(&self) -> builder::DiskBulkWriteImport;
+    #[doc = "Start the process of importing blocks into a disk\n\nSends a `POST` request to `/v1/disks/{disk}/bulk-write-start`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n```ignore\nlet response = client.disk_bulk_write_import_start()\n    .disk(disk)\n    .project(project)\n    .send()\n    .await;\n```"]
+    fn disk_bulk_write_import_start(&self) -> builder::DiskBulkWriteImportStart;
+    #[doc = "Stop the process of importing blocks into a disk\n\nSends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n```ignore\nlet response = client.disk_bulk_write_import_stop()\n    .disk(disk)\n    .project(project)\n    .send()\n    .await;\n```"]
+    fn disk_bulk_write_import_stop(&self) -> builder::DiskBulkWriteImportStop;
+    #[doc = "Finalize disk when imports are done\n\nSends a `POST` request to `/v1/disks/{disk}/finalize`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n- `snapshot_name`: an optional snapshot name\n```ignore\nlet response = client.disk_finalize_import()\n    .disk(disk)\n    .project(project)\n    .snapshot_name(snapshot_name)\n    .send()\n    .await;\n```"]
+    fn disk_finalize_import(&self) -> builder::DiskFinalizeImport;
+    #[doc = "Send request to import blocks from URL\n\nSends a `POST` request to `/v1/disks/{disk}/import`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.disk_import_blocks_from_url()\n    .disk(disk)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    fn disk_import_blocks_from_url(&self) -> builder::DiskImportBlocksFromUrl;
+    #[doc = "Fetch disk metrics\n\nSends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`\n\nArguments:\n- `disk`\n- `metric`\n- `end_time`: An exclusive end time of metrics.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `start_time`: An inclusive start time of metrics.\n```ignore\nlet response = client.disk_metrics_list()\n    .disk(disk)\n    .metric(metric)\n    .end_time(end_time)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .start_time(start_time)\n    .send()\n    .await;\n```"]
     fn disk_metrics_list(&self) -> builder::DiskMetricsList;
 }
 
@@ -16004,6 +16307,26 @@ impl ClientDisksExt for Client {
 
     fn disk_delete(&self) -> builder::DiskDelete {
         builder::DiskDelete::new(self)
+    }
+
+    fn disk_bulk_write_import(&self) -> builder::DiskBulkWriteImport {
+        builder::DiskBulkWriteImport::new(self)
+    }
+
+    fn disk_bulk_write_import_start(&self) -> builder::DiskBulkWriteImportStart {
+        builder::DiskBulkWriteImportStart::new(self)
+    }
+
+    fn disk_bulk_write_import_stop(&self) -> builder::DiskBulkWriteImportStop {
+        builder::DiskBulkWriteImportStop::new(self)
+    }
+
+    fn disk_finalize_import(&self) -> builder::DiskFinalizeImport {
+        builder::DiskFinalizeImport::new(self)
+    }
+
+    fn disk_import_blocks_from_url(&self) -> builder::DiskImportBlocksFromUrl {
+        builder::DiskImportBlocksFromUrl::new(self)
     }
 
     fn disk_metrics_list(&self) -> builder::DiskMetricsList {
@@ -16047,13 +16370,13 @@ impl ClientHiddenExt for Client {
 }
 
 pub trait ClientImagesExt {
-    #[doc = "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.\n\nSends a `GET` request to `/v1/images`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.image_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.\n\nSends a `GET` request to `/v1/images`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.image_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn image_list(&self) -> builder::ImageList;
-    #[doc = "Create an image\n\nCreate a new image in a project.\n\nSends a `POST` request to `/v1/images`\n\n```ignore\nlet response = client.image_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create an image\n\nCreate a new image in a project.\n\nSends a `POST` request to `/v1/images`\n\nArguments:\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.image_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn image_create(&self) -> builder::ImageCreate;
-    #[doc = "Fetch an image\n\nFetch the details for a specific image in a project.\n\nSends a `GET` request to `/v1/images/{image}`\n\n```ignore\nlet response = client.image_view()\n    .image(image)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an image\n\nFetch the details for a specific image in a project.\n\nSends a `GET` request to `/v1/images/{image}`\n\nArguments:\n- `image`: Name or ID of the image\n- `project`: Name or ID of the project\n```ignore\nlet response = client.image_view()\n    .image(image)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn image_view(&self) -> builder::ImageView;
-    #[doc = "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.\n\nSends a `DELETE` request to `/v1/images/{image}`\n\n```ignore\nlet response = client.image_delete()\n    .image(image)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.\n\nSends a `DELETE` request to `/v1/images/{image}`\n\nArguments:\n- `image`: Name or ID of the image\n- `project`: Name or ID of the project\n```ignore\nlet response = client.image_delete()\n    .image(image)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn image_delete(&self) -> builder::ImageDelete;
 }
 
@@ -16076,43 +16399,43 @@ impl ClientImagesExt for Client {
 }
 
 pub trait ClientInstancesExt {
-    #[doc = "List instances\n\nSends a `GET` request to `/v1/instances`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.instance_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List instances\n\nSends a `GET` request to `/v1/instances`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.instance_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn instance_list(&self) -> builder::InstanceList;
-    #[doc = "Create an instance\n\nSends a `POST` request to `/v1/instances`\n\n```ignore\nlet response = client.instance_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create an instance\n\nSends a `POST` request to `/v1/instances`\n\nArguments:\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.instance_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_create(&self) -> builder::InstanceCreate;
-    #[doc = "Fetch an instance\n\nSends a `GET` request to `/v1/instances/{instance}`\n\n```ignore\nlet response = client.instance_view()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an instance\n\nSends a `GET` request to `/v1/instances/{instance}`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_view()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_view(&self) -> builder::InstanceView;
-    #[doc = "Delete an instance\n\nSends a `DELETE` request to `/v1/instances/{instance}`\n\n```ignore\nlet response = client.instance_delete()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete an instance\n\nSends a `DELETE` request to `/v1/instances/{instance}`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_delete()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_delete(&self) -> builder::InstanceDelete;
-    #[doc = "List an instance's disks\n\nSends a `GET` request to `/v1/instances/{instance}/disks`\n\nArguments:\n- `instance`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.instance_disk_list()\n    .instance(instance)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List an instance's disks\n\nSends a `GET` request to `/v1/instances/{instance}/disks`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.instance_disk_list()\n    .instance(instance)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn instance_disk_list(&self) -> builder::InstanceDiskList;
-    #[doc = "Attach a disk to an instance\n\nSends a `POST` request to `/v1/instances/{instance}/disks/attach`\n\n```ignore\nlet response = client.instance_disk_attach()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Attach a disk to an instance\n\nSends a `POST` request to `/v1/instances/{instance}/disks/attach`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.instance_disk_attach()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_disk_attach(&self) -> builder::InstanceDiskAttach;
-    #[doc = "Detach a disk from an instance\n\nSends a `POST` request to `/v1/instances/{instance}/disks/detach`\n\n```ignore\nlet response = client.instance_disk_detach()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Detach a disk from an instance\n\nSends a `POST` request to `/v1/instances/{instance}/disks/detach`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.instance_disk_detach()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_disk_detach(&self) -> builder::InstanceDiskDetach;
-    #[doc = "List external IP addresses\n\nSends a `GET` request to `/v1/instances/{instance}/external-ips`\n\n```ignore\nlet response = client.instance_external_ip_list()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "List external IP addresses\n\nSends a `GET` request to `/v1/instances/{instance}/external-ips`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_external_ip_list()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_external_ip_list(&self) -> builder::InstanceExternalIpList;
-    #[doc = "Migrate an instance\n\nSends a `POST` request to `/v1/instances/{instance}/migrate`\n\n```ignore\nlet response = client.instance_migrate()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Migrate an instance\n\nSends a `POST` request to `/v1/instances/{instance}/migrate`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.instance_migrate()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_migrate(&self) -> builder::InstanceMigrate;
-    #[doc = "Reboot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/reboot`\n\n```ignore\nlet response = client.instance_reboot()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Reboot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/reboot`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_reboot()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_reboot(&self) -> builder::InstanceReboot;
-    #[doc = "Fetch an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console`\n\nArguments:\n- `instance`\n- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.\n- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`.\n- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)\n- `project`\n```ignore\nlet response = client.instance_serial_console()\n    .instance(instance)\n    .from_start(from_start)\n    .max_bytes(max_bytes)\n    .most_recent(most_recent)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.\n- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`. This parameter is only useful for the non-streaming GET request for serial console data, and *ignored* by the streaming websocket endpoint.\n- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_serial_console()\n    .instance(instance)\n    .from_start(from_start)\n    .max_bytes(max_bytes)\n    .most_recent(most_recent)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_serial_console(&self) -> builder::InstanceSerialConsole;
-    #[doc = "Stream an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console/stream`\n\n```ignore\nlet response = client.instance_serial_console_stream()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Stream an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console/stream`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.\n- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`. This parameter is only useful for the non-streaming GET request for serial console data, and *ignored* by the streaming websocket endpoint.\n- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_serial_console_stream()\n    .instance(instance)\n    .from_start(from_start)\n    .max_bytes(max_bytes)\n    .most_recent(most_recent)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream;
-    #[doc = "Boot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/start`\n\n```ignore\nlet response = client.instance_start()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Boot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/start`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_start()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_start(&self) -> builder::InstanceStart;
-    #[doc = "Stop an instance\n\nSends a `POST` request to `/v1/instances/{instance}/stop`\n\n```ignore\nlet response = client.instance_stop()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Stop an instance\n\nSends a `POST` request to `/v1/instances/{instance}/stop`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_stop()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_stop(&self) -> builder::InstanceStop;
-    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/network-interfaces`\n\nArguments:\n- `instance`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.instance_network_interface_list()\n    .instance(instance)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/network-interfaces`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.instance_network_interface_list()\n    .instance(instance)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList;
-    #[doc = "Create a network interface\n\nSends a `POST` request to `/v1/network-interfaces`\n\n```ignore\nlet response = client.instance_network_interface_create()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a network interface\n\nSends a `POST` request to `/v1/network-interfaces`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.instance_network_interface_create()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate;
-    #[doc = "Fetch a network interface\n\nSends a `GET` request to `/v1/network-interfaces/{interface}`\n\n```ignore\nlet response = client.instance_network_interface_view()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a network interface\n\nSends a `GET` request to `/v1/network-interfaces/{interface}`\n\nArguments:\n- `interface`: Name or ID of the network interface\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_network_interface_view()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView;
-    #[doc = "Update a network interface\n\nSends a `PUT` request to `/v1/network-interfaces/{interface}`\n\n```ignore\nlet response = client.instance_network_interface_update()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a network interface\n\nSends a `PUT` request to `/v1/network-interfaces/{interface}`\n\nArguments:\n- `interface`: Name or ID of the network interface\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.instance_network_interface_update()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate;
-    #[doc = "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.\n\nSends a `DELETE` request to `/v1/network-interfaces/{interface}`\n\n```ignore\nlet response = client.instance_network_interface_delete()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.\n\nSends a `DELETE` request to `/v1/network-interfaces/{interface}`\n\nArguments:\n- `interface`: Name or ID of the network interface\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_network_interface_delete()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_network_interface_delete(&self) -> builder::InstanceNetworkInterfaceDelete;
 }
 
@@ -16239,15 +16562,15 @@ pub trait ClientProjectsExt {
     fn project_list(&self) -> builder::ProjectList;
     #[doc = "Create a project\n\nSends a `POST` request to `/v1/projects`\n\n```ignore\nlet response = client.project_create()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn project_create(&self) -> builder::ProjectCreate;
-    #[doc = "Fetch a project\n\nSends a `GET` request to `/v1/projects/{project}`\n\n```ignore\nlet response = client.project_view()\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a project\n\nSends a `GET` request to `/v1/projects/{project}`\n\nArguments:\n- `project`: Name or ID of the project\n```ignore\nlet response = client.project_view()\n    .project(project)\n    .send()\n    .await;\n```"]
     fn project_view(&self) -> builder::ProjectView;
-    #[doc = "Update a project\n\nSends a `PUT` request to `/v1/projects/{project}`\n\n```ignore\nlet response = client.project_update()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a project\n\nSends a `PUT` request to `/v1/projects/{project}`\n\nArguments:\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.project_update()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn project_update(&self) -> builder::ProjectUpdate;
-    #[doc = "Delete a project\n\nSends a `DELETE` request to `/v1/projects/{project}`\n\n```ignore\nlet response = client.project_delete()\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a project\n\nSends a `DELETE` request to `/v1/projects/{project}`\n\nArguments:\n- `project`: Name or ID of the project\n```ignore\nlet response = client.project_delete()\n    .project(project)\n    .send()\n    .await;\n```"]
     fn project_delete(&self) -> builder::ProjectDelete;
-    #[doc = "Fetch a project's IAM policy\n\nSends a `GET` request to `/v1/projects/{project}/policy`\n\n```ignore\nlet response = client.project_policy_view()\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a project's IAM policy\n\nSends a `GET` request to `/v1/projects/{project}/policy`\n\nArguments:\n- `project`: Name or ID of the project\n```ignore\nlet response = client.project_policy_view()\n    .project(project)\n    .send()\n    .await;\n```"]
     fn project_policy_view(&self) -> builder::ProjectPolicyView;
-    #[doc = "Update a project's IAM policy\n\nSends a `PUT` request to `/v1/projects/{project}/policy`\n\n```ignore\nlet response = client.project_policy_update()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a project's IAM policy\n\nSends a `PUT` request to `/v1/projects/{project}/policy`\n\nArguments:\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.project_policy_update()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn project_policy_update(&self) -> builder::ProjectPolicyUpdate;
 }
 
@@ -16307,9 +16630,9 @@ pub trait ClientSessionExt {
     fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList;
     #[doc = "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.\n\nSends a `POST` request to `/v1/me/ssh-keys`\n\n```ignore\nlet response = client.current_user_ssh_key_create()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate;
-    #[doc = "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.\n\nSends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`\n\n```ignore\nlet response = client.current_user_ssh_key_view()\n    .ssh_key(ssh_key)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.\n\nSends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`\n\nArguments:\n- `ssh_key`: Name or ID of the SSH key\n```ignore\nlet response = client.current_user_ssh_key_view()\n    .ssh_key(ssh_key)\n    .send()\n    .await;\n```"]
     fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView;
-    #[doc = "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.\n\nSends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`\n\n```ignore\nlet response = client.current_user_ssh_key_delete()\n    .ssh_key(ssh_key)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.\n\nSends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`\n\nArguments:\n- `ssh_key`: Name or ID of the SSH key\n```ignore\nlet response = client.current_user_ssh_key_delete()\n    .ssh_key(ssh_key)\n    .send()\n    .await;\n```"]
     fn current_user_ssh_key_delete(&self) -> builder::CurrentUserSshKeyDelete;
 }
 
@@ -16342,7 +16665,7 @@ impl ClientSessionExt for Client {
 pub trait ClientSilosExt {
     #[doc = "List groups\n\nSends a `GET` request to `/v1/groups`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.group_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn group_list(&self) -> builder::GroupList;
-    #[doc = "Fetch group\n\nSends a `GET` request to `/v1/groups/{group}`\n\n```ignore\nlet response = client.group_view()\n    .group(group)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch group\n\nSends a `GET` request to `/v1/groups/{group}`\n\nArguments:\n- `group`: ID of the group\n```ignore\nlet response = client.group_view()\n    .group(group)\n    .send()\n    .await;\n```"]
     fn group_view(&self) -> builder::GroupView;
     #[doc = "Fetch the current silo's IAM policy\n\nSends a `GET` request to `/v1/policy`\n\n```ignore\nlet response = client.policy_view()\n    .send()\n    .await;\n```"]
     fn policy_view(&self) -> builder::PolicyView;
@@ -16375,13 +16698,13 @@ impl ClientSilosExt for Client {
 }
 
 pub trait ClientSnapshotsExt {
-    #[doc = "List snapshots\n\nSends a `GET` request to `/v1/snapshots`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.snapshot_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List snapshots\n\nSends a `GET` request to `/v1/snapshots`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.snapshot_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn snapshot_list(&self) -> builder::SnapshotList;
-    #[doc = "Create a snapshot\n\nCreates a point-in-time snapshot from a disk.\n\nSends a `POST` request to `/v1/snapshots`\n\n```ignore\nlet response = client.snapshot_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a snapshot\n\nCreates a point-in-time snapshot from a disk.\n\nSends a `POST` request to `/v1/snapshots`\n\nArguments:\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.snapshot_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn snapshot_create(&self) -> builder::SnapshotCreate;
-    #[doc = "Fetch a snapshot\n\nSends a `GET` request to `/v1/snapshots/{snapshot}`\n\n```ignore\nlet response = client.snapshot_view()\n    .snapshot(snapshot)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a snapshot\n\nSends a `GET` request to `/v1/snapshots/{snapshot}`\n\nArguments:\n- `snapshot`: Name or ID of the snapshot\n- `project`: Name or ID of the project\n```ignore\nlet response = client.snapshot_view()\n    .snapshot(snapshot)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn snapshot_view(&self) -> builder::SnapshotView;
-    #[doc = "Delete a snapshot\n\nSends a `DELETE` request to `/v1/snapshots/{snapshot}`\n\n```ignore\nlet response = client.snapshot_delete()\n    .snapshot(snapshot)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a snapshot\n\nSends a `DELETE` request to `/v1/snapshots/{snapshot}`\n\nArguments:\n- `snapshot`: Name or ID of the snapshot\n- `project`: Name or ID of the project\n```ignore\nlet response = client.snapshot_delete()\n    .snapshot(snapshot)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn snapshot_delete(&self) -> builder::SnapshotDelete;
 }
 
@@ -16434,33 +16757,33 @@ pub trait ClientSystemExt {
     fn sled_view(&self) -> builder::SledView;
     #[doc = "List physical disks attached to sleds\n\nSends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/disks`\n\nArguments:\n- `sled_id`: The sled's unique ID.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.sled_physical_disk_list()\n    .sled_id(sled_id)\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList;
-    #[doc = "List a silo's IDPs_name\n\nSends a `GET` request to `/v1/system/identity-providers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `silo`\n- `sort_by`\n```ignore\nlet response = client.silo_identity_provider_list()\n    .limit(limit)\n    .page_token(page_token)\n    .silo(silo)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List a silo's IDPs_name\n\nSends a `GET` request to `/v1/system/identity-providers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `silo`: Name or ID of the silo\n- `sort_by`\n```ignore\nlet response = client.silo_identity_provider_list()\n    .limit(limit)\n    .page_token(page_token)\n    .silo(silo)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
-    #[doc = "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.\n\nSends a `POST` request to `/v1/system/identity-providers/local/users`\n\n```ignore\nlet response = client.local_idp_user_create()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.\n\nSends a `POST` request to `/v1/system/identity-providers/local/users`\n\nArguments:\n- `silo`: Name or ID of the silo\n- `body`\n```ignore\nlet response = client.local_idp_user_create()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
-    #[doc = "Delete a user\n\nSends a `DELETE` request to `/v1/system/identity-providers/local/users/{user_id}`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n```ignore\nlet response = client.local_idp_user_delete()\n    .user_id(user_id)\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a user\n\nSends a `DELETE` request to `/v1/system/identity-providers/local/users/{user_id}`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`: Name or ID of the silo\n```ignore\nlet response = client.local_idp_user_delete()\n    .user_id(user_id)\n    .silo(silo)\n    .send()\n    .await;\n```"]
     fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
-    #[doc = "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.\n\nSends a `POST` request to `/v1/system/identity-providers/local/users/{user_id}/set-password`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n- `body`\n```ignore\nlet response = client.local_idp_user_set_password()\n    .user_id(user_id)\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.\n\nSends a `POST` request to `/v1/system/identity-providers/local/users/{user_id}/set-password`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`: Name or ID of the silo\n- `body`\n```ignore\nlet response = client.local_idp_user_set_password()\n    .user_id(user_id)\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
-    #[doc = "Create a SAML IDP\n\nSends a `POST` request to `/v1/system/identity-providers/saml`\n\n```ignore\nlet response = client.saml_identity_provider_create()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a SAML IDP\n\nSends a `POST` request to `/v1/system/identity-providers/saml`\n\nArguments:\n- `silo`: Name or ID of the silo\n- `body`\n```ignore\nlet response = client.saml_identity_provider_create()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
-    #[doc = "Fetch a SAML IDP\n\nSends a `GET` request to `/v1/system/identity-providers/saml/{provider}`\n\n```ignore\nlet response = client.saml_identity_provider_view()\n    .provider(provider)\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a SAML IDP\n\nSends a `GET` request to `/v1/system/identity-providers/saml/{provider}`\n\nArguments:\n- `provider`: Name or ID of the SAML identity provider\n- `silo`: Name or ID of the silo\n```ignore\nlet response = client.saml_identity_provider_view()\n    .provider(provider)\n    .silo(silo)\n    .send()\n    .await;\n```"]
     fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView;
     #[doc = "List IP pools\n\nSends a `GET` request to `/v1/system/ip-pools`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.ip_pool_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn ip_pool_list(&self) -> builder::IpPoolList;
     #[doc = "Create an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools`\n\n```ignore\nlet response = client.ip_pool_create()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn ip_pool_create(&self) -> builder::IpPoolCreate;
-    #[doc = "Fetch an IP pool\n\nSends a `GET` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_view()\n    .pool(pool)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an IP pool\n\nSends a `GET` request to `/v1/system/ip-pools/{pool}`\n\nArguments:\n- `pool`: Name or ID of the IP pool\n```ignore\nlet response = client.ip_pool_view()\n    .pool(pool)\n    .send()\n    .await;\n```"]
     fn ip_pool_view(&self) -> builder::IpPoolView;
-    #[doc = "Update an IP Pool\n\nSends a `PUT` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_update()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update an IP Pool\n\nSends a `PUT` request to `/v1/system/ip-pools/{pool}`\n\nArguments:\n- `pool`: Name or ID of the IP pool\n- `body`\n```ignore\nlet response = client.ip_pool_update()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn ip_pool_update(&self) -> builder::IpPoolUpdate;
-    #[doc = "Delete an IP Pool\n\nSends a `DELETE` request to `/v1/system/ip-pools/{pool}`\n\n```ignore\nlet response = client.ip_pool_delete()\n    .pool(pool)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete an IP Pool\n\nSends a `DELETE` request to `/v1/system/ip-pools/{pool}`\n\nArguments:\n- `pool`: Name or ID of the IP pool\n```ignore\nlet response = client.ip_pool_delete()\n    .pool(pool)\n    .send()\n    .await;\n```"]
     fn ip_pool_delete(&self) -> builder::IpPoolDelete;
-    #[doc = "List ranges for an IP pool\n\nRanges are ordered by their first address.\n\nSends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`\n\nArguments:\n- `pool`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_range_list()\n    .pool(pool)\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
+    #[doc = "List ranges for an IP pool\n\nRanges are ordered by their first address.\n\nSends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`\n\nArguments:\n- `pool`: Name or ID of the IP pool\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n```ignore\nlet response = client.ip_pool_range_list()\n    .pool(pool)\n    .limit(limit)\n    .page_token(page_token)\n    .send()\n    .await;\n```"]
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
-    #[doc = "Add a range to an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`\n\n```ignore\nlet response = client.ip_pool_range_add()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Add a range to an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`\n\nArguments:\n- `pool`: Name or ID of the IP pool\n- `body`\n```ignore\nlet response = client.ip_pool_range_add()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd;
-    #[doc = "Remove a range from an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`\n\n```ignore\nlet response = client.ip_pool_range_remove()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Remove a range from an IP pool\n\nSends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`\n\nArguments:\n- `pool`: Name or ID of the IP pool\n- `body`\n```ignore\nlet response = client.ip_pool_range_remove()\n    .pool(pool)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove;
     #[doc = "Fetch the IP pool used for Oxide services\n\nSends a `GET` request to `/v1/system/ip-pools-service`\n\n```ignore\nlet response = client.ip_pool_service_view()\n    .send()\n    .await;\n```"]
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
@@ -16480,13 +16803,13 @@ pub trait ClientSystemExt {
     fn silo_list(&self) -> builder::SiloList;
     #[doc = "Create a silo\n\nSends a `POST` request to `/v1/system/silos`\n\n```ignore\nlet response = client.silo_create()\n    .body(body)\n    .send()\n    .await;\n```"]
     fn silo_create(&self) -> builder::SiloCreate;
-    #[doc = "Fetch a silo\n\nFetch a silo by name.\n\nSends a `GET` request to `/v1/system/silos/{silo}`\n\n```ignore\nlet response = client.silo_view()\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a silo\n\nFetch a silo by name.\n\nSends a `GET` request to `/v1/system/silos/{silo}`\n\nArguments:\n- `silo`: Name or ID of the silo\n```ignore\nlet response = client.silo_view()\n    .silo(silo)\n    .send()\n    .await;\n```"]
     fn silo_view(&self) -> builder::SiloView;
-    #[doc = "Delete a silo\n\nDelete a silo by name.\n\nSends a `DELETE` request to `/v1/system/silos/{silo}`\n\n```ignore\nlet response = client.silo_delete()\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a silo\n\nDelete a silo by name.\n\nSends a `DELETE` request to `/v1/system/silos/{silo}`\n\nArguments:\n- `silo`: Name or ID of the silo\n```ignore\nlet response = client.silo_delete()\n    .silo(silo)\n    .send()\n    .await;\n```"]
     fn silo_delete(&self) -> builder::SiloDelete;
-    #[doc = "Fetch a silo's IAM policy\n\nSends a `GET` request to `/v1/system/silos/{silo}/policy`\n\n```ignore\nlet response = client.silo_policy_view()\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a silo's IAM policy\n\nSends a `GET` request to `/v1/system/silos/{silo}/policy`\n\nArguments:\n- `silo`: Name or ID of the silo\n```ignore\nlet response = client.silo_policy_view()\n    .silo(silo)\n    .send()\n    .await;\n```"]
     fn silo_policy_view(&self) -> builder::SiloPolicyView;
-    #[doc = "Update a silo's IAM policy\n\nSends a `PUT` request to `/v1/system/silos/{silo}/policy`\n\n```ignore\nlet response = client.silo_policy_update()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a silo's IAM policy\n\nSends a `PUT` request to `/v1/system/silos/{silo}/policy`\n\nArguments:\n- `silo`: Name or ID of the silo\n- `body`\n```ignore\nlet response = client.silo_policy_update()\n    .silo(silo)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate;
     #[doc = "View version and update status of component tree\n\nSends a `GET` request to `/v1/system/update/components`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.system_component_version_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn system_component_version_list(&self) -> builder::SystemComponentVersionList;
@@ -16508,9 +16831,9 @@ pub trait ClientSystemExt {
     fn system_update_components_list(&self) -> builder::SystemUpdateComponentsList;
     #[doc = "View system version and update status\n\nSends a `GET` request to `/v1/system/update/version`\n\n```ignore\nlet response = client.system_version()\n    .send()\n    .await;\n```"]
     fn system_version(&self) -> builder::SystemVersion;
-    #[doc = "List users in a silo\n\nSends a `GET` request to `/v1/system/users`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `silo`\n- `sort_by`\n```ignore\nlet response = client.silo_user_list()\n    .limit(limit)\n    .page_token(page_token)\n    .silo(silo)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List users in a silo\n\nSends a `GET` request to `/v1/system/users`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `silo`: Name or ID of the silo\n- `sort_by`\n```ignore\nlet response = client.silo_user_list()\n    .limit(limit)\n    .page_token(page_token)\n    .silo(silo)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn silo_user_list(&self) -> builder::SiloUserList;
-    #[doc = "Fetch a user\n\nSends a `GET` request to `/v1/system/users/{user_id}`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`\n```ignore\nlet response = client.silo_user_view()\n    .user_id(user_id)\n    .silo(silo)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a user\n\nSends a `GET` request to `/v1/system/users/{user_id}`\n\nArguments:\n- `user_id`: The user's internal id\n- `silo`: Name or ID of the silo\n```ignore\nlet response = client.silo_user_view()\n    .user_id(user_id)\n    .silo(silo)\n    .send()\n    .await;\n```"]
     fn silo_user_view(&self) -> builder::SiloUserView;
     #[doc = "List built-in users\n\nSends a `GET` request to `/v1/system/users-builtin`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `sort_by`\n```ignore\nlet response = client.user_builtin_list()\n    .limit(limit)\n    .page_token(page_token)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn user_builtin_list(&self) -> builder::UserBuiltinList;
@@ -16745,51 +17068,51 @@ impl ClientSystemExt for Client {
 }
 
 pub trait ClientVpcsExt {
-    #[doc = "List firewall rules\n\nSends a `GET` request to `/v1/vpc-firewall-rules`\n\n```ignore\nlet response = client.vpc_firewall_rules_view()\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "List firewall rules\n\nSends a `GET` request to `/v1/vpc-firewall-rules`\n\nArguments:\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_firewall_rules_view()\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_firewall_rules_view(&self) -> builder::VpcFirewallRulesView;
-    #[doc = "Replace firewall rules\n\nSends a `PUT` request to `/v1/vpc-firewall-rules`\n\n```ignore\nlet response = client.vpc_firewall_rules_update()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Replace firewall rules\n\nSends a `PUT` request to `/v1/vpc-firewall-rules`\n\nArguments:\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_firewall_rules_update()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_firewall_rules_update(&self) -> builder::VpcFirewallRulesUpdate;
-    #[doc = "List routes\n\nList the routes associated with a router in a particular VPC.\n\nSends a `GET` request to `/v1/vpc-router-routes`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `router`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_router_route_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .router(router)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "List routes\n\nList the routes associated with a router in a particular VPC.\n\nSends a `GET` request to `/v1/vpc-router-routes`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `router`: Name or ID of the router\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_route_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .router(router)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_list(&self) -> builder::VpcRouterRouteList;
-    #[doc = "Create a router\n\nSends a `POST` request to `/v1/vpc-router-routes`\n\n```ignore\nlet response = client.vpc_router_route_create()\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a router\n\nSends a `POST` request to `/v1/vpc-router-routes`\n\nArguments:\n- `project`: Name or ID of the project\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_router_route_create()\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_create(&self) -> builder::VpcRouterRouteCreate;
-    #[doc = "Fetch a route\n\nSends a `GET` request to `/v1/vpc-router-routes/{route}`\n\n```ignore\nlet response = client.vpc_router_route_view()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a route\n\nSends a `GET` request to `/v1/vpc-router-routes/{route}`\n\nArguments:\n- `route`: Name or ID of the route\n- `project`: Name or ID of the project\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_route_view()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_view(&self) -> builder::VpcRouterRouteView;
-    #[doc = "Update a route\n\nSends a `PUT` request to `/v1/vpc-router-routes/{route}`\n\n```ignore\nlet response = client.vpc_router_route_update()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a route\n\nSends a `PUT` request to `/v1/vpc-router-routes/{route}`\n\nArguments:\n- `route`: Name or ID of the route\n- `project`: Name or ID of the project\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_router_route_update()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_update(&self) -> builder::VpcRouterRouteUpdate;
-    #[doc = "Delete a route\n\nSends a `DELETE` request to `/v1/vpc-router-routes/{route}`\n\n```ignore\nlet response = client.vpc_router_route_delete()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a route\n\nSends a `DELETE` request to `/v1/vpc-router-routes/{route}`\n\nArguments:\n- `route`: Name or ID of the route\n- `project`: Name or ID of the project\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_route_delete()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_delete(&self) -> builder::VpcRouterRouteDelete;
-    #[doc = "List routers\n\nSends a `GET` request to `/v1/vpc-routers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_router_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "List routers\n\nSends a `GET` request to `/v1/vpc-routers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_list(&self) -> builder::VpcRouterList;
-    #[doc = "Create a VPC router\n\nSends a `POST` request to `/v1/vpc-routers`\n\n```ignore\nlet response = client.vpc_router_create()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a VPC router\n\nSends a `POST` request to `/v1/vpc-routers`\n\nArguments:\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_router_create()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_router_create(&self) -> builder::VpcRouterCreate;
-    #[doc = "Get a router\n\nSends a `GET` request to `/v1/vpc-routers/{router}`\n\n```ignore\nlet response = client.vpc_router_view()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Get a router\n\nSends a `GET` request to `/v1/vpc-routers/{router}`\n\nArguments:\n- `router`: Name or ID of the router\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_view()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_view(&self) -> builder::VpcRouterView;
-    #[doc = "Update a router\n\nSends a `PUT` request to `/v1/vpc-routers/{router}`\n\n```ignore\nlet response = client.vpc_router_update()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a router\n\nSends a `PUT` request to `/v1/vpc-routers/{router}`\n\nArguments:\n- `router`: Name or ID of the router\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_router_update()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_router_update(&self) -> builder::VpcRouterUpdate;
-    #[doc = "Delete a router\n\nSends a `DELETE` request to `/v1/vpc-routers/{router}`\n\n```ignore\nlet response = client.vpc_router_delete()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a router\n\nSends a `DELETE` request to `/v1/vpc-routers/{router}`\n\nArguments:\n- `router`: Name or ID of the router\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_delete()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_delete(&self) -> builder::VpcRouterDelete;
-    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_subnet_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_list(&self) -> builder::VpcSubnetList;
-    #[doc = "Create a subnet\n\nSends a `POST` request to `/v1/vpc-subnets`\n\n```ignore\nlet response = client.vpc_subnet_create()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a subnet\n\nSends a `POST` request to `/v1/vpc-subnets`\n\nArguments:\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_subnet_create()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_create(&self) -> builder::VpcSubnetCreate;
-    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}`\n\n```ignore\nlet response = client.vpc_subnet_view()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_view()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_view(&self) -> builder::VpcSubnetView;
-    #[doc = "Update a subnet\n\nSends a `PUT` request to `/v1/vpc-subnets/{subnet}`\n\n```ignore\nlet response = client.vpc_subnet_update()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a subnet\n\nSends a `PUT` request to `/v1/vpc-subnets/{subnet}`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_subnet_update()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_update(&self) -> builder::VpcSubnetUpdate;
-    #[doc = "Delete a subnet\n\nSends a `DELETE` request to `/v1/vpc-subnets/{subnet}`\n\n```ignore\nlet response = client.vpc_subnet_delete()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a subnet\n\nSends a `DELETE` request to `/v1/vpc-subnets/{subnet}`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_delete()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_delete(&self) -> builder::VpcSubnetDelete;
-    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`\n\nArguments:\n- `subnet`\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n- `vpc`\n```ignore\nlet response = client.vpc_subnet_list_network_interfaces()\n    .subnet(subnet)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_list_network_interfaces()\n    .subnet(subnet)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_list_network_interfaces(&self) -> builder::VpcSubnetListNetworkInterfaces;
-    #[doc = "List VPCs\n\nSends a `GET` request to `/v1/vpcs`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`\n- `sort_by`\n```ignore\nlet response = client.vpc_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List VPCs\n\nSends a `GET` request to `/v1/vpcs`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.vpc_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn vpc_list(&self) -> builder::VpcList;
-    #[doc = "Create a VPC\n\nSends a `POST` request to `/v1/vpcs`\n\n```ignore\nlet response = client.vpc_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a VPC\n\nSends a `POST` request to `/v1/vpcs`\n\nArguments:\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.vpc_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_create(&self) -> builder::VpcCreate;
-    #[doc = "Fetch a VPC\n\nSends a `GET` request to `/v1/vpcs/{vpc}`\n\n```ignore\nlet response = client.vpc_view()\n    .vpc(vpc)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a VPC\n\nSends a `GET` request to `/v1/vpcs/{vpc}`\n\nArguments:\n- `vpc`: Name or ID of the VPC\n- `project`: Name or ID of the project\n```ignore\nlet response = client.vpc_view()\n    .vpc(vpc)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn vpc_view(&self) -> builder::VpcView;
-    #[doc = "Update a VPC\n\nSends a `PUT` request to `/v1/vpcs/{vpc}`\n\n```ignore\nlet response = client.vpc_update()\n    .vpc(vpc)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a VPC\n\nSends a `PUT` request to `/v1/vpcs/{vpc}`\n\nArguments:\n- `vpc`: Name or ID of the VPC\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.vpc_update()\n    .vpc(vpc)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_update(&self) -> builder::VpcUpdate;
-    #[doc = "Delete a VPC\n\nSends a `DELETE` request to `/v1/vpcs/{vpc}`\n\n```ignore\nlet response = client.vpc_delete()\n    .vpc(vpc)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a VPC\n\nSends a `DELETE` request to `/v1/vpcs/{vpc}`\n\nArguments:\n- `vpc`: Name or ID of the VPC\n- `project`: Name or ID of the project\n```ignore\nlet response = client.vpc_delete()\n    .vpc(vpc)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn vpc_delete(&self) -> builder::VpcDelete;
 }
 
@@ -18091,6 +18414,438 @@ pub mod builder {
                 query.push(("project", v.to_string()));
             }
             let request = client.client.delete(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientDisksExt::disk_bulk_write_import`]\n\n[`ClientDisksExt::disk_bulk_write_import`]: super::ClientDisksExt::disk_bulk_write_import"]
+    #[derive(Debug, Clone)]
+    pub struct DiskBulkWriteImport<'a> {
+        client: &'a super::Client,
+        disk: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::ImportBlocksBulkWrite, String>,
+    }
+
+    impl<'a> DiskBulkWriteImport<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                disk: Err("disk was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(types::builder::ImportBlocksBulkWrite::default()),
+            }
+        }
+
+        pub fn disk<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.disk = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for disk failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ImportBlocksBulkWrite>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `ImportBlocksBulkWrite` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::ImportBlocksBulkWrite,
+            ) -> types::builder::ImportBlocksBulkWrite,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/disks/{disk}/bulk-write`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                disk,
+                project,
+                body,
+            } = self;
+            let disk = disk.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(std::convert::TryInto::<types::ImportBlocksBulkWrite>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/disks/{}/bulk-write",
+                client.baseurl,
+                encode_path(&disk.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client.client.post(url).json(&body).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientDisksExt::disk_bulk_write_import_start`]\n\n[`ClientDisksExt::disk_bulk_write_import_start`]: super::ClientDisksExt::disk_bulk_write_import_start"]
+    #[derive(Debug, Clone)]
+    pub struct DiskBulkWriteImportStart<'a> {
+        client: &'a super::Client,
+        disk: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> DiskBulkWriteImportStart<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                disk: Err("disk was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn disk<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.disk = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for disk failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/disks/{disk}/bulk-write-start`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                disk,
+                project,
+            } = self;
+            let disk = disk.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/disks/{}/bulk-write-start",
+                client.baseurl,
+                encode_path(&disk.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client.client.post(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientDisksExt::disk_bulk_write_import_stop`]\n\n[`ClientDisksExt::disk_bulk_write_import_stop`]: super::ClientDisksExt::disk_bulk_write_import_stop"]
+    #[derive(Debug, Clone)]
+    pub struct DiskBulkWriteImportStop<'a> {
+        client: &'a super::Client,
+        disk: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> DiskBulkWriteImportStop<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                disk: Err("disk was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn disk<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.disk = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for disk failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                disk,
+                project,
+            } = self;
+            let disk = disk.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/disks/{}/bulk-write-stop",
+                client.baseurl,
+                encode_path(&disk.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client.client.post(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientDisksExt::disk_finalize_import`]\n\n[`ClientDisksExt::disk_finalize_import`]: super::ClientDisksExt::disk_finalize_import"]
+    #[derive(Debug, Clone)]
+    pub struct DiskFinalizeImport<'a> {
+        client: &'a super::Client,
+        disk: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        snapshot_name: Result<Option<String>, String>,
+    }
+
+    impl<'a> DiskFinalizeImport<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                disk: Err("disk was not initialized".to_string()),
+                project: Ok(None),
+                snapshot_name: Ok(None),
+            }
+        }
+
+        pub fn disk<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.disk = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for disk failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn snapshot_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.snapshot_name = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for snapshot_name failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/disks/{disk}/finalize`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                disk,
+                project,
+                snapshot_name,
+            } = self;
+            let disk = disk.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let snapshot_name = snapshot_name.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/disks/{}/finalize",
+                client.baseurl,
+                encode_path(&disk.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &snapshot_name {
+                query.push(("snapshot_name", v.to_string()));
+            }
+            let request = client.client.post(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientDisksExt::disk_import_blocks_from_url`]\n\n[`ClientDisksExt::disk_import_blocks_from_url`]: super::ClientDisksExt::disk_import_blocks_from_url"]
+    #[derive(Debug, Clone)]
+    pub struct DiskImportBlocksFromUrl<'a> {
+        client: &'a super::Client,
+        disk: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::ImportBlocksFromUrl, String>,
+    }
+
+    impl<'a> DiskImportBlocksFromUrl<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                disk: Err("disk was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(types::builder::ImportBlocksFromUrl::default()),
+            }
+        }
+
+        pub fn disk<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.disk = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for disk failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ImportBlocksFromUrl>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `ImportBlocksFromUrl` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::ImportBlocksFromUrl,
+            ) -> types::builder::ImportBlocksFromUrl,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/disks/{disk}/import`"]
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                disk,
+                project,
+                body,
+            } = self;
+            let disk = disk.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(std::convert::TryInto::<types::ImportBlocksFromUrl>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/disks/{}/import",
+                client.baseurl,
+                encode_path(&disk.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client.client.post(url).json(&body).query(&query).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -19996,6 +20751,9 @@ pub mod builder {
     pub struct InstanceSerialConsoleStream<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
+        from_start: Result<Option<u64>, String>,
+        max_bytes: Result<Option<u64>, String>,
+        most_recent: Result<Option<u64>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
 
@@ -20004,6 +20762,9 @@ pub mod builder {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
+                from_start: Ok(None),
+                max_bytes: Ok(None),
+                most_recent: Ok(None),
                 project: Ok(None),
             }
         }
@@ -20015,6 +20776,39 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn from_start<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<u64>,
+        {
+            self.from_start = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `u64` for from_start failed".to_string());
+            self
+        }
+
+        pub fn max_bytes<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<u64>,
+        {
+            self.max_bytes = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `u64` for max_bytes failed".to_string());
+            self
+        }
+
+        pub fn most_recent<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<u64>,
+        {
+            self.most_recent = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `u64` for most_recent failed".to_string());
             self
         }
 
@@ -20036,16 +20830,31 @@ pub mod builder {
             let Self {
                 client,
                 instance,
+                from_start,
+                max_bytes,
+                most_recent,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
+            let from_start = from_start.map_err(Error::InvalidRequest)?;
+            let max_bytes = max_bytes.map_err(Error::InvalidRequest)?;
+            let most_recent = most_recent.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/serial-console/stream",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &from_start {
+                query.push(("from_start", v.to_string()));
+            }
+            if let Some(v) = &max_bytes {
+                query.push(("max_bytes", v.to_string()));
+            }
+            if let Some(v) = &most_recent {
+                query.push(("most_recent", v.to_string()));
+            }
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
@@ -20230,7 +21039,7 @@ pub mod builder {
         }
 
         #[doc = "Sends a `GET` request to `/v1/me`"]
-        pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
+        pub async fn send(self) -> Result<ResponseValue<types::CurrentUser>, Error<types::Error>> {
             let Self { client } = self;
             let url = format!("{}/v1/me", client.baseurl,);
             let request = client.client.get(url).build()?;

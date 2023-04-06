@@ -31,6 +31,11 @@ impl Cli {
             CliCommand::DiskCreate => Self::cli_disk_create(),
             CliCommand::DiskView => Self::cli_disk_view(),
             CliCommand::DiskDelete => Self::cli_disk_delete(),
+            CliCommand::DiskBulkWriteImport => Self::cli_disk_bulk_write_import(),
+            CliCommand::DiskBulkWriteImportStart => Self::cli_disk_bulk_write_import_start(),
+            CliCommand::DiskBulkWriteImportStop => Self::cli_disk_bulk_write_import_stop(),
+            CliCommand::DiskFinalizeImport => Self::cli_disk_finalize_import(),
+            CliCommand::DiskImportBlocksFromUrl => Self::cli_disk_import_blocks_from_url(),
             CliCommand::DiskMetricsList => Self::cli_disk_metrics_list(),
             CliCommand::GroupList => Self::cli_group_list(),
             CliCommand::GroupView => Self::cli_group_view(),
@@ -391,7 +396,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -408,7 +414,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -438,13 +445,15 @@ impl Cli {
                 clap::Arg::new("disk")
                     .long("disk")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Fetch a disk")
     }
@@ -455,15 +464,138 @@ impl Cli {
                 clap::Arg::new("disk")
                     .long("disk")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Delete a disk")
+    }
+
+    pub fn cli_disk_bulk_write_import() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("disk")
+                    .long("disk")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the disk"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("base64-encoded-data")
+                    .long("base64-encoded-data")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String)),
+            )
+            .arg(
+                clap::Arg::new("offset")
+                    .long("offset")
+                    .required(true)
+                    .value_parser(clap::value_parser!(u64)),
+            )
+            .about("Import blocks into a disk")
+    }
+
+    pub fn cli_disk_bulk_write_import_start() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("disk")
+                    .long("disk")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the disk"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
+            )
+            .about("Start the process of importing blocks into a disk")
+    }
+
+    pub fn cli_disk_bulk_write_import_stop() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("disk")
+                    .long("disk")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the disk"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
+            )
+            .about("Stop the process of importing blocks into a disk")
+    }
+
+    pub fn cli_disk_finalize_import() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("disk")
+                    .long("disk")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the disk"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("snapshot-name")
+                    .long("snapshot-name")
+                    .required(false)
+                    .value_parser(clap::value_parser!(String))
+                    .help("an optional snapshot name"),
+            )
+            .about("Finalize disk when imports are done")
+    }
+
+    pub fn cli_disk_import_blocks_from_url() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("disk")
+                    .long("disk")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the disk"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("url")
+                    .long("url")
+                    .required(true)
+                    .value_parser(clap::value_parser!(String))
+                    .help("the source to pull blocks from"),
+            )
+            .about("Send request to import blocks from URL")
     }
 
     pub fn cli_disk_metrics_list() -> clap::Command {
@@ -498,7 +630,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("start-time")
@@ -534,7 +667,8 @@ impl Cli {
                 clap::Arg::new("group")
                     .long("group")
                     .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .help("ID of the group"),
             )
             .about("Fetch group")
     }
@@ -552,7 +686,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -573,7 +708,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -610,13 +746,15 @@ impl Cli {
                 clap::Arg::new("image")
                     .long("image")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the image"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Fetch an image\n\nFetch the details for a specific image in a project.")
     }
@@ -627,13 +765,15 @@ impl Cli {
                 clap::Arg::new("image")
                     .long("image")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the image"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about(
                 "Delete an image\n\nPermanently delete an image from a project. This operation \
@@ -655,7 +795,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -672,7 +813,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -731,13 +873,15 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Fetch an instance")
     }
@@ -748,13 +892,15 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Delete an instance")
     }
@@ -765,7 +911,8 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("limit")
@@ -778,7 +925,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -795,19 +943,22 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the disk"),
             )
             .about("Attach a disk to an instance")
     }
@@ -818,19 +969,22 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the disk"),
             )
             .about("Detach a disk from an instance")
     }
@@ -841,13 +995,15 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("List external IP addresses")
     }
@@ -858,13 +1014,15 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("dst-sled-id")
@@ -881,13 +1039,15 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Reboot an instance")
     }
@@ -898,7 +1058,8 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("from-start")
@@ -920,7 +1081,9 @@ impl Cli {
                     .help(
                         "Maximum number of bytes of buffered serial console contents to return. \
                          If the requested range runs to the end of the available buffer, the data \
-                         returned will be shorter than `max_bytes`.",
+                         returned will be shorter than `max_bytes`. This parameter is only useful \
+                         for the non-streaming GET request for serial console data, and *ignored* \
+                         by the streaming websocket endpoint.",
                     ),
             )
             .arg(
@@ -938,7 +1101,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Fetch an instance's serial console")
     }
@@ -949,13 +1113,51 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("from-start")
+                    .long("from-start")
+                    .required(false)
+                    .value_parser(clap::value_parser!(u64))
+                    .help(
+                        "Character index in the serial buffer from which to read, counting the \
+                         bytes output since instance start. If this is not provided, \
+                         `most_recent` must be provided, and if this *is* provided, `most_recent` \
+                         must *not* be provided.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("max-bytes")
+                    .long("max-bytes")
+                    .required(false)
+                    .value_parser(clap::value_parser!(u64))
+                    .help(
+                        "Maximum number of bytes of buffered serial console contents to return. \
+                         If the requested range runs to the end of the available buffer, the data \
+                         returned will be shorter than `max_bytes`. This parameter is only useful \
+                         for the non-streaming GET request for serial console data, and *ignored* \
+                         by the streaming websocket endpoint.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("most-recent")
+                    .long("most-recent")
+                    .required(false)
+                    .value_parser(clap::value_parser!(u64))
+                    .help(
+                        "Character index in the serial buffer from which to read, counting \
+                         *backward* from the most recently buffered data retrieved from the \
+                         instance. (See note on `from_start` about mutual exclusivity)",
+                    ),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Stream an instance's serial console")
     }
@@ -966,13 +1168,15 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Boot an instance")
     }
@@ -983,13 +1187,15 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Stop an instance")
     }
@@ -1070,7 +1276,8 @@ impl Cli {
                 clap::Arg::new("ssh-key")
                     .long("ssh-key")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the SSH key"),
             )
             .about(
                 "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently \
@@ -1084,7 +1291,8 @@ impl Cli {
                 clap::Arg::new("ssh-key")
                     .long("ssh-key")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the SSH key"),
             )
             .about(
                 "Delete an SSH public key\n\nDelete an SSH public key associated with the \
@@ -1098,7 +1306,8 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("limit")
@@ -1111,7 +1320,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -1128,13 +1338,15 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -1181,19 +1393,22 @@ impl Cli {
                 clap::Arg::new("interface")
                     .long("interface")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the network interface"),
             )
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Fetch a network interface")
     }
@@ -1204,19 +1419,22 @@ impl Cli {
                 clap::Arg::new("interface")
                     .long("interface")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the network interface"),
             )
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -1255,19 +1473,22 @@ impl Cli {
                 clap::Arg::new("interface")
                     .long("interface")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the network interface"),
             )
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about(
                 "Delete a network interface\n\nNote that the primary interface for an instance \
@@ -1326,7 +1547,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Fetch a project")
     }
@@ -1337,7 +1559,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -1360,7 +1583,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Delete a project")
     }
@@ -1371,7 +1595,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Fetch a project's IAM policy")
     }
@@ -1382,7 +1607,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Update a project's IAM policy")
     }
@@ -1400,7 +1626,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -1417,7 +1644,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -1447,13 +1675,15 @@ impl Cli {
                 clap::Arg::new("snapshot")
                     .long("snapshot")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the snapshot"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Fetch a snapshot")
     }
@@ -1464,13 +1694,15 @@ impl Cli {
                 clap::Arg::new("snapshot")
                     .long("snapshot")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the snapshot"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Delete a snapshot")
     }
@@ -1665,7 +1897,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -1682,7 +1915,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("external-id")
@@ -1711,7 +1945,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .about("Delete a user")
     }
@@ -1729,7 +1964,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .about(
                 "Set or invalidate a user's password\n\nPasswords can only be updated for users \
@@ -1743,7 +1979,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("acs-url")
@@ -1812,13 +2049,15 @@ impl Cli {
                 clap::Arg::new("provider")
                     .long("provider")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the SAML identity provider"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .about("Fetch a SAML IDP")
     }
@@ -1864,7 +2103,8 @@ impl Cli {
                 clap::Arg::new("pool")
                     .long("pool")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the IP pool"),
             )
             .about("Fetch an IP pool")
     }
@@ -1875,7 +2115,8 @@ impl Cli {
                 clap::Arg::new("pool")
                     .long("pool")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the IP pool"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -1898,7 +2139,8 @@ impl Cli {
                 clap::Arg::new("pool")
                     .long("pool")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the IP pool"),
             )
             .about("Delete an IP Pool")
     }
@@ -1909,7 +2151,8 @@ impl Cli {
                 clap::Arg::new("pool")
                     .long("pool")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the IP pool"),
             )
             .arg(
                 clap::Arg::new("limit")
@@ -1927,7 +2170,8 @@ impl Cli {
                 clap::Arg::new("pool")
                     .long("pool")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the IP pool"),
             )
             .about("Add a range to an IP pool")
     }
@@ -1938,7 +2182,8 @@ impl Cli {
                 clap::Arg::new("pool")
                     .long("pool")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the IP pool"),
             )
             .about("Remove a range from an IP pool")
     }
@@ -2146,7 +2391,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .about("Fetch a silo\n\nFetch a silo by name.")
     }
@@ -2157,7 +2403,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .about("Delete a silo\n\nDelete a silo by name.")
     }
@@ -2168,7 +2415,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .about("Fetch a silo's IAM policy")
     }
@@ -2179,7 +2427,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .about("Update a silo's IAM policy")
     }
@@ -2308,7 +2557,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -2332,7 +2582,8 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the silo"),
             )
             .about("Fetch a user")
     }
@@ -2396,13 +2647,15 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("List firewall rules")
     }
@@ -2413,13 +2666,15 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("Replace firewall rules")
     }
@@ -2437,13 +2692,15 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("router")
                     .long("router")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -2455,7 +2712,8 @@ impl Cli {
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("List routes\n\nList the routes associated with a router in a particular VPC.")
     }
@@ -2466,19 +2724,22 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("router")
                     .long("router")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -2501,25 +2762,29 @@ impl Cli {
                 clap::Arg::new("route")
                     .long("route")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the route"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("router")
                     .long("router")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("Fetch a route")
     }
@@ -2530,25 +2795,29 @@ impl Cli {
                 clap::Arg::new("route")
                     .long("route")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the route"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("router")
                     .long("router")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -2571,25 +2840,29 @@ impl Cli {
                 clap::Arg::new("route")
                     .long("route")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the route"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("router")
                     .long("router")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("Delete a route")
     }
@@ -2607,7 +2880,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -2619,7 +2893,8 @@ impl Cli {
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("List routers")
     }
@@ -2630,13 +2905,15 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -2659,19 +2936,22 @@ impl Cli {
                 clap::Arg::new("router")
                     .long("router")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("Get a router")
     }
@@ -2682,19 +2962,22 @@ impl Cli {
                 clap::Arg::new("router")
                     .long("router")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -2717,19 +3000,22 @@ impl Cli {
                 clap::Arg::new("router")
                     .long("router")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("Delete a router")
     }
@@ -2747,7 +3033,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -2759,7 +3046,8 @@ impl Cli {
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("Fetch a subnet")
     }
@@ -2770,13 +3058,15 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -2822,19 +3112,22 @@ impl Cli {
                 clap::Arg::new("subnet")
                     .long("subnet")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("Fetch a subnet")
     }
@@ -2845,19 +3138,22 @@ impl Cli {
                 clap::Arg::new("subnet")
                     .long("subnet")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -2880,19 +3176,22 @@ impl Cli {
                 clap::Arg::new("subnet")
                     .long("subnet")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("Delete a subnet")
     }
@@ -2903,7 +3202,8 @@ impl Cli {
                 clap::Arg::new("subnet")
                     .long("subnet")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("limit")
@@ -2916,7 +3216,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -2928,7 +3229,8 @@ impl Cli {
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .about("List network interfaces")
     }
@@ -2946,7 +3248,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -2963,7 +3266,8 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -3004,13 +3308,15 @@ impl Cli {
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Fetch a VPC")
     }
@@ -3021,13 +3327,15 @@ impl Cli {
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
@@ -3056,13 +3364,15 @@ impl Cli {
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
             )
             .about("Delete a VPC")
     }
@@ -3125,6 +3435,21 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::DiskDelete => {
                 self.execute_disk_delete(matches).await;
+            }
+            CliCommand::DiskBulkWriteImport => {
+                self.execute_disk_bulk_write_import(matches).await;
+            }
+            CliCommand::DiskBulkWriteImportStart => {
+                self.execute_disk_bulk_write_import_start(matches).await;
+            }
+            CliCommand::DiskBulkWriteImportStop => {
+                self.execute_disk_bulk_write_import_stop(matches).await;
+            }
+            CliCommand::DiskFinalizeImport => {
+                self.execute_disk_finalize_import(matches).await;
+            }
+            CliCommand::DiskImportBlocksFromUrl => {
+                self.execute_disk_import_blocks_from_url(matches).await;
             }
             CliCommand::DiskMetricsList => {
                 self.execute_disk_metrics_list(matches).await;
@@ -3893,6 +4218,142 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_disk_bulk_write_import(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.disk_bulk_write_import();
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
+            request = request.disk(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("base64-encoded-data") {
+            request = request.body_map(|body| body.base64_encoded_data(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u64>("offset") {
+            request = request.body_map(|body| body.offset(value.clone()))
+        }
+
+        self.over
+            .execute_disk_bulk_write_import(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_disk_bulk_write_import_start(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.disk_bulk_write_import_start();
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
+            request = request.disk(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_disk_bulk_write_import_start(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_disk_bulk_write_import_stop(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.disk_bulk_write_import_stop();
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
+            request = request.disk(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_disk_bulk_write_import_stop(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_disk_finalize_import(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.disk_finalize_import();
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
+            request = request.disk(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("snapshot-name") {
+            request = request.snapshot_name(value.clone());
+        }
+
+        self.over
+            .execute_disk_finalize_import(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_disk_import_blocks_from_url(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.disk_import_blocks_from_url();
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
+            request = request.disk(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<String>("url") {
+            request = request.body_map(|body| body.url(value.clone()))
+        }
+
+        self.over
+            .execute_disk_import_blocks_from_url(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_disk_metrics_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.disk_metrics_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
@@ -4410,6 +4871,18 @@ impl<T: CliOverride> Cli<T> {
         let mut request = self.client.instance_serial_console_stream();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u64>("from-start") {
+            request = request.from_start(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u64>("max-bytes") {
+            request = request.max_bytes(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u64>("most-recent") {
+            request = request.most_recent(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -7189,6 +7662,46 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_disk_bulk_write_import(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::DiskBulkWriteImport,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_disk_bulk_write_import_start(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::DiskBulkWriteImportStart,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_disk_bulk_write_import_stop(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::DiskBulkWriteImportStop,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_disk_finalize_import(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::DiskFinalizeImport,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_disk_import_blocks_from_url(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::DiskImportBlocksFromUrl,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_disk_metrics_list(
         &self,
         matches: &clap::ArgMatches,
@@ -8203,6 +8716,11 @@ pub enum CliCommand {
     DiskCreate,
     DiskView,
     DiskDelete,
+    DiskBulkWriteImport,
+    DiskBulkWriteImportStart,
+    DiskBulkWriteImportStop,
+    DiskFinalizeImport,
+    DiskImportBlocksFromUrl,
     DiskMetricsList,
     GroupList,
     GroupView,
@@ -8349,6 +8867,11 @@ impl CliCommand {
             CliCommand::DiskCreate,
             CliCommand::DiskView,
             CliCommand::DiskDelete,
+            CliCommand::DiskBulkWriteImport,
+            CliCommand::DiskBulkWriteImportStart,
+            CliCommand::DiskBulkWriteImportStop,
+            CliCommand::DiskFinalizeImport,
+            CliCommand::DiskImportBlocksFromUrl,
             CliCommand::DiskMetricsList,
             CliCommand::GroupList,
             CliCommand::GroupView,
