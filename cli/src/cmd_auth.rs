@@ -627,8 +627,6 @@ mod test {
     fn test_parse_host() {
         use super::parse_host;
 
-        // TODO: Replace with assert_matches when stable
-
         // The simple cases where only the host name or IP is passed
         assert!(matches!(
             parse_host("example.com").map(|host| host.to_string()),
@@ -699,7 +697,7 @@ fn test_cmd_auth_status() {
     let oxide_mock = server.mock(|when, then| {
         when.method(GET)
             .path("/v1/me")
-            .header("Authorization", "Bearer oxide-token-1111");
+            .header("authorization", "Bearer oxide-token-1111");
         then.status(200)
             .json_body_obj(&oxide_api::types::CurrentUser {
                 display_name: "privileged".to_string(),
@@ -748,14 +746,11 @@ fn test_cmd_auth_status() {
             "\"Token: oxide-token-1111\"",
         )));
 
-    // Assert the mock received the provided number of requests which matched
-    // all the request requirements
+    // Assert that both commands hit the mock.
     oxide_mock.assert_hits(2);
 
     let oxide_mock = server.mock(|when, then| {
-        when.method(GET)
-            .path("/v1/me")
-            .header("Authorization", "Bearer oxide-token-1112");
+        when.header("authorization", "Bearer oxide-token-1112");
         then.status(401).json_body_obj(&oxide_api::types::Error {
             error_code: None,
             message: "oops".to_string(),
@@ -792,5 +787,6 @@ fn test_cmd_auth_status() {
             "{}: [\"Not authenticated. Host/token combination invalid\"]\n",
             server.url("/")
         ));
-    oxide_mock.assert();
+    // Assert that both commands hit the mock.
+    oxide_mock.assert_hits(2);
 }

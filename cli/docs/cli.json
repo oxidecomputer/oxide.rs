@@ -1938,7 +1938,8 @@
         },
         {
           "name": "status",
-          "about": "Verifies and displays information about your authentication state.\nThis command validates the authentication state for each Oxide environment in the current configuration. These hosts may be from your hosts.toml file and/or\n$OXIDE_HOST environment variable.",
+          "about": "Verifies and displays information about your authentication state.",
+          "long_about": "Verifies and displays information about your authentication state.\n\nThis command validates the authentication state for each Oxide environment\nin the current configuration. These hosts may be from your hosts.toml file\nand/or $OXIDE_HOST environment variable.",
           "args": [
             {
               "short": "t",
