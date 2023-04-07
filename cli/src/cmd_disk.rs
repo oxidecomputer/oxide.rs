@@ -4,31 +4,31 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use oxide_api::Client;
-use oxide_api::ClientDisksExt;
-use oxide_api::ClientImagesExt;
-use oxide_api::ClientSnapshotsExt;
-use oxide_api::ClientSystemExt;
+use anyhow::bail;
+use anyhow::Result;
+use base64::Engine;
+use clap::Parser;
+use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use oxide_api::types::BlockSize;
-use oxide_api::types::Distribution;
 use oxide_api::types::DiskCreate;
 use oxide_api::types::DiskSource;
-use oxide_api::types::ImageCreate;
+use oxide_api::types::Distribution;
 use oxide_api::types::GlobalImageCreate;
+use oxide_api::types::ImageCreate;
 use oxide_api::types::ImageSource;
 use oxide_api::types::ImportBlocksBulkWrite;
 use oxide_api::types::Name;
 use oxide_api::types::NameOrId;
 use oxide_api::types::Snapshot;
-use anyhow::Result;
-use anyhow::bail;
-use clap::Parser;
-use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
-use tokio::sync::mpsc;
+use oxide_api::Client;
+use oxide_api::ClientDisksExt;
+use oxide_api::ClientImagesExt;
+use oxide_api::ClientSnapshotsExt;
+use oxide_api::ClientSystemExt;
 use std::fs::File;
 use std::io::Read;
-use base64::Engine;
 use std::path::Path;
+use tokio::sync::mpsc;
 
 /// Import a file to a disk
 ///
@@ -127,7 +127,10 @@ impl CmdDiskImport {
             .await;
 
         if let Err(e) = response {
-            eprintln!("trying to unwind, deleting {:?} failed with {:?}", self.disk_name, e);
+            eprintln!(
+                "trying to unwind, deleting {:?} failed with {:?}",
+                self.disk_name, e
+            );
             return Err(e.into());
         }
 
@@ -144,7 +147,10 @@ impl CmdDiskImport {
 
         // If this fails, then the disk will remain in state "import-ready"
         if let Err(e) = response {
-            eprintln!("trying to unwind, finalizing {:?} failed with {:?}", self.disk_name, e);
+            eprintln!(
+                "trying to unwind, finalizing {:?} failed with {:?}",
+                self.disk_name, e
+            );
             return Err(e.into());
         }
 
@@ -162,7 +168,10 @@ impl CmdDiskImport {
         // If this fails, then the disk will remain in state
         // "importing-from-bulk-writes"
         if let Err(e) = response {
-            eprintln!("trying to unwind, stopping the bulk write process for {:?} failed with {:?}", self.disk_name, e);
+            eprintln!(
+                "trying to unwind, stopping the bulk write process for {:?} failed with {:?}",
+                self.disk_name, e
+            );
             return Err(e.into());
         }
 
@@ -210,7 +219,8 @@ impl CmdDiskImport {
         let disk_block_size = match &self.disk_block_size {
             Some(v) => BlockSize::try_from(*v),
             None => BlockSize::try_from(512),
-        }.unwrap();
+        }
+        .unwrap();
 
         // If using more than 1 thread, make sure the number of threads divides
         // the total disk size
@@ -218,23 +228,24 @@ impl CmdDiskImport {
             bail!("thread count must evenly divide disk size {}", disk_size);
         }
         if ((disk_size / CHUNK_SIZE) % self.threads as u64) != 0 {
-            bail!("thread count must evenly divide number of chunks {}", disk_size / CHUNK_SIZE);
+            bail!(
+                "thread count must evenly divide number of chunks {}",
+                disk_size / CHUNK_SIZE
+            );
         }
 
         // Create the disk in state "importing blocks"
         client
             .disk_create()
             .project(&self.project)
-            .body(
-                DiskCreate {
-                    name: self.disk_name.clone(),
-                    description: self.description.clone(),
-                    disk_source: DiskSource::ImportingBlocks {
-                        block_size: disk_block_size.clone(),
-                    },
-                    size: disk_size.try_into()?,
-                }
-            )
+            .body(DiskCreate {
+                name: self.disk_name.clone(),
+                description: self.description.clone(),
+                disk_source: DiskSource::ImportingBlocks {
+                    block_size: disk_block_size.clone(),
+                },
+                size: disk_size.try_into()?,
+            })
             .send()
             .await?;
 
@@ -262,7 +273,8 @@ impl CmdDiskImport {
         }
 
         // Create one tokio task for each thread that will upload file chunks
-        let mut handles: Vec<tokio::task::JoinHandle<Result<()>>> = Vec::with_capacity(self.threads);
+        let mut handles: Vec<tokio::task::JoinHandle<Result<()>>> =
+            Vec::with_capacity(self.threads);
         let mut senders = Vec::with_capacity(self.threads);
 
         let mb = MultiProgress::new();
@@ -288,7 +300,8 @@ impl CmdDiskImport {
                         .disk(disk_name.clone())
                         .project(project.clone())
                         .body(ImportBlocksBulkWrite {
-                            offset, base64_encoded_data,
+                            offset,
+                            base64_encoded_data,
                         })
                         .send()
                         .await?;
@@ -396,9 +409,7 @@ impl CmdDiskImport {
             request = request.snapshot_name(snapshot_name.clone());
         }
 
-        let finalize_response = request
-            .send()
-            .await;
+        let finalize_response = request.send().await;
 
         if let Err(e) = finalize_response {
             eprintln!("finalizing the disk failed with {:?}", e);
@@ -443,9 +454,7 @@ impl CmdDiskImport {
                         name: image_os.parse().unwrap(),
                         version: image_version.clone(),
                     },
-                    source: ImageSource::Snapshot {
-                        id: snapshot.id,
-                    },
+                    source: ImageSource::Snapshot { id: snapshot.id },
                     block_size: disk_block_size,
                 })
                 .send()
