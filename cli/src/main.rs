@@ -137,7 +137,8 @@ async fn main() {
 
         // TODO this could be improved
         Some(("disk", sub_matches)) if sub_matches.subcommand_name() == Some("import") => {
-            cmd_disk::CmdDiskImport::from_arg_matches(sub_matches)
+            let real_sub_matches = sub_matches.subcommand().unwrap().1;
+            cmd_disk::CmdDiskImport::from_arg_matches(real_sub_matches)
                 .unwrap()
                 .run(&mut ctx)
                 .await
