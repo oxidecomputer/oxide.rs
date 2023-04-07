@@ -277,7 +277,58 @@
           ]
         },
         {
-          "name": "import"
+          "name": "import",
+          "about": "Import a file to a disk",
+          "long_about": "Import a file to a disk\n\nUpload the contents of a file to a disk, optionally creating a snapshot\nand/or an image.",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "disk-block-size",
+              "help": "The desired size of the disk's blocks"
+            },
+            {
+              "long": "disk-name",
+              "help": "The name of the disk to create"
+            },
+            {
+              "long": "disk-size",
+              "help": "The size of the disk to create. If unspecified, the size of the file will be used, rounded up to the nearest GB"
+            },
+            {
+              "long": "image-description",
+              "help": "The description for the image created out of the snapshot of this disk"
+            },
+            {
+              "long": "image-name",
+              "help": "If supplied, create an image from the snapshot of this disk. Requires snapshot name to be supplied"
+            },
+            {
+              "long": "image-os",
+              "help": "The OS of this image (eg. Debian)"
+            },
+            {
+              "long": "image-version",
+              "help": "The version of this image (eg. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)"
+            },
+            {
+              "long": "path",
+              "help": "Path to the file to import"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "snapshot-name",
+              "help": "If supplied, create a snapshot with this name"
+            },
+            {
+              "long": "threads",
+              "help": "How many upload threads to run. Disk size must be divisible by this number"
+            }
+          ]
         },
         {
           "name": "list",
