@@ -5,6 +5,9 @@ on: workflow_dispatch
 permissions:
   contents: write
   pull-requests: write
+  # This is a workaround for the GitHub cli requiring excessive permissions when updating a pull
+  # request (https://github.com/cli/cli/discussions/5307)
+  repository-projects: read
 
 jobs:
   generate-update:
@@ -32,8 +35,14 @@ jobs:
 
       - name: Update progenitor
         run: |
+          FROM=$(cargo tree -i progenitor | grep -Eo '#([0-9a-z]+)')
           cargo update -p progenitor
           cargo update -p progenitor-client
+          TO=$(cargo tree -i progenitor | grep -Eo '#([0-9a-z]+)')
+
+          echo "from=${FROM:1}" >> $GITHUB_OUTPUT
+          echo "to=${TO:1}" >> $GITHUB_OUTPUT
+        id: progenitor_versions
 
       - name: Rebuild client
         run: |
@@ -60,18 +69,47 @@ jobs:
           git pull origin integration
           mainToIntegration="$(git rev-list --count main..integration)"
           integrationToMain="$(git rev-list --count integration..main)"
-          prUrl=$(gh search prs --head integration --base main --state open --repo oxidecomputer/oxide-sdk-and-cli --json url --jq .[].url)
+          prUrl=$(gh search prs --head integration --base main --state open --repo $GITHUB_REPOSITORY --json url --jq .[].url)
+          prNumber=$(gh search prs --head integration --base main --state open --repo $GITHUB_REPOSITORY --json number --jq .[].number)
+
+          progenitorDiffUrl=""
+
+          if [ "${{ steps.progenitor_versions.outputs.from }}" != "${{ steps.progenitor_versions.outputs.to }}" ]
+          then
+            progenitorDiffUrl="https://github.com/oxidecomputer/progenitor/compare/${{ steps.progenitor_versions.outputs.from }}...${{ steps.progenitor_versions.outputs.to }}"
+          fi
+
           if [ "$mainToIntegration" -eq 0 -a "$integrationToMain" -eq 0 ]
           then
             echo "Main is up to date with integration. No pull request needed"
+
+            if [ -z "$prNumber" ]
+            then
+              echo "Closing existing PR"
+              gh pr close $prNumber
+            fi
           elif [ "$mainToIntegration" -gt 0 ]
           then
-            echo "Main behind integration ($mainToIntegration)"
-            if [ -z "$prUrl" ]
+            echo "Main is behind integration ($mainToIntegration)"
+
+            echo "Integration dependency update" >> body
+            echo "" >> body
+
+            if [ "$progenitorDiffUrl" != "" ]
             then
-              gh pr create -B main -H integration --title 'Integration' --body 'Integrating dependency update'
+              echo "Bump [progenitor](https://github.com/oxidecomputer/progenitor) from \`${{ steps.progenitor_versions.outputs.from }}\` to \`${{ steps.progenitor_versions.outputs.to }}\`" >> body
+              echo "Changes: ${progenitorDiffUrl}" >> body
+              echo "" >> body
+            fi
+
+            echo "Generated code against latest nexus.json" >> body
+
+            if [ -z "$prNumber" ]
+            then
+              gh pr create -B main -H integration --title 'Integration' --body-file body
             else
-              echo "PR already exists: $prUrl"
+              echo "PR already exists: ($prNumber) $prUrl . Updating..."
+              gh pr edit "$prNumber" --body-file body
             fi
           else
             echo "Integration is behind main ($integrationToMain). This is likely an error"
