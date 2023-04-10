@@ -1,0 +1,19 @@
+workflow = "integrate.yml"
+branch = "main"
+
+[[on]]
+repository = "oxidecomputer/omicron"
+paths = [
+  "openapi/nexus.json",
+]
+
+[[on]]
+repository = "oxidecomputer/progenitor"
+paths = [
+  "progenitor-client/**",
+  "progenitor-impl/**",
+  "progenitor-macro/**",
+  "progenitor/**",
+  "Cargo.toml",
+  "Cargo.lock"
+]
