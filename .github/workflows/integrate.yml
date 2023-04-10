@@ -1,0 +1,75 @@
+name: Integration
+
+on: workflow_dispatch
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-update:
+    concurrency:
+      group: integration
+      cancel-in-progress: true
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3.5.0
+        with:
+          ref: main
+      - name: Install nightly rustfmt
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          components: rustfmt
+          default: false
+      - name: Report cargo version
+        run: cargo --version
+      - name: Report rustfmt version
+        run: cargo fmt -- --version
+
+      - name: Update schema
+        run: curl -s https://raw.githubusercontent.com/oxidecomputer/omicron/main/openapi/nexus.json --output schema.json
+
+      - name: Update progenitor
+        run: |
+          cargo update -p progenitor
+          cargo update -p progenitor-client
+
+      - name: Report changes
+        run: git status
+
+      - name: Commit changes
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update with latest schema" || echo "Nothing to commit"
+          git push origin main:integration --force
+          # Reset back to the original main
+          git reset --hard origin/main
+
+      - name: Update pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git checkout integration
+          git pull origin integration
+          mainToIntegration="$(git rev-list --count main..integration)"
+          integrationToMain="$(git rev-list --count integration..main)"
+          prUrl=$(gh search prs --head integration --base main --state open --repo oxidecomputer/oxide-sdk-and-cli --json url --jq .[].url)
+          if [ "$mainToIntegration" -eq 0 -a "$integrationToMain" -eq 0 ]
+          then
+            echo "Main is up to date with integration. No pull request needed"
+          elif [ "$mainToIntegration" -gt 0 ]
+          then
+            echo "Main behind integration ($mainToIntegration)"
+            if [ -z "$prUrl" ]
+            then
+              gh pr create -B main -H integration --title 'Integration' --body 'Integrating dependency update'
+            else
+              echo "PR already exists: $prUrl"
+            fi
+          else
+            echo "Integration is behind main ($integrationToMain). This is likely an error"
+            exit 1
+          fi
