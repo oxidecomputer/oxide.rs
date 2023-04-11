@@ -12,7 +12,7 @@ base64 = "0.21.0"
 built = { version = "0.6.0", features = ["git2"] }
 chrono = { version = "0.4.24", features = ["serde"] }
 clap = { version = "4.2", features = ["derive", "string", "env"] }
-dialoguer = "0.10.3"
+dialoguer = "0.10.4"
 dirs = "4.0.0"
 env_logger = "0.10.0"
 expectorate = "1.0.6"
