@@ -1,6 +1,9 @@
 name: Integration
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
 
 permissions:
   contents: write
