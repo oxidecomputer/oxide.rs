@@ -9,7 +9,7 @@ members = [
 anyhow = "1.0.70"
 assert_cmd = "2.0.10"
 base64 = "0.21.0"
-built = "0.6.0"
+built = { version = "0.6.0", features = ["git2"] }
 chrono = { version = "0.4.24", features = ["serde"] }
 clap = { version = "4.2", features = ["derive", "string", "env"] }
 dialoguer = "0.10.3"
