@@ -106,11 +106,14 @@ jobs:
           then
             echo "Main is behind integration ($mainToIntegration)"
 
+            title="Bump schema.json to omicron:${{ steps.schema_sha.outputs.short }}"
+
             echo "Integration dependency update" > body
             echo "" >> body
 
             if [ "$progenitorDiffUrl" != "" ]
             then
+              title+=" and progenitor to ${{ steps.progenitor_versions.outputs.to }}"
               echo "Bump [progenitor](https://github.com/oxidecomputer/progenitor) from \`${{ steps.progenitor_versions.outputs.from }}\` to \`${{ steps.progenitor_versions.outputs.to }}\`" >> body
               echo "Changes: ${progenitorDiffUrl}" >> body
               echo "" >> body
@@ -123,10 +126,10 @@ jobs:
 
             if [ -z "$prNumber" ]
             then
-              gh pr create -B main -H integration --title 'Integration' --body-file body
+              gh pr create -B main -H integration --title "$title" --body-file body
             else
               echo "PR already exists: ($prNumber) $prUrl . Updating..."
-              gh pr edit "$prNumber" --body-file body
+              gh pr edit "$prNumber" --title "$title" --body-file body
             fi
           else
             echo "Integration is behind main ($integrationToMain). This is likely an error"
