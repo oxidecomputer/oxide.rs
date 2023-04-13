@@ -69,7 +69,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Detect specific changes that are will be committed back
+          # Detect specific changes that will be committed back
           git diff --quiet cli/docs/cli.json || docsUpdate=$?
           echo "docs=${docsUpdate}" >> $GITHUB_OUTPUT
 
