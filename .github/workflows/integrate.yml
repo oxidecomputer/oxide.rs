@@ -57,6 +57,10 @@ jobs:
         run: |
           cargo run -p xtask generate
 
+      - name: Generate docs
+        run: |
+          cargo run -p oxide docs > cli/docs/cli.json
+
       - name: Report changes
         run: git status
 
@@ -64,11 +68,17 @@ jobs:
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Detect specific changes that will be committed back
+          git diff --quiet cli/docs/cli.json || docsUpdate=$?
+          echo "docs=${docsUpdate}" >> $GITHUB_OUTPUT
+
           git add .
           git commit -m "Rebuilt with latest dependency updates" || echo "Nothing to commit"
           git push origin main:integration --force
           # Reset back to the original main
           git reset --hard origin/main
+        id: committed
 
       - name: Update pull request
         env:
@@ -126,6 +136,13 @@ jobs:
             schemaUrl="https://github.com/oxidecomputer/omicron/blob/${{ steps.schema_sha.outputs.full }}/openapi/nexus.json"
 
             echo "Generated code against [$schemaLabel]($schemaUrl)" >> body
+            echo "" >> body
+
+            if [ ${{ steps.committed.outputs.docs }} ]
+            then
+              echo "CLI docs updated against the updated CLI" >> body
+              echo "" >> body
+            fi
 
             if [ -z "$prNumber" ]
             then
