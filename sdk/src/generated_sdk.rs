@@ -928,6 +928,26 @@ pub mod types {
         }
     }
 
+    #[doc = "Parameters for finalizing a disk"]
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct FinalizeDisk {
+        #[doc = "If specified a snapshot of the disk will be created with the given name during finalization. If not specified, a snapshot for the disk will _not_ be created. A snapshot can be manually created once the disk transitions into the `Detached` state."]
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub snapshot_name: Option<Name>,
+    }
+
+    impl From<&FinalizeDisk> for FinalizeDisk {
+        fn from(value: &FinalizeDisk) -> Self {
+            value.clone()
+        }
+    }
+
+    impl FinalizeDisk {
+        pub fn builder() -> builder::FinalizeDisk {
+            builder::FinalizeDisk::default()
+        }
+    }
+
     #[derive(
         Clone,
         Copy,
@@ -1806,13 +1826,52 @@ pub mod types {
         }
     }
 
-    #[doc = "Describes an attachment of a `NetworkInterface` to an `Instance`, at the time the instance is created."]
+    #[doc = "An `InstanceNetworkInterface` represents a virtual network interface device attached to an instance."]
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct InstanceNetworkInterface {
+        #[doc = "human-readable free-form text about a resource"]
+        pub description: String,
+        #[doc = "unique, immutable, system-controlled identifier for each resource"]
+        pub id: uuid::Uuid,
+        #[doc = "The Instance to which the interface belongs."]
+        pub instance_id: uuid::Uuid,
+        #[doc = "The IP address assigned to this interface."]
+        pub ip: std::net::IpAddr,
+        #[doc = "The MAC address assigned to this interface."]
+        pub mac: MacAddr,
+        #[doc = "unique, mutable, user-controlled identifier for each resource"]
+        pub name: Name,
+        #[doc = "True if this interface is the primary for the instance to which it's attached."]
+        pub primary: bool,
+        #[doc = "The subnet to which the interface belongs."]
+        pub subnet_id: uuid::Uuid,
+        #[doc = "timestamp when this resource was created"]
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        #[doc = "timestamp when this resource was last modified"]
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        #[doc = "The VPC to which the interface belongs."]
+        pub vpc_id: uuid::Uuid,
+    }
+
+    impl From<&InstanceNetworkInterface> for InstanceNetworkInterface {
+        fn from(value: &InstanceNetworkInterface) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InstanceNetworkInterface {
+        pub fn builder() -> builder::InstanceNetworkInterface {
+            builder::InstanceNetworkInterface::default()
+        }
+    }
+
+    #[doc = "Describes an attachment of an `InstanceNetworkInterface` to an `Instance`, at the time the instance is created."]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "params")]
     pub enum InstanceNetworkInterfaceAttachment {
-        #[doc = "Create one or more `NetworkInterface`s for the `Instance`.\n\nIf more than one interface is provided, then the first will be designated the primary interface for the instance."]
+        #[doc = "Create one or more `InstanceNetworkInterface`s for the `Instance`.\n\nIf more than one interface is provided, then the first will be designated the primary interface for the instance."]
         #[serde(rename = "create")]
-        Create(Vec<NetworkInterfaceCreate>),
+        Create(Vec<InstanceNetworkInterfaceCreate>),
         #[serde(rename = "default")]
         Default,
         #[serde(rename = "none")]
@@ -1825,9 +1884,81 @@ pub mod types {
         }
     }
 
-    impl From<Vec<NetworkInterfaceCreate>> for InstanceNetworkInterfaceAttachment {
-        fn from(value: Vec<NetworkInterfaceCreate>) -> Self {
+    impl From<Vec<InstanceNetworkInterfaceCreate>> for InstanceNetworkInterfaceAttachment {
+        fn from(value: Vec<InstanceNetworkInterfaceCreate>) -> Self {
             Self::Create(value)
+        }
+    }
+
+    #[doc = "Create-time parameters for an [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface)."]
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct InstanceNetworkInterfaceCreate {
+        pub description: String,
+        #[doc = "The IP address for the interface. One will be auto-assigned if not provided."]
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub ip: Option<std::net::IpAddr>,
+        pub name: Name,
+        #[doc = "The VPC Subnet in which to create the interface."]
+        pub subnet_name: Name,
+        #[doc = "The VPC in which to create the interface."]
+        pub vpc_name: Name,
+    }
+
+    impl From<&InstanceNetworkInterfaceCreate> for InstanceNetworkInterfaceCreate {
+        fn from(value: &InstanceNetworkInterfaceCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InstanceNetworkInterfaceCreate {
+        pub fn builder() -> builder::InstanceNetworkInterfaceCreate {
+            builder::InstanceNetworkInterfaceCreate::default()
+        }
+    }
+
+    #[doc = "A single page of results"]
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct InstanceNetworkInterfaceResultsPage {
+        #[doc = "list of items on this page of results"]
+        pub items: Vec<InstanceNetworkInterface>,
+        #[doc = "token used to fetch the next page of results (if any)"]
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&InstanceNetworkInterfaceResultsPage> for InstanceNetworkInterfaceResultsPage {
+        fn from(value: &InstanceNetworkInterfaceResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InstanceNetworkInterfaceResultsPage {
+        pub fn builder() -> builder::InstanceNetworkInterfaceResultsPage {
+            builder::InstanceNetworkInterfaceResultsPage::default()
+        }
+    }
+
+    #[doc = "Parameters for updating an [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface).\n\nNote that modifying IP addresses for an interface is not yet supported, a new interface must be created instead."]
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct InstanceNetworkInterfaceUpdate {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub description: Option<String>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub name: Option<Name>,
+        #[doc = "Make a secondary interface the instance's primary interface.\n\nIf applied to a secondary interface, that interface will become the primary on the next reboot of the instance. Note that this may have implications for routing between instances, as the new primary interface will be on a distinct subnet from the previous primary interface.\n\nNote that this can only be used to select a new primary interface for an instance. Requests to change the primary interface into a secondary will return an error."]
+        #[serde(default)]
+        pub primary: bool,
+    }
+
+    impl From<&InstanceNetworkInterfaceUpdate> for InstanceNetworkInterfaceUpdate {
+        fn from(value: &InstanceNetworkInterfaceUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl InstanceNetworkInterfaceUpdate {
+        pub fn builder() -> builder::InstanceNetworkInterfaceUpdate {
+            builder::InstanceNetworkInterfaceUpdate::default()
         }
     }
 
@@ -2899,117 +3030,6 @@ pub mod types {
         type Error = &'static str;
         fn try_from(value: String) -> Result<Self, &'static str> {
             value.parse()
-        }
-    }
-
-    #[doc = "A `NetworkInterface` represents a virtual network interface device."]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct NetworkInterface {
-        #[doc = "human-readable free-form text about a resource"]
-        pub description: String,
-        #[doc = "unique, immutable, system-controlled identifier for each resource"]
-        pub id: uuid::Uuid,
-        #[doc = "The Instance to which the interface belongs."]
-        pub instance_id: uuid::Uuid,
-        #[doc = "The IP address assigned to this interface."]
-        pub ip: std::net::IpAddr,
-        #[doc = "The MAC address assigned to this interface."]
-        pub mac: MacAddr,
-        #[doc = "unique, mutable, user-controlled identifier for each resource"]
-        pub name: Name,
-        #[doc = "True if this interface is the primary for the instance to which it's attached."]
-        pub primary: bool,
-        #[doc = "The subnet to which the interface belongs."]
-        pub subnet_id: uuid::Uuid,
-        #[doc = "timestamp when this resource was created"]
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        #[doc = "timestamp when this resource was last modified"]
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        #[doc = "The VPC to which the interface belongs."]
-        pub vpc_id: uuid::Uuid,
-    }
-
-    impl From<&NetworkInterface> for NetworkInterface {
-        fn from(value: &NetworkInterface) -> Self {
-            value.clone()
-        }
-    }
-
-    impl NetworkInterface {
-        pub fn builder() -> builder::NetworkInterface {
-            builder::NetworkInterface::default()
-        }
-    }
-
-    #[doc = "Create-time parameters for a [`NetworkInterface`](omicron_common::api::external::NetworkInterface)"]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct NetworkInterfaceCreate {
-        pub description: String,
-        #[doc = "The IP address for the interface. One will be auto-assigned if not provided."]
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub ip: Option<std::net::IpAddr>,
-        pub name: Name,
-        #[doc = "The VPC Subnet in which to create the interface."]
-        pub subnet_name: Name,
-        #[doc = "The VPC in which to create the interface."]
-        pub vpc_name: Name,
-    }
-
-    impl From<&NetworkInterfaceCreate> for NetworkInterfaceCreate {
-        fn from(value: &NetworkInterfaceCreate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl NetworkInterfaceCreate {
-        pub fn builder() -> builder::NetworkInterfaceCreate {
-            builder::NetworkInterfaceCreate::default()
-        }
-    }
-
-    #[doc = "A single page of results"]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct NetworkInterfaceResultsPage {
-        #[doc = "list of items on this page of results"]
-        pub items: Vec<NetworkInterface>,
-        #[doc = "token used to fetch the next page of results (if any)"]
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
-    }
-
-    impl From<&NetworkInterfaceResultsPage> for NetworkInterfaceResultsPage {
-        fn from(value: &NetworkInterfaceResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl NetworkInterfaceResultsPage {
-        pub fn builder() -> builder::NetworkInterfaceResultsPage {
-            builder::NetworkInterfaceResultsPage::default()
-        }
-    }
-
-    #[doc = "Parameters for updating a [`NetworkInterface`](omicron_common::api::external::NetworkInterface).\n\nNote that modifying IP addresses for an interface is not yet supported, a new interface must be created instead."]
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct NetworkInterfaceUpdate {
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub description: Option<String>,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub name: Option<Name>,
-        #[doc = "Make a secondary interface the instance's primary interface.\n\nIf applied to a secondary interface, that interface will become the primary on the next reboot of the instance. Note that this may have implications for routing between instances, as the new primary interface will be on a distinct subnet from the previous primary interface.\n\nNote that this can only be used to select a new primary interface for an instance. Requests to change the primary interface into a secondary will return an error."]
-        #[serde(default)]
-        pub primary: bool,
-    }
-
-    impl From<&NetworkInterfaceUpdate> for NetworkInterfaceUpdate {
-        fn from(value: &NetworkInterfaceUpdate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl NetworkInterfaceUpdate {
-        pub fn builder() -> builder::NetworkInterfaceUpdate {
-            builder::NetworkInterfaceUpdate::default()
         }
     }
 
@@ -7836,6 +7856,49 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct FinalizeDisk {
+            snapshot_name: Result<Option<super::Name>, String>,
+        }
+
+        impl Default for FinalizeDisk {
+            fn default() -> Self {
+                Self {
+                    snapshot_name: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl FinalizeDisk {
+            pub fn snapshot_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Name>>,
+                T::Error: std::fmt::Display,
+            {
+                self.snapshot_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for snapshot_name: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<FinalizeDisk> for super::FinalizeDisk {
+            type Error = String;
+            fn try_from(value: FinalizeDisk) -> Result<Self, String> {
+                Ok(Self {
+                    snapshot_name: value.snapshot_name?,
+                })
+            }
+        }
+
+        impl From<super::FinalizeDisk> for FinalizeDisk {
+            fn from(value: super::FinalizeDisk) -> Self {
+                Self {
+                    snapshot_name: Ok(value.snapshot_name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct FleetRolePolicy {
             role_assignments: Result<Vec<super::FleetRoleRoleAssignment>, String>,
         }
@@ -9621,6 +9684,422 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct InstanceNetworkInterface {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            instance_id: Result<uuid::Uuid, String>,
+            ip: Result<std::net::IpAddr, String>,
+            mac: Result<super::MacAddr, String>,
+            name: Result<super::Name, String>,
+            primary: Result<bool, String>,
+            subnet_id: Result<uuid::Uuid, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            vpc_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for InstanceNetworkInterface {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    instance_id: Err("no value supplied for instance_id".to_string()),
+                    ip: Err("no value supplied for ip".to_string()),
+                    mac: Err("no value supplied for mac".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    primary: Err("no value supplied for primary".to_string()),
+                    subnet_id: Err("no value supplied for subnet_id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                    vpc_id: Err("no value supplied for vpc_id".to_string()),
+                }
+            }
+        }
+
+        impl InstanceNetworkInterface {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn instance_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.instance_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for instance_id: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn mac<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::MacAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.mac = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mac: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn primary<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.primary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for primary: {}", e));
+                self
+            }
+            pub fn subnet_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.subnet_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet_id: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+            pub fn vpc_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.vpc_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vpc_id: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InstanceNetworkInterface> for super::InstanceNetworkInterface {
+            type Error = String;
+            fn try_from(value: InstanceNetworkInterface) -> Result<Self, String> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    instance_id: value.instance_id?,
+                    ip: value.ip?,
+                    mac: value.mac?,
+                    name: value.name?,
+                    primary: value.primary?,
+                    subnet_id: value.subnet_id?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                    vpc_id: value.vpc_id?,
+                })
+            }
+        }
+
+        impl From<super::InstanceNetworkInterface> for InstanceNetworkInterface {
+            fn from(value: super::InstanceNetworkInterface) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    instance_id: Ok(value.instance_id),
+                    ip: Ok(value.ip),
+                    mac: Ok(value.mac),
+                    name: Ok(value.name),
+                    primary: Ok(value.primary),
+                    subnet_id: Ok(value.subnet_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vpc_id: Ok(value.vpc_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InstanceNetworkInterfaceCreate {
+            description: Result<String, String>,
+            ip: Result<Option<std::net::IpAddr>, String>,
+            name: Result<super::Name, String>,
+            subnet_name: Result<super::Name, String>,
+            vpc_name: Result<super::Name, String>,
+        }
+
+        impl Default for InstanceNetworkInterfaceCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    ip: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    subnet_name: Err("no value supplied for subnet_name".to_string()),
+                    vpc_name: Err("no value supplied for vpc_name".to_string()),
+                }
+            }
+        }
+
+        impl InstanceNetworkInterfaceCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn subnet_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.subnet_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet_name: {}", e));
+                self
+            }
+            pub fn vpc_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.vpc_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vpc_name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InstanceNetworkInterfaceCreate>
+            for super::InstanceNetworkInterfaceCreate
+        {
+            type Error = String;
+            fn try_from(value: InstanceNetworkInterfaceCreate) -> Result<Self, String> {
+                Ok(Self {
+                    description: value.description?,
+                    ip: value.ip?,
+                    name: value.name?,
+                    subnet_name: value.subnet_name?,
+                    vpc_name: value.vpc_name?,
+                })
+            }
+        }
+
+        impl From<super::InstanceNetworkInterfaceCreate> for InstanceNetworkInterfaceCreate {
+            fn from(value: super::InstanceNetworkInterfaceCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    ip: Ok(value.ip),
+                    name: Ok(value.name),
+                    subnet_name: Ok(value.subnet_name),
+                    vpc_name: Ok(value.vpc_name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InstanceNetworkInterfaceResultsPage {
+            items: Result<Vec<super::InstanceNetworkInterface>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for InstanceNetworkInterfaceResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl InstanceNetworkInterfaceResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::InstanceNetworkInterface>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InstanceNetworkInterfaceResultsPage>
+            for super::InstanceNetworkInterfaceResultsPage
+        {
+            type Error = String;
+            fn try_from(value: InstanceNetworkInterfaceResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::InstanceNetworkInterfaceResultsPage> for InstanceNetworkInterfaceResultsPage {
+            fn from(value: super::InstanceNetworkInterfaceResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct InstanceNetworkInterfaceUpdate {
+            description: Result<Option<String>, String>,
+            name: Result<Option<super::Name>, String>,
+            primary: Result<bool, String>,
+        }
+
+        impl Default for InstanceNetworkInterfaceUpdate {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    name: Ok(Default::default()),
+                    primary: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl InstanceNetworkInterfaceUpdate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Name>>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn primary<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.primary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for primary: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<InstanceNetworkInterfaceUpdate>
+            for super::InstanceNetworkInterfaceUpdate
+        {
+            type Error = String;
+            fn try_from(value: InstanceNetworkInterfaceUpdate) -> Result<Self, String> {
+                Ok(Self {
+                    description: value.description?,
+                    name: value.name?,
+                    primary: value.primary?,
+                })
+            }
+        }
+
+        impl From<super::InstanceNetworkInterfaceUpdate> for InstanceNetworkInterfaceUpdate {
+            fn from(value: super::InstanceNetworkInterfaceUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                    primary: Ok(value.primary),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct InstanceResultsPage {
             items: Result<Vec<super::Instance>, String>,
             next_page: Result<Option<String>, String>,
@@ -10359,416 +10838,6 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct NetworkInterface {
-            description: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            instance_id: Result<uuid::Uuid, String>,
-            ip: Result<std::net::IpAddr, String>,
-            mac: Result<super::MacAddr, String>,
-            name: Result<super::Name, String>,
-            primary: Result<bool, String>,
-            subnet_id: Result<uuid::Uuid, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            vpc_id: Result<uuid::Uuid, String>,
-        }
-
-        impl Default for NetworkInterface {
-            fn default() -> Self {
-                Self {
-                    description: Err("no value supplied for description".to_string()),
-                    id: Err("no value supplied for id".to_string()),
-                    instance_id: Err("no value supplied for instance_id".to_string()),
-                    ip: Err("no value supplied for ip".to_string()),
-                    mac: Err("no value supplied for mac".to_string()),
-                    name: Err("no value supplied for name".to_string()),
-                    primary: Err("no value supplied for primary".to_string()),
-                    subnet_id: Err("no value supplied for subnet_id".to_string()),
-                    time_created: Err("no value supplied for time_created".to_string()),
-                    time_modified: Err("no value supplied for time_modified".to_string()),
-                    vpc_id: Err("no value supplied for vpc_id".to_string()),
-                }
-            }
-        }
-
-        impl NetworkInterface {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<String>,
-                T::Error: std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-            pub fn instance_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.instance_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for instance_id: {}", e));
-                self
-            }
-            pub fn ip<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<std::net::IpAddr>,
-                T::Error: std::fmt::Display,
-            {
-                self.ip = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
-                self
-            }
-            pub fn mac<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::MacAddr>,
-                T::Error: std::fmt::Display,
-            {
-                self.mac = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for mac: {}", e));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::Name>,
-                T::Error: std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn primary<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<bool>,
-                T::Error: std::fmt::Display,
-            {
-                self.primary = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for primary: {}", e));
-                self
-            }
-            pub fn subnet_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.subnet_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for subnet_id: {}", e));
-                self
-            }
-            pub fn time_created<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_created = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_created: {}", e)
-                });
-                self
-            }
-            pub fn time_modified<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_modified = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_modified: {}", e)
-                });
-                self
-            }
-            pub fn vpc_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.vpc_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for vpc_id: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<NetworkInterface> for super::NetworkInterface {
-            type Error = String;
-            fn try_from(value: NetworkInterface) -> Result<Self, String> {
-                Ok(Self {
-                    description: value.description?,
-                    id: value.id?,
-                    instance_id: value.instance_id?,
-                    ip: value.ip?,
-                    mac: value.mac?,
-                    name: value.name?,
-                    primary: value.primary?,
-                    subnet_id: value.subnet_id?,
-                    time_created: value.time_created?,
-                    time_modified: value.time_modified?,
-                    vpc_id: value.vpc_id?,
-                })
-            }
-        }
-
-        impl From<super::NetworkInterface> for NetworkInterface {
-            fn from(value: super::NetworkInterface) -> Self {
-                Self {
-                    description: Ok(value.description),
-                    id: Ok(value.id),
-                    instance_id: Ok(value.instance_id),
-                    ip: Ok(value.ip),
-                    mac: Ok(value.mac),
-                    name: Ok(value.name),
-                    primary: Ok(value.primary),
-                    subnet_id: Ok(value.subnet_id),
-                    time_created: Ok(value.time_created),
-                    time_modified: Ok(value.time_modified),
-                    vpc_id: Ok(value.vpc_id),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct NetworkInterfaceCreate {
-            description: Result<String, String>,
-            ip: Result<Option<std::net::IpAddr>, String>,
-            name: Result<super::Name, String>,
-            subnet_name: Result<super::Name, String>,
-            vpc_name: Result<super::Name, String>,
-        }
-
-        impl Default for NetworkInterfaceCreate {
-            fn default() -> Self {
-                Self {
-                    description: Err("no value supplied for description".to_string()),
-                    ip: Ok(Default::default()),
-                    name: Err("no value supplied for name".to_string()),
-                    subnet_name: Err("no value supplied for subnet_name".to_string()),
-                    vpc_name: Err("no value supplied for vpc_name".to_string()),
-                }
-            }
-        }
-
-        impl NetworkInterfaceCreate {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<String>,
-                T::Error: std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-            pub fn ip<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<std::net::IpAddr>>,
-                T::Error: std::fmt::Display,
-            {
-                self.ip = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::Name>,
-                T::Error: std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn subnet_name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::Name>,
-                T::Error: std::fmt::Display,
-            {
-                self.subnet_name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for subnet_name: {}", e));
-                self
-            }
-            pub fn vpc_name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::Name>,
-                T::Error: std::fmt::Display,
-            {
-                self.vpc_name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for vpc_name: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<NetworkInterfaceCreate> for super::NetworkInterfaceCreate {
-            type Error = String;
-            fn try_from(value: NetworkInterfaceCreate) -> Result<Self, String> {
-                Ok(Self {
-                    description: value.description?,
-                    ip: value.ip?,
-                    name: value.name?,
-                    subnet_name: value.subnet_name?,
-                    vpc_name: value.vpc_name?,
-                })
-            }
-        }
-
-        impl From<super::NetworkInterfaceCreate> for NetworkInterfaceCreate {
-            fn from(value: super::NetworkInterfaceCreate) -> Self {
-                Self {
-                    description: Ok(value.description),
-                    ip: Ok(value.ip),
-                    name: Ok(value.name),
-                    subnet_name: Ok(value.subnet_name),
-                    vpc_name: Ok(value.vpc_name),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct NetworkInterfaceResultsPage {
-            items: Result<Vec<super::NetworkInterface>, String>,
-            next_page: Result<Option<String>, String>,
-        }
-
-        impl Default for NetworkInterfaceResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl NetworkInterfaceResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::NetworkInterface>>,
-                T::Error: std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<NetworkInterfaceResultsPage> for super::NetworkInterfaceResultsPage {
-            type Error = String;
-            fn try_from(value: NetworkInterfaceResultsPage) -> Result<Self, String> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
-                })
-            }
-        }
-
-        impl From<super::NetworkInterfaceResultsPage> for NetworkInterfaceResultsPage {
-            fn from(value: super::NetworkInterfaceResultsPage) -> Self {
-                Self {
-                    items: Ok(value.items),
-                    next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct NetworkInterfaceUpdate {
-            description: Result<Option<String>, String>,
-            name: Result<Option<super::Name>, String>,
-            primary: Result<bool, String>,
-        }
-
-        impl Default for NetworkInterfaceUpdate {
-            fn default() -> Self {
-                Self {
-                    description: Ok(Default::default()),
-                    name: Ok(Default::default()),
-                    primary: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl NetworkInterfaceUpdate {
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {}", e));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<super::Name>>,
-                T::Error: std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn primary<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<bool>,
-                T::Error: std::fmt::Display,
-            {
-                self.primary = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for primary: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<NetworkInterfaceUpdate> for super::NetworkInterfaceUpdate {
-            type Error = String;
-            fn try_from(value: NetworkInterfaceUpdate) -> Result<Self, String> {
-                Ok(Self {
-                    description: value.description?,
-                    name: value.name?,
-                    primary: value.primary?,
-                })
-            }
-        }
-
-        impl From<super::NetworkInterfaceUpdate> for NetworkInterfaceUpdate {
-            fn from(value: super::NetworkInterfaceUpdate) -> Self {
-                Self {
-                    description: Ok(value.description),
-                    name: Ok(value.name),
-                    primary: Ok(value.primary),
                 }
             }
         }
@@ -16284,7 +16353,7 @@ pub trait ClientDisksExt {
     fn disk_bulk_write_import_start(&self) -> builder::DiskBulkWriteImportStart;
     #[doc = "Stop the process of importing blocks into a disk\n\nSends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n```ignore\nlet response = client.disk_bulk_write_import_stop()\n    .disk(disk)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn disk_bulk_write_import_stop(&self) -> builder::DiskBulkWriteImportStop;
-    #[doc = "Finalize disk when imports are done\n\nSends a `POST` request to `/v1/disks/{disk}/finalize`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n- `snapshot_name`: an optional snapshot name\n```ignore\nlet response = client.disk_finalize_import()\n    .disk(disk)\n    .project(project)\n    .snapshot_name(snapshot_name)\n    .send()\n    .await;\n```"]
+    #[doc = "Finalize disk when imports are done\n\nSends a `POST` request to `/v1/disks/{disk}/finalize`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.disk_finalize_import()\n    .disk(disk)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn disk_finalize_import(&self) -> builder::DiskFinalizeImport;
     #[doc = "Send request to import blocks from URL\n\nSends a `POST` request to `/v1/disks/{disk}/import`\n\nArguments:\n- `disk`: Name or ID of the disk\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.disk_import_blocks_from_url()\n    .disk(disk)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn disk_import_blocks_from_url(&self) -> builder::DiskImportBlocksFromUrl;
@@ -16419,23 +16488,23 @@ pub trait ClientInstancesExt {
     fn instance_migrate(&self) -> builder::InstanceMigrate;
     #[doc = "Reboot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/reboot`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_reboot()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_reboot(&self) -> builder::InstanceReboot;
-    #[doc = "Fetch an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.\n- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`. This parameter is only useful for the non-streaming GET request for serial console data, and *ignored* by the streaming websocket endpoint.\n- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_serial_console()\n    .instance(instance)\n    .from_start(from_start)\n    .max_bytes(max_bytes)\n    .most_recent(most_recent)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.\n- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`. This parameter is only useful for the non-streaming GET request for serial console data, and *ignored* by the streaming websocket endpoint.\n- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)\n- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`\n```ignore\nlet response = client.instance_serial_console()\n    .instance(instance)\n    .from_start(from_start)\n    .max_bytes(max_bytes)\n    .most_recent(most_recent)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_serial_console(&self) -> builder::InstanceSerialConsole;
-    #[doc = "Stream an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console/stream`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.\n- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`. This parameter is only useful for the non-streaming GET request for serial console data, and *ignored* by the streaming websocket endpoint.\n- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_serial_console_stream()\n    .instance(instance)\n    .from_start(from_start)\n    .max_bytes(max_bytes)\n    .most_recent(most_recent)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Stream an instance's serial console\n\nSends a `GET` request to `/v1/instances/{instance}/serial-console/stream`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.\n- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`. This parameter is only useful for the non-streaming GET request for serial console data, and *ignored* by the streaming websocket endpoint.\n- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)\n- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`\n```ignore\nlet response = client.instance_serial_console_stream()\n    .instance(instance)\n    .from_start(from_start)\n    .max_bytes(max_bytes)\n    .most_recent(most_recent)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream;
     #[doc = "Boot an instance\n\nSends a `POST` request to `/v1/instances/{instance}/start`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_start()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_start(&self) -> builder::InstanceStart;
     #[doc = "Stop an instance\n\nSends a `POST` request to `/v1/instances/{instance}/stop`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_stop()\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_stop(&self) -> builder::InstanceStop;
-    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/network-interfaces`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.instance_network_interface_list()\n    .instance(instance)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/network-interfaces`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`\n- `sort_by`\n```ignore\nlet response = client.instance_network_interface_list()\n    .instance(instance)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList;
-    #[doc = "Create a network interface\n\nSends a `POST` request to `/v1/network-interfaces`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.instance_network_interface_create()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a network interface\n\nSends a `POST` request to `/v1/network-interfaces`\n\nArguments:\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`\n- `body`\n```ignore\nlet response = client.instance_network_interface_create()\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate;
-    #[doc = "Fetch a network interface\n\nSends a `GET` request to `/v1/network-interfaces/{interface}`\n\nArguments:\n- `interface`: Name or ID of the network interface\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_network_interface_view()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a network interface\n\nSends a `GET` request to `/v1/network-interfaces/{interface}`\n\nArguments:\n- `interface`: Name or ID of the network interface\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`\n```ignore\nlet response = client.instance_network_interface_view()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView;
-    #[doc = "Update a network interface\n\nSends a `PUT` request to `/v1/network-interfaces/{interface}`\n\nArguments:\n- `interface`: Name or ID of the network interface\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.instance_network_interface_update()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a network interface\n\nSends a `PUT` request to `/v1/network-interfaces/{interface}`\n\nArguments:\n- `interface`: Name or ID of the network interface\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`\n- `body`\n```ignore\nlet response = client.instance_network_interface_update()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate;
-    #[doc = "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.\n\nSends a `DELETE` request to `/v1/network-interfaces/{interface}`\n\nArguments:\n- `interface`: Name or ID of the network interface\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project\n```ignore\nlet response = client.instance_network_interface_delete()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.\n\nSends a `DELETE` request to `/v1/network-interfaces/{interface}`\n\nArguments:\n- `interface`: Name or ID of the network interface\n- `instance`: Name or ID of the instance\n- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`\n```ignore\nlet response = client.instance_network_interface_delete()\n    .interface(interface)\n    .instance(instance)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn instance_network_interface_delete(&self) -> builder::InstanceNetworkInterfaceDelete;
 }
 
@@ -17068,41 +17137,41 @@ impl ClientSystemExt for Client {
 }
 
 pub trait ClientVpcsExt {
-    #[doc = "List firewall rules\n\nSends a `GET` request to `/v1/vpc-firewall-rules`\n\nArguments:\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_firewall_rules_view()\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "List firewall rules\n\nSends a `GET` request to `/v1/vpc-firewall-rules`\n\nArguments:\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_firewall_rules_view()\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_firewall_rules_view(&self) -> builder::VpcFirewallRulesView;
-    #[doc = "Replace firewall rules\n\nSends a `PUT` request to `/v1/vpc-firewall-rules`\n\nArguments:\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_firewall_rules_update()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Replace firewall rules\n\nSends a `PUT` request to `/v1/vpc-firewall-rules`\n\nArguments:\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_firewall_rules_update()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_firewall_rules_update(&self) -> builder::VpcFirewallRulesUpdate;
-    #[doc = "List routes\n\nList the routes associated with a router in a particular VPC.\n\nSends a `GET` request to `/v1/vpc-router-routes`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `router`: Name or ID of the router\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_route_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .router(router)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "List routes\n\nList the routes associated with a router in a particular VPC.\n\nSends a `GET` request to `/v1/vpc-router-routes`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `router`: Name or ID of the router\n- `sort_by`\n- `vpc`: Name or ID of the VPC, only required if `subnet` is provided as a `Name`\n```ignore\nlet response = client.vpc_router_route_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .router(router)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_list(&self) -> builder::VpcRouterRouteList;
-    #[doc = "Create a router\n\nSends a `POST` request to `/v1/vpc-router-routes`\n\nArguments:\n- `project`: Name or ID of the project\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_router_route_create()\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a router\n\nSends a `POST` request to `/v1/vpc-router-routes`\n\nArguments:\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC, only required if `subnet` is provided as a `Name`\n- `body`\n```ignore\nlet response = client.vpc_router_route_create()\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_create(&self) -> builder::VpcRouterRouteCreate;
-    #[doc = "Fetch a route\n\nSends a `GET` request to `/v1/vpc-router-routes/{route}`\n\nArguments:\n- `route`: Name or ID of the route\n- `project`: Name or ID of the project\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_route_view()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a route\n\nSends a `GET` request to `/v1/vpc-router-routes/{route}`\n\nArguments:\n- `route`: Name or ID of the route\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC, only required if `subnet` is provided as a `Name`\n```ignore\nlet response = client.vpc_router_route_view()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_view(&self) -> builder::VpcRouterRouteView;
-    #[doc = "Update a route\n\nSends a `PUT` request to `/v1/vpc-router-routes/{route}`\n\nArguments:\n- `route`: Name or ID of the route\n- `project`: Name or ID of the project\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_router_route_update()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a route\n\nSends a `PUT` request to `/v1/vpc-router-routes/{route}`\n\nArguments:\n- `route`: Name or ID of the route\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC, only required if `subnet` is provided as a `Name`\n- `body`\n```ignore\nlet response = client.vpc_router_route_update()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_update(&self) -> builder::VpcRouterRouteUpdate;
-    #[doc = "Delete a route\n\nSends a `DELETE` request to `/v1/vpc-router-routes/{route}`\n\nArguments:\n- `route`: Name or ID of the route\n- `project`: Name or ID of the project\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_route_delete()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a route\n\nSends a `DELETE` request to `/v1/vpc-router-routes/{route}`\n\nArguments:\n- `route`: Name or ID of the route\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `router`: Name or ID of the router\n- `vpc`: Name or ID of the VPC, only required if `subnet` is provided as a `Name`\n```ignore\nlet response = client.vpc_router_route_delete()\n    .route(route)\n    .project(project)\n    .router(router)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_route_delete(&self) -> builder::VpcRouterRouteDelete;
-    #[doc = "List routers\n\nSends a `GET` request to `/v1/vpc-routers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "List routers\n\nSends a `GET` request to `/v1/vpc-routers`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_list(&self) -> builder::VpcRouterList;
-    #[doc = "Create a VPC router\n\nSends a `POST` request to `/v1/vpc-routers`\n\nArguments:\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_router_create()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a VPC router\n\nSends a `POST` request to `/v1/vpc-routers`\n\nArguments:\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_router_create()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_router_create(&self) -> builder::VpcRouterCreate;
-    #[doc = "Get a router\n\nSends a `GET` request to `/v1/vpc-routers/{router}`\n\nArguments:\n- `router`: Name or ID of the router\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_view()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Get a router\n\nSends a `GET` request to `/v1/vpc-routers/{router}`\n\nArguments:\n- `router`: Name or ID of the router\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_view()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_view(&self) -> builder::VpcRouterView;
-    #[doc = "Update a router\n\nSends a `PUT` request to `/v1/vpc-routers/{router}`\n\nArguments:\n- `router`: Name or ID of the router\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_router_update()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a router\n\nSends a `PUT` request to `/v1/vpc-routers/{router}`\n\nArguments:\n- `router`: Name or ID of the router\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_router_update()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_router_update(&self) -> builder::VpcRouterUpdate;
-    #[doc = "Delete a router\n\nSends a `DELETE` request to `/v1/vpc-routers/{router}`\n\nArguments:\n- `router`: Name or ID of the router\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_delete()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a router\n\nSends a `DELETE` request to `/v1/vpc-routers/{router}`\n\nArguments:\n- `router`: Name or ID of the router\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_router_delete()\n    .router(router)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_router_delete(&self) -> builder::VpcRouterDelete;
-    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_list(&self) -> builder::VpcSubnetList;
-    #[doc = "Create a subnet\n\nSends a `POST` request to `/v1/vpc-subnets`\n\nArguments:\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_subnet_create()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Create a subnet\n\nSends a `POST` request to `/v1/vpc-subnets`\n\nArguments:\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_subnet_create()\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_create(&self) -> builder::VpcSubnetCreate;
-    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_view()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Fetch a subnet\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_view()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_view(&self) -> builder::VpcSubnetView;
-    #[doc = "Update a subnet\n\nSends a `PUT` request to `/v1/vpc-subnets/{subnet}`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_subnet_update()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
+    #[doc = "Update a subnet\n\nSends a `PUT` request to `/v1/vpc-subnets/{subnet}`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `vpc`: Name or ID of the VPC\n- `body`\n```ignore\nlet response = client.vpc_subnet_update()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_update(&self) -> builder::VpcSubnetUpdate;
-    #[doc = "Delete a subnet\n\nSends a `DELETE` request to `/v1/vpc-subnets/{subnet}`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `project`: Name or ID of the project\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_delete()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "Delete a subnet\n\nSends a `DELETE` request to `/v1/vpc-subnets/{subnet}`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_delete()\n    .subnet(subnet)\n    .project(project)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_delete(&self) -> builder::VpcSubnetDelete;
-    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_list_network_interfaces()\n    .subnet(subnet)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
+    #[doc = "List network interfaces\n\nSends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`\n\nArguments:\n- `subnet`: Name or ID of the subnet\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`\n- `sort_by`\n- `vpc`: Name or ID of the VPC\n```ignore\nlet response = client.vpc_subnet_list_network_interfaces()\n    .subnet(subnet)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .vpc(vpc)\n    .send()\n    .await;\n```"]
     fn vpc_subnet_list_network_interfaces(&self) -> builder::VpcSubnetListNetworkInterfaces;
     #[doc = "List VPCs\n\nSends a `GET` request to `/v1/vpcs`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.vpc_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn vpc_list(&self) -> builder::VpcList;
@@ -18678,7 +18747,7 @@ pub mod builder {
         client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
-        snapshot_name: Result<Option<String>, String>,
+        body: Result<types::builder::FinalizeDisk, String>,
     }
 
     impl<'a> DiskFinalizeImport<'a> {
@@ -18687,7 +18756,7 @@ pub mod builder {
                 client,
                 disk: Err("disk was not initialized".to_string()),
                 project: Ok(None),
-                snapshot_name: Ok(None),
+                body: Ok(types::builder::FinalizeDisk::default()),
             }
         }
 
@@ -18712,14 +18781,22 @@ pub mod builder {
             self
         }
 
-        pub fn snapshot_name<V>(mut self, value: V) -> Self
+        pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<String>,
+            V: std::convert::TryInto<types::FinalizeDisk>,
         {
-            self.snapshot_name = value
+            self.body = value
                 .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for snapshot_name failed".to_string());
+                .map(From::from)
+                .map_err(|_| "conversion to `FinalizeDisk` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::FinalizeDisk) -> types::builder::FinalizeDisk,
+        {
+            self.body = self.body.map(f);
             self
         }
 
@@ -18729,24 +18806,23 @@ pub mod builder {
                 client,
                 disk,
                 project,
-                snapshot_name,
+                body,
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let snapshot_name = snapshot_name.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(std::convert::TryInto::<types::FinalizeDisk>::try_into)
+                .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/disks/{}/finalize",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
                 query.push(("project", v.to_string()));
             }
-            if let Some(v) = &snapshot_name {
-                query.push(("snapshot_name", v.to_string()));
-            }
-            let request = client.client.post(url).query(&query).build()?;
+            let request = client.client.post(url).json(&body).query(&query).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
@@ -21571,7 +21647,7 @@ pub mod builder {
         #[doc = "Sends a `GET` request to `/v1/network-interfaces`"]
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::NetworkInterfaceResultsPage>, Error<types::Error>>
+        ) -> Result<ResponseValue<types::InstanceNetworkInterfaceResultsPage>, Error<types::Error>>
         {
             let Self {
                 client,
@@ -21621,8 +21697,9 @@ pub mod builder {
         #[doc = "Streams `GET` requests to `/v1/network-interfaces`"]
         pub fn stream(
             self,
-        ) -> impl futures::Stream<Item = Result<types::NetworkInterface, Error<types::Error>>> + Unpin + 'a
-        {
+        ) -> impl futures::Stream<Item = Result<types::InstanceNetworkInterface, Error<types::Error>>>
+               + Unpin
+               + 'a {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
@@ -21674,7 +21751,7 @@ pub mod builder {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::builder::NetworkInterfaceCreate, String>,
+        body: Result<types::builder::InstanceNetworkInterfaceCreate, String>,
     }
 
     impl<'a> InstanceNetworkInterfaceCreate<'a> {
@@ -21683,7 +21760,7 @@ pub mod builder {
                 client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
-                body: Ok(types::builder::NetworkInterfaceCreate::default()),
+                body: Ok(types::builder::InstanceNetworkInterfaceCreate::default()),
             }
         }
 
@@ -21710,20 +21787,19 @@ pub mod builder {
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::NetworkInterfaceCreate>,
+            V: std::convert::TryInto<types::InstanceNetworkInterfaceCreate>,
         {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|_| "conversion to `NetworkInterfaceCreate` for body failed".to_string());
+            self.body = value.try_into().map(From::from).map_err(|_| {
+                "conversion to `InstanceNetworkInterfaceCreate` for body failed".to_string()
+            });
             self
         }
 
         pub fn body_map<F>(mut self, f: F) -> Self
         where
             F: std::ops::FnOnce(
-                types::builder::NetworkInterfaceCreate,
-            ) -> types::builder::NetworkInterfaceCreate,
+                types::builder::InstanceNetworkInterfaceCreate,
+            ) -> types::builder::InstanceNetworkInterfaceCreate,
         {
             self.body = self.body.map(f);
             self
@@ -21732,7 +21808,7 @@ pub mod builder {
         #[doc = "Sends a `POST` request to `/v1/network-interfaces`"]
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::NetworkInterface>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::InstanceNetworkInterface>, Error<types::Error>> {
             let Self {
                 client,
                 instance,
@@ -21742,7 +21818,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::NetworkInterfaceCreate>::try_into)
+                .and_then(std::convert::TryInto::<types::InstanceNetworkInterfaceCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/network-interfaces", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
@@ -21820,7 +21896,7 @@ pub mod builder {
         #[doc = "Sends a `GET` request to `/v1/network-interfaces/{interface}`"]
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::NetworkInterface>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::InstanceNetworkInterface>, Error<types::Error>> {
             let Self {
                 client,
                 interface,
@@ -21865,7 +21941,7 @@ pub mod builder {
         interface: Result<types::NameOrId, String>,
         instance: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::builder::NetworkInterfaceUpdate, String>,
+        body: Result<types::builder::InstanceNetworkInterfaceUpdate, String>,
     }
 
     impl<'a> InstanceNetworkInterfaceUpdate<'a> {
@@ -21875,7 +21951,7 @@ pub mod builder {
                 interface: Err("interface was not initialized".to_string()),
                 instance: Ok(None),
                 project: Ok(None),
-                body: Ok(types::builder::NetworkInterfaceUpdate::default()),
+                body: Ok(types::builder::InstanceNetworkInterfaceUpdate::default()),
             }
         }
 
@@ -21913,20 +21989,19 @@ pub mod builder {
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::NetworkInterfaceUpdate>,
+            V: std::convert::TryInto<types::InstanceNetworkInterfaceUpdate>,
         {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|_| "conversion to `NetworkInterfaceUpdate` for body failed".to_string());
+            self.body = value.try_into().map(From::from).map_err(|_| {
+                "conversion to `InstanceNetworkInterfaceUpdate` for body failed".to_string()
+            });
             self
         }
 
         pub fn body_map<F>(mut self, f: F) -> Self
         where
             F: std::ops::FnOnce(
-                types::builder::NetworkInterfaceUpdate,
-            ) -> types::builder::NetworkInterfaceUpdate,
+                types::builder::InstanceNetworkInterfaceUpdate,
+            ) -> types::builder::InstanceNetworkInterfaceUpdate,
         {
             self.body = self.body.map(f);
             self
@@ -21935,7 +22010,7 @@ pub mod builder {
         #[doc = "Sends a `PUT` request to `/v1/network-interfaces/{interface}`"]
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::NetworkInterface>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::InstanceNetworkInterface>, Error<types::Error>> {
             let Self {
                 client,
                 interface,
@@ -21947,7 +22022,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::NetworkInterfaceUpdate>::try_into)
+                .and_then(std::convert::TryInto::<types::InstanceNetworkInterfaceUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/network-interfaces/{}",
@@ -29777,7 +29852,7 @@ pub mod builder {
         #[doc = "Sends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`"]
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::NetworkInterfaceResultsPage>, Error<types::Error>>
+        ) -> Result<ResponseValue<types::InstanceNetworkInterfaceResultsPage>, Error<types::Error>>
         {
             let Self {
                 client,
@@ -29833,8 +29908,9 @@ pub mod builder {
         #[doc = "Streams `GET` requests to `/v1/vpc-subnets/{subnet}/network-interfaces`"]
         pub fn stream(
             self,
-        ) -> impl futures::Stream<Item = Result<types::NetworkInterface, Error<types::Error>>> + Unpin + 'a
-        {
+        ) -> impl futures::Stream<Item = Result<types::InstanceNetworkInterface, Error<types::Error>>>
+               + Unpin
+               + 'a {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
