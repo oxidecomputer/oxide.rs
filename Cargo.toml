@@ -15,7 +15,7 @@ clap = { version = "4.2", features = ["derive", "string", "env"] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
 env_logger = "0.10.0"
-expectorate = "1.0.6"
+expectorate = "1.0.7"
 futures = "0.3.28"
 http = "0.2.9"
 httpmock = "0.6.7"
