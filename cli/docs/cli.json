@@ -612,7 +612,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `instance` is provided as a `Name`"
                 },
                 {
                   "long": "subnet-name",
@@ -638,7 +638,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `instance` is provided as a `Name`"
                 }
               ]
             },
@@ -656,7 +656,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `instance` is provided as a `Name`"
                 },
                 {
                   "long": "sort-by"
@@ -687,7 +687,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `instance` is provided as a `Name`"
                 }
               ]
             },
@@ -705,7 +705,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `instance` is provided as a `Name`"
                 }
               ]
             }
@@ -1550,7 +1550,7 @@
               "args": [
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "vpc",
@@ -1564,7 +1564,7 @@
               "args": [
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "vpc",
@@ -1606,7 +1606,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "vpc",
@@ -1620,7 +1620,7 @@
               "args": [
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "router",
@@ -1642,7 +1642,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "sort-by"
@@ -1668,7 +1668,7 @@
                     },
                     {
                       "long": "project",
-                      "help": "Name or ID of the project"
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                     },
                     {
                       "long": "router",
@@ -1676,7 +1676,7 @@
                     },
                     {
                       "long": "vpc",
-                      "help": "Name or ID of the VPC"
+                      "help": "Name or ID of the VPC, only required if `subnet` is provided as a `Name`"
                     }
                   ]
                 },
@@ -1686,7 +1686,7 @@
                   "args": [
                     {
                       "long": "project",
-                      "help": "Name or ID of the project"
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                     },
                     {
                       "long": "route",
@@ -1698,7 +1698,7 @@
                     },
                     {
                       "long": "vpc",
-                      "help": "Name or ID of the VPC"
+                      "help": "Name or ID of the VPC, only required if `subnet` is provided as a `Name`"
                     }
                   ]
                 },
@@ -1712,7 +1712,7 @@
                     },
                     {
                       "long": "project",
-                      "help": "Name or ID of the project"
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                     },
                     {
                       "long": "router",
@@ -1723,7 +1723,7 @@
                     },
                     {
                       "long": "vpc",
-                      "help": "Name or ID of the VPC"
+                      "help": "Name or ID of the VPC, only required if `subnet` is provided as a `Name`"
                     }
                   ]
                 },
@@ -1739,7 +1739,7 @@
                     },
                     {
                       "long": "project",
-                      "help": "Name or ID of the project"
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                     },
                     {
                       "long": "route",
@@ -1751,7 +1751,7 @@
                     },
                     {
                       "long": "vpc",
-                      "help": "Name or ID of the VPC"
+                      "help": "Name or ID of the VPC, only required if `subnet` is provided as a `Name`"
                     }
                   ]
                 },
@@ -1761,7 +1761,7 @@
                   "args": [
                     {
                       "long": "project",
-                      "help": "Name or ID of the project"
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                     },
                     {
                       "long": "route",
@@ -1773,7 +1773,7 @@
                     },
                     {
                       "long": "vpc",
-                      "help": "Name or ID of the VPC"
+                      "help": "Name or ID of the VPC, only required if `subnet` is provided as a `Name`"
                     }
                   ]
                 }
@@ -1791,7 +1791,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "router",
@@ -1809,7 +1809,7 @@
               "args": [
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "router",
@@ -1846,7 +1846,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "vpc",
@@ -1860,7 +1860,7 @@
               "args": [
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "subnet",
@@ -1882,7 +1882,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "sort-by"
@@ -1906,7 +1906,7 @@
                     },
                     {
                       "long": "project",
-                      "help": "Name or ID of the project"
+                      "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                     },
                     {
                       "long": "sort-by"
@@ -1935,7 +1935,7 @@
                 },
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "subnet",
@@ -1953,7 +1953,7 @@
               "args": [
                 {
                   "long": "project",
-                  "help": "Name or ID of the project"
+                  "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
                   "long": "subnet",

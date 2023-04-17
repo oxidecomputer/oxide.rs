@@ -566,8 +566,13 @@ impl Cli {
                 clap::Arg::new("snapshot-name")
                     .long("snapshot-name")
                     .required(false)
-                    .value_parser(clap::value_parser!(String))
-                    .help("an optional snapshot name"),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .help(
+                        "If specified a snapshot of the disk will be created with the given name \
+                         during finalization. If not specified, a snapshot for the disk will \
+                         _not_ be created. A snapshot can be manually created once the disk \
+                         transitions into the `Detached` state.",
+                    ),
             )
             .about("Finalize disk when imports are done")
     }
@@ -1102,7 +1107,10 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `instance` is provided as a \
+                         `Name`",
+                    ),
             )
             .about("Fetch an instance's serial console")
     }
@@ -1157,7 +1165,10 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `instance` is provided as a \
+                         `Name`",
+                    ),
             )
             .about("Stream an instance's serial console")
     }
@@ -1321,7 +1332,10 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `instance` is provided as a \
+                         `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -1346,7 +1360,10 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `instance` is provided as a \
+                         `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("description")
@@ -1408,7 +1425,10 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `instance` is provided as a \
+                         `Name`",
+                    ),
             )
             .about("Fetch a network interface")
     }
@@ -1434,7 +1454,10 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `instance` is provided as a \
+                         `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("description")
@@ -1488,7 +1511,10 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `instance` is provided as a \
+                         `Name`",
+                    ),
             )
             .about(
                 "Delete a network interface\n\nNote that the primary interface for an instance \
@@ -2648,7 +2674,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -2667,7 +2695,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -2693,7 +2723,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("router")
@@ -2713,7 +2745,9 @@ impl Cli {
                     .long("vpc")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the VPC"),
+                    .help(
+                        "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
+                    ),
             )
             .about("List routes\n\nList the routes associated with a router in a particular VPC.")
     }
@@ -2725,7 +2759,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("router")
@@ -2739,7 +2775,9 @@ impl Cli {
                     .long("vpc")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the VPC"),
+                    .help(
+                        "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("description")
@@ -2770,7 +2808,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("router")
@@ -2784,7 +2824,9 @@ impl Cli {
                     .long("vpc")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the VPC"),
+                    .help(
+                        "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
+                    ),
             )
             .about("Fetch a route")
     }
@@ -2803,7 +2845,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("router")
@@ -2817,7 +2861,9 @@ impl Cli {
                     .long("vpc")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the VPC"),
+                    .help(
+                        "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("description")
@@ -2848,7 +2894,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("router")
@@ -2862,7 +2910,9 @@ impl Cli {
                     .long("vpc")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the VPC"),
+                    .help(
+                        "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
+                    ),
             )
             .about("Delete a route")
     }
@@ -2881,7 +2931,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -2906,7 +2958,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -2944,7 +2998,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -2970,7 +3026,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -3008,7 +3066,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -3034,7 +3094,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -3059,7 +3121,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -3120,7 +3184,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -3146,7 +3212,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -3184,7 +3252,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -3217,7 +3287,9 @@ impl Cli {
                     .long("project")
                     .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .help("Name or ID of the project"),
+                    .help(
+                        "Name or ID of the project, only required if `vpc` is provided as a `Name`",
+                    ),
             )
             .arg(
                 clap::Arg::new("sort-by")
@@ -4308,8 +4380,8 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<String>("snapshot-name") {
-            request = request.snapshot_name(value.clone());
+        if let Some(value) = matches.get_one::<types::Name>("snapshot-name") {
+            request = request.body_map(|body| body.snapshot_name(value.clone()))
         }
 
         self.over
