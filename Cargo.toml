@@ -21,7 +21,7 @@ http = "0.2.9"
 httpmock = "0.6.7"
 newline-converter = "0.2.2"
 oauth2 = "4.3.0"
-open = "4.0.1"
+open = "4.0.2"
 oxide-api = { path = "sdk" }
 predicates = "3.0.2"
 pretty_assertions = "1.3.0"
