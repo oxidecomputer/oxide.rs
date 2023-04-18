@@ -5,6 +5,10 @@
 workflow = "integrate.yml"
 branch = "main"
 
+# Request an installation token when running this workflow
+
+requires_token = true
+
 # Listen for pushes to the nexus.json file in oxidecomputer/omicron and multiple source paths in
 # oxidecomputer/progenitor (on each repository's respective default branch).
 
