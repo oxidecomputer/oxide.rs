@@ -13,6 +13,7 @@ use oxide_api::types::BlockSize;
 use oxide_api::types::DiskCreate;
 use oxide_api::types::DiskSource;
 use oxide_api::types::Distribution;
+use oxide_api::types::FinalizeDisk;
 use oxide_api::types::GlobalImageCreate;
 use oxide_api::types::ImageCreate;
 use oxide_api::types::ImageSource;
@@ -400,14 +401,13 @@ impl CmdDiskImport {
         }
 
         // Finalize the disk, optionally making a snapshot
-        let mut request = client
+        let request = client
             .disk_finalize_import()
             .project(&self.project)
-            .disk(self.disk_name.clone());
-
-        if let Some(snapshot_name) = &self.snapshot_name {
-            request = request.snapshot_name(snapshot_name.clone());
-        }
+            .disk(self.disk_name.clone())
+            .body(FinalizeDisk {
+                snapshot_name: self.snapshot_name.as_ref().map(|x| x.clone()),
+            });
 
         let finalize_response = request.send().await;
 
