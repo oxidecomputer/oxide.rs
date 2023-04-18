@@ -2,6 +2,12 @@ name: Integration
 
 on:
   workflow_dispatch:
+    reflector_access_token:
+      description: Access token for use in authenticating as the Reflector bot
+      type: string
+    reflector_user_id:
+      description: User id of the Reflector bot
+      type: string
 
 permissions:
   contents: write
@@ -19,6 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.5.0
         with:
+          token: ${{ inputs.reflector_access_token }}
           ref: main
       - name: Install nightly rustfmt
         uses: actions-rs/toolchain@v1
@@ -64,8 +71,8 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "reflector[bot]"
+          git config --local user.email "${{ inputs.reflector_user_id }}+reflector[bot]@users.noreply.github.com"
 
           # Detect specific changes that will be committed back
           git diff --quiet cli/docs/cli.json || docsUpdate=$?
