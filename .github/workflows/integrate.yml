@@ -110,7 +110,7 @@ jobs:
           then
             echo "Main is up to date with integration. No pull request needed"
 
-            if [ -z "$prNumber" ]
+            if [ "$prNumber" != "" ]
             then
               echo "Closing existing PR"
               gh pr close $prNumber
