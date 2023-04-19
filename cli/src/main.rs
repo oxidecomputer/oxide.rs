@@ -206,6 +206,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ImageCreate => Some("image create"),
         CliCommand::ImageView => Some("image view"),
         CliCommand::ImageDelete => Some("image delete"),
+        CliCommand::ImagePromote => Some("image promote"),
 
         CliCommand::SiloIdentityProviderList => Some("silo idp list"),
         CliCommand::LocalIdpUserCreate => Some("silo idp local user create"),

@@ -43,6 +43,7 @@ impl Cli {
             CliCommand::ImageCreate => Self::cli_image_create(),
             CliCommand::ImageView => Self::cli_image_view(),
             CliCommand::ImageDelete => Self::cli_image_delete(),
+            CliCommand::ImagePromote => Self::cli_image_promote(),
             CliCommand::InstanceList => Self::cli_instance_list(),
             CliCommand::InstanceCreate => Self::cli_instance_create(),
             CliCommand::InstanceView => Self::cli_instance_view(),
@@ -681,6 +682,16 @@ impl Cli {
     pub fn cli_image_list() -> clap::Command {
         clap::Command::new("")
             .arg(
+                clap::Arg::new("include-silo-images")
+                    .long("include-silo-images")
+                    .required(false)
+                    .value_parser(clap::value_parser!(bool))
+                    .help(
+                        "Flag used to indicate if silo scoped images should be included when \
+                         listing project images. Only valid when `project` is provided.",
+                    ),
+            )
+            .arg(
                 clap::Arg::new("limit")
                     .long("limit")
                     .required(false)
@@ -712,7 +723,7 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(true)
+                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the project"),
             )
@@ -785,6 +796,25 @@ impl Cli {
                  cannot be undone. Any instances in the project using the image will continue to \
                  run, however new instances can not be created with this image.",
             )
+    }
+
+    pub fn cli_image_promote() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("image")
+                    .long("image")
+                    .required(true)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the image"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .required(false)
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .help("Name or ID of the project"),
+            )
+            .about("Promote a project image to be visible to all projects in the silo")
     }
 
     pub fn cli_instance_list() -> clap::Command {
@@ -3544,6 +3574,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::ImageDelete => {
                 self.execute_image_delete(matches).await;
             }
+            CliCommand::ImagePromote => {
+                self.execute_image_promote(matches).await;
+            }
             CliCommand::InstanceList => {
                 self.execute_instance_list(matches).await;
             }
@@ -4509,6 +4542,10 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_image_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.image_list();
+        if let Some(value) = matches.get_one::<bool>("include-silo-images") {
+            request = request.include_silo_images(value.clone());
+        }
+
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -4603,6 +4640,30 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_image_delete(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_image_promote(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.image_promote();
+        if let Some(value) = matches.get_one::<types::NameOrId>("image") {
+            request = request.image(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_image_promote(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -7830,6 +7891,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_image_promote(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ImagePromote,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_instance_list(
         &self,
         matches: &clap::ArgMatches,
@@ -8800,6 +8869,7 @@ pub enum CliCommand {
     ImageCreate,
     ImageView,
     ImageDelete,
+    ImagePromote,
     InstanceList,
     InstanceCreate,
     InstanceView,
@@ -8951,6 +9021,7 @@ impl CliCommand {
             CliCommand::ImageCreate,
             CliCommand::ImageView,
             CliCommand::ImageDelete,
+            CliCommand::ImagePromote,
             CliCommand::InstanceList,
             CliCommand::InstanceCreate,
             CliCommand::InstanceView,
