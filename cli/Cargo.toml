@@ -4,7 +4,7 @@ description = "CLI for the Oxide rack"
 version = "0.1.0"
 edition = "2021"
 license = "MPL-2.0"
-repository = "https://github.com/oxidecomputer/oxide-sdk-and-cli"
+repository = "https://github.com/oxidecomputer/oxide.rs"
 readme = "README.md"
 
 default-run = "oxide"
