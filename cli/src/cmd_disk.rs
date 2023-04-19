@@ -12,9 +12,7 @@ use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use oxide_api::types::BlockSize;
 use oxide_api::types::DiskCreate;
 use oxide_api::types::DiskSource;
-use oxide_api::types::Distribution;
 use oxide_api::types::FinalizeDisk;
-use oxide_api::types::GlobalImageCreate;
 use oxide_api::types::ImageCreate;
 use oxide_api::types::ImageSource;
 use oxide_api::types::ImportBlocksBulkWrite;
@@ -25,7 +23,6 @@ use oxide_api::Client;
 use oxide_api::ClientDisksExt;
 use oxide_api::ClientImagesExt;
 use oxide_api::ClientSnapshotsExt;
-use oxide_api::ClientSystemExt;
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
@@ -442,18 +439,13 @@ impl CmdDiskImport {
                 .await?
                 .into_inner();
 
-            // TODO project level images
             client
-                .system_image_create()
-                .body(GlobalImageCreate {
+                .image_create()
+                .body(ImageCreate {
                     name: image_name.clone(),
                     description: image_description.clone(),
-                    //os: image_os.clone(),
-                    //version: image_version.clone(),
-                    distribution: Distribution {
-                        name: image_os.parse().unwrap(),
-                        version: image_version.clone(),
-                    },
+                    os: image_os.clone(),
+                    version: image_version.clone(),
                     source: ImageSource::Snapshot { id: snapshot.id },
                     block_size: disk_block_size,
                 })
