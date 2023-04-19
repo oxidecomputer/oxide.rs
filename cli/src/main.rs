@@ -20,6 +20,8 @@ mod cmd_api;
 mod cmd_auth;
 mod cmd_disk;
 mod cmd_docs;
+mod cmd_instance_serial;
+
 mod cmd_version;
 mod config;
 mod context;
@@ -41,6 +43,7 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_docs::CmdDocs>("docs")
         .add_custom::<cmd_version::CmdVersion>("version")
         .add_custom::<cmd_disk::CmdDiskImport>("disk import")
+        .add_custom::<cmd_instance_serial::CmdInstanceSerial>("instance serial")
 }
 
 #[tokio::main]

@@ -1108,6 +1108,78 @@
           ]
         },
         {
+          "name": "serial",
+          "about": "Connect to or retrieve data from the instance's serial console.",
+          "subcommands": [
+            {
+              "name": "console",
+              "about": "Connect to an instance's serial console interactively.",
+              "args": [
+                {
+                  "long": "byte-offset",
+                  "short": "b",
+                  "help": "The offset since boot (or if negative, the current end of the buffered data) from which to retrieve output history"
+                },
+                {
+                  "long": "escape-prefix-length",
+                  "help": "The number of bytes from the beginning of the escape string to pass to the VM before beginning to buffer inputs until a mismatch. Defaults to 0, such that input matching the escape string does not get sent to the VM at all until a non-matching character is typed. For example, to mimic the escape sequence for exiting SSH (\"\\n~.\"), you may pass `-e '^M~.' --escape-prefix-length=1` such that newline gets sent to the VM immediately while still continuing to match the rest of the sequence"
+                },
+                {
+                  "long": "escape-string",
+                  "short": "e",
+                  "help": "If this sequence of bytes is typed, the client will exit. Defaults to \"^]^C\" (Ctrl+], Ctrl+C). Note that the string passed for this argument must be valid UTF-8, and is used verbatim without any parsing; in most shells, if you wish to include a special character (such as Enter or a Ctrl+letter combo), you can insert the character by preceding it with Ctrl+V at the command line. To disable the escape string altogether, provide an empty string to this flag (and to exit in such a case, use pkill or similar)"
+                },
+                {
+                  "long": "instance",
+                  "short": "i",
+                  "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "project",
+                  "short": "p",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "tty",
+                  "short": "t",
+                  "help": "Use a specified tty device (e.g. /dev/ttyUSB0) rather than the current terminal's stdin/stdout"
+                }
+              ]
+            },
+            {
+              "name": "history",
+              "about": "Fetch an instance's serial console output.",
+              "args": [
+                {
+                  "long": "byte-offset",
+                  "short": "b",
+                  "help": "The offset since boot (or if negative, the current end of the buffered data) from which to retrieve output history. Defaults to the instance's first output from boot"
+                },
+                {
+                  "long": "instance",
+                  "short": "i",
+                  "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "json",
+                  "short": "j",
+                  "help": "Output a JSON payload of the requested bytes, and the absolute byte-offset-since-boot of the last byte retrieved, rather than formatting the output to the terminal directly"
+                },
+                {
+                  "long": "max-bytes",
+                  "short": "m",
+                  "help": "Maximum number of bytes of buffered serial console contents to return. If the requested range (starting at --byte-offset) runs to the end of the available buffer, the data returned will be shorter (and if --json is provided, the actual final offset will be provided)"
+                },
+                {
+                  "long": "project",
+                  "short": "p",
+                  "help": "Name or ID of the project"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "start",
           "about": "Boot an instance",
           "args": [
