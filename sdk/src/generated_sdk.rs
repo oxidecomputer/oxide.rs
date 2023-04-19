@@ -1493,7 +1493,7 @@ pub mod types {
         }
     }
 
-    #[doc = "Client view of project Images"]
+    #[doc = "Client view of images"]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Image {
         #[doc = "size of blocks in bytes"]
@@ -1509,8 +1509,9 @@ pub mod types {
         pub name: Name,
         #[doc = "The family of the operating system like Debian, Ubuntu, etc."]
         pub os: String,
-        #[doc = "The project the image belongs to"]
-        pub project_id: uuid::Uuid,
+        #[doc = "ID of the parent project if the image is a project image"]
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub project_id: Option<uuid::Uuid>,
         #[doc = "total size in bytes"]
         pub size: ByteCount,
         #[doc = "timestamp when this resource was created"]
@@ -8802,7 +8803,7 @@ pub mod types {
             id: Result<uuid::Uuid, String>,
             name: Result<super::Name, String>,
             os: Result<String, String>,
-            project_id: Result<uuid::Uuid, String>,
+            project_id: Result<Option<uuid::Uuid>, String>,
             size: Result<super::ByteCount, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -8819,7 +8820,7 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     os: Err("no value supplied for os".to_string()),
-                    project_id: Err("no value supplied for project_id".to_string()),
+                    project_id: Ok(Default::default()),
                     size: Err("no value supplied for size".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
@@ -8892,7 +8893,7 @@ pub mod types {
             }
             pub fn project_id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<uuid::Uuid>,
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
                 T::Error: std::fmt::Display,
             {
                 self.project_id = value
@@ -16439,7 +16440,7 @@ impl ClientHiddenExt for Client {
 }
 
 pub trait ClientImagesExt {
-    #[doc = "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.\n\nSends a `GET` request to `/v1/images`\n\nArguments:\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.image_list()\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
+    #[doc = "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.\n\nSends a `GET` request to `/v1/images`\n\nArguments:\n- `include_silo_images`: Flag used to indicate if silo scoped images should be included when listing project images. Only valid when `project` is provided.\n- `limit`: Maximum number of items returned by a single call\n- `page_token`: Token returned by previous call to retrieve the subsequent page\n- `project`: Name or ID of the project\n- `sort_by`\n```ignore\nlet response = client.image_list()\n    .include_silo_images(include_silo_images)\n    .limit(limit)\n    .page_token(page_token)\n    .project(project)\n    .sort_by(sort_by)\n    .send()\n    .await;\n```"]
     fn image_list(&self) -> builder::ImageList;
     #[doc = "Create an image\n\nCreate a new image in a project.\n\nSends a `POST` request to `/v1/images`\n\nArguments:\n- `project`: Name or ID of the project\n- `body`\n```ignore\nlet response = client.image_create()\n    .project(project)\n    .body(body)\n    .send()\n    .await;\n```"]
     fn image_create(&self) -> builder::ImageCreate;
@@ -16447,6 +16448,8 @@ pub trait ClientImagesExt {
     fn image_view(&self) -> builder::ImageView;
     #[doc = "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.\n\nSends a `DELETE` request to `/v1/images/{image}`\n\nArguments:\n- `image`: Name or ID of the image\n- `project`: Name or ID of the project\n```ignore\nlet response = client.image_delete()\n    .image(image)\n    .project(project)\n    .send()\n    .await;\n```"]
     fn image_delete(&self) -> builder::ImageDelete;
+    #[doc = "Promote a project image to be visible to all projects in the silo\n\nSends a `POST` request to `/v1/images/{image}/promote`\n\nArguments:\n- `image`: Name or ID of the image\n- `project`: Name or ID of the project\n```ignore\nlet response = client.image_promote()\n    .image(image)\n    .project(project)\n    .send()\n    .await;\n```"]
+    fn image_promote(&self) -> builder::ImagePromote;
 }
 
 impl ClientImagesExt for Client {
@@ -16464,6 +16467,10 @@ impl ClientImagesExt for Client {
 
     fn image_delete(&self) -> builder::ImageDelete {
         builder::ImageDelete::new(self)
+    }
+
+    fn image_promote(&self) -> builder::ImagePromote {
+        builder::ImagePromote::new(self)
     }
 }
 
@@ -19332,6 +19339,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct ImageList<'a> {
         client: &'a super::Client,
+        include_silo_images: Result<Option<bool>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -19342,11 +19350,23 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
+                include_silo_images: Ok(None),
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
             }
+        }
+
+        pub fn include_silo_images<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.include_silo_images = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for include_silo_images failed".to_string());
+            self
         }
 
         pub fn limit<V>(mut self, value: V) -> Self
@@ -19398,17 +19418,22 @@ pub mod builder {
         ) -> Result<ResponseValue<types::ImageResultsPage>, Error<types::Error>> {
             let Self {
                 client,
+                include_silo_images,
                 limit,
                 page_token,
                 project,
                 sort_by,
             } = self;
+            let include_silo_images = include_silo_images.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/images", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let mut query = Vec::with_capacity(5usize);
+            if let Some(v) = &include_silo_images {
+                query.push(("include_silo_images", v.to_string()));
+            }
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
             }
@@ -19445,6 +19470,7 @@ pub mod builder {
             use futures::TryFutureExt;
             use futures::TryStreamExt;
             let next = Self {
+                include_silo_images: Ok(None),
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
@@ -19489,7 +19515,7 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct ImageCreate<'a> {
         client: &'a super::Client,
-        project: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
         body: Result<types::builder::ImageCreate, String>,
     }
 
@@ -19497,7 +19523,7 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                project: Err("project was not initialized".to_string()),
+                project: Ok(None),
                 body: Ok(types::builder::ImageCreate::default()),
             }
         }
@@ -19508,6 +19534,7 @@ pub mod builder {
         {
             self.project = value
                 .try_into()
+                .map(Some)
                 .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
             self
         }
@@ -19544,7 +19571,9 @@ pub mod builder {
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/images", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
             let request = client.client.post(url).json(&body).query(&query).build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -19694,6 +19723,78 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    #[doc = "Builder for [`ClientImagesExt::image_promote`]\n\n[`ClientImagesExt::image_promote`]: super::ClientImagesExt::image_promote"]
+    #[derive(Debug, Clone)]
+    pub struct ImagePromote<'a> {
+        client: &'a super::Client,
+        image: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> ImagePromote<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                image: Err("image was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn image<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.image = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for image failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        #[doc = "Sends a `POST` request to `/v1/images/{image}/promote`"]
+        pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
+            let Self {
+                client,
+                image,
+                project,
+            } = self;
+            let image = image.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/images/{}/promote",
+                client.baseurl,
+                encode_path(&image.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client.client.post(url).query(&query).build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                202u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
