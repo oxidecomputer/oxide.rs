@@ -2,12 +2,13 @@ name: Integration
 
 on:
   workflow_dispatch:
-    reflector_access_token:
-      description: Access token for use in authenticating as the Reflector bot
-      type: string
-    reflector_user_id:
-      description: User id of the Reflector bot
-      type: string
+    inputs:
+      reflector_access_token:
+        description: Access token for use in authenticating as the Reflector bot
+        type: string
+      reflector_user_id:
+        description: User id of the Reflector bot
+        type: string
 
 permissions:
   contents: write
