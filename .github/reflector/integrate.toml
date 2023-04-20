@@ -28,3 +28,14 @@ paths = [
   "Cargo.toml",
   "Cargo.lock"
 ]
+
+# Listen for changes on the repo's own main branch. This ensures that the integration  branch is
+# always built on top of the latest code. Actions triggered by this location are run with a
+# 5 minute delay. This allows for multiple pushes to the main branch to be batched together into
+# a single run.
+[[on]]
+repository = "oxidecomputer/oxide.rs"
+paths = [
+  "**",
+]
+debounce = 300
