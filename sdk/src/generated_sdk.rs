@@ -31,7 +31,7 @@ pub mod types {
 
     /// A type storing a range over `T`.
     ///
-    ///This type supports ranges similar to the `RangeTo`, `Range` and
+    /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -57,7 +57,7 @@ pub mod types {
 
     /// A type storing a range over `T`.
     ///
-    ///This type supports ranges similar to the `RangeTo`, `Range` and
+    /// This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
     /// `(start..end)`, and `(start..)` respectively.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -167,7 +167,7 @@ pub mod types {
 
     /// A count of bytes, typically used either for memory or storage capacity
     ///
-    ///The maximum supported byte count is [`i64::MAX`].  This makes it
+    /// The maximum supported byte count is [`i64::MAX`].  This makes it
     /// somewhat inconvenient to define constructors: a u32 constructor can be
     /// infallible, but an i64 constructor can fail (if the value is negative)
     /// and a u64 constructor can fail (if the value is larger than i64::MAX).
@@ -1048,7 +1048,7 @@ pub mod types {
     /// Client view of a [`Policy`], which describes how this resource may be
     /// accessed
     ///
-    ///Note that the Policy only describes access granted explicitly for this
+    /// Note that the Policy only describes access granted explicitly for this
     /// resource.  The policies of parent resources can also cause a user to
     /// have access to this resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1072,7 +1072,7 @@ pub mod types {
     /// Describes the assignment of a particular role on a particular resource
     /// to a particular identity (user, group, etc.)
     ///
-    ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s
+    /// The resource is not part of this structure.  Rather, [`RoleAssignment`]s
     /// are put into a [`Policy`] and that Policy is applied to a particular
     /// resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1229,32 +1229,32 @@ pub mod types {
 
     /// A simple type for managing a histogram metric.
     ///
-    ///A histogram maintains the count of any number of samples, over a set of
+    /// A histogram maintains the count of any number of samples, over a set of
     /// bins. Bins are specified on construction via their _left_ edges,
     /// inclusive. There can't be any "gaps" in the bins, and an additional bin
     /// may be added to the left, right, or both so that the bins extend to the
     /// entire range of the support.
     ///
-    ///Note that any gaps, unsorted bins, or non-finite values will result in
+    /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
     ///
-    ///Example ------- ```rust use oximeter::histogram::{BinRange, Histogram};
+    /// Example ------- ```rust use oximeter::histogram::{BinRange, Histogram};
     ///
-    ///let edges = [0i64, 10, 20]; let mut hist =
+    /// let edges = [0i64, 10, 20]; let mut hist =
     /// Histogram::new(&edges).unwrap(); assert_eq!(hist.n_bins(), 4); // One
     /// additional bin for the range (20..) assert_eq!(hist.n_samples(), 0);
     /// hist.sample(4); hist.sample(100); assert_eq!(hist.n_samples(), 2);
     ///
-    ///let data = hist.iter().collect::<Vec<_>>(); assert_eq!(data[0].range,
+    /// let data = hist.iter().collect::<Vec<_>>(); assert_eq!(data[0].range,
     /// BinRange::range(i64::MIN, 0)); // An additional bin for `..0`
     /// assert_eq!(data[0].count, 0); // Nothing is in this bin
     ///
-    ///assert_eq!(data[1].range, BinRange::range(0, 10)); // The range `0..10`
+    /// assert_eq!(data[1].range, BinRange::range(0, 10)); // The range `0..10`
     /// assert_eq!(data[1].count, 1); // 4 is sampled into this bin ```
     ///
-    ///Notes -----
+    /// Notes -----
     ///
-    ///Histograms may be constructed either from their left bin edges, or from
+    /// Histograms may be constructed either from their left bin edges, or from
     /// a sequence of ranges. In either case, the left-most bin may be converted
     /// upon construction. In particular, if the left-most value is not equal to
     /// the minimum of the support, a new bin will be added from the minimum to
@@ -1262,7 +1262,7 @@ pub mod types {
     /// because the provided bin was unbounded below, such as `(..0)`, then that
     /// bin will be converted into one bounded below, `(MIN..0)` in this case.
     ///
-    ///The short of this is that, most of the time, it shouldn't matter. If one
+    /// The short of this is that, most of the time, it shouldn't matter. If one
     /// specifies the extremes of the support as their bins, be aware that the
     /// left-most may be converted from a `BinRange::RangeTo` into a
     /// `BinRange::Range`. In other words, the first bin of a histogram is
@@ -1290,32 +1290,32 @@ pub mod types {
 
     /// A simple type for managing a histogram metric.
     ///
-    ///A histogram maintains the count of any number of samples, over a set of
+    /// A histogram maintains the count of any number of samples, over a set of
     /// bins. Bins are specified on construction via their _left_ edges,
     /// inclusive. There can't be any "gaps" in the bins, and an additional bin
     /// may be added to the left, right, or both so that the bins extend to the
     /// entire range of the support.
     ///
-    ///Note that any gaps, unsorted bins, or non-finite values will result in
+    /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
     ///
-    ///Example ------- ```rust use oximeter::histogram::{BinRange, Histogram};
+    /// Example ------- ```rust use oximeter::histogram::{BinRange, Histogram};
     ///
-    ///let edges = [0i64, 10, 20]; let mut hist =
+    /// let edges = [0i64, 10, 20]; let mut hist =
     /// Histogram::new(&edges).unwrap(); assert_eq!(hist.n_bins(), 4); // One
     /// additional bin for the range (20..) assert_eq!(hist.n_samples(), 0);
     /// hist.sample(4); hist.sample(100); assert_eq!(hist.n_samples(), 2);
     ///
-    ///let data = hist.iter().collect::<Vec<_>>(); assert_eq!(data[0].range,
+    /// let data = hist.iter().collect::<Vec<_>>(); assert_eq!(data[0].range,
     /// BinRange::range(i64::MIN, 0)); // An additional bin for `..0`
     /// assert_eq!(data[0].count, 0); // Nothing is in this bin
     ///
-    ///assert_eq!(data[1].range, BinRange::range(0, 10)); // The range `0..10`
+    /// assert_eq!(data[1].range, BinRange::range(0, 10)); // The range `0..10`
     /// assert_eq!(data[1].count, 1); // 4 is sampled into this bin ```
     ///
-    ///Notes -----
+    /// Notes -----
     ///
-    ///Histograms may be constructed either from their left bin edges, or from
+    /// Histograms may be constructed either from their left bin edges, or from
     /// a sequence of ranges. In either case, the left-most bin may be converted
     /// upon construction. In particular, if the left-most value is not equal to
     /// the minimum of the support, a new bin will be added from the minimum to
@@ -1323,7 +1323,7 @@ pub mod types {
     /// because the provided bin was unbounded below, such as `(..0)`, then that
     /// bin will be converted into one bounded below, `(MIN..0)` in this case.
     ///
-    ///The short of this is that, most of the time, it shouldn't matter. If one
+    /// The short of this is that, most of the time, it shouldn't matter. If one
     /// specifies the extremes of the support as their bins, be aware that the
     /// left-most may be converted from a `BinRange::RangeTo` into a
     /// `BinRange::Range`. In other words, the first bin of a histogram is
@@ -1351,7 +1351,7 @@ pub mod types {
 
     /// Supported set of sort modes for scanning by id only.
     ///
-    ///Currently, we only support scanning in ascending order.
+    /// Currently, we only support scanning in ascending order.
     #[derive(
         Clone,
         Copy,
@@ -1876,7 +1876,7 @@ pub mod types {
         pub disks: Vec<InstanceDiskAttachment>,
         /// The external IP addresses provided to this instance.
         ///
-        ///By default, all instances have outbound connectivity, but no inbound
+        /// By default, all instances have outbound connectivity, but no inbound
         /// connectivity. These external addresses can be used to provide a
         /// fixed, known IP address for making inbound connections to the
         /// instance.
@@ -2006,7 +2006,7 @@ pub mod types {
     pub enum InstanceNetworkInterfaceAttachment {
         /// Create one or more `InstanceNetworkInterface`s for the `Instance`.
         ///
-        ///If more than one interface is provided, then the first will be
+        /// If more than one interface is provided, then the first will be
         /// designated the primary interface for the instance.
         #[serde(rename = "create")]
         Create(Vec<InstanceNetworkInterfaceCreate>),
@@ -2083,7 +2083,7 @@ pub mod types {
     /// [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface).
     ///
     ///
-    ///Note that modifying IP addresses for an interface is not yet supported,
+    /// Note that modifying IP addresses for an interface is not yet supported,
     /// a new interface must be created instead.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceNetworkInterfaceUpdate {
@@ -2093,13 +2093,13 @@ pub mod types {
         pub name: Option<Name>,
         /// Make a secondary interface the instance's primary interface.
         ///
-        ///If applied to a secondary interface, that interface will become the
+        /// If applied to a secondary interface, that interface will become the
         /// primary on the next reboot of the instance. Note that this may have
         /// implications for routing between instances, as the new primary
         /// interface will be on a distinct subnet from the previous primary
         /// interface.
         ///
-        ///Note that this can only be used to select a new primary interface
+        /// Note that this can only be used to select a new primary interface
         /// for an instance. Requests to change the primary interface into a
         /// secondary will return an error.
         #[serde(default)]
@@ -2166,7 +2166,7 @@ pub mod types {
 
     /// Running state of an Instance (primarily: booted or stopped)
     ///
-    ///This typically reflects whether it's starting, running, stopping, or
+    /// This typically reflects whether it's starting, running, stopping, or
     /// stopped, but also includes states related to the Instance's lifecycle
     #[derive(
         Clone,
@@ -2447,7 +2447,7 @@ pub mod types {
 
     /// Create-time parameters for an IP Pool.
     ///
-    ///See [`IpPool`](crate::external_api::views::IpPool)
+    /// See [`IpPool`](crate::external_api::views::IpPool)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPoolCreate {
         pub description: String,
@@ -2652,7 +2652,7 @@ pub mod types {
 
     /// A non-decreasing IPv4 address range, inclusive of both ends.
     ///
-    ///The first address must be less than or equal to the last address.
+    /// The first address must be less than or equal to the last address.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Ipv4Range {
         pub first: std::net::Ipv4Addr,
@@ -2747,7 +2747,7 @@ pub mod types {
 
     /// A non-decreasing IPv6 address range, inclusive of both ends.
     ///
-    ///The first address must be less than or equal to the last address.
+    /// The first address must be less than or equal to the last address.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Ipv6Range {
         pub first: std::net::Ipv6Addr,
@@ -3171,7 +3171,7 @@ pub mod types {
 
     /// Supported set of sort modes for scanning by name only
     ///
-    ///Currently, we only support scanning in ascending order.
+    /// Currently, we only support scanning in ascending order.
     #[derive(
         Clone,
         Copy,
@@ -3238,7 +3238,7 @@ pub mod types {
 
     /// Unique name for a saga [`Node`]
     ///
-    ///Each node requires a string name that's unique within its DAG.  The name
+    /// Each node requires a string name that's unique within its DAG.  The name
     /// is used to identify its output.  Nodes that depend on a given node
     /// (either directly or indirectly) can access the node's output using its
     /// name.
@@ -3608,7 +3608,7 @@ pub mod types {
     /// Client view of a [`Policy`], which describes how this resource may be
     /// accessed
     ///
-    ///Note that the Policy only describes access granted explicitly for this
+    /// Note that the Policy only describes access granted explicitly for this
     /// resource.  The policies of parent resources can also cause a user to
     /// have access to this resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3632,7 +3632,7 @@ pub mod types {
     /// Describes the assignment of a particular role on a particular resource
     /// to a particular identity (user, group, etc.)
     ///
-    ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s
+    /// The resource is not part of this structure.  Rather, [`RoleAssignment`]s
     /// are put into a [`Policy`] and that Policy is applied to a particular
     /// resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3836,7 +3836,7 @@ pub mod types {
     /// A `RouteDestination` is used to match traffic with a routing rule, on
     /// the destination of that traffic.
     ///
-    ///When traffic is to be sent to a destination that is within a given
+    /// When traffic is to be sent to a destination that is within a given
     /// `RouteDestination`, the corresponding [`RouterRoute`] applies, and
     /// traffic will be forward to the [`RouteTarget`] for that rule.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3968,7 +3968,7 @@ pub mod types {
     /// kind determines certain attributes such as if the route is modifiable
     /// and describes how or where the route was created.
     ///
-    ///See [RFD-21](https://rfd.shared.oxide.computer/rfd/0021#concept-router) for more context
+    /// See [RFD-21](https://rfd.shared.oxide.computer/rfd/0021#concept-router) for more context
     #[derive(
         Clone,
         Copy,
@@ -3986,22 +3986,22 @@ pub mod types {
         /// Determines the default destination of traffic, such as whether it
         /// goes to the internet or not.
         ///
-        ///`Destination: An Internet Gateway` `Modifiable: true`
+        /// `Destination: An Internet Gateway` `Modifiable: true`
         #[serde(rename = "default")]
         Default,
         /// Automatically added for each VPC Subnet in the VPC
         ///
-        ///`Destination: A VPC Subnet` `Modifiable: false`
+        /// `Destination: A VPC Subnet` `Modifiable: false`
         #[serde(rename = "vpc_subnet")]
         VpcSubnet,
         /// Automatically added when VPC peering is established
         ///
-        ///`Destination: A different VPC` `Modifiable: false`
+        /// `Destination: A different VPC` `Modifiable: false`
         #[serde(rename = "vpc_peering")]
         VpcPeering,
         /// Created by a user See [`RouteTarget`]
         ///
-        ///`Destination: User defined` `Modifiable: true`
+        /// `Destination: User defined` `Modifiable: true`
         #[serde(rename = "custom")]
         Custom,
     }
@@ -4445,7 +4445,7 @@ pub mod types {
         /// belong to this group and those users can log in and further
         /// initialize the Silo.
         ///
-        ///Note that if configuring a SAML based identity provider,
+        /// Note that if configuring a SAML based identity provider,
         /// group_attribute_name must be set for users to be considered part of
         /// a group. See [`SamlIdentityProviderCreate`] for more information.
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4639,7 +4639,7 @@ pub mod types {
     /// Client view of a [`Policy`], which describes how this resource may be
     /// accessed
     ///
-    ///Note that the Policy only describes access granted explicitly for this
+    /// Note that the Policy only describes access granted explicitly for this
     /// resource.  The policies of parent resources can also cause a user to
     /// have access to this resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -4663,7 +4663,7 @@ pub mod types {
     /// Describes the assignment of a particular role on a particular resource
     /// to a particular identity (user, group, etc.)
     ///
-    ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s
+    /// The resource is not part of this structure.  Rather, [`RoleAssignment`]s
     /// are put into a [`Policy`] and that Policy is applied to a particular
     /// resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5692,7 +5692,7 @@ pub mod types {
         pub dns_name: Name,
         /// The IPv6 prefix for this VPC.
         ///
-        ///All IPv6 subnets created from this VPC must be taken from this
+        /// All IPv6 subnets created from this VPC must be taken from this
         /// range, which sould be a Unique Local Address in the range
         /// `fd00::/48`. The default VPC Subnet will have the first `/64` range
         /// from this prefix.
@@ -6433,12 +6433,12 @@ pub mod types {
         pub description: String,
         /// The IPv4 address range for this subnet.
         ///
-        ///It must be allocated from an RFC 1918 private address range, and
+        /// It must be allocated from an RFC 1918 private address range, and
         /// must not overlap with any other existing subnet in the VPC.
         pub ipv4_block: Ipv4Net,
         /// The IPv6 address range for this subnet.
         ///
-        ///It must be allocated from the RFC 4193 Unique Local Address range,
+        /// It must be allocated from the RFC 4193 Unique Local Address range,
         /// with the prefix equal to the parent VPC's prefix. A random `/64`
         /// block will be assigned if one is not provided. It must not overlap
         /// with any existing subnet in the VPC.
@@ -16603,9 +16603,9 @@ pub mod types {
 #[derive(Clone, Debug)]
 /// Client for Oxide Region API
 ///
-///API for interacting with the Oxide control plane
+/// API for interacting with the Oxide control plane
 ///
-///Version: 0.0.1
+/// Version: 0.0.1
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -16662,15 +16662,15 @@ impl Client {
 pub trait ClientDisksExt {
     /// List disks
     ///
-    ///Sends a `GET` request to `/v1/disks`
+    /// Sends a `GET` request to `/v1/disks`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `project`: Name or ID of the project
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.disk_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -16682,12 +16682,12 @@ pub trait ClientDisksExt {
     fn disk_list(&self) -> builder::DiskList;
     /// Create a disk
     ///
-    ///Sends a `POST` request to `/v1/disks`
+    /// Sends a `POST` request to `/v1/disks`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.disk_create()
     ///    .project(project)
     ///    .body(body)
@@ -16697,12 +16697,12 @@ pub trait ClientDisksExt {
     fn disk_create(&self) -> builder::DiskCreate;
     /// Fetch a disk
     ///
-    ///Sends a `GET` request to `/v1/disks/{disk}`
+    /// Sends a `GET` request to `/v1/disks/{disk}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `disk`: Name or ID of the disk
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.disk_view()
     ///    .disk(disk)
     ///    .project(project)
@@ -16712,12 +16712,12 @@ pub trait ClientDisksExt {
     fn disk_view(&self) -> builder::DiskView;
     /// Delete a disk
     ///
-    ///Sends a `DELETE` request to `/v1/disks/{disk}`
+    /// Sends a `DELETE` request to `/v1/disks/{disk}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `disk`: Name or ID of the disk
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.disk_delete()
     ///    .disk(disk)
     ///    .project(project)
@@ -16727,13 +16727,13 @@ pub trait ClientDisksExt {
     fn disk_delete(&self) -> builder::DiskDelete;
     /// Import blocks into a disk
     ///
-    ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write`
+    /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `disk`: Name or ID of the disk
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.disk_bulk_write_import()
     ///    .disk(disk)
     ///    .project(project)
@@ -16744,12 +16744,12 @@ pub trait ClientDisksExt {
     fn disk_bulk_write_import(&self) -> builder::DiskBulkWriteImport;
     /// Start the process of importing blocks into a disk
     ///
-    ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write-start`
+    /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write-start`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `disk`: Name or ID of the disk
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.disk_bulk_write_import_start()
     ///    .disk(disk)
     ///    .project(project)
@@ -16759,12 +16759,12 @@ pub trait ClientDisksExt {
     fn disk_bulk_write_import_start(&self) -> builder::DiskBulkWriteImportStart;
     /// Stop the process of importing blocks into a disk
     ///
-    ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`
+    /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `disk`: Name or ID of the disk
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.disk_bulk_write_import_stop()
     ///    .disk(disk)
     ///    .project(project)
@@ -16774,13 +16774,13 @@ pub trait ClientDisksExt {
     fn disk_bulk_write_import_stop(&self) -> builder::DiskBulkWriteImportStop;
     /// Finalize disk when imports are done
     ///
-    ///Sends a `POST` request to `/v1/disks/{disk}/finalize`
+    /// Sends a `POST` request to `/v1/disks/{disk}/finalize`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `disk`: Name or ID of the disk
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.disk_finalize_import()
     ///    .disk(disk)
     ///    .project(project)
@@ -16791,13 +16791,13 @@ pub trait ClientDisksExt {
     fn disk_finalize_import(&self) -> builder::DiskFinalizeImport;
     /// Send request to import blocks from URL
     ///
-    ///Sends a `POST` request to `/v1/disks/{disk}/import`
+    /// Sends a `POST` request to `/v1/disks/{disk}/import`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `disk`: Name or ID of the disk
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.disk_import_blocks_from_url()
     ///    .disk(disk)
     ///    .project(project)
@@ -16808,9 +16808,9 @@ pub trait ClientDisksExt {
     fn disk_import_blocks_from_url(&self) -> builder::DiskImportBlocksFromUrl;
     /// Fetch disk metrics
     ///
-    ///Sends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`
+    /// Sends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `disk`
     /// - `metric`
     /// - `end_time`: An exclusive end time of metrics.
@@ -16819,7 +16819,7 @@ pub trait ClientDisksExt {
     ///   subsequent page
     /// - `project`: Name or ID of the project
     /// - `start_time`: An inclusive start time of metrics.
-    ///```ignore
+    /// ```ignore
     /// let response = client.disk_metrics_list()
     ///    .disk(disk)
     ///    .metric(metric)
@@ -16879,13 +16879,13 @@ impl ClientDisksExt for Client {
 pub trait ClientHiddenExt {
     /// Start an OAuth 2.0 Device Authorization Grant
     ///
-    ///This endpoint is designed to be accessed from an *unauthenticated* API
+    /// This endpoint is designed to be accessed from an *unauthenticated* API
     /// client. It generates and records a `device_code` and `user_code` which
     /// must be verified and confirmed prior to a token being granted.
     ///
-    ///Sends a `POST` request to `/device/auth`
+    /// Sends a `POST` request to `/device/auth`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.device_auth_request()
     ///    .body(body)
     ///    .send()
@@ -16894,14 +16894,14 @@ pub trait ClientHiddenExt {
     fn device_auth_request(&self) -> builder::DeviceAuthRequest;
     /// Confirm an OAuth 2.0 Device Authorization Grant
     ///
-    ///This endpoint is designed to be accessed by the user agent (browser),
+    /// This endpoint is designed to be accessed by the user agent (browser),
     /// not the client requesting the token. So we do not actually return the
     /// token here; it will be returned in response to the poll on
     /// `/device/token`.
     ///
-    ///Sends a `POST` request to `/device/confirm`
+    /// Sends a `POST` request to `/device/confirm`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.device_auth_confirm()
     ///    .body(body)
     ///    .send()
@@ -16910,12 +16910,12 @@ pub trait ClientHiddenExt {
     fn device_auth_confirm(&self) -> builder::DeviceAuthConfirm;
     /// Request a device access token
     ///
-    ///This endpoint should be polled by the client until the user code is
+    /// This endpoint should be polled by the client until the user code is
     /// verified and the grant is confirmed.
     ///
-    ///Sends a `POST` request to `/device/token`
+    /// Sends a `POST` request to `/device/token`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.device_access_token()
     ///    .body(body)
     ///    .send()
@@ -16924,7 +16924,7 @@ pub trait ClientHiddenExt {
     fn device_access_token(&self) -> builder::DeviceAccessToken;
     /// Sends a `POST` request to `/login`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.login_spoof()
     ///    .body(body)
     ///    .send()
@@ -16933,7 +16933,7 @@ pub trait ClientHiddenExt {
     fn login_spoof(&self) -> builder::LoginSpoof;
     /// Sends a `POST` request to `/logout`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.logout()
     ///    .send()
     ///    .await;
@@ -16966,13 +16966,13 @@ impl ClientHiddenExt for Client {
 pub trait ClientImagesExt {
     /// List images
     ///
-    ///List images which are global or scoped to the specified project. The
+    /// List images which are global or scoped to the specified project. The
     /// images are returned sorted by creation date, with the most recent images
     /// appearing first.
     ///
-    ///Sends a `GET` request to `/v1/images`
+    /// Sends a `GET` request to `/v1/images`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `include_silo_images`: Flag used to indicate if silo scoped images
     ///   should be included when listing project images. Only valid when
     ///   `project` is provided.
@@ -16981,7 +16981,7 @@ pub trait ClientImagesExt {
     ///   subsequent page
     /// - `project`: Name or ID of the project
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.image_list()
     ///    .include_silo_images(include_silo_images)
     ///    .limit(limit)
@@ -16994,14 +16994,14 @@ pub trait ClientImagesExt {
     fn image_list(&self) -> builder::ImageList;
     /// Create an image
     ///
-    ///Create a new image in a project.
+    /// Create a new image in a project.
     ///
-    ///Sends a `POST` request to `/v1/images`
+    /// Sends a `POST` request to `/v1/images`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.image_create()
     ///    .project(project)
     ///    .body(body)
@@ -17011,14 +17011,14 @@ pub trait ClientImagesExt {
     fn image_create(&self) -> builder::ImageCreate;
     /// Fetch an image
     ///
-    ///Fetch the details for a specific image in a project.
+    /// Fetch the details for a specific image in a project.
     ///
-    ///Sends a `GET` request to `/v1/images/{image}`
+    /// Sends a `GET` request to `/v1/images/{image}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `image`: Name or ID of the image
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.image_view()
     ///    .image(image)
     ///    .project(project)
@@ -17028,16 +17028,16 @@ pub trait ClientImagesExt {
     fn image_view(&self) -> builder::ImageView;
     /// Delete an image
     ///
-    ///Permanently delete an image from a project. This operation cannot be
+    /// Permanently delete an image from a project. This operation cannot be
     /// undone. Any instances in the project using the image will continue to
     /// run, however new instances can not be created with this image.
     ///
-    ///Sends a `DELETE` request to `/v1/images/{image}`
+    /// Sends a `DELETE` request to `/v1/images/{image}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `image`: Name or ID of the image
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.image_delete()
     ///    .image(image)
     ///    .project(project)
@@ -17047,12 +17047,12 @@ pub trait ClientImagesExt {
     fn image_delete(&self) -> builder::ImageDelete;
     /// Promote a project image to be visible to all projects in the silo
     ///
-    ///Sends a `POST` request to `/v1/images/{image}/promote`
+    /// Sends a `POST` request to `/v1/images/{image}/promote`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `image`: Name or ID of the image
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.image_promote()
     ///    .image(image)
     ///    .project(project)
@@ -17087,15 +17087,15 @@ impl ClientImagesExt for Client {
 pub trait ClientInstancesExt {
     /// List instances
     ///
-    ///Sends a `GET` request to `/v1/instances`
+    /// Sends a `GET` request to `/v1/instances`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `project`: Name or ID of the project
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -17107,12 +17107,12 @@ pub trait ClientInstancesExt {
     fn instance_list(&self) -> builder::InstanceList;
     /// Create an instance
     ///
-    ///Sends a `POST` request to `/v1/instances`
+    /// Sends a `POST` request to `/v1/instances`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_create()
     ///    .project(project)
     ///    .body(body)
@@ -17122,12 +17122,12 @@ pub trait ClientInstancesExt {
     fn instance_create(&self) -> builder::InstanceCreate;
     /// Fetch an instance
     ///
-    ///Sends a `GET` request to `/v1/instances/{instance}`
+    /// Sends a `GET` request to `/v1/instances/{instance}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_view()
     ///    .instance(instance)
     ///    .project(project)
@@ -17137,12 +17137,12 @@ pub trait ClientInstancesExt {
     fn instance_view(&self) -> builder::InstanceView;
     /// Delete an instance
     ///
-    ///Sends a `DELETE` request to `/v1/instances/{instance}`
+    /// Sends a `DELETE` request to `/v1/instances/{instance}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_delete()
     ///    .instance(instance)
     ///    .project(project)
@@ -17152,16 +17152,16 @@ pub trait ClientInstancesExt {
     fn instance_delete(&self) -> builder::InstanceDelete;
     /// List an instance's disks
     ///
-    ///Sends a `GET` request to `/v1/instances/{instance}/disks`
+    /// Sends a `GET` request to `/v1/instances/{instance}/disks`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `project`: Name or ID of the project
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_disk_list()
     ///    .instance(instance)
     ///    .limit(limit)
@@ -17174,13 +17174,13 @@ pub trait ClientInstancesExt {
     fn instance_disk_list(&self) -> builder::InstanceDiskList;
     /// Attach a disk to an instance
     ///
-    ///Sends a `POST` request to `/v1/instances/{instance}/disks/attach`
+    /// Sends a `POST` request to `/v1/instances/{instance}/disks/attach`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_disk_attach()
     ///    .instance(instance)
     ///    .project(project)
@@ -17191,13 +17191,13 @@ pub trait ClientInstancesExt {
     fn instance_disk_attach(&self) -> builder::InstanceDiskAttach;
     /// Detach a disk from an instance
     ///
-    ///Sends a `POST` request to `/v1/instances/{instance}/disks/detach`
+    /// Sends a `POST` request to `/v1/instances/{instance}/disks/detach`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_disk_detach()
     ///    .instance(instance)
     ///    .project(project)
@@ -17208,12 +17208,12 @@ pub trait ClientInstancesExt {
     fn instance_disk_detach(&self) -> builder::InstanceDiskDetach;
     /// List external IP addresses
     ///
-    ///Sends a `GET` request to `/v1/instances/{instance}/external-ips`
+    /// Sends a `GET` request to `/v1/instances/{instance}/external-ips`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_external_ip_list()
     ///    .instance(instance)
     ///    .project(project)
@@ -17223,13 +17223,13 @@ pub trait ClientInstancesExt {
     fn instance_external_ip_list(&self) -> builder::InstanceExternalIpList;
     /// Migrate an instance
     ///
-    ///Sends a `POST` request to `/v1/instances/{instance}/migrate`
+    /// Sends a `POST` request to `/v1/instances/{instance}/migrate`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_migrate()
     ///    .instance(instance)
     ///    .project(project)
@@ -17240,12 +17240,12 @@ pub trait ClientInstancesExt {
     fn instance_migrate(&self) -> builder::InstanceMigrate;
     /// Reboot an instance
     ///
-    ///Sends a `POST` request to `/v1/instances/{instance}/reboot`
+    /// Sends a `POST` request to `/v1/instances/{instance}/reboot`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_reboot()
     ///    .instance(instance)
     ///    .project(project)
@@ -17255,9 +17255,9 @@ pub trait ClientInstancesExt {
     fn instance_reboot(&self) -> builder::InstanceReboot;
     /// Fetch an instance's serial console
     ///
-    ///Sends a `GET` request to `/v1/instances/{instance}/serial-console`
+    /// Sends a `GET` request to `/v1/instances/{instance}/serial-console`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `from_start`: Character index in the serial buffer from which to read,
     ///   counting the bytes output since instance start. If this is not
@@ -17275,7 +17275,7 @@ pub trait ClientInstancesExt {
     ///   exclusivity)
     /// - `project`: Name or ID of the project, only required if `instance` is
     ///   provided as a `Name`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_serial_console()
     ///    .instance(instance)
     ///    .from_start(from_start)
@@ -17288,10 +17288,10 @@ pub trait ClientInstancesExt {
     fn instance_serial_console(&self) -> builder::InstanceSerialConsole;
     /// Stream an instance's serial console
     ///
-    ///Sends a `GET` request to
+    /// Sends a `GET` request to
     /// `/v1/instances/{instance}/serial-console/stream`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `from_start`: Character index in the serial buffer from which to read,
     ///   counting the bytes output since instance start. If this is not
@@ -17309,7 +17309,7 @@ pub trait ClientInstancesExt {
     ///   exclusivity)
     /// - `project`: Name or ID of the project, only required if `instance` is
     ///   provided as a `Name`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_serial_console_stream()
     ///    .instance(instance)
     ///    .from_start(from_start)
@@ -17322,12 +17322,12 @@ pub trait ClientInstancesExt {
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream;
     /// Boot an instance
     ///
-    ///Sends a `POST` request to `/v1/instances/{instance}/start`
+    /// Sends a `POST` request to `/v1/instances/{instance}/start`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_start()
     ///    .instance(instance)
     ///    .project(project)
@@ -17337,12 +17337,12 @@ pub trait ClientInstancesExt {
     fn instance_start(&self) -> builder::InstanceStart;
     /// Stop an instance
     ///
-    ///Sends a `POST` request to `/v1/instances/{instance}/stop`
+    /// Sends a `POST` request to `/v1/instances/{instance}/stop`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_stop()
     ///    .instance(instance)
     ///    .project(project)
@@ -17352,9 +17352,9 @@ pub trait ClientInstancesExt {
     fn instance_stop(&self) -> builder::InstanceStop;
     /// List network interfaces
     ///
-    ///Sends a `GET` request to `/v1/network-interfaces`
+    /// Sends a `GET` request to `/v1/network-interfaces`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
@@ -17362,7 +17362,7 @@ pub trait ClientInstancesExt {
     /// - `project`: Name or ID of the project, only required if `instance` is
     ///   provided as a `Name`
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_network_interface_list()
     ///    .instance(instance)
     ///    .limit(limit)
@@ -17375,14 +17375,14 @@ pub trait ClientInstancesExt {
     fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList;
     /// Create a network interface
     ///
-    ///Sends a `POST` request to `/v1/network-interfaces`
+    /// Sends a `POST` request to `/v1/network-interfaces`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project, only required if `instance` is
     ///   provided as a `Name`
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_network_interface_create()
     ///    .instance(instance)
     ///    .project(project)
@@ -17393,14 +17393,14 @@ pub trait ClientInstancesExt {
     fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate;
     /// Fetch a network interface
     ///
-    ///Sends a `GET` request to `/v1/network-interfaces/{interface}`
+    /// Sends a `GET` request to `/v1/network-interfaces/{interface}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `interface`: Name or ID of the network interface
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project, only required if `instance` is
     ///   provided as a `Name`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_network_interface_view()
     ///    .interface(interface)
     ///    .instance(instance)
@@ -17411,15 +17411,15 @@ pub trait ClientInstancesExt {
     fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView;
     /// Update a network interface
     ///
-    ///Sends a `PUT` request to `/v1/network-interfaces/{interface}`
+    /// Sends a `PUT` request to `/v1/network-interfaces/{interface}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `interface`: Name or ID of the network interface
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project, only required if `instance` is
     ///   provided as a `Name`
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_network_interface_update()
     ///    .interface(interface)
     ///    .instance(instance)
@@ -17431,19 +17431,19 @@ pub trait ClientInstancesExt {
     fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate;
     /// Delete a network interface
     ///
-    ///Note that the primary interface for an instance cannot be deleted if
+    /// Note that the primary interface for an instance cannot be deleted if
     /// there are any secondary interfaces. A new primary interface must be
     /// designated first. The primary interface can be deleted if there are no
     /// secondary interfaces.
     ///
-    ///Sends a `DELETE` request to `/v1/network-interfaces/{interface}`
+    /// Sends a `DELETE` request to `/v1/network-interfaces/{interface}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `interface`: Name or ID of the network interface
     /// - `instance`: Name or ID of the instance
     /// - `project`: Name or ID of the project, only required if `instance` is
     ///   provided as a `Name`
-    ///```ignore
+    /// ```ignore
     /// let response = client.instance_network_interface_delete()
     ///    .interface(interface)
     ///    .instance(instance)
@@ -17535,9 +17535,9 @@ impl ClientInstancesExt for Client {
 pub trait ClientLoginExt {
     /// Authenticate a user (i.e., log in) via username and password
     ///
-    ///Sends a `POST` request to `/login/{silo_name}/local`
+    /// Sends a `POST` request to `/login/{silo_name}/local`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.login_local()
     ///    .silo_name(silo_name)
     ///    .body(body)
@@ -17547,12 +17547,12 @@ pub trait ClientLoginExt {
     fn login_local(&self) -> builder::LoginLocal;
     /// Prompt user login
     ///
-    ///Either display a page asking a user for their credentials, or redirect
+    /// Either display a page asking a user for their credentials, or redirect
     /// them to their identity provider.
     ///
-    ///Sends a `GET` request to `/login/{silo_name}/saml/{provider_name}`
+    /// Sends a `GET` request to `/login/{silo_name}/saml/{provider_name}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.login_saml_begin()
     ///    .silo_name(silo_name)
     ///    .provider_name(provider_name)
@@ -17562,9 +17562,9 @@ pub trait ClientLoginExt {
     fn login_saml_begin(&self) -> builder::LoginSamlBegin;
     /// Authenticate a user (i.e., log in) via SAML
     ///
-    ///Sends a `POST` request to `/login/{silo_name}/saml/{provider_name}`
+    /// Sends a `POST` request to `/login/{silo_name}/saml/{provider_name}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.login_saml()
     ///    .silo_name(silo_name)
     ///    .provider_name(provider_name)
@@ -17592,9 +17592,9 @@ impl ClientLoginExt for Client {
 pub trait ClientPolicyExt {
     /// Fetch the top-level IAM policy
     ///
-    ///Sends a `GET` request to `/v1/system/policy`
+    /// Sends a `GET` request to `/v1/system/policy`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_policy_view()
     ///    .send()
     ///    .await;
@@ -17602,9 +17602,9 @@ pub trait ClientPolicyExt {
     fn system_policy_view(&self) -> builder::SystemPolicyView;
     /// Update the top-level IAM policy
     ///
-    ///Sends a `PUT` request to `/v1/system/policy`
+    /// Sends a `PUT` request to `/v1/system/policy`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_policy_update()
     ///    .body(body)
     ///    .send()
@@ -17626,14 +17626,14 @@ impl ClientPolicyExt for Client {
 pub trait ClientProjectsExt {
     /// List projects
     ///
-    ///Sends a `GET` request to `/v1/projects`
+    /// Sends a `GET` request to `/v1/projects`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.project_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -17644,9 +17644,9 @@ pub trait ClientProjectsExt {
     fn project_list(&self) -> builder::ProjectList;
     /// Create a project
     ///
-    ///Sends a `POST` request to `/v1/projects`
+    /// Sends a `POST` request to `/v1/projects`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.project_create()
     ///    .body(body)
     ///    .send()
@@ -17655,11 +17655,11 @@ pub trait ClientProjectsExt {
     fn project_create(&self) -> builder::ProjectCreate;
     /// Fetch a project
     ///
-    ///Sends a `GET` request to `/v1/projects/{project}`
+    /// Sends a `GET` request to `/v1/projects/{project}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.project_view()
     ///    .project(project)
     ///    .send()
@@ -17668,12 +17668,12 @@ pub trait ClientProjectsExt {
     fn project_view(&self) -> builder::ProjectView;
     /// Update a project
     ///
-    ///Sends a `PUT` request to `/v1/projects/{project}`
+    /// Sends a `PUT` request to `/v1/projects/{project}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.project_update()
     ///    .project(project)
     ///    .body(body)
@@ -17683,11 +17683,11 @@ pub trait ClientProjectsExt {
     fn project_update(&self) -> builder::ProjectUpdate;
     /// Delete a project
     ///
-    ///Sends a `DELETE` request to `/v1/projects/{project}`
+    /// Sends a `DELETE` request to `/v1/projects/{project}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.project_delete()
     ///    .project(project)
     ///    .send()
@@ -17696,11 +17696,11 @@ pub trait ClientProjectsExt {
     fn project_delete(&self) -> builder::ProjectDelete;
     /// Fetch a project's IAM policy
     ///
-    ///Sends a `GET` request to `/v1/projects/{project}/policy`
+    /// Sends a `GET` request to `/v1/projects/{project}/policy`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.project_policy_view()
     ///    .project(project)
     ///    .send()
@@ -17709,12 +17709,12 @@ pub trait ClientProjectsExt {
     fn project_policy_view(&self) -> builder::ProjectPolicyView;
     /// Update a project's IAM policy
     ///
-    ///Sends a `PUT` request to `/v1/projects/{project}/policy`
+    /// Sends a `PUT` request to `/v1/projects/{project}/policy`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.project_policy_update()
     ///    .project(project)
     ///    .body(body)
@@ -17757,13 +17757,13 @@ impl ClientProjectsExt for Client {
 pub trait ClientRolesExt {
     /// List built-in roles
     ///
-    ///Sends a `GET` request to `/v1/system/roles`
+    /// Sends a `GET` request to `/v1/system/roles`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
-    ///```ignore
+    /// ```ignore
     /// let response = client.role_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -17773,11 +17773,11 @@ pub trait ClientRolesExt {
     fn role_list(&self) -> builder::RoleList;
     /// Fetch a built-in role
     ///
-    ///Sends a `GET` request to `/v1/system/roles/{role_name}`
+    /// Sends a `GET` request to `/v1/system/roles/{role_name}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `role_name`: The built-in role's unique name.
-    ///```ignore
+    /// ```ignore
     /// let response = client.role_view()
     ///    .role_name(role_name)
     ///    .send()
@@ -17799,9 +17799,9 @@ impl ClientRolesExt for Client {
 pub trait ClientSessionExt {
     /// Fetch the user associated with the current session
     ///
-    ///Sends a `GET` request to `/v1/me`
+    /// Sends a `GET` request to `/v1/me`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.current_user_view()
     ///    .send()
     ///    .await;
@@ -17809,14 +17809,14 @@ pub trait ClientSessionExt {
     fn current_user_view(&self) -> builder::CurrentUserView;
     /// Fetch the silo groups the current user belongs to
     ///
-    ///Sends a `GET` request to `/v1/me/groups`
+    /// Sends a `GET` request to `/v1/me/groups`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.current_user_groups()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -17827,16 +17827,16 @@ pub trait ClientSessionExt {
     fn current_user_groups(&self) -> builder::CurrentUserGroups;
     /// List SSH public keys
     ///
-    ///Lists SSH public keys for the currently authenticated user.
+    /// Lists SSH public keys for the currently authenticated user.
     ///
-    ///Sends a `GET` request to `/v1/me/ssh-keys`
+    /// Sends a `GET` request to `/v1/me/ssh-keys`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.current_user_ssh_key_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -17847,11 +17847,11 @@ pub trait ClientSessionExt {
     fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList;
     /// Create an SSH public key
     ///
-    ///Create an SSH public key for the currently authenticated user.
+    /// Create an SSH public key for the currently authenticated user.
     ///
-    ///Sends a `POST` request to `/v1/me/ssh-keys`
+    /// Sends a `POST` request to `/v1/me/ssh-keys`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.current_user_ssh_key_create()
     ///    .body(body)
     ///    .send()
@@ -17860,14 +17860,14 @@ pub trait ClientSessionExt {
     fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate;
     /// Fetch an SSH public key
     ///
-    ///Fetch an SSH public key associated with the currently authenticated
+    /// Fetch an SSH public key associated with the currently authenticated
     /// user.
     ///
-    ///Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`
+    /// Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `ssh_key`: Name or ID of the SSH key
-    ///```ignore
+    /// ```ignore
     /// let response = client.current_user_ssh_key_view()
     ///    .ssh_key(ssh_key)
     ///    .send()
@@ -17876,14 +17876,14 @@ pub trait ClientSessionExt {
     fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView;
     /// Delete an SSH public key
     ///
-    ///Delete an SSH public key associated with the currently authenticated
+    /// Delete an SSH public key associated with the currently authenticated
     /// user.
     ///
-    ///Sends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`
+    /// Sends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `ssh_key`: Name or ID of the SSH key
-    ///```ignore
+    /// ```ignore
     /// let response = client.current_user_ssh_key_delete()
     ///    .ssh_key(ssh_key)
     ///    .send()
@@ -17921,14 +17921,14 @@ impl ClientSessionExt for Client {
 pub trait ClientSilosExt {
     /// List groups
     ///
-    ///Sends a `GET` request to `/v1/groups`
+    /// Sends a `GET` request to `/v1/groups`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.group_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -17939,11 +17939,11 @@ pub trait ClientSilosExt {
     fn group_list(&self) -> builder::GroupList;
     /// Fetch group
     ///
-    ///Sends a `GET` request to `/v1/groups/{group}`
+    /// Sends a `GET` request to `/v1/groups/{group}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `group`: ID of the group
-    ///```ignore
+    /// ```ignore
     /// let response = client.group_view()
     ///    .group(group)
     ///    .send()
@@ -17952,9 +17952,9 @@ pub trait ClientSilosExt {
     fn group_view(&self) -> builder::GroupView;
     /// Fetch the current silo's IAM policy
     ///
-    ///Sends a `GET` request to `/v1/policy`
+    /// Sends a `GET` request to `/v1/policy`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.policy_view()
     ///    .send()
     ///    .await;
@@ -17962,9 +17962,9 @@ pub trait ClientSilosExt {
     fn policy_view(&self) -> builder::PolicyView;
     /// Update the current silo's IAM policy
     ///
-    ///Sends a `PUT` request to `/v1/policy`
+    /// Sends a `PUT` request to `/v1/policy`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.policy_update()
     ///    .body(body)
     ///    .send()
@@ -17973,15 +17973,15 @@ pub trait ClientSilosExt {
     fn policy_update(&self) -> builder::PolicyUpdate;
     /// List users
     ///
-    ///Sends a `GET` request to `/v1/users`
+    /// Sends a `GET` request to `/v1/users`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `group`
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.user_list()
     ///    .group(group)
     ///    .limit(limit)
@@ -18018,15 +18018,15 @@ impl ClientSilosExt for Client {
 pub trait ClientSnapshotsExt {
     /// List snapshots
     ///
-    ///Sends a `GET` request to `/v1/snapshots`
+    /// Sends a `GET` request to `/v1/snapshots`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `project`: Name or ID of the project
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.snapshot_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18038,14 +18038,14 @@ pub trait ClientSnapshotsExt {
     fn snapshot_list(&self) -> builder::SnapshotList;
     /// Create a snapshot
     ///
-    ///Creates a point-in-time snapshot from a disk.
+    /// Creates a point-in-time snapshot from a disk.
     ///
-    ///Sends a `POST` request to `/v1/snapshots`
+    /// Sends a `POST` request to `/v1/snapshots`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.snapshot_create()
     ///    .project(project)
     ///    .body(body)
@@ -18055,12 +18055,12 @@ pub trait ClientSnapshotsExt {
     fn snapshot_create(&self) -> builder::SnapshotCreate;
     /// Fetch a snapshot
     ///
-    ///Sends a `GET` request to `/v1/snapshots/{snapshot}`
+    /// Sends a `GET` request to `/v1/snapshots/{snapshot}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `snapshot`: Name or ID of the snapshot
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.snapshot_view()
     ///    .snapshot(snapshot)
     ///    .project(project)
@@ -18070,12 +18070,12 @@ pub trait ClientSnapshotsExt {
     fn snapshot_view(&self) -> builder::SnapshotView;
     /// Delete a snapshot
     ///
-    ///Sends a `DELETE` request to `/v1/snapshots/{snapshot}`
+    /// Sends a `DELETE` request to `/v1/snapshots/{snapshot}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `snapshot`: Name or ID of the snapshot
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.snapshot_delete()
     ///    .snapshot(snapshot)
     ///    .project(project)
@@ -18106,9 +18106,9 @@ impl ClientSnapshotsExt for Client {
 pub trait ClientSystemExt {
     /// Fetch a system-wide image by id
     ///
-    ///Sends a `GET` request to `/system/by-id/images/{id}`
+    /// Sends a `GET` request to `/system/by-id/images/{id}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_image_view_by_id()
     ///    .id(id)
     ///    .send()
@@ -18117,18 +18117,18 @@ pub trait ClientSystemExt {
     fn system_image_view_by_id(&self) -> builder::SystemImageViewById;
     /// List system-wide images
     ///
-    ///Returns a list of all the system-wide images. System-wide images are
+    /// Returns a list of all the system-wide images. System-wide images are
     /// returned sorted by creation date, with the most recent images appearing
     /// first.
     ///
-    ///Sends a `GET` request to `/system/images`
+    /// Sends a `GET` request to `/system/images`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_image_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18139,12 +18139,12 @@ pub trait ClientSystemExt {
     fn system_image_list(&self) -> builder::SystemImageList;
     /// Create a system-wide image
     ///
-    ///Create a new system-wide image. This image can then be used by any user
+    /// Create a new system-wide image. This image can then be used by any user
     /// in any silo as a base for instances.
     ///
-    ///Sends a `POST` request to `/system/images`
+    /// Sends a `POST` request to `/system/images`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_image_create()
     ///    .body(body)
     ///    .send()
@@ -18153,11 +18153,11 @@ pub trait ClientSystemExt {
     fn system_image_create(&self) -> builder::SystemImageCreate;
     /// Fetch a system-wide image
     ///
-    ///Returns the details of a specific system-wide image.
+    /// Returns the details of a specific system-wide image.
     ///
-    ///Sends a `GET` request to `/system/images/{image_name}`
+    /// Sends a `GET` request to `/system/images/{image_name}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_image_view()
     ///    .image_name(image_name)
     ///    .send()
@@ -18166,13 +18166,13 @@ pub trait ClientSystemExt {
     fn system_image_view(&self) -> builder::SystemImageView;
     /// Delete a system-wide image
     ///
-    ///Permanently delete a system-wide image. This operation cannot be undone.
+    /// Permanently delete a system-wide image. This operation cannot be undone.
     /// Any instances using the system-wide image will continue to run, however
     /// new instances can not be created with this image.
     ///
-    ///Sends a `DELETE` request to `/system/images/{image_name}`
+    /// Sends a `DELETE` request to `/system/images/{image_name}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_image_delete()
     ///    .image_name(image_name)
     ///    .send()
@@ -18181,18 +18181,18 @@ pub trait ClientSystemExt {
     fn system_image_delete(&self) -> builder::SystemImageDelete;
     /// List system-wide certificates
     ///
-    ///Returns a list of all the system-wide certificates. System-wide
+    /// Returns a list of all the system-wide certificates. System-wide
     /// certificates are returned sorted by creation date, with the most recent
     /// certificates appearing first.
     ///
-    ///Sends a `GET` request to `/v1/system/certificates`
+    /// Sends a `GET` request to `/v1/system/certificates`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.certificate_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18203,12 +18203,12 @@ pub trait ClientSystemExt {
     fn certificate_list(&self) -> builder::CertificateList;
     /// Create a new system-wide x.509 certificate
     ///
-    ///This certificate is automatically used by the Oxide Control plane to
+    /// This certificate is automatically used by the Oxide Control plane to
     /// serve external connections.
     ///
-    ///Sends a `POST` request to `/v1/system/certificates`
+    /// Sends a `POST` request to `/v1/system/certificates`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.certificate_create()
     ///    .body(body)
     ///    .send()
@@ -18217,11 +18217,11 @@ pub trait ClientSystemExt {
     fn certificate_create(&self) -> builder::CertificateCreate;
     /// Fetch a certificate
     ///
-    ///Returns the details of a specific certificate
+    /// Returns the details of a specific certificate
     ///
-    ///Sends a `GET` request to `/v1/system/certificates/{certificate}`
+    /// Sends a `GET` request to `/v1/system/certificates/{certificate}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.certificate_view()
     ///    .certificate(certificate)
     ///    .send()
@@ -18230,11 +18230,11 @@ pub trait ClientSystemExt {
     fn certificate_view(&self) -> builder::CertificateView;
     /// Delete a certificate
     ///
-    ///Permanently delete a certificate. This operation cannot be undone.
+    /// Permanently delete a certificate. This operation cannot be undone.
     ///
-    ///Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
+    /// Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.certificate_delete()
     ///    .certificate(certificate)
     ///    .send()
@@ -18243,14 +18243,14 @@ pub trait ClientSystemExt {
     fn certificate_delete(&self) -> builder::CertificateDelete;
     /// List physical disks
     ///
-    ///Sends a `GET` request to `/v1/system/hardware/disks`
+    /// Sends a `GET` request to `/v1/system/hardware/disks`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.physical_disk_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18261,14 +18261,14 @@ pub trait ClientSystemExt {
     fn physical_disk_list(&self) -> builder::PhysicalDiskList;
     /// List racks
     ///
-    ///Sends a `GET` request to `/v1/system/hardware/racks`
+    /// Sends a `GET` request to `/v1/system/hardware/racks`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.rack_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18279,11 +18279,11 @@ pub trait ClientSystemExt {
     fn rack_list(&self) -> builder::RackList;
     /// Fetch a rack
     ///
-    ///Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
+    /// Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `rack_id`: The rack's unique ID.
-    ///```ignore
+    /// ```ignore
     /// let response = client.rack_view()
     ///    .rack_id(rack_id)
     ///    .send()
@@ -18292,14 +18292,14 @@ pub trait ClientSystemExt {
     fn rack_view(&self) -> builder::RackView;
     /// List sleds
     ///
-    ///Sends a `GET` request to `/v1/system/hardware/sleds`
+    /// Sends a `GET` request to `/v1/system/hardware/sleds`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.sled_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18310,11 +18310,11 @@ pub trait ClientSystemExt {
     fn sled_list(&self) -> builder::SledList;
     /// Fetch a sled
     ///
-    ///Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
+    /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `sled_id`: The sled's unique ID.
-    ///```ignore
+    /// ```ignore
     /// let response = client.sled_view()
     ///    .sled_id(sled_id)
     ///    .send()
@@ -18323,15 +18323,15 @@ pub trait ClientSystemExt {
     fn sled_view(&self) -> builder::SledView;
     /// List physical disks attached to sleds
     ///
-    ///Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/disks`
+    /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/disks`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `sled_id`: The sled's unique ID.
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.sled_physical_disk_list()
     ///    .sled_id(sled_id)
     ///    .limit(limit)
@@ -18343,15 +18343,15 @@ pub trait ClientSystemExt {
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList;
     /// List a silo's IDPs_name
     ///
-    ///Sends a `GET` request to `/v1/system/identity-providers`
+    /// Sends a `GET` request to `/v1/system/identity-providers`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `silo`: Name or ID of the silo
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.silo_identity_provider_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18363,16 +18363,16 @@ pub trait ClientSystemExt {
     fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
     /// Create a user
     ///
-    ///Users can only be created in Silos with `provision_type` == `Fixed`.
+    /// Users can only be created in Silos with `provision_type` == `Fixed`.
     /// Otherwise, Silo users are just-in-time (JIT) provisioned when a user
     /// first logs in using an external Identity Provider.
     ///
-    ///Sends a `POST` request to `/v1/system/identity-providers/local/users`
+    /// Sends a `POST` request to `/v1/system/identity-providers/local/users`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `silo`: Name or ID of the silo
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.local_idp_user_create()
     ///    .silo(silo)
     ///    .body(body)
@@ -18382,13 +18382,13 @@ pub trait ClientSystemExt {
     fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
     /// Delete a user
     ///
-    ///Sends a `DELETE` request to
+    /// Sends a `DELETE` request to
     /// `/v1/system/identity-providers/local/users/{user_id}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `user_id`: The user's internal id
     /// - `silo`: Name or ID of the silo
-    ///```ignore
+    /// ```ignore
     /// let response = client.local_idp_user_delete()
     ///    .user_id(user_id)
     ///    .silo(silo)
@@ -18398,17 +18398,17 @@ pub trait ClientSystemExt {
     fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
     /// Set or invalidate a user's password
     ///
-    ///Passwords can only be updated for users in Silos with identity mode
+    /// Passwords can only be updated for users in Silos with identity mode
     /// `LocalOnly`.
     ///
-    ///Sends a `POST` request to
+    /// Sends a `POST` request to
     /// `/v1/system/identity-providers/local/users/{user_id}/set-password`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `user_id`: The user's internal id
     /// - `silo`: Name or ID of the silo
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.local_idp_user_set_password()
     ///    .user_id(user_id)
     ///    .silo(silo)
@@ -18419,12 +18419,12 @@ pub trait ClientSystemExt {
     fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
     /// Create a SAML IDP
     ///
-    ///Sends a `POST` request to `/v1/system/identity-providers/saml`
+    /// Sends a `POST` request to `/v1/system/identity-providers/saml`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `silo`: Name or ID of the silo
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.saml_identity_provider_create()
     ///    .silo(silo)
     ///    .body(body)
@@ -18434,12 +18434,12 @@ pub trait ClientSystemExt {
     fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
     /// Fetch a SAML IDP
     ///
-    ///Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
+    /// Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `provider`: Name or ID of the SAML identity provider
     /// - `silo`: Name or ID of the silo
-    ///```ignore
+    /// ```ignore
     /// let response = client.saml_identity_provider_view()
     ///    .provider(provider)
     ///    .silo(silo)
@@ -18449,14 +18449,14 @@ pub trait ClientSystemExt {
     fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView;
     /// List IP pools
     ///
-    ///Sends a `GET` request to `/v1/system/ip-pools`
+    /// Sends a `GET` request to `/v1/system/ip-pools`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18467,9 +18467,9 @@ pub trait ClientSystemExt {
     fn ip_pool_list(&self) -> builder::IpPoolList;
     /// Create an IP pool
     ///
-    ///Sends a `POST` request to `/v1/system/ip-pools`
+    /// Sends a `POST` request to `/v1/system/ip-pools`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_create()
     ///    .body(body)
     ///    .send()
@@ -18478,11 +18478,11 @@ pub trait ClientSystemExt {
     fn ip_pool_create(&self) -> builder::IpPoolCreate;
     /// Fetch an IP pool
     ///
-    ///Sends a `GET` request to `/v1/system/ip-pools/{pool}`
+    /// Sends a `GET` request to `/v1/system/ip-pools/{pool}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `pool`: Name or ID of the IP pool
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_view()
     ///    .pool(pool)
     ///    .send()
@@ -18491,12 +18491,12 @@ pub trait ClientSystemExt {
     fn ip_pool_view(&self) -> builder::IpPoolView;
     /// Update an IP Pool
     ///
-    ///Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
+    /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `pool`: Name or ID of the IP pool
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_update()
     ///    .pool(pool)
     ///    .body(body)
@@ -18506,11 +18506,11 @@ pub trait ClientSystemExt {
     fn ip_pool_update(&self) -> builder::IpPoolUpdate;
     /// Delete an IP Pool
     ///
-    ///Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
+    /// Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `pool`: Name or ID of the IP pool
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_delete()
     ///    .pool(pool)
     ///    .send()
@@ -18519,16 +18519,16 @@ pub trait ClientSystemExt {
     fn ip_pool_delete(&self) -> builder::IpPoolDelete;
     /// List ranges for an IP pool
     ///
-    ///Ranges are ordered by their first address.
+    /// Ranges are ordered by their first address.
     ///
-    ///Sends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`
+    /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `pool`: Name or ID of the IP pool
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_range_list()
     ///    .pool(pool)
     ///    .limit(limit)
@@ -18539,12 +18539,12 @@ pub trait ClientSystemExt {
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
     /// Add a range to an IP pool
     ///
-    ///Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
+    /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `pool`: Name or ID of the IP pool
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_range_add()
     ///    .pool(pool)
     ///    .body(body)
@@ -18554,12 +18554,12 @@ pub trait ClientSystemExt {
     fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd;
     /// Remove a range from an IP pool
     ///
-    ///Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`
+    /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `pool`: Name or ID of the IP pool
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_range_remove()
     ///    .pool(pool)
     ///    .body(body)
@@ -18569,9 +18569,9 @@ pub trait ClientSystemExt {
     fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove;
     /// Fetch the IP pool used for Oxide services
     ///
-    ///Sends a `GET` request to `/v1/system/ip-pools-service`
+    /// Sends a `GET` request to `/v1/system/ip-pools-service`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_service_view()
     ///    .send()
     ///    .await;
@@ -18579,15 +18579,15 @@ pub trait ClientSystemExt {
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
     /// List ranges for the IP pool used for Oxide services
     ///
-    ///Ranges are ordered by their first address.
+    /// Ranges are ordered by their first address.
     ///
-    ///Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
+    /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_service_range_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18597,9 +18597,9 @@ pub trait ClientSystemExt {
     fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
     /// Add a range to an IP pool used for Oxide services
     ///
-    ///Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
+    /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_service_range_add()
     ///    .body(body)
     ///    .send()
@@ -18608,9 +18608,9 @@ pub trait ClientSystemExt {
     fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd;
     /// Remove a range from an IP pool used for Oxide services
     ///
-    ///Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
+    /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.ip_pool_service_range_remove()
     ///    .body(body)
     ///    .send()
@@ -18619,9 +18619,9 @@ pub trait ClientSystemExt {
     fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
     /// Access metrics data
     ///
-    ///Sends a `GET` request to `/v1/system/metrics/{metric_name}`
+    /// Sends a `GET` request to `/v1/system/metrics/{metric_name}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `metric_name`
     /// - `end_time`: An exclusive end time of metrics.
     /// - `id`: The UUID of the container being queried
@@ -18629,7 +18629,7 @@ pub trait ClientSystemExt {
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `start_time`: An inclusive start time of metrics.
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_metric()
     ///    .metric_name(metric_name)
     ///    .end_time(end_time)
@@ -18643,14 +18643,14 @@ pub trait ClientSystemExt {
     fn system_metric(&self) -> builder::SystemMetric;
     /// List sagas
     ///
-    ///Sends a `GET` request to `/v1/system/sagas`
+    /// Sends a `GET` request to `/v1/system/sagas`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.saga_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18661,9 +18661,9 @@ pub trait ClientSystemExt {
     fn saga_list(&self) -> builder::SagaList;
     /// Fetch a saga
     ///
-    ///Sends a `GET` request to `/v1/system/sagas/{saga_id}`
+    /// Sends a `GET` request to `/v1/system/sagas/{saga_id}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.saga_view()
     ///    .saga_id(saga_id)
     ///    .send()
@@ -18672,16 +18672,16 @@ pub trait ClientSystemExt {
     fn saga_view(&self) -> builder::SagaView;
     /// List silos
     ///
-    ///Lists silos that are discoverable based on the current permissions.
+    /// Lists silos that are discoverable based on the current permissions.
     ///
-    ///Sends a `GET` request to `/v1/system/silos`
+    /// Sends a `GET` request to `/v1/system/silos`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.silo_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18692,9 +18692,9 @@ pub trait ClientSystemExt {
     fn silo_list(&self) -> builder::SiloList;
     /// Create a silo
     ///
-    ///Sends a `POST` request to `/v1/system/silos`
+    /// Sends a `POST` request to `/v1/system/silos`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.silo_create()
     ///    .body(body)
     ///    .send()
@@ -18703,13 +18703,13 @@ pub trait ClientSystemExt {
     fn silo_create(&self) -> builder::SiloCreate;
     /// Fetch a silo
     ///
-    ///Fetch a silo by name.
+    /// Fetch a silo by name.
     ///
-    ///Sends a `GET` request to `/v1/system/silos/{silo}`
+    /// Sends a `GET` request to `/v1/system/silos/{silo}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `silo`: Name or ID of the silo
-    ///```ignore
+    /// ```ignore
     /// let response = client.silo_view()
     ///    .silo(silo)
     ///    .send()
@@ -18718,13 +18718,13 @@ pub trait ClientSystemExt {
     fn silo_view(&self) -> builder::SiloView;
     /// Delete a silo
     ///
-    ///Delete a silo by name.
+    /// Delete a silo by name.
     ///
-    ///Sends a `DELETE` request to `/v1/system/silos/{silo}`
+    /// Sends a `DELETE` request to `/v1/system/silos/{silo}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `silo`: Name or ID of the silo
-    ///```ignore
+    /// ```ignore
     /// let response = client.silo_delete()
     ///    .silo(silo)
     ///    .send()
@@ -18733,11 +18733,11 @@ pub trait ClientSystemExt {
     fn silo_delete(&self) -> builder::SiloDelete;
     /// Fetch a silo's IAM policy
     ///
-    ///Sends a `GET` request to `/v1/system/silos/{silo}/policy`
+    /// Sends a `GET` request to `/v1/system/silos/{silo}/policy`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `silo`: Name or ID of the silo
-    ///```ignore
+    /// ```ignore
     /// let response = client.silo_policy_view()
     ///    .silo(silo)
     ///    .send()
@@ -18746,12 +18746,12 @@ pub trait ClientSystemExt {
     fn silo_policy_view(&self) -> builder::SiloPolicyView;
     /// Update a silo's IAM policy
     ///
-    ///Sends a `PUT` request to `/v1/system/silos/{silo}/policy`
+    /// Sends a `PUT` request to `/v1/system/silos/{silo}/policy`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `silo`: Name or ID of the silo
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.silo_policy_update()
     ///    .silo(silo)
     ///    .body(body)
@@ -18761,14 +18761,14 @@ pub trait ClientSystemExt {
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate;
     /// View version and update status of component tree
     ///
-    ///Sends a `GET` request to `/v1/system/update/components`
+    /// Sends a `GET` request to `/v1/system/update/components`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_component_version_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18779,14 +18779,14 @@ pub trait ClientSystemExt {
     fn system_component_version_list(&self) -> builder::SystemComponentVersionList;
     /// List all update deployments
     ///
-    ///Sends a `GET` request to `/v1/system/update/deployments`
+    /// Sends a `GET` request to `/v1/system/update/deployments`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.update_deployments_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18797,9 +18797,9 @@ pub trait ClientSystemExt {
     fn update_deployments_list(&self) -> builder::UpdateDeploymentsList;
     /// Fetch a system update deployment
     ///
-    ///Sends a `GET` request to `/v1/system/update/deployments/{id}`
+    /// Sends a `GET` request to `/v1/system/update/deployments/{id}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.update_deployment_view()
     ///    .id(id)
     ///    .send()
@@ -18808,9 +18808,9 @@ pub trait ClientSystemExt {
     fn update_deployment_view(&self) -> builder::UpdateDeploymentView;
     /// Refresh update data
     ///
-    ///Sends a `POST` request to `/v1/system/update/refresh`
+    /// Sends a `POST` request to `/v1/system/update/refresh`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_update_refresh()
     ///    .send()
     ///    .await;
@@ -18818,9 +18818,9 @@ pub trait ClientSystemExt {
     fn system_update_refresh(&self) -> builder::SystemUpdateRefresh;
     /// Start system update
     ///
-    ///Sends a `POST` request to `/v1/system/update/start`
+    /// Sends a `POST` request to `/v1/system/update/start`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_update_start()
     ///    .body(body)
     ///    .send()
@@ -18829,11 +18829,11 @@ pub trait ClientSystemExt {
     fn system_update_start(&self) -> builder::SystemUpdateStart;
     /// Stop system update
     ///
-    ///If there is no update in progress, do nothing.
+    /// If there is no update in progress, do nothing.
     ///
-    ///Sends a `POST` request to `/v1/system/update/stop`
+    /// Sends a `POST` request to `/v1/system/update/stop`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_update_stop()
     ///    .send()
     ///    .await;
@@ -18841,14 +18841,14 @@ pub trait ClientSystemExt {
     fn system_update_stop(&self) -> builder::SystemUpdateStop;
     /// List all updates
     ///
-    ///Sends a `GET` request to `/v1/system/update/updates`
+    /// Sends a `GET` request to `/v1/system/update/updates`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_update_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18859,9 +18859,9 @@ pub trait ClientSystemExt {
     fn system_update_list(&self) -> builder::SystemUpdateList;
     /// View system update
     ///
-    ///Sends a `GET` request to `/v1/system/update/updates/{version}`
+    /// Sends a `GET` request to `/v1/system/update/updates/{version}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_update_view()
     ///    .version(version)
     ///    .send()
@@ -18870,10 +18870,10 @@ pub trait ClientSystemExt {
     fn system_update_view(&self) -> builder::SystemUpdateView;
     /// View system update component tree
     ///
-    ///Sends a `GET` request to
+    /// Sends a `GET` request to
     /// `/v1/system/update/updates/{version}/components`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_update_components_list()
     ///    .version(version)
     ///    .send()
@@ -18882,9 +18882,9 @@ pub trait ClientSystemExt {
     fn system_update_components_list(&self) -> builder::SystemUpdateComponentsList;
     /// View system version and update status
     ///
-    ///Sends a `GET` request to `/v1/system/update/version`
+    /// Sends a `GET` request to `/v1/system/update/version`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.system_version()
     ///    .send()
     ///    .await;
@@ -18892,15 +18892,15 @@ pub trait ClientSystemExt {
     fn system_version(&self) -> builder::SystemVersion;
     /// List users in a silo
     ///
-    ///Sends a `GET` request to `/v1/system/users`
+    /// Sends a `GET` request to `/v1/system/users`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `silo`: Name or ID of the silo
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.silo_user_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18912,12 +18912,12 @@ pub trait ClientSystemExt {
     fn silo_user_list(&self) -> builder::SiloUserList;
     /// Fetch a user
     ///
-    ///Sends a `GET` request to `/v1/system/users/{user_id}`
+    /// Sends a `GET` request to `/v1/system/users/{user_id}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `user_id`: The user's internal id
     /// - `silo`: Name or ID of the silo
-    ///```ignore
+    /// ```ignore
     /// let response = client.silo_user_view()
     ///    .user_id(user_id)
     ///    .silo(silo)
@@ -18927,14 +18927,14 @@ pub trait ClientSystemExt {
     fn silo_user_view(&self) -> builder::SiloUserView;
     /// List built-in users
     ///
-    ///Sends a `GET` request to `/v1/system/users-builtin`
+    /// Sends a `GET` request to `/v1/system/users-builtin`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.user_builtin_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -18945,9 +18945,9 @@ pub trait ClientSystemExt {
     fn user_builtin_list(&self) -> builder::UserBuiltinList;
     /// Fetch a built-in user
     ///
-    ///Sends a `GET` request to `/v1/system/users-builtin/{user}`
+    /// Sends a `GET` request to `/v1/system/users-builtin/{user}`
     ///
-    ///```ignore
+    /// ```ignore
     /// let response = client.user_builtin_view()
     ///    .user(user)
     ///    .send()
@@ -19185,13 +19185,13 @@ impl ClientSystemExt for Client {
 pub trait ClientVpcsExt {
     /// List firewall rules
     ///
-    ///Sends a `GET` request to `/v1/vpc-firewall-rules`
+    /// Sends a `GET` request to `/v1/vpc-firewall-rules`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_firewall_rules_view()
     ///    .project(project)
     ///    .vpc(vpc)
@@ -19201,14 +19201,14 @@ pub trait ClientVpcsExt {
     fn vpc_firewall_rules_view(&self) -> builder::VpcFirewallRulesView;
     /// Replace firewall rules
     ///
-    ///Sends a `PUT` request to `/v1/vpc-firewall-rules`
+    /// Sends a `PUT` request to `/v1/vpc-firewall-rules`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_firewall_rules_update()
     ///    .project(project)
     ///    .vpc(vpc)
@@ -19219,11 +19219,11 @@ pub trait ClientVpcsExt {
     fn vpc_firewall_rules_update(&self) -> builder::VpcFirewallRulesUpdate;
     /// List routes
     ///
-    ///List the routes associated with a router in a particular VPC.
+    /// List the routes associated with a router in a particular VPC.
     ///
-    ///Sends a `GET` request to `/v1/vpc-router-routes`
+    /// Sends a `GET` request to `/v1/vpc-router-routes`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
@@ -19233,7 +19233,7 @@ pub trait ClientVpcsExt {
     /// - `sort_by`
     /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
     ///   a `Name`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_router_route_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -19247,16 +19247,16 @@ pub trait ClientVpcsExt {
     fn vpc_router_route_list(&self) -> builder::VpcRouterRouteList;
     /// Create a router
     ///
-    ///Sends a `POST` request to `/v1/vpc-router-routes`
+    /// Sends a `POST` request to `/v1/vpc-router-routes`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `router`: Name or ID of the router
     /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
     ///   a `Name`
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_router_route_create()
     ///    .project(project)
     ///    .router(router)
@@ -19268,16 +19268,16 @@ pub trait ClientVpcsExt {
     fn vpc_router_route_create(&self) -> builder::VpcRouterRouteCreate;
     /// Fetch a route
     ///
-    ///Sends a `GET` request to `/v1/vpc-router-routes/{route}`
+    /// Sends a `GET` request to `/v1/vpc-router-routes/{route}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `route`: Name or ID of the route
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `router`: Name or ID of the router
     /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
     ///   a `Name`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_router_route_view()
     ///    .route(route)
     ///    .project(project)
@@ -19289,9 +19289,9 @@ pub trait ClientVpcsExt {
     fn vpc_router_route_view(&self) -> builder::VpcRouterRouteView;
     /// Update a route
     ///
-    ///Sends a `PUT` request to `/v1/vpc-router-routes/{route}`
+    /// Sends a `PUT` request to `/v1/vpc-router-routes/{route}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `route`: Name or ID of the route
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
@@ -19299,7 +19299,7 @@ pub trait ClientVpcsExt {
     /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
     ///   a `Name`
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_router_route_update()
     ///    .route(route)
     ///    .project(project)
@@ -19312,16 +19312,16 @@ pub trait ClientVpcsExt {
     fn vpc_router_route_update(&self) -> builder::VpcRouterRouteUpdate;
     /// Delete a route
     ///
-    ///Sends a `DELETE` request to `/v1/vpc-router-routes/{route}`
+    /// Sends a `DELETE` request to `/v1/vpc-router-routes/{route}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `route`: Name or ID of the route
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `router`: Name or ID of the router
     /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
     ///   a `Name`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_router_route_delete()
     ///    .route(route)
     ///    .project(project)
@@ -19333,9 +19333,9 @@ pub trait ClientVpcsExt {
     fn vpc_router_route_delete(&self) -> builder::VpcRouterRouteDelete;
     /// List routers
     ///
-    ///Sends a `GET` request to `/v1/vpc-routers`
+    /// Sends a `GET` request to `/v1/vpc-routers`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
@@ -19343,7 +19343,7 @@ pub trait ClientVpcsExt {
     ///   provided as a `Name`
     /// - `sort_by`
     /// - `vpc`: Name or ID of the VPC
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_router_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -19356,14 +19356,14 @@ pub trait ClientVpcsExt {
     fn vpc_router_list(&self) -> builder::VpcRouterList;
     /// Create a VPC router
     ///
-    ///Sends a `POST` request to `/v1/vpc-routers`
+    /// Sends a `POST` request to `/v1/vpc-routers`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_router_create()
     ///    .project(project)
     ///    .vpc(vpc)
@@ -19374,14 +19374,14 @@ pub trait ClientVpcsExt {
     fn vpc_router_create(&self) -> builder::VpcRouterCreate;
     /// Get a router
     ///
-    ///Sends a `GET` request to `/v1/vpc-routers/{router}`
+    /// Sends a `GET` request to `/v1/vpc-routers/{router}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `router`: Name or ID of the router
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_router_view()
     ///    .router(router)
     ///    .project(project)
@@ -19392,15 +19392,15 @@ pub trait ClientVpcsExt {
     fn vpc_router_view(&self) -> builder::VpcRouterView;
     /// Update a router
     ///
-    ///Sends a `PUT` request to `/v1/vpc-routers/{router}`
+    /// Sends a `PUT` request to `/v1/vpc-routers/{router}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `router`: Name or ID of the router
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_router_update()
     ///    .router(router)
     ///    .project(project)
@@ -19412,14 +19412,14 @@ pub trait ClientVpcsExt {
     fn vpc_router_update(&self) -> builder::VpcRouterUpdate;
     /// Delete a router
     ///
-    ///Sends a `DELETE` request to `/v1/vpc-routers/{router}`
+    /// Sends a `DELETE` request to `/v1/vpc-routers/{router}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `router`: Name or ID of the router
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_router_delete()
     ///    .router(router)
     ///    .project(project)
@@ -19430,9 +19430,9 @@ pub trait ClientVpcsExt {
     fn vpc_router_delete(&self) -> builder::VpcRouterDelete;
     /// Fetch a subnet
     ///
-    ///Sends a `GET` request to `/v1/vpc-subnets`
+    /// Sends a `GET` request to `/v1/vpc-subnets`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
@@ -19440,7 +19440,7 @@ pub trait ClientVpcsExt {
     ///   provided as a `Name`
     /// - `sort_by`
     /// - `vpc`: Name or ID of the VPC
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_subnet_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -19453,14 +19453,14 @@ pub trait ClientVpcsExt {
     fn vpc_subnet_list(&self) -> builder::VpcSubnetList;
     /// Create a subnet
     ///
-    ///Sends a `POST` request to `/v1/vpc-subnets`
+    /// Sends a `POST` request to `/v1/vpc-subnets`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_subnet_create()
     ///    .project(project)
     ///    .vpc(vpc)
@@ -19471,14 +19471,14 @@ pub trait ClientVpcsExt {
     fn vpc_subnet_create(&self) -> builder::VpcSubnetCreate;
     /// Fetch a subnet
     ///
-    ///Sends a `GET` request to `/v1/vpc-subnets/{subnet}`
+    /// Sends a `GET` request to `/v1/vpc-subnets/{subnet}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `subnet`: Name or ID of the subnet
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_subnet_view()
     ///    .subnet(subnet)
     ///    .project(project)
@@ -19489,15 +19489,15 @@ pub trait ClientVpcsExt {
     fn vpc_subnet_view(&self) -> builder::VpcSubnetView;
     /// Update a subnet
     ///
-    ///Sends a `PUT` request to `/v1/vpc-subnets/{subnet}`
+    /// Sends a `PUT` request to `/v1/vpc-subnets/{subnet}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `subnet`: Name or ID of the subnet
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_subnet_update()
     ///    .subnet(subnet)
     ///    .project(project)
@@ -19509,14 +19509,14 @@ pub trait ClientVpcsExt {
     fn vpc_subnet_update(&self) -> builder::VpcSubnetUpdate;
     /// Delete a subnet
     ///
-    ///Sends a `DELETE` request to `/v1/vpc-subnets/{subnet}`
+    /// Sends a `DELETE` request to `/v1/vpc-subnets/{subnet}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `subnet`: Name or ID of the subnet
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `vpc`: Name or ID of the VPC
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_subnet_delete()
     ///    .subnet(subnet)
     ///    .project(project)
@@ -19527,9 +19527,9 @@ pub trait ClientVpcsExt {
     fn vpc_subnet_delete(&self) -> builder::VpcSubnetDelete;
     /// List network interfaces
     ///
-    ///Sends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`
+    /// Sends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `subnet`: Name or ID of the subnet
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
@@ -19538,7 +19538,7 @@ pub trait ClientVpcsExt {
     ///   provided as a `Name`
     /// - `sort_by`
     /// - `vpc`: Name or ID of the VPC
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_subnet_list_network_interfaces()
     ///    .subnet(subnet)
     ///    .limit(limit)
@@ -19552,15 +19552,15 @@ pub trait ClientVpcsExt {
     fn vpc_subnet_list_network_interfaces(&self) -> builder::VpcSubnetListNetworkInterfaces;
     /// List VPCs
     ///
-    ///Sends a `GET` request to `/v1/vpcs`
+    /// Sends a `GET` request to `/v1/vpcs`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `project`: Name or ID of the project
     /// - `sort_by`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -19572,12 +19572,12 @@ pub trait ClientVpcsExt {
     fn vpc_list(&self) -> builder::VpcList;
     /// Create a VPC
     ///
-    ///Sends a `POST` request to `/v1/vpcs`
+    /// Sends a `POST` request to `/v1/vpcs`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_create()
     ///    .project(project)
     ///    .body(body)
@@ -19587,12 +19587,12 @@ pub trait ClientVpcsExt {
     fn vpc_create(&self) -> builder::VpcCreate;
     /// Fetch a VPC
     ///
-    ///Sends a `GET` request to `/v1/vpcs/{vpc}`
+    /// Sends a `GET` request to `/v1/vpcs/{vpc}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `vpc`: Name or ID of the VPC
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_view()
     ///    .vpc(vpc)
     ///    .project(project)
@@ -19602,13 +19602,13 @@ pub trait ClientVpcsExt {
     fn vpc_view(&self) -> builder::VpcView;
     /// Update a VPC
     ///
-    ///Sends a `PUT` request to `/v1/vpcs/{vpc}`
+    /// Sends a `PUT` request to `/v1/vpcs/{vpc}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `vpc`: Name or ID of the VPC
     /// - `project`: Name or ID of the project
     /// - `body`
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_update()
     ///    .vpc(vpc)
     ///    .project(project)
@@ -19619,12 +19619,12 @@ pub trait ClientVpcsExt {
     fn vpc_update(&self) -> builder::VpcUpdate;
     /// Delete a VPC
     ///
-    ///Sends a `DELETE` request to `/v1/vpcs/{vpc}`
+    /// Sends a `DELETE` request to `/v1/vpcs/{vpc}`
     ///
-    ///Arguments:
+    /// Arguments:
     /// - `vpc`: Name or ID of the VPC
     /// - `project`: Name or ID of the project
-    ///```ignore
+    /// ```ignore
     /// let response = client.vpc_delete()
     ///    .vpc(vpc)
     ///    .project(project)
@@ -19736,7 +19736,7 @@ pub mod builder {
     };
     /// Builder for [`ClientHiddenExt::device_auth_request`]
     ///
-    ///[`ClientHiddenExt::device_auth_request`]: super::ClientHiddenExt::device_auth_request
+    /// [`ClientHiddenExt::device_auth_request`]: super::ClientHiddenExt::device_auth_request
     #[derive(Debug, Clone)]
     pub struct DeviceAuthRequest<'a> {
         client: &'a super::Client,
@@ -19791,7 +19791,7 @@ pub mod builder {
 
     /// Builder for [`ClientHiddenExt::device_auth_confirm`]
     ///
-    ///[`ClientHiddenExt::device_auth_confirm`]: super::ClientHiddenExt::device_auth_confirm
+    /// [`ClientHiddenExt::device_auth_confirm`]: super::ClientHiddenExt::device_auth_confirm
     #[derive(Debug, Clone)]
     pub struct DeviceAuthConfirm<'a> {
         client: &'a super::Client,
@@ -19852,7 +19852,7 @@ pub mod builder {
 
     /// Builder for [`ClientHiddenExt::device_access_token`]
     ///
-    ///[`ClientHiddenExt::device_access_token`]: super::ClientHiddenExt::device_access_token
+    /// [`ClientHiddenExt::device_access_token`]: super::ClientHiddenExt::device_access_token
     #[derive(Debug, Clone)]
     pub struct DeviceAccessToken<'a> {
         client: &'a super::Client,
@@ -19906,7 +19906,7 @@ pub mod builder {
 
     /// Builder for [`ClientHiddenExt::login_spoof`]
     ///
-    ///[`ClientHiddenExt::login_spoof`]: super::ClientHiddenExt::login_spoof
+    /// [`ClientHiddenExt::login_spoof`]: super::ClientHiddenExt::login_spoof
     #[derive(Debug, Clone)]
     pub struct LoginSpoof<'a> {
         client: &'a super::Client,
@@ -19965,7 +19965,7 @@ pub mod builder {
 
     /// Builder for [`ClientLoginExt::login_local`]
     ///
-    ///[`ClientLoginExt::login_local`]: super::ClientLoginExt::login_local
+    /// [`ClientLoginExt::login_local`]: super::ClientLoginExt::login_local
     #[derive(Debug, Clone)]
     pub struct LoginLocal<'a> {
         client: &'a super::Client,
@@ -20046,7 +20046,7 @@ pub mod builder {
 
     /// Builder for [`ClientLoginExt::login_saml_begin`]
     ///
-    ///[`ClientLoginExt::login_saml_begin`]: super::ClientLoginExt::login_saml_begin
+    /// [`ClientLoginExt::login_saml_begin`]: super::ClientLoginExt::login_saml_begin
     #[derive(Debug, Clone)]
     pub struct LoginSamlBegin<'a> {
         client: &'a super::Client,
@@ -20116,7 +20116,7 @@ pub mod builder {
 
     /// Builder for [`ClientLoginExt::login_saml`]
     ///
-    ///[`ClientLoginExt::login_saml`]: super::ClientLoginExt::login_saml
+    /// [`ClientLoginExt::login_saml`]: super::ClientLoginExt::login_saml
     #[derive(Debug)]
     pub struct LoginSaml<'a> {
         client: &'a super::Client,
@@ -20208,7 +20208,7 @@ pub mod builder {
 
     /// Builder for [`ClientHiddenExt::logout`]
     ///
-    ///[`ClientHiddenExt::logout`]: super::ClientHiddenExt::logout
+    /// [`ClientHiddenExt::logout`]: super::ClientHiddenExt::logout
     #[derive(Debug, Clone)]
     pub struct Logout<'a> {
         client: &'a super::Client,
@@ -20241,7 +20241,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_image_view_by_id`]
     ///
-    ///[`ClientSystemExt::system_image_view_by_id`]: super::ClientSystemExt::system_image_view_by_id
+    /// [`ClientSystemExt::system_image_view_by_id`]: super::ClientSystemExt::system_image_view_by_id
     #[derive(Debug, Clone)]
     pub struct SystemImageViewById<'a> {
         client: &'a super::Client,
@@ -20293,7 +20293,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_image_list`]
     ///
-    ///[`ClientSystemExt::system_image_list`]: super::ClientSystemExt::system_image_list
+    /// [`ClientSystemExt::system_image_list`]: super::ClientSystemExt::system_image_list
     #[derive(Debug, Clone)]
     pub struct SystemImageList<'a> {
         client: &'a super::Client,
@@ -20433,7 +20433,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_image_create`]
     ///
-    ///[`ClientSystemExt::system_image_create`]: super::ClientSystemExt::system_image_create
+    /// [`ClientSystemExt::system_image_create`]: super::ClientSystemExt::system_image_create
     #[derive(Debug, Clone)]
     pub struct SystemImageCreate<'a> {
         client: &'a super::Client,
@@ -20494,7 +20494,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_image_view`]
     ///
-    ///[`ClientSystemExt::system_image_view`]: super::ClientSystemExt::system_image_view
+    /// [`ClientSystemExt::system_image_view`]: super::ClientSystemExt::system_image_view
     #[derive(Debug, Clone)]
     pub struct SystemImageView<'a> {
         client: &'a super::Client,
@@ -20546,7 +20546,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_image_delete`]
     ///
-    ///[`ClientSystemExt::system_image_delete`]: super::ClientSystemExt::system_image_delete
+    /// [`ClientSystemExt::system_image_delete`]: super::ClientSystemExt::system_image_delete
     #[derive(Debug, Clone)]
     pub struct SystemImageDelete<'a> {
         client: &'a super::Client,
@@ -20598,7 +20598,7 @@ pub mod builder {
 
     /// Builder for [`ClientDisksExt::disk_list`]
     ///
-    ///[`ClientDisksExt::disk_list`]: super::ClientDisksExt::disk_list
+    /// [`ClientDisksExt::disk_list`]: super::ClientDisksExt::disk_list
     #[derive(Debug, Clone)]
     pub struct DiskList<'a> {
         client: &'a super::Client,
@@ -20757,7 +20757,7 @@ pub mod builder {
 
     /// Builder for [`ClientDisksExt::disk_create`]
     ///
-    ///[`ClientDisksExt::disk_create`]: super::ClientDisksExt::disk_create
+    /// [`ClientDisksExt::disk_create`]: super::ClientDisksExt::disk_create
     #[derive(Debug, Clone)]
     pub struct DiskCreate<'a> {
         client: &'a super::Client,
@@ -20835,7 +20835,7 @@ pub mod builder {
 
     /// Builder for [`ClientDisksExt::disk_view`]
     ///
-    ///[`ClientDisksExt::disk_view`]: super::ClientDisksExt::disk_view
+    /// [`ClientDisksExt::disk_view`]: super::ClientDisksExt::disk_view
     #[derive(Debug, Clone)]
     pub struct DiskView<'a> {
         client: &'a super::Client,
@@ -20909,7 +20909,7 @@ pub mod builder {
 
     /// Builder for [`ClientDisksExt::disk_delete`]
     ///
-    ///[`ClientDisksExt::disk_delete`]: super::ClientDisksExt::disk_delete
+    /// [`ClientDisksExt::disk_delete`]: super::ClientDisksExt::disk_delete
     #[derive(Debug, Clone)]
     pub struct DiskDelete<'a> {
         client: &'a super::Client,
@@ -20983,7 +20983,7 @@ pub mod builder {
 
     /// Builder for [`ClientDisksExt::disk_bulk_write_import`]
     ///
-    ///[`ClientDisksExt::disk_bulk_write_import`]: super::ClientDisksExt::disk_bulk_write_import
+    /// [`ClientDisksExt::disk_bulk_write_import`]: super::ClientDisksExt::disk_bulk_write_import
     #[derive(Debug, Clone)]
     pub struct DiskBulkWriteImport<'a> {
         client: &'a super::Client,
@@ -21084,7 +21084,7 @@ pub mod builder {
 
     /// Builder for [`ClientDisksExt::disk_bulk_write_import_start`]
     ///
-    ///[`ClientDisksExt::disk_bulk_write_import_start`]: super::ClientDisksExt::disk_bulk_write_import_start
+    /// [`ClientDisksExt::disk_bulk_write_import_start`]: super::ClientDisksExt::disk_bulk_write_import_start
     #[derive(Debug, Clone)]
     pub struct DiskBulkWriteImportStart<'a> {
         client: &'a super::Client,
@@ -21158,7 +21158,7 @@ pub mod builder {
 
     /// Builder for [`ClientDisksExt::disk_bulk_write_import_stop`]
     ///
-    ///[`ClientDisksExt::disk_bulk_write_import_stop`]: super::ClientDisksExt::disk_bulk_write_import_stop
+    /// [`ClientDisksExt::disk_bulk_write_import_stop`]: super::ClientDisksExt::disk_bulk_write_import_stop
     #[derive(Debug, Clone)]
     pub struct DiskBulkWriteImportStop<'a> {
         client: &'a super::Client,
@@ -21232,7 +21232,7 @@ pub mod builder {
 
     /// Builder for [`ClientDisksExt::disk_finalize_import`]
     ///
-    ///[`ClientDisksExt::disk_finalize_import`]: super::ClientDisksExt::disk_finalize_import
+    /// [`ClientDisksExt::disk_finalize_import`]: super::ClientDisksExt::disk_finalize_import
     #[derive(Debug, Clone)]
     pub struct DiskFinalizeImport<'a> {
         client: &'a super::Client,
@@ -21331,7 +21331,7 @@ pub mod builder {
 
     /// Builder for [`ClientDisksExt::disk_import_blocks_from_url`]
     ///
-    ///[`ClientDisksExt::disk_import_blocks_from_url`]: super::ClientDisksExt::disk_import_blocks_from_url
+    /// [`ClientDisksExt::disk_import_blocks_from_url`]: super::ClientDisksExt::disk_import_blocks_from_url
     #[derive(Debug, Clone)]
     pub struct DiskImportBlocksFromUrl<'a> {
         client: &'a super::Client,
@@ -21432,7 +21432,7 @@ pub mod builder {
 
     /// Builder for [`ClientDisksExt::disk_metrics_list`]
     ///
-    ///[`ClientDisksExt::disk_metrics_list`]: super::ClientDisksExt::disk_metrics_list
+    /// [`ClientDisksExt::disk_metrics_list`]: super::ClientDisksExt::disk_metrics_list
     #[derive(Debug, Clone)]
     pub struct DiskMetricsList<'a> {
         client: &'a super::Client,
@@ -21644,7 +21644,7 @@ pub mod builder {
 
     /// Builder for [`ClientSilosExt::group_list`]
     ///
-    ///[`ClientSilosExt::group_list`]: super::ClientSilosExt::group_list
+    /// [`ClientSilosExt::group_list`]: super::ClientSilosExt::group_list
     #[derive(Debug, Clone)]
     pub struct GroupList<'a> {
         client: &'a super::Client,
@@ -21784,7 +21784,7 @@ pub mod builder {
 
     /// Builder for [`ClientSilosExt::group_view`]
     ///
-    ///[`ClientSilosExt::group_view`]: super::ClientSilosExt::group_view
+    /// [`ClientSilosExt::group_view`]: super::ClientSilosExt::group_view
     #[derive(Debug, Clone)]
     pub struct GroupView<'a> {
         client: &'a super::Client,
@@ -21836,7 +21836,7 @@ pub mod builder {
 
     /// Builder for [`ClientImagesExt::image_list`]
     ///
-    ///[`ClientImagesExt::image_list`]: super::ClientImagesExt::image_list
+    /// [`ClientImagesExt::image_list`]: super::ClientImagesExt::image_list
     #[derive(Debug, Clone)]
     pub struct ImageList<'a> {
         client: &'a super::Client,
@@ -22014,7 +22014,7 @@ pub mod builder {
 
     /// Builder for [`ClientImagesExt::image_create`]
     ///
-    ///[`ClientImagesExt::image_create`]: super::ClientImagesExt::image_create
+    /// [`ClientImagesExt::image_create`]: super::ClientImagesExt::image_create
     #[derive(Debug, Clone)]
     pub struct ImageCreate<'a> {
         client: &'a super::Client,
@@ -22095,7 +22095,7 @@ pub mod builder {
 
     /// Builder for [`ClientImagesExt::image_view`]
     ///
-    ///[`ClientImagesExt::image_view`]: super::ClientImagesExt::image_view
+    /// [`ClientImagesExt::image_view`]: super::ClientImagesExt::image_view
     #[derive(Debug, Clone)]
     pub struct ImageView<'a> {
         client: &'a super::Client,
@@ -22169,7 +22169,7 @@ pub mod builder {
 
     /// Builder for [`ClientImagesExt::image_delete`]
     ///
-    ///[`ClientImagesExt::image_delete`]: super::ClientImagesExt::image_delete
+    /// [`ClientImagesExt::image_delete`]: super::ClientImagesExt::image_delete
     #[derive(Debug, Clone)]
     pub struct ImageDelete<'a> {
         client: &'a super::Client,
@@ -22243,7 +22243,7 @@ pub mod builder {
 
     /// Builder for [`ClientImagesExt::image_promote`]
     ///
-    ///[`ClientImagesExt::image_promote`]: super::ClientImagesExt::image_promote
+    /// [`ClientImagesExt::image_promote`]: super::ClientImagesExt::image_promote
     #[derive(Debug, Clone)]
     pub struct ImagePromote<'a> {
         client: &'a super::Client,
@@ -22317,7 +22317,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_list`]
     ///
-    ///[`ClientInstancesExt::instance_list`]: super::ClientInstancesExt::instance_list
+    /// [`ClientInstancesExt::instance_list`]: super::ClientInstancesExt::instance_list
     #[derive(Debug, Clone)]
     pub struct InstanceList<'a> {
         client: &'a super::Client,
@@ -22476,7 +22476,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_create`]
     ///
-    ///[`ClientInstancesExt::instance_create`]: super::ClientInstancesExt::instance_create
+    /// [`ClientInstancesExt::instance_create`]: super::ClientInstancesExt::instance_create
     #[derive(Debug, Clone)]
     pub struct InstanceCreate<'a> {
         client: &'a super::Client,
@@ -22554,7 +22554,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_view`]
     ///
-    ///[`ClientInstancesExt::instance_view`]: super::ClientInstancesExt::instance_view
+    /// [`ClientInstancesExt::instance_view`]: super::ClientInstancesExt::instance_view
     #[derive(Debug, Clone)]
     pub struct InstanceView<'a> {
         client: &'a super::Client,
@@ -22628,7 +22628,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_delete`]
     ///
-    ///[`ClientInstancesExt::instance_delete`]: super::ClientInstancesExt::instance_delete
+    /// [`ClientInstancesExt::instance_delete`]: super::ClientInstancesExt::instance_delete
     #[derive(Debug, Clone)]
     pub struct InstanceDelete<'a> {
         client: &'a super::Client,
@@ -22702,7 +22702,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_disk_list`]
     ///
-    ///[`ClientInstancesExt::instance_disk_list`]: super::ClientInstancesExt::instance_disk_list
+    /// [`ClientInstancesExt::instance_disk_list`]: super::ClientInstancesExt::instance_disk_list
     #[derive(Debug, Clone)]
     pub struct InstanceDiskList<'a> {
         client: &'a super::Client,
@@ -22879,7 +22879,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_disk_attach`]
     ///
-    ///[`ClientInstancesExt::instance_disk_attach`]: super::ClientInstancesExt::instance_disk_attach
+    /// [`ClientInstancesExt::instance_disk_attach`]: super::ClientInstancesExt::instance_disk_attach
     #[derive(Debug, Clone)]
     pub struct InstanceDiskAttach<'a> {
         client: &'a super::Client,
@@ -22978,7 +22978,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_disk_detach`]
     ///
-    ///[`ClientInstancesExt::instance_disk_detach`]: super::ClientInstancesExt::instance_disk_detach
+    /// [`ClientInstancesExt::instance_disk_detach`]: super::ClientInstancesExt::instance_disk_detach
     #[derive(Debug, Clone)]
     pub struct InstanceDiskDetach<'a> {
         client: &'a super::Client,
@@ -23077,7 +23077,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_external_ip_list`]
     ///
-    ///[`ClientInstancesExt::instance_external_ip_list`]: super::ClientInstancesExt::instance_external_ip_list
+    /// [`ClientInstancesExt::instance_external_ip_list`]: super::ClientInstancesExt::instance_external_ip_list
     #[derive(Debug, Clone)]
     pub struct InstanceExternalIpList<'a> {
         client: &'a super::Client,
@@ -23153,7 +23153,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_migrate`]
     ///
-    ///[`ClientInstancesExt::instance_migrate`]: super::ClientInstancesExt::instance_migrate
+    /// [`ClientInstancesExt::instance_migrate`]: super::ClientInstancesExt::instance_migrate
     #[derive(Debug, Clone)]
     pub struct InstanceMigrate<'a> {
         client: &'a super::Client,
@@ -23252,7 +23252,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_reboot`]
     ///
-    ///[`ClientInstancesExt::instance_reboot`]: super::ClientInstancesExt::instance_reboot
+    /// [`ClientInstancesExt::instance_reboot`]: super::ClientInstancesExt::instance_reboot
     #[derive(Debug, Clone)]
     pub struct InstanceReboot<'a> {
         client: &'a super::Client,
@@ -23326,7 +23326,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_serial_console`]
     ///
-    ///[`ClientInstancesExt::instance_serial_console`]: super::ClientInstancesExt::instance_serial_console
+    /// [`ClientInstancesExt::instance_serial_console`]: super::ClientInstancesExt::instance_serial_console
     #[derive(Debug, Clone)]
     pub struct InstanceSerialConsole<'a> {
         client: &'a super::Client,
@@ -23456,7 +23456,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_serial_console_stream`]
     ///
-    ///[`ClientInstancesExt::instance_serial_console_stream`]: super::ClientInstancesExt::instance_serial_console_stream
+    /// [`ClientInstancesExt::instance_serial_console_stream`]: super::ClientInstancesExt::instance_serial_console_stream
     #[derive(Debug, Clone)]
     pub struct InstanceSerialConsoleStream<'a> {
         client: &'a super::Client,
@@ -23596,7 +23596,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_start`]
     ///
-    ///[`ClientInstancesExt::instance_start`]: super::ClientInstancesExt::instance_start
+    /// [`ClientInstancesExt::instance_start`]: super::ClientInstancesExt::instance_start
     #[derive(Debug, Clone)]
     pub struct InstanceStart<'a> {
         client: &'a super::Client,
@@ -23670,7 +23670,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_stop`]
     ///
-    ///[`ClientInstancesExt::instance_stop`]: super::ClientInstancesExt::instance_stop
+    /// [`ClientInstancesExt::instance_stop`]: super::ClientInstancesExt::instance_stop
     #[derive(Debug, Clone)]
     pub struct InstanceStop<'a> {
         client: &'a super::Client,
@@ -23744,7 +23744,7 @@ pub mod builder {
 
     /// Builder for [`ClientSessionExt::current_user_view`]
     ///
-    ///[`ClientSessionExt::current_user_view`]: super::ClientSessionExt::current_user_view
+    /// [`ClientSessionExt::current_user_view`]: super::ClientSessionExt::current_user_view
     #[derive(Debug, Clone)]
     pub struct CurrentUserView<'a> {
         client: &'a super::Client,
@@ -23777,7 +23777,7 @@ pub mod builder {
 
     /// Builder for [`ClientSessionExt::current_user_groups`]
     ///
-    ///[`ClientSessionExt::current_user_groups`]: super::ClientSessionExt::current_user_groups
+    /// [`ClientSessionExt::current_user_groups`]: super::ClientSessionExt::current_user_groups
     #[derive(Debug, Clone)]
     pub struct CurrentUserGroups<'a> {
         client: &'a super::Client,
@@ -23917,7 +23917,7 @@ pub mod builder {
 
     /// Builder for [`ClientSessionExt::current_user_ssh_key_list`]
     ///
-    ///[`ClientSessionExt::current_user_ssh_key_list`]: super::ClientSessionExt::current_user_ssh_key_list
+    /// [`ClientSessionExt::current_user_ssh_key_list`]: super::ClientSessionExt::current_user_ssh_key_list
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyList<'a> {
         client: &'a super::Client,
@@ -24057,7 +24057,7 @@ pub mod builder {
 
     /// Builder for [`ClientSessionExt::current_user_ssh_key_create`]
     ///
-    ///[`ClientSessionExt::current_user_ssh_key_create`]: super::ClientSessionExt::current_user_ssh_key_create
+    /// [`ClientSessionExt::current_user_ssh_key_create`]: super::ClientSessionExt::current_user_ssh_key_create
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyCreate<'a> {
         client: &'a super::Client,
@@ -24116,7 +24116,7 @@ pub mod builder {
 
     /// Builder for [`ClientSessionExt::current_user_ssh_key_view`]
     ///
-    ///[`ClientSessionExt::current_user_ssh_key_view`]: super::ClientSessionExt::current_user_ssh_key_view
+    /// [`ClientSessionExt::current_user_ssh_key_view`]: super::ClientSessionExt::current_user_ssh_key_view
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyView<'a> {
         client: &'a super::Client,
@@ -24168,7 +24168,7 @@ pub mod builder {
 
     /// Builder for [`ClientSessionExt::current_user_ssh_key_delete`]
     ///
-    ///[`ClientSessionExt::current_user_ssh_key_delete`]: super::ClientSessionExt::current_user_ssh_key_delete
+    /// [`ClientSessionExt::current_user_ssh_key_delete`]: super::ClientSessionExt::current_user_ssh_key_delete
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyDelete<'a> {
         client: &'a super::Client,
@@ -24220,7 +24220,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_network_interface_list`]
     ///
-    ///[`ClientInstancesExt::instance_network_interface_list`]: super::ClientInstancesExt::instance_network_interface_list
+    /// [`ClientInstancesExt::instance_network_interface_list`]: super::ClientInstancesExt::instance_network_interface_list
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceList<'a> {
         client: &'a super::Client,
@@ -24400,7 +24400,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_network_interface_create`]
     ///
-    ///[`ClientInstancesExt::instance_network_interface_create`]: super::ClientInstancesExt::instance_network_interface_create
+    /// [`ClientInstancesExt::instance_network_interface_create`]: super::ClientInstancesExt::instance_network_interface_create
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceCreate<'a> {
         client: &'a super::Client,
@@ -24499,7 +24499,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_network_interface_view`]
     ///
-    ///[`ClientInstancesExt::instance_network_interface_view`]: super::ClientInstancesExt::instance_network_interface_view
+    /// [`ClientInstancesExt::instance_network_interface_view`]: super::ClientInstancesExt::instance_network_interface_view
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceView<'a> {
         client: &'a super::Client,
@@ -24593,7 +24593,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_network_interface_update`]
     ///
-    ///[`ClientInstancesExt::instance_network_interface_update`]: super::ClientInstancesExt::instance_network_interface_update
+    /// [`ClientInstancesExt::instance_network_interface_update`]: super::ClientInstancesExt::instance_network_interface_update
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceUpdate<'a> {
         client: &'a super::Client,
@@ -24713,7 +24713,7 @@ pub mod builder {
 
     /// Builder for [`ClientInstancesExt::instance_network_interface_delete`]
     ///
-    ///[`ClientInstancesExt::instance_network_interface_delete`]: super::ClientInstancesExt::instance_network_interface_delete
+    /// [`ClientInstancesExt::instance_network_interface_delete`]: super::ClientInstancesExt::instance_network_interface_delete
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceDelete<'a> {
         client: &'a super::Client,
@@ -24805,7 +24805,7 @@ pub mod builder {
 
     /// Builder for [`ClientSilosExt::policy_view`]
     ///
-    ///[`ClientSilosExt::policy_view`]: super::ClientSilosExt::policy_view
+    /// [`ClientSilosExt::policy_view`]: super::ClientSilosExt::policy_view
     #[derive(Debug, Clone)]
     pub struct PolicyView<'a> {
         client: &'a super::Client,
@@ -24840,7 +24840,7 @@ pub mod builder {
 
     /// Builder for [`ClientSilosExt::policy_update`]
     ///
-    ///[`ClientSilosExt::policy_update`]: super::ClientSilosExt::policy_update
+    /// [`ClientSilosExt::policy_update`]: super::ClientSilosExt::policy_update
     #[derive(Debug, Clone)]
     pub struct PolicyUpdate<'a> {
         client: &'a super::Client,
@@ -24901,7 +24901,7 @@ pub mod builder {
 
     /// Builder for [`ClientProjectsExt::project_list`]
     ///
-    ///[`ClientProjectsExt::project_list`]: super::ClientProjectsExt::project_list
+    /// [`ClientProjectsExt::project_list`]: super::ClientProjectsExt::project_list
     #[derive(Debug, Clone)]
     pub struct ProjectList<'a> {
         client: &'a super::Client,
@@ -25041,7 +25041,7 @@ pub mod builder {
 
     /// Builder for [`ClientProjectsExt::project_create`]
     ///
-    ///[`ClientProjectsExt::project_create`]: super::ClientProjectsExt::project_create
+    /// [`ClientProjectsExt::project_create`]: super::ClientProjectsExt::project_create
     #[derive(Debug, Clone)]
     pub struct ProjectCreate<'a> {
         client: &'a super::Client,
@@ -25100,7 +25100,7 @@ pub mod builder {
 
     /// Builder for [`ClientProjectsExt::project_view`]
     ///
-    ///[`ClientProjectsExt::project_view`]: super::ClientProjectsExt::project_view
+    /// [`ClientProjectsExt::project_view`]: super::ClientProjectsExt::project_view
     #[derive(Debug, Clone)]
     pub struct ProjectView<'a> {
         client: &'a super::Client,
@@ -25152,7 +25152,7 @@ pub mod builder {
 
     /// Builder for [`ClientProjectsExt::project_update`]
     ///
-    ///[`ClientProjectsExt::project_update`]: super::ClientProjectsExt::project_update
+    /// [`ClientProjectsExt::project_update`]: super::ClientProjectsExt::project_update
     #[derive(Debug, Clone)]
     pub struct ProjectUpdate<'a> {
         client: &'a super::Client,
@@ -25232,7 +25232,7 @@ pub mod builder {
 
     /// Builder for [`ClientProjectsExt::project_delete`]
     ///
-    ///[`ClientProjectsExt::project_delete`]: super::ClientProjectsExt::project_delete
+    /// [`ClientProjectsExt::project_delete`]: super::ClientProjectsExt::project_delete
     #[derive(Debug, Clone)]
     pub struct ProjectDelete<'a> {
         client: &'a super::Client,
@@ -25284,7 +25284,7 @@ pub mod builder {
 
     /// Builder for [`ClientProjectsExt::project_policy_view`]
     ///
-    ///[`ClientProjectsExt::project_policy_view`]: super::ClientProjectsExt::project_policy_view
+    /// [`ClientProjectsExt::project_policy_view`]: super::ClientProjectsExt::project_policy_view
     #[derive(Debug, Clone)]
     pub struct ProjectPolicyView<'a> {
         client: &'a super::Client,
@@ -25338,7 +25338,7 @@ pub mod builder {
 
     /// Builder for [`ClientProjectsExt::project_policy_update`]
     ///
-    ///[`ClientProjectsExt::project_policy_update`]: super::ClientProjectsExt::project_policy_update
+    /// [`ClientProjectsExt::project_policy_update`]: super::ClientProjectsExt::project_policy_update
     #[derive(Debug, Clone)]
     pub struct ProjectPolicyUpdate<'a> {
         client: &'a super::Client,
@@ -25422,7 +25422,7 @@ pub mod builder {
 
     /// Builder for [`ClientSnapshotsExt::snapshot_list`]
     ///
-    ///[`ClientSnapshotsExt::snapshot_list`]: super::ClientSnapshotsExt::snapshot_list
+    /// [`ClientSnapshotsExt::snapshot_list`]: super::ClientSnapshotsExt::snapshot_list
     #[derive(Debug, Clone)]
     pub struct SnapshotList<'a> {
         client: &'a super::Client,
@@ -25581,7 +25581,7 @@ pub mod builder {
 
     /// Builder for [`ClientSnapshotsExt::snapshot_create`]
     ///
-    ///[`ClientSnapshotsExt::snapshot_create`]: super::ClientSnapshotsExt::snapshot_create
+    /// [`ClientSnapshotsExt::snapshot_create`]: super::ClientSnapshotsExt::snapshot_create
     #[derive(Debug, Clone)]
     pub struct SnapshotCreate<'a> {
         client: &'a super::Client,
@@ -25659,7 +25659,7 @@ pub mod builder {
 
     /// Builder for [`ClientSnapshotsExt::snapshot_view`]
     ///
-    ///[`ClientSnapshotsExt::snapshot_view`]: super::ClientSnapshotsExt::snapshot_view
+    /// [`ClientSnapshotsExt::snapshot_view`]: super::ClientSnapshotsExt::snapshot_view
     #[derive(Debug, Clone)]
     pub struct SnapshotView<'a> {
         client: &'a super::Client,
@@ -25733,7 +25733,7 @@ pub mod builder {
 
     /// Builder for [`ClientSnapshotsExt::snapshot_delete`]
     ///
-    ///[`ClientSnapshotsExt::snapshot_delete`]: super::ClientSnapshotsExt::snapshot_delete
+    /// [`ClientSnapshotsExt::snapshot_delete`]: super::ClientSnapshotsExt::snapshot_delete
     #[derive(Debug, Clone)]
     pub struct SnapshotDelete<'a> {
         client: &'a super::Client,
@@ -25807,7 +25807,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::certificate_list`]
     ///
-    ///[`ClientSystemExt::certificate_list`]: super::ClientSystemExt::certificate_list
+    /// [`ClientSystemExt::certificate_list`]: super::ClientSystemExt::certificate_list
     #[derive(Debug, Clone)]
     pub struct CertificateList<'a> {
         client: &'a super::Client,
@@ -25947,7 +25947,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::certificate_create`]
     ///
-    ///[`ClientSystemExt::certificate_create`]: super::ClientSystemExt::certificate_create
+    /// [`ClientSystemExt::certificate_create`]: super::ClientSystemExt::certificate_create
     #[derive(Debug, Clone)]
     pub struct CertificateCreate<'a> {
         client: &'a super::Client,
@@ -26008,7 +26008,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::certificate_view`]
     ///
-    ///[`ClientSystemExt::certificate_view`]: super::ClientSystemExt::certificate_view
+    /// [`ClientSystemExt::certificate_view`]: super::ClientSystemExt::certificate_view
     #[derive(Debug, Clone)]
     pub struct CertificateView<'a> {
         client: &'a super::Client,
@@ -26063,7 +26063,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::certificate_delete`]
     ///
-    ///[`ClientSystemExt::certificate_delete`]: super::ClientSystemExt::certificate_delete
+    /// [`ClientSystemExt::certificate_delete`]: super::ClientSystemExt::certificate_delete
     #[derive(Debug, Clone)]
     pub struct CertificateDelete<'a> {
         client: &'a super::Client,
@@ -26118,7 +26118,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::physical_disk_list`]
     ///
-    ///[`ClientSystemExt::physical_disk_list`]: super::ClientSystemExt::physical_disk_list
+    /// [`ClientSystemExt::physical_disk_list`]: super::ClientSystemExt::physical_disk_list
     #[derive(Debug, Clone)]
     pub struct PhysicalDiskList<'a> {
         client: &'a super::Client,
@@ -26258,7 +26258,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::rack_list`]
     ///
-    ///[`ClientSystemExt::rack_list`]: super::ClientSystemExt::rack_list
+    /// [`ClientSystemExt::rack_list`]: super::ClientSystemExt::rack_list
     #[derive(Debug, Clone)]
     pub struct RackList<'a> {
         client: &'a super::Client,
@@ -26398,7 +26398,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::rack_view`]
     ///
-    ///[`ClientSystemExt::rack_view`]: super::ClientSystemExt::rack_view
+    /// [`ClientSystemExt::rack_view`]: super::ClientSystemExt::rack_view
     #[derive(Debug, Clone)]
     pub struct RackView<'a> {
         client: &'a super::Client,
@@ -26450,7 +26450,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::sled_list`]
     ///
-    ///[`ClientSystemExt::sled_list`]: super::ClientSystemExt::sled_list
+    /// [`ClientSystemExt::sled_list`]: super::ClientSystemExt::sled_list
     #[derive(Debug, Clone)]
     pub struct SledList<'a> {
         client: &'a super::Client,
@@ -26590,7 +26590,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::sled_view`]
     ///
-    ///[`ClientSystemExt::sled_view`]: super::ClientSystemExt::sled_view
+    /// [`ClientSystemExt::sled_view`]: super::ClientSystemExt::sled_view
     #[derive(Debug, Clone)]
     pub struct SledView<'a> {
         client: &'a super::Client,
@@ -26642,7 +26642,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::sled_physical_disk_list`]
     ///
-    ///[`ClientSystemExt::sled_physical_disk_list`]: super::ClientSystemExt::sled_physical_disk_list
+    /// [`ClientSystemExt::sled_physical_disk_list`]: super::ClientSystemExt::sled_physical_disk_list
     #[derive(Debug, Clone)]
     pub struct SledPhysicalDiskList<'a> {
         client: &'a super::Client,
@@ -26801,7 +26801,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::silo_identity_provider_list`]
     ///
-    ///[`ClientSystemExt::silo_identity_provider_list`]: super::ClientSystemExt::silo_identity_provider_list
+    /// [`ClientSystemExt::silo_identity_provider_list`]: super::ClientSystemExt::silo_identity_provider_list
     #[derive(Debug, Clone)]
     pub struct SiloIdentityProviderList<'a> {
         client: &'a super::Client,
@@ -26961,7 +26961,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::local_idp_user_create`]
     ///
-    ///[`ClientSystemExt::local_idp_user_create`]: super::ClientSystemExt::local_idp_user_create
+    /// [`ClientSystemExt::local_idp_user_create`]: super::ClientSystemExt::local_idp_user_create
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserCreate<'a> {
         client: &'a super::Client,
@@ -27039,7 +27039,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::local_idp_user_delete`]
     ///
-    ///[`ClientSystemExt::local_idp_user_delete`]: super::ClientSystemExt::local_idp_user_delete
+    /// [`ClientSystemExt::local_idp_user_delete`]: super::ClientSystemExt::local_idp_user_delete
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserDelete<'a> {
         client: &'a super::Client,
@@ -27111,7 +27111,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::local_idp_user_set_password`]
     ///
-    ///[`ClientSystemExt::local_idp_user_set_password`]: super::ClientSystemExt::local_idp_user_set_password
+    /// [`ClientSystemExt::local_idp_user_set_password`]: super::ClientSystemExt::local_idp_user_set_password
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserSetPassword<'a> {
         client: &'a super::Client,
@@ -27197,7 +27197,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::saml_identity_provider_create`]
     ///
-    ///[`ClientSystemExt::saml_identity_provider_create`]: super::ClientSystemExt::saml_identity_provider_create
+    /// [`ClientSystemExt::saml_identity_provider_create`]: super::ClientSystemExt::saml_identity_provider_create
     #[derive(Debug, Clone)]
     pub struct SamlIdentityProviderCreate<'a> {
         client: &'a super::Client,
@@ -27274,7 +27274,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::saml_identity_provider_view`]
     ///
-    ///[`ClientSystemExt::saml_identity_provider_view`]: super::ClientSystemExt::saml_identity_provider_view
+    /// [`ClientSystemExt::saml_identity_provider_view`]: super::ClientSystemExt::saml_identity_provider_view
     #[derive(Debug, Clone)]
     pub struct SamlIdentityProviderView<'a> {
         client: &'a super::Client,
@@ -27348,7 +27348,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_list`]
     ///
-    ///[`ClientSystemExt::ip_pool_list`]: super::ClientSystemExt::ip_pool_list
+    /// [`ClientSystemExt::ip_pool_list`]: super::ClientSystemExt::ip_pool_list
     #[derive(Debug, Clone)]
     pub struct IpPoolList<'a> {
         client: &'a super::Client,
@@ -27488,7 +27488,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_create`]
     ///
-    ///[`ClientSystemExt::ip_pool_create`]: super::ClientSystemExt::ip_pool_create
+    /// [`ClientSystemExt::ip_pool_create`]: super::ClientSystemExt::ip_pool_create
     #[derive(Debug, Clone)]
     pub struct IpPoolCreate<'a> {
         client: &'a super::Client,
@@ -27547,7 +27547,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_view`]
     ///
-    ///[`ClientSystemExt::ip_pool_view`]: super::ClientSystemExt::ip_pool_view
+    /// [`ClientSystemExt::ip_pool_view`]: super::ClientSystemExt::ip_pool_view
     #[derive(Debug, Clone)]
     pub struct IpPoolView<'a> {
         client: &'a super::Client,
@@ -27599,7 +27599,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_update`]
     ///
-    ///[`ClientSystemExt::ip_pool_update`]: super::ClientSystemExt::ip_pool_update
+    /// [`ClientSystemExt::ip_pool_update`]: super::ClientSystemExt::ip_pool_update
     #[derive(Debug, Clone)]
     pub struct IpPoolUpdate<'a> {
         client: &'a super::Client,
@@ -27675,7 +27675,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_delete`]
     ///
-    ///[`ClientSystemExt::ip_pool_delete`]: super::ClientSystemExt::ip_pool_delete
+    /// [`ClientSystemExt::ip_pool_delete`]: super::ClientSystemExt::ip_pool_delete
     #[derive(Debug, Clone)]
     pub struct IpPoolDelete<'a> {
         client: &'a super::Client,
@@ -27727,7 +27727,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_range_list`]
     ///
-    ///[`ClientSystemExt::ip_pool_range_list`]: super::ClientSystemExt::ip_pool_range_list
+    /// [`ClientSystemExt::ip_pool_range_list`]: super::ClientSystemExt::ip_pool_range_list
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeList<'a> {
         client: &'a super::Client,
@@ -27866,7 +27866,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_range_add`]
     ///
-    ///[`ClientSystemExt::ip_pool_range_add`]: super::ClientSystemExt::ip_pool_range_add
+    /// [`ClientSystemExt::ip_pool_range_add`]: super::ClientSystemExt::ip_pool_range_add
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeAdd<'a> {
         client: &'a super::Client,
@@ -27931,7 +27931,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_range_remove`]
     ///
-    ///[`ClientSystemExt::ip_pool_range_remove`]: super::ClientSystemExt::ip_pool_range_remove
+    /// [`ClientSystemExt::ip_pool_range_remove`]: super::ClientSystemExt::ip_pool_range_remove
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeRemove<'a> {
         client: &'a super::Client,
@@ -27996,7 +27996,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_service_view`]
     ///
-    ///[`ClientSystemExt::ip_pool_service_view`]: super::ClientSystemExt::ip_pool_service_view
+    /// [`ClientSystemExt::ip_pool_service_view`]: super::ClientSystemExt::ip_pool_service_view
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceView<'a> {
         client: &'a super::Client,
@@ -28029,7 +28029,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_service_range_list`]
     ///
-    ///[`ClientSystemExt::ip_pool_service_range_list`]: super::ClientSystemExt::ip_pool_service_range_list
+    /// [`ClientSystemExt::ip_pool_service_range_list`]: super::ClientSystemExt::ip_pool_service_range_list
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeList<'a> {
         client: &'a super::Client,
@@ -28150,7 +28150,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_service_range_add`]
     ///
-    ///[`ClientSystemExt::ip_pool_service_range_add`]: super::ClientSystemExt::ip_pool_service_range_add
+    /// [`ClientSystemExt::ip_pool_service_range_add`]: super::ClientSystemExt::ip_pool_service_range_add
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeAdd<'a> {
         client: &'a super::Client,
@@ -28198,7 +28198,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::ip_pool_service_range_remove`]
     ///
-    ///[`ClientSystemExt::ip_pool_service_range_remove`]: super::ClientSystemExt::ip_pool_service_range_remove
+    /// [`ClientSystemExt::ip_pool_service_range_remove`]: super::ClientSystemExt::ip_pool_service_range_remove
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeRemove<'a> {
         client: &'a super::Client,
@@ -28250,7 +28250,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_metric`]
     ///
-    ///[`ClientSystemExt::system_metric`]: super::ClientSystemExt::system_metric
+    /// [`ClientSystemExt::system_metric`]: super::ClientSystemExt::system_metric
     #[derive(Debug, Clone)]
     pub struct SystemMetric<'a> {
         client: &'a super::Client,
@@ -28395,7 +28395,7 @@ pub mod builder {
 
     /// Builder for [`ClientPolicyExt::system_policy_view`]
     ///
-    ///[`ClientPolicyExt::system_policy_view`]: super::ClientPolicyExt::system_policy_view
+    /// [`ClientPolicyExt::system_policy_view`]: super::ClientPolicyExt::system_policy_view
     #[derive(Debug, Clone)]
     pub struct SystemPolicyView<'a> {
         client: &'a super::Client,
@@ -28430,7 +28430,7 @@ pub mod builder {
 
     /// Builder for [`ClientPolicyExt::system_policy_update`]
     ///
-    ///[`ClientPolicyExt::system_policy_update`]: super::ClientPolicyExt::system_policy_update
+    /// [`ClientPolicyExt::system_policy_update`]: super::ClientPolicyExt::system_policy_update
     #[derive(Debug, Clone)]
     pub struct SystemPolicyUpdate<'a> {
         client: &'a super::Client,
@@ -28491,7 +28491,7 @@ pub mod builder {
 
     /// Builder for [`ClientRolesExt::role_list`]
     ///
-    ///[`ClientRolesExt::role_list`]: super::ClientRolesExt::role_list
+    /// [`ClientRolesExt::role_list`]: super::ClientRolesExt::role_list
     #[derive(Debug, Clone)]
     pub struct RoleList<'a> {
         client: &'a super::Client,
@@ -28612,7 +28612,7 @@ pub mod builder {
 
     /// Builder for [`ClientRolesExt::role_view`]
     ///
-    ///[`ClientRolesExt::role_view`]: super::ClientRolesExt::role_view
+    /// [`ClientRolesExt::role_view`]: super::ClientRolesExt::role_view
     #[derive(Debug, Clone)]
     pub struct RoleView<'a> {
         client: &'a super::Client,
@@ -28664,7 +28664,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::saga_list`]
     ///
-    ///[`ClientSystemExt::saga_list`]: super::ClientSystemExt::saga_list
+    /// [`ClientSystemExt::saga_list`]: super::ClientSystemExt::saga_list
     #[derive(Debug, Clone)]
     pub struct SagaList<'a> {
         client: &'a super::Client,
@@ -28804,7 +28804,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::saga_view`]
     ///
-    ///[`ClientSystemExt::saga_view`]: super::ClientSystemExt::saga_view
+    /// [`ClientSystemExt::saga_view`]: super::ClientSystemExt::saga_view
     #[derive(Debug, Clone)]
     pub struct SagaView<'a> {
         client: &'a super::Client,
@@ -28856,7 +28856,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::silo_list`]
     ///
-    ///[`ClientSystemExt::silo_list`]: super::ClientSystemExt::silo_list
+    /// [`ClientSystemExt::silo_list`]: super::ClientSystemExt::silo_list
     #[derive(Debug, Clone)]
     pub struct SiloList<'a> {
         client: &'a super::Client,
@@ -28996,7 +28996,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::silo_create`]
     ///
-    ///[`ClientSystemExt::silo_create`]: super::ClientSystemExt::silo_create
+    /// [`ClientSystemExt::silo_create`]: super::ClientSystemExt::silo_create
     #[derive(Debug, Clone)]
     pub struct SiloCreate<'a> {
         client: &'a super::Client,
@@ -29055,7 +29055,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::silo_view`]
     ///
-    ///[`ClientSystemExt::silo_view`]: super::ClientSystemExt::silo_view
+    /// [`ClientSystemExt::silo_view`]: super::ClientSystemExt::silo_view
     #[derive(Debug, Clone)]
     pub struct SiloView<'a> {
         client: &'a super::Client,
@@ -29107,7 +29107,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::silo_delete`]
     ///
-    ///[`ClientSystemExt::silo_delete`]: super::ClientSystemExt::silo_delete
+    /// [`ClientSystemExt::silo_delete`]: super::ClientSystemExt::silo_delete
     #[derive(Debug, Clone)]
     pub struct SiloDelete<'a> {
         client: &'a super::Client,
@@ -29159,7 +29159,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::silo_policy_view`]
     ///
-    ///[`ClientSystemExt::silo_policy_view`]: super::ClientSystemExt::silo_policy_view
+    /// [`ClientSystemExt::silo_policy_view`]: super::ClientSystemExt::silo_policy_view
     #[derive(Debug, Clone)]
     pub struct SiloPolicyView<'a> {
         client: &'a super::Client,
@@ -29213,7 +29213,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::silo_policy_update`]
     ///
-    ///[`ClientSystemExt::silo_policy_update`]: super::ClientSystemExt::silo_policy_update
+    /// [`ClientSystemExt::silo_policy_update`]: super::ClientSystemExt::silo_policy_update
     #[derive(Debug, Clone)]
     pub struct SiloPolicyUpdate<'a> {
         client: &'a super::Client,
@@ -29291,7 +29291,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_component_version_list`]
     ///
-    ///[`ClientSystemExt::system_component_version_list`]: super::ClientSystemExt::system_component_version_list
+    /// [`ClientSystemExt::system_component_version_list`]: super::ClientSystemExt::system_component_version_list
     #[derive(Debug, Clone)]
     pub struct SystemComponentVersionList<'a> {
         client: &'a super::Client,
@@ -29433,7 +29433,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::update_deployments_list`]
     ///
-    ///[`ClientSystemExt::update_deployments_list`]: super::ClientSystemExt::update_deployments_list
+    /// [`ClientSystemExt::update_deployments_list`]: super::ClientSystemExt::update_deployments_list
     #[derive(Debug, Clone)]
     pub struct UpdateDeploymentsList<'a> {
         client: &'a super::Client,
@@ -29574,7 +29574,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::update_deployment_view`]
     ///
-    ///[`ClientSystemExt::update_deployment_view`]: super::ClientSystemExt::update_deployment_view
+    /// [`ClientSystemExt::update_deployment_view`]: super::ClientSystemExt::update_deployment_view
     #[derive(Debug, Clone)]
     pub struct UpdateDeploymentView<'a> {
         client: &'a super::Client,
@@ -29628,7 +29628,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_update_refresh`]
     ///
-    ///[`ClientSystemExt::system_update_refresh`]: super::ClientSystemExt::system_update_refresh
+    /// [`ClientSystemExt::system_update_refresh`]: super::ClientSystemExt::system_update_refresh
     #[derive(Debug, Clone)]
     pub struct SystemUpdateRefresh<'a> {
         client: &'a super::Client,
@@ -29661,7 +29661,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_update_start`]
     ///
-    ///[`ClientSystemExt::system_update_start`]: super::ClientSystemExt::system_update_start
+    /// [`ClientSystemExt::system_update_start`]: super::ClientSystemExt::system_update_start
     #[derive(Debug, Clone)]
     pub struct SystemUpdateStart<'a> {
         client: &'a super::Client,
@@ -29724,7 +29724,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_update_stop`]
     ///
-    ///[`ClientSystemExt::system_update_stop`]: super::ClientSystemExt::system_update_stop
+    /// [`ClientSystemExt::system_update_stop`]: super::ClientSystemExt::system_update_stop
     #[derive(Debug, Clone)]
     pub struct SystemUpdateStop<'a> {
         client: &'a super::Client,
@@ -29757,7 +29757,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_update_list`]
     ///
-    ///[`ClientSystemExt::system_update_list`]: super::ClientSystemExt::system_update_list
+    /// [`ClientSystemExt::system_update_list`]: super::ClientSystemExt::system_update_list
     #[derive(Debug, Clone)]
     pub struct SystemUpdateList<'a> {
         client: &'a super::Client,
@@ -29897,7 +29897,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_update_view`]
     ///
-    ///[`ClientSystemExt::system_update_view`]: super::ClientSystemExt::system_update_view
+    /// [`ClientSystemExt::system_update_view`]: super::ClientSystemExt::system_update_view
     #[derive(Debug, Clone)]
     pub struct SystemUpdateView<'a> {
         client: &'a super::Client,
@@ -29949,7 +29949,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_update_components_list`]
     ///
-    ///[`ClientSystemExt::system_update_components_list`]: super::ClientSystemExt::system_update_components_list
+    /// [`ClientSystemExt::system_update_components_list`]: super::ClientSystemExt::system_update_components_list
     #[derive(Debug, Clone)]
     pub struct SystemUpdateComponentsList<'a> {
         client: &'a super::Client,
@@ -30004,7 +30004,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::system_version`]
     ///
-    ///[`ClientSystemExt::system_version`]: super::ClientSystemExt::system_version
+    /// [`ClientSystemExt::system_version`]: super::ClientSystemExt::system_version
     #[derive(Debug, Clone)]
     pub struct SystemVersion<'a> {
         client: &'a super::Client,
@@ -30039,7 +30039,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::silo_user_list`]
     ///
-    ///[`ClientSystemExt::silo_user_list`]: super::ClientSystemExt::silo_user_list
+    /// [`ClientSystemExt::silo_user_list`]: super::ClientSystemExt::silo_user_list
     #[derive(Debug, Clone)]
     pub struct SiloUserList<'a> {
         client: &'a super::Client,
@@ -30198,7 +30198,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::silo_user_view`]
     ///
-    ///[`ClientSystemExt::silo_user_view`]: super::ClientSystemExt::silo_user_view
+    /// [`ClientSystemExt::silo_user_view`]: super::ClientSystemExt::silo_user_view
     #[derive(Debug, Clone)]
     pub struct SiloUserView<'a> {
         client: &'a super::Client,
@@ -30269,7 +30269,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::user_builtin_list`]
     ///
-    ///[`ClientSystemExt::user_builtin_list`]: super::ClientSystemExt::user_builtin_list
+    /// [`ClientSystemExt::user_builtin_list`]: super::ClientSystemExt::user_builtin_list
     #[derive(Debug, Clone)]
     pub struct UserBuiltinList<'a> {
         client: &'a super::Client,
@@ -30409,7 +30409,7 @@ pub mod builder {
 
     /// Builder for [`ClientSystemExt::user_builtin_view`]
     ///
-    ///[`ClientSystemExt::user_builtin_view`]: super::ClientSystemExt::user_builtin_view
+    /// [`ClientSystemExt::user_builtin_view`]: super::ClientSystemExt::user_builtin_view
     #[derive(Debug, Clone)]
     pub struct UserBuiltinView<'a> {
         client: &'a super::Client,
@@ -30461,7 +30461,7 @@ pub mod builder {
 
     /// Builder for [`ClientSilosExt::user_list`]
     ///
-    ///[`ClientSilosExt::user_list`]: super::ClientSilosExt::user_list
+    /// [`ClientSilosExt::user_list`]: super::ClientSilosExt::user_list
     #[derive(Debug, Clone)]
     pub struct UserList<'a> {
         client: &'a super::Client,
@@ -30620,7 +30620,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_firewall_rules_view`]
     ///
-    ///[`ClientVpcsExt::vpc_firewall_rules_view`]: super::ClientVpcsExt::vpc_firewall_rules_view
+    /// [`ClientVpcsExt::vpc_firewall_rules_view`]: super::ClientVpcsExt::vpc_firewall_rules_view
     #[derive(Debug, Clone)]
     pub struct VpcFirewallRulesView<'a> {
         client: &'a super::Client,
@@ -30693,7 +30693,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_firewall_rules_update`]
     ///
-    ///[`ClientVpcsExt::vpc_firewall_rules_update`]: super::ClientVpcsExt::vpc_firewall_rules_update
+    /// [`ClientVpcsExt::vpc_firewall_rules_update`]: super::ClientVpcsExt::vpc_firewall_rules_update
     #[derive(Debug, Clone)]
     pub struct VpcFirewallRulesUpdate<'a> {
         client: &'a super::Client,
@@ -30792,7 +30792,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_router_route_list`]
     ///
-    ///[`ClientVpcsExt::vpc_router_route_list`]: super::ClientVpcsExt::vpc_router_route_list
+    /// [`ClientVpcsExt::vpc_router_route_list`]: super::ClientVpcsExt::vpc_router_route_list
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteList<'a> {
         client: &'a super::Client,
@@ -30989,7 +30989,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_router_route_create`]
     ///
-    ///[`ClientVpcsExt::vpc_router_route_create`]: super::ClientVpcsExt::vpc_router_route_create
+    /// [`ClientVpcsExt::vpc_router_route_create`]: super::ClientVpcsExt::vpc_router_route_create
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteCreate<'a> {
         client: &'a super::Client,
@@ -31105,7 +31105,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_router_route_view`]
     ///
-    ///[`ClientVpcsExt::vpc_router_route_view`]: super::ClientVpcsExt::vpc_router_route_view
+    /// [`ClientVpcsExt::vpc_router_route_view`]: super::ClientVpcsExt::vpc_router_route_view
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteView<'a> {
         client: &'a super::Client,
@@ -31212,7 +31212,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_router_route_update`]
     ///
-    ///[`ClientVpcsExt::vpc_router_route_update`]: super::ClientVpcsExt::vpc_router_route_update
+    /// [`ClientVpcsExt::vpc_router_route_update`]: super::ClientVpcsExt::vpc_router_route_update
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteUpdate<'a> {
         client: &'a super::Client,
@@ -31349,7 +31349,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_router_route_delete`]
     ///
-    ///[`ClientVpcsExt::vpc_router_route_delete`]: super::ClientVpcsExt::vpc_router_route_delete
+    /// [`ClientVpcsExt::vpc_router_route_delete`]: super::ClientVpcsExt::vpc_router_route_delete
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteDelete<'a> {
         client: &'a super::Client,
@@ -31459,7 +31459,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_router_list`]
     ///
-    ///[`ClientVpcsExt::vpc_router_list`]: super::ClientVpcsExt::vpc_router_list
+    /// [`ClientVpcsExt::vpc_router_list`]: super::ClientVpcsExt::vpc_router_list
     #[derive(Debug, Clone)]
     pub struct VpcRouterList<'a> {
         client: &'a super::Client,
@@ -31637,7 +31637,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_router_create`]
     ///
-    ///[`ClientVpcsExt::vpc_router_create`]: super::ClientVpcsExt::vpc_router_create
+    /// [`ClientVpcsExt::vpc_router_create`]: super::ClientVpcsExt::vpc_router_create
     #[derive(Debug, Clone)]
     pub struct VpcRouterCreate<'a> {
         client: &'a super::Client,
@@ -31733,7 +31733,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_router_view`]
     ///
-    ///[`ClientVpcsExt::vpc_router_view`]: super::ClientVpcsExt::vpc_router_view
+    /// [`ClientVpcsExt::vpc_router_view`]: super::ClientVpcsExt::vpc_router_view
     #[derive(Debug, Clone)]
     pub struct VpcRouterView<'a> {
         client: &'a super::Client,
@@ -31825,7 +31825,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_router_update`]
     ///
-    ///[`ClientVpcsExt::vpc_router_update`]: super::ClientVpcsExt::vpc_router_update
+    /// [`ClientVpcsExt::vpc_router_update`]: super::ClientVpcsExt::vpc_router_update
     #[derive(Debug, Clone)]
     pub struct VpcRouterUpdate<'a> {
         client: &'a super::Client,
@@ -31942,7 +31942,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_router_delete`]
     ///
-    ///[`ClientVpcsExt::vpc_router_delete`]: super::ClientVpcsExt::vpc_router_delete
+    /// [`ClientVpcsExt::vpc_router_delete`]: super::ClientVpcsExt::vpc_router_delete
     #[derive(Debug, Clone)]
     pub struct VpcRouterDelete<'a> {
         client: &'a super::Client,
@@ -32034,7 +32034,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_subnet_list`]
     ///
-    ///[`ClientVpcsExt::vpc_subnet_list`]: super::ClientVpcsExt::vpc_subnet_list
+    /// [`ClientVpcsExt::vpc_subnet_list`]: super::ClientVpcsExt::vpc_subnet_list
     #[derive(Debug, Clone)]
     pub struct VpcSubnetList<'a> {
         client: &'a super::Client,
@@ -32212,7 +32212,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_subnet_create`]
     ///
-    ///[`ClientVpcsExt::vpc_subnet_create`]: super::ClientVpcsExt::vpc_subnet_create
+    /// [`ClientVpcsExt::vpc_subnet_create`]: super::ClientVpcsExt::vpc_subnet_create
     #[derive(Debug, Clone)]
     pub struct VpcSubnetCreate<'a> {
         client: &'a super::Client,
@@ -32308,7 +32308,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_subnet_view`]
     ///
-    ///[`ClientVpcsExt::vpc_subnet_view`]: super::ClientVpcsExt::vpc_subnet_view
+    /// [`ClientVpcsExt::vpc_subnet_view`]: super::ClientVpcsExt::vpc_subnet_view
     #[derive(Debug, Clone)]
     pub struct VpcSubnetView<'a> {
         client: &'a super::Client,
@@ -32400,7 +32400,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_subnet_update`]
     ///
-    ///[`ClientVpcsExt::vpc_subnet_update`]: super::ClientVpcsExt::vpc_subnet_update
+    /// [`ClientVpcsExt::vpc_subnet_update`]: super::ClientVpcsExt::vpc_subnet_update
     #[derive(Debug, Clone)]
     pub struct VpcSubnetUpdate<'a> {
         client: &'a super::Client,
@@ -32517,7 +32517,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_subnet_delete`]
     ///
-    ///[`ClientVpcsExt::vpc_subnet_delete`]: super::ClientVpcsExt::vpc_subnet_delete
+    /// [`ClientVpcsExt::vpc_subnet_delete`]: super::ClientVpcsExt::vpc_subnet_delete
     #[derive(Debug, Clone)]
     pub struct VpcSubnetDelete<'a> {
         client: &'a super::Client,
@@ -32609,7 +32609,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_subnet_list_network_interfaces`]
     ///
-    ///[`ClientVpcsExt::vpc_subnet_list_network_interfaces`]: super::ClientVpcsExt::vpc_subnet_list_network_interfaces
+    /// [`ClientVpcsExt::vpc_subnet_list_network_interfaces`]: super::ClientVpcsExt::vpc_subnet_list_network_interfaces
     #[derive(Debug, Clone)]
     pub struct VpcSubnetListNetworkInterfaces<'a> {
         client: &'a super::Client,
@@ -32809,7 +32809,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_list`]
     ///
-    ///[`ClientVpcsExt::vpc_list`]: super::ClientVpcsExt::vpc_list
+    /// [`ClientVpcsExt::vpc_list`]: super::ClientVpcsExt::vpc_list
     #[derive(Debug, Clone)]
     pub struct VpcList<'a> {
         client: &'a super::Client,
@@ -32968,7 +32968,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_create`]
     ///
-    ///[`ClientVpcsExt::vpc_create`]: super::ClientVpcsExt::vpc_create
+    /// [`ClientVpcsExt::vpc_create`]: super::ClientVpcsExt::vpc_create
     #[derive(Debug, Clone)]
     pub struct VpcCreate<'a> {
         client: &'a super::Client,
@@ -33046,7 +33046,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_view`]
     ///
-    ///[`ClientVpcsExt::vpc_view`]: super::ClientVpcsExt::vpc_view
+    /// [`ClientVpcsExt::vpc_view`]: super::ClientVpcsExt::vpc_view
     #[derive(Debug, Clone)]
     pub struct VpcView<'a> {
         client: &'a super::Client,
@@ -33120,7 +33120,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_update`]
     ///
-    ///[`ClientVpcsExt::vpc_update`]: super::ClientVpcsExt::vpc_update
+    /// [`ClientVpcsExt::vpc_update`]: super::ClientVpcsExt::vpc_update
     #[derive(Debug, Clone)]
     pub struct VpcUpdate<'a> {
         client: &'a super::Client,
@@ -33219,7 +33219,7 @@ pub mod builder {
 
     /// Builder for [`ClientVpcsExt::vpc_delete`]
     ///
-    ///[`ClientVpcsExt::vpc_delete`]: super::ClientVpcsExt::vpc_delete
+    /// [`ClientVpcsExt::vpc_delete`]: super::ClientVpcsExt::vpc_delete
     #[derive(Debug, Clone)]
     pub struct VpcDelete<'a> {
         client: &'a super::Client,

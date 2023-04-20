@@ -61,7 +61,7 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
     std::io::stdout().flush().unwrap();
 
     let code = generator.generate_tokens(&spec).unwrap();
-    let contents = format_code(code);
+    let contents = format_code(code.to_string());
     let loc_sdk = contents.matches('\n').count();
 
     let mut out_path = root_path.clone();
@@ -130,12 +130,11 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
     result
 }
 
-fn format_code(code: impl ToString) -> String {
+fn format_code(code: String) -> String {
     let contents = format!(
         "// The contents of this file are generated; do not modify them.\n\n{}",
-        code.to_string(),
+        code,
     );
-    let contents = contents.replace(r#"# [doc = ""#, r#"#[doc = " "#);
     let contents = rustfmt_wrapper::rustfmt_config(
         rustfmt_wrapper::config::Config {
             format_strings: Some(true),
@@ -151,7 +150,10 @@ fn format_code(code: impl ToString) -> String {
     // Add newlines after end-braces at <= two levels of indentation. Rustfmt's
     // `blank_lines_lower_bound` is broken.
     let regex = regex::Regex::new(r#"(})(\n\s{0,8}[^} ])"#).unwrap();
-    regex.replace_all(&contents, "$1\n$2").to_string()
+    let contents = regex.replace_all(&contents, "$1\n$2");
+
+    let regex = regex::Regex::new(r#"(\n\s*///)(\S)"#).unwrap();
+    regex.replace_all(&contents, "$1 $2").to_string()
 }
 
 fn show_diff(expected: &str, actual: &str) {
