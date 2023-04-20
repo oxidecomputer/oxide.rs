@@ -2,8 +2,13 @@ name: Integration
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
+    inputs:
+      reflector_access_token:
+        description: Access token for use in authenticating as the Reflector bot
+        type: string
+      reflector_user_id:
+        description: User id of the Reflector bot
+        type: string
 
 permissions:
   contents: write
@@ -21,6 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.5.0
         with:
+          token: ${{ inputs.reflector_access_token }}
           ref: main
       - name: Install nightly rustfmt
         uses: actions-rs/toolchain@v1
@@ -57,17 +63,22 @@ jobs:
         run: |
           cargo run -p xtask generate
 
+      # Tests are allowed to fail so that a partial PR can at least be generated. This is likely to
+      # occur when updating the oxide.json schema file and new types that are not yet handled by
+      # the CLI are introduced. The result of this should be a PR that has the updated schema and
+      # corresponding generated code that will fail due to compilation errors during test.
       - name: Generate docs
+        continue-on-error: true
         run: |
-          cargo run -p oxide docs > cli/docs/cli.json
+          EXPECTORATE=overwrite cargo test
 
       - name: Report changes
         run: git status
 
       - name: Commit changes
         run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "reflector[bot]"
+          git config --local user.email "${{ inputs.reflector_user_id }}+reflector[bot]@users.noreply.github.com"
 
           # Detect specific changes that will be committed back
           git diff --quiet cli/docs/cli.json || docsUpdate=$?
@@ -110,7 +121,7 @@ jobs:
           then
             echo "Main is up to date with integration. No pull request needed"
 
-            if [ -z "$prNumber" ]
+            if [ "$prNumber" != "" ]
             then
               echo "Closing existing PR"
               gh pr close $prNumber

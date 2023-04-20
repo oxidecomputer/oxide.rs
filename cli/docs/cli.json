@@ -464,6 +464,10 @@
           "about": "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
           "args": [
             {
+              "long": "include-silo-images",
+              "help": "Flag used to indicate if silo scoped images should be included when listing project images. Only valid when `project` is provided."
+            },
+            {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"
             },
@@ -473,6 +477,20 @@
             },
             {
               "long": "sort-by"
+            }
+          ]
+        },
+        {
+          "name": "promote",
+          "about": "Promote a project image to be visible to all projects in the silo",
+          "args": [
+            {
+              "long": "image",
+              "help": "Name or ID of the image"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
             }
           ]
         },

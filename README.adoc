@@ -1,25 +1,17 @@
 # Oxide SDK and CLI
 
-NOTE: this README is written in the
-https://en.wikipedia.org/wiki/Optative_mood[*optative mood*] in that it
-describes things as we intend to them to be rather than as they are at present.
-Asides in the text and the issues are intended to track the divergence between
-what has been done and what is yet-to-be-done.
-
 This repo contains two published crates: the Oxide Rust SDK and the Oxide CLI.
-The SDK and CLI are derived from the Oxide API and provide interfaces for
-interacting with the Oxide Rack.
-
-NOTE: We currently have several **other** repos with CLIs and Rust SDKs; the
-goal of this repo is to supercede `cli`, `oxide.rs`, and `oxide-sdk-rust`.
+The SDK and CLI are derived from the Oxide API OpenAPI spec and provide
+interfaces for interacting with the Oxide Rack.
 
 ## Generation
 
-Both rely on https://github.com/oxidecomputer/progenitor[`progenitor`] for code
-generation from the OpenAPI description of the Oxide API. Typically
-`progenitor` is used via a macro or `build.rs`, here we use an
+Both the SDK and CLI rely on
+https://github.com/oxidecomputer/progenitor[`progenitor`] for code generation
+from the OpenAPI description of the Oxide API. Typically `progenitor` is used
+via a macro or `build.rs`, here we use an
 https://github.com/matklad/cargo-xtask['xtask`]. Not only is the source OpenAPI
-document checked in, we also check in the generated code 1. so that changes in
+document checked in, we also check-in the generated code 1. so that changes in
 generated output (in addition to input) may be easily tracked and 2. so that
 navigating from rustdoc to source shows the full code rather than, say, an
 opaque macro invocation (that yields literally tens of thousands of lines of
@@ -27,11 +19,14 @@ code).
 
 The Oxide OpenAPI description is in `oxide.json`. To re-generate the CLI and
 SDK from an updated API document, run `cargo xtask generate`. CI ensures that
-the API description and generated code are in sync (**NB**: not yet true).
+the API description and generated code are in sync.
+
+NOTE: generation requires that a nightly version of `rustfmt` is installed.
 
 ## Hand-written code
 
-While both the SDK and CLI are *mostly* generated, both include some hand-written code as well.
+While both the SDK and CLI are *mostly* generated, both include some hand-
+written code as well.
 
 The SDK includes hand-written code to simplify the use of some aspects of the
 API and to support the CLI. For example, it includes a `clap`-related `impl`
@@ -40,4 +35,4 @@ block so that the `ByteCount` type can be specified with a binary suffix (e.g.
 
 The CLI includes hand-written code for some of the blocking and tackling. It
 also has hand-written code to add additional subcommands (e.g. `auth`) and to
-augment generated commands.
+augment commands that cannot be fully or optimally generated.
