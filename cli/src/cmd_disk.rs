@@ -441,6 +441,7 @@ impl CmdDiskImport {
 
             client
                 .image_create()
+                .project(&self.project)
                 .body(ImageCreate {
                     name: image_name.clone(),
                     description: image_description.clone(),
