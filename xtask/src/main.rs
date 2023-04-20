@@ -60,14 +60,9 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
     print!("generating sdk ... ");
     std::io::stdout().flush().unwrap();
 
-    let code = generator.generate_text(&spec).unwrap();
-    let loc_sdk = code.matches('\n').count();
-
-    let contents = format!(
-        "// The contents of this file are generated; do not modify them.\n\n{}",
-        code,
-    );
-    let contents = dos2unix(&contents);
+    let code = generator.generate_tokens(&spec).unwrap();
+    let contents = format_code(code);
+    let loc_sdk = contents.matches('\n').count();
 
     let mut out_path = root_path.clone();
     out_path.push("sdk");
@@ -90,23 +85,16 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
             println!("👍");
         }
     } else {
-        std::fs::write(out_path, contents.as_ref()).unwrap();
+        std::fs::write(out_path, &contents).unwrap();
         println!("done.");
     }
 
     // CLI
     print!("generating cli ... ");
     std::io::stdout().flush().unwrap();
-    let code = generator.cli_text(&spec, "oxide_api").unwrap();
-    let loc_cli = code.matches('\n').count();
-
-    let contents = format!(
-        "{}\n\n{}\n\n{}",
-        "// The contents of this file are generated; do not modify them.",
-        "use oxide_api::*;",
-        code,
-    );
-    let contents = dos2unix(&contents);
+    let code = generator.cli(&spec, "oxide_api").unwrap().to_string();
+    let contents = format_code(format!("{}\n{}", "use oxide_api::*;", code));
+    let loc_cli = contents.matches('\n').count();
 
     let mut out_path = root_path;
     out_path.push("cli");
@@ -129,7 +117,7 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
             println!("👍");
         }
     } else {
-        std::fs::write(out_path, contents.as_ref()).unwrap();
+        std::fs::write(out_path, &contents).unwrap();
         println!("done.");
         let duration = Instant::now().duration_since(start).as_millis();
         println!(
@@ -140,6 +128,27 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
     }
 
     result
+}
+
+fn format_code(code: impl ToString) -> String {
+    let contents = format!(
+        "// The contents of this file are generated; do not modify them.\n\n{}",
+        code.to_string(),
+    );
+    let contents = rustfmt_wrapper::rustfmt_config(
+        rustfmt_wrapper::config::Config {
+            format_strings: Some(true),
+            normalize_doc_attributes: Some(true),
+            wrap_comments: Some(true),
+            ..Default::default()
+        },
+        contents,
+    )
+    .unwrap();
+    let contents = dos2unix(&contents);
+    // Add newlines after end-braces at <= two levels of indentation.
+    let regex = regex::Regex::new(r#"(})(\n\s{0,8}[^} ])"#).unwrap();
+    regex.replace_all(&contents, "$1\n$2").to_string()
 }
 
 fn show_diff(expected: &str, actual: &str) {
