@@ -12,11 +12,15 @@ requires_token = true
 # Listen for pushes to the nexus.json file in oxidecomputer/omicron and multiple source paths in
 # oxidecomputer/progenitor (on each repository's respective default branch).
 
+# Debounce values are used to batch together multiple pushes that occur in a relatively short
+# timeframe
+
 [[on]]
 repository = "oxidecomputer/omicron"
 paths = [
   "openapi/nexus.json",
 ]
+debounce = 60
 
 [[on]]
 repository = "oxidecomputer/progenitor"
@@ -28,11 +32,10 @@ paths = [
   "Cargo.toml",
   "Cargo.lock"
 ]
+debounce = 300
 
-# Listen for changes on the repo's own main branch. This ensures that the integration  branch is
-# always built on top of the latest code. Actions triggered by this location are run with a
-# 5 minute delay. This allows for multiple pushes to the main branch to be batched together into
-# a single run.
+# Listen for changes on the repo's own main branch. This ensures that the integration branch is
+# always built on top of the latest code.
 [[on]]
 repository = "oxidecomputer/oxide.rs"
 paths = [
