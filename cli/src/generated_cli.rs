@@ -1,6 +1,7 @@
 // The contents of this file are generated; do not modify them.
 
 use oxide_api::*;
+
 pub struct Cli<T: CliOverride = ()> {
     client: oxide_api::Client,
     over: T,
