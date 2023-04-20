@@ -1,8 +1,8 @@
 # Oxide SDK and CLI
 
 This repo contains two published crates: the Oxide Rust SDK and the Oxide CLI.
-The SDK and CLI are derived from the Oxide API OpenAPI and provide interfaces
-for interacting with the Oxide Rack.
+The SDK and CLI are derived from the Oxide API OpenAPI spec and provide
+interfaces for interacting with the Oxide Rack.
 
 ## Generation
 
@@ -20,6 +20,8 @@ code).
 The Oxide OpenAPI description is in `oxide.json`. To re-generate the CLI and
 SDK from an updated API document, run `cargo xtask generate`. CI ensures that
 the API description and generated code are in sync.
+
+NOTE: generation requires that a nightly version of `rustfmt` is installed.
 
 ## Hand-written code
 

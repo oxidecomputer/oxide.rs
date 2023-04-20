@@ -146,9 +146,13 @@ fn format_code(code: impl ToString) -> String {
     )
     .unwrap();
     let contents = dos2unix(&contents);
+
     // Add newlines after end-braces at <= two levels of indentation.
     let regex = regex::Regex::new(r#"(})(\n\s{0,8}[^} ])"#).unwrap();
-    regex.replace_all(&contents, "$1\n$2").to_string()
+    let contents = regex.replace_all(&contents, "$1\n$2");
+
+    let regex = regex::Regex::new(r#"^(\s*)///(\S)"#).unwrap();
+    regex.replace_all(&contents, "$1/// $2").to_string()
 }
 
 fn show_diff(expected: &str, actual: &str) {

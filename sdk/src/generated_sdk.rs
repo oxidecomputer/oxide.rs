@@ -31,14 +31,17 @@ pub mod types {
 
     ///A type storing a range over `T`.
     ///
-    ///This type supports ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the standard library. Those cover `(..end)`, `(start..end)`, and `(start..)` respectively.
+    ///This type supports ranges similar to the `RangeTo`, `Range` and
+    /// `RangeFrom` types in the standard library. Those cover `(..end)`,
+    /// `(start..end)`, and `(start..)` respectively.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type")]
     pub enum BinRangedouble {
         ///A range unbounded below and exclusively above, `..end`.
         #[serde(rename = "range_to")]
         RangeTo { end: f64 },
-        ///A range bounded inclusively below and exclusively above, `start..end`.
+        ///A range bounded inclusively below and exclusively above,
+        /// `start..end`.
         #[serde(rename = "range")]
         Range { end: f64, start: f64 },
         ///A range bounded inclusively below and unbounded above, `start..`.
@@ -54,14 +57,17 @@ pub mod types {
 
     ///A type storing a range over `T`.
     ///
-    ///This type supports ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the standard library. Those cover `(..end)`, `(start..end)`, and `(start..)` respectively.
+    ///This type supports ranges similar to the `RangeTo`, `Range` and
+    /// `RangeFrom` types in the standard library. Those cover `(..end)`,
+    /// `(start..end)`, and `(start..)` respectively.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type")]
     pub enum BinRangeint64 {
         ///A range unbounded below and exclusively above, `..end`.
         #[serde(rename = "range_to")]
         RangeTo { end: i64 },
-        ///A range bounded inclusively below and exclusively above, `start..end`.
+        ///A range bounded inclusively below and exclusively above,
+        /// `start..end`.
         #[serde(rename = "range")]
         Range { end: i64, start: i64 },
         ///A range bounded inclusively below and unbounded above, `start..`.
@@ -161,7 +167,11 @@ pub mod types {
 
     ///A count of bytes, typically used either for memory or storage capacity
     ///
-    ///The maximum supported byte count is [`i64::MAX`].  This makes it somewhat inconvenient to define constructors: a u32 constructor can be infallible, but an i64 constructor can fail (if the value is negative) and a u64 constructor can fail (if the value is larger than i64::MAX).  We provide all of these for consumers' convenience.
+    ///The maximum supported byte count is [`i64::MAX`].  This makes it
+    /// somewhat inconvenient to define constructors: a u32 constructor can be
+    /// infallible, but an i64 constructor can fail (if the value is negative)
+    /// and a u64 constructor can fail (if the value is larger than i64::MAX).
+    /// We provide all of these for consumers' convenience.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ByteCount(pub u64);
     impl std::ops::Deref for ByteCount {
@@ -251,7 +261,8 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a [`Certificate`](crate::external_api::views::Certificate)
+    ///Create-time parameters for a
+    /// [`Certificate`](crate::external_api::views::Certificate)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct CertificateCreate {
         ///PEM file containing public certificate chain
@@ -298,7 +309,8 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in "asset" public API objects (which generally have no name or description)
+    ///Identity-related metadata that's included in "asset" public API objects
+    /// (which generally have no name or description)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ComponentUpdate {
         pub component_type: UpdateableComponentType,
@@ -607,7 +619,8 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a [`Disk`](omicron_common::api::external::Disk)
+    ///Create-time parameters for a
+    /// [`Disk`](omicron_common::api::external::Disk)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct DiskCreate {
         pub description: String,
@@ -760,7 +773,8 @@ pub mod types {
         ///Create a blank disk
         #[serde(rename = "blank")]
         Blank {
-            ///size of blocks for this Disk. valid values are: 512, 2048, or 4096
+            ///size of blocks for this Disk. valid values are: 512, 2048, or
+            /// 4096
             block_size: BlockSize,
         },
         ///Create a disk from a disk snapshot
@@ -772,7 +786,8 @@ pub mod types {
         ///Create a disk from a global image
         #[serde(rename = "global_image")]
         GlobalImage { image_id: uuid::Uuid },
-        ///Create a blank disk that will accept bulk writes or pull blocks from an external source.
+        ///Create a blank disk that will accept bulk writes or pull blocks from
+        /// an external source.
         #[serde(rename = "importing_blocks")]
         ImportingBlocks { block_size: BlockSize },
     }
@@ -898,7 +913,9 @@ pub mod types {
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type")]
     pub enum ExternalIpCreate {
-        ///An IP address providing both inbound and outbound access. The address is automatically-assigned from the provided IP Pool, or all available pools if not specified.
+        ///An IP address providing both inbound and outbound access. The
+        /// address is automatically-assigned from the provided IP Pool, or all
+        /// available pools if not specified.
         #[serde(rename = "ephemeral")]
         Ephemeral {
             #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -937,7 +954,10 @@ pub mod types {
     ///Parameters for finalizing a disk
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FinalizeDisk {
-        ///If specified a snapshot of the disk will be created with the given name during finalization. If not specified, a snapshot for the disk will _not_ be created. A snapshot can be manually created once the disk transitions into the `Detached` state.
+        ///If specified a snapshot of the disk will be created with the given
+        /// name during finalization. If not specified, a snapshot for the disk
+        /// will _not_ be created. A snapshot can be manually created once the
+        /// disk transitions into the `Detached` state.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub snapshot_name: Option<Name>,
     }
@@ -1025,9 +1045,12 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Policy`], which describes how this resource may be accessed
+    ///Client view of a [`Policy`], which describes how this resource may be
+    /// accessed
     ///
-    ///Note that the Policy only describes access granted explicitly for this resource.  The policies of parent resources can also cause a user to have access to this resource.
+    ///Note that the Policy only describes access granted explicitly for this
+    /// resource.  The policies of parent resources can also cause a user to
+    /// have access to this resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FleetRolePolicy {
         ///Roles directly assigned on this resource
@@ -1046,9 +1069,12 @@ pub mod types {
         }
     }
 
-    ///Describes the assignment of a particular role on a particular resource to a particular identity (user, group, etc.)
+    ///Describes the assignment of a particular role on a particular resource
+    /// to a particular identity (user, group, etc.)
     ///
-    ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s are put into a [`Policy`] and that Policy is applied to a particular resource.
+    ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s
+    /// are put into a [`Policy`] and that Policy is applied to a particular
+    /// resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FleetRoleRoleAssignment {
         pub identity_id: uuid::Uuid,
@@ -1109,7 +1135,8 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an [`GlobalImage`](crate::external_api::views::GlobalImage)
+    ///Create-time parameters for an
+    /// [`GlobalImage`](crate::external_api::views::GlobalImage)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct GlobalImageCreate {
         ///block size in bytes
@@ -1202,23 +1229,46 @@ pub mod types {
 
     ///A simple type for managing a histogram metric.
     ///
-    ///A histogram maintains the count of any number of samples, over a set of bins. Bins are specified on construction via their _left_ edges, inclusive. There can't be any "gaps" in the bins, and an additional bin may be added to the left, right, or both so that the bins extend to the entire range of the support.
+    ///A histogram maintains the count of any number of samples, over a set of
+    /// bins. Bins are specified on construction via their _left_ edges,
+    /// inclusive. There can't be any "gaps" in the bins, and an additional bin
+    /// may be added to the left, right, or both so that the bins extend to the
+    /// entire range of the support.
     ///
-    ///Note that any gaps, unsorted bins, or non-finite values will result in an error.
+    ///Note that any gaps, unsorted bins, or non-finite values will result in
+    /// an error.
     ///
     ///Example ------- ```rust use oximeter::histogram::{BinRange, Histogram};
     ///
-    ///let edges = [0i64, 10, 20]; let mut hist = Histogram::new(&edges).unwrap(); assert_eq!(hist.n_bins(), 4); // One additional bin for the range (20..) assert_eq!(hist.n_samples(), 0); hist.sample(4); hist.sample(100); assert_eq!(hist.n_samples(), 2);
+    ///let edges = [0i64, 10, 20]; let mut hist =
+    /// Histogram::new(&edges).unwrap(); assert_eq!(hist.n_bins(), 4); // One
+    /// additional bin for the range (20..) assert_eq!(hist.n_samples(), 0);
+    /// hist.sample(4); hist.sample(100); assert_eq!(hist.n_samples(), 2);
     ///
-    ///let data = hist.iter().collect::<Vec<_>>(); assert_eq!(data[0].range, BinRange::range(i64::MIN, 0)); // An additional bin for `..0` assert_eq!(data[0].count, 0); // Nothing is in this bin
+    ///let data = hist.iter().collect::<Vec<_>>(); assert_eq!(data[0].range,
+    /// BinRange::range(i64::MIN, 0)); // An additional bin for `..0`
+    /// assert_eq!(data[0].count, 0); // Nothing is in this bin
     ///
-    ///assert_eq!(data[1].range, BinRange::range(0, 10)); // The range `0..10` assert_eq!(data[1].count, 1); // 4 is sampled into this bin ```
+    ///assert_eq!(data[1].range, BinRange::range(0, 10)); // The range `0..10`
+    /// assert_eq!(data[1].count, 1); // 4 is sampled into this bin ```
     ///
     ///Notes -----
     ///
-    ///Histograms may be constructed either from their left bin edges, or from a sequence of ranges. In either case, the left-most bin may be converted upon construction. In particular, if the left-most value is not equal to the minimum of the support, a new bin will be added from the minimum to that provided value. If the left-most value _is_ the support's minimum, because the provided bin was unbounded below, such as `(..0)`, then that bin will be converted into one bounded below, `(MIN..0)` in this case.
+    ///Histograms may be constructed either from their left bin edges, or from
+    /// a sequence of ranges. In either case, the left-most bin may be converted
+    /// upon construction. In particular, if the left-most value is not equal to
+    /// the minimum of the support, a new bin will be added from the minimum to
+    /// that provided value. If the left-most value _is_ the support's minimum,
+    /// because the provided bin was unbounded below, such as `(..0)`, then that
+    /// bin will be converted into one bounded below, `(MIN..0)` in this case.
     ///
-    ///The short of this is that, most of the time, it shouldn't matter. If one specifies the extremes of the support as their bins, be aware that the left-most may be converted from a `BinRange::RangeTo` into a `BinRange::Range`. In other words, the first bin of a histogram is _always_ a `Bin::Range` or a `Bin::RangeFrom` after construction. In fact, every bin is one of those variants, the `BinRange::RangeTo` is only provided as a convenience during construction.
+    ///The short of this is that, most of the time, it shouldn't matter. If one
+    /// specifies the extremes of the support as their bins, be aware that the
+    /// left-most may be converted from a `BinRange::RangeTo` into a
+    /// `BinRange::Range`. In other words, the first bin of a histogram is
+    /// _always_ a `Bin::Range` or a `Bin::RangeFrom` after construction. In
+    /// fact, every bin is one of those variants, the `BinRange::RangeTo` is
+    /// only provided as a convenience during construction.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramdouble {
         pub bins: Vec<Bindouble>,
@@ -1240,23 +1290,46 @@ pub mod types {
 
     ///A simple type for managing a histogram metric.
     ///
-    ///A histogram maintains the count of any number of samples, over a set of bins. Bins are specified on construction via their _left_ edges, inclusive. There can't be any "gaps" in the bins, and an additional bin may be added to the left, right, or both so that the bins extend to the entire range of the support.
+    ///A histogram maintains the count of any number of samples, over a set of
+    /// bins. Bins are specified on construction via their _left_ edges,
+    /// inclusive. There can't be any "gaps" in the bins, and an additional bin
+    /// may be added to the left, right, or both so that the bins extend to the
+    /// entire range of the support.
     ///
-    ///Note that any gaps, unsorted bins, or non-finite values will result in an error.
+    ///Note that any gaps, unsorted bins, or non-finite values will result in
+    /// an error.
     ///
     ///Example ------- ```rust use oximeter::histogram::{BinRange, Histogram};
     ///
-    ///let edges = [0i64, 10, 20]; let mut hist = Histogram::new(&edges).unwrap(); assert_eq!(hist.n_bins(), 4); // One additional bin for the range (20..) assert_eq!(hist.n_samples(), 0); hist.sample(4); hist.sample(100); assert_eq!(hist.n_samples(), 2);
+    ///let edges = [0i64, 10, 20]; let mut hist =
+    /// Histogram::new(&edges).unwrap(); assert_eq!(hist.n_bins(), 4); // One
+    /// additional bin for the range (20..) assert_eq!(hist.n_samples(), 0);
+    /// hist.sample(4); hist.sample(100); assert_eq!(hist.n_samples(), 2);
     ///
-    ///let data = hist.iter().collect::<Vec<_>>(); assert_eq!(data[0].range, BinRange::range(i64::MIN, 0)); // An additional bin for `..0` assert_eq!(data[0].count, 0); // Nothing is in this bin
+    ///let data = hist.iter().collect::<Vec<_>>(); assert_eq!(data[0].range,
+    /// BinRange::range(i64::MIN, 0)); // An additional bin for `..0`
+    /// assert_eq!(data[0].count, 0); // Nothing is in this bin
     ///
-    ///assert_eq!(data[1].range, BinRange::range(0, 10)); // The range `0..10` assert_eq!(data[1].count, 1); // 4 is sampled into this bin ```
+    ///assert_eq!(data[1].range, BinRange::range(0, 10)); // The range `0..10`
+    /// assert_eq!(data[1].count, 1); // 4 is sampled into this bin ```
     ///
     ///Notes -----
     ///
-    ///Histograms may be constructed either from their left bin edges, or from a sequence of ranges. In either case, the left-most bin may be converted upon construction. In particular, if the left-most value is not equal to the minimum of the support, a new bin will be added from the minimum to that provided value. If the left-most value _is_ the support's minimum, because the provided bin was unbounded below, such as `(..0)`, then that bin will be converted into one bounded below, `(MIN..0)` in this case.
+    ///Histograms may be constructed either from their left bin edges, or from
+    /// a sequence of ranges. In either case, the left-most bin may be converted
+    /// upon construction. In particular, if the left-most value is not equal to
+    /// the minimum of the support, a new bin will be added from the minimum to
+    /// that provided value. If the left-most value _is_ the support's minimum,
+    /// because the provided bin was unbounded below, such as `(..0)`, then that
+    /// bin will be converted into one bounded below, `(MIN..0)` in this case.
     ///
-    ///The short of this is that, most of the time, it shouldn't matter. If one specifies the extremes of the support as their bins, be aware that the left-most may be converted from a `BinRange::RangeTo` into a `BinRange::Range`. In other words, the first bin of a histogram is _always_ a `Bin::Range` or a `Bin::RangeFrom` after construction. In fact, every bin is one of those variants, the `BinRange::RangeTo` is only provided as a convenience during construction.
+    ///The short of this is that, most of the time, it shouldn't matter. If one
+    /// specifies the extremes of the support as their bins, be aware that the
+    /// left-most may be converted from a `BinRange::RangeTo` into a
+    /// `BinRange::Range`. In other words, the first bin of a histogram is
+    /// _always_ a `Bin::Range` or a `Bin::RangeFrom` after construction. In
+    /// fact, every bin is one of those variants, the `BinRange::RangeTo` is
+    /// only provided as a convenience during construction.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramint64 {
         pub bins: Vec<Binint64>,
@@ -1585,7 +1658,8 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an [`Image`](crate::external_api::views::Image)
+    ///Create-time parameters for an
+    /// [`Image`](crate::external_api::views::Image)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ImageCreate {
         ///block size in bytes
@@ -1792,7 +1866,8 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an [`Instance`](omicron_common::api::external::Instance)
+    ///Create-time parameters for an
+    /// [`Instance`](omicron_common::api::external::Instance)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceCreate {
         pub description: String,
@@ -1801,7 +1876,10 @@ pub mod types {
         pub disks: Vec<InstanceDiskAttachment>,
         ///The external IP addresses provided to this instance.
         ///
-        ///By default, all instances have outbound connectivity, but no inbound connectivity. These external addresses can be used to provide a fixed, known IP address for making inbound connections to the instance.
+        ///By default, all instances have outbound connectivity, but no inbound
+        /// connectivity. These external addresses can be used to provide a
+        /// fixed, known IP address for making inbound connections to the
+        /// instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
         pub external_ips: Vec<ExternalIpCreate>,
         pub hostname: String,
@@ -1814,7 +1892,9 @@ pub mod types {
         ///Should this instance be started upon creation; true by default.
         #[serde(default = "defaults::default_bool::<true>")]
         pub start: bool,
-        ///User data for instance initialization systems (such as cloud-init). Must be a Base64-encoded string, as specified in RFC 4648 § 4 (+ and / characters with padding). Maximum 32 KiB unencoded data.
+        ///User data for instance initialization systems (such as cloud-init).
+        /// Must be a Base64-encoded string, as specified in RFC 4648 § 4 (+ and
+        /// / characters with padding). Maximum 32 KiB unencoded data.
         #[serde(default)]
         pub user_data: String,
     }
@@ -1859,7 +1939,8 @@ pub mod types {
         }
     }
 
-    ///Migration parameters for an [`Instance`](omicron_common::api::external::Instance)
+    ///Migration parameters for an
+    /// [`Instance`](omicron_common::api::external::Instance)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceMigrate {
         pub dst_sled_id: uuid::Uuid,
@@ -1877,7 +1958,8 @@ pub mod types {
         }
     }
 
-    ///An `InstanceNetworkInterface` represents a virtual network interface device attached to an instance.
+    ///An `InstanceNetworkInterface` represents a virtual network interface
+    /// device attached to an instance.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceNetworkInterface {
         ///human-readable free-form text about a resource
@@ -1892,7 +1974,8 @@ pub mod types {
         pub mac: MacAddr,
         ///unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///True if this interface is the primary for the instance to which it's attached.
+        ///True if this interface is the primary for the instance to which it's
+        /// attached.
         pub primary: bool,
         ///The subnet to which the interface belongs.
         pub subnet_id: uuid::Uuid,
@@ -1916,13 +1999,15 @@ pub mod types {
         }
     }
 
-    ///Describes an attachment of an `InstanceNetworkInterface` to an `Instance`, at the time the instance is created.
+    ///Describes an attachment of an `InstanceNetworkInterface` to an
+    /// `Instance`, at the time the instance is created.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "params")]
     pub enum InstanceNetworkInterfaceAttachment {
         ///Create one or more `InstanceNetworkInterface`s for the `Instance`.
         ///
-        ///If more than one interface is provided, then the first will be designated the primary interface for the instance.
+        ///If more than one interface is provided, then the first will be
+        /// designated the primary interface for the instance.
         #[serde(rename = "create")]
         Create(Vec<InstanceNetworkInterfaceCreate>),
         #[serde(rename = "default")]
@@ -1943,11 +2028,14 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface).
+    ///Create-time parameters for an
+    /// [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface).
+    ///
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceNetworkInterfaceCreate {
         pub description: String,
-        ///The IP address for the interface. One will be auto-assigned if not provided.
+        ///The IP address for the interface. One will be auto-assigned if not
+        /// provided.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub ip: Option<std::net::IpAddr>,
         pub name: Name,
@@ -1991,9 +2079,12 @@ pub mod types {
         }
     }
 
-    ///Parameters for updating an [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface).
+    ///Parameters for updating an
+    /// [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface).
     ///
-    ///Note that modifying IP addresses for an interface is not yet supported, a new interface must be created instead.
+    ///
+    ///Note that modifying IP addresses for an interface is not yet supported,
+    /// a new interface must be created instead.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceNetworkInterfaceUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2002,9 +2093,15 @@ pub mod types {
         pub name: Option<Name>,
         ///Make a secondary interface the instance's primary interface.
         ///
-        ///If applied to a secondary interface, that interface will become the primary on the next reboot of the instance. Note that this may have implications for routing between instances, as the new primary interface will be on a distinct subnet from the previous primary interface.
+        ///If applied to a secondary interface, that interface will become the
+        /// primary on the next reboot of the instance. Note that this may have
+        /// implications for routing between instances, as the new primary
+        /// interface will be on a distinct subnet from the previous primary
+        /// interface.
         ///
-        ///Note that this can only be used to select a new primary interface for an instance. Requests to change the primary interface into a secondary will return an error.
+        ///Note that this can only be used to select a new primary interface
+        /// for an instance. Requests to change the primary interface into a
+        /// secondary will return an error.
         #[serde(default)]
         pub primary: bool,
     }
@@ -2046,9 +2143,12 @@ pub mod types {
     ///Contents of an Instance's serial console buffer.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceSerialConsoleData {
-        ///The bytes starting from the requested offset up to either the end of the buffer or the request's `max_bytes`. Provided as a u8 array rather than a string, as it may not be UTF-8.
+        ///The bytes starting from the requested offset up to either the end of
+        /// the buffer or the request's `max_bytes`. Provided as a u8 array
+        /// rather than a string, as it may not be UTF-8.
         pub data: Vec<u8>,
-        ///The absolute offset since boot (suitable for use as `byte_offset` in a subsequent request) of the last byte returned in `data`.
+        ///The absolute offset since boot (suitable for use as `byte_offset` in
+        /// a subsequent request) of the last byte returned in `data`.
         pub last_byte_offset: u64,
     }
 
@@ -2066,7 +2166,8 @@ pub mod types {
 
     ///Running state of an Instance (primarily: booted or stopped)
     ///
-    ///This typically reflects whether it's starting, running, stopping, or stopped, but also includes states related to the Instance's lifecycle
+    ///This typically reflects whether it's starting, running, stopping, or
+    /// stopped, but also includes states related to the Instance's lifecycle
     #[derive(
         Clone,
         Copy,
@@ -2090,16 +2191,20 @@ pub mod types {
         ///The instance is currently running.
         #[serde(rename = "running")]
         Running,
-        ///The instance has been requested to stop and a transition to "Stopped" is imminent.
+        ///The instance has been requested to stop and a transition to
+        /// "Stopped" is imminent.
         #[serde(rename = "stopping")]
         Stopping,
         ///The instance is currently stopped.
         #[serde(rename = "stopped")]
         Stopped,
-        ///The instance is in the process of rebooting - it will remain in the "rebooting" state until the VM is starting once more.
+        ///The instance is in the process of rebooting - it will remain in the
+        /// "rebooting" state until the VM is starting once more.
         #[serde(rename = "rebooting")]
         Rebooting,
-        ///The instance is in the process of migrating - it will remain in the "migrating" state until the migration process is complete and the destination propolis is ready to continue execution.
+        ///The instance is in the process of migrating - it will remain in the
+        /// "migrating" state until the migration process is complete and the
+        /// destination propolis is ready to continue execution.
         #[serde(rename = "migrating")]
         Migrating,
         ///The instance is attempting to recover from a failure.
@@ -2312,7 +2417,8 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in nearly all public API objects
+    ///Identity-related metadata that's included in nearly all public API
+    /// objects
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPool {
         ///human-readable free-form text about a resource
@@ -2660,7 +2766,8 @@ pub mod types {
         }
     }
 
-    ///An inclusive-inclusive range of IP ports. The second port may be omitted to represent a single port
+    ///An inclusive-inclusive range of IP ports. The second port may be omitted
+    /// to represent a single port
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
     pub struct L4PortRange(String);
     impl std::ops::Deref for L4PortRange {
@@ -2849,7 +2956,9 @@ pub mod types {
         }
     }
 
-    ///Names must begin with a lower case ASCII letter, be composed exclusively of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end with a '-'. Names cannot be a UUID though they may contain a UUID.
+    ///Names must begin with a lower case ASCII letter, be composed exclusively
+    /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
+    /// with a '-'. Names cannot be a UUID though they may contain a UUID.
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
     pub struct Name(String);
     impl std::ops::Deref for Name {
@@ -3129,7 +3238,10 @@ pub mod types {
 
     ///Unique name for a saga [`Node`]
     ///
-    ///Each node requires a string name that's unique within its DAG.  The name is used to identify its output.  Nodes that depend on a given node (either directly or indirectly) can access the node's output using its name.
+    ///Each node requires a string name that's unique within its DAG.  The name
+    /// is used to identify its output.  Nodes that depend on a given node
+    /// (either directly or indirectly) can access the node's output using its
+    /// name.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct NodeName(pub String);
     impl std::ops::Deref for NodeName {
@@ -3380,7 +3492,8 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a [`Project`](crate::external_api::views::Project)
+    ///Create-time parameters for a
+    /// [`Project`](crate::external_api::views::Project)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectCreate {
         pub description: String,
@@ -3492,9 +3605,12 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Policy`], which describes how this resource may be accessed
+    ///Client view of a [`Policy`], which describes how this resource may be
+    /// accessed
     ///
-    ///Note that the Policy only describes access granted explicitly for this resource.  The policies of parent resources can also cause a user to have access to this resource.
+    ///Note that the Policy only describes access granted explicitly for this
+    /// resource.  The policies of parent resources can also cause a user to
+    /// have access to this resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectRolePolicy {
         ///Roles directly assigned on this resource
@@ -3513,9 +3629,12 @@ pub mod types {
         }
     }
 
-    ///Describes the assignment of a particular role on a particular resource to a particular identity (user, group, etc.)
+    ///Describes the assignment of a particular role on a particular resource
+    /// to a particular identity (user, group, etc.)
     ///
-    ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s are put into a [`Policy`] and that Policy is applied to a particular resource.
+    ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s
+    /// are put into a [`Policy`] and that Policy is applied to a particular
+    /// resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectRoleRoleAssignment {
         pub identity_id: uuid::Uuid,
@@ -3535,7 +3654,8 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a [`Project`](crate::external_api::views::Project)
+    ///Updateable properties of a
+    /// [`Project`](crate::external_api::views::Project)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3713,9 +3833,12 @@ pub mod types {
         }
     }
 
-    ///A `RouteDestination` is used to match traffic with a routing rule, on the destination of that traffic.
+    ///A `RouteDestination` is used to match traffic with a routing rule, on
+    /// the destination of that traffic.
     ///
-    ///When traffic is to be sent to a destination that is within a given `RouteDestination`, the corresponding [`RouterRoute`] applies, and traffic will be forward to the [`RouteTarget`] for that rule.
+    ///When traffic is to be sent to a destination that is within a given
+    /// `RouteDestination`, the corresponding [`RouterRoute`] applies, and
+    /// traffic will be forward to the [`RouteTarget`] for that rule.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
     pub enum RouteDestination {
@@ -3751,7 +3874,8 @@ pub mod types {
         }
     }
 
-    ///A `RouteTarget` describes the possible locations that traffic matching a route destination can be sent.
+    ///A `RouteTarget` describes the possible locations that traffic matching a
+    /// route destination can be sent.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
     pub enum RouteTarget {
@@ -3784,7 +3908,8 @@ pub mod types {
         }
     }
 
-    ///A route defines a rule that governs where traffic should be sent based on its destination.
+    ///A route defines a rule that governs where traffic should be sent based
+    /// on its destination.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RouterRoute {
         ///human-readable free-form text about a resource
@@ -3817,7 +3942,8 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a [`omicron_common::api::external::RouterRoute`]
+    ///Create-time parameters for a
+    /// [`omicron_common::api::external::RouterRoute`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RouterRouteCreate {
         pub description: String,
@@ -3838,7 +3964,9 @@ pub mod types {
         }
     }
 
-    ///The classification of a [`RouterRoute`] as defined by the system. The kind determines certain attributes such as if the route is modifiable and describes how or where the route was created.
+    ///The classification of a [`RouterRoute`] as defined by the system. The
+    /// kind determines certain attributes such as if the route is modifiable
+    /// and describes how or where the route was created.
     ///
     ///See [RFD-21](https://rfd.shared.oxide.computer/rfd/0021#concept-router) for more context
     #[derive(
@@ -3855,7 +3983,8 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum RouterRouteKind {
-        ///Determines the default destination of traffic, such as whether it goes to the internet or not.
+        ///Determines the default destination of traffic, such as whether it
+        /// goes to the internet or not.
         ///
         ///`Destination: An Internet Gateway` `Modifiable: true`
         #[serde(rename = "default")]
@@ -3950,7 +4079,8 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a [`omicron_common::api::external::RouterRoute`]
+    ///Updateable properties of a
+    /// [`omicron_common::api::external::RouterRoute`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RouterRouteUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4054,7 +4184,8 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in nearly all public API objects
+    ///Identity-related metadata that's included in nearly all public API
+    /// objects
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SamlIdentityProvider {
         ///service provider endpoint where the response will be sent
@@ -4067,7 +4198,8 @@ pub mod types {
         pub idp_entity_id: String,
         ///unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///optional request signing public certificate (base64 encoded der file)
+        ///optional request signing public certificate (base64 encoded der
+        /// file)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub public_cert: Option<String>,
         ///service provider endpoint where the idp should send log out requests
@@ -4100,7 +4232,9 @@ pub mod types {
         ///service provider endpoint where the response will be sent
         pub acs_url: String,
         pub description: String,
-        ///If set, SAML attributes with this name will be considered to denote a user's group membership, where the attribute value(s) should be a comma-separated list of group names.
+        ///If set, SAML attributes with this name will be considered to denote
+        /// a user's group membership, where the attribute value(s) should be a
+        /// comma-separated list of group names.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub group_attribute_name: Option<String>,
         ///idp's entity id
@@ -4276,7 +4410,8 @@ pub mod types {
     pub struct Silo {
         ///human-readable free-form text about a resource
         pub description: String,
-        ///A silo where discoverable is false can be retrieved only by its id - it will not be part of the "list all silos" output.
+        ///A silo where discoverable is false can be retrieved only by its id -
+        /// it will not be part of the "list all silos" output.
         pub discoverable: bool,
         ///unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
@@ -4305,9 +4440,14 @@ pub mod types {
     ///Create-time parameters for a [`Silo`](crate::external_api::views::Silo)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SiloCreate {
-        ///If set, this group will be created during Silo creation and granted the "Silo Admin" role. Identity providers can assert that users belong to this group and those users can log in and further initialize the Silo.
+        ///If set, this group will be created during Silo creation and granted
+        /// the "Silo Admin" role. Identity providers can assert that users
+        /// belong to this group and those users can log in and further
+        /// initialize the Silo.
         ///
-        ///Note that if configuring a SAML based identity provider, group_attribute_name must be set for users to be considered part of a group. See [`SamlIdentityProviderCreate`] for more information.
+        ///Note that if configuring a SAML based identity provider,
+        /// group_attribute_name must be set for users to be considered part of
+        /// a group. See [`SamlIdentityProviderCreate`] for more information.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub admin_group_name: Option<String>,
         pub description: String,
@@ -4328,7 +4468,8 @@ pub mod types {
         }
     }
 
-    ///Describes how identities are managed and users are authenticated in this Silo
+    ///Describes how identities are managed and users are authenticated in this
+    /// Silo
     #[derive(
         Clone,
         Copy,
@@ -4343,10 +4484,14 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum SiloIdentityMode {
-        ///Users are authenticated with SAML using an external authentication provider.  The system updates information about users and groups only during successful authentication (i.e,. "JIT provisioning" of users and groups).
+        ///Users are authenticated with SAML using an external authentication
+        /// provider.  The system updates information about users and groups
+        /// only during successful authentication (i.e,. "JIT provisioning" of
+        /// users and groups).
         #[serde(rename = "saml_jit")]
         SamlJit,
-        ///The system is the source of truth about users.  There is no linkage to an external authentication provider or identity provider.
+        ///The system is the source of truth about users.  There is no linkage
+        /// to an external authentication provider or identity provider.
         #[serde(rename = "local_only")]
         LocalOnly,
     }
@@ -4491,9 +4636,12 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Policy`], which describes how this resource may be accessed
+    ///Client view of a [`Policy`], which describes how this resource may be
+    /// accessed
     ///
-    ///Note that the Policy only describes access granted explicitly for this resource.  The policies of parent resources can also cause a user to have access to this resource.
+    ///Note that the Policy only describes access granted explicitly for this
+    /// resource.  The policies of parent resources can also cause a user to
+    /// have access to this resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SiloRolePolicy {
         ///Roles directly assigned on this resource
@@ -4512,9 +4660,12 @@ pub mod types {
         }
     }
 
-    ///Describes the assignment of a particular role on a particular resource to a particular identity (user, group, etc.)
+    ///Describes the assignment of a particular role on a particular resource
+    /// to a particular identity (user, group, etc.)
     ///
-    ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s are put into a [`Policy`] and that Policy is applied to a particular resource.
+    ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s
+    /// are put into a [`Policy`] and that Policy is applied to a particular
+    /// resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SiloRoleRoleAssignment {
         pub identity_id: uuid::Uuid,
@@ -4617,7 +4768,8 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a [`Snapshot`](crate::external_api::views::Snapshot)
+    ///Create-time parameters for a
+    /// [`Snapshot`](crate::external_api::views::Snapshot)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SnapshotCreate {
         pub description: String,
@@ -4783,7 +4935,8 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an [`SshKey`](crate::external_api::views::SshKey)
+    ///Create-time parameters for an
+    /// [`SshKey`](crate::external_api::views::SshKey)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SshKeyCreate {
         pub description: String,
@@ -4897,7 +5050,8 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in "asset" public API objects (which generally have no name or description)
+    ///Identity-related metadata that's included in "asset" public API objects
+    /// (which generally have no name or description)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SystemUpdate {
         ///unique, immutable, system-controlled identifier for each resource
@@ -4978,7 +5132,8 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in "asset" public API objects (which generally have no name or description)
+    ///Identity-related metadata that's included in "asset" public API objects
+    /// (which generally have no name or description)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UpdateDeployment {
         ///unique, immutable, system-controlled identifier for each resource
@@ -5093,7 +5248,8 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in "asset" public API objects (which generally have no name or description)
+    ///Identity-related metadata that's included in "asset" public API objects
+    /// (which generally have no name or description)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UpdateableComponent {
         pub component_type: UpdateableComponentType,
@@ -5342,7 +5498,9 @@ pub mod types {
         }
     }
 
-    ///Names must begin with a lower case ASCII letter, be composed exclusively of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end with a '-'. Names cannot be a UUID though they may contain a UUID.
+    ///Names must begin with a lower case ASCII letter, be composed exclusively
+    /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
+    /// with a '-'. Names cannot be a UUID though they may contain a UUID.
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
     pub struct UserId(String);
     impl std::ops::Deref for UserId {
@@ -5534,7 +5692,10 @@ pub mod types {
         pub dns_name: Name,
         ///The IPv6 prefix for this VPC.
         ///
-        ///All IPv6 subnets created from this VPC must be taken from this range, which sould be a Unique Local Address in the range `fd00::/48`. The default VPC Subnet will have the first `/64` range from this prefix.
+        ///All IPv6 subnets created from this VPC must be taken from this
+        /// range, which sould be a Unique Local Address in the range
+        /// `fd00::/48`. The default VPC Subnet will have the first `/64` range
+        /// from this prefix.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub ipv6_prefix: Option<Ipv6Net>,
         pub name: Name,
@@ -5727,10 +5888,13 @@ pub mod types {
         }
     }
 
-    ///Filter for a firewall rule. A given packet must match every field that is present for the rule to apply to it. A packet matches a field if any entry in that field matches the packet.
+    ///Filter for a firewall rule. A given packet must match every field that
+    /// is present for the rule to apply to it. A packet matches a field if any
+    /// entry in that field matches the packet.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcFirewallRuleFilter {
-        ///If present, the sources (if incoming) or destinations (if outgoing) this rule applies to.
+        ///If present, the sources (if incoming) or destinations (if outgoing)
+        /// this rule applies to.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub hosts: Option<Vec<VpcFirewallRuleHostFilter>>,
         ///If present, the destination ports this rule applies to.
@@ -5753,7 +5917,8 @@ pub mod types {
         }
     }
 
-    ///The `VpcFirewallRuleHostFilter` is used to filter traffic on the basis of its source or destination host.
+    ///The `VpcFirewallRuleHostFilter` is used to filter traffic on the basis
+    /// of its source or destination host.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
     pub enum VpcFirewallRuleHostFilter {
@@ -5931,7 +6096,8 @@ pub mod types {
         }
     }
 
-    ///A `VpcFirewallRuleTarget` is used to specify the set of [`Instance`]s to which a firewall rule applies.
+    ///A `VpcFirewallRuleTarget` is used to specify the set of [`Instance`]s to
+    /// which a firewall rule applies.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
     pub enum VpcFirewallRuleTarget {
@@ -6003,7 +6169,9 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a `Vpc`'s firewall Note that VpcFirewallRules are implicitly created along with a Vpc, so there is no explicit creation.
+    ///Updateable properties of a `Vpc`'s firewall Note that VpcFirewallRules
+    /// are implicitly created along with a Vpc, so there is no explicit
+    /// creation.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcFirewallRuleUpdateParams {
         pub rules: Vec<VpcFirewallRuleUpdate>,
@@ -6061,7 +6229,8 @@ pub mod types {
         }
     }
 
-    ///A VPC router defines a series of rules that indicate where traffic should be sent depending on its destination.
+    ///A VPC router defines a series of rules that indicate where traffic
+    /// should be sent depending on its destination.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcRouter {
         ///human-readable free-form text about a resource
@@ -6091,7 +6260,8 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a [`VpcRouter`](crate::external_api::views::VpcRouter)
+    ///Create-time parameters for a
+    /// [`VpcRouter`](crate::external_api::views::VpcRouter)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcRouterCreate {
         pub description: String,
@@ -6199,7 +6369,8 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a [`VpcRouter`](crate::external_api::views::VpcRouter)
+    ///Updateable properties of a
+    /// [`VpcRouter`](crate::external_api::views::VpcRouter)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcRouterUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -6220,7 +6391,9 @@ pub mod types {
         }
     }
 
-    ///A VPC subnet represents a logical grouping for instances that allows network traffic between them, within a IPv4 subnetwork or optionall an IPv6 subnetwork.
+    ///A VPC subnet represents a logical grouping for instances that allows
+    /// network traffic between them, within a IPv4 subnetwork or optionall an
+    /// IPv6 subnetwork.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnet {
         ///human-readable free-form text about a resource
@@ -6253,17 +6426,22 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a [`VpcSubnet`](crate::external_api::views::VpcSubnet)
+    ///Create-time parameters for a
+    /// [`VpcSubnet`](crate::external_api::views::VpcSubnet)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnetCreate {
         pub description: String,
         ///The IPv4 address range for this subnet.
         ///
-        ///It must be allocated from an RFC 1918 private address range, and must not overlap with any other existing subnet in the VPC.
+        ///It must be allocated from an RFC 1918 private address range, and
+        /// must not overlap with any other existing subnet in the VPC.
         pub ipv4_block: Ipv4Net,
         ///The IPv6 address range for this subnet.
         ///
-        ///It must be allocated from the RFC 4193 Unique Local Address range, with the prefix equal to the parent VPC's prefix. A random `/64` block will be assigned if one is not provided. It must not overlap with any existing subnet in the VPC.
+        ///It must be allocated from the RFC 4193 Unique Local Address range,
+        /// with the prefix equal to the parent VPC's prefix. A random `/64`
+        /// block will be assigned if one is not provided. It must not overlap
+        /// with any existing subnet in the VPC.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub ipv6_block: Option<Ipv6Net>,
         pub name: Name,
@@ -6303,7 +6481,8 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a [`VpcSubnet`](crate::external_api::views::VpcSubnet)
+    ///Updateable properties of a
+    /// [`VpcSubnet`](crate::external_api::views::VpcSubnet)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnetUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -16486,160 +16665,162 @@ pub trait ClientDisksExt {
     ///Sends a `GET` request to `/v1/disks`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.disk_list()
+    /// let response = client.disk_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .project(project)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn disk_list(&self) -> builder::DiskList;
     ///Create a disk
     ///
     ///Sends a `POST` request to `/v1/disks`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.disk_create()
+    /// let response = client.disk_create()
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn disk_create(&self) -> builder::DiskCreate;
     ///Fetch a disk
     ///
     ///Sends a `GET` request to `/v1/disks/{disk}`
     ///
     ///Arguments:
-    ///- `disk`: Name or ID of the disk
-    ///- `project`: Name or ID of the project
+    /// - `disk`: Name or ID of the disk
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.disk_view()
+    /// let response = client.disk_view()
     ///    .disk(disk)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn disk_view(&self) -> builder::DiskView;
     ///Delete a disk
     ///
     ///Sends a `DELETE` request to `/v1/disks/{disk}`
     ///
     ///Arguments:
-    ///- `disk`: Name or ID of the disk
-    ///- `project`: Name or ID of the project
+    /// - `disk`: Name or ID of the disk
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.disk_delete()
+    /// let response = client.disk_delete()
     ///    .disk(disk)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn disk_delete(&self) -> builder::DiskDelete;
     ///Import blocks into a disk
     ///
     ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write`
     ///
     ///Arguments:
-    ///- `disk`: Name or ID of the disk
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `disk`: Name or ID of the disk
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.disk_bulk_write_import()
+    /// let response = client.disk_bulk_write_import()
     ///    .disk(disk)
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn disk_bulk_write_import(&self) -> builder::DiskBulkWriteImport;
     ///Start the process of importing blocks into a disk
     ///
     ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write-start`
     ///
     ///Arguments:
-    ///- `disk`: Name or ID of the disk
-    ///- `project`: Name or ID of the project
+    /// - `disk`: Name or ID of the disk
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.disk_bulk_write_import_start()
+    /// let response = client.disk_bulk_write_import_start()
     ///    .disk(disk)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn disk_bulk_write_import_start(&self) -> builder::DiskBulkWriteImportStart;
     ///Stop the process of importing blocks into a disk
     ///
     ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`
     ///
     ///Arguments:
-    ///- `disk`: Name or ID of the disk
-    ///- `project`: Name or ID of the project
+    /// - `disk`: Name or ID of the disk
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.disk_bulk_write_import_stop()
+    /// let response = client.disk_bulk_write_import_stop()
     ///    .disk(disk)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn disk_bulk_write_import_stop(&self) -> builder::DiskBulkWriteImportStop;
     ///Finalize disk when imports are done
     ///
     ///Sends a `POST` request to `/v1/disks/{disk}/finalize`
     ///
     ///Arguments:
-    ///- `disk`: Name or ID of the disk
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `disk`: Name or ID of the disk
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.disk_finalize_import()
+    /// let response = client.disk_finalize_import()
     ///    .disk(disk)
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn disk_finalize_import(&self) -> builder::DiskFinalizeImport;
     ///Send request to import blocks from URL
     ///
     ///Sends a `POST` request to `/v1/disks/{disk}/import`
     ///
     ///Arguments:
-    ///- `disk`: Name or ID of the disk
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `disk`: Name or ID of the disk
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.disk_import_blocks_from_url()
+    /// let response = client.disk_import_blocks_from_url()
     ///    .disk(disk)
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn disk_import_blocks_from_url(&self) -> builder::DiskImportBlocksFromUrl;
     ///Fetch disk metrics
     ///
     ///Sends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`
     ///
     ///Arguments:
-    ///- `disk`
-    ///- `metric`
-    ///- `end_time`: An exclusive end time of metrics.
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project
-    ///- `start_time`: An inclusive start time of metrics.
+    /// - `disk`
+    /// - `metric`
+    /// - `end_time`: An exclusive end time of metrics.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `start_time`: An inclusive start time of metrics.
     ///```ignore
-    ///let response = client.disk_metrics_list()
+    /// let response = client.disk_metrics_list()
     ///    .disk(disk)
     ///    .metric(metric)
     ///    .end_time(end_time)
@@ -16649,7 +16830,7 @@ pub trait ClientDisksExt {
     ///    .start_time(start_time)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn disk_metrics_list(&self) -> builder::DiskMetricsList;
 }
 
@@ -16698,59 +16879,65 @@ impl ClientDisksExt for Client {
 pub trait ClientHiddenExt {
     ///Start an OAuth 2.0 Device Authorization Grant
     ///
-    ///This endpoint is designed to be accessed from an *unauthenticated* API client. It generates and records a `device_code` and `user_code` which must be verified and confirmed prior to a token being granted.
+    ///This endpoint is designed to be accessed from an *unauthenticated* API
+    /// client. It generates and records a `device_code` and `user_code` which
+    /// must be verified and confirmed prior to a token being granted.
     ///
     ///Sends a `POST` request to `/device/auth`
     ///
     ///```ignore
-    ///let response = client.device_auth_request()
+    /// let response = client.device_auth_request()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn device_auth_request(&self) -> builder::DeviceAuthRequest;
     ///Confirm an OAuth 2.0 Device Authorization Grant
     ///
-    ///This endpoint is designed to be accessed by the user agent (browser), not the client requesting the token. So we do not actually return the token here; it will be returned in response to the poll on `/device/token`.
+    ///This endpoint is designed to be accessed by the user agent (browser),
+    /// not the client requesting the token. So we do not actually return the
+    /// token here; it will be returned in response to the poll on
+    /// `/device/token`.
     ///
     ///Sends a `POST` request to `/device/confirm`
     ///
     ///```ignore
-    ///let response = client.device_auth_confirm()
+    /// let response = client.device_auth_confirm()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn device_auth_confirm(&self) -> builder::DeviceAuthConfirm;
     ///Request a device access token
     ///
-    ///This endpoint should be polled by the client until the user code is verified and the grant is confirmed.
+    ///This endpoint should be polled by the client until the user code is
+    /// verified and the grant is confirmed.
     ///
     ///Sends a `POST` request to `/device/token`
     ///
     ///```ignore
-    ///let response = client.device_access_token()
+    /// let response = client.device_access_token()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn device_access_token(&self) -> builder::DeviceAccessToken;
     ///Sends a `POST` request to `/login`
     ///
     ///```ignore
-    ///let response = client.login_spoof()
+    /// let response = client.login_spoof()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn login_spoof(&self) -> builder::LoginSpoof;
     ///Sends a `POST` request to `/logout`
     ///
     ///```ignore
-    ///let response = client.logout()
+    /// let response = client.logout()
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn logout(&self) -> builder::Logout;
 }
 
@@ -16779,18 +16966,23 @@ impl ClientHiddenExt for Client {
 pub trait ClientImagesExt {
     ///List images
     ///
-    ///List images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.
+    ///List images which are global or scoped to the specified project. The
+    /// images are returned sorted by creation date, with the most recent images
+    /// appearing first.
     ///
     ///Sends a `GET` request to `/v1/images`
     ///
     ///Arguments:
-    ///- `include_silo_images`: Flag used to indicate if silo scoped images should be included when listing project images. Only valid when `project` is provided.
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project
-    ///- `sort_by`
+    /// - `include_silo_images`: Flag used to indicate if silo scoped images
+    ///   should be included when listing project images. Only valid when
+    ///   `project` is provided.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.image_list()
+    /// let response = client.image_list()
     ///    .include_silo_images(include_silo_images)
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -16798,7 +16990,7 @@ pub trait ClientImagesExt {
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn image_list(&self) -> builder::ImageList;
     ///Create an image
     ///
@@ -16807,15 +16999,15 @@ pub trait ClientImagesExt {
     ///Sends a `POST` request to `/v1/images`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.image_create()
+    /// let response = client.image_create()
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn image_create(&self) -> builder::ImageCreate;
     ///Fetch an image
     ///
@@ -16824,47 +17016,49 @@ pub trait ClientImagesExt {
     ///Sends a `GET` request to `/v1/images/{image}`
     ///
     ///Arguments:
-    ///- `image`: Name or ID of the image
-    ///- `project`: Name or ID of the project
+    /// - `image`: Name or ID of the image
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.image_view()
+    /// let response = client.image_view()
     ///    .image(image)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn image_view(&self) -> builder::ImageView;
     ///Delete an image
     ///
-    ///Permanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.
+    ///Permanently delete an image from a project. This operation cannot be
+    /// undone. Any instances in the project using the image will continue to
+    /// run, however new instances can not be created with this image.
     ///
     ///Sends a `DELETE` request to `/v1/images/{image}`
     ///
     ///Arguments:
-    ///- `image`: Name or ID of the image
-    ///- `project`: Name or ID of the project
+    /// - `image`: Name or ID of the image
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.image_delete()
+    /// let response = client.image_delete()
     ///    .image(image)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn image_delete(&self) -> builder::ImageDelete;
     ///Promote a project image to be visible to all projects in the silo
     ///
     ///Sends a `POST` request to `/v1/images/{image}/promote`
     ///
     ///Arguments:
-    ///- `image`: Name or ID of the image
-    ///- `project`: Name or ID of the project
+    /// - `image`: Name or ID of the image
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.image_promote()
+    /// let response = client.image_promote()
     ///    .image(image)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn image_promote(&self) -> builder::ImagePromote;
 }
 
@@ -16896,77 +17090,79 @@ pub trait ClientInstancesExt {
     ///Sends a `GET` request to `/v1/instances`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.instance_list()
+    /// let response = client.instance_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .project(project)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_list(&self) -> builder::InstanceList;
     ///Create an instance
     ///
     ///Sends a `POST` request to `/v1/instances`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.instance_create()
+    /// let response = client.instance_create()
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_create(&self) -> builder::InstanceCreate;
     ///Fetch an instance
     ///
     ///Sends a `GET` request to `/v1/instances/{instance}`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.instance_view()
+    /// let response = client.instance_view()
     ///    .instance(instance)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_view(&self) -> builder::InstanceView;
     ///Delete an instance
     ///
     ///Sends a `DELETE` request to `/v1/instances/{instance}`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.instance_delete()
+    /// let response = client.instance_delete()
     ///    .instance(instance)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_delete(&self) -> builder::InstanceDelete;
     ///List an instance's disks
     ///
     ///Sends a `GET` request to `/v1/instances/{instance}/disks`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project
-    ///- `sort_by`
+    /// - `instance`: Name or ID of the instance
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.instance_disk_list()
+    /// let response = client.instance_disk_list()
     ///    .instance(instance)
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -16974,101 +17170,113 @@ pub trait ClientInstancesExt {
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_disk_list(&self) -> builder::InstanceDiskList;
     ///Attach a disk to an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/disks/attach`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.instance_disk_attach()
+    /// let response = client.instance_disk_attach()
     ///    .instance(instance)
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_disk_attach(&self) -> builder::InstanceDiskAttach;
     ///Detach a disk from an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/disks/detach`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.instance_disk_detach()
+    /// let response = client.instance_disk_detach()
     ///    .instance(instance)
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_disk_detach(&self) -> builder::InstanceDiskDetach;
     ///List external IP addresses
     ///
     ///Sends a `GET` request to `/v1/instances/{instance}/external-ips`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.instance_external_ip_list()
+    /// let response = client.instance_external_ip_list()
     ///    .instance(instance)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_external_ip_list(&self) -> builder::InstanceExternalIpList;
     ///Migrate an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/migrate`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.instance_migrate()
+    /// let response = client.instance_migrate()
     ///    .instance(instance)
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_migrate(&self) -> builder::InstanceMigrate;
     ///Reboot an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/reboot`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.instance_reboot()
+    /// let response = client.instance_reboot()
     ///    .instance(instance)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_reboot(&self) -> builder::InstanceReboot;
     ///Fetch an instance's serial console
     ///
     ///Sends a `GET` request to `/v1/instances/{instance}/serial-console`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.
-    ///- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`. This parameter is only useful for the non-streaming GET request for serial console data, and *ignored* by the streaming websocket endpoint.
-    ///- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)
-    ///- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`
+    /// - `instance`: Name or ID of the instance
+    /// - `from_start`: Character index in the serial buffer from which to read,
+    ///   counting the bytes output since instance start. If this is not
+    ///   provided, `most_recent` must be provided, and if this *is* provided,
+    ///   `most_recent` must *not* be provided.
+    /// - `max_bytes`: Maximum number of bytes of buffered serial console
+    ///   contents to return. If the requested range runs to the end of the
+    ///   available buffer, the data returned will be shorter than `max_bytes`.
+    ///   This parameter is only useful for the non-streaming GET request for
+    ///   serial console data, and *ignored* by the streaming websocket
+    ///   endpoint.
+    /// - `most_recent`: Character index in the serial buffer from which to
+    ///   read, counting *backward* from the most recently buffered data
+    ///   retrieved from the instance. (See note on `from_start` about mutual
+    ///   exclusivity)
+    /// - `project`: Name or ID of the project, only required if `instance` is
+    ///   provided as a `Name`
     ///```ignore
-    ///let response = client.instance_serial_console()
+    /// let response = client.instance_serial_console()
     ///    .instance(instance)
     ///    .from_start(from_start)
     ///    .max_bytes(max_bytes)
@@ -17076,20 +17284,33 @@ pub trait ClientInstancesExt {
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_serial_console(&self) -> builder::InstanceSerialConsole;
     ///Stream an instance's serial console
     ///
-    ///Sends a `GET` request to `/v1/instances/{instance}/serial-console/stream`
+    ///Sends a `GET` request to
+    /// `/v1/instances/{instance}/serial-console/stream`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `from_start`: Character index in the serial buffer from which to read, counting the bytes output since instance start. If this is not provided, `most_recent` must be provided, and if this *is* provided, `most_recent` must *not* be provided.
-    ///- `max_bytes`: Maximum number of bytes of buffered serial console contents to return. If the requested range runs to the end of the available buffer, the data returned will be shorter than `max_bytes`. This parameter is only useful for the non-streaming GET request for serial console data, and *ignored* by the streaming websocket endpoint.
-    ///- `most_recent`: Character index in the serial buffer from which to read, counting *backward* from the most recently buffered data retrieved from the instance. (See note on `from_start` about mutual exclusivity)
-    ///- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`
+    /// - `instance`: Name or ID of the instance
+    /// - `from_start`: Character index in the serial buffer from which to read,
+    ///   counting the bytes output since instance start. If this is not
+    ///   provided, `most_recent` must be provided, and if this *is* provided,
+    ///   `most_recent` must *not* be provided.
+    /// - `max_bytes`: Maximum number of bytes of buffered serial console
+    ///   contents to return. If the requested range runs to the end of the
+    ///   available buffer, the data returned will be shorter than `max_bytes`.
+    ///   This parameter is only useful for the non-streaming GET request for
+    ///   serial console data, and *ignored* by the streaming websocket
+    ///   endpoint.
+    /// - `most_recent`: Character index in the serial buffer from which to
+    ///   read, counting *backward* from the most recently buffered data
+    ///   retrieved from the instance. (See note on `from_start` about mutual
+    ///   exclusivity)
+    /// - `project`: Name or ID of the project, only required if `instance` is
+    ///   provided as a `Name`
     ///```ignore
-    ///let response = client.instance_serial_console_stream()
+    /// let response = client.instance_serial_console_stream()
     ///    .instance(instance)
     ///    .from_start(from_start)
     ///    .max_bytes(max_bytes)
@@ -17097,50 +17318,52 @@ pub trait ClientInstancesExt {
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream;
     ///Boot an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/start`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.instance_start()
+    /// let response = client.instance_start()
     ///    .instance(instance)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_start(&self) -> builder::InstanceStart;
     ///Stop an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/stop`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.instance_stop()
+    /// let response = client.instance_stop()
     ///    .instance(instance)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_stop(&self) -> builder::InstanceStop;
     ///List network interfaces
     ///
     ///Sends a `GET` request to `/v1/network-interfaces`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`
-    ///- `sort_by`
+    /// - `instance`: Name or ID of the instance
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project, only required if `instance` is
+    ///   provided as a `Name`
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.instance_network_interface_list()
+    /// let response = client.instance_network_interface_list()
     ///    .instance(instance)
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -17148,79 +17371,86 @@ pub trait ClientInstancesExt {
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList;
     ///Create a network interface
     ///
     ///Sends a `POST` request to `/v1/network-interfaces`
     ///
     ///Arguments:
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`
-    ///- `body`
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project, only required if `instance` is
+    ///   provided as a `Name`
+    /// - `body`
     ///```ignore
-    ///let response = client.instance_network_interface_create()
+    /// let response = client.instance_network_interface_create()
     ///    .instance(instance)
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate;
     ///Fetch a network interface
     ///
     ///Sends a `GET` request to `/v1/network-interfaces/{interface}`
     ///
     ///Arguments:
-    ///- `interface`: Name or ID of the network interface
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`
+    /// - `interface`: Name or ID of the network interface
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project, only required if `instance` is
+    ///   provided as a `Name`
     ///```ignore
-    ///let response = client.instance_network_interface_view()
+    /// let response = client.instance_network_interface_view()
     ///    .interface(interface)
     ///    .instance(instance)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView;
     ///Update a network interface
     ///
     ///Sends a `PUT` request to `/v1/network-interfaces/{interface}`
     ///
     ///Arguments:
-    ///- `interface`: Name or ID of the network interface
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`
-    ///- `body`
+    /// - `interface`: Name or ID of the network interface
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project, only required if `instance` is
+    ///   provided as a `Name`
+    /// - `body`
     ///```ignore
-    ///let response = client.instance_network_interface_update()
+    /// let response = client.instance_network_interface_update()
     ///    .interface(interface)
     ///    .instance(instance)
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate;
     ///Delete a network interface
     ///
-    ///Note that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.
+    ///Note that the primary interface for an instance cannot be deleted if
+    /// there are any secondary interfaces. A new primary interface must be
+    /// designated first. The primary interface can be deleted if there are no
+    /// secondary interfaces.
     ///
     ///Sends a `DELETE` request to `/v1/network-interfaces/{interface}`
     ///
     ///Arguments:
-    ///- `interface`: Name or ID of the network interface
-    ///- `instance`: Name or ID of the instance
-    ///- `project`: Name or ID of the project, only required if `instance` is provided as a `Name`
+    /// - `interface`: Name or ID of the network interface
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project, only required if `instance` is
+    ///   provided as a `Name`
     ///```ignore
-    ///let response = client.instance_network_interface_delete()
+    /// let response = client.instance_network_interface_delete()
     ///    .interface(interface)
     ///    .instance(instance)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn instance_network_interface_delete(&self) -> builder::InstanceNetworkInterfaceDelete;
 }
 
@@ -17308,39 +17538,40 @@ pub trait ClientLoginExt {
     ///Sends a `POST` request to `/login/{silo_name}/local`
     ///
     ///```ignore
-    ///let response = client.login_local()
+    /// let response = client.login_local()
     ///    .silo_name(silo_name)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn login_local(&self) -> builder::LoginLocal;
     ///Prompt user login
     ///
-    ///Either display a page asking a user for their credentials, or redirect them to their identity provider.
+    ///Either display a page asking a user for their credentials, or redirect
+    /// them to their identity provider.
     ///
     ///Sends a `GET` request to `/login/{silo_name}/saml/{provider_name}`
     ///
     ///```ignore
-    ///let response = client.login_saml_begin()
+    /// let response = client.login_saml_begin()
     ///    .silo_name(silo_name)
     ///    .provider_name(provider_name)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn login_saml_begin(&self) -> builder::LoginSamlBegin;
     ///Authenticate a user (i.e., log in) via SAML
     ///
     ///Sends a `POST` request to `/login/{silo_name}/saml/{provider_name}`
     ///
     ///```ignore
-    ///let response = client.login_saml()
+    /// let response = client.login_saml()
     ///    .silo_name(silo_name)
     ///    .provider_name(provider_name)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn login_saml(&self) -> builder::LoginSaml;
 }
 
@@ -17364,21 +17595,21 @@ pub trait ClientPolicyExt {
     ///Sends a `GET` request to `/v1/system/policy`
     ///
     ///```ignore
-    ///let response = client.system_policy_view()
+    /// let response = client.system_policy_view()
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_policy_view(&self) -> builder::SystemPolicyView;
     ///Update the top-level IAM policy
     ///
     ///Sends a `PUT` request to `/v1/system/policy`
     ///
     ///```ignore
-    ///let response = client.system_policy_update()
+    /// let response = client.system_policy_update()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_policy_update(&self) -> builder::SystemPolicyUpdate;
 }
 
@@ -17398,97 +17629,98 @@ pub trait ClientProjectsExt {
     ///Sends a `GET` request to `/v1/projects`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.project_list()
+    /// let response = client.project_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn project_list(&self) -> builder::ProjectList;
     ///Create a project
     ///
     ///Sends a `POST` request to `/v1/projects`
     ///
     ///```ignore
-    ///let response = client.project_create()
+    /// let response = client.project_create()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn project_create(&self) -> builder::ProjectCreate;
     ///Fetch a project
     ///
     ///Sends a `GET` request to `/v1/projects/{project}`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.project_view()
+    /// let response = client.project_view()
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn project_view(&self) -> builder::ProjectView;
     ///Update a project
     ///
     ///Sends a `PUT` request to `/v1/projects/{project}`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.project_update()
+    /// let response = client.project_update()
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn project_update(&self) -> builder::ProjectUpdate;
     ///Delete a project
     ///
     ///Sends a `DELETE` request to `/v1/projects/{project}`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.project_delete()
+    /// let response = client.project_delete()
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn project_delete(&self) -> builder::ProjectDelete;
     ///Fetch a project's IAM policy
     ///
     ///Sends a `GET` request to `/v1/projects/{project}/policy`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.project_policy_view()
+    /// let response = client.project_policy_view()
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn project_policy_view(&self) -> builder::ProjectPolicyView;
     ///Update a project's IAM policy
     ///
     ///Sends a `PUT` request to `/v1/projects/{project}/policy`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.project_policy_update()
+    /// let response = client.project_policy_update()
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn project_policy_update(&self) -> builder::ProjectPolicyUpdate;
 }
 
@@ -17528,28 +17760,29 @@ pub trait ClientRolesExt {
     ///Sends a `GET` request to `/v1/system/roles`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
     ///```ignore
-    ///let response = client.role_list()
+    /// let response = client.role_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn role_list(&self) -> builder::RoleList;
     ///Fetch a built-in role
     ///
     ///Sends a `GET` request to `/v1/system/roles/{role_name}`
     ///
     ///Arguments:
-    ///- `role_name`: The built-in role's unique name.
+    /// - `role_name`: The built-in role's unique name.
     ///```ignore
-    ///let response = client.role_view()
+    /// let response = client.role_view()
     ///    .role_name(role_name)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn role_view(&self) -> builder::RoleView;
 }
 
@@ -17569,27 +17802,28 @@ pub trait ClientSessionExt {
     ///Sends a `GET` request to `/v1/me`
     ///
     ///```ignore
-    ///let response = client.current_user_view()
+    /// let response = client.current_user_view()
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn current_user_view(&self) -> builder::CurrentUserView;
     ///Fetch the silo groups the current user belongs to
     ///
     ///Sends a `GET` request to `/v1/me/groups`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.current_user_groups()
+    /// let response = client.current_user_groups()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn current_user_groups(&self) -> builder::CurrentUserGroups;
     ///List SSH public keys
     ///
@@ -17598,17 +17832,18 @@ pub trait ClientSessionExt {
     ///Sends a `GET` request to `/v1/me/ssh-keys`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.current_user_ssh_key_list()
+    /// let response = client.current_user_ssh_key_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList;
     ///Create an SSH public key
     ///
@@ -17617,41 +17852,43 @@ pub trait ClientSessionExt {
     ///Sends a `POST` request to `/v1/me/ssh-keys`
     ///
     ///```ignore
-    ///let response = client.current_user_ssh_key_create()
+    /// let response = client.current_user_ssh_key_create()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate;
     ///Fetch an SSH public key
     ///
-    ///Fetch an SSH public key associated with the currently authenticated user.
+    ///Fetch an SSH public key associated with the currently authenticated
+    /// user.
     ///
     ///Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`
     ///
     ///Arguments:
-    ///- `ssh_key`: Name or ID of the SSH key
+    /// - `ssh_key`: Name or ID of the SSH key
     ///```ignore
-    ///let response = client.current_user_ssh_key_view()
+    /// let response = client.current_user_ssh_key_view()
     ///    .ssh_key(ssh_key)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView;
     ///Delete an SSH public key
     ///
-    ///Delete an SSH public key associated with the currently authenticated user.
+    ///Delete an SSH public key associated with the currently authenticated
+    /// user.
     ///
     ///Sends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`
     ///
     ///Arguments:
-    ///- `ssh_key`: Name or ID of the SSH key
+    /// - `ssh_key`: Name or ID of the SSH key
     ///```ignore
-    ///let response = client.current_user_ssh_key_delete()
+    /// let response = client.current_user_ssh_key_delete()
     ///    .ssh_key(ssh_key)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn current_user_ssh_key_delete(&self) -> builder::CurrentUserSshKeyDelete;
 }
 
@@ -17687,70 +17924,72 @@ pub trait ClientSilosExt {
     ///Sends a `GET` request to `/v1/groups`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.group_list()
+    /// let response = client.group_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn group_list(&self) -> builder::GroupList;
     ///Fetch group
     ///
     ///Sends a `GET` request to `/v1/groups/{group}`
     ///
     ///Arguments:
-    ///- `group`: ID of the group
+    /// - `group`: ID of the group
     ///```ignore
-    ///let response = client.group_view()
+    /// let response = client.group_view()
     ///    .group(group)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn group_view(&self) -> builder::GroupView;
     ///Fetch the current silo's IAM policy
     ///
     ///Sends a `GET` request to `/v1/policy`
     ///
     ///```ignore
-    ///let response = client.policy_view()
+    /// let response = client.policy_view()
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn policy_view(&self) -> builder::PolicyView;
     ///Update the current silo's IAM policy
     ///
     ///Sends a `PUT` request to `/v1/policy`
     ///
     ///```ignore
-    ///let response = client.policy_update()
+    /// let response = client.policy_update()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn policy_update(&self) -> builder::PolicyUpdate;
     ///List users
     ///
     ///Sends a `GET` request to `/v1/users`
     ///
     ///Arguments:
-    ///- `group`
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `group`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.user_list()
+    /// let response = client.user_list()
     ///    .group(group)
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn user_list(&self) -> builder::UserList;
 }
 
@@ -17782,19 +18021,20 @@ pub trait ClientSnapshotsExt {
     ///Sends a `GET` request to `/v1/snapshots`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.snapshot_list()
+    /// let response = client.snapshot_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .project(project)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn snapshot_list(&self) -> builder::SnapshotList;
     ///Create a snapshot
     ///
@@ -17803,45 +18043,45 @@ pub trait ClientSnapshotsExt {
     ///Sends a `POST` request to `/v1/snapshots`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.snapshot_create()
+    /// let response = client.snapshot_create()
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn snapshot_create(&self) -> builder::SnapshotCreate;
     ///Fetch a snapshot
     ///
     ///Sends a `GET` request to `/v1/snapshots/{snapshot}`
     ///
     ///Arguments:
-    ///- `snapshot`: Name or ID of the snapshot
-    ///- `project`: Name or ID of the project
+    /// - `snapshot`: Name or ID of the snapshot
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.snapshot_view()
+    /// let response = client.snapshot_view()
     ///    .snapshot(snapshot)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn snapshot_view(&self) -> builder::SnapshotView;
     ///Delete a snapshot
     ///
     ///Sends a `DELETE` request to `/v1/snapshots/{snapshot}`
     ///
     ///Arguments:
-    ///- `snapshot`: Name or ID of the snapshot
-    ///- `project`: Name or ID of the project
+    /// - `snapshot`: Name or ID of the snapshot
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.snapshot_delete()
+    /// let response = client.snapshot_delete()
     ///    .snapshot(snapshot)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn snapshot_delete(&self) -> builder::SnapshotDelete;
 }
 
@@ -17869,43 +18109,47 @@ pub trait ClientSystemExt {
     ///Sends a `GET` request to `/system/by-id/images/{id}`
     ///
     ///```ignore
-    ///let response = client.system_image_view_by_id()
+    /// let response = client.system_image_view_by_id()
     ///    .id(id)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_image_view_by_id(&self) -> builder::SystemImageViewById;
     ///List system-wide images
     ///
-    ///Returns a list of all the system-wide images. System-wide images are returned sorted by creation date, with the most recent images appearing first.
+    ///Returns a list of all the system-wide images. System-wide images are
+    /// returned sorted by creation date, with the most recent images appearing
+    /// first.
     ///
     ///Sends a `GET` request to `/system/images`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.system_image_list()
+    /// let response = client.system_image_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_image_list(&self) -> builder::SystemImageList;
     ///Create a system-wide image
     ///
-    ///Create a new system-wide image. This image can then be used by any user in any silo as a base for instances.
+    ///Create a new system-wide image. This image can then be used by any user
+    /// in any silo as a base for instances.
     ///
     ///Sends a `POST` request to `/system/images`
     ///
     ///```ignore
-    ///let response = client.system_image_create()
+    /// let response = client.system_image_create()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_image_create(&self) -> builder::SystemImageCreate;
     ///Fetch a system-wide image
     ///
@@ -17914,56 +18158,62 @@ pub trait ClientSystemExt {
     ///Sends a `GET` request to `/system/images/{image_name}`
     ///
     ///```ignore
-    ///let response = client.system_image_view()
+    /// let response = client.system_image_view()
     ///    .image_name(image_name)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_image_view(&self) -> builder::SystemImageView;
     ///Delete a system-wide image
     ///
-    ///Permanently delete a system-wide image. This operation cannot be undone. Any instances using the system-wide image will continue to run, however new instances can not be created with this image.
+    ///Permanently delete a system-wide image. This operation cannot be undone.
+    /// Any instances using the system-wide image will continue to run, however
+    /// new instances can not be created with this image.
     ///
     ///Sends a `DELETE` request to `/system/images/{image_name}`
     ///
     ///```ignore
-    ///let response = client.system_image_delete()
+    /// let response = client.system_image_delete()
     ///    .image_name(image_name)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_image_delete(&self) -> builder::SystemImageDelete;
     ///List system-wide certificates
     ///
-    ///Returns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.
+    ///Returns a list of all the system-wide certificates. System-wide
+    /// certificates are returned sorted by creation date, with the most recent
+    /// certificates appearing first.
     ///
     ///Sends a `GET` request to `/v1/system/certificates`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.certificate_list()
+    /// let response = client.certificate_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn certificate_list(&self) -> builder::CertificateList;
     ///Create a new system-wide x.509 certificate
     ///
-    ///This certificate is automatically used by the Oxide Control plane to serve external connections.
+    ///This certificate is automatically used by the Oxide Control plane to
+    /// serve external connections.
     ///
     ///Sends a `POST` request to `/v1/system/certificates`
     ///
     ///```ignore
-    ///let response = client.certificate_create()
+    /// let response = client.certificate_create()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn certificate_create(&self) -> builder::CertificateCreate;
     ///Fetch a certificate
     ///
@@ -17972,11 +18222,11 @@ pub trait ClientSystemExt {
     ///Sends a `GET` request to `/v1/system/certificates/{certificate}`
     ///
     ///```ignore
-    ///let response = client.certificate_view()
+    /// let response = client.certificate_view()
     ///    .certificate(certificate)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn certificate_view(&self) -> builder::CertificateView;
     ///Delete a certificate
     ///
@@ -17985,276 +18235,287 @@ pub trait ClientSystemExt {
     ///Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
     ///
     ///```ignore
-    ///let response = client.certificate_delete()
+    /// let response = client.certificate_delete()
     ///    .certificate(certificate)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn certificate_delete(&self) -> builder::CertificateDelete;
     ///List physical disks
     ///
     ///Sends a `GET` request to `/v1/system/hardware/disks`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.physical_disk_list()
+    /// let response = client.physical_disk_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn physical_disk_list(&self) -> builder::PhysicalDiskList;
     ///List racks
     ///
     ///Sends a `GET` request to `/v1/system/hardware/racks`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.rack_list()
+    /// let response = client.rack_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn rack_list(&self) -> builder::RackList;
     ///Fetch a rack
     ///
     ///Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
     ///
     ///Arguments:
-    ///- `rack_id`: The rack's unique ID.
+    /// - `rack_id`: The rack's unique ID.
     ///```ignore
-    ///let response = client.rack_view()
+    /// let response = client.rack_view()
     ///    .rack_id(rack_id)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn rack_view(&self) -> builder::RackView;
     ///List sleds
     ///
     ///Sends a `GET` request to `/v1/system/hardware/sleds`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.sled_list()
+    /// let response = client.sled_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn sled_list(&self) -> builder::SledList;
     ///Fetch a sled
     ///
     ///Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
     ///
     ///Arguments:
-    ///- `sled_id`: The sled's unique ID.
+    /// - `sled_id`: The sled's unique ID.
     ///```ignore
-    ///let response = client.sled_view()
+    /// let response = client.sled_view()
     ///    .sled_id(sled_id)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn sled_view(&self) -> builder::SledView;
     ///List physical disks attached to sleds
     ///
     ///Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/disks`
     ///
     ///Arguments:
-    ///- `sled_id`: The sled's unique ID.
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `sled_id`: The sled's unique ID.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.sled_physical_disk_list()
+    /// let response = client.sled_physical_disk_list()
     ///    .sled_id(sled_id)
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList;
     ///List a silo's IDPs_name
     ///
     ///Sends a `GET` request to `/v1/system/identity-providers`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `silo`: Name or ID of the silo
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `silo`: Name or ID of the silo
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.silo_identity_provider_list()
+    /// let response = client.silo_identity_provider_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .silo(silo)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
     ///Create a user
     ///
-    ///Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.
+    ///Users can only be created in Silos with `provision_type` == `Fixed`.
+    /// Otherwise, Silo users are just-in-time (JIT) provisioned when a user
+    /// first logs in using an external Identity Provider.
     ///
     ///Sends a `POST` request to `/v1/system/identity-providers/local/users`
     ///
     ///Arguments:
-    ///- `silo`: Name or ID of the silo
-    ///- `body`
+    /// - `silo`: Name or ID of the silo
+    /// - `body`
     ///```ignore
-    ///let response = client.local_idp_user_create()
+    /// let response = client.local_idp_user_create()
     ///    .silo(silo)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
     ///Delete a user
     ///
-    ///Sends a `DELETE` request to `/v1/system/identity-providers/local/users/{user_id}`
+    ///Sends a `DELETE` request to
+    /// `/v1/system/identity-providers/local/users/{user_id}`
     ///
     ///Arguments:
-    ///- `user_id`: The user's internal id
-    ///- `silo`: Name or ID of the silo
+    /// - `user_id`: The user's internal id
+    /// - `silo`: Name or ID of the silo
     ///```ignore
-    ///let response = client.local_idp_user_delete()
+    /// let response = client.local_idp_user_delete()
     ///    .user_id(user_id)
     ///    .silo(silo)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
     ///Set or invalidate a user's password
     ///
-    ///Passwords can only be updated for users in Silos with identity mode `LocalOnly`.
+    ///Passwords can only be updated for users in Silos with identity mode
+    /// `LocalOnly`.
     ///
-    ///Sends a `POST` request to `/v1/system/identity-providers/local/users/{user_id}/set-password`
+    ///Sends a `POST` request to
+    /// `/v1/system/identity-providers/local/users/{user_id}/set-password`
     ///
     ///Arguments:
-    ///- `user_id`: The user's internal id
-    ///- `silo`: Name or ID of the silo
-    ///- `body`
+    /// - `user_id`: The user's internal id
+    /// - `silo`: Name or ID of the silo
+    /// - `body`
     ///```ignore
-    ///let response = client.local_idp_user_set_password()
+    /// let response = client.local_idp_user_set_password()
     ///    .user_id(user_id)
     ///    .silo(silo)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
     ///Create a SAML IDP
     ///
     ///Sends a `POST` request to `/v1/system/identity-providers/saml`
     ///
     ///Arguments:
-    ///- `silo`: Name or ID of the silo
-    ///- `body`
+    /// - `silo`: Name or ID of the silo
+    /// - `body`
     ///```ignore
-    ///let response = client.saml_identity_provider_create()
+    /// let response = client.saml_identity_provider_create()
     ///    .silo(silo)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
     ///Fetch a SAML IDP
     ///
     ///Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
     ///
     ///Arguments:
-    ///- `provider`: Name or ID of the SAML identity provider
-    ///- `silo`: Name or ID of the silo
+    /// - `provider`: Name or ID of the SAML identity provider
+    /// - `silo`: Name or ID of the silo
     ///```ignore
-    ///let response = client.saml_identity_provider_view()
+    /// let response = client.saml_identity_provider_view()
     ///    .provider(provider)
     ///    .silo(silo)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView;
     ///List IP pools
     ///
     ///Sends a `GET` request to `/v1/system/ip-pools`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.ip_pool_list()
+    /// let response = client.ip_pool_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_list(&self) -> builder::IpPoolList;
     ///Create an IP pool
     ///
     ///Sends a `POST` request to `/v1/system/ip-pools`
     ///
     ///```ignore
-    ///let response = client.ip_pool_create()
+    /// let response = client.ip_pool_create()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_create(&self) -> builder::IpPoolCreate;
     ///Fetch an IP pool
     ///
     ///Sends a `GET` request to `/v1/system/ip-pools/{pool}`
     ///
     ///Arguments:
-    ///- `pool`: Name or ID of the IP pool
+    /// - `pool`: Name or ID of the IP pool
     ///```ignore
-    ///let response = client.ip_pool_view()
+    /// let response = client.ip_pool_view()
     ///    .pool(pool)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_view(&self) -> builder::IpPoolView;
     ///Update an IP Pool
     ///
     ///Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
     ///
     ///Arguments:
-    ///- `pool`: Name or ID of the IP pool
-    ///- `body`
+    /// - `pool`: Name or ID of the IP pool
+    /// - `body`
     ///```ignore
-    ///let response = client.ip_pool_update()
+    /// let response = client.ip_pool_update()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_update(&self) -> builder::IpPoolUpdate;
     ///Delete an IP Pool
     ///
     ///Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
     ///
     ///Arguments:
-    ///- `pool`: Name or ID of the IP pool
+    /// - `pool`: Name or ID of the IP pool
     ///```ignore
-    ///let response = client.ip_pool_delete()
+    /// let response = client.ip_pool_delete()
     ///    .pool(pool)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_delete(&self) -> builder::IpPoolDelete;
     ///List ranges for an IP pool
     ///
@@ -18263,57 +18524,58 @@ pub trait ClientSystemExt {
     ///Sends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`
     ///
     ///Arguments:
-    ///- `pool`: Name or ID of the IP pool
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
+    /// - `pool`: Name or ID of the IP pool
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
     ///```ignore
-    ///let response = client.ip_pool_range_list()
+    /// let response = client.ip_pool_range_list()
     ///    .pool(pool)
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
     ///Add a range to an IP pool
     ///
     ///Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
     ///
     ///Arguments:
-    ///- `pool`: Name or ID of the IP pool
-    ///- `body`
+    /// - `pool`: Name or ID of the IP pool
+    /// - `body`
     ///```ignore
-    ///let response = client.ip_pool_range_add()
+    /// let response = client.ip_pool_range_add()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd;
     ///Remove a range from an IP pool
     ///
     ///Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`
     ///
     ///Arguments:
-    ///- `pool`: Name or ID of the IP pool
-    ///- `body`
+    /// - `pool`: Name or ID of the IP pool
+    /// - `body`
     ///```ignore
-    ///let response = client.ip_pool_range_remove()
+    /// let response = client.ip_pool_range_remove()
     ///    .pool(pool)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove;
     ///Fetch the IP pool used for Oxide services
     ///
     ///Sends a `GET` request to `/v1/system/ip-pools-service`
     ///
     ///```ignore
-    ///let response = client.ip_pool_service_view()
+    /// let response = client.ip_pool_service_view()
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
     ///List ranges for the IP pool used for Oxide services
     ///
@@ -18322,51 +18584,53 @@ pub trait ClientSystemExt {
     ///Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
     ///```ignore
-    ///let response = client.ip_pool_service_range_list()
+    /// let response = client.ip_pool_service_range_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
     ///Add a range to an IP pool used for Oxide services
     ///
     ///Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
     ///
     ///```ignore
-    ///let response = client.ip_pool_service_range_add()
+    /// let response = client.ip_pool_service_range_add()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd;
     ///Remove a range from an IP pool used for Oxide services
     ///
     ///Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
     ///
     ///```ignore
-    ///let response = client.ip_pool_service_range_remove()
+    /// let response = client.ip_pool_service_range_remove()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
     ///Access metrics data
     ///
     ///Sends a `GET` request to `/v1/system/metrics/{metric_name}`
     ///
     ///Arguments:
-    ///- `metric_name`
-    ///- `end_time`: An exclusive end time of metrics.
-    ///- `id`: The UUID of the container being queried
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `start_time`: An inclusive start time of metrics.
+    /// - `metric_name`
+    /// - `end_time`: An exclusive end time of metrics.
+    /// - `id`: The UUID of the container being queried
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `start_time`: An inclusive start time of metrics.
     ///```ignore
-    ///let response = client.system_metric()
+    /// let response = client.system_metric()
     ///    .metric_name(metric_name)
     ///    .end_time(end_time)
     ///    .id(id)
@@ -18375,35 +18639,36 @@ pub trait ClientSystemExt {
     ///    .start_time(start_time)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_metric(&self) -> builder::SystemMetric;
     ///List sagas
     ///
     ///Sends a `GET` request to `/v1/system/sagas`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.saga_list()
+    /// let response = client.saga_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn saga_list(&self) -> builder::SagaList;
     ///Fetch a saga
     ///
     ///Sends a `GET` request to `/v1/system/sagas/{saga_id}`
     ///
     ///```ignore
-    ///let response = client.saga_view()
+    /// let response = client.saga_view()
     ///    .saga_id(saga_id)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn saga_view(&self) -> builder::SagaView;
     ///List silos
     ///
@@ -18412,28 +18677,29 @@ pub trait ClientSystemExt {
     ///Sends a `GET` request to `/v1/system/silos`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.silo_list()
+    /// let response = client.silo_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn silo_list(&self) -> builder::SiloList;
     ///Create a silo
     ///
     ///Sends a `POST` request to `/v1/system/silos`
     ///
     ///```ignore
-    ///let response = client.silo_create()
+    /// let response = client.silo_create()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn silo_create(&self) -> builder::SiloCreate;
     ///Fetch a silo
     ///
@@ -18442,13 +18708,13 @@ pub trait ClientSystemExt {
     ///Sends a `GET` request to `/v1/system/silos/{silo}`
     ///
     ///Arguments:
-    ///- `silo`: Name or ID of the silo
+    /// - `silo`: Name or ID of the silo
     ///```ignore
-    ///let response = client.silo_view()
+    /// let response = client.silo_view()
     ///    .silo(silo)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn silo_view(&self) -> builder::SiloView;
     ///Delete a silo
     ///
@@ -18457,107 +18723,109 @@ pub trait ClientSystemExt {
     ///Sends a `DELETE` request to `/v1/system/silos/{silo}`
     ///
     ///Arguments:
-    ///- `silo`: Name or ID of the silo
+    /// - `silo`: Name or ID of the silo
     ///```ignore
-    ///let response = client.silo_delete()
+    /// let response = client.silo_delete()
     ///    .silo(silo)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn silo_delete(&self) -> builder::SiloDelete;
     ///Fetch a silo's IAM policy
     ///
     ///Sends a `GET` request to `/v1/system/silos/{silo}/policy`
     ///
     ///Arguments:
-    ///- `silo`: Name or ID of the silo
+    /// - `silo`: Name or ID of the silo
     ///```ignore
-    ///let response = client.silo_policy_view()
+    /// let response = client.silo_policy_view()
     ///    .silo(silo)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn silo_policy_view(&self) -> builder::SiloPolicyView;
     ///Update a silo's IAM policy
     ///
     ///Sends a `PUT` request to `/v1/system/silos/{silo}/policy`
     ///
     ///Arguments:
-    ///- `silo`: Name or ID of the silo
-    ///- `body`
+    /// - `silo`: Name or ID of the silo
+    /// - `body`
     ///```ignore
-    ///let response = client.silo_policy_update()
+    /// let response = client.silo_policy_update()
     ///    .silo(silo)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate;
     ///View version and update status of component tree
     ///
     ///Sends a `GET` request to `/v1/system/update/components`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.system_component_version_list()
+    /// let response = client.system_component_version_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_component_version_list(&self) -> builder::SystemComponentVersionList;
     ///List all update deployments
     ///
     ///Sends a `GET` request to `/v1/system/update/deployments`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.update_deployments_list()
+    /// let response = client.update_deployments_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn update_deployments_list(&self) -> builder::UpdateDeploymentsList;
     ///Fetch a system update deployment
     ///
     ///Sends a `GET` request to `/v1/system/update/deployments/{id}`
     ///
     ///```ignore
-    ///let response = client.update_deployment_view()
+    /// let response = client.update_deployment_view()
     ///    .id(id)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn update_deployment_view(&self) -> builder::UpdateDeploymentView;
     ///Refresh update data
     ///
     ///Sends a `POST` request to `/v1/system/update/refresh`
     ///
     ///```ignore
-    ///let response = client.system_update_refresh()
+    /// let response = client.system_update_refresh()
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_update_refresh(&self) -> builder::SystemUpdateRefresh;
     ///Start system update
     ///
     ///Sends a `POST` request to `/v1/system/update/start`
     ///
     ///```ignore
-    ///let response = client.system_update_start()
+    /// let response = client.system_update_start()
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_update_start(&self) -> builder::SystemUpdateStart;
     ///Stop system update
     ///
@@ -18566,121 +18834,125 @@ pub trait ClientSystemExt {
     ///Sends a `POST` request to `/v1/system/update/stop`
     ///
     ///```ignore
-    ///let response = client.system_update_stop()
+    /// let response = client.system_update_stop()
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_update_stop(&self) -> builder::SystemUpdateStop;
     ///List all updates
     ///
     ///Sends a `GET` request to `/v1/system/update/updates`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.system_update_list()
+    /// let response = client.system_update_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_update_list(&self) -> builder::SystemUpdateList;
     ///View system update
     ///
     ///Sends a `GET` request to `/v1/system/update/updates/{version}`
     ///
     ///```ignore
-    ///let response = client.system_update_view()
+    /// let response = client.system_update_view()
     ///    .version(version)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_update_view(&self) -> builder::SystemUpdateView;
     ///View system update component tree
     ///
-    ///Sends a `GET` request to `/v1/system/update/updates/{version}/components`
+    ///Sends a `GET` request to
+    /// `/v1/system/update/updates/{version}/components`
     ///
     ///```ignore
-    ///let response = client.system_update_components_list()
+    /// let response = client.system_update_components_list()
     ///    .version(version)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_update_components_list(&self) -> builder::SystemUpdateComponentsList;
     ///View system version and update status
     ///
     ///Sends a `GET` request to `/v1/system/update/version`
     ///
     ///```ignore
-    ///let response = client.system_version()
+    /// let response = client.system_version()
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn system_version(&self) -> builder::SystemVersion;
     ///List users in a silo
     ///
     ///Sends a `GET` request to `/v1/system/users`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `silo`: Name or ID of the silo
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `silo`: Name or ID of the silo
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.silo_user_list()
+    /// let response = client.silo_user_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .silo(silo)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn silo_user_list(&self) -> builder::SiloUserList;
     ///Fetch a user
     ///
     ///Sends a `GET` request to `/v1/system/users/{user_id}`
     ///
     ///Arguments:
-    ///- `user_id`: The user's internal id
-    ///- `silo`: Name or ID of the silo
+    /// - `user_id`: The user's internal id
+    /// - `silo`: Name or ID of the silo
     ///```ignore
-    ///let response = client.silo_user_view()
+    /// let response = client.silo_user_view()
     ///    .user_id(user_id)
     ///    .silo(silo)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn silo_user_view(&self) -> builder::SiloUserView;
     ///List built-in users
     ///
     ///Sends a `GET` request to `/v1/system/users-builtin`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.user_builtin_list()
+    /// let response = client.user_builtin_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn user_builtin_list(&self) -> builder::UserBuiltinList;
     ///Fetch a built-in user
     ///
     ///Sends a `GET` request to `/v1/system/users-builtin/{user}`
     ///
     ///```ignore
-    ///let response = client.user_builtin_view()
+    /// let response = client.user_builtin_view()
     ///    .user(user)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn user_builtin_view(&self) -> builder::UserBuiltinView;
 }
 
@@ -18916,32 +19188,34 @@ pub trait ClientVpcsExt {
     ///Sends a `GET` request to `/v1/vpc-firewall-rules`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `vpc`: Name or ID of the VPC
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
     ///```ignore
-    ///let response = client.vpc_firewall_rules_view()
+    /// let response = client.vpc_firewall_rules_view()
     ///    .project(project)
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_firewall_rules_view(&self) -> builder::VpcFirewallRulesView;
     ///Replace firewall rules
     ///
     ///Sends a `PUT` request to `/v1/vpc-firewall-rules`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `vpc`: Name or ID of the VPC
-    ///- `body`
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// - `body`
     ///```ignore
-    ///let response = client.vpc_firewall_rules_update()
+    /// let response = client.vpc_firewall_rules_update()
     ///    .project(project)
     ///    .vpc(vpc)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_firewall_rules_update(&self) -> builder::VpcFirewallRulesUpdate;
     ///List routes
     ///
@@ -18950,14 +19224,17 @@ pub trait ClientVpcsExt {
     ///Sends a `GET` request to `/v1/vpc-router-routes`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `router`: Name or ID of the router
-    ///- `sort_by`
-    ///- `vpc`: Name or ID of the VPC, only required if `subnet` is provided as a `Name`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `router`: Name or ID of the router
+    /// - `sort_by`
+    /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
+    ///   a `Name`
     ///```ignore
-    ///let response = client.vpc_router_route_list()
+    /// let response = client.vpc_router_route_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .project(project)
@@ -18966,58 +19243,64 @@ pub trait ClientVpcsExt {
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_router_route_list(&self) -> builder::VpcRouterRouteList;
     ///Create a router
     ///
     ///Sends a `POST` request to `/v1/vpc-router-routes`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `router`: Name or ID of the router
-    ///- `vpc`: Name or ID of the VPC, only required if `subnet` is provided as a `Name`
-    ///- `body`
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `router`: Name or ID of the router
+    /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
+    ///   a `Name`
+    /// - `body`
     ///```ignore
-    ///let response = client.vpc_router_route_create()
+    /// let response = client.vpc_router_route_create()
     ///    .project(project)
     ///    .router(router)
     ///    .vpc(vpc)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_router_route_create(&self) -> builder::VpcRouterRouteCreate;
     ///Fetch a route
     ///
     ///Sends a `GET` request to `/v1/vpc-router-routes/{route}`
     ///
     ///Arguments:
-    ///- `route`: Name or ID of the route
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `router`: Name or ID of the router
-    ///- `vpc`: Name or ID of the VPC, only required if `subnet` is provided as a `Name`
+    /// - `route`: Name or ID of the route
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `router`: Name or ID of the router
+    /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
+    ///   a `Name`
     ///```ignore
-    ///let response = client.vpc_router_route_view()
+    /// let response = client.vpc_router_route_view()
     ///    .route(route)
     ///    .project(project)
     ///    .router(router)
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_router_route_view(&self) -> builder::VpcRouterRouteView;
     ///Update a route
     ///
     ///Sends a `PUT` request to `/v1/vpc-router-routes/{route}`
     ///
     ///Arguments:
-    ///- `route`: Name or ID of the route
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `router`: Name or ID of the router
-    ///- `vpc`: Name or ID of the VPC, only required if `subnet` is provided as a `Name`
-    ///- `body`
+    /// - `route`: Name or ID of the route
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `router`: Name or ID of the router
+    /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
+    ///   a `Name`
+    /// - `body`
     ///```ignore
-    ///let response = client.vpc_router_route_update()
+    /// let response = client.vpc_router_route_update()
     ///    .route(route)
     ///    .project(project)
     ///    .router(router)
@@ -19025,39 +19308,43 @@ pub trait ClientVpcsExt {
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_router_route_update(&self) -> builder::VpcRouterRouteUpdate;
     ///Delete a route
     ///
     ///Sends a `DELETE` request to `/v1/vpc-router-routes/{route}`
     ///
     ///Arguments:
-    ///- `route`: Name or ID of the route
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `router`: Name or ID of the router
-    ///- `vpc`: Name or ID of the VPC, only required if `subnet` is provided as a `Name`
+    /// - `route`: Name or ID of the route
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `router`: Name or ID of the router
+    /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
+    ///   a `Name`
     ///```ignore
-    ///let response = client.vpc_router_route_delete()
+    /// let response = client.vpc_router_route_delete()
     ///    .route(route)
     ///    .project(project)
     ///    .router(router)
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_router_route_delete(&self) -> builder::VpcRouterRouteDelete;
     ///List routers
     ///
     ///Sends a `GET` request to `/v1/vpc-routers`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `sort_by`
-    ///- `vpc`: Name or ID of the VPC
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `sort_by`
+    /// - `vpc`: Name or ID of the VPC
     ///```ignore
-    ///let response = client.vpc_router_list()
+    /// let response = client.vpc_router_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .project(project)
@@ -19065,90 +19352,96 @@ pub trait ClientVpcsExt {
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_router_list(&self) -> builder::VpcRouterList;
     ///Create a VPC router
     ///
     ///Sends a `POST` request to `/v1/vpc-routers`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `vpc`: Name or ID of the VPC
-    ///- `body`
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// - `body`
     ///```ignore
-    ///let response = client.vpc_router_create()
+    /// let response = client.vpc_router_create()
     ///    .project(project)
     ///    .vpc(vpc)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_router_create(&self) -> builder::VpcRouterCreate;
     ///Get a router
     ///
     ///Sends a `GET` request to `/v1/vpc-routers/{router}`
     ///
     ///Arguments:
-    ///- `router`: Name or ID of the router
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `vpc`: Name or ID of the VPC
+    /// - `router`: Name or ID of the router
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
     ///```ignore
-    ///let response = client.vpc_router_view()
+    /// let response = client.vpc_router_view()
     ///    .router(router)
     ///    .project(project)
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_router_view(&self) -> builder::VpcRouterView;
     ///Update a router
     ///
     ///Sends a `PUT` request to `/v1/vpc-routers/{router}`
     ///
     ///Arguments:
-    ///- `router`: Name or ID of the router
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `vpc`: Name or ID of the VPC
-    ///- `body`
+    /// - `router`: Name or ID of the router
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// - `body`
     ///```ignore
-    ///let response = client.vpc_router_update()
+    /// let response = client.vpc_router_update()
     ///    .router(router)
     ///    .project(project)
     ///    .vpc(vpc)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_router_update(&self) -> builder::VpcRouterUpdate;
     ///Delete a router
     ///
     ///Sends a `DELETE` request to `/v1/vpc-routers/{router}`
     ///
     ///Arguments:
-    ///- `router`: Name or ID of the router
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `vpc`: Name or ID of the VPC
+    /// - `router`: Name or ID of the router
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
     ///```ignore
-    ///let response = client.vpc_router_delete()
+    /// let response = client.vpc_router_delete()
     ///    .router(router)
     ///    .project(project)
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_router_delete(&self) -> builder::VpcRouterDelete;
     ///Fetch a subnet
     ///
     ///Sends a `GET` request to `/v1/vpc-subnets`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `sort_by`
-    ///- `vpc`: Name or ID of the VPC
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `sort_by`
+    /// - `vpc`: Name or ID of the VPC
     ///```ignore
-    ///let response = client.vpc_subnet_list()
+    /// let response = client.vpc_subnet_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .project(project)
@@ -19156,91 +19449,97 @@ pub trait ClientVpcsExt {
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_subnet_list(&self) -> builder::VpcSubnetList;
     ///Create a subnet
     ///
     ///Sends a `POST` request to `/v1/vpc-subnets`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `vpc`: Name or ID of the VPC
-    ///- `body`
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// - `body`
     ///```ignore
-    ///let response = client.vpc_subnet_create()
+    /// let response = client.vpc_subnet_create()
     ///    .project(project)
     ///    .vpc(vpc)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_subnet_create(&self) -> builder::VpcSubnetCreate;
     ///Fetch a subnet
     ///
     ///Sends a `GET` request to `/v1/vpc-subnets/{subnet}`
     ///
     ///Arguments:
-    ///- `subnet`: Name or ID of the subnet
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `vpc`: Name or ID of the VPC
+    /// - `subnet`: Name or ID of the subnet
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
     ///```ignore
-    ///let response = client.vpc_subnet_view()
+    /// let response = client.vpc_subnet_view()
     ///    .subnet(subnet)
     ///    .project(project)
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_subnet_view(&self) -> builder::VpcSubnetView;
     ///Update a subnet
     ///
     ///Sends a `PUT` request to `/v1/vpc-subnets/{subnet}`
     ///
     ///Arguments:
-    ///- `subnet`: Name or ID of the subnet
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `vpc`: Name or ID of the VPC
-    ///- `body`
+    /// - `subnet`: Name or ID of the subnet
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
+    /// - `body`
     ///```ignore
-    ///let response = client.vpc_subnet_update()
+    /// let response = client.vpc_subnet_update()
     ///    .subnet(subnet)
     ///    .project(project)
     ///    .vpc(vpc)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_subnet_update(&self) -> builder::VpcSubnetUpdate;
     ///Delete a subnet
     ///
     ///Sends a `DELETE` request to `/v1/vpc-subnets/{subnet}`
     ///
     ///Arguments:
-    ///- `subnet`: Name or ID of the subnet
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `vpc`: Name or ID of the VPC
+    /// - `subnet`: Name or ID of the subnet
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `vpc`: Name or ID of the VPC
     ///```ignore
-    ///let response = client.vpc_subnet_delete()
+    /// let response = client.vpc_subnet_delete()
     ///    .subnet(subnet)
     ///    .project(project)
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_subnet_delete(&self) -> builder::VpcSubnetDelete;
     ///List network interfaces
     ///
     ///Sends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`
     ///
     ///Arguments:
-    ///- `subnet`: Name or ID of the subnet
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project, only required if `vpc` is provided as a `Name`
-    ///- `sort_by`
-    ///- `vpc`: Name or ID of the VPC
+    /// - `subnet`: Name or ID of the subnet
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project, only required if `vpc` is
+    ///   provided as a `Name`
+    /// - `sort_by`
+    /// - `vpc`: Name or ID of the VPC
     ///```ignore
-    ///let response = client.vpc_subnet_list_network_interfaces()
+    /// let response = client.vpc_subnet_list_network_interfaces()
     ///    .subnet(subnet)
     ///    .limit(limit)
     ///    .page_token(page_token)
@@ -19249,88 +19548,89 @@ pub trait ClientVpcsExt {
     ///    .vpc(vpc)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_subnet_list_network_interfaces(&self) -> builder::VpcSubnetListNetworkInterfaces;
     ///List VPCs
     ///
     ///Sends a `GET` request to `/v1/vpcs`
     ///
     ///Arguments:
-    ///- `limit`: Maximum number of items returned by a single call
-    ///- `page_token`: Token returned by previous call to retrieve the subsequent page
-    ///- `project`: Name or ID of the project
-    ///- `sort_by`
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
     ///```ignore
-    ///let response = client.vpc_list()
+    /// let response = client.vpc_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .project(project)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_list(&self) -> builder::VpcList;
     ///Create a VPC
     ///
     ///Sends a `POST` request to `/v1/vpcs`
     ///
     ///Arguments:
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.vpc_create()
+    /// let response = client.vpc_create()
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_create(&self) -> builder::VpcCreate;
     ///Fetch a VPC
     ///
     ///Sends a `GET` request to `/v1/vpcs/{vpc}`
     ///
     ///Arguments:
-    ///- `vpc`: Name or ID of the VPC
-    ///- `project`: Name or ID of the project
+    /// - `vpc`: Name or ID of the VPC
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.vpc_view()
+    /// let response = client.vpc_view()
     ///    .vpc(vpc)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_view(&self) -> builder::VpcView;
     ///Update a VPC
     ///
     ///Sends a `PUT` request to `/v1/vpcs/{vpc}`
     ///
     ///Arguments:
-    ///- `vpc`: Name or ID of the VPC
-    ///- `project`: Name or ID of the project
-    ///- `body`
+    /// - `vpc`: Name or ID of the VPC
+    /// - `project`: Name or ID of the project
+    /// - `body`
     ///```ignore
-    ///let response = client.vpc_update()
+    /// let response = client.vpc_update()
     ///    .vpc(vpc)
     ///    .project(project)
     ///    .body(body)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_update(&self) -> builder::VpcUpdate;
     ///Delete a VPC
     ///
     ///Sends a `DELETE` request to `/v1/vpcs/{vpc}`
     ///
     ///Arguments:
-    ///- `vpc`: Name or ID of the VPC
-    ///- `project`: Name or ID of the project
+    /// - `vpc`: Name or ID of the VPC
+    /// - `project`: Name or ID of the project
     ///```ignore
-    ///let response = client.vpc_delete()
+    /// let response = client.vpc_delete()
     ///    .vpc(vpc)
     ///    .project(project)
     ///    .send()
     ///    .await;
-    ///```
+    /// ```
     fn vpc_delete(&self) -> builder::VpcDelete;
 }
 
@@ -23233,7 +23533,8 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/instances/{instance}/serial-console/stream`
+        ///Sends a `GET` request to
+        /// `/v1/instances/{instance}/serial-console/stream`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<reqwest::Upgraded>, Error<reqwest::Upgraded>> {
@@ -26449,7 +26750,8 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/hardware/sleds/{sled_id}/disks`
+        ///Streams `GET` requests to
+        /// `/v1/system/hardware/sleds/{sled_id}/disks`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::PhysicalDisk, Error<types::Error>>> + Unpin + 'a
@@ -26705,7 +27007,8 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/identity-providers/local/users`
+        ///Sends a `POST` request to
+        /// `/v1/system/identity-providers/local/users`
         pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
@@ -26773,7 +27076,8 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/system/identity-providers/local/users/{user_id}`
+        ///Sends a `DELETE` request to
+        /// `/v1/system/identity-providers/local/users/{user_id}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -26856,7 +27160,8 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/identity-providers/local/users/{user_id}/set-password`
+        ///Sends a `POST` request to
+        /// `/v1/system/identity-providers/local/users/{user_id}/set-password`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -27006,7 +27311,8 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
+        ///Sends a `GET` request to
+        /// `/v1/system/identity-providers/saml/{provider}`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SamlIdentityProvider>, Error<types::Error>> {
@@ -27917,7 +28223,8 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
+        ///Sends a `POST` request to
+        /// `/v1/system/ip-pools-service/ranges/remove`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body.map_err(Error::InvalidRequest)?;
@@ -29667,7 +29974,8 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/update/updates/{version}/components`
+        ///Sends a `GET` request to
+        /// `/v1/system/update/updates/{version}/components`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::ComponentUpdateResultsPage>, Error<types::Error>> {
@@ -32390,7 +32698,8 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`
+        ///Sends a `GET` request to
+        /// `/v1/vpc-subnets/{subnet}/network-interfaces`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::InstanceNetworkInterfaceResultsPage>, Error<types::Error>>
@@ -32446,7 +32755,8 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/vpc-subnets/{subnet}/network-interfaces`
+        ///Streams `GET` requests to
+        /// `/v1/vpc-subnets/{subnet}/network-interfaces`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::InstanceNetworkInterface, Error<types::Error>>>
