@@ -9,7 +9,7 @@ pub mod types {
     use serde::{Deserialize, Serialize};
     #[allow(unused_imports)]
     use std::convert::TryFrom;
-    ///Properties that should uniquely identify a Sled.
+    /// Properties that should uniquely identify a Sled.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Baseboard {
         pub part: String,
@@ -29,7 +29,7 @@ pub mod types {
         }
     }
 
-    ///A type storing a range over `T`.
+    /// A type storing a range over `T`.
     ///
     ///This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
@@ -37,14 +37,14 @@ pub mod types {
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type")]
     pub enum BinRangedouble {
-        ///A range unbounded below and exclusively above, `..end`.
+        /// A range unbounded below and exclusively above, `..end`.
         #[serde(rename = "range_to")]
         RangeTo { end: f64 },
-        ///A range bounded inclusively below and exclusively above,
+        /// A range bounded inclusively below and exclusively above,
         /// `start..end`.
         #[serde(rename = "range")]
         Range { end: f64, start: f64 },
-        ///A range bounded inclusively below and unbounded above, `start..`.
+        /// A range bounded inclusively below and unbounded above, `start..`.
         #[serde(rename = "range_from")]
         RangeFrom { start: f64 },
     }
@@ -55,7 +55,7 @@ pub mod types {
         }
     }
 
-    ///A type storing a range over `T`.
+    /// A type storing a range over `T`.
     ///
     ///This type supports ranges similar to the `RangeTo`, `Range` and
     /// `RangeFrom` types in the standard library. Those cover `(..end)`,
@@ -63,14 +63,14 @@ pub mod types {
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type")]
     pub enum BinRangeint64 {
-        ///A range unbounded below and exclusively above, `..end`.
+        /// A range unbounded below and exclusively above, `..end`.
         #[serde(rename = "range_to")]
         RangeTo { end: i64 },
-        ///A range bounded inclusively below and exclusively above,
+        /// A range bounded inclusively below and exclusively above,
         /// `start..end`.
         #[serde(rename = "range")]
         Range { end: i64, start: i64 },
-        ///A range bounded inclusively below and unbounded above, `start..`.
+        /// A range bounded inclusively below and unbounded above, `start..`.
         #[serde(rename = "range_from")]
         RangeFrom { start: i64 },
     }
@@ -81,12 +81,12 @@ pub mod types {
         }
     }
 
-    ///Type storing bin edges and a count of samples within it.
+    /// Type storing bin edges and a count of samples within it.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Bindouble {
-        ///The total count of samples in this bin.
+        /// The total count of samples in this bin.
         pub count: u64,
-        ///The range of the support covered by this bin.
+        /// The range of the support covered by this bin.
         pub range: BinRangedouble,
     }
 
@@ -102,12 +102,12 @@ pub mod types {
         }
     }
 
-    ///Type storing bin edges and a count of samples within it.
+    /// Type storing bin edges and a count of samples within it.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Binint64 {
-        ///The total count of samples in this bin.
+        /// The total count of samples in this bin.
         pub count: u64,
-        ///The range of the support covered by this bin.
+        /// The range of the support covered by this bin.
         pub range: BinRangeint64,
     }
 
@@ -165,7 +165,7 @@ pub mod types {
         }
     }
 
-    ///A count of bytes, typically used either for memory or storage capacity
+    /// A count of bytes, typically used either for memory or storage capacity
     ///
     ///The maximum supported byte count is [`i64::MAX`].  This makes it
     /// somewhat inconvenient to define constructors: a u32 constructor can be
@@ -233,19 +233,19 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Certificate`]
+    /// Client view of a [`Certificate`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Certificate {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub service: ServiceUsingCertificate,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -261,17 +261,17 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a
+    /// Create-time parameters for a
     /// [`Certificate`](crate::external_api::views::Certificate)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct CertificateCreate {
-        ///PEM file containing public certificate chain
+        /// PEM file containing public certificate chain
         pub cert: Vec<u8>,
         pub description: String,
-        ///PEM file containing private key
+        /// PEM file containing private key
         pub key: Vec<u8>,
         pub name: Name,
-        ///The service using this certificate
+        /// The service using this certificate
         pub service: ServiceUsingCertificate,
     }
 
@@ -287,12 +287,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct CertificateResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Certificate>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -309,16 +309,16 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in "asset" public API objects
+    /// Identity-related metadata that's included in "asset" public API objects
     /// (which generally have no name or description)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ComponentUpdate {
         pub component_type: UpdateableComponentType,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         pub version: SemverVersion,
     }
@@ -335,12 +335,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ComponentUpdateResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<ComponentUpdate>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -357,7 +357,7 @@ pub mod types {
         }
     }
 
-    ///A cumulative or counter data type.
+    /// A cumulative or counter data type.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Cumulativedouble {
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
@@ -376,7 +376,7 @@ pub mod types {
         }
     }
 
-    ///A cumulative or counter data type.
+    /// A cumulative or counter data type.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Cumulativeint64 {
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
@@ -395,15 +395,15 @@ pub mod types {
         }
     }
 
-    ///Info about the current user
+    /// Info about the current user
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct CurrentUser {
-        ///Human-readable name that can identify the user
+        /// Human-readable name that can identify the user
         pub display_name: String,
         pub id: uuid::Uuid,
-        ///Uuid of the silo to which this user belongs
+        /// Uuid of the silo to which this user belongs
         pub silo_id: uuid::Uuid,
-        ///Name of the silo to which this user belongs.
+        /// Name of the silo to which this user belongs.
         pub silo_name: Name,
     }
 
@@ -419,7 +419,7 @@ pub mod types {
         }
     }
 
-    ///A `Datum` is a single sampled data point from a metric.
+    /// A `Datum` is a single sampled data point from a metric.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "datum")]
     pub enum Datum {
@@ -499,9 +499,9 @@ pub mod types {
 
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct DerEncodedKeyPair {
-        ///request signing private key (base64 encoded der file)
+        /// request signing private key (base64 encoded der file)
         pub private_key: String,
-        ///request signing public certificate (base64 encoded der file)
+        /// request signing public certificate (base64 encoded der file)
         pub public_cert: String,
     }
 
@@ -583,27 +583,27 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Disk`]
+    /// Client view of a [`Disk`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Disk {
         pub block_size: ByteCount,
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
         pub device_path: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub image_id: Option<uuid::Uuid>,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub project_id: uuid::Uuid,
         pub size: ByteCount,
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub snapshot_id: Option<uuid::Uuid>,
         pub state: DiskState,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -619,15 +619,15 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a
+    /// Create-time parameters for a
     /// [`Disk`](omicron_common::api::external::Disk)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct DiskCreate {
         pub description: String,
-        ///initial source for this disk
+        /// initial source for this disk
         pub disk_source: DiskSource,
         pub name: Name,
-        ///total size of the Disk in bytes
+        /// total size of the Disk in bytes
         pub size: ByteCount,
     }
 
@@ -728,7 +728,7 @@ pub mod types {
 
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct DiskPath {
-        ///Name or ID of the disk
+        /// Name or ID of the disk
         pub disk: NameOrId,
     }
 
@@ -744,12 +744,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct DiskResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Disk>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -766,27 +766,27 @@ pub mod types {
         }
     }
 
-    ///Different sources for a disk
+    /// Different sources for a disk
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type")]
     pub enum DiskSource {
-        ///Create a blank disk
+        /// Create a blank disk
         #[serde(rename = "blank")]
         Blank {
-            ///size of blocks for this Disk. valid values are: 512, 2048, or
+            /// size of blocks for this Disk. valid values are: 512, 2048, or
             /// 4096
             block_size: BlockSize,
         },
-        ///Create a disk from a disk snapshot
+        /// Create a disk from a disk snapshot
         #[serde(rename = "snapshot")]
         Snapshot { snapshot_id: uuid::Uuid },
-        ///Create a disk from a project image
+        /// Create a disk from a project image
         #[serde(rename = "image")]
         Image { image_id: uuid::Uuid },
-        ///Create a disk from a global image
+        /// Create a disk from a global image
         #[serde(rename = "global_image")]
         GlobalImage { image_id: uuid::Uuid },
-        ///Create a blank disk that will accept bulk writes or pull blocks from
+        /// Create a blank disk that will accept bulk writes or pull blocks from
         /// an external source.
         #[serde(rename = "importing_blocks")]
         ImportingBlocks { block_size: BlockSize },
@@ -798,7 +798,7 @@ pub mod types {
         }
     }
 
-    ///State of a Disk (primarily: attached or not)
+    /// State of a Disk (primarily: attached or not)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "state", content = "instance")]
     pub enum DiskState {
@@ -816,13 +816,13 @@ pub mod types {
         Finalizing,
         #[serde(rename = "maintenance")]
         Maintenance,
-        ///Disk is being attached to the given Instance
+        /// Disk is being attached to the given Instance
         #[serde(rename = "attaching")]
         Attaching(uuid::Uuid),
-        ///Disk is attached to the given Instance
+        /// Disk is attached to the given Instance
         #[serde(rename = "attached")]
         Attached(uuid::Uuid),
-        ///Disk is being detached from the given Instance
+        /// Disk is being detached from the given Instance
         #[serde(rename = "detaching")]
         Detaching(uuid::Uuid),
         #[serde(rename = "destroyed")]
@@ -837,12 +837,12 @@ pub mod types {
         }
     }
 
-    ///OS image distribution
+    /// OS image distribution
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Distribution {
-        ///The name of the distribution (e.g. "alpine" or "ubuntu")
+        /// The name of the distribution (e.g. "alpine" or "ubuntu")
         pub name: Name,
-        ///The version of the distribution (e.g. "3.10" or "18.04")
+        /// The version of the distribution (e.g. "3.10" or "18.04")
         pub version: String,
     }
 
@@ -858,7 +858,7 @@ pub mod types {
         }
     }
 
-    ///Error information from a response.
+    /// Error information from a response.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Error {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -909,11 +909,11 @@ pub mod types {
         }
     }
 
-    ///Parameters for creating an external IP address for instances.
+    /// Parameters for creating an external IP address for instances.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type")]
     pub enum ExternalIpCreate {
-        ///An IP address providing both inbound and outbound access. The
+        /// An IP address providing both inbound and outbound access. The
         /// address is automatically-assigned from the provided IP Pool, or all
         /// available pools if not specified.
         #[serde(rename = "ephemeral")]
@@ -929,12 +929,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ExternalIpResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<ExternalIp>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -951,10 +951,10 @@ pub mod types {
         }
     }
 
-    ///Parameters for finalizing a disk
+    /// Parameters for finalizing a disk
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FinalizeDisk {
-        ///If specified a snapshot of the disk will be created with the given
+        /// If specified a snapshot of the disk will be created with the given
         /// name during finalization. If not specified, a snapshot for the disk
         /// will _not_ be created. A snapshot can be manually created once the
         /// disk transitions into the `Detached` state.
@@ -1045,7 +1045,7 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Policy`], which describes how this resource may be
+    /// Client view of a [`Policy`], which describes how this resource may be
     /// accessed
     ///
     ///Note that the Policy only describes access granted explicitly for this
@@ -1053,7 +1053,7 @@ pub mod types {
     /// have access to this resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FleetRolePolicy {
-        ///Roles directly assigned on this resource
+        /// Roles directly assigned on this resource
         pub role_assignments: Vec<FleetRoleRoleAssignment>,
     }
 
@@ -1069,7 +1069,7 @@ pub mod types {
         }
     }
 
-    ///Describes the assignment of a particular role on a particular resource
+    /// Describes the assignment of a particular role on a particular resource
     /// to a particular identity (user, group, etc.)
     ///
     ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s
@@ -1094,32 +1094,32 @@ pub mod types {
         }
     }
 
-    ///Client view of global Images
+    /// Client view of global Images
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct GlobalImage {
-        ///size of blocks in bytes
+        /// size of blocks in bytes
         pub block_size: ByteCount,
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///Hash of the image contents, if applicable
+        /// Hash of the image contents, if applicable
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub digest: Option<Digest>,
-        ///Image distribution
+        /// Image distribution
         pub distribution: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///total size in bytes
+        /// total size in bytes
         pub size: ByteCount,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        ///URL source of this image, if any
+        /// URL source of this image, if any
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub url: Option<String>,
-        ///Image version
+        /// Image version
         pub version: String,
     }
 
@@ -1135,17 +1135,17 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an
+    /// Create-time parameters for an
     /// [`GlobalImage`](crate::external_api::views::GlobalImage)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct GlobalImageCreate {
-        ///block size in bytes
+        /// block size in bytes
         pub block_size: BlockSize,
         pub description: String,
-        ///OS image distribution
+        /// OS image distribution
         pub distribution: Distribution,
         pub name: Name,
-        ///The source of the image's contents.
+        /// The source of the image's contents.
         pub source: ImageSource,
     }
 
@@ -1161,12 +1161,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct GlobalImageResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<GlobalImage>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -1183,13 +1183,13 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Group`]
+    /// Client view of a [`Group`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Group {
-        ///Human-readable name that can identify the group
+        /// Human-readable name that can identify the group
         pub display_name: String,
         pub id: uuid::Uuid,
-        ///Uuid of the silo to which this group belongs
+        /// Uuid of the silo to which this group belongs
         pub silo_id: uuid::Uuid,
     }
 
@@ -1205,12 +1205,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct GroupResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Group>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -1227,7 +1227,7 @@ pub mod types {
         }
     }
 
-    ///A simple type for managing a histogram metric.
+    /// A simple type for managing a histogram metric.
     ///
     ///A histogram maintains the count of any number of samples, over a set of
     /// bins. Bins are specified on construction via their _left_ edges,
@@ -1288,7 +1288,7 @@ pub mod types {
         }
     }
 
-    ///A simple type for managing a histogram metric.
+    /// A simple type for managing a histogram metric.
     ///
     ///A histogram maintains the count of any number of samples, over a set of
     /// bins. Bins are specified on construction via their _left_ edges,
@@ -1349,7 +1349,7 @@ pub mod types {
         }
     }
 
-    ///Supported set of sort modes for scanning by id only.
+    /// Supported set of sort modes for scanning by id only.
     ///
     ///Currently, we only support scanning in ascending order.
     #[derive(
@@ -1366,7 +1366,7 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum IdSortMode {
-        ///sort in increasing order of "id"
+        /// sort in increasing order of "id"
         #[serde(rename = "id_ascending")]
         IdAscending,
     }
@@ -1416,20 +1416,20 @@ pub mod types {
         }
     }
 
-    ///Client view of an [`IdentityProvider`]
+    /// Client view of an [`IdentityProvider`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IdentityProvider {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///Identity provider type
+        /// Identity provider type
         pub provider_type: IdentityProviderType,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -1445,12 +1445,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IdentityProviderResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<IdentityProvider>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -1481,7 +1481,7 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum IdentityProviderType {
-        ///SAML identity provider
+        /// SAML identity provider
         #[serde(rename = "saml")]
         Saml,
     }
@@ -1531,7 +1531,7 @@ pub mod types {
         }
     }
 
-    ///Describes what kind of identity is described by an id
+    /// Describes what kind of identity is described by an id
     #[derive(
         Clone,
         Copy,
@@ -1614,35 +1614,35 @@ pub mod types {
         }
     }
 
-    ///Client view of images
+    /// Client view of images
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Image {
-        ///size of blocks in bytes
+        /// size of blocks in bytes
         pub block_size: ByteCount,
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///Hash of the image contents, if applicable
+        /// Hash of the image contents, if applicable
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub digest: Option<Digest>,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///The family of the operating system like Debian, Ubuntu, etc.
+        /// The family of the operating system like Debian, Ubuntu, etc.
         pub os: String,
-        ///ID of the parent project if the image is a project image
+        /// ID of the parent project if the image is a project image
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub project_id: Option<uuid::Uuid>,
-        ///total size in bytes
+        /// total size in bytes
         pub size: ByteCount,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        ///URL source of this image, if any
+        /// URL source of this image, if any
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub url: Option<String>,
-        ///Version of the operating system
+        /// Version of the operating system
         pub version: String,
     }
 
@@ -1658,19 +1658,19 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an
+    /// Create-time parameters for an
     /// [`Image`](crate::external_api::views::Image)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ImageCreate {
-        ///block size in bytes
+        /// block size in bytes
         pub block_size: BlockSize,
         pub description: String,
         pub name: Name,
-        ///The family of the operating system (e.g. Debian, Ubuntu, etc.)
+        /// The family of the operating system (e.g. Debian, Ubuntu, etc.)
         pub os: String,
-        ///The source of the image's contents.
+        /// The source of the image's contents.
         pub source: ImageSource,
-        ///The version of the operating system (e.g. 18.04, 20.04, etc.)
+        /// The version of the operating system (e.g. 18.04, 20.04, etc.)
         pub version: String,
     }
 
@@ -1686,12 +1686,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ImageResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Image>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -1708,7 +1708,7 @@ pub mod types {
         }
     }
 
-    ///The source of the underlying image.
+    /// The source of the underlying image.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type")]
     pub enum ImageSource {
@@ -1726,7 +1726,7 @@ pub mod types {
         }
     }
 
-    ///Parameters for importing blocks with a bulk write
+    /// Parameters for importing blocks with a bulk write
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ImportBlocksBulkWrite {
         pub base64_encoded_data: String,
@@ -1745,13 +1745,13 @@ pub mod types {
         }
     }
 
-    ///Parameters for importing blocks from a URL to a disk
+    /// Parameters for importing blocks from a URL to a disk
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ImportBlocksFromUrl {
-        ///Expected digest of all blocks when importing from a URL
+        /// Expected digest of all blocks when importing from a URL
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub expected_digest: Option<ExpectedDigest>,
-        ///the source to pull blocks from
+        /// the source to pull blocks from
         pub url: String,
     }
 
@@ -1767,27 +1767,27 @@ pub mod types {
         }
     }
 
-    ///Client view of an [`Instance`]
+    /// Client view of an [`Instance`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Instance {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///RFC1035-compliant hostname for the Instance.
+        /// RFC1035-compliant hostname for the Instance.
         pub hostname: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///memory allocated for this Instance
+        /// memory allocated for this Instance
         pub memory: ByteCount,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///number of CPUs allocated for this Instance
+        /// number of CPUs allocated for this Instance
         pub ncpus: InstanceCpuCount,
-        ///id for the project containing this Instance
+        /// id for the project containing this Instance
         pub project_id: uuid::Uuid,
         pub run_state: InstanceState,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         pub time_run_state_updated: chrono::DateTime<chrono::offset::Utc>,
     }
@@ -1804,7 +1804,7 @@ pub mod types {
         }
     }
 
-    ///The number of CPUs in an Instance
+    /// The number of CPUs in an Instance
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceCpuCount(pub u16);
     impl std::ops::Deref for InstanceCpuCount {
@@ -1866,15 +1866,15 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an
+    /// Create-time parameters for an
     /// [`Instance`](omicron_common::api::external::Instance)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceCreate {
         pub description: String,
-        ///The disks to be created or attached for this instance.
+        /// The disks to be created or attached for this instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
         pub disks: Vec<InstanceDiskAttachment>,
-        ///The external IP addresses provided to this instance.
+        /// The external IP addresses provided to this instance.
         ///
         ///By default, all instances have outbound connectivity, but no inbound
         /// connectivity. These external addresses can be used to provide a
@@ -1886,13 +1886,13 @@ pub mod types {
         pub memory: ByteCount,
         pub name: Name,
         pub ncpus: InstanceCpuCount,
-        ///The network interfaces to be created for this instance.
+        /// The network interfaces to be created for this instance.
         #[serde(default = "defaults::instance_create_network_interfaces")]
         pub network_interfaces: InstanceNetworkInterfaceAttachment,
-        ///Should this instance be started upon creation; true by default.
+        /// Should this instance be started upon creation; true by default.
         #[serde(default = "defaults::default_bool::<true>")]
         pub start: bool,
-        ///User data for instance initialization systems (such as cloud-init).
+        /// User data for instance initialization systems (such as cloud-init).
         /// Must be a Base64-encoded string, as specified in RFC 4648 § 4 (+ and
         /// / characters with padding). Maximum 32 KiB unencoded data.
         #[serde(default)]
@@ -1911,24 +1911,24 @@ pub mod types {
         }
     }
 
-    ///Describe the instance's disks at creation time
+    /// Describe the instance's disks at creation time
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type")]
     pub enum InstanceDiskAttachment {
-        ///During instance creation, create and attach disks
+        /// During instance creation, create and attach disks
         #[serde(rename = "create")]
         Create {
             description: String,
-            ///initial source for this disk
+            /// initial source for this disk
             disk_source: DiskSource,
             name: Name,
-            ///total size of the Disk in bytes
+            /// total size of the Disk in bytes
             size: ByteCount,
         },
-        ///During instance creation, attach this disk
+        /// During instance creation, attach this disk
         #[serde(rename = "attach")]
         Attach {
-            ///A disk name to attach
+            /// A disk name to attach
             name: Name,
         },
     }
@@ -1939,7 +1939,7 @@ pub mod types {
         }
     }
 
-    ///Migration parameters for an
+    /// Migration parameters for an
     /// [`Instance`](omicron_common::api::external::Instance)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceMigrate {
@@ -1958,32 +1958,32 @@ pub mod types {
         }
     }
 
-    ///An `InstanceNetworkInterface` represents a virtual network interface
+    /// An `InstanceNetworkInterface` represents a virtual network interface
     /// device attached to an instance.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceNetworkInterface {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///The Instance to which the interface belongs.
+        /// The Instance to which the interface belongs.
         pub instance_id: uuid::Uuid,
-        ///The IP address assigned to this interface.
+        /// The IP address assigned to this interface.
         pub ip: std::net::IpAddr,
-        ///The MAC address assigned to this interface.
+        /// The MAC address assigned to this interface.
         pub mac: MacAddr,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///True if this interface is the primary for the instance to which it's
+        /// True if this interface is the primary for the instance to which it's
         /// attached.
         pub primary: bool,
-        ///The subnet to which the interface belongs.
+        /// The subnet to which the interface belongs.
         pub subnet_id: uuid::Uuid,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        ///The VPC to which the interface belongs.
+        /// The VPC to which the interface belongs.
         pub vpc_id: uuid::Uuid,
     }
 
@@ -1999,12 +1999,12 @@ pub mod types {
         }
     }
 
-    ///Describes an attachment of an `InstanceNetworkInterface` to an
+    /// Describes an attachment of an `InstanceNetworkInterface` to an
     /// `Instance`, at the time the instance is created.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "params")]
     pub enum InstanceNetworkInterfaceAttachment {
-        ///Create one or more `InstanceNetworkInterface`s for the `Instance`.
+        /// Create one or more `InstanceNetworkInterface`s for the `Instance`.
         ///
         ///If more than one interface is provided, then the first will be
         /// designated the primary interface for the instance.
@@ -2028,20 +2028,20 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an
+    /// Create-time parameters for an
     /// [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface).
     ///
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceNetworkInterfaceCreate {
         pub description: String,
-        ///The IP address for the interface. One will be auto-assigned if not
+        /// The IP address for the interface. One will be auto-assigned if not
         /// provided.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub ip: Option<std::net::IpAddr>,
         pub name: Name,
-        ///The VPC Subnet in which to create the interface.
+        /// The VPC Subnet in which to create the interface.
         pub subnet_name: Name,
-        ///The VPC in which to create the interface.
+        /// The VPC in which to create the interface.
         pub vpc_name: Name,
     }
 
@@ -2057,12 +2057,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceNetworkInterfaceResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<InstanceNetworkInterface>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -2079,7 +2079,7 @@ pub mod types {
         }
     }
 
-    ///Parameters for updating an
+    /// Parameters for updating an
     /// [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface).
     ///
     ///
@@ -2091,7 +2091,7 @@ pub mod types {
         pub description: Option<String>,
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub name: Option<Name>,
-        ///Make a secondary interface the instance's primary interface.
+        /// Make a secondary interface the instance's primary interface.
         ///
         ///If applied to a secondary interface, that interface will become the
         /// primary on the next reboot of the instance. Note that this may have
@@ -2118,12 +2118,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Instance>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -2140,14 +2140,14 @@ pub mod types {
         }
     }
 
-    ///Contents of an Instance's serial console buffer.
+    /// Contents of an Instance's serial console buffer.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceSerialConsoleData {
-        ///The bytes starting from the requested offset up to either the end of
+        /// The bytes starting from the requested offset up to either the end of
         /// the buffer or the request's `max_bytes`. Provided as a u8 array
         /// rather than a string, as it may not be UTF-8.
         pub data: Vec<u8>,
-        ///The absolute offset since boot (suitable for use as `byte_offset` in
+        /// The absolute offset since boot (suitable for use as `byte_offset` in
         /// a subsequent request) of the last byte returned in `data`.
         pub last_byte_offset: u64,
     }
@@ -2164,7 +2164,7 @@ pub mod types {
         }
     }
 
-    ///Running state of an Instance (primarily: booted or stopped)
+    /// Running state of an Instance (primarily: booted or stopped)
     ///
     ///This typically reflects whether it's starting, running, stopping, or
     /// stopped, but also includes states related to the Instance's lifecycle
@@ -2182,38 +2182,38 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum InstanceState {
-        ///The instance is being created.
+        /// The instance is being created.
         #[serde(rename = "creating")]
         Creating,
-        ///The instance is currently starting up.
+        /// The instance is currently starting up.
         #[serde(rename = "starting")]
         Starting,
-        ///The instance is currently running.
+        /// The instance is currently running.
         #[serde(rename = "running")]
         Running,
-        ///The instance has been requested to stop and a transition to
+        /// The instance has been requested to stop and a transition to
         /// "Stopped" is imminent.
         #[serde(rename = "stopping")]
         Stopping,
-        ///The instance is currently stopped.
+        /// The instance is currently stopped.
         #[serde(rename = "stopped")]
         Stopped,
-        ///The instance is in the process of rebooting - it will remain in the
+        /// The instance is in the process of rebooting - it will remain in the
         /// "rebooting" state until the VM is starting once more.
         #[serde(rename = "rebooting")]
         Rebooting,
-        ///The instance is in the process of migrating - it will remain in the
+        /// The instance is in the process of migrating - it will remain in the
         /// "migrating" state until the migration process is complete and the
         /// destination propolis is ready to continue execution.
         #[serde(rename = "migrating")]
         Migrating,
-        ///The instance is attempting to recover from a failure.
+        /// The instance is attempting to recover from a failure.
         #[serde(rename = "repairing")]
         Repairing,
-        ///The instance has encountered a failure.
+        /// The instance has encountered a failure.
         #[serde(rename = "failed")]
         Failed,
-        ///The instance has been deleted.
+        /// The instance has been deleted.
         #[serde(rename = "destroyed")]
         Destroyed,
     }
@@ -2281,7 +2281,7 @@ pub mod types {
         }
     }
 
-    ///The kind of an external IP address for an instance
+    /// The kind of an external IP address for an instance
     #[derive(
         Clone,
         Copy,
@@ -2417,19 +2417,19 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in nearly all public API
+    /// Identity-related metadata that's included in nearly all public API
     /// objects
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPool {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -2445,7 +2445,7 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an IP Pool.
+    /// Create-time parameters for an IP Pool.
     ///
     ///See [`IpPool`](crate::external_api::views::IpPool)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2485,12 +2485,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPoolRangeResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<IpPoolRange>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -2507,12 +2507,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPoolResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<IpPool>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -2529,7 +2529,7 @@ pub mod types {
         }
     }
 
-    ///Parameters for updating an IP Pool
+    /// Parameters for updating an IP Pool
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPoolUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -2575,7 +2575,7 @@ pub mod types {
         }
     }
 
-    ///An IPv4 subnet, including prefix and subnet mask
+    /// An IPv4 subnet, including prefix and subnet mask
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
     pub struct Ipv4Net(String);
     impl std::ops::Deref for Ipv4Net {
@@ -2650,7 +2650,7 @@ pub mod types {
         }
     }
 
-    ///A non-decreasing IPv4 address range, inclusive of both ends.
+    /// A non-decreasing IPv4 address range, inclusive of both ends.
     ///
     ///The first address must be less than or equal to the last address.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2671,7 +2671,7 @@ pub mod types {
         }
     }
 
-    ///An IPv6 subnet, including prefix and subnet mask
+    /// An IPv6 subnet, including prefix and subnet mask
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
     pub struct Ipv6Net(String);
     impl std::ops::Deref for Ipv6Net {
@@ -2745,7 +2745,7 @@ pub mod types {
         }
     }
 
-    ///A non-decreasing IPv6 address range, inclusive of both ends.
+    /// A non-decreasing IPv6 address range, inclusive of both ends.
     ///
     ///The first address must be less than or equal to the last address.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2766,7 +2766,7 @@ pub mod types {
         }
     }
 
-    ///An inclusive-inclusive range of IP ports. The second port may be omitted
+    /// An inclusive-inclusive range of IP ports. The second port may be omitted
     /// to represent a single port
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
     pub struct L4PortRange(String);
@@ -2841,7 +2841,7 @@ pub mod types {
         }
     }
 
-    ///A Media Access Control address, in EUI-48 format
+    /// A Media Access Control address, in EUI-48 format
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
     pub struct MacAddr(String);
     impl std::ops::Deref for MacAddr {
@@ -2915,7 +2915,7 @@ pub mod types {
         }
     }
 
-    ///A `Measurement` is a timestamped datum from a single metric
+    /// A `Measurement` is a timestamped datum from a single metric
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Measurement {
         pub datum: Datum,
@@ -2934,12 +2934,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct MeasurementResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Measurement>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -2956,7 +2956,7 @@ pub mod types {
         }
     }
 
-    ///Names must begin with a lower case ASCII letter, be composed exclusively
+    /// Names must begin with a lower case ASCII letter, be composed exclusively
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
     /// with a '-'. Names cannot be a UUID though they may contain a UUID.
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
@@ -3094,7 +3094,7 @@ pub mod types {
         }
     }
 
-    ///Supported set of sort modes for scanning by name or id
+    /// Supported set of sort modes for scanning by name or id
     #[derive(
         Clone,
         Copy,
@@ -3109,13 +3109,13 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum NameOrIdSortMode {
-        ///sort in increasing order of "name"
+        /// sort in increasing order of "name"
         #[serde(rename = "name_ascending")]
         NameAscending,
-        ///sort in decreasing order of "name"
+        /// sort in decreasing order of "name"
         #[serde(rename = "name_descending")]
         NameDescending,
-        ///sort in increasing order of "id"
+        /// sort in increasing order of "id"
         #[serde(rename = "id_ascending")]
         IdAscending,
     }
@@ -3169,7 +3169,7 @@ pub mod types {
         }
     }
 
-    ///Supported set of sort modes for scanning by name only
+    /// Supported set of sort modes for scanning by name only
     ///
     ///Currently, we only support scanning in ascending order.
     #[derive(
@@ -3186,7 +3186,7 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum NameSortMode {
-        ///sort in increasing order of "name"
+        /// sort in increasing order of "name"
         #[serde(rename = "name_ascending")]
         NameAscending,
     }
@@ -3236,7 +3236,7 @@ pub mod types {
         }
     }
 
-    ///Unique name for a saga [`Node`]
+    /// Unique name for a saga [`Node`]
     ///
     ///Each node requires a string name that's unique within its DAG.  The name
     /// is used to identify its output.  Nodes that depend on a given node
@@ -3282,7 +3282,7 @@ pub mod types {
         }
     }
 
-    ///Passwords may be subject to additional constraints.
+    /// Passwords may be subject to additional constraints.
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
     pub struct Password(String);
     impl std::ops::Deref for Password {
@@ -3346,20 +3346,20 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`PhysicalDisk`]
+    /// Client view of a [`PhysicalDisk`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct PhysicalDisk {
         pub disk_type: PhysicalDiskType,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         pub model: String,
         pub serial: String,
-        ///The sled to which this disk is attached, if any.
+        /// The sled to which this disk is attached, if any.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub sled_id: Option<uuid::Uuid>,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         pub vendor: String,
     }
@@ -3376,12 +3376,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct PhysicalDiskResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<PhysicalDisk>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -3465,18 +3465,18 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Project`]
+    /// Client view of a [`Project`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Project {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -3492,7 +3492,7 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a
+    /// Create-time parameters for a
     /// [`Project`](crate::external_api::views::Project)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectCreate {
@@ -3512,12 +3512,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Project>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -3605,7 +3605,7 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Policy`], which describes how this resource may be
+    /// Client view of a [`Policy`], which describes how this resource may be
     /// accessed
     ///
     ///Note that the Policy only describes access granted explicitly for this
@@ -3613,7 +3613,7 @@ pub mod types {
     /// have access to this resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectRolePolicy {
-        ///Roles directly assigned on this resource
+        /// Roles directly assigned on this resource
         pub role_assignments: Vec<ProjectRoleRoleAssignment>,
     }
 
@@ -3629,7 +3629,7 @@ pub mod types {
         }
     }
 
-    ///Describes the assignment of a particular role on a particular resource
+    /// Describes the assignment of a particular role on a particular resource
     /// to a particular identity (user, group, etc.)
     ///
     ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s
@@ -3654,7 +3654,7 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a
+    /// Updateable properties of a
     /// [`Project`](crate::external_api::views::Project)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectUpdate {
@@ -3676,14 +3676,14 @@ pub mod types {
         }
     }
 
-    ///Client view of an [`Rack`]
+    /// Client view of an [`Rack`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Rack {
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -3699,12 +3699,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RackResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Rack>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -3721,7 +3721,7 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Role`]
+    /// Client view of a [`Role`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Role {
         pub description: String,
@@ -3740,7 +3740,7 @@ pub mod types {
         }
     }
 
-    ///Role names consist of two string components separated by dot (".").
+    /// Role names consist of two string components separated by dot (".").
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
     pub struct RoleName(String);
     impl std::ops::Deref for RoleName {
@@ -3811,12 +3811,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RoleResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Role>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -3833,7 +3833,7 @@ pub mod types {
         }
     }
 
-    ///A `RouteDestination` is used to match traffic with a routing rule, on
+    /// A `RouteDestination` is used to match traffic with a routing rule, on
     /// the destination of that traffic.
     ///
     ///When traffic is to be sent to a destination that is within a given
@@ -3842,16 +3842,16 @@ pub mod types {
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
     pub enum RouteDestination {
-        ///Route applies to traffic destined for a specific IP address
+        /// Route applies to traffic destined for a specific IP address
         #[serde(rename = "ip")]
         Ip(std::net::IpAddr),
-        ///Route applies to traffic destined for a specific IP subnet
+        /// Route applies to traffic destined for a specific IP subnet
         #[serde(rename = "ip_net")]
         IpNet(IpNet),
-        ///Route applies to traffic destined for the given VPC.
+        /// Route applies to traffic destined for the given VPC.
         #[serde(rename = "vpc")]
         Vpc(Name),
-        ///Route applies to traffic
+        /// Route applies to traffic
         #[serde(rename = "subnet")]
         Subnet(Name),
     }
@@ -3874,24 +3874,24 @@ pub mod types {
         }
     }
 
-    ///A `RouteTarget` describes the possible locations that traffic matching a
+    /// A `RouteTarget` describes the possible locations that traffic matching a
     /// route destination can be sent.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
     pub enum RouteTarget {
-        ///Forward traffic to a particular IP address.
+        /// Forward traffic to a particular IP address.
         #[serde(rename = "ip")]
         Ip(std::net::IpAddr),
-        ///Forward traffic to a VPC
+        /// Forward traffic to a VPC
         #[serde(rename = "vpc")]
         Vpc(Name),
-        ///Forward traffic to a VPC Subnet
+        /// Forward traffic to a VPC Subnet
         #[serde(rename = "subnet")]
         Subnet(Name),
-        ///Forward traffic to a specific instance
+        /// Forward traffic to a specific instance
         #[serde(rename = "instance")]
         Instance(Name),
-        ///Forward traffic to an internet gateway
+        /// Forward traffic to an internet gateway
         #[serde(rename = "internet_gateway")]
         InternetGateway(Name),
     }
@@ -3908,25 +3908,25 @@ pub mod types {
         }
     }
 
-    ///A route defines a rule that governs where traffic should be sent based
+    /// A route defines a rule that governs where traffic should be sent based
     /// on its destination.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RouterRoute {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
         pub destination: RouteDestination,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///Describes the kind of router. Set at creation. `read-only`
+        /// Describes the kind of router. Set at creation. `read-only`
         pub kind: RouterRouteKind,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub target: RouteTarget,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        ///The VPC Router to which the route belongs.
+        /// The VPC Router to which the route belongs.
         pub vpc_router_id: uuid::Uuid,
     }
 
@@ -3942,7 +3942,7 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a
+    /// Create-time parameters for a
     /// [`omicron_common::api::external::RouterRoute`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RouterRouteCreate {
@@ -3964,7 +3964,7 @@ pub mod types {
         }
     }
 
-    ///The classification of a [`RouterRoute`] as defined by the system. The
+    /// The classification of a [`RouterRoute`] as defined by the system. The
     /// kind determines certain attributes such as if the route is modifiable
     /// and describes how or where the route was created.
     ///
@@ -3983,23 +3983,23 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum RouterRouteKind {
-        ///Determines the default destination of traffic, such as whether it
+        /// Determines the default destination of traffic, such as whether it
         /// goes to the internet or not.
         ///
         ///`Destination: An Internet Gateway` `Modifiable: true`
         #[serde(rename = "default")]
         Default,
-        ///Automatically added for each VPC Subnet in the VPC
+        /// Automatically added for each VPC Subnet in the VPC
         ///
         ///`Destination: A VPC Subnet` `Modifiable: false`
         #[serde(rename = "vpc_subnet")]
         VpcSubnet,
-        ///Automatically added when VPC peering is established
+        /// Automatically added when VPC peering is established
         ///
         ///`Destination: A different VPC` `Modifiable: false`
         #[serde(rename = "vpc_peering")]
         VpcPeering,
-        ///Created by a user See [`RouteTarget`]
+        /// Created by a user See [`RouteTarget`]
         ///
         ///`Destination: User defined` `Modifiable: true`
         #[serde(rename = "custom")]
@@ -4057,12 +4057,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RouterRouteResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<RouterRoute>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -4079,7 +4079,7 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a
+    /// Updateable properties of a
     /// [`omicron_common::api::external::RouterRoute`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RouterRouteUpdate {
@@ -4142,12 +4142,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SagaResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Saga>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -4184,33 +4184,33 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in nearly all public API
+    /// Identity-related metadata that's included in nearly all public API
     /// objects
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SamlIdentityProvider {
-        ///service provider endpoint where the response will be sent
+        /// service provider endpoint where the response will be sent
         pub acs_url: String,
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///idp's entity id
+        /// idp's entity id
         pub idp_entity_id: String,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///optional request signing public certificate (base64 encoded der
+        /// optional request signing public certificate (base64 encoded der
         /// file)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub public_cert: Option<String>,
-        ///service provider endpoint where the idp should send log out requests
+        /// service provider endpoint where the idp should send log out requests
         pub slo_url: String,
-        ///sp's client id
+        /// sp's client id
         pub sp_client_id: String,
-        ///customer's technical contact for saml configuration
+        /// customer's technical contact for saml configuration
         pub technical_contact_email: String,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -4226,30 +4226,30 @@ pub mod types {
         }
     }
 
-    ///Create-time identity-related parameters
+    /// Create-time identity-related parameters
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SamlIdentityProviderCreate {
-        ///service provider endpoint where the response will be sent
+        /// service provider endpoint where the response will be sent
         pub acs_url: String,
         pub description: String,
-        ///If set, SAML attributes with this name will be considered to denote
+        /// If set, SAML attributes with this name will be considered to denote
         /// a user's group membership, where the attribute value(s) should be a
         /// comma-separated list of group names.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub group_attribute_name: Option<String>,
-        ///idp's entity id
+        /// idp's entity id
         pub idp_entity_id: String,
-        ///the source of an identity provider metadata descriptor
+        /// the source of an identity provider metadata descriptor
         pub idp_metadata_source: IdpMetadataSource,
         pub name: Name,
-        ///request signing key pair
+        /// request signing key pair
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub signing_keypair: Option<DerEncodedKeyPair>,
-        ///service provider endpoint where the idp should send log out requests
+        /// service provider endpoint where the idp should send log out requests
         pub slo_url: String,
-        ///sp's client id
+        /// sp's client id
         pub sp_client_id: String,
-        ///customer's technical contact for saml configuration
+        /// customer's technical contact for saml configuration
         pub technical_contact_email: String,
     }
 
@@ -4340,7 +4340,7 @@ pub mod types {
         }
     }
 
-    ///The service intended to use this certificate.
+    /// The service intended to use this certificate.
     #[derive(
         Clone,
         Copy,
@@ -4355,7 +4355,7 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum ServiceUsingCertificate {
-        ///This certificate is intended for access to the external API.
+        /// This certificate is intended for access to the external API.
         #[serde(rename = "external_api")]
         ExternalApi,
     }
@@ -4405,23 +4405,23 @@ pub mod types {
         }
     }
 
-    ///Client view of a ['Silo']
+    /// Client view of a ['Silo']
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Silo {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///A silo where discoverable is false can be retrieved only by its id -
+        /// A silo where discoverable is false can be retrieved only by its id -
         /// it will not be part of the "list all silos" output.
         pub discoverable: bool,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///How users and groups are managed in this Silo
+        /// How users and groups are managed in this Silo
         pub identity_mode: SiloIdentityMode,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -4437,10 +4437,10 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a [`Silo`](crate::external_api::views::Silo)
+    /// Create-time parameters for a [`Silo`](crate::external_api::views::Silo)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SiloCreate {
-        ///If set, this group will be created during Silo creation and granted
+        /// If set, this group will be created during Silo creation and granted
         /// the "Silo Admin" role. Identity providers can assert that users
         /// belong to this group and those users can log in and further
         /// initialize the Silo.
@@ -4468,7 +4468,7 @@ pub mod types {
         }
     }
 
-    ///Describes how identities are managed and users are authenticated in this
+    /// Describes how identities are managed and users are authenticated in this
     /// Silo
     #[derive(
         Clone,
@@ -4484,13 +4484,13 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum SiloIdentityMode {
-        ///Users are authenticated with SAML using an external authentication
+        /// Users are authenticated with SAML using an external authentication
         /// provider.  The system updates information about users and groups
         /// only during successful authentication (i.e,. "JIT provisioning" of
         /// users and groups).
         #[serde(rename = "saml_jit")]
         SamlJit,
-        ///The system is the source of truth about users.  There is no linkage
+        /// The system is the source of truth about users.  There is no linkage
         /// to an external authentication provider or identity provider.
         #[serde(rename = "local_only")]
         LocalOnly,
@@ -4543,12 +4543,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SiloResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Silo>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -4636,7 +4636,7 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Policy`], which describes how this resource may be
+    /// Client view of a [`Policy`], which describes how this resource may be
     /// accessed
     ///
     ///Note that the Policy only describes access granted explicitly for this
@@ -4644,7 +4644,7 @@ pub mod types {
     /// have access to this resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SiloRolePolicy {
-        ///Roles directly assigned on this resource
+        /// Roles directly assigned on this resource
         pub role_assignments: Vec<SiloRoleRoleAssignment>,
     }
 
@@ -4660,7 +4660,7 @@ pub mod types {
         }
     }
 
-    ///Describes the assignment of a particular role on a particular resource
+    /// Describes the assignment of a particular role on a particular resource
     /// to a particular identity (user, group, etc.)
     ///
     ///The resource is not part of this structure.  Rather, [`RoleAssignment`]s
@@ -4685,21 +4685,21 @@ pub mod types {
         }
     }
 
-    ///An operator's view of a Sled.
+    /// An operator's view of a Sled.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Sled {
         pub baseboard: Baseboard,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///The rack to which this Sled is currently attached
+        /// The rack to which this Sled is currently attached
         pub rack_id: uuid::Uuid,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        ///The number of hardware threads which can execute on this sled
+        /// The number of hardware threads which can execute on this sled
         pub usable_hardware_threads: u32,
-        ///Amount of RAM which may be used by the Sled's OS
+        /// Amount of RAM which may be used by the Sled's OS
         pub usable_physical_ram: ByteCount,
     }
 
@@ -4715,12 +4715,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SledResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Sled>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -4737,22 +4737,22 @@ pub mod types {
         }
     }
 
-    ///Client view of a Snapshot
+    /// Client view of a Snapshot
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Snapshot {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
         pub disk_id: uuid::Uuid,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub project_id: uuid::Uuid,
         pub size: ByteCount,
         pub state: SnapshotState,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -4768,12 +4768,12 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a
+    /// Create-time parameters for a
     /// [`Snapshot`](crate::external_api::views::Snapshot)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SnapshotCreate {
         pub description: String,
-        ///The name of the disk to be snapshotted
+        /// The name of the disk to be snapshotted
         pub disk: Name,
         pub name: Name,
     }
@@ -4790,12 +4790,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SnapshotResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Snapshot>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -4904,22 +4904,22 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`SshKey`]
+    /// Client view of a [`SshKey`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SshKey {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///SSH public key, e.g., `"ssh-ed25519 AAAAC3NzaC..."`
+        /// SSH public key, e.g., `"ssh-ed25519 AAAAC3NzaC..."`
         pub public_key: String,
-        ///The user to whom this key belongs
+        /// The user to whom this key belongs
         pub silo_user_id: uuid::Uuid,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -4935,13 +4935,13 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for an
+    /// Create-time parameters for an
     /// [`SshKey`](crate::external_api::views::SshKey)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SshKeyCreate {
         pub description: String,
         pub name: Name,
-        ///SSH public key, e.g., `"ssh-ed25519 AAAAC3NzaC..."`
+        /// SSH public key, e.g., `"ssh-ed25519 AAAAC3NzaC..."`
         pub public_key: String,
     }
 
@@ -4957,12 +4957,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SshKeyResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<SshKey>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -5050,15 +5050,15 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in "asset" public API objects
+    /// Identity-related metadata that's included in "asset" public API objects
     /// (which generally have no name or description)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SystemUpdate {
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         pub version: SemverVersion,
     }
@@ -5075,12 +5075,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SystemUpdateResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<SystemUpdate>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -5132,16 +5132,16 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in "asset" public API objects
+    /// Identity-related metadata that's included in "asset" public API objects
     /// (which generally have no name or description)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UpdateDeployment {
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         pub status: UpdateStatus,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         pub version: SemverVersion,
     }
@@ -5158,12 +5158,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UpdateDeploymentResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<UpdateDeployment>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -5248,19 +5248,19 @@ pub mod types {
         }
     }
 
-    ///Identity-related metadata that's included in "asset" public API objects
+    /// Identity-related metadata that's included in "asset" public API objects
     /// (which generally have no name or description)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UpdateableComponent {
         pub component_type: UpdateableComponentType,
         pub device_id: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         pub status: UpdateStatus,
         pub system_version: SemverVersion,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
         pub version: SemverVersion,
     }
@@ -5277,12 +5277,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UpdateableComponentResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<UpdateableComponent>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -5406,13 +5406,13 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`User`]
+    /// Client view of a [`User`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct User {
-        ///Human-readable name that can identify the user
+        /// Human-readable name that can identify the user
         pub display_name: String,
         pub id: uuid::Uuid,
-        ///Uuid of the silo to which this user belongs
+        /// Uuid of the silo to which this user belongs
         pub silo_id: uuid::Uuid,
     }
 
@@ -5428,18 +5428,18 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`UserBuiltin`]
+    /// Client view of a [`UserBuiltin`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UserBuiltin {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -5455,12 +5455,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UserBuiltinResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<UserBuiltin>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -5477,12 +5477,12 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a [`User`](crate::external_api::views::User)
+    /// Create-time parameters for a [`User`](crate::external_api::views::User)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UserCreate {
-        ///username used to log in
+        /// username used to log in
         pub external_id: UserId,
-        ///password used to log in
+        /// password used to log in
         pub password: UserPassword,
     }
 
@@ -5498,7 +5498,7 @@ pub mod types {
         }
     }
 
-    ///Names must begin with a lower case ASCII letter, be composed exclusively
+    /// Names must begin with a lower case ASCII letter, be composed exclusively
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
     /// with a '-'. Names cannot be a UUID though they may contain a UUID.
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
@@ -5568,11 +5568,11 @@ pub mod types {
         }
     }
 
-    ///Parameters for setting a user's password
+    /// Parameters for setting a user's password
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "user_password_value", content = "details")]
     pub enum UserPassword {
-        ///Sets the user's password to the provided value
+        /// Sets the user's password to the provided value
         #[serde(rename = "password")]
         Password(Password),
         #[serde(rename = "invalid_password")]
@@ -5591,12 +5591,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UserResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<User>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -5613,7 +5613,7 @@ pub mod types {
         }
     }
 
-    ///Credentials for local user login
+    /// Credentials for local user login
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UsernamePasswordCredentials {
         pub password: Password,
@@ -5650,26 +5650,26 @@ pub mod types {
         }
     }
 
-    ///Client view of a [`Vpc`]
+    /// Client view of a [`Vpc`]
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Vpc {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///The name used for the VPC in DNS.
+        /// The name used for the VPC in DNS.
         pub dns_name: Name,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///The unique local IPv6 address range for subnets in this VPC
+        /// The unique local IPv6 address range for subnets in this VPC
         pub ipv6_prefix: Ipv6Net,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///id for the project containing this VPC
+        /// id for the project containing this VPC
         pub project_id: uuid::Uuid,
-        ///id for the system router where subnet default routes are registered
+        /// id for the system router where subnet default routes are registered
         pub system_router_id: uuid::Uuid,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
@@ -5685,12 +5685,12 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a [`Vpc`](crate::external_api::views::Vpc)
+    /// Create-time parameters for a [`Vpc`](crate::external_api::views::Vpc)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcCreate {
         pub description: String,
         pub dns_name: Name,
-        ///The IPv6 prefix for this VPC.
+        /// The IPv6 prefix for this VPC.
         ///
         ///All IPv6 subnets created from this VPC must be taken from this
         /// range, which sould be a Unique Local Address in the range
@@ -5713,32 +5713,32 @@ pub mod types {
         }
     }
 
-    ///A single rule in a VPC firewall
+    /// A single rule in a VPC firewall
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcFirewallRule {
-        ///whether traffic matching the rule should be allowed or dropped
+        /// whether traffic matching the rule should be allowed or dropped
         pub action: VpcFirewallRuleAction,
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///whether this rule is for incoming or outgoing traffic
+        /// whether this rule is for incoming or outgoing traffic
         pub direction: VpcFirewallRuleDirection,
-        ///reductions on the scope of the rule
+        /// reductions on the scope of the rule
         pub filters: VpcFirewallRuleFilter,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///the relative priority of this rule
+        /// the relative priority of this rule
         pub priority: u16,
-        ///whether this rule is in effect
+        /// whether this rule is in effect
         pub status: VpcFirewallRuleStatus,
-        ///list of sets of instances that the rule applies to
+        /// list of sets of instances that the rule applies to
         pub targets: Vec<VpcFirewallRuleTarget>,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        ///the VPC to which this rule belongs
+        /// the VPC to which this rule belongs
         pub vpc_id: uuid::Uuid,
     }
 
@@ -5888,19 +5888,19 @@ pub mod types {
         }
     }
 
-    ///Filter for a firewall rule. A given packet must match every field that
+    /// Filter for a firewall rule. A given packet must match every field that
     /// is present for the rule to apply to it. A packet matches a field if any
     /// entry in that field matches the packet.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcFirewallRuleFilter {
-        ///If present, the sources (if incoming) or destinations (if outgoing)
+        /// If present, the sources (if incoming) or destinations (if outgoing)
         /// this rule applies to.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub hosts: Option<Vec<VpcFirewallRuleHostFilter>>,
-        ///If present, the destination ports this rule applies to.
+        /// If present, the destination ports this rule applies to.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub ports: Option<Vec<L4PortRange>>,
-        ///If present, the networking protocols this rule applies to.
+        /// If present, the networking protocols this rule applies to.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub protocols: Option<Vec<VpcFirewallRuleProtocol>>,
     }
@@ -5917,24 +5917,24 @@ pub mod types {
         }
     }
 
-    ///The `VpcFirewallRuleHostFilter` is used to filter traffic on the basis
+    /// The `VpcFirewallRuleHostFilter` is used to filter traffic on the basis
     /// of its source or destination host.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
     pub enum VpcFirewallRuleHostFilter {
-        ///The rule applies to traffic from/to all instances in the VPC
+        /// The rule applies to traffic from/to all instances in the VPC
         #[serde(rename = "vpc")]
         Vpc(Name),
-        ///The rule applies to traffic from/to all instances in the VPC Subnet
+        /// The rule applies to traffic from/to all instances in the VPC Subnet
         #[serde(rename = "subnet")]
         Subnet(Name),
-        ///The rule applies to traffic from/to this specific instance
+        /// The rule applies to traffic from/to this specific instance
         #[serde(rename = "instance")]
         Instance(Name),
-        ///The rule applies to traffic from/to a specific IP address
+        /// The rule applies to traffic from/to a specific IP address
         #[serde(rename = "ip")]
         Ip(std::net::IpAddr),
-        ///The rule applies to traffic from/to a specific IP subnet
+        /// The rule applies to traffic from/to a specific IP subnet
         #[serde(rename = "ip_net")]
         IpNet(IpNet),
     }
@@ -5957,7 +5957,7 @@ pub mod types {
         }
     }
 
-    ///The protocols that may be specified in a firewall rule's filter
+    /// The protocols that may be specified in a firewall rule's filter
     #[derive(
         Clone,
         Copy,
@@ -6096,24 +6096,24 @@ pub mod types {
         }
     }
 
-    ///A `VpcFirewallRuleTarget` is used to specify the set of [`Instance`]s to
+    /// A `VpcFirewallRuleTarget` is used to specify the set of [`Instance`]s to
     /// which a firewall rule applies.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
     pub enum VpcFirewallRuleTarget {
-        ///The rule applies to all instances in the VPC
+        /// The rule applies to all instances in the VPC
         #[serde(rename = "vpc")]
         Vpc(Name),
-        ///The rule applies to all instances in the VPC Subnet
+        /// The rule applies to all instances in the VPC Subnet
         #[serde(rename = "subnet")]
         Subnet(Name),
-        ///The rule applies to this specific instance
+        /// The rule applies to this specific instance
         #[serde(rename = "instance")]
         Instance(Name),
-        ///The rule applies to a specific IP address
+        /// The rule applies to a specific IP address
         #[serde(rename = "ip")]
         Ip(std::net::IpAddr),
-        ///The rule applies to a specific IP subnet
+        /// The rule applies to a specific IP subnet
         #[serde(rename = "ip_net")]
         IpNet(IpNet),
     }
@@ -6136,24 +6136,24 @@ pub mod types {
         }
     }
 
-    ///A single rule in a VPC firewall
+    /// A single rule in a VPC firewall
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcFirewallRuleUpdate {
-        ///whether traffic matching the rule should be allowed or dropped
+        /// whether traffic matching the rule should be allowed or dropped
         pub action: VpcFirewallRuleAction,
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///whether this rule is for incoming or outgoing traffic
+        /// whether this rule is for incoming or outgoing traffic
         pub direction: VpcFirewallRuleDirection,
-        ///reductions on the scope of the rule
+        /// reductions on the scope of the rule
         pub filters: VpcFirewallRuleFilter,
-        ///name of the rule, unique to this VPC
+        /// name of the rule, unique to this VPC
         pub name: Name,
-        ///the relative priority of this rule
+        /// the relative priority of this rule
         pub priority: u16,
-        ///whether this rule is in effect
+        /// whether this rule is in effect
         pub status: VpcFirewallRuleStatus,
-        ///list of sets of instances that the rule applies to
+        /// list of sets of instances that the rule applies to
         pub targets: Vec<VpcFirewallRuleTarget>,
     }
 
@@ -6169,7 +6169,7 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a `Vpc`'s firewall Note that VpcFirewallRules
+    /// Updateable properties of a `Vpc`'s firewall Note that VpcFirewallRules
     /// are implicitly created along with a Vpc, so there is no explicit
     /// creation.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6189,7 +6189,7 @@ pub mod types {
         }
     }
 
-    ///Collection of a Vpc's firewall rules
+    /// Collection of a Vpc's firewall rules
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcFirewallRules {
         pub rules: Vec<VpcFirewallRule>,
@@ -6207,12 +6207,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<Vpc>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -6229,22 +6229,22 @@ pub mod types {
         }
     }
 
-    ///A VPC router defines a series of rules that indicate where traffic
+    /// A VPC router defines a series of rules that indicate where traffic
     /// should be sent depending on its destination.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcRouter {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         pub kind: VpcRouterKind,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        ///The VPC to which the router belongs.
+        /// The VPC to which the router belongs.
         pub vpc_id: uuid::Uuid,
     }
 
@@ -6260,7 +6260,7 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a
+    /// Create-time parameters for a
     /// [`VpcRouter`](crate::external_api::views::VpcRouter)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcRouterCreate {
@@ -6347,12 +6347,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcRouterResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<VpcRouter>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -6369,7 +6369,7 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a
+    /// Updateable properties of a
     /// [`VpcRouter`](crate::external_api::views::VpcRouter)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcRouterUpdate {
@@ -6391,26 +6391,26 @@ pub mod types {
         }
     }
 
-    ///A VPC subnet represents a logical grouping for instances that allows
+    /// A VPC subnet represents a logical grouping for instances that allows
     /// network traffic between them, within a IPv4 subnetwork or optionall an
     /// IPv6 subnetwork.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnet {
-        ///human-readable free-form text about a resource
+        /// human-readable free-form text about a resource
         pub description: String,
-        ///unique, immutable, system-controlled identifier for each resource
+        /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        ///The IPv4 subnet CIDR block.
+        /// The IPv4 subnet CIDR block.
         pub ipv4_block: Ipv4Net,
-        ///The IPv6 subnet CIDR block.
+        /// The IPv6 subnet CIDR block.
         pub ipv6_block: Ipv6Net,
-        ///unique, mutable, user-controlled identifier for each resource
+        /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        ///timestamp when this resource was created
+        /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        ///timestamp when this resource was last modified
+        /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        ///The VPC to which the subnet belongs.
+        /// The VPC to which the subnet belongs.
         pub vpc_id: uuid::Uuid,
     }
 
@@ -6426,17 +6426,17 @@ pub mod types {
         }
     }
 
-    ///Create-time parameters for a
+    /// Create-time parameters for a
     /// [`VpcSubnet`](crate::external_api::views::VpcSubnet)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnetCreate {
         pub description: String,
-        ///The IPv4 address range for this subnet.
+        /// The IPv4 address range for this subnet.
         ///
         ///It must be allocated from an RFC 1918 private address range, and
         /// must not overlap with any other existing subnet in the VPC.
         pub ipv4_block: Ipv4Net,
-        ///The IPv6 address range for this subnet.
+        /// The IPv6 address range for this subnet.
         ///
         ///It must be allocated from the RFC 4193 Unique Local Address range,
         /// with the prefix equal to the parent VPC's prefix. A random `/64`
@@ -6459,12 +6459,12 @@ pub mod types {
         }
     }
 
-    ///A single page of results
+    /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnetResultsPage {
-        ///list of items on this page of results
+        /// list of items on this page of results
         pub items: Vec<VpcSubnet>,
-        ///token used to fetch the next page of results (if any)
+        /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
@@ -6481,7 +6481,7 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a
+    /// Updateable properties of a
     /// [`VpcSubnet`](crate::external_api::views::VpcSubnet)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnetUpdate {
@@ -6503,7 +6503,7 @@ pub mod types {
         }
     }
 
-    ///Updateable properties of a [`Vpc`](crate::external_api::views::Vpc)
+    /// Updateable properties of a [`Vpc`](crate::external_api::views::Vpc)
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -16601,7 +16601,7 @@ pub mod types {
 }
 
 #[derive(Clone, Debug)]
-///Client for Oxide Region API
+/// Client for Oxide Region API
 ///
 ///API for interacting with the Oxide control plane
 ///
@@ -16660,7 +16660,7 @@ impl Client {
 }
 
 pub trait ClientDisksExt {
-    ///List disks
+    /// List disks
     ///
     ///Sends a `GET` request to `/v1/disks`
     ///
@@ -16680,7 +16680,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_list(&self) -> builder::DiskList;
-    ///Create a disk
+    /// Create a disk
     ///
     ///Sends a `POST` request to `/v1/disks`
     ///
@@ -16695,7 +16695,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_create(&self) -> builder::DiskCreate;
-    ///Fetch a disk
+    /// Fetch a disk
     ///
     ///Sends a `GET` request to `/v1/disks/{disk}`
     ///
@@ -16710,7 +16710,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_view(&self) -> builder::DiskView;
-    ///Delete a disk
+    /// Delete a disk
     ///
     ///Sends a `DELETE` request to `/v1/disks/{disk}`
     ///
@@ -16725,7 +16725,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_delete(&self) -> builder::DiskDelete;
-    ///Import blocks into a disk
+    /// Import blocks into a disk
     ///
     ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write`
     ///
@@ -16742,7 +16742,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_bulk_write_import(&self) -> builder::DiskBulkWriteImport;
-    ///Start the process of importing blocks into a disk
+    /// Start the process of importing blocks into a disk
     ///
     ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write-start`
     ///
@@ -16757,7 +16757,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_bulk_write_import_start(&self) -> builder::DiskBulkWriteImportStart;
-    ///Stop the process of importing blocks into a disk
+    /// Stop the process of importing blocks into a disk
     ///
     ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`
     ///
@@ -16772,7 +16772,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_bulk_write_import_stop(&self) -> builder::DiskBulkWriteImportStop;
-    ///Finalize disk when imports are done
+    /// Finalize disk when imports are done
     ///
     ///Sends a `POST` request to `/v1/disks/{disk}/finalize`
     ///
@@ -16789,7 +16789,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_finalize_import(&self) -> builder::DiskFinalizeImport;
-    ///Send request to import blocks from URL
+    /// Send request to import blocks from URL
     ///
     ///Sends a `POST` request to `/v1/disks/{disk}/import`
     ///
@@ -16806,7 +16806,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_import_blocks_from_url(&self) -> builder::DiskImportBlocksFromUrl;
-    ///Fetch disk metrics
+    /// Fetch disk metrics
     ///
     ///Sends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`
     ///
@@ -16877,7 +16877,7 @@ impl ClientDisksExt for Client {
 }
 
 pub trait ClientHiddenExt {
-    ///Start an OAuth 2.0 Device Authorization Grant
+    /// Start an OAuth 2.0 Device Authorization Grant
     ///
     ///This endpoint is designed to be accessed from an *unauthenticated* API
     /// client. It generates and records a `device_code` and `user_code` which
@@ -16892,7 +16892,7 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn device_auth_request(&self) -> builder::DeviceAuthRequest;
-    ///Confirm an OAuth 2.0 Device Authorization Grant
+    /// Confirm an OAuth 2.0 Device Authorization Grant
     ///
     ///This endpoint is designed to be accessed by the user agent (browser),
     /// not the client requesting the token. So we do not actually return the
@@ -16908,7 +16908,7 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn device_auth_confirm(&self) -> builder::DeviceAuthConfirm;
-    ///Request a device access token
+    /// Request a device access token
     ///
     ///This endpoint should be polled by the client until the user code is
     /// verified and the grant is confirmed.
@@ -16922,7 +16922,7 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn device_access_token(&self) -> builder::DeviceAccessToken;
-    ///Sends a `POST` request to `/login`
+    /// Sends a `POST` request to `/login`
     ///
     ///```ignore
     /// let response = client.login_spoof()
@@ -16931,7 +16931,7 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn login_spoof(&self) -> builder::LoginSpoof;
-    ///Sends a `POST` request to `/logout`
+    /// Sends a `POST` request to `/logout`
     ///
     ///```ignore
     /// let response = client.logout()
@@ -16964,7 +16964,7 @@ impl ClientHiddenExt for Client {
 }
 
 pub trait ClientImagesExt {
-    ///List images
+    /// List images
     ///
     ///List images which are global or scoped to the specified project. The
     /// images are returned sorted by creation date, with the most recent images
@@ -16992,7 +16992,7 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_list(&self) -> builder::ImageList;
-    ///Create an image
+    /// Create an image
     ///
     ///Create a new image in a project.
     ///
@@ -17009,7 +17009,7 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_create(&self) -> builder::ImageCreate;
-    ///Fetch an image
+    /// Fetch an image
     ///
     ///Fetch the details for a specific image in a project.
     ///
@@ -17026,7 +17026,7 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_view(&self) -> builder::ImageView;
-    ///Delete an image
+    /// Delete an image
     ///
     ///Permanently delete an image from a project. This operation cannot be
     /// undone. Any instances in the project using the image will continue to
@@ -17045,7 +17045,7 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_delete(&self) -> builder::ImageDelete;
-    ///Promote a project image to be visible to all projects in the silo
+    /// Promote a project image to be visible to all projects in the silo
     ///
     ///Sends a `POST` request to `/v1/images/{image}/promote`
     ///
@@ -17085,7 +17085,7 @@ impl ClientImagesExt for Client {
 }
 
 pub trait ClientInstancesExt {
-    ///List instances
+    /// List instances
     ///
     ///Sends a `GET` request to `/v1/instances`
     ///
@@ -17105,7 +17105,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_list(&self) -> builder::InstanceList;
-    ///Create an instance
+    /// Create an instance
     ///
     ///Sends a `POST` request to `/v1/instances`
     ///
@@ -17120,7 +17120,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_create(&self) -> builder::InstanceCreate;
-    ///Fetch an instance
+    /// Fetch an instance
     ///
     ///Sends a `GET` request to `/v1/instances/{instance}`
     ///
@@ -17135,7 +17135,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_view(&self) -> builder::InstanceView;
-    ///Delete an instance
+    /// Delete an instance
     ///
     ///Sends a `DELETE` request to `/v1/instances/{instance}`
     ///
@@ -17150,7 +17150,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_delete(&self) -> builder::InstanceDelete;
-    ///List an instance's disks
+    /// List an instance's disks
     ///
     ///Sends a `GET` request to `/v1/instances/{instance}/disks`
     ///
@@ -17172,7 +17172,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_disk_list(&self) -> builder::InstanceDiskList;
-    ///Attach a disk to an instance
+    /// Attach a disk to an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/disks/attach`
     ///
@@ -17189,7 +17189,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_disk_attach(&self) -> builder::InstanceDiskAttach;
-    ///Detach a disk from an instance
+    /// Detach a disk from an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/disks/detach`
     ///
@@ -17206,7 +17206,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_disk_detach(&self) -> builder::InstanceDiskDetach;
-    ///List external IP addresses
+    /// List external IP addresses
     ///
     ///Sends a `GET` request to `/v1/instances/{instance}/external-ips`
     ///
@@ -17221,7 +17221,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_external_ip_list(&self) -> builder::InstanceExternalIpList;
-    ///Migrate an instance
+    /// Migrate an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/migrate`
     ///
@@ -17238,7 +17238,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_migrate(&self) -> builder::InstanceMigrate;
-    ///Reboot an instance
+    /// Reboot an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/reboot`
     ///
@@ -17253,7 +17253,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_reboot(&self) -> builder::InstanceReboot;
-    ///Fetch an instance's serial console
+    /// Fetch an instance's serial console
     ///
     ///Sends a `GET` request to `/v1/instances/{instance}/serial-console`
     ///
@@ -17286,7 +17286,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_serial_console(&self) -> builder::InstanceSerialConsole;
-    ///Stream an instance's serial console
+    /// Stream an instance's serial console
     ///
     ///Sends a `GET` request to
     /// `/v1/instances/{instance}/serial-console/stream`
@@ -17320,7 +17320,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream;
-    ///Boot an instance
+    /// Boot an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/start`
     ///
@@ -17335,7 +17335,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_start(&self) -> builder::InstanceStart;
-    ///Stop an instance
+    /// Stop an instance
     ///
     ///Sends a `POST` request to `/v1/instances/{instance}/stop`
     ///
@@ -17350,7 +17350,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_stop(&self) -> builder::InstanceStop;
-    ///List network interfaces
+    /// List network interfaces
     ///
     ///Sends a `GET` request to `/v1/network-interfaces`
     ///
@@ -17373,7 +17373,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList;
-    ///Create a network interface
+    /// Create a network interface
     ///
     ///Sends a `POST` request to `/v1/network-interfaces`
     ///
@@ -17391,7 +17391,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate;
-    ///Fetch a network interface
+    /// Fetch a network interface
     ///
     ///Sends a `GET` request to `/v1/network-interfaces/{interface}`
     ///
@@ -17409,7 +17409,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView;
-    ///Update a network interface
+    /// Update a network interface
     ///
     ///Sends a `PUT` request to `/v1/network-interfaces/{interface}`
     ///
@@ -17429,7 +17429,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate;
-    ///Delete a network interface
+    /// Delete a network interface
     ///
     ///Note that the primary interface for an instance cannot be deleted if
     /// there are any secondary interfaces. A new primary interface must be
@@ -17533,7 +17533,7 @@ impl ClientInstancesExt for Client {
 }
 
 pub trait ClientLoginExt {
-    ///Authenticate a user (i.e., log in) via username and password
+    /// Authenticate a user (i.e., log in) via username and password
     ///
     ///Sends a `POST` request to `/login/{silo_name}/local`
     ///
@@ -17545,7 +17545,7 @@ pub trait ClientLoginExt {
     ///    .await;
     /// ```
     fn login_local(&self) -> builder::LoginLocal;
-    ///Prompt user login
+    /// Prompt user login
     ///
     ///Either display a page asking a user for their credentials, or redirect
     /// them to their identity provider.
@@ -17560,7 +17560,7 @@ pub trait ClientLoginExt {
     ///    .await;
     /// ```
     fn login_saml_begin(&self) -> builder::LoginSamlBegin;
-    ///Authenticate a user (i.e., log in) via SAML
+    /// Authenticate a user (i.e., log in) via SAML
     ///
     ///Sends a `POST` request to `/login/{silo_name}/saml/{provider_name}`
     ///
@@ -17590,7 +17590,7 @@ impl ClientLoginExt for Client {
 }
 
 pub trait ClientPolicyExt {
-    ///Fetch the top-level IAM policy
+    /// Fetch the top-level IAM policy
     ///
     ///Sends a `GET` request to `/v1/system/policy`
     ///
@@ -17600,7 +17600,7 @@ pub trait ClientPolicyExt {
     ///    .await;
     /// ```
     fn system_policy_view(&self) -> builder::SystemPolicyView;
-    ///Update the top-level IAM policy
+    /// Update the top-level IAM policy
     ///
     ///Sends a `PUT` request to `/v1/system/policy`
     ///
@@ -17624,7 +17624,7 @@ impl ClientPolicyExt for Client {
 }
 
 pub trait ClientProjectsExt {
-    ///List projects
+    /// List projects
     ///
     ///Sends a `GET` request to `/v1/projects`
     ///
@@ -17642,7 +17642,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_list(&self) -> builder::ProjectList;
-    ///Create a project
+    /// Create a project
     ///
     ///Sends a `POST` request to `/v1/projects`
     ///
@@ -17653,7 +17653,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_create(&self) -> builder::ProjectCreate;
-    ///Fetch a project
+    /// Fetch a project
     ///
     ///Sends a `GET` request to `/v1/projects/{project}`
     ///
@@ -17666,7 +17666,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_view(&self) -> builder::ProjectView;
-    ///Update a project
+    /// Update a project
     ///
     ///Sends a `PUT` request to `/v1/projects/{project}`
     ///
@@ -17681,7 +17681,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_update(&self) -> builder::ProjectUpdate;
-    ///Delete a project
+    /// Delete a project
     ///
     ///Sends a `DELETE` request to `/v1/projects/{project}`
     ///
@@ -17694,7 +17694,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_delete(&self) -> builder::ProjectDelete;
-    ///Fetch a project's IAM policy
+    /// Fetch a project's IAM policy
     ///
     ///Sends a `GET` request to `/v1/projects/{project}/policy`
     ///
@@ -17707,7 +17707,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_policy_view(&self) -> builder::ProjectPolicyView;
-    ///Update a project's IAM policy
+    /// Update a project's IAM policy
     ///
     ///Sends a `PUT` request to `/v1/projects/{project}/policy`
     ///
@@ -17755,7 +17755,7 @@ impl ClientProjectsExt for Client {
 }
 
 pub trait ClientRolesExt {
-    ///List built-in roles
+    /// List built-in roles
     ///
     ///Sends a `GET` request to `/v1/system/roles`
     ///
@@ -17771,7 +17771,7 @@ pub trait ClientRolesExt {
     ///    .await;
     /// ```
     fn role_list(&self) -> builder::RoleList;
-    ///Fetch a built-in role
+    /// Fetch a built-in role
     ///
     ///Sends a `GET` request to `/v1/system/roles/{role_name}`
     ///
@@ -17797,7 +17797,7 @@ impl ClientRolesExt for Client {
 }
 
 pub trait ClientSessionExt {
-    ///Fetch the user associated with the current session
+    /// Fetch the user associated with the current session
     ///
     ///Sends a `GET` request to `/v1/me`
     ///
@@ -17807,7 +17807,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_view(&self) -> builder::CurrentUserView;
-    ///Fetch the silo groups the current user belongs to
+    /// Fetch the silo groups the current user belongs to
     ///
     ///Sends a `GET` request to `/v1/me/groups`
     ///
@@ -17825,7 +17825,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_groups(&self) -> builder::CurrentUserGroups;
-    ///List SSH public keys
+    /// List SSH public keys
     ///
     ///Lists SSH public keys for the currently authenticated user.
     ///
@@ -17845,7 +17845,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList;
-    ///Create an SSH public key
+    /// Create an SSH public key
     ///
     ///Create an SSH public key for the currently authenticated user.
     ///
@@ -17858,7 +17858,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate;
-    ///Fetch an SSH public key
+    /// Fetch an SSH public key
     ///
     ///Fetch an SSH public key associated with the currently authenticated
     /// user.
@@ -17874,7 +17874,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView;
-    ///Delete an SSH public key
+    /// Delete an SSH public key
     ///
     ///Delete an SSH public key associated with the currently authenticated
     /// user.
@@ -17919,7 +17919,7 @@ impl ClientSessionExt for Client {
 }
 
 pub trait ClientSilosExt {
-    ///List groups
+    /// List groups
     ///
     ///Sends a `GET` request to `/v1/groups`
     ///
@@ -17937,7 +17937,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn group_list(&self) -> builder::GroupList;
-    ///Fetch group
+    /// Fetch group
     ///
     ///Sends a `GET` request to `/v1/groups/{group}`
     ///
@@ -17950,7 +17950,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn group_view(&self) -> builder::GroupView;
-    ///Fetch the current silo's IAM policy
+    /// Fetch the current silo's IAM policy
     ///
     ///Sends a `GET` request to `/v1/policy`
     ///
@@ -17960,7 +17960,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn policy_view(&self) -> builder::PolicyView;
-    ///Update the current silo's IAM policy
+    /// Update the current silo's IAM policy
     ///
     ///Sends a `PUT` request to `/v1/policy`
     ///
@@ -17971,7 +17971,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn policy_update(&self) -> builder::PolicyUpdate;
-    ///List users
+    /// List users
     ///
     ///Sends a `GET` request to `/v1/users`
     ///
@@ -18016,7 +18016,7 @@ impl ClientSilosExt for Client {
 }
 
 pub trait ClientSnapshotsExt {
-    ///List snapshots
+    /// List snapshots
     ///
     ///Sends a `GET` request to `/v1/snapshots`
     ///
@@ -18036,7 +18036,7 @@ pub trait ClientSnapshotsExt {
     ///    .await;
     /// ```
     fn snapshot_list(&self) -> builder::SnapshotList;
-    ///Create a snapshot
+    /// Create a snapshot
     ///
     ///Creates a point-in-time snapshot from a disk.
     ///
@@ -18053,7 +18053,7 @@ pub trait ClientSnapshotsExt {
     ///    .await;
     /// ```
     fn snapshot_create(&self) -> builder::SnapshotCreate;
-    ///Fetch a snapshot
+    /// Fetch a snapshot
     ///
     ///Sends a `GET` request to `/v1/snapshots/{snapshot}`
     ///
@@ -18068,7 +18068,7 @@ pub trait ClientSnapshotsExt {
     ///    .await;
     /// ```
     fn snapshot_view(&self) -> builder::SnapshotView;
-    ///Delete a snapshot
+    /// Delete a snapshot
     ///
     ///Sends a `DELETE` request to `/v1/snapshots/{snapshot}`
     ///
@@ -18104,7 +18104,7 @@ impl ClientSnapshotsExt for Client {
 }
 
 pub trait ClientSystemExt {
-    ///Fetch a system-wide image by id
+    /// Fetch a system-wide image by id
     ///
     ///Sends a `GET` request to `/system/by-id/images/{id}`
     ///
@@ -18115,7 +18115,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_image_view_by_id(&self) -> builder::SystemImageViewById;
-    ///List system-wide images
+    /// List system-wide images
     ///
     ///Returns a list of all the system-wide images. System-wide images are
     /// returned sorted by creation date, with the most recent images appearing
@@ -18137,7 +18137,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_image_list(&self) -> builder::SystemImageList;
-    ///Create a system-wide image
+    /// Create a system-wide image
     ///
     ///Create a new system-wide image. This image can then be used by any user
     /// in any silo as a base for instances.
@@ -18151,7 +18151,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_image_create(&self) -> builder::SystemImageCreate;
-    ///Fetch a system-wide image
+    /// Fetch a system-wide image
     ///
     ///Returns the details of a specific system-wide image.
     ///
@@ -18164,7 +18164,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_image_view(&self) -> builder::SystemImageView;
-    ///Delete a system-wide image
+    /// Delete a system-wide image
     ///
     ///Permanently delete a system-wide image. This operation cannot be undone.
     /// Any instances using the system-wide image will continue to run, however
@@ -18179,7 +18179,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_image_delete(&self) -> builder::SystemImageDelete;
-    ///List system-wide certificates
+    /// List system-wide certificates
     ///
     ///Returns a list of all the system-wide certificates. System-wide
     /// certificates are returned sorted by creation date, with the most recent
@@ -18201,7 +18201,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn certificate_list(&self) -> builder::CertificateList;
-    ///Create a new system-wide x.509 certificate
+    /// Create a new system-wide x.509 certificate
     ///
     ///This certificate is automatically used by the Oxide Control plane to
     /// serve external connections.
@@ -18215,7 +18215,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn certificate_create(&self) -> builder::CertificateCreate;
-    ///Fetch a certificate
+    /// Fetch a certificate
     ///
     ///Returns the details of a specific certificate
     ///
@@ -18228,7 +18228,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn certificate_view(&self) -> builder::CertificateView;
-    ///Delete a certificate
+    /// Delete a certificate
     ///
     ///Permanently delete a certificate. This operation cannot be undone.
     ///
@@ -18241,7 +18241,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn certificate_delete(&self) -> builder::CertificateDelete;
-    ///List physical disks
+    /// List physical disks
     ///
     ///Sends a `GET` request to `/v1/system/hardware/disks`
     ///
@@ -18259,7 +18259,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn physical_disk_list(&self) -> builder::PhysicalDiskList;
-    ///List racks
+    /// List racks
     ///
     ///Sends a `GET` request to `/v1/system/hardware/racks`
     ///
@@ -18277,7 +18277,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn rack_list(&self) -> builder::RackList;
-    ///Fetch a rack
+    /// Fetch a rack
     ///
     ///Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
     ///
@@ -18290,7 +18290,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn rack_view(&self) -> builder::RackView;
-    ///List sleds
+    /// List sleds
     ///
     ///Sends a `GET` request to `/v1/system/hardware/sleds`
     ///
@@ -18308,7 +18308,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn sled_list(&self) -> builder::SledList;
-    ///Fetch a sled
+    /// Fetch a sled
     ///
     ///Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
     ///
@@ -18321,7 +18321,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn sled_view(&self) -> builder::SledView;
-    ///List physical disks attached to sleds
+    /// List physical disks attached to sleds
     ///
     ///Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/disks`
     ///
@@ -18341,7 +18341,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList;
-    ///List a silo's IDPs_name
+    /// List a silo's IDPs_name
     ///
     ///Sends a `GET` request to `/v1/system/identity-providers`
     ///
@@ -18361,7 +18361,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
-    ///Create a user
+    /// Create a user
     ///
     ///Users can only be created in Silos with `provision_type` == `Fixed`.
     /// Otherwise, Silo users are just-in-time (JIT) provisioned when a user
@@ -18380,7 +18380,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
-    ///Delete a user
+    /// Delete a user
     ///
     ///Sends a `DELETE` request to
     /// `/v1/system/identity-providers/local/users/{user_id}`
@@ -18396,7 +18396,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
-    ///Set or invalidate a user's password
+    /// Set or invalidate a user's password
     ///
     ///Passwords can only be updated for users in Silos with identity mode
     /// `LocalOnly`.
@@ -18417,7 +18417,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
-    ///Create a SAML IDP
+    /// Create a SAML IDP
     ///
     ///Sends a `POST` request to `/v1/system/identity-providers/saml`
     ///
@@ -18432,7 +18432,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
-    ///Fetch a SAML IDP
+    /// Fetch a SAML IDP
     ///
     ///Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
     ///
@@ -18447,7 +18447,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView;
-    ///List IP pools
+    /// List IP pools
     ///
     ///Sends a `GET` request to `/v1/system/ip-pools`
     ///
@@ -18465,7 +18465,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_list(&self) -> builder::IpPoolList;
-    ///Create an IP pool
+    /// Create an IP pool
     ///
     ///Sends a `POST` request to `/v1/system/ip-pools`
     ///
@@ -18476,7 +18476,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_create(&self) -> builder::IpPoolCreate;
-    ///Fetch an IP pool
+    /// Fetch an IP pool
     ///
     ///Sends a `GET` request to `/v1/system/ip-pools/{pool}`
     ///
@@ -18489,7 +18489,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_view(&self) -> builder::IpPoolView;
-    ///Update an IP Pool
+    /// Update an IP Pool
     ///
     ///Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
     ///
@@ -18504,7 +18504,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_update(&self) -> builder::IpPoolUpdate;
-    ///Delete an IP Pool
+    /// Delete an IP Pool
     ///
     ///Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
     ///
@@ -18517,7 +18517,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_delete(&self) -> builder::IpPoolDelete;
-    ///List ranges for an IP pool
+    /// List ranges for an IP pool
     ///
     ///Ranges are ordered by their first address.
     ///
@@ -18537,7 +18537,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
-    ///Add a range to an IP pool
+    /// Add a range to an IP pool
     ///
     ///Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
     ///
@@ -18552,7 +18552,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd;
-    ///Remove a range from an IP pool
+    /// Remove a range from an IP pool
     ///
     ///Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`
     ///
@@ -18567,7 +18567,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove;
-    ///Fetch the IP pool used for Oxide services
+    /// Fetch the IP pool used for Oxide services
     ///
     ///Sends a `GET` request to `/v1/system/ip-pools-service`
     ///
@@ -18577,7 +18577,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
-    ///List ranges for the IP pool used for Oxide services
+    /// List ranges for the IP pool used for Oxide services
     ///
     ///Ranges are ordered by their first address.
     ///
@@ -18595,7 +18595,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
-    ///Add a range to an IP pool used for Oxide services
+    /// Add a range to an IP pool used for Oxide services
     ///
     ///Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
     ///
@@ -18606,7 +18606,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd;
-    ///Remove a range from an IP pool used for Oxide services
+    /// Remove a range from an IP pool used for Oxide services
     ///
     ///Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
     ///
@@ -18617,7 +18617,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
-    ///Access metrics data
+    /// Access metrics data
     ///
     ///Sends a `GET` request to `/v1/system/metrics/{metric_name}`
     ///
@@ -18641,7 +18641,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_metric(&self) -> builder::SystemMetric;
-    ///List sagas
+    /// List sagas
     ///
     ///Sends a `GET` request to `/v1/system/sagas`
     ///
@@ -18659,7 +18659,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn saga_list(&self) -> builder::SagaList;
-    ///Fetch a saga
+    /// Fetch a saga
     ///
     ///Sends a `GET` request to `/v1/system/sagas/{saga_id}`
     ///
@@ -18670,7 +18670,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn saga_view(&self) -> builder::SagaView;
-    ///List silos
+    /// List silos
     ///
     ///Lists silos that are discoverable based on the current permissions.
     ///
@@ -18690,7 +18690,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn silo_list(&self) -> builder::SiloList;
-    ///Create a silo
+    /// Create a silo
     ///
     ///Sends a `POST` request to `/v1/system/silos`
     ///
@@ -18701,7 +18701,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn silo_create(&self) -> builder::SiloCreate;
-    ///Fetch a silo
+    /// Fetch a silo
     ///
     ///Fetch a silo by name.
     ///
@@ -18716,7 +18716,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn silo_view(&self) -> builder::SiloView;
-    ///Delete a silo
+    /// Delete a silo
     ///
     ///Delete a silo by name.
     ///
@@ -18731,7 +18731,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn silo_delete(&self) -> builder::SiloDelete;
-    ///Fetch a silo's IAM policy
+    /// Fetch a silo's IAM policy
     ///
     ///Sends a `GET` request to `/v1/system/silos/{silo}/policy`
     ///
@@ -18744,7 +18744,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn silo_policy_view(&self) -> builder::SiloPolicyView;
-    ///Update a silo's IAM policy
+    /// Update a silo's IAM policy
     ///
     ///Sends a `PUT` request to `/v1/system/silos/{silo}/policy`
     ///
@@ -18759,7 +18759,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate;
-    ///View version and update status of component tree
+    /// View version and update status of component tree
     ///
     ///Sends a `GET` request to `/v1/system/update/components`
     ///
@@ -18777,7 +18777,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_component_version_list(&self) -> builder::SystemComponentVersionList;
-    ///List all update deployments
+    /// List all update deployments
     ///
     ///Sends a `GET` request to `/v1/system/update/deployments`
     ///
@@ -18795,7 +18795,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn update_deployments_list(&self) -> builder::UpdateDeploymentsList;
-    ///Fetch a system update deployment
+    /// Fetch a system update deployment
     ///
     ///Sends a `GET` request to `/v1/system/update/deployments/{id}`
     ///
@@ -18806,7 +18806,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn update_deployment_view(&self) -> builder::UpdateDeploymentView;
-    ///Refresh update data
+    /// Refresh update data
     ///
     ///Sends a `POST` request to `/v1/system/update/refresh`
     ///
@@ -18816,7 +18816,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_update_refresh(&self) -> builder::SystemUpdateRefresh;
-    ///Start system update
+    /// Start system update
     ///
     ///Sends a `POST` request to `/v1/system/update/start`
     ///
@@ -18827,7 +18827,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_update_start(&self) -> builder::SystemUpdateStart;
-    ///Stop system update
+    /// Stop system update
     ///
     ///If there is no update in progress, do nothing.
     ///
@@ -18839,7 +18839,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_update_stop(&self) -> builder::SystemUpdateStop;
-    ///List all updates
+    /// List all updates
     ///
     ///Sends a `GET` request to `/v1/system/update/updates`
     ///
@@ -18857,7 +18857,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_update_list(&self) -> builder::SystemUpdateList;
-    ///View system update
+    /// View system update
     ///
     ///Sends a `GET` request to `/v1/system/update/updates/{version}`
     ///
@@ -18868,7 +18868,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_update_view(&self) -> builder::SystemUpdateView;
-    ///View system update component tree
+    /// View system update component tree
     ///
     ///Sends a `GET` request to
     /// `/v1/system/update/updates/{version}/components`
@@ -18880,7 +18880,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_update_components_list(&self) -> builder::SystemUpdateComponentsList;
-    ///View system version and update status
+    /// View system version and update status
     ///
     ///Sends a `GET` request to `/v1/system/update/version`
     ///
@@ -18890,7 +18890,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_version(&self) -> builder::SystemVersion;
-    ///List users in a silo
+    /// List users in a silo
     ///
     ///Sends a `GET` request to `/v1/system/users`
     ///
@@ -18910,7 +18910,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn silo_user_list(&self) -> builder::SiloUserList;
-    ///Fetch a user
+    /// Fetch a user
     ///
     ///Sends a `GET` request to `/v1/system/users/{user_id}`
     ///
@@ -18925,7 +18925,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn silo_user_view(&self) -> builder::SiloUserView;
-    ///List built-in users
+    /// List built-in users
     ///
     ///Sends a `GET` request to `/v1/system/users-builtin`
     ///
@@ -18943,7 +18943,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn user_builtin_list(&self) -> builder::UserBuiltinList;
-    ///Fetch a built-in user
+    /// Fetch a built-in user
     ///
     ///Sends a `GET` request to `/v1/system/users-builtin/{user}`
     ///
@@ -19183,7 +19183,7 @@ impl ClientSystemExt for Client {
 }
 
 pub trait ClientVpcsExt {
-    ///List firewall rules
+    /// List firewall rules
     ///
     ///Sends a `GET` request to `/v1/vpc-firewall-rules`
     ///
@@ -19199,7 +19199,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_firewall_rules_view(&self) -> builder::VpcFirewallRulesView;
-    ///Replace firewall rules
+    /// Replace firewall rules
     ///
     ///Sends a `PUT` request to `/v1/vpc-firewall-rules`
     ///
@@ -19217,7 +19217,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_firewall_rules_update(&self) -> builder::VpcFirewallRulesUpdate;
-    ///List routes
+    /// List routes
     ///
     ///List the routes associated with a router in a particular VPC.
     ///
@@ -19245,7 +19245,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_route_list(&self) -> builder::VpcRouterRouteList;
-    ///Create a router
+    /// Create a router
     ///
     ///Sends a `POST` request to `/v1/vpc-router-routes`
     ///
@@ -19266,7 +19266,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_route_create(&self) -> builder::VpcRouterRouteCreate;
-    ///Fetch a route
+    /// Fetch a route
     ///
     ///Sends a `GET` request to `/v1/vpc-router-routes/{route}`
     ///
@@ -19287,7 +19287,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_route_view(&self) -> builder::VpcRouterRouteView;
-    ///Update a route
+    /// Update a route
     ///
     ///Sends a `PUT` request to `/v1/vpc-router-routes/{route}`
     ///
@@ -19310,7 +19310,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_route_update(&self) -> builder::VpcRouterRouteUpdate;
-    ///Delete a route
+    /// Delete a route
     ///
     ///Sends a `DELETE` request to `/v1/vpc-router-routes/{route}`
     ///
@@ -19331,7 +19331,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_route_delete(&self) -> builder::VpcRouterRouteDelete;
-    ///List routers
+    /// List routers
     ///
     ///Sends a `GET` request to `/v1/vpc-routers`
     ///
@@ -19354,7 +19354,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_list(&self) -> builder::VpcRouterList;
-    ///Create a VPC router
+    /// Create a VPC router
     ///
     ///Sends a `POST` request to `/v1/vpc-routers`
     ///
@@ -19372,7 +19372,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_create(&self) -> builder::VpcRouterCreate;
-    ///Get a router
+    /// Get a router
     ///
     ///Sends a `GET` request to `/v1/vpc-routers/{router}`
     ///
@@ -19390,7 +19390,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_view(&self) -> builder::VpcRouterView;
-    ///Update a router
+    /// Update a router
     ///
     ///Sends a `PUT` request to `/v1/vpc-routers/{router}`
     ///
@@ -19410,7 +19410,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_update(&self) -> builder::VpcRouterUpdate;
-    ///Delete a router
+    /// Delete a router
     ///
     ///Sends a `DELETE` request to `/v1/vpc-routers/{router}`
     ///
@@ -19428,7 +19428,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_delete(&self) -> builder::VpcRouterDelete;
-    ///Fetch a subnet
+    /// Fetch a subnet
     ///
     ///Sends a `GET` request to `/v1/vpc-subnets`
     ///
@@ -19451,7 +19451,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_list(&self) -> builder::VpcSubnetList;
-    ///Create a subnet
+    /// Create a subnet
     ///
     ///Sends a `POST` request to `/v1/vpc-subnets`
     ///
@@ -19469,7 +19469,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_create(&self) -> builder::VpcSubnetCreate;
-    ///Fetch a subnet
+    /// Fetch a subnet
     ///
     ///Sends a `GET` request to `/v1/vpc-subnets/{subnet}`
     ///
@@ -19487,7 +19487,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_view(&self) -> builder::VpcSubnetView;
-    ///Update a subnet
+    /// Update a subnet
     ///
     ///Sends a `PUT` request to `/v1/vpc-subnets/{subnet}`
     ///
@@ -19507,7 +19507,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_update(&self) -> builder::VpcSubnetUpdate;
-    ///Delete a subnet
+    /// Delete a subnet
     ///
     ///Sends a `DELETE` request to `/v1/vpc-subnets/{subnet}`
     ///
@@ -19525,7 +19525,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_delete(&self) -> builder::VpcSubnetDelete;
-    ///List network interfaces
+    /// List network interfaces
     ///
     ///Sends a `GET` request to `/v1/vpc-subnets/{subnet}/network-interfaces`
     ///
@@ -19550,7 +19550,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_list_network_interfaces(&self) -> builder::VpcSubnetListNetworkInterfaces;
-    ///List VPCs
+    /// List VPCs
     ///
     ///Sends a `GET` request to `/v1/vpcs`
     ///
@@ -19570,7 +19570,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_list(&self) -> builder::VpcList;
-    ///Create a VPC
+    /// Create a VPC
     ///
     ///Sends a `POST` request to `/v1/vpcs`
     ///
@@ -19585,7 +19585,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_create(&self) -> builder::VpcCreate;
-    ///Fetch a VPC
+    /// Fetch a VPC
     ///
     ///Sends a `GET` request to `/v1/vpcs/{vpc}`
     ///
@@ -19600,7 +19600,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_view(&self) -> builder::VpcView;
-    ///Update a VPC
+    /// Update a VPC
     ///
     ///Sends a `PUT` request to `/v1/vpcs/{vpc}`
     ///
@@ -19617,7 +19617,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_update(&self) -> builder::VpcUpdate;
-    ///Delete a VPC
+    /// Delete a VPC
     ///
     ///Sends a `DELETE` request to `/v1/vpcs/{vpc}`
     ///
@@ -19734,7 +19734,7 @@ pub mod builder {
     use super::{
         encode_path, ByteStream, Error, HeaderMap, HeaderValue, RequestBuilderExt, ResponseValue,
     };
-    ///Builder for [`ClientHiddenExt::device_auth_request`]
+    /// Builder for [`ClientHiddenExt::device_auth_request`]
     ///
     ///[`ClientHiddenExt::device_auth_request`]: super::ClientHiddenExt::device_auth_request
     #[derive(Debug, Clone)]
@@ -19772,7 +19772,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/device/auth`
+        /// Sends a `POST` request to `/device/auth`
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
             let Self { client, body } = self;
             let body = body
@@ -19789,7 +19789,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientHiddenExt::device_auth_confirm`]
+    /// Builder for [`ClientHiddenExt::device_auth_confirm`]
     ///
     ///[`ClientHiddenExt::device_auth_confirm`]: super::ClientHiddenExt::device_auth_confirm
     #[derive(Debug, Clone)]
@@ -19827,7 +19827,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/device/confirm`
+        /// Sends a `POST` request to `/device/confirm`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
@@ -19850,7 +19850,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientHiddenExt::device_access_token`]
+    /// Builder for [`ClientHiddenExt::device_access_token`]
     ///
     ///[`ClientHiddenExt::device_access_token`]: super::ClientHiddenExt::device_access_token
     #[derive(Debug, Clone)]
@@ -19887,7 +19887,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/device/token`
+        /// Sends a `POST` request to `/device/token`
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
             let Self { client, body } = self;
             let body = body
@@ -19904,7 +19904,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientHiddenExt::login_spoof`]
+    /// Builder for [`ClientHiddenExt::login_spoof`]
     ///
     ///[`ClientHiddenExt::login_spoof`]: super::ClientHiddenExt::login_spoof
     #[derive(Debug, Clone)]
@@ -19940,7 +19940,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/login`
+        /// Sends a `POST` request to `/login`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
@@ -19963,7 +19963,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientLoginExt::login_local`]
+    /// Builder for [`ClientLoginExt::login_local`]
     ///
     ///[`ClientLoginExt::login_local`]: super::ClientLoginExt::login_local
     #[derive(Debug, Clone)]
@@ -20012,7 +20012,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/login/{silo_name}/local`
+        /// Sends a `POST` request to `/login/{silo_name}/local`
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<types::Error>> {
             let Self {
                 client,
@@ -20044,7 +20044,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientLoginExt::login_saml_begin`]
+    /// Builder for [`ClientLoginExt::login_saml_begin`]
     ///
     ///[`ClientLoginExt::login_saml_begin`]: super::ClientLoginExt::login_saml_begin
     #[derive(Debug, Clone)]
@@ -20083,7 +20083,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/login/{silo_name}/saml/{provider_name}`
+        /// Sends a `GET` request to `/login/{silo_name}/saml/{provider_name}`
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<types::Error>> {
             let Self {
                 client,
@@ -20114,7 +20114,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientLoginExt::login_saml`]
+    /// Builder for [`ClientLoginExt::login_saml`]
     ///
     ///[`ClientLoginExt::login_saml`]: super::ClientLoginExt::login_saml
     #[derive(Debug)]
@@ -20165,7 +20165,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/login/{silo_name}/saml/{provider_name}`
+        /// Sends a `POST` request to `/login/{silo_name}/saml/{provider_name}`
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<types::Error>> {
             let Self {
                 client,
@@ -20206,7 +20206,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientHiddenExt::logout`]
+    /// Builder for [`ClientHiddenExt::logout`]
     ///
     ///[`ClientHiddenExt::logout`]: super::ClientHiddenExt::logout
     #[derive(Debug, Clone)]
@@ -20219,7 +20219,7 @@ pub mod builder {
             Self { client }
         }
 
-        ///Sends a `POST` request to `/logout`
+        /// Sends a `POST` request to `/logout`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client } = self;
             let url = format!("{}/logout", client.baseurl,);
@@ -20239,7 +20239,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_image_view_by_id`]
+    /// Builder for [`ClientSystemExt::system_image_view_by_id`]
     ///
     ///[`ClientSystemExt::system_image_view_by_id`]: super::ClientSystemExt::system_image_view_by_id
     #[derive(Debug, Clone)]
@@ -20266,7 +20266,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/system/by-id/images/{id}`
+        /// Sends a `GET` request to `/system/by-id/images/{id}`
         pub async fn send(self) -> Result<ResponseValue<types::GlobalImage>, Error<types::Error>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
@@ -20291,7 +20291,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_image_list`]
+    /// Builder for [`ClientSystemExt::system_image_list`]
     ///
     ///[`ClientSystemExt::system_image_list`]: super::ClientSystemExt::system_image_list
     #[derive(Debug, Clone)]
@@ -20344,7 +20344,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/system/images`
+        /// Sends a `GET` request to `/system/images`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::GlobalImageResultsPage>, Error<types::Error>> {
@@ -20383,7 +20383,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/system/images`
+        /// Streams `GET` requests to `/system/images`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::GlobalImage, Error<types::Error>>> + Unpin + 'a
@@ -20431,7 +20431,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_image_create`]
+    /// Builder for [`ClientSystemExt::system_image_create`]
     ///
     ///[`ClientSystemExt::system_image_create`]: super::ClientSystemExt::system_image_create
     #[derive(Debug, Clone)]
@@ -20469,7 +20469,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/system/images`
+        /// Sends a `POST` request to `/system/images`
         pub async fn send(self) -> Result<ResponseValue<types::GlobalImage>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
@@ -20492,7 +20492,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_image_view`]
+    /// Builder for [`ClientSystemExt::system_image_view`]
     ///
     ///[`ClientSystemExt::system_image_view`]: super::ClientSystemExt::system_image_view
     #[derive(Debug, Clone)]
@@ -20519,7 +20519,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/system/images/{image_name}`
+        /// Sends a `GET` request to `/system/images/{image_name}`
         pub async fn send(self) -> Result<ResponseValue<types::GlobalImage>, Error<types::Error>> {
             let Self { client, image_name } = self;
             let image_name = image_name.map_err(Error::InvalidRequest)?;
@@ -20544,7 +20544,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_image_delete`]
+    /// Builder for [`ClientSystemExt::system_image_delete`]
     ///
     ///[`ClientSystemExt::system_image_delete`]: super::ClientSystemExt::system_image_delete
     #[derive(Debug, Clone)]
@@ -20571,7 +20571,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/system/images/{image_name}`
+        /// Sends a `DELETE` request to `/system/images/{image_name}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, image_name } = self;
             let image_name = image_name.map_err(Error::InvalidRequest)?;
@@ -20596,7 +20596,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientDisksExt::disk_list`]
+    /// Builder for [`ClientDisksExt::disk_list`]
     ///
     ///[`ClientDisksExt::disk_list`]: super::ClientDisksExt::disk_list
     #[derive(Debug, Clone)]
@@ -20662,7 +20662,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/disks`
+        /// Sends a `GET` request to `/v1/disks`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::DiskResultsPage>, Error<types::Error>> {
@@ -20706,7 +20706,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/disks`
+        /// Streams `GET` requests to `/v1/disks`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Disk, Error<types::Error>>> + Unpin + 'a
@@ -20755,7 +20755,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientDisksExt::disk_create`]
+    /// Builder for [`ClientDisksExt::disk_create`]
     ///
     ///[`ClientDisksExt::disk_create`]: super::ClientDisksExt::disk_create
     #[derive(Debug, Clone)]
@@ -20803,7 +20803,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/disks`
+        /// Sends a `POST` request to `/v1/disks`
         pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
             let Self {
                 client,
@@ -20833,7 +20833,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientDisksExt::disk_view`]
+    /// Builder for [`ClientDisksExt::disk_view`]
     ///
     ///[`ClientDisksExt::disk_view`]: super::ClientDisksExt::disk_view
     #[derive(Debug, Clone)]
@@ -20873,7 +20873,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/disks/{disk}`
+        /// Sends a `GET` request to `/v1/disks/{disk}`
         pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
             let Self {
                 client,
@@ -20907,7 +20907,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientDisksExt::disk_delete`]
+    /// Builder for [`ClientDisksExt::disk_delete`]
     ///
     ///[`ClientDisksExt::disk_delete`]: super::ClientDisksExt::disk_delete
     #[derive(Debug, Clone)]
@@ -20947,7 +20947,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/disks/{disk}`
+        /// Sends a `DELETE` request to `/v1/disks/{disk}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -20981,7 +20981,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientDisksExt::disk_bulk_write_import`]
+    /// Builder for [`ClientDisksExt::disk_bulk_write_import`]
     ///
     ///[`ClientDisksExt::disk_bulk_write_import`]: super::ClientDisksExt::disk_bulk_write_import
     #[derive(Debug, Clone)]
@@ -21044,7 +21044,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write`
+        /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -21082,7 +21082,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientDisksExt::disk_bulk_write_import_start`]
+    /// Builder for [`ClientDisksExt::disk_bulk_write_import_start`]
     ///
     ///[`ClientDisksExt::disk_bulk_write_import_start`]: super::ClientDisksExt::disk_bulk_write_import_start
     #[derive(Debug, Clone)]
@@ -21122,7 +21122,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write-start`
+        /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write-start`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -21156,7 +21156,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientDisksExt::disk_bulk_write_import_stop`]
+    /// Builder for [`ClientDisksExt::disk_bulk_write_import_stop`]
     ///
     ///[`ClientDisksExt::disk_bulk_write_import_stop`]: super::ClientDisksExt::disk_bulk_write_import_stop
     #[derive(Debug, Clone)]
@@ -21196,7 +21196,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`
+        /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -21230,7 +21230,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientDisksExt::disk_finalize_import`]
+    /// Builder for [`ClientDisksExt::disk_finalize_import`]
     ///
     ///[`ClientDisksExt::disk_finalize_import`]: super::ClientDisksExt::disk_finalize_import
     #[derive(Debug, Clone)]
@@ -21291,7 +21291,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/disks/{disk}/finalize`
+        /// Sends a `POST` request to `/v1/disks/{disk}/finalize`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -21329,7 +21329,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientDisksExt::disk_import_blocks_from_url`]
+    /// Builder for [`ClientDisksExt::disk_import_blocks_from_url`]
     ///
     ///[`ClientDisksExt::disk_import_blocks_from_url`]: super::ClientDisksExt::disk_import_blocks_from_url
     #[derive(Debug, Clone)]
@@ -21392,7 +21392,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/disks/{disk}/import`
+        /// Sends a `POST` request to `/v1/disks/{disk}/import`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -21430,7 +21430,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientDisksExt::disk_metrics_list`]
+    /// Builder for [`ClientDisksExt::disk_metrics_list`]
     ///
     ///[`ClientDisksExt::disk_metrics_list`]: super::ClientDisksExt::disk_metrics_list
     #[derive(Debug, Clone)]
@@ -21534,7 +21534,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`
+        /// Sends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
@@ -21592,7 +21592,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/disks/{disk}/metrics/{metric}`
+        /// Streams `GET` requests to `/v1/disks/{disk}/metrics/{metric}`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Measurement, Error<types::Error>>> + Unpin + 'a
@@ -21642,7 +21642,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSilosExt::group_list`]
+    /// Builder for [`ClientSilosExt::group_list`]
     ///
     ///[`ClientSilosExt::group_list`]: super::ClientSilosExt::group_list
     #[derive(Debug, Clone)]
@@ -21695,7 +21695,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/groups`
+        /// Sends a `GET` request to `/v1/groups`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::GroupResultsPage>, Error<types::Error>> {
@@ -21734,7 +21734,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/groups`
+        /// Streams `GET` requests to `/v1/groups`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Group, Error<types::Error>>> + Unpin + 'a
@@ -21782,7 +21782,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSilosExt::group_view`]
+    /// Builder for [`ClientSilosExt::group_view`]
     ///
     ///[`ClientSilosExt::group_view`]: super::ClientSilosExt::group_view
     #[derive(Debug, Clone)]
@@ -21809,7 +21809,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/groups/{group}`
+        /// Sends a `GET` request to `/v1/groups/{group}`
         pub async fn send(self) -> Result<ResponseValue<types::Group>, Error<types::Error>> {
             let Self { client, group } = self;
             let group = group.map_err(Error::InvalidRequest)?;
@@ -21834,7 +21834,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientImagesExt::image_list`]
+    /// Builder for [`ClientImagesExt::image_list`]
     ///
     ///[`ClientImagesExt::image_list`]: super::ClientImagesExt::image_list
     #[derive(Debug, Clone)]
@@ -21913,7 +21913,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/images`
+        /// Sends a `GET` request to `/v1/images`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::ImageResultsPage>, Error<types::Error>> {
@@ -21962,7 +21962,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/images`
+        /// Streams `GET` requests to `/v1/images`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Image, Error<types::Error>>> + Unpin + 'a
@@ -22012,7 +22012,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientImagesExt::image_create`]
+    /// Builder for [`ClientImagesExt::image_create`]
     ///
     ///[`ClientImagesExt::image_create`]: super::ClientImagesExt::image_create
     #[derive(Debug, Clone)]
@@ -22061,7 +22061,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/images`
+        /// Sends a `POST` request to `/v1/images`
         pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
             let Self {
                 client,
@@ -22093,7 +22093,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientImagesExt::image_view`]
+    /// Builder for [`ClientImagesExt::image_view`]
     ///
     ///[`ClientImagesExt::image_view`]: super::ClientImagesExt::image_view
     #[derive(Debug, Clone)]
@@ -22133,7 +22133,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/images/{image}`
+        /// Sends a `GET` request to `/v1/images/{image}`
         pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
             let Self {
                 client,
@@ -22167,7 +22167,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientImagesExt::image_delete`]
+    /// Builder for [`ClientImagesExt::image_delete`]
     ///
     ///[`ClientImagesExt::image_delete`]: super::ClientImagesExt::image_delete
     #[derive(Debug, Clone)]
@@ -22207,7 +22207,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/images/{image}`
+        /// Sends a `DELETE` request to `/v1/images/{image}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -22241,7 +22241,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientImagesExt::image_promote`]
+    /// Builder for [`ClientImagesExt::image_promote`]
     ///
     ///[`ClientImagesExt::image_promote`]: super::ClientImagesExt::image_promote
     #[derive(Debug, Clone)]
@@ -22281,7 +22281,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/images/{image}/promote`
+        /// Sends a `POST` request to `/v1/images/{image}/promote`
         pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
             let Self {
                 client,
@@ -22315,7 +22315,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_list`]
+    /// Builder for [`ClientInstancesExt::instance_list`]
     ///
     ///[`ClientInstancesExt::instance_list`]: super::ClientInstancesExt::instance_list
     #[derive(Debug, Clone)]
@@ -22381,7 +22381,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/instances`
+        /// Sends a `GET` request to `/v1/instances`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::InstanceResultsPage>, Error<types::Error>> {
@@ -22425,7 +22425,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/instances`
+        /// Streams `GET` requests to `/v1/instances`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Instance, Error<types::Error>>> + Unpin + 'a
@@ -22474,7 +22474,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_create`]
+    /// Builder for [`ClientInstancesExt::instance_create`]
     ///
     ///[`ClientInstancesExt::instance_create`]: super::ClientInstancesExt::instance_create
     #[derive(Debug, Clone)]
@@ -22522,7 +22522,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/instances`
+        /// Sends a `POST` request to `/v1/instances`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
                 client,
@@ -22552,7 +22552,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_view`]
+    /// Builder for [`ClientInstancesExt::instance_view`]
     ///
     ///[`ClientInstancesExt::instance_view`]: super::ClientInstancesExt::instance_view
     #[derive(Debug, Clone)]
@@ -22592,7 +22592,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/instances/{instance}`
+        /// Sends a `GET` request to `/v1/instances/{instance}`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
                 client,
@@ -22626,7 +22626,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_delete`]
+    /// Builder for [`ClientInstancesExt::instance_delete`]
     ///
     ///[`ClientInstancesExt::instance_delete`]: super::ClientInstancesExt::instance_delete
     #[derive(Debug, Clone)]
@@ -22666,7 +22666,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/instances/{instance}`
+        /// Sends a `DELETE` request to `/v1/instances/{instance}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -22700,7 +22700,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_disk_list`]
+    /// Builder for [`ClientInstancesExt::instance_disk_list`]
     ///
     ///[`ClientInstancesExt::instance_disk_list`]: super::ClientInstancesExt::instance_disk_list
     #[derive(Debug, Clone)]
@@ -22778,7 +22778,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/instances/{instance}/disks`
+        /// Sends a `GET` request to `/v1/instances/{instance}/disks`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::DiskResultsPage>, Error<types::Error>> {
@@ -22828,7 +22828,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/instances/{instance}/disks`
+        /// Streams `GET` requests to `/v1/instances/{instance}/disks`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Disk, Error<types::Error>>> + Unpin + 'a
@@ -22877,7 +22877,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_disk_attach`]
+    /// Builder for [`ClientInstancesExt::instance_disk_attach`]
     ///
     ///[`ClientInstancesExt::instance_disk_attach`]: super::ClientInstancesExt::instance_disk_attach
     #[derive(Debug, Clone)]
@@ -22938,7 +22938,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/instances/{instance}/disks/attach`
+        /// Sends a `POST` request to `/v1/instances/{instance}/disks/attach`
         pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
             let Self {
                 client,
@@ -22976,7 +22976,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_disk_detach`]
+    /// Builder for [`ClientInstancesExt::instance_disk_detach`]
     ///
     ///[`ClientInstancesExt::instance_disk_detach`]: super::ClientInstancesExt::instance_disk_detach
     #[derive(Debug, Clone)]
@@ -23037,7 +23037,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/instances/{instance}/disks/detach`
+        /// Sends a `POST` request to `/v1/instances/{instance}/disks/detach`
         pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
             let Self {
                 client,
@@ -23075,7 +23075,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_external_ip_list`]
+    /// Builder for [`ClientInstancesExt::instance_external_ip_list`]
     ///
     ///[`ClientInstancesExt::instance_external_ip_list`]: super::ClientInstancesExt::instance_external_ip_list
     #[derive(Debug, Clone)]
@@ -23115,7 +23115,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/instances/{instance}/external-ips`
+        /// Sends a `GET` request to `/v1/instances/{instance}/external-ips`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::ExternalIpResultsPage>, Error<types::Error>> {
@@ -23151,7 +23151,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_migrate`]
+    /// Builder for [`ClientInstancesExt::instance_migrate`]
     ///
     ///[`ClientInstancesExt::instance_migrate`]: super::ClientInstancesExt::instance_migrate
     #[derive(Debug, Clone)]
@@ -23212,7 +23212,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/instances/{instance}/migrate`
+        /// Sends a `POST` request to `/v1/instances/{instance}/migrate`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
                 client,
@@ -23250,7 +23250,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_reboot`]
+    /// Builder for [`ClientInstancesExt::instance_reboot`]
     ///
     ///[`ClientInstancesExt::instance_reboot`]: super::ClientInstancesExt::instance_reboot
     #[derive(Debug, Clone)]
@@ -23290,7 +23290,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/instances/{instance}/reboot`
+        /// Sends a `POST` request to `/v1/instances/{instance}/reboot`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
                 client,
@@ -23324,7 +23324,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_serial_console`]
+    /// Builder for [`ClientInstancesExt::instance_serial_console`]
     ///
     ///[`ClientInstancesExt::instance_serial_console`]: super::ClientInstancesExt::instance_serial_console
     #[derive(Debug, Clone)]
@@ -23403,7 +23403,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/instances/{instance}/serial-console`
+        /// Sends a `GET` request to `/v1/instances/{instance}/serial-console`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::InstanceSerialConsoleData>, Error<types::Error>> {
@@ -23454,7 +23454,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_serial_console_stream`]
+    /// Builder for [`ClientInstancesExt::instance_serial_console_stream`]
     ///
     ///[`ClientInstancesExt::instance_serial_console_stream`]: super::ClientInstancesExt::instance_serial_console_stream
     #[derive(Debug, Clone)]
@@ -23533,7 +23533,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to
+        /// Sends a `GET` request to
         /// `/v1/instances/{instance}/serial-console/stream`
         pub async fn send(
             self,
@@ -23594,7 +23594,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_start`]
+    /// Builder for [`ClientInstancesExt::instance_start`]
     ///
     ///[`ClientInstancesExt::instance_start`]: super::ClientInstancesExt::instance_start
     #[derive(Debug, Clone)]
@@ -23634,7 +23634,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/instances/{instance}/start`
+        /// Sends a `POST` request to `/v1/instances/{instance}/start`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
                 client,
@@ -23668,7 +23668,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_stop`]
+    /// Builder for [`ClientInstancesExt::instance_stop`]
     ///
     ///[`ClientInstancesExt::instance_stop`]: super::ClientInstancesExt::instance_stop
     #[derive(Debug, Clone)]
@@ -23708,7 +23708,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/instances/{instance}/stop`
+        /// Sends a `POST` request to `/v1/instances/{instance}/stop`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
                 client,
@@ -23742,7 +23742,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSessionExt::current_user_view`]
+    /// Builder for [`ClientSessionExt::current_user_view`]
     ///
     ///[`ClientSessionExt::current_user_view`]: super::ClientSessionExt::current_user_view
     #[derive(Debug, Clone)]
@@ -23755,7 +23755,7 @@ pub mod builder {
             Self { client }
         }
 
-        ///Sends a `GET` request to `/v1/me`
+        /// Sends a `GET` request to `/v1/me`
         pub async fn send(self) -> Result<ResponseValue<types::CurrentUser>, Error<types::Error>> {
             let Self { client } = self;
             let url = format!("{}/v1/me", client.baseurl,);
@@ -23775,7 +23775,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSessionExt::current_user_groups`]
+    /// Builder for [`ClientSessionExt::current_user_groups`]
     ///
     ///[`ClientSessionExt::current_user_groups`]: super::ClientSessionExt::current_user_groups
     #[derive(Debug, Clone)]
@@ -23828,7 +23828,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/me/groups`
+        /// Sends a `GET` request to `/v1/me/groups`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::GroupResultsPage>, Error<types::Error>> {
@@ -23867,7 +23867,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/me/groups`
+        /// Streams `GET` requests to `/v1/me/groups`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Group, Error<types::Error>>> + Unpin + 'a
@@ -23915,7 +23915,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSessionExt::current_user_ssh_key_list`]
+    /// Builder for [`ClientSessionExt::current_user_ssh_key_list`]
     ///
     ///[`ClientSessionExt::current_user_ssh_key_list`]: super::ClientSessionExt::current_user_ssh_key_list
     #[derive(Debug, Clone)]
@@ -23968,7 +23968,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/me/ssh-keys`
+        /// Sends a `GET` request to `/v1/me/ssh-keys`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SshKeyResultsPage>, Error<types::Error>> {
@@ -24007,7 +24007,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/me/ssh-keys`
+        /// Streams `GET` requests to `/v1/me/ssh-keys`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::SshKey, Error<types::Error>>> + Unpin + 'a
@@ -24055,7 +24055,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSessionExt::current_user_ssh_key_create`]
+    /// Builder for [`ClientSessionExt::current_user_ssh_key_create`]
     ///
     ///[`ClientSessionExt::current_user_ssh_key_create`]: super::ClientSessionExt::current_user_ssh_key_create
     #[derive(Debug, Clone)]
@@ -24091,7 +24091,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/me/ssh-keys`
+        /// Sends a `POST` request to `/v1/me/ssh-keys`
         pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
@@ -24114,7 +24114,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSessionExt::current_user_ssh_key_view`]
+    /// Builder for [`ClientSessionExt::current_user_ssh_key_view`]
     ///
     ///[`ClientSessionExt::current_user_ssh_key_view`]: super::ClientSessionExt::current_user_ssh_key_view
     #[derive(Debug, Clone)]
@@ -24141,7 +24141,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`
+        /// Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`
         pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
             let Self { client, ssh_key } = self;
             let ssh_key = ssh_key.map_err(Error::InvalidRequest)?;
@@ -24166,7 +24166,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSessionExt::current_user_ssh_key_delete`]
+    /// Builder for [`ClientSessionExt::current_user_ssh_key_delete`]
     ///
     ///[`ClientSessionExt::current_user_ssh_key_delete`]: super::ClientSessionExt::current_user_ssh_key_delete
     #[derive(Debug, Clone)]
@@ -24193,7 +24193,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`
+        /// Sends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, ssh_key } = self;
             let ssh_key = ssh_key.map_err(Error::InvalidRequest)?;
@@ -24218,7 +24218,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_network_interface_list`]
+    /// Builder for [`ClientInstancesExt::instance_network_interface_list`]
     ///
     ///[`ClientInstancesExt::instance_network_interface_list`]: super::ClientInstancesExt::instance_network_interface_list
     #[derive(Debug, Clone)]
@@ -24297,7 +24297,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/network-interfaces`
+        /// Sends a `GET` request to `/v1/network-interfaces`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::InstanceNetworkInterfaceResultsPage>, Error<types::Error>>
@@ -24347,7 +24347,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/network-interfaces`
+        /// Streams `GET` requests to `/v1/network-interfaces`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::InstanceNetworkInterface, Error<types::Error>>>
@@ -24398,7 +24398,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_network_interface_create`]
+    /// Builder for [`ClientInstancesExt::instance_network_interface_create`]
     ///
     ///[`ClientInstancesExt::instance_network_interface_create`]: super::ClientInstancesExt::instance_network_interface_create
     #[derive(Debug, Clone)]
@@ -24460,7 +24460,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/network-interfaces`
+        /// Sends a `POST` request to `/v1/network-interfaces`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::InstanceNetworkInterface>, Error<types::Error>> {
@@ -24497,7 +24497,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_network_interface_view`]
+    /// Builder for [`ClientInstancesExt::instance_network_interface_view`]
     ///
     ///[`ClientInstancesExt::instance_network_interface_view`]: super::ClientInstancesExt::instance_network_interface_view
     #[derive(Debug, Clone)]
@@ -24550,7 +24550,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/network-interfaces/{interface}`
+        /// Sends a `GET` request to `/v1/network-interfaces/{interface}`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::InstanceNetworkInterface>, Error<types::Error>> {
@@ -24591,7 +24591,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_network_interface_update`]
+    /// Builder for [`ClientInstancesExt::instance_network_interface_update`]
     ///
     ///[`ClientInstancesExt::instance_network_interface_update`]: super::ClientInstancesExt::instance_network_interface_update
     #[derive(Debug, Clone)]
@@ -24666,7 +24666,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/network-interfaces/{interface}`
+        /// Sends a `PUT` request to `/v1/network-interfaces/{interface}`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::InstanceNetworkInterface>, Error<types::Error>> {
@@ -24711,7 +24711,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientInstancesExt::instance_network_interface_delete`]
+    /// Builder for [`ClientInstancesExt::instance_network_interface_delete`]
     ///
     ///[`ClientInstancesExt::instance_network_interface_delete`]: super::ClientInstancesExt::instance_network_interface_delete
     #[derive(Debug, Clone)]
@@ -24764,7 +24764,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/network-interfaces/{interface}`
+        /// Sends a `DELETE` request to `/v1/network-interfaces/{interface}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -24803,7 +24803,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSilosExt::policy_view`]
+    /// Builder for [`ClientSilosExt::policy_view`]
     ///
     ///[`ClientSilosExt::policy_view`]: super::ClientSilosExt::policy_view
     #[derive(Debug, Clone)]
@@ -24816,7 +24816,7 @@ pub mod builder {
             Self { client }
         }
 
-        ///Sends a `GET` request to `/v1/policy`
+        /// Sends a `GET` request to `/v1/policy`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
@@ -24838,7 +24838,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSilosExt::policy_update`]
+    /// Builder for [`ClientSilosExt::policy_update`]
     ///
     ///[`ClientSilosExt::policy_update`]: super::ClientSilosExt::policy_update
     #[derive(Debug, Clone)]
@@ -24874,7 +24874,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/policy`
+        /// Sends a `PUT` request to `/v1/policy`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
@@ -24899,7 +24899,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientProjectsExt::project_list`]
+    /// Builder for [`ClientProjectsExt::project_list`]
     ///
     ///[`ClientProjectsExt::project_list`]: super::ClientProjectsExt::project_list
     #[derive(Debug, Clone)]
@@ -24952,7 +24952,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/projects`
+        /// Sends a `GET` request to `/v1/projects`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::ProjectResultsPage>, Error<types::Error>> {
@@ -24991,7 +24991,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/projects`
+        /// Streams `GET` requests to `/v1/projects`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Project, Error<types::Error>>> + Unpin + 'a
@@ -25039,7 +25039,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientProjectsExt::project_create`]
+    /// Builder for [`ClientProjectsExt::project_create`]
     ///
     ///[`ClientProjectsExt::project_create`]: super::ClientProjectsExt::project_create
     #[derive(Debug, Clone)]
@@ -25075,7 +25075,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/projects`
+        /// Sends a `POST` request to `/v1/projects`
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
@@ -25098,7 +25098,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientProjectsExt::project_view`]
+    /// Builder for [`ClientProjectsExt::project_view`]
     ///
     ///[`ClientProjectsExt::project_view`]: super::ClientProjectsExt::project_view
     #[derive(Debug, Clone)]
@@ -25125,7 +25125,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/projects/{project}`
+        /// Sends a `GET` request to `/v1/projects/{project}`
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
             let Self { client, project } = self;
             let project = project.map_err(Error::InvalidRequest)?;
@@ -25150,7 +25150,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientProjectsExt::project_update`]
+    /// Builder for [`ClientProjectsExt::project_update`]
     ///
     ///[`ClientProjectsExt::project_update`]: super::ClientProjectsExt::project_update
     #[derive(Debug, Clone)]
@@ -25198,7 +25198,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/projects/{project}`
+        /// Sends a `PUT` request to `/v1/projects/{project}`
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
             let Self {
                 client,
@@ -25230,7 +25230,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientProjectsExt::project_delete`]
+    /// Builder for [`ClientProjectsExt::project_delete`]
     ///
     ///[`ClientProjectsExt::project_delete`]: super::ClientProjectsExt::project_delete
     #[derive(Debug, Clone)]
@@ -25257,7 +25257,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/projects/{project}`
+        /// Sends a `DELETE` request to `/v1/projects/{project}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, project } = self;
             let project = project.map_err(Error::InvalidRequest)?;
@@ -25282,7 +25282,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientProjectsExt::project_policy_view`]
+    /// Builder for [`ClientProjectsExt::project_policy_view`]
     ///
     ///[`ClientProjectsExt::project_policy_view`]: super::ClientProjectsExt::project_policy_view
     #[derive(Debug, Clone)]
@@ -25309,7 +25309,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/projects/{project}/policy`
+        /// Sends a `GET` request to `/v1/projects/{project}/policy`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::ProjectRolePolicy>, Error<types::Error>> {
@@ -25336,7 +25336,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientProjectsExt::project_policy_update`]
+    /// Builder for [`ClientProjectsExt::project_policy_update`]
     ///
     ///[`ClientProjectsExt::project_policy_update`]: super::ClientProjectsExt::project_policy_update
     #[derive(Debug, Clone)]
@@ -25386,7 +25386,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/projects/{project}/policy`
+        /// Sends a `PUT` request to `/v1/projects/{project}/policy`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::ProjectRolePolicy>, Error<types::Error>> {
@@ -25420,7 +25420,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSnapshotsExt::snapshot_list`]
+    /// Builder for [`ClientSnapshotsExt::snapshot_list`]
     ///
     ///[`ClientSnapshotsExt::snapshot_list`]: super::ClientSnapshotsExt::snapshot_list
     #[derive(Debug, Clone)]
@@ -25486,7 +25486,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/snapshots`
+        /// Sends a `GET` request to `/v1/snapshots`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SnapshotResultsPage>, Error<types::Error>> {
@@ -25530,7 +25530,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/snapshots`
+        /// Streams `GET` requests to `/v1/snapshots`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Snapshot, Error<types::Error>>> + Unpin + 'a
@@ -25579,7 +25579,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSnapshotsExt::snapshot_create`]
+    /// Builder for [`ClientSnapshotsExt::snapshot_create`]
     ///
     ///[`ClientSnapshotsExt::snapshot_create`]: super::ClientSnapshotsExt::snapshot_create
     #[derive(Debug, Clone)]
@@ -25627,7 +25627,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/snapshots`
+        /// Sends a `POST` request to `/v1/snapshots`
         pub async fn send(self) -> Result<ResponseValue<types::Snapshot>, Error<types::Error>> {
             let Self {
                 client,
@@ -25657,7 +25657,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSnapshotsExt::snapshot_view`]
+    /// Builder for [`ClientSnapshotsExt::snapshot_view`]
     ///
     ///[`ClientSnapshotsExt::snapshot_view`]: super::ClientSnapshotsExt::snapshot_view
     #[derive(Debug, Clone)]
@@ -25697,7 +25697,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/snapshots/{snapshot}`
+        /// Sends a `GET` request to `/v1/snapshots/{snapshot}`
         pub async fn send(self) -> Result<ResponseValue<types::Snapshot>, Error<types::Error>> {
             let Self {
                 client,
@@ -25731,7 +25731,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSnapshotsExt::snapshot_delete`]
+    /// Builder for [`ClientSnapshotsExt::snapshot_delete`]
     ///
     ///[`ClientSnapshotsExt::snapshot_delete`]: super::ClientSnapshotsExt::snapshot_delete
     #[derive(Debug, Clone)]
@@ -25771,7 +25771,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/snapshots/{snapshot}`
+        /// Sends a `DELETE` request to `/v1/snapshots/{snapshot}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -25805,7 +25805,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::certificate_list`]
+    /// Builder for [`ClientSystemExt::certificate_list`]
     ///
     ///[`ClientSystemExt::certificate_list`]: super::ClientSystemExt::certificate_list
     #[derive(Debug, Clone)]
@@ -25858,7 +25858,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/certificates`
+        /// Sends a `GET` request to `/v1/system/certificates`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::CertificateResultsPage>, Error<types::Error>> {
@@ -25897,7 +25897,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/certificates`
+        /// Streams `GET` requests to `/v1/system/certificates`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Certificate, Error<types::Error>>> + Unpin + 'a
@@ -25945,7 +25945,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::certificate_create`]
+    /// Builder for [`ClientSystemExt::certificate_create`]
     ///
     ///[`ClientSystemExt::certificate_create`]: super::ClientSystemExt::certificate_create
     #[derive(Debug, Clone)]
@@ -25983,7 +25983,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/certificates`
+        /// Sends a `POST` request to `/v1/system/certificates`
         pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
@@ -26006,7 +26006,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::certificate_view`]
+    /// Builder for [`ClientSystemExt::certificate_view`]
     ///
     ///[`ClientSystemExt::certificate_view`]: super::ClientSystemExt::certificate_view
     #[derive(Debug, Clone)]
@@ -26033,7 +26033,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/certificates/{certificate}`
+        /// Sends a `GET` request to `/v1/system/certificates/{certificate}`
         pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
             let Self {
                 client,
@@ -26061,7 +26061,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::certificate_delete`]
+    /// Builder for [`ClientSystemExt::certificate_delete`]
     ///
     ///[`ClientSystemExt::certificate_delete`]: super::ClientSystemExt::certificate_delete
     #[derive(Debug, Clone)]
@@ -26088,7 +26088,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
+        /// Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -26116,7 +26116,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::physical_disk_list`]
+    /// Builder for [`ClientSystemExt::physical_disk_list`]
     ///
     ///[`ClientSystemExt::physical_disk_list`]: super::ClientSystemExt::physical_disk_list
     #[derive(Debug, Clone)]
@@ -26169,7 +26169,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/hardware/disks`
+        /// Sends a `GET` request to `/v1/system/hardware/disks`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::PhysicalDiskResultsPage>, Error<types::Error>> {
@@ -26208,7 +26208,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/hardware/disks`
+        /// Streams `GET` requests to `/v1/system/hardware/disks`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::PhysicalDisk, Error<types::Error>>> + Unpin + 'a
@@ -26256,7 +26256,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::rack_list`]
+    /// Builder for [`ClientSystemExt::rack_list`]
     ///
     ///[`ClientSystemExt::rack_list`]: super::ClientSystemExt::rack_list
     #[derive(Debug, Clone)]
@@ -26309,7 +26309,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/hardware/racks`
+        /// Sends a `GET` request to `/v1/system/hardware/racks`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::RackResultsPage>, Error<types::Error>> {
@@ -26348,7 +26348,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/hardware/racks`
+        /// Streams `GET` requests to `/v1/system/hardware/racks`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Rack, Error<types::Error>>> + Unpin + 'a
@@ -26396,7 +26396,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::rack_view`]
+    /// Builder for [`ClientSystemExt::rack_view`]
     ///
     ///[`ClientSystemExt::rack_view`]: super::ClientSystemExt::rack_view
     #[derive(Debug, Clone)]
@@ -26423,7 +26423,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
+        /// Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
         pub async fn send(self) -> Result<ResponseValue<types::Rack>, Error<types::Error>> {
             let Self { client, rack_id } = self;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
@@ -26448,7 +26448,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::sled_list`]
+    /// Builder for [`ClientSystemExt::sled_list`]
     ///
     ///[`ClientSystemExt::sled_list`]: super::ClientSystemExt::sled_list
     #[derive(Debug, Clone)]
@@ -26501,7 +26501,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/hardware/sleds`
+        /// Sends a `GET` request to `/v1/system/hardware/sleds`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SledResultsPage>, Error<types::Error>> {
@@ -26540,7 +26540,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/hardware/sleds`
+        /// Streams `GET` requests to `/v1/system/hardware/sleds`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Sled, Error<types::Error>>> + Unpin + 'a
@@ -26588,7 +26588,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::sled_view`]
+    /// Builder for [`ClientSystemExt::sled_view`]
     ///
     ///[`ClientSystemExt::sled_view`]: super::ClientSystemExt::sled_view
     #[derive(Debug, Clone)]
@@ -26615,7 +26615,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
+        /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
         pub async fn send(self) -> Result<ResponseValue<types::Sled>, Error<types::Error>> {
             let Self { client, sled_id } = self;
             let sled_id = sled_id.map_err(Error::InvalidRequest)?;
@@ -26640,7 +26640,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::sled_physical_disk_list`]
+    /// Builder for [`ClientSystemExt::sled_physical_disk_list`]
     ///
     ///[`ClientSystemExt::sled_physical_disk_list`]: super::ClientSystemExt::sled_physical_disk_list
     #[derive(Debug, Clone)]
@@ -26705,7 +26705,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/disks`
+        /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/disks`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::PhysicalDiskResultsPage>, Error<types::Error>> {
@@ -26750,7 +26750,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to
+        /// Streams `GET` requests to
         /// `/v1/system/hardware/sleds/{sled_id}/disks`
         pub fn stream(
             self,
@@ -26799,7 +26799,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::silo_identity_provider_list`]
+    /// Builder for [`ClientSystemExt::silo_identity_provider_list`]
     ///
     ///[`ClientSystemExt::silo_identity_provider_list`]: super::ClientSystemExt::silo_identity_provider_list
     #[derive(Debug, Clone)]
@@ -26865,7 +26865,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/identity-providers`
+        /// Sends a `GET` request to `/v1/system/identity-providers`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::IdentityProviderResultsPage>, Error<types::Error>>
@@ -26910,7 +26910,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/identity-providers`
+        /// Streams `GET` requests to `/v1/system/identity-providers`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::IdentityProvider, Error<types::Error>>> + Unpin + 'a
@@ -26959,7 +26959,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::local_idp_user_create`]
+    /// Builder for [`ClientSystemExt::local_idp_user_create`]
     ///
     ///[`ClientSystemExt::local_idp_user_create`]: super::ClientSystemExt::local_idp_user_create
     #[derive(Debug, Clone)]
@@ -27007,7 +27007,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to
+        /// Sends a `POST` request to
         /// `/v1/system/identity-providers/local/users`
         pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
             let Self { client, silo, body } = self;
@@ -27037,7 +27037,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::local_idp_user_delete`]
+    /// Builder for [`ClientSystemExt::local_idp_user_delete`]
     ///
     ///[`ClientSystemExt::local_idp_user_delete`]: super::ClientSystemExt::local_idp_user_delete
     #[derive(Debug, Clone)]
@@ -27076,7 +27076,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to
+        /// Sends a `DELETE` request to
         /// `/v1/system/identity-providers/local/users/{user_id}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
@@ -27109,7 +27109,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::local_idp_user_set_password`]
+    /// Builder for [`ClientSystemExt::local_idp_user_set_password`]
     ///
     ///[`ClientSystemExt::local_idp_user_set_password`]: super::ClientSystemExt::local_idp_user_set_password
     #[derive(Debug, Clone)]
@@ -27160,7 +27160,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to
+        /// Sends a `POST` request to
         /// `/v1/system/identity-providers/local/users/{user_id}/set-password`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
@@ -27195,7 +27195,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::saml_identity_provider_create`]
+    /// Builder for [`ClientSystemExt::saml_identity_provider_create`]
     ///
     ///[`ClientSystemExt::saml_identity_provider_create`]: super::ClientSystemExt::saml_identity_provider_create
     #[derive(Debug, Clone)]
@@ -27244,7 +27244,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/identity-providers/saml`
+        /// Sends a `POST` request to `/v1/system/identity-providers/saml`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SamlIdentityProvider>, Error<types::Error>> {
@@ -27272,7 +27272,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::saml_identity_provider_view`]
+    /// Builder for [`ClientSystemExt::saml_identity_provider_view`]
     ///
     ///[`ClientSystemExt::saml_identity_provider_view`]: super::ClientSystemExt::saml_identity_provider_view
     #[derive(Debug, Clone)]
@@ -27311,7 +27311,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to
+        /// Sends a `GET` request to
         /// `/v1/system/identity-providers/saml/{provider}`
         pub async fn send(
             self,
@@ -27346,7 +27346,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_list`]
+    /// Builder for [`ClientSystemExt::ip_pool_list`]
     ///
     ///[`ClientSystemExt::ip_pool_list`]: super::ClientSystemExt::ip_pool_list
     #[derive(Debug, Clone)]
@@ -27399,7 +27399,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/ip-pools`
+        /// Sends a `GET` request to `/v1/system/ip-pools`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::IpPoolResultsPage>, Error<types::Error>> {
@@ -27438,7 +27438,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/ip-pools`
+        /// Streams `GET` requests to `/v1/system/ip-pools`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::IpPool, Error<types::Error>>> + Unpin + 'a
@@ -27486,7 +27486,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_create`]
+    /// Builder for [`ClientSystemExt::ip_pool_create`]
     ///
     ///[`ClientSystemExt::ip_pool_create`]: super::ClientSystemExt::ip_pool_create
     #[derive(Debug, Clone)]
@@ -27522,7 +27522,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/ip-pools`
+        /// Sends a `POST` request to `/v1/system/ip-pools`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
@@ -27545,7 +27545,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_view`]
+    /// Builder for [`ClientSystemExt::ip_pool_view`]
     ///
     ///[`ClientSystemExt::ip_pool_view`]: super::ClientSystemExt::ip_pool_view
     #[derive(Debug, Clone)]
@@ -27572,7 +27572,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/ip-pools/{pool}`
+        /// Sends a `GET` request to `/v1/system/ip-pools/{pool}`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self { client, pool } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
@@ -27597,7 +27597,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_update`]
+    /// Builder for [`ClientSystemExt::ip_pool_update`]
     ///
     ///[`ClientSystemExt::ip_pool_update`]: super::ClientSystemExt::ip_pool_update
     #[derive(Debug, Clone)]
@@ -27645,7 +27645,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
+        /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self { client, pool, body } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
@@ -27673,7 +27673,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_delete`]
+    /// Builder for [`ClientSystemExt::ip_pool_delete`]
     ///
     ///[`ClientSystemExt::ip_pool_delete`]: super::ClientSystemExt::ip_pool_delete
     #[derive(Debug, Clone)]
@@ -27700,7 +27700,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
+        /// Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, pool } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
@@ -27725,7 +27725,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_range_list`]
+    /// Builder for [`ClientSystemExt::ip_pool_range_list`]
     ///
     ///[`ClientSystemExt::ip_pool_range_list`]: super::ClientSystemExt::ip_pool_range_list
     #[derive(Debug, Clone)]
@@ -27777,7 +27777,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`
+        /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
@@ -27817,7 +27817,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/ip-pools/{pool}/ranges`
+        /// Streams `GET` requests to `/v1/system/ip-pools/{pool}/ranges`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::IpPoolRange, Error<types::Error>>> + Unpin + 'a
@@ -27864,7 +27864,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_range_add`]
+    /// Builder for [`ClientSystemExt::ip_pool_range_add`]
     ///
     ///[`ClientSystemExt::ip_pool_range_add`]: super::ClientSystemExt::ip_pool_range_add
     #[derive(Debug, Clone)]
@@ -27903,7 +27903,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
+        /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
         pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
             let Self { client, pool, body } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
@@ -27929,7 +27929,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_range_remove`]
+    /// Builder for [`ClientSystemExt::ip_pool_range_remove`]
     ///
     ///[`ClientSystemExt::ip_pool_range_remove`]: super::ClientSystemExt::ip_pool_range_remove
     #[derive(Debug, Clone)]
@@ -27968,7 +27968,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`
+        /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, pool, body } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
@@ -27994,7 +27994,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_service_view`]
+    /// Builder for [`ClientSystemExt::ip_pool_service_view`]
     ///
     ///[`ClientSystemExt::ip_pool_service_view`]: super::ClientSystemExt::ip_pool_service_view
     #[derive(Debug, Clone)]
@@ -28007,7 +28007,7 @@ pub mod builder {
             Self { client }
         }
 
-        ///Sends a `GET` request to `/v1/system/ip-pools-service`
+        /// Sends a `GET` request to `/v1/system/ip-pools-service`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self { client } = self;
             let url = format!("{}/v1/system/ip-pools-service", client.baseurl,);
@@ -28027,7 +28027,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_service_range_list`]
+    /// Builder for [`ClientSystemExt::ip_pool_service_range_list`]
     ///
     ///[`ClientSystemExt::ip_pool_service_range_list`]: super::ClientSystemExt::ip_pool_service_range_list
     #[derive(Debug, Clone)]
@@ -28067,7 +28067,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
+        /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
@@ -28101,7 +28101,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/ip-pools-service/ranges`
+        /// Streams `GET` requests to `/v1/system/ip-pools-service/ranges`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::IpPoolRange, Error<types::Error>>> + Unpin + 'a
@@ -28148,7 +28148,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_service_range_add`]
+    /// Builder for [`ClientSystemExt::ip_pool_service_range_add`]
     ///
     ///[`ClientSystemExt::ip_pool_service_range_add`]: super::ClientSystemExt::ip_pool_service_range_add
     #[derive(Debug, Clone)]
@@ -28175,7 +28175,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
+        /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
         pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body.map_err(Error::InvalidRequest)?;
@@ -28196,7 +28196,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::ip_pool_service_range_remove`]
+    /// Builder for [`ClientSystemExt::ip_pool_service_range_remove`]
     ///
     ///[`ClientSystemExt::ip_pool_service_range_remove`]: super::ClientSystemExt::ip_pool_service_range_remove
     #[derive(Debug, Clone)]
@@ -28223,7 +28223,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to
+        /// Sends a `POST` request to
         /// `/v1/system/ip-pools-service/ranges/remove`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
@@ -28248,7 +28248,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_metric`]
+    /// Builder for [`ClientSystemExt::system_metric`]
     ///
     ///[`ClientSystemExt::system_metric`]: super::ClientSystemExt::system_metric
     #[derive(Debug, Clone)]
@@ -28339,7 +28339,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/metrics/{metric_name}`
+        /// Sends a `GET` request to `/v1/system/metrics/{metric_name}`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
@@ -28393,7 +28393,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientPolicyExt::system_policy_view`]
+    /// Builder for [`ClientPolicyExt::system_policy_view`]
     ///
     ///[`ClientPolicyExt::system_policy_view`]: super::ClientPolicyExt::system_policy_view
     #[derive(Debug, Clone)]
@@ -28406,7 +28406,7 @@ pub mod builder {
             Self { client }
         }
 
-        ///Sends a `GET` request to `/v1/system/policy`
+        /// Sends a `GET` request to `/v1/system/policy`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::FleetRolePolicy>, Error<types::Error>> {
@@ -28428,7 +28428,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientPolicyExt::system_policy_update`]
+    /// Builder for [`ClientPolicyExt::system_policy_update`]
     ///
     ///[`ClientPolicyExt::system_policy_update`]: super::ClientPolicyExt::system_policy_update
     #[derive(Debug, Clone)]
@@ -28464,7 +28464,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/system/policy`
+        /// Sends a `PUT` request to `/v1/system/policy`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::FleetRolePolicy>, Error<types::Error>> {
@@ -28489,7 +28489,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientRolesExt::role_list`]
+    /// Builder for [`ClientRolesExt::role_list`]
     ///
     ///[`ClientRolesExt::role_list`]: super::ClientRolesExt::role_list
     #[derive(Debug, Clone)]
@@ -28529,7 +28529,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/roles`
+        /// Sends a `GET` request to `/v1/system/roles`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::RoleResultsPage>, Error<types::Error>> {
@@ -28563,7 +28563,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/roles`
+        /// Streams `GET` requests to `/v1/system/roles`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Role, Error<types::Error>>> + Unpin + 'a
@@ -28610,7 +28610,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientRolesExt::role_view`]
+    /// Builder for [`ClientRolesExt::role_view`]
     ///
     ///[`ClientRolesExt::role_view`]: super::ClientRolesExt::role_view
     #[derive(Debug, Clone)]
@@ -28637,7 +28637,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/roles/{role_name}`
+        /// Sends a `GET` request to `/v1/system/roles/{role_name}`
         pub async fn send(self) -> Result<ResponseValue<types::Role>, Error<types::Error>> {
             let Self { client, role_name } = self;
             let role_name = role_name.map_err(Error::InvalidRequest)?;
@@ -28662,7 +28662,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::saga_list`]
+    /// Builder for [`ClientSystemExt::saga_list`]
     ///
     ///[`ClientSystemExt::saga_list`]: super::ClientSystemExt::saga_list
     #[derive(Debug, Clone)]
@@ -28715,7 +28715,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/sagas`
+        /// Sends a `GET` request to `/v1/system/sagas`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SagaResultsPage>, Error<types::Error>> {
@@ -28754,7 +28754,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/sagas`
+        /// Streams `GET` requests to `/v1/system/sagas`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Saga, Error<types::Error>>> + Unpin + 'a
@@ -28802,7 +28802,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::saga_view`]
+    /// Builder for [`ClientSystemExt::saga_view`]
     ///
     ///[`ClientSystemExt::saga_view`]: super::ClientSystemExt::saga_view
     #[derive(Debug, Clone)]
@@ -28829,7 +28829,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/sagas/{saga_id}`
+        /// Sends a `GET` request to `/v1/system/sagas/{saga_id}`
         pub async fn send(self) -> Result<ResponseValue<types::Saga>, Error<types::Error>> {
             let Self { client, saga_id } = self;
             let saga_id = saga_id.map_err(Error::InvalidRequest)?;
@@ -28854,7 +28854,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::silo_list`]
+    /// Builder for [`ClientSystemExt::silo_list`]
     ///
     ///[`ClientSystemExt::silo_list`]: super::ClientSystemExt::silo_list
     #[derive(Debug, Clone)]
@@ -28907,7 +28907,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/silos`
+        /// Sends a `GET` request to `/v1/system/silos`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SiloResultsPage>, Error<types::Error>> {
@@ -28946,7 +28946,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/silos`
+        /// Streams `GET` requests to `/v1/system/silos`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Silo, Error<types::Error>>> + Unpin + 'a
@@ -28994,7 +28994,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::silo_create`]
+    /// Builder for [`ClientSystemExt::silo_create`]
     ///
     ///[`ClientSystemExt::silo_create`]: super::ClientSystemExt::silo_create
     #[derive(Debug, Clone)]
@@ -29030,7 +29030,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/silos`
+        /// Sends a `POST` request to `/v1/system/silos`
         pub async fn send(self) -> Result<ResponseValue<types::Silo>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
@@ -29053,7 +29053,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::silo_view`]
+    /// Builder for [`ClientSystemExt::silo_view`]
     ///
     ///[`ClientSystemExt::silo_view`]: super::ClientSystemExt::silo_view
     #[derive(Debug, Clone)]
@@ -29080,7 +29080,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/silos/{silo}`
+        /// Sends a `GET` request to `/v1/system/silos/{silo}`
         pub async fn send(self) -> Result<ResponseValue<types::Silo>, Error<types::Error>> {
             let Self { client, silo } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
@@ -29105,7 +29105,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::silo_delete`]
+    /// Builder for [`ClientSystemExt::silo_delete`]
     ///
     ///[`ClientSystemExt::silo_delete`]: super::ClientSystemExt::silo_delete
     #[derive(Debug, Clone)]
@@ -29132,7 +29132,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/system/silos/{silo}`
+        /// Sends a `DELETE` request to `/v1/system/silos/{silo}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, silo } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
@@ -29157,7 +29157,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::silo_policy_view`]
+    /// Builder for [`ClientSystemExt::silo_policy_view`]
     ///
     ///[`ClientSystemExt::silo_policy_view`]: super::ClientSystemExt::silo_policy_view
     #[derive(Debug, Clone)]
@@ -29184,7 +29184,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/silos/{silo}/policy`
+        /// Sends a `GET` request to `/v1/system/silos/{silo}/policy`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
@@ -29211,7 +29211,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::silo_policy_update`]
+    /// Builder for [`ClientSystemExt::silo_policy_update`]
     ///
     ///[`ClientSystemExt::silo_policy_update`]: super::ClientSystemExt::silo_policy_update
     #[derive(Debug, Clone)]
@@ -29259,7 +29259,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/system/silos/{silo}/policy`
+        /// Sends a `PUT` request to `/v1/system/silos/{silo}/policy`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
@@ -29289,7 +29289,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_component_version_list`]
+    /// Builder for [`ClientSystemExt::system_component_version_list`]
     ///
     ///[`ClientSystemExt::system_component_version_list`]: super::ClientSystemExt::system_component_version_list
     #[derive(Debug, Clone)]
@@ -29342,7 +29342,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/update/components`
+        /// Sends a `GET` request to `/v1/system/update/components`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::UpdateableComponentResultsPage>, Error<types::Error>>
@@ -29382,7 +29382,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/update/components`
+        /// Streams `GET` requests to `/v1/system/update/components`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::UpdateableComponent, Error<types::Error>>>
@@ -29431,7 +29431,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::update_deployments_list`]
+    /// Builder for [`ClientSystemExt::update_deployments_list`]
     ///
     ///[`ClientSystemExt::update_deployments_list`]: super::ClientSystemExt::update_deployments_list
     #[derive(Debug, Clone)]
@@ -29484,7 +29484,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/update/deployments`
+        /// Sends a `GET` request to `/v1/system/update/deployments`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::UpdateDeploymentResultsPage>, Error<types::Error>>
@@ -29524,7 +29524,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/update/deployments`
+        /// Streams `GET` requests to `/v1/system/update/deployments`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::UpdateDeployment, Error<types::Error>>> + Unpin + 'a
@@ -29572,7 +29572,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::update_deployment_view`]
+    /// Builder for [`ClientSystemExt::update_deployment_view`]
     ///
     ///[`ClientSystemExt::update_deployment_view`]: super::ClientSystemExt::update_deployment_view
     #[derive(Debug, Clone)]
@@ -29599,7 +29599,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/update/deployments/{id}`
+        /// Sends a `GET` request to `/v1/system/update/deployments/{id}`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::UpdateDeployment>, Error<types::Error>> {
@@ -29626,7 +29626,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_update_refresh`]
+    /// Builder for [`ClientSystemExt::system_update_refresh`]
     ///
     ///[`ClientSystemExt::system_update_refresh`]: super::ClientSystemExt::system_update_refresh
     #[derive(Debug, Clone)]
@@ -29639,7 +29639,7 @@ pub mod builder {
             Self { client }
         }
 
-        ///Sends a `POST` request to `/v1/system/update/refresh`
+        /// Sends a `POST` request to `/v1/system/update/refresh`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client } = self;
             let url = format!("{}/v1/system/update/refresh", client.baseurl,);
@@ -29659,7 +29659,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_update_start`]
+    /// Builder for [`ClientSystemExt::system_update_start`]
     ///
     ///[`ClientSystemExt::system_update_start`]: super::ClientSystemExt::system_update_start
     #[derive(Debug, Clone)]
@@ -29697,7 +29697,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/system/update/start`
+        /// Sends a `POST` request to `/v1/system/update/start`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::UpdateDeployment>, Error<types::Error>> {
@@ -29722,7 +29722,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_update_stop`]
+    /// Builder for [`ClientSystemExt::system_update_stop`]
     ///
     ///[`ClientSystemExt::system_update_stop`]: super::ClientSystemExt::system_update_stop
     #[derive(Debug, Clone)]
@@ -29735,7 +29735,7 @@ pub mod builder {
             Self { client }
         }
 
-        ///Sends a `POST` request to `/v1/system/update/stop`
+        /// Sends a `POST` request to `/v1/system/update/stop`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client } = self;
             let url = format!("{}/v1/system/update/stop", client.baseurl,);
@@ -29755,7 +29755,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_update_list`]
+    /// Builder for [`ClientSystemExt::system_update_list`]
     ///
     ///[`ClientSystemExt::system_update_list`]: super::ClientSystemExt::system_update_list
     #[derive(Debug, Clone)]
@@ -29808,7 +29808,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/update/updates`
+        /// Sends a `GET` request to `/v1/system/update/updates`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SystemUpdateResultsPage>, Error<types::Error>> {
@@ -29847,7 +29847,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/update/updates`
+        /// Streams `GET` requests to `/v1/system/update/updates`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::SystemUpdate, Error<types::Error>>> + Unpin + 'a
@@ -29895,7 +29895,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_update_view`]
+    /// Builder for [`ClientSystemExt::system_update_view`]
     ///
     ///[`ClientSystemExt::system_update_view`]: super::ClientSystemExt::system_update_view
     #[derive(Debug, Clone)]
@@ -29922,7 +29922,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/update/updates/{version}`
+        /// Sends a `GET` request to `/v1/system/update/updates/{version}`
         pub async fn send(self) -> Result<ResponseValue<types::SystemUpdate>, Error<types::Error>> {
             let Self { client, version } = self;
             let version = version.map_err(Error::InvalidRequest)?;
@@ -29947,7 +29947,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_update_components_list`]
+    /// Builder for [`ClientSystemExt::system_update_components_list`]
     ///
     ///[`ClientSystemExt::system_update_components_list`]: super::ClientSystemExt::system_update_components_list
     #[derive(Debug, Clone)]
@@ -29974,7 +29974,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to
+        /// Sends a `GET` request to
         /// `/v1/system/update/updates/{version}/components`
         pub async fn send(
             self,
@@ -30002,7 +30002,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::system_version`]
+    /// Builder for [`ClientSystemExt::system_version`]
     ///
     ///[`ClientSystemExt::system_version`]: super::ClientSystemExt::system_version
     #[derive(Debug, Clone)]
@@ -30015,7 +30015,7 @@ pub mod builder {
             Self { client }
         }
 
-        ///Sends a `GET` request to `/v1/system/update/version`
+        /// Sends a `GET` request to `/v1/system/update/version`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SystemVersion>, Error<types::Error>> {
@@ -30037,7 +30037,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::silo_user_list`]
+    /// Builder for [`ClientSystemExt::silo_user_list`]
     ///
     ///[`ClientSystemExt::silo_user_list`]: super::ClientSystemExt::silo_user_list
     #[derive(Debug, Clone)]
@@ -30103,7 +30103,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/users`
+        /// Sends a `GET` request to `/v1/system/users`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::UserResultsPage>, Error<types::Error>> {
@@ -30147,7 +30147,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/users`
+        /// Streams `GET` requests to `/v1/system/users`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::User, Error<types::Error>>> + Unpin + 'a
@@ -30196,7 +30196,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::silo_user_view`]
+    /// Builder for [`ClientSystemExt::silo_user_view`]
     ///
     ///[`ClientSystemExt::silo_user_view`]: super::ClientSystemExt::silo_user_view
     #[derive(Debug, Clone)]
@@ -30235,7 +30235,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/users/{user_id}`
+        /// Sends a `GET` request to `/v1/system/users/{user_id}`
         pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
             let Self {
                 client,
@@ -30267,7 +30267,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::user_builtin_list`]
+    /// Builder for [`ClientSystemExt::user_builtin_list`]
     ///
     ///[`ClientSystemExt::user_builtin_list`]: super::ClientSystemExt::user_builtin_list
     #[derive(Debug, Clone)]
@@ -30320,7 +30320,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/users-builtin`
+        /// Sends a `GET` request to `/v1/system/users-builtin`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::UserBuiltinResultsPage>, Error<types::Error>> {
@@ -30359,7 +30359,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/system/users-builtin`
+        /// Streams `GET` requests to `/v1/system/users-builtin`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::UserBuiltin, Error<types::Error>>> + Unpin + 'a
@@ -30407,7 +30407,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSystemExt::user_builtin_view`]
+    /// Builder for [`ClientSystemExt::user_builtin_view`]
     ///
     ///[`ClientSystemExt::user_builtin_view`]: super::ClientSystemExt::user_builtin_view
     #[derive(Debug, Clone)]
@@ -30434,7 +30434,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/system/users-builtin/{user}`
+        /// Sends a `GET` request to `/v1/system/users-builtin/{user}`
         pub async fn send(self) -> Result<ResponseValue<types::UserBuiltin>, Error<types::Error>> {
             let Self { client, user } = self;
             let user = user.map_err(Error::InvalidRequest)?;
@@ -30459,7 +30459,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientSilosExt::user_list`]
+    /// Builder for [`ClientSilosExt::user_list`]
     ///
     ///[`ClientSilosExt::user_list`]: super::ClientSilosExt::user_list
     #[derive(Debug, Clone)]
@@ -30525,7 +30525,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/users`
+        /// Sends a `GET` request to `/v1/users`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::UserResultsPage>, Error<types::Error>> {
@@ -30569,7 +30569,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/users`
+        /// Streams `GET` requests to `/v1/users`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::User, Error<types::Error>>> + Unpin + 'a
@@ -30618,7 +30618,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_firewall_rules_view`]
+    /// Builder for [`ClientVpcsExt::vpc_firewall_rules_view`]
     ///
     ///[`ClientVpcsExt::vpc_firewall_rules_view`]: super::ClientVpcsExt::vpc_firewall_rules_view
     #[derive(Debug, Clone)]
@@ -30658,7 +30658,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/vpc-firewall-rules`
+        /// Sends a `GET` request to `/v1/vpc-firewall-rules`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::VpcFirewallRules>, Error<types::Error>> {
@@ -30691,7 +30691,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_firewall_rules_update`]
+    /// Builder for [`ClientVpcsExt::vpc_firewall_rules_update`]
     ///
     ///[`ClientVpcsExt::vpc_firewall_rules_update`]: super::ClientVpcsExt::vpc_firewall_rules_update
     #[derive(Debug, Clone)]
@@ -30753,7 +30753,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/vpc-firewall-rules`
+        /// Sends a `PUT` request to `/v1/vpc-firewall-rules`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::VpcFirewallRules>, Error<types::Error>> {
@@ -30790,7 +30790,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_router_route_list`]
+    /// Builder for [`ClientVpcsExt::vpc_router_route_list`]
     ///
     ///[`ClientVpcsExt::vpc_router_route_list`]: super::ClientVpcsExt::vpc_router_route_list
     #[derive(Debug, Clone)]
@@ -30882,7 +30882,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/vpc-router-routes`
+        /// Sends a `GET` request to `/v1/vpc-router-routes`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::RouterRouteResultsPage>, Error<types::Error>> {
@@ -30936,7 +30936,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/vpc-router-routes`
+        /// Streams `GET` requests to `/v1/vpc-router-routes`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::RouterRoute, Error<types::Error>>> + Unpin + 'a
@@ -30987,7 +30987,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_router_route_create`]
+    /// Builder for [`ClientVpcsExt::vpc_router_route_create`]
     ///
     ///[`ClientVpcsExt::vpc_router_route_create`]: super::ClientVpcsExt::vpc_router_route_create
     #[derive(Debug, Clone)]
@@ -31063,7 +31063,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/vpc-router-routes`
+        /// Sends a `POST` request to `/v1/vpc-router-routes`
         pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
             let Self {
                 client,
@@ -31103,7 +31103,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_router_route_view`]
+    /// Builder for [`ClientVpcsExt::vpc_router_route_view`]
     ///
     ///[`ClientVpcsExt::vpc_router_route_view`]: super::ClientVpcsExt::vpc_router_route_view
     #[derive(Debug, Clone)]
@@ -31168,7 +31168,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/vpc-router-routes/{route}`
+        /// Sends a `GET` request to `/v1/vpc-router-routes/{route}`
         pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
             let Self {
                 client,
@@ -31210,7 +31210,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_router_route_update`]
+    /// Builder for [`ClientVpcsExt::vpc_router_route_update`]
     ///
     ///[`ClientVpcsExt::vpc_router_route_update`]: super::ClientVpcsExt::vpc_router_route_update
     #[derive(Debug, Clone)]
@@ -31299,7 +31299,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/vpc-router-routes/{route}`
+        /// Sends a `PUT` request to `/v1/vpc-router-routes/{route}`
         pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
             let Self {
                 client,
@@ -31347,7 +31347,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_router_route_delete`]
+    /// Builder for [`ClientVpcsExt::vpc_router_route_delete`]
     ///
     ///[`ClientVpcsExt::vpc_router_route_delete`]: super::ClientVpcsExt::vpc_router_route_delete
     #[derive(Debug, Clone)]
@@ -31413,7 +31413,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/vpc-router-routes/{route}`
+        /// Sends a `DELETE` request to `/v1/vpc-router-routes/{route}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -31457,7 +31457,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_router_list`]
+    /// Builder for [`ClientVpcsExt::vpc_router_list`]
     ///
     ///[`ClientVpcsExt::vpc_router_list`]: super::ClientVpcsExt::vpc_router_list
     #[derive(Debug, Clone)]
@@ -31536,7 +31536,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/vpc-routers`
+        /// Sends a `GET` request to `/v1/vpc-routers`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::VpcRouterResultsPage>, Error<types::Error>> {
@@ -31585,7 +31585,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/vpc-routers`
+        /// Streams `GET` requests to `/v1/vpc-routers`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::VpcRouter, Error<types::Error>>> + Unpin + 'a
@@ -31635,7 +31635,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_router_create`]
+    /// Builder for [`ClientVpcsExt::vpc_router_create`]
     ///
     ///[`ClientVpcsExt::vpc_router_create`]: super::ClientVpcsExt::vpc_router_create
     #[derive(Debug, Clone)]
@@ -31696,7 +31696,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/vpc-routers`
+        /// Sends a `POST` request to `/v1/vpc-routers`
         pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
             let Self {
                 client,
@@ -31731,7 +31731,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_router_view`]
+    /// Builder for [`ClientVpcsExt::vpc_router_view`]
     ///
     ///[`ClientVpcsExt::vpc_router_view`]: super::ClientVpcsExt::vpc_router_view
     #[derive(Debug, Clone)]
@@ -31784,7 +31784,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/vpc-routers/{router}`
+        /// Sends a `GET` request to `/v1/vpc-routers/{router}`
         pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
             let Self {
                 client,
@@ -31823,7 +31823,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_router_update`]
+    /// Builder for [`ClientVpcsExt::vpc_router_update`]
     ///
     ///[`ClientVpcsExt::vpc_router_update`]: super::ClientVpcsExt::vpc_router_update
     #[derive(Debug, Clone)]
@@ -31897,7 +31897,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/vpc-routers/{router}`
+        /// Sends a `PUT` request to `/v1/vpc-routers/{router}`
         pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
             let Self {
                 client,
@@ -31940,7 +31940,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_router_delete`]
+    /// Builder for [`ClientVpcsExt::vpc_router_delete`]
     ///
     ///[`ClientVpcsExt::vpc_router_delete`]: super::ClientVpcsExt::vpc_router_delete
     #[derive(Debug, Clone)]
@@ -31993,7 +31993,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/vpc-routers/{router}`
+        /// Sends a `DELETE` request to `/v1/vpc-routers/{router}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -32032,7 +32032,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_subnet_list`]
+    /// Builder for [`ClientVpcsExt::vpc_subnet_list`]
     ///
     ///[`ClientVpcsExt::vpc_subnet_list`]: super::ClientVpcsExt::vpc_subnet_list
     #[derive(Debug, Clone)]
@@ -32111,7 +32111,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/vpc-subnets`
+        /// Sends a `GET` request to `/v1/vpc-subnets`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::VpcSubnetResultsPage>, Error<types::Error>> {
@@ -32160,7 +32160,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/vpc-subnets`
+        /// Streams `GET` requests to `/v1/vpc-subnets`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::VpcSubnet, Error<types::Error>>> + Unpin + 'a
@@ -32210,7 +32210,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_subnet_create`]
+    /// Builder for [`ClientVpcsExt::vpc_subnet_create`]
     ///
     ///[`ClientVpcsExt::vpc_subnet_create`]: super::ClientVpcsExt::vpc_subnet_create
     #[derive(Debug, Clone)]
@@ -32271,7 +32271,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/vpc-subnets`
+        /// Sends a `POST` request to `/v1/vpc-subnets`
         pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
             let Self {
                 client,
@@ -32306,7 +32306,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_subnet_view`]
+    /// Builder for [`ClientVpcsExt::vpc_subnet_view`]
     ///
     ///[`ClientVpcsExt::vpc_subnet_view`]: super::ClientVpcsExt::vpc_subnet_view
     #[derive(Debug, Clone)]
@@ -32359,7 +32359,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/vpc-subnets/{subnet}`
+        /// Sends a `GET` request to `/v1/vpc-subnets/{subnet}`
         pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
             let Self {
                 client,
@@ -32398,7 +32398,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_subnet_update`]
+    /// Builder for [`ClientVpcsExt::vpc_subnet_update`]
     ///
     ///[`ClientVpcsExt::vpc_subnet_update`]: super::ClientVpcsExt::vpc_subnet_update
     #[derive(Debug, Clone)]
@@ -32472,7 +32472,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/vpc-subnets/{subnet}`
+        /// Sends a `PUT` request to `/v1/vpc-subnets/{subnet}`
         pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
             let Self {
                 client,
@@ -32515,7 +32515,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_subnet_delete`]
+    /// Builder for [`ClientVpcsExt::vpc_subnet_delete`]
     ///
     ///[`ClientVpcsExt::vpc_subnet_delete`]: super::ClientVpcsExt::vpc_subnet_delete
     #[derive(Debug, Clone)]
@@ -32568,7 +32568,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/vpc-subnets/{subnet}`
+        /// Sends a `DELETE` request to `/v1/vpc-subnets/{subnet}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
@@ -32607,7 +32607,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_subnet_list_network_interfaces`]
+    /// Builder for [`ClientVpcsExt::vpc_subnet_list_network_interfaces`]
     ///
     ///[`ClientVpcsExt::vpc_subnet_list_network_interfaces`]: super::ClientVpcsExt::vpc_subnet_list_network_interfaces
     #[derive(Debug, Clone)]
@@ -32698,7 +32698,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to
+        /// Sends a `GET` request to
         /// `/v1/vpc-subnets/{subnet}/network-interfaces`
         pub async fn send(
             self,
@@ -32755,7 +32755,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to
+        /// Streams `GET` requests to
         /// `/v1/vpc-subnets/{subnet}/network-interfaces`
         pub fn stream(
             self,
@@ -32807,7 +32807,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_list`]
+    /// Builder for [`ClientVpcsExt::vpc_list`]
     ///
     ///[`ClientVpcsExt::vpc_list`]: super::ClientVpcsExt::vpc_list
     #[derive(Debug, Clone)]
@@ -32873,7 +32873,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/vpcs`
+        /// Sends a `GET` request to `/v1/vpcs`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::VpcResultsPage>, Error<types::Error>> {
@@ -32917,7 +32917,7 @@ pub mod builder {
             }
         }
 
-        ///Streams `GET` requests to `/v1/vpcs`
+        /// Streams `GET` requests to `/v1/vpcs`
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::Vpc, Error<types::Error>>> + Unpin + 'a
@@ -32966,7 +32966,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_create`]
+    /// Builder for [`ClientVpcsExt::vpc_create`]
     ///
     ///[`ClientVpcsExt::vpc_create`]: super::ClientVpcsExt::vpc_create
     #[derive(Debug, Clone)]
@@ -33014,7 +33014,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `POST` request to `/v1/vpcs`
+        /// Sends a `POST` request to `/v1/vpcs`
         pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
             let Self {
                 client,
@@ -33044,7 +33044,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_view`]
+    /// Builder for [`ClientVpcsExt::vpc_view`]
     ///
     ///[`ClientVpcsExt::vpc_view`]: super::ClientVpcsExt::vpc_view
     #[derive(Debug, Clone)]
@@ -33084,7 +33084,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `GET` request to `/v1/vpcs/{vpc}`
+        /// Sends a `GET` request to `/v1/vpcs/{vpc}`
         pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
             let Self {
                 client,
@@ -33118,7 +33118,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_update`]
+    /// Builder for [`ClientVpcsExt::vpc_update`]
     ///
     ///[`ClientVpcsExt::vpc_update`]: super::ClientVpcsExt::vpc_update
     #[derive(Debug, Clone)]
@@ -33179,7 +33179,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `PUT` request to `/v1/vpcs/{vpc}`
+        /// Sends a `PUT` request to `/v1/vpcs/{vpc}`
         pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
             let Self {
                 client,
@@ -33217,7 +33217,7 @@ pub mod builder {
         }
     }
 
-    ///Builder for [`ClientVpcsExt::vpc_delete`]
+    /// Builder for [`ClientVpcsExt::vpc_delete`]
     ///
     ///[`ClientVpcsExt::vpc_delete`]: super::ClientVpcsExt::vpc_delete
     #[derive(Debug, Clone)]
@@ -33257,7 +33257,7 @@ pub mod builder {
             self
         }
 
-        ///Sends a `DELETE` request to `/v1/vpcs/{vpc}`
+        /// Sends a `DELETE` request to `/v1/vpcs/{vpc}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
                 client,
