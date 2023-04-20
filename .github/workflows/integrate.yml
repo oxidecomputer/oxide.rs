@@ -71,7 +71,7 @@ jobs:
       - name: Generate docs
         continue-on-error: true
         run: |
-          cargo run -p oxide docs > cli/docs/cli.json
+          EXPECTORATE=overwrite cargo test
 
       - name: Report changes
         run: git status
