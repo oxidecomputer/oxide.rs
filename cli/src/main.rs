@@ -174,7 +174,8 @@ async fn main() {
         }
     };
 
-    if result.is_err() {
+    if let Err(e) = result {
+        println!("error: {}", e);
         std::process::exit(1)
     }
 }
