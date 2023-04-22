@@ -1779,8 +1779,12 @@ dependencies = [
 name = "oxide-httpmock"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "httpmock",
  "oxide-api",
+ "regex",
+ "serde_json",
+ "uuid",
 ]
 
 [[package]]
@@ -2027,6 +2031,7 @@ version = "0.2.1-dev"
 dependencies = [
  "getopts",
  "heck",
+ "http",
  "indexmap",
  "openapiv3",
  "proc-macro2",

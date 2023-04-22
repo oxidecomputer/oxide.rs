@@ -9,7 +9,6 @@ readme = "README.md"
 
 [dependencies]
 # base64 = { workspace = true }
-# chrono = { workspace = true }
 # clap = { workspace = true, optional = true }
 # futures = { workspace = true }
 # progenitor-client = { workspace = true }
@@ -17,8 +16,11 @@ readme = "README.md"
 # regress = { workspace = true }
 # reqwest = { workspace = true }
 # serde = { workspace = true }
-# serde_json = { workspace = true }
 # schemars = { workspace = true }
-# uuid = { workspace = true }
-oxide-api = { workspace = true }
+
+chrono = { workspace = true }
 httpmock = { workspace = true }
+oxide-api = { workspace = true }
+regex = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }

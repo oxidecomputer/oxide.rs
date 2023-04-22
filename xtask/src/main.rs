@@ -21,6 +21,13 @@ enum Xtask {
         check: bool,
         #[clap(short = 'v', long)]
         verbose: bool,
+
+        #[clap(long)]
+        sdk: bool,
+        #[clap(long)]
+        cli: bool,
+        #[clap(long)]
+        httpmock: bool,
     },
 }
 
@@ -28,13 +35,29 @@ fn main() -> Result<(), String> {
     let xtask = Xtask::parse();
 
     match xtask {
-        Xtask::Generate { check, verbose } => generate(check, verbose),
+        Xtask::Generate {
+            check,
+            verbose,
+            sdk,
+            cli,
+            httpmock,
+        } => generate(check, verbose, sdk, cli, httpmock),
     }
 }
 
 // TODO flag to --check the generated file that we can use in CI to keep people
 // from modifying the generated file by hand or forgetting to update it.
-fn generate(check: bool, verbose: bool) -> Result<(), String> {
+fn generate(
+    check: bool,
+    verbose: bool,
+    mut sdk: bool,
+    mut cli: bool,
+    mut httpmock: bool,
+) -> Result<(), String> {
+    if !(sdk || cli || httpmock) {
+        (sdk, cli, httpmock) = (true, true, true);
+    }
+
     let start = Instant::now();
     let xtask_path = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
     let root_path = xtask_path.parent().unwrap().to_path_buf();
@@ -51,58 +74,65 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
     );
 
     let mut error = false;
+    let mut loc = 0;
 
     // TODO I'd like to generate a hash as well to have a way to check if the
     // spec has changed since the last generation.
 
     // SDK
-    print!("generating sdk ... ");
-    std::io::stdout().flush().unwrap();
+    if sdk {
+        print!("generating sdk ... ");
+        std::io::stdout().flush().unwrap();
 
-    let code = generator.generate_tokens(&spec).unwrap();
-    let contents = format_code(code.to_string());
-    let loc_sdk = contents.matches('\n').count();
+        let code = generator.generate_tokens(&spec).unwrap();
+        let contents = format_code(code.to_string());
+        loc += contents.matches('\n').count();
 
-    let mut out_path = root_path.clone();
-    out_path.push("sdk");
-    out_path.push("src");
-    out_path.push("generated_sdk.rs");
+        let mut out_path = root_path.clone();
+        out_path.push("sdk");
+        out_path.push("src");
+        out_path.push("generated_sdk.rs");
 
-    error |= output_contents(check, out_path, contents, verbose).is_err();
+        error |= output_contents(check, out_path, contents, verbose).is_err();
+    }
 
     // SDK httpmock library
-    print!("generating httpmock ... ");
-    std::io::stdout().flush().unwrap();
-    let code = generator.httpmock(&spec, "oxide_api").unwrap().to_string();
-    let contents = format_code(format!("{}\n\n{}", "use oxide_api::*;", code));
-    let loc_httpmock = contents.matches('\n').count();
+    if httpmock {
+        print!("generating httpmock ... ");
+        std::io::stdout().flush().unwrap();
+        let code = generator.httpmock(&spec, "oxide_api").unwrap().to_string();
+        let contents = format_code(format!("{}\n\n{}", "use oxide_api::*;", code));
+        loc += contents.matches('\n').count();
 
-    let mut out_path = root_path.clone();
-    out_path.push("sdk-httpmock");
-    out_path.push("src");
-    out_path.push("generated_httpmock.rs");
+        let mut out_path = root_path.clone();
+        out_path.push("sdk-httpmock");
+        out_path.push("src");
+        out_path.push("generated_httpmock.rs");
 
-    error |= output_contents(check, out_path, contents, verbose).is_err();
+        error |= output_contents(check, out_path, contents, verbose).is_err();
+    }
 
     // CLI
-    print!("generating cli ... ");
-    std::io::stdout().flush().unwrap();
-    let code = generator.cli(&spec, "oxide_api").unwrap().to_string();
-    let contents = format_code(format!("{}\n\n{}", "use oxide_api::*;", code));
-    let loc_cli = contents.matches('\n').count();
+    if cli {
+        print!("generating cli ... ");
+        std::io::stdout().flush().unwrap();
+        let code = generator.cli(&spec, "oxide_api").unwrap().to_string();
+        let contents = format_code(format!("{}\n\n{}", "use oxide_api::*;", code));
+        loc += contents.matches('\n').count();
 
-    let mut out_path = root_path;
-    out_path.push("cli");
-    out_path.push("src");
-    out_path.push("generated_cli.rs");
+        let mut out_path = root_path;
+        out_path.push("cli");
+        out_path.push("src");
+        out_path.push("generated_cli.rs");
 
-    error |= output_contents(check, out_path, contents, verbose).is_err();
+        error |= output_contents(check, out_path, contents, verbose).is_err();
+    }
 
     let duration = Instant::now().duration_since(start).as_micros();
     println!(
         "generation took {:.3}s ({}us per line)",
         duration as f64 / 1_000_000_f64,
-        duration / (loc_sdk + loc_httpmock + loc_cli) as u128,
+        duration / loc as u128,
     );
 
     if error {

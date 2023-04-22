@@ -2,5111 +2,9454 @@
 
 use oxide_api::*;
 
-struct DeviceAuthRequestWhen(httpmock::When);
-impl DeviceAuthRequestWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DeviceAuthRequestThen(httpmock::Then);
-impl DeviceAuthRequestThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DeviceAuthConfirmWhen(httpmock::When);
-impl DeviceAuthConfirmWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DeviceAuthConfirmThen(httpmock::Then);
-impl DeviceAuthConfirmThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DeviceAccessTokenWhen(httpmock::When);
-impl DeviceAccessTokenWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DeviceAccessTokenThen(httpmock::Then);
-impl DeviceAccessTokenThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct LoginSpoofWhen(httpmock::When);
-impl LoginSpoofWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct LoginSpoofThen(httpmock::Then);
-impl LoginSpoofThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct LoginLocalWhen(httpmock::When);
-impl LoginLocalWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct LoginLocalThen(httpmock::Then);
-impl LoginLocalThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct LoginSamlBeginWhen(httpmock::When);
-impl LoginSamlBeginWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct LoginSamlBeginThen(httpmock::Then);
-impl LoginSamlBeginThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct LoginSamlWhen(httpmock::When);
-impl LoginSamlWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct LoginSamlThen(httpmock::Then);
-impl LoginSamlThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct LogoutWhen(httpmock::When);
-impl LogoutWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct LogoutThen(httpmock::Then);
-impl LogoutThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemImageViewByIdWhen(httpmock::When);
-impl SystemImageViewByIdWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemImageViewByIdThen(httpmock::Then);
-impl SystemImageViewByIdThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemImageListWhen(httpmock::When);
-impl SystemImageListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemImageListThen(httpmock::Then);
-impl SystemImageListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemImageCreateWhen(httpmock::When);
-impl SystemImageCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemImageCreateThen(httpmock::Then);
-impl SystemImageCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemImageViewWhen(httpmock::When);
-impl SystemImageViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemImageViewThen(httpmock::Then);
-impl SystemImageViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemImageDeleteWhen(httpmock::When);
-impl SystemImageDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemImageDeleteThen(httpmock::Then);
-impl SystemImageDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DiskListWhen(httpmock::When);
-impl DiskListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DiskListThen(httpmock::Then);
-impl DiskListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DiskCreateWhen(httpmock::When);
-impl DiskCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DiskCreateThen(httpmock::Then);
-impl DiskCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DiskViewWhen(httpmock::When);
-impl DiskViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DiskViewThen(httpmock::Then);
-impl DiskViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DiskDeleteWhen(httpmock::When);
-impl DiskDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DiskDeleteThen(httpmock::Then);
-impl DiskDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DiskBulkWriteImportWhen(httpmock::When);
-impl DiskBulkWriteImportWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DiskBulkWriteImportThen(httpmock::Then);
-impl DiskBulkWriteImportThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DiskBulkWriteImportStartWhen(httpmock::When);
-impl DiskBulkWriteImportStartWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DiskBulkWriteImportStartThen(httpmock::Then);
-impl DiskBulkWriteImportStartThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DiskBulkWriteImportStopWhen(httpmock::When);
-impl DiskBulkWriteImportStopWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DiskBulkWriteImportStopThen(httpmock::Then);
-impl DiskBulkWriteImportStopThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DiskFinalizeImportWhen(httpmock::When);
-impl DiskFinalizeImportWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DiskFinalizeImportThen(httpmock::Then);
-impl DiskFinalizeImportThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DiskImportBlocksFromUrlWhen(httpmock::When);
-impl DiskImportBlocksFromUrlWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DiskImportBlocksFromUrlThen(httpmock::Then);
-impl DiskImportBlocksFromUrlThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct DiskMetricsListWhen(httpmock::When);
-impl DiskMetricsListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct DiskMetricsListThen(httpmock::Then);
-impl DiskMetricsListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct GroupListWhen(httpmock::When);
-impl GroupListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct GroupListThen(httpmock::Then);
-impl GroupListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct GroupViewWhen(httpmock::When);
-impl GroupViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct GroupViewThen(httpmock::Then);
-impl GroupViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ImageListWhen(httpmock::When);
-impl ImageListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ImageListThen(httpmock::Then);
-impl ImageListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ImageCreateWhen(httpmock::When);
-impl ImageCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ImageCreateThen(httpmock::Then);
-impl ImageCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ImageViewWhen(httpmock::When);
-impl ImageViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ImageViewThen(httpmock::Then);
-impl ImageViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ImageDeleteWhen(httpmock::When);
-impl ImageDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ImageDeleteThen(httpmock::Then);
-impl ImageDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ImagePromoteWhen(httpmock::When);
-impl ImagePromoteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ImagePromoteThen(httpmock::Then);
-impl ImagePromoteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceListWhen(httpmock::When);
-impl InstanceListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceListThen(httpmock::Then);
-impl InstanceListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceCreateWhen(httpmock::When);
-impl InstanceCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceCreateThen(httpmock::Then);
-impl InstanceCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceViewWhen(httpmock::When);
-impl InstanceViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceViewThen(httpmock::Then);
-impl InstanceViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceDeleteWhen(httpmock::When);
-impl InstanceDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceDeleteThen(httpmock::Then);
-impl InstanceDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceDiskListWhen(httpmock::When);
-impl InstanceDiskListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceDiskListThen(httpmock::Then);
-impl InstanceDiskListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceDiskAttachWhen(httpmock::When);
-impl InstanceDiskAttachWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceDiskAttachThen(httpmock::Then);
-impl InstanceDiskAttachThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceDiskDetachWhen(httpmock::When);
-impl InstanceDiskDetachWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceDiskDetachThen(httpmock::Then);
-impl InstanceDiskDetachThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceExternalIpListWhen(httpmock::When);
-impl InstanceExternalIpListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceExternalIpListThen(httpmock::Then);
-impl InstanceExternalIpListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceMigrateWhen(httpmock::When);
-impl InstanceMigrateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceMigrateThen(httpmock::Then);
-impl InstanceMigrateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceRebootWhen(httpmock::When);
-impl InstanceRebootWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceRebootThen(httpmock::Then);
-impl InstanceRebootThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceSerialConsoleWhen(httpmock::When);
-impl InstanceSerialConsoleWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceSerialConsoleThen(httpmock::Then);
-impl InstanceSerialConsoleThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceSerialConsoleStreamWhen(httpmock::When);
-impl InstanceSerialConsoleStreamWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceSerialConsoleStreamThen(httpmock::Then);
-impl InstanceSerialConsoleStreamThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceStartWhen(httpmock::When);
-impl InstanceStartWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceStartThen(httpmock::Then);
-impl InstanceStartThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceStopWhen(httpmock::When);
-impl InstanceStopWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceStopThen(httpmock::Then);
-impl InstanceStopThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct CurrentUserViewWhen(httpmock::When);
-impl CurrentUserViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct CurrentUserViewThen(httpmock::Then);
-impl CurrentUserViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct CurrentUserGroupsWhen(httpmock::When);
-impl CurrentUserGroupsWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct CurrentUserGroupsThen(httpmock::Then);
-impl CurrentUserGroupsThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct CurrentUserSshKeyListWhen(httpmock::When);
-impl CurrentUserSshKeyListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct CurrentUserSshKeyListThen(httpmock::Then);
-impl CurrentUserSshKeyListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct CurrentUserSshKeyCreateWhen(httpmock::When);
-impl CurrentUserSshKeyCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct CurrentUserSshKeyCreateThen(httpmock::Then);
-impl CurrentUserSshKeyCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct CurrentUserSshKeyViewWhen(httpmock::When);
-impl CurrentUserSshKeyViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct CurrentUserSshKeyViewThen(httpmock::Then);
-impl CurrentUserSshKeyViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct CurrentUserSshKeyDeleteWhen(httpmock::When);
-impl CurrentUserSshKeyDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct CurrentUserSshKeyDeleteThen(httpmock::Then);
-impl CurrentUserSshKeyDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceNetworkInterfaceListWhen(httpmock::When);
-impl InstanceNetworkInterfaceListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceNetworkInterfaceListThen(httpmock::Then);
-impl InstanceNetworkInterfaceListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceNetworkInterfaceCreateWhen(httpmock::When);
-impl InstanceNetworkInterfaceCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceNetworkInterfaceCreateThen(httpmock::Then);
-impl InstanceNetworkInterfaceCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceNetworkInterfaceViewWhen(httpmock::When);
-impl InstanceNetworkInterfaceViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceNetworkInterfaceViewThen(httpmock::Then);
-impl InstanceNetworkInterfaceViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceNetworkInterfaceUpdateWhen(httpmock::When);
-impl InstanceNetworkInterfaceUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceNetworkInterfaceUpdateThen(httpmock::Then);
-impl InstanceNetworkInterfaceUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct InstanceNetworkInterfaceDeleteWhen(httpmock::When);
-impl InstanceNetworkInterfaceDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct InstanceNetworkInterfaceDeleteThen(httpmock::Then);
-impl InstanceNetworkInterfaceDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct PolicyViewWhen(httpmock::When);
-impl PolicyViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct PolicyViewThen(httpmock::Then);
-impl PolicyViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct PolicyUpdateWhen(httpmock::When);
-impl PolicyUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct PolicyUpdateThen(httpmock::Then);
-impl PolicyUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ProjectListWhen(httpmock::When);
-impl ProjectListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ProjectListThen(httpmock::Then);
-impl ProjectListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ProjectCreateWhen(httpmock::When);
-impl ProjectCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ProjectCreateThen(httpmock::Then);
-impl ProjectCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ProjectViewWhen(httpmock::When);
-impl ProjectViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ProjectViewThen(httpmock::Then);
-impl ProjectViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ProjectUpdateWhen(httpmock::When);
-impl ProjectUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ProjectUpdateThen(httpmock::Then);
-impl ProjectUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ProjectDeleteWhen(httpmock::When);
-impl ProjectDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ProjectDeleteThen(httpmock::Then);
-impl ProjectDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ProjectPolicyViewWhen(httpmock::When);
-impl ProjectPolicyViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ProjectPolicyViewThen(httpmock::Then);
-impl ProjectPolicyViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct ProjectPolicyUpdateWhen(httpmock::When);
-impl ProjectPolicyUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct ProjectPolicyUpdateThen(httpmock::Then);
-impl ProjectPolicyUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SnapshotListWhen(httpmock::When);
-impl SnapshotListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SnapshotListThen(httpmock::Then);
-impl SnapshotListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SnapshotCreateWhen(httpmock::When);
-impl SnapshotCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SnapshotCreateThen(httpmock::Then);
-impl SnapshotCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SnapshotViewWhen(httpmock::When);
-impl SnapshotViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SnapshotViewThen(httpmock::Then);
-impl SnapshotViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SnapshotDeleteWhen(httpmock::When);
-impl SnapshotDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SnapshotDeleteThen(httpmock::Then);
-impl SnapshotDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct CertificateListWhen(httpmock::When);
-impl CertificateListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct CertificateListThen(httpmock::Then);
-impl CertificateListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct CertificateCreateWhen(httpmock::When);
-impl CertificateCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct CertificateCreateThen(httpmock::Then);
-impl CertificateCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct CertificateViewWhen(httpmock::When);
-impl CertificateViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct CertificateViewThen(httpmock::Then);
-impl CertificateViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct CertificateDeleteWhen(httpmock::When);
-impl CertificateDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct CertificateDeleteThen(httpmock::Then);
-impl CertificateDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct PhysicalDiskListWhen(httpmock::When);
-impl PhysicalDiskListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct PhysicalDiskListThen(httpmock::Then);
-impl PhysicalDiskListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct RackListWhen(httpmock::When);
-impl RackListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct RackListThen(httpmock::Then);
-impl RackListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct RackViewWhen(httpmock::When);
-impl RackViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct RackViewThen(httpmock::Then);
-impl RackViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SledListWhen(httpmock::When);
-impl SledListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SledListThen(httpmock::Then);
-impl SledListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SledViewWhen(httpmock::When);
-impl SledViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SledViewThen(httpmock::Then);
-impl SledViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SledPhysicalDiskListWhen(httpmock::When);
-impl SledPhysicalDiskListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SledPhysicalDiskListThen(httpmock::Then);
-impl SledPhysicalDiskListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SiloIdentityProviderListWhen(httpmock::When);
-impl SiloIdentityProviderListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SiloIdentityProviderListThen(httpmock::Then);
-impl SiloIdentityProviderListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct LocalIdpUserCreateWhen(httpmock::When);
-impl LocalIdpUserCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct LocalIdpUserCreateThen(httpmock::Then);
-impl LocalIdpUserCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct LocalIdpUserDeleteWhen(httpmock::When);
-impl LocalIdpUserDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct LocalIdpUserDeleteThen(httpmock::Then);
-impl LocalIdpUserDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct LocalIdpUserSetPasswordWhen(httpmock::When);
-impl LocalIdpUserSetPasswordWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct LocalIdpUserSetPasswordThen(httpmock::Then);
-impl LocalIdpUserSetPasswordThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SamlIdentityProviderCreateWhen(httpmock::When);
-impl SamlIdentityProviderCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SamlIdentityProviderCreateThen(httpmock::Then);
-impl SamlIdentityProviderCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SamlIdentityProviderViewWhen(httpmock::When);
-impl SamlIdentityProviderViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SamlIdentityProviderViewThen(httpmock::Then);
-impl SamlIdentityProviderViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolListWhen(httpmock::When);
-impl IpPoolListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolListThen(httpmock::Then);
-impl IpPoolListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolCreateWhen(httpmock::When);
-impl IpPoolCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolCreateThen(httpmock::Then);
-impl IpPoolCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolViewWhen(httpmock::When);
-impl IpPoolViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolViewThen(httpmock::Then);
-impl IpPoolViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolUpdateWhen(httpmock::When);
-impl IpPoolUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolUpdateThen(httpmock::Then);
-impl IpPoolUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolDeleteWhen(httpmock::When);
-impl IpPoolDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolDeleteThen(httpmock::Then);
-impl IpPoolDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolRangeListWhen(httpmock::When);
-impl IpPoolRangeListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolRangeListThen(httpmock::Then);
-impl IpPoolRangeListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolRangeAddWhen(httpmock::When);
-impl IpPoolRangeAddWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolRangeAddThen(httpmock::Then);
-impl IpPoolRangeAddThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolRangeRemoveWhen(httpmock::When);
-impl IpPoolRangeRemoveWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolRangeRemoveThen(httpmock::Then);
-impl IpPoolRangeRemoveThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolServiceViewWhen(httpmock::When);
-impl IpPoolServiceViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolServiceViewThen(httpmock::Then);
-impl IpPoolServiceViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolServiceRangeListWhen(httpmock::When);
-impl IpPoolServiceRangeListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolServiceRangeListThen(httpmock::Then);
-impl IpPoolServiceRangeListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolServiceRangeAddWhen(httpmock::When);
-impl IpPoolServiceRangeAddWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolServiceRangeAddThen(httpmock::Then);
-impl IpPoolServiceRangeAddThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct IpPoolServiceRangeRemoveWhen(httpmock::When);
-impl IpPoolServiceRangeRemoveWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct IpPoolServiceRangeRemoveThen(httpmock::Then);
-impl IpPoolServiceRangeRemoveThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemMetricWhen(httpmock::When);
-impl SystemMetricWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemMetricThen(httpmock::Then);
-impl SystemMetricThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemPolicyViewWhen(httpmock::When);
-impl SystemPolicyViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemPolicyViewThen(httpmock::Then);
-impl SystemPolicyViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemPolicyUpdateWhen(httpmock::When);
-impl SystemPolicyUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemPolicyUpdateThen(httpmock::Then);
-impl SystemPolicyUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct RoleListWhen(httpmock::When);
-impl RoleListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct RoleListThen(httpmock::Then);
-impl RoleListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct RoleViewWhen(httpmock::When);
-impl RoleViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct RoleViewThen(httpmock::Then);
-impl RoleViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SagaListWhen(httpmock::When);
-impl SagaListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SagaListThen(httpmock::Then);
-impl SagaListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SagaViewWhen(httpmock::When);
-impl SagaViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SagaViewThen(httpmock::Then);
-impl SagaViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SiloListWhen(httpmock::When);
-impl SiloListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SiloListThen(httpmock::Then);
-impl SiloListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SiloCreateWhen(httpmock::When);
-impl SiloCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SiloCreateThen(httpmock::Then);
-impl SiloCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SiloViewWhen(httpmock::When);
-impl SiloViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SiloViewThen(httpmock::Then);
-impl SiloViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SiloDeleteWhen(httpmock::When);
-impl SiloDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SiloDeleteThen(httpmock::Then);
-impl SiloDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SiloPolicyViewWhen(httpmock::When);
-impl SiloPolicyViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SiloPolicyViewThen(httpmock::Then);
-impl SiloPolicyViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SiloPolicyUpdateWhen(httpmock::When);
-impl SiloPolicyUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SiloPolicyUpdateThen(httpmock::Then);
-impl SiloPolicyUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemComponentVersionListWhen(httpmock::When);
-impl SystemComponentVersionListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemComponentVersionListThen(httpmock::Then);
-impl SystemComponentVersionListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct UpdateDeploymentsListWhen(httpmock::When);
-impl UpdateDeploymentsListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct UpdateDeploymentsListThen(httpmock::Then);
-impl UpdateDeploymentsListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct UpdateDeploymentViewWhen(httpmock::When);
-impl UpdateDeploymentViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct UpdateDeploymentViewThen(httpmock::Then);
-impl UpdateDeploymentViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemUpdateRefreshWhen(httpmock::When);
-impl SystemUpdateRefreshWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemUpdateRefreshThen(httpmock::Then);
-impl SystemUpdateRefreshThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemUpdateStartWhen(httpmock::When);
-impl SystemUpdateStartWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemUpdateStartThen(httpmock::Then);
-impl SystemUpdateStartThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemUpdateStopWhen(httpmock::When);
-impl SystemUpdateStopWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemUpdateStopThen(httpmock::Then);
-impl SystemUpdateStopThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemUpdateListWhen(httpmock::When);
-impl SystemUpdateListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemUpdateListThen(httpmock::Then);
-impl SystemUpdateListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemUpdateViewWhen(httpmock::When);
-impl SystemUpdateViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemUpdateViewThen(httpmock::Then);
-impl SystemUpdateViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemUpdateComponentsListWhen(httpmock::When);
-impl SystemUpdateComponentsListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemUpdateComponentsListThen(httpmock::Then);
-impl SystemUpdateComponentsListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SystemVersionWhen(httpmock::When);
-impl SystemVersionWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SystemVersionThen(httpmock::Then);
-impl SystemVersionThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SiloUserListWhen(httpmock::When);
-impl SiloUserListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SiloUserListThen(httpmock::Then);
-impl SiloUserListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct SiloUserViewWhen(httpmock::When);
-impl SiloUserViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct SiloUserViewThen(httpmock::Then);
-impl SiloUserViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct UserBuiltinListWhen(httpmock::When);
-impl UserBuiltinListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct UserBuiltinListThen(httpmock::Then);
-impl UserBuiltinListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct UserBuiltinViewWhen(httpmock::When);
-impl UserBuiltinViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct UserBuiltinViewThen(httpmock::Then);
-impl UserBuiltinViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct UserListWhen(httpmock::When);
-impl UserListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct UserListThen(httpmock::Then);
-impl UserListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcFirewallRulesViewWhen(httpmock::When);
-impl VpcFirewallRulesViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcFirewallRulesViewThen(httpmock::Then);
-impl VpcFirewallRulesViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcFirewallRulesUpdateWhen(httpmock::When);
-impl VpcFirewallRulesUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcFirewallRulesUpdateThen(httpmock::Then);
-impl VpcFirewallRulesUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcRouterRouteListWhen(httpmock::When);
-impl VpcRouterRouteListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcRouterRouteListThen(httpmock::Then);
-impl VpcRouterRouteListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcRouterRouteCreateWhen(httpmock::When);
-impl VpcRouterRouteCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcRouterRouteCreateThen(httpmock::Then);
-impl VpcRouterRouteCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcRouterRouteViewWhen(httpmock::When);
-impl VpcRouterRouteViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcRouterRouteViewThen(httpmock::Then);
-impl VpcRouterRouteViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcRouterRouteUpdateWhen(httpmock::When);
-impl VpcRouterRouteUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcRouterRouteUpdateThen(httpmock::Then);
-impl VpcRouterRouteUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcRouterRouteDeleteWhen(httpmock::When);
-impl VpcRouterRouteDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcRouterRouteDeleteThen(httpmock::Then);
-impl VpcRouterRouteDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcRouterListWhen(httpmock::When);
-impl VpcRouterListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcRouterListThen(httpmock::Then);
-impl VpcRouterListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcRouterCreateWhen(httpmock::When);
-impl VpcRouterCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcRouterCreateThen(httpmock::Then);
-impl VpcRouterCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcRouterViewWhen(httpmock::When);
-impl VpcRouterViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcRouterViewThen(httpmock::Then);
-impl VpcRouterViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcRouterUpdateWhen(httpmock::When);
-impl VpcRouterUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcRouterUpdateThen(httpmock::Then);
-impl VpcRouterUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcRouterDeleteWhen(httpmock::When);
-impl VpcRouterDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcRouterDeleteThen(httpmock::Then);
-impl VpcRouterDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcSubnetListWhen(httpmock::When);
-impl VpcSubnetListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcSubnetListThen(httpmock::Then);
-impl VpcSubnetListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcSubnetCreateWhen(httpmock::When);
-impl VpcSubnetCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcSubnetCreateThen(httpmock::Then);
-impl VpcSubnetCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcSubnetViewWhen(httpmock::When);
-impl VpcSubnetViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcSubnetViewThen(httpmock::Then);
-impl VpcSubnetViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcSubnetUpdateWhen(httpmock::When);
-impl VpcSubnetUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcSubnetUpdateThen(httpmock::Then);
-impl VpcSubnetUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcSubnetDeleteWhen(httpmock::When);
-impl VpcSubnetDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcSubnetDeleteThen(httpmock::Then);
-impl VpcSubnetDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcSubnetListNetworkInterfacesWhen(httpmock::When);
-impl VpcSubnetListNetworkInterfacesWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcSubnetListNetworkInterfacesThen(httpmock::Then);
-impl VpcSubnetListNetworkInterfacesThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcListWhen(httpmock::When);
-impl VpcListWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcListThen(httpmock::Then);
-impl VpcListThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcCreateWhen(httpmock::When);
-impl VpcCreateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcCreateThen(httpmock::Then);
-impl VpcCreateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcViewWhen(httpmock::When);
-impl VpcViewWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcViewThen(httpmock::Then);
-impl VpcViewThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcUpdateWhen(httpmock::When);
-impl VpcUpdateWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcUpdateThen(httpmock::Then);
-impl VpcUpdateThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-struct VpcDeleteWhen(httpmock::When);
-impl VpcDeleteWhen {
-    fn new(inner: httpmock::When) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::When {
-        self.0
-    }
-}
-
-struct VpcDeleteThen(httpmock::Then);
-impl VpcDeleteThen {
-    fn new(inner: httpmock::Then) -> Self {
-        Self(inner)
-    }
-
-    fn into_inner(self) -> httpmock::Then {
-        self.0
-    }
-}
-
-trait MockServerExt {
-    fn device_auth_request<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DeviceAuthRequestWhen, DeviceAuthRequestThen);
-    fn device_auth_confirm<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DeviceAuthConfirmWhen, DeviceAuthConfirmThen);
-    fn device_access_token<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DeviceAccessTokenWhen, DeviceAccessTokenThen);
-    fn login_spoof<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(LoginSpoofWhen, LoginSpoofThen);
-    fn login_local<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(LoginLocalWhen, LoginLocalThen);
-    fn login_saml_begin<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(LoginSamlBeginWhen, LoginSamlBeginThen);
-    fn login_saml<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(LoginSamlWhen, LoginSamlThen);
-    fn logout<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(LogoutWhen, LogoutThen);
-    fn system_image_view_by_id<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemImageViewByIdWhen, SystemImageViewByIdThen);
-    fn system_image_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemImageListWhen, SystemImageListThen);
-    fn system_image_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemImageCreateWhen, SystemImageCreateThen);
-    fn system_image_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemImageViewWhen, SystemImageViewThen);
-    fn system_image_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemImageDeleteWhen, SystemImageDeleteThen);
-    fn disk_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DiskListWhen, DiskListThen);
-    fn disk_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DiskCreateWhen, DiskCreateThen);
-    fn disk_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DiskViewWhen, DiskViewThen);
-    fn disk_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DiskDeleteWhen, DiskDeleteThen);
-    fn disk_bulk_write_import<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DiskBulkWriteImportWhen, DiskBulkWriteImportThen);
-    fn disk_bulk_write_import_start<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DiskBulkWriteImportStartWhen, DiskBulkWriteImportStartThen);
-    fn disk_bulk_write_import_stop<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DiskBulkWriteImportStopWhen, DiskBulkWriteImportStopThen);
-    fn disk_finalize_import<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DiskFinalizeImportWhen, DiskFinalizeImportThen);
-    fn disk_import_blocks_from_url<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DiskImportBlocksFromUrlWhen, DiskImportBlocksFromUrlThen);
-    fn disk_metrics_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(DiskMetricsListWhen, DiskMetricsListThen);
-    fn group_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(GroupListWhen, GroupListThen);
-    fn group_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(GroupViewWhen, GroupViewThen);
-    fn image_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ImageListWhen, ImageListThen);
-    fn image_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ImageCreateWhen, ImageCreateThen);
-    fn image_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ImageViewWhen, ImageViewThen);
-    fn image_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ImageDeleteWhen, ImageDeleteThen);
-    fn image_promote<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ImagePromoteWhen, ImagePromoteThen);
-    fn instance_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceListWhen, InstanceListThen);
-    fn instance_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceCreateWhen, InstanceCreateThen);
-    fn instance_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceViewWhen, InstanceViewThen);
-    fn instance_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceDeleteWhen, InstanceDeleteThen);
-    fn instance_disk_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceDiskListWhen, InstanceDiskListThen);
-    fn instance_disk_attach<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceDiskAttachWhen, InstanceDiskAttachThen);
-    fn instance_disk_detach<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceDiskDetachWhen, InstanceDiskDetachThen);
-    fn instance_external_ip_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceExternalIpListWhen, InstanceExternalIpListThen);
-    fn instance_migrate<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceMigrateWhen, InstanceMigrateThen);
-    fn instance_reboot<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceRebootWhen, InstanceRebootThen);
-    fn instance_serial_console<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceSerialConsoleWhen, InstanceSerialConsoleThen);
-    fn instance_serial_console_stream<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceSerialConsoleStreamWhen, InstanceSerialConsoleStreamThen);
-    fn instance_start<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceStartWhen, InstanceStartThen);
-    fn instance_stop<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceStopWhen, InstanceStopThen);
-    fn current_user_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(CurrentUserViewWhen, CurrentUserViewThen);
-    fn current_user_groups<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(CurrentUserGroupsWhen, CurrentUserGroupsThen);
-    fn current_user_ssh_key_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(CurrentUserSshKeyListWhen, CurrentUserSshKeyListThen);
-    fn current_user_ssh_key_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(CurrentUserSshKeyCreateWhen, CurrentUserSshKeyCreateThen);
-    fn current_user_ssh_key_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(CurrentUserSshKeyViewWhen, CurrentUserSshKeyViewThen);
-    fn current_user_ssh_key_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(CurrentUserSshKeyDeleteWhen, CurrentUserSshKeyDeleteThen);
-    fn instance_network_interface_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceNetworkInterfaceListWhen, InstanceNetworkInterfaceListThen);
-    fn instance_network_interface_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceNetworkInterfaceCreateWhen, InstanceNetworkInterfaceCreateThen);
-    fn instance_network_interface_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceNetworkInterfaceViewWhen, InstanceNetworkInterfaceViewThen);
-    fn instance_network_interface_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceNetworkInterfaceUpdateWhen, InstanceNetworkInterfaceUpdateThen);
-    fn instance_network_interface_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(InstanceNetworkInterfaceDeleteWhen, InstanceNetworkInterfaceDeleteThen);
-    fn policy_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(PolicyViewWhen, PolicyViewThen);
-    fn policy_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(PolicyUpdateWhen, PolicyUpdateThen);
-    fn project_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ProjectListWhen, ProjectListThen);
-    fn project_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ProjectCreateWhen, ProjectCreateThen);
-    fn project_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ProjectViewWhen, ProjectViewThen);
-    fn project_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ProjectUpdateWhen, ProjectUpdateThen);
-    fn project_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ProjectDeleteWhen, ProjectDeleteThen);
-    fn project_policy_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ProjectPolicyViewWhen, ProjectPolicyViewThen);
-    fn project_policy_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(ProjectPolicyUpdateWhen, ProjectPolicyUpdateThen);
-    fn snapshot_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SnapshotListWhen, SnapshotListThen);
-    fn snapshot_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SnapshotCreateWhen, SnapshotCreateThen);
-    fn snapshot_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SnapshotViewWhen, SnapshotViewThen);
-    fn snapshot_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SnapshotDeleteWhen, SnapshotDeleteThen);
-    fn certificate_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(CertificateListWhen, CertificateListThen);
-    fn certificate_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(CertificateCreateWhen, CertificateCreateThen);
-    fn certificate_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(CertificateViewWhen, CertificateViewThen);
-    fn certificate_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(CertificateDeleteWhen, CertificateDeleteThen);
-    fn physical_disk_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(PhysicalDiskListWhen, PhysicalDiskListThen);
-    fn rack_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(RackListWhen, RackListThen);
-    fn rack_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(RackViewWhen, RackViewThen);
-    fn sled_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SledListWhen, SledListThen);
-    fn sled_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SledViewWhen, SledViewThen);
-    fn sled_physical_disk_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SledPhysicalDiskListWhen, SledPhysicalDiskListThen);
-    fn silo_identity_provider_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SiloIdentityProviderListWhen, SiloIdentityProviderListThen);
-    fn local_idp_user_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(LocalIdpUserCreateWhen, LocalIdpUserCreateThen);
-    fn local_idp_user_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(LocalIdpUserDeleteWhen, LocalIdpUserDeleteThen);
-    fn local_idp_user_set_password<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(LocalIdpUserSetPasswordWhen, LocalIdpUserSetPasswordThen);
-    fn saml_identity_provider_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SamlIdentityProviderCreateWhen, SamlIdentityProviderCreateThen);
-    fn saml_identity_provider_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SamlIdentityProviderViewWhen, SamlIdentityProviderViewThen);
-    fn ip_pool_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolListWhen, IpPoolListThen);
-    fn ip_pool_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolCreateWhen, IpPoolCreateThen);
-    fn ip_pool_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolViewWhen, IpPoolViewThen);
-    fn ip_pool_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolUpdateWhen, IpPoolUpdateThen);
-    fn ip_pool_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolDeleteWhen, IpPoolDeleteThen);
-    fn ip_pool_range_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolRangeListWhen, IpPoolRangeListThen);
-    fn ip_pool_range_add<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolRangeAddWhen, IpPoolRangeAddThen);
-    fn ip_pool_range_remove<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolRangeRemoveWhen, IpPoolRangeRemoveThen);
-    fn ip_pool_service_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolServiceViewWhen, IpPoolServiceViewThen);
-    fn ip_pool_service_range_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolServiceRangeListWhen, IpPoolServiceRangeListThen);
-    fn ip_pool_service_range_add<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolServiceRangeAddWhen, IpPoolServiceRangeAddThen);
-    fn ip_pool_service_range_remove<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(IpPoolServiceRangeRemoveWhen, IpPoolServiceRangeRemoveThen);
-    fn system_metric<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemMetricWhen, SystemMetricThen);
-    fn system_policy_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemPolicyViewWhen, SystemPolicyViewThen);
-    fn system_policy_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemPolicyUpdateWhen, SystemPolicyUpdateThen);
-    fn role_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(RoleListWhen, RoleListThen);
-    fn role_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(RoleViewWhen, RoleViewThen);
-    fn saga_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SagaListWhen, SagaListThen);
-    fn saga_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SagaViewWhen, SagaViewThen);
-    fn silo_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SiloListWhen, SiloListThen);
-    fn silo_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SiloCreateWhen, SiloCreateThen);
-    fn silo_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SiloViewWhen, SiloViewThen);
-    fn silo_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SiloDeleteWhen, SiloDeleteThen);
-    fn silo_policy_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SiloPolicyViewWhen, SiloPolicyViewThen);
-    fn silo_policy_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SiloPolicyUpdateWhen, SiloPolicyUpdateThen);
-    fn system_component_version_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemComponentVersionListWhen, SystemComponentVersionListThen);
-    fn update_deployments_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(UpdateDeploymentsListWhen, UpdateDeploymentsListThen);
-    fn update_deployment_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(UpdateDeploymentViewWhen, UpdateDeploymentViewThen);
-    fn system_update_refresh<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemUpdateRefreshWhen, SystemUpdateRefreshThen);
-    fn system_update_start<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemUpdateStartWhen, SystemUpdateStartThen);
-    fn system_update_stop<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemUpdateStopWhen, SystemUpdateStopThen);
-    fn system_update_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemUpdateListWhen, SystemUpdateListThen);
-    fn system_update_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemUpdateViewWhen, SystemUpdateViewThen);
-    fn system_update_components_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemUpdateComponentsListWhen, SystemUpdateComponentsListThen);
-    fn system_version<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SystemVersionWhen, SystemVersionThen);
-    fn silo_user_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SiloUserListWhen, SiloUserListThen);
-    fn silo_user_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(SiloUserViewWhen, SiloUserViewThen);
-    fn user_builtin_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(UserBuiltinListWhen, UserBuiltinListThen);
-    fn user_builtin_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(UserBuiltinViewWhen, UserBuiltinViewThen);
-    fn user_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(UserListWhen, UserListThen);
-    fn vpc_firewall_rules_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcFirewallRulesViewWhen, VpcFirewallRulesViewThen);
-    fn vpc_firewall_rules_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcFirewallRulesUpdateWhen, VpcFirewallRulesUpdateThen);
-    fn vpc_router_route_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcRouterRouteListWhen, VpcRouterRouteListThen);
-    fn vpc_router_route_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcRouterRouteCreateWhen, VpcRouterRouteCreateThen);
-    fn vpc_router_route_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcRouterRouteViewWhen, VpcRouterRouteViewThen);
-    fn vpc_router_route_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcRouterRouteUpdateWhen, VpcRouterRouteUpdateThen);
-    fn vpc_router_route_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcRouterRouteDeleteWhen, VpcRouterRouteDeleteThen);
-    fn vpc_router_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcRouterListWhen, VpcRouterListThen);
-    fn vpc_router_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcRouterCreateWhen, VpcRouterCreateThen);
-    fn vpc_router_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcRouterViewWhen, VpcRouterViewThen);
-    fn vpc_router_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcRouterUpdateWhen, VpcRouterUpdateThen);
-    fn vpc_router_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcRouterDeleteWhen, VpcRouterDeleteThen);
-    fn vpc_subnet_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcSubnetListWhen, VpcSubnetListThen);
-    fn vpc_subnet_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcSubnetCreateWhen, VpcSubnetCreateThen);
-    fn vpc_subnet_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcSubnetViewWhen, VpcSubnetViewThen);
-    fn vpc_subnet_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcSubnetUpdateWhen, VpcSubnetUpdateThen);
-    fn vpc_subnet_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcSubnetDeleteWhen, VpcSubnetDeleteThen);
-    fn vpc_subnet_list_network_interfaces<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcSubnetListNetworkInterfacesWhen, VpcSubnetListNetworkInterfacesThen);
-    fn vpc_list<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcListWhen, VpcListThen);
-    fn vpc_create<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcCreateWhen, VpcCreateThen);
-    fn vpc_view<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcViewWhen, VpcViewThen);
-    fn vpc_update<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcUpdateWhen, VpcUpdateThen);
-    fn vpc_delete<F>(&self, f: F) -> httpmock::Mock
-    where
-        F: FnOnce(VpcDeleteWhen, VpcDeleteThen);
+pub mod operations {
+    //! [`When`](httpmock::When) and [`Then`](httpmock::Then)
+    //! wrappers for each operation. Each can be converted to
+    //! its inner type with a call to `into_inner()`. This can
+    //! be used to explicitly deviate from permitted values.
+    use oxide_api::*;
+    pub struct DeviceAuthRequestWhen(httpmock::When);
+    impl DeviceAuthRequestWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/device/auth$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::DeviceAuthRequest) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct DeviceAuthRequestThen(httpmock::Then);
+    impl DeviceAuthRequestThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+            Self(self.0.status(status).json_body(value))
+        }
+    }
+
+    pub struct DeviceAuthConfirmWhen(httpmock::When);
+    impl DeviceAuthConfirmWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/device/confirm$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::DeviceAuthVerify) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct DeviceAuthConfirmThen(httpmock::Then);
+    impl DeviceAuthConfirmThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DeviceAccessTokenWhen(httpmock::When);
+    impl DeviceAccessTokenWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/device/token$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::DeviceAccessTokenRequest) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct DeviceAccessTokenThen(httpmock::Then);
+    impl DeviceAccessTokenThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
+            Self(self.0.status(status).json_body(value))
+        }
+    }
+
+    pub struct LoginSpoofWhen(httpmock::When);
+    impl LoginSpoofWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/login$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::SpoofLoginBody) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct LoginSpoofThen(httpmock::Then);
+    impl LoginSpoofThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct LoginLocalWhen(httpmock::When);
+    impl LoginLocalWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/login/.*/local$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo_name(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!("^/login/{}/local$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::UsernamePasswordCredentials) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct LoginLocalThen(httpmock::Then);
+    impl LoginLocalThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn see_other(self) -> Self {
+            Self(self.0.status(303u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn success(self, status: u16, value: serde_json::Value) -> Self {
+            Self(self.0.status(status).json_body(value))
+        }
+    }
+
+    pub struct LoginSamlBeginWhen(httpmock::When);
+    impl LoginSamlBeginWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/login/.*/saml/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo_name(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!("^/login/{}/saml/.*$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn provider_name(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!("^/login/.*/saml/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct LoginSamlBeginThen(httpmock::Then);
+    impl LoginSamlBeginThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn found(self) -> Self {
+            Self(self.0.status(302u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn success(self, status: u16, value: serde_json::Value) -> Self {
+            Self(self.0.status(status).json_body(value))
+        }
+    }
+
+    pub struct LoginSamlWhen(httpmock::When);
+    impl LoginSamlWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/login/.*/saml/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo_name(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!("^/login/{}/saml/.*$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn provider_name(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!("^/login/.*/saml/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: serde_json::Value) -> Self {
+            Self(self.0.json_body(value))
+        }
+    }
+
+    pub struct LoginSamlThen(httpmock::Then);
+    impl LoginSamlThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn see_other(self) -> Self {
+            Self(self.0.status(303u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn success(self, status: u16, value: serde_json::Value) -> Self {
+            Self(self.0.status(status).json_body(value))
+        }
+    }
+
+    pub struct LogoutWhen(httpmock::When);
+    impl LogoutWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/logout$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct LogoutThen(httpmock::Then);
+    impl LogoutThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemImageViewByIdWhen(httpmock::When);
+    impl SystemImageViewByIdWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/system/by-id/images/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn id(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!("^/system/by-id/images/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SystemImageViewByIdThen(httpmock::Then);
+    impl SystemImageViewByIdThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::GlobalImage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemImageListWhen(httpmock::When);
+    impl SystemImageListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/system/images$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SystemImageListThen(httpmock::Then);
+    impl SystemImageListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::GlobalImageResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemImageCreateWhen(httpmock::When);
+    impl SystemImageCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/system/images$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::GlobalImageCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SystemImageCreateThen(httpmock::Then);
+    impl SystemImageCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::GlobalImage) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemImageViewWhen(httpmock::When);
+    impl SystemImageViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/system/images/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn image_name(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!("^/system/images/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SystemImageViewThen(httpmock::Then);
+    impl SystemImageViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::GlobalImage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemImageDeleteWhen(httpmock::When);
+    impl SystemImageDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/system/images/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn image_name(self, value: &types::Name) -> Self {
+            let re = regex::Regex::new(&format!("^/system/images/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SystemImageDeleteThen(httpmock::Then);
+    impl SystemImageDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DiskListWhen(httpmock::When);
+    impl DiskListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/disks$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct DiskListThen(httpmock::Then);
+    impl DiskListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::DiskResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DiskCreateWhen(httpmock::When);
+    impl DiskCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/disks$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::DiskCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct DiskCreateThen(httpmock::Then);
+    impl DiskCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Disk) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DiskViewWhen(httpmock::When);
+    impl DiskViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/disks/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn disk(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/disks/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct DiskViewThen(httpmock::Then);
+    impl DiskViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Disk) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DiskDeleteWhen(httpmock::When);
+    impl DiskDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/disks/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn disk(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/disks/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct DiskDeleteThen(httpmock::Then);
+    impl DiskDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DiskBulkWriteImportWhen(httpmock::When);
+    impl DiskBulkWriteImportWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/disks/.*/bulk-write$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn disk(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/disks/{}/bulk-write$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::ImportBlocksBulkWrite) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct DiskBulkWriteImportThen(httpmock::Then);
+    impl DiskBulkWriteImportThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DiskBulkWriteImportStartWhen(httpmock::When);
+    impl DiskBulkWriteImportStartWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/disks/.*/bulk-write-start$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn disk(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/disks/{}/bulk-write-start$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct DiskBulkWriteImportStartThen(httpmock::Then);
+    impl DiskBulkWriteImportStartThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DiskBulkWriteImportStopWhen(httpmock::When);
+    impl DiskBulkWriteImportStopWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/disks/.*/bulk-write-stop$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn disk(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/disks/{}/bulk-write-stop$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct DiskBulkWriteImportStopThen(httpmock::Then);
+    impl DiskBulkWriteImportStopThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DiskFinalizeImportWhen(httpmock::When);
+    impl DiskFinalizeImportWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/disks/.*/finalize$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn disk(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/disks/{}/finalize$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::FinalizeDisk) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct DiskFinalizeImportThen(httpmock::Then);
+    impl DiskFinalizeImportThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DiskImportBlocksFromUrlWhen(httpmock::When);
+    impl DiskImportBlocksFromUrlWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/disks/.*/import$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn disk(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/disks/{}/import$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::ImportBlocksFromUrl) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct DiskImportBlocksFromUrlThen(httpmock::Then);
+    impl DiskImportBlocksFromUrlThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct DiskMetricsListWhen(httpmock::When);
+    impl DiskMetricsListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/disks/.*/metrics/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn disk(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/disks/{}/metrics/.*$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn metric(self, value: types::DiskMetricName) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/disks/.*/metrics/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn end_time(self, value: &chrono::DateTime<chrono::offset::Utc>) -> Self {
+            Self(self.0.query_param("end_time", value.to_string()))
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn start_time(self, value: &chrono::DateTime<chrono::offset::Utc>) -> Self {
+            Self(self.0.query_param("start_time", value.to_string()))
+        }
+    }
+
+    pub struct DiskMetricsListThen(httpmock::Then);
+    impl DiskMetricsListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct GroupListWhen(httpmock::When);
+    impl GroupListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/groups$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct GroupListThen(httpmock::Then);
+    impl GroupListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::GroupResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct GroupViewWhen(httpmock::When);
+    impl GroupViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/groups/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn group(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/groups/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct GroupViewThen(httpmock::Then);
+    impl GroupViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Group) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ImageListWhen(httpmock::When);
+    impl ImageListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/images$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn include_silo_images(self, value: bool) -> Self {
+            Self(self.0.query_param("include_silo_images", value.to_string()))
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct ImageListThen(httpmock::Then);
+    impl ImageListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ImageResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ImageCreateWhen(httpmock::When);
+    impl ImageCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/images$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::ImageCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct ImageCreateThen(httpmock::Then);
+    impl ImageCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Image) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ImageViewWhen(httpmock::When);
+    impl ImageViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/images/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn image(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/images/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct ImageViewThen(httpmock::Then);
+    impl ImageViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Image) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ImageDeleteWhen(httpmock::When);
+    impl ImageDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/images/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn image(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/images/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct ImageDeleteThen(httpmock::Then);
+    impl ImageDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ImagePromoteWhen(httpmock::When);
+    impl ImagePromoteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/images/.*/promote$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn image(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/images/{}/promote$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct ImagePromoteThen(httpmock::Then);
+    impl ImagePromoteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::Image) -> Self {
+            Self(self.0.status(202u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceListWhen(httpmock::When);
+    impl InstanceListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/instances$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct InstanceListThen(httpmock::Then);
+    impl InstanceListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::InstanceResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceCreateWhen(httpmock::When);
+    impl InstanceCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/instances$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::InstanceCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceCreateThen(httpmock::Then);
+    impl InstanceCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Instance) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceViewWhen(httpmock::When);
+    impl InstanceViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/instances/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct InstanceViewThen(httpmock::Then);
+    impl InstanceViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Instance) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceDeleteWhen(httpmock::When);
+    impl InstanceDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/instances/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct InstanceDeleteThen(httpmock::Then);
+    impl InstanceDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceDiskListWhen(httpmock::When);
+    impl InstanceDiskListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*/disks$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/instances/{}/disks$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct InstanceDiskListThen(httpmock::Then);
+    impl InstanceDiskListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::DiskResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceDiskAttachWhen(httpmock::When);
+    impl InstanceDiskAttachWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*/disks/attach$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/disks/attach$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::DiskPath) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceDiskAttachThen(httpmock::Then);
+    impl InstanceDiskAttachThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::Disk) -> Self {
+            Self(self.0.status(202u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceDiskDetachWhen(httpmock::When);
+    impl InstanceDiskDetachWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*/disks/detach$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/disks/detach$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::DiskPath) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceDiskDetachThen(httpmock::Then);
+    impl InstanceDiskDetachThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::Disk) -> Self {
+            Self(self.0.status(202u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceExternalIpListWhen(httpmock::When);
+    impl InstanceExternalIpListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*/external-ips$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/external-ips$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct InstanceExternalIpListThen(httpmock::Then);
+    impl InstanceExternalIpListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ExternalIpResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceMigrateWhen(httpmock::When);
+    impl InstanceMigrateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*/migrate$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/instances/{}/migrate$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::InstanceMigrate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceMigrateThen(httpmock::Then);
+    impl InstanceMigrateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Instance) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceRebootWhen(httpmock::When);
+    impl InstanceRebootWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*/reboot$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/instances/{}/reboot$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct InstanceRebootThen(httpmock::Then);
+    impl InstanceRebootThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::Instance) -> Self {
+            Self(self.0.status(202u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceSerialConsoleWhen(httpmock::When);
+    impl InstanceSerialConsoleWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*/serial-console$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/serial-console$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn from_start(self, value: u64) -> Self {
+            Self(self.0.query_param("from_start", value.to_string()))
+        }
+
+        pub fn max_bytes(self, value: u64) -> Self {
+            Self(self.0.query_param("max_bytes", value.to_string()))
+        }
+
+        pub fn most_recent(self, value: u64) -> Self {
+            Self(self.0.query_param("most_recent", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct InstanceSerialConsoleThen(httpmock::Then);
+    impl InstanceSerialConsoleThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::InstanceSerialConsoleData) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceSerialConsoleStreamWhen(httpmock::When);
+    impl InstanceSerialConsoleStreamWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/instances/.*/serial-console/stream$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/instances/{}/serial-console/stream$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn from_start(self, value: u64) -> Self {
+            Self(self.0.query_param("from_start", value.to_string()))
+        }
+
+        pub fn max_bytes(self, value: u64) -> Self {
+            Self(self.0.query_param("max_bytes", value.to_string()))
+        }
+
+        pub fn most_recent(self, value: u64) -> Self {
+            Self(self.0.query_param("most_recent", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct InstanceSerialConsoleStreamThen(httpmock::Then);
+    impl InstanceSerialConsoleStreamThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn default_response(self, status: u16) -> Self {
+            Self(self.0.status(status))
+        }
+
+        pub fn switching_protocols(self) -> Self {
+            Self(self.0.status(101u16))
+        }
+    }
+
+    pub struct InstanceStartWhen(httpmock::When);
+    impl InstanceStartWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*/start$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/instances/{}/start$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct InstanceStartThen(httpmock::Then);
+    impl InstanceStartThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::Instance) -> Self {
+            Self(self.0.status(202u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceStopWhen(httpmock::When);
+    impl InstanceStopWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/instances/.*/stop$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/instances/{}/stop$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct InstanceStopThen(httpmock::Then);
+    impl InstanceStopThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::Instance) -> Self {
+            Self(self.0.status(202u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct CurrentUserViewWhen(httpmock::When);
+    impl CurrentUserViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/me$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct CurrentUserViewThen(httpmock::Then);
+    impl CurrentUserViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::CurrentUser) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct CurrentUserGroupsWhen(httpmock::When);
+    impl CurrentUserGroupsWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/me/groups$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct CurrentUserGroupsThen(httpmock::Then);
+    impl CurrentUserGroupsThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::GroupResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct CurrentUserSshKeyListWhen(httpmock::When);
+    impl CurrentUserSshKeyListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/me/ssh-keys$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct CurrentUserSshKeyListThen(httpmock::Then);
+    impl CurrentUserSshKeyListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SshKeyResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct CurrentUserSshKeyCreateWhen(httpmock::When);
+    impl CurrentUserSshKeyCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/me/ssh-keys$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::SshKeyCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct CurrentUserSshKeyCreateThen(httpmock::Then);
+    impl CurrentUserSshKeyCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::SshKey) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct CurrentUserSshKeyViewWhen(httpmock::When);
+    impl CurrentUserSshKeyViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/me/ssh-keys/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn ssh_key(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/me/ssh-keys/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct CurrentUserSshKeyViewThen(httpmock::Then);
+    impl CurrentUserSshKeyViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SshKey) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct CurrentUserSshKeyDeleteWhen(httpmock::When);
+    impl CurrentUserSshKeyDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/me/ssh-keys/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn ssh_key(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/me/ssh-keys/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct CurrentUserSshKeyDeleteThen(httpmock::Then);
+    impl CurrentUserSshKeyDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceNetworkInterfaceListWhen(httpmock::When);
+    impl InstanceNetworkInterfaceListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/network-interfaces$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("instance", value.to_string()))
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct InstanceNetworkInterfaceListThen(httpmock::Then);
+    impl InstanceNetworkInterfaceListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::InstanceNetworkInterfaceResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceNetworkInterfaceCreateWhen(httpmock::When);
+    impl InstanceNetworkInterfaceCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/network-interfaces$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("instance", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::InstanceNetworkInterfaceCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceNetworkInterfaceCreateThen(httpmock::Then);
+    impl InstanceNetworkInterfaceCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::InstanceNetworkInterface) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceNetworkInterfaceViewWhen(httpmock::When);
+    impl InstanceNetworkInterfaceViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/network-interfaces/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn interface(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/network-interfaces/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("instance", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct InstanceNetworkInterfaceViewThen(httpmock::Then);
+    impl InstanceNetworkInterfaceViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::InstanceNetworkInterface) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceNetworkInterfaceUpdateWhen(httpmock::When);
+    impl InstanceNetworkInterfaceUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/network-interfaces/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn interface(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/network-interfaces/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("instance", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::InstanceNetworkInterfaceUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceNetworkInterfaceUpdateThen(httpmock::Then);
+    impl InstanceNetworkInterfaceUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::InstanceNetworkInterface) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct InstanceNetworkInterfaceDeleteWhen(httpmock::When);
+    impl InstanceNetworkInterfaceDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/network-interfaces/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn interface(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/network-interfaces/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("instance", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct InstanceNetworkInterfaceDeleteThen(httpmock::Then);
+    impl InstanceNetworkInterfaceDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct PolicyViewWhen(httpmock::When);
+    impl PolicyViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/policy$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct PolicyViewThen(httpmock::Then);
+    impl PolicyViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct PolicyUpdateWhen(httpmock::When);
+    impl PolicyUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/policy$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::SiloRolePolicy) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct PolicyUpdateThen(httpmock::Then);
+    impl PolicyUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ProjectListWhen(httpmock::When);
+    impl ProjectListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/projects$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct ProjectListThen(httpmock::Then);
+    impl ProjectListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ProjectResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ProjectCreateWhen(httpmock::When);
+    impl ProjectCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/projects$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::ProjectCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct ProjectCreateThen(httpmock::Then);
+    impl ProjectCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Project) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ProjectViewWhen(httpmock::When);
+    impl ProjectViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/projects/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/projects/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct ProjectViewThen(httpmock::Then);
+    impl ProjectViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Project) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ProjectUpdateWhen(httpmock::When);
+    impl ProjectUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/projects/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/projects/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::ProjectUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct ProjectUpdateThen(httpmock::Then);
+    impl ProjectUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Project) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ProjectDeleteWhen(httpmock::When);
+    impl ProjectDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/projects/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/projects/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct ProjectDeleteThen(httpmock::Then);
+    impl ProjectDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ProjectPolicyViewWhen(httpmock::When);
+    impl ProjectPolicyViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/projects/.*/policy$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/projects/{}/policy$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct ProjectPolicyViewThen(httpmock::Then);
+    impl ProjectPolicyViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ProjectRolePolicy) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct ProjectPolicyUpdateWhen(httpmock::When);
+    impl ProjectPolicyUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/projects/.*/policy$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/projects/{}/policy$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::ProjectRolePolicy) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct ProjectPolicyUpdateThen(httpmock::Then);
+    impl ProjectPolicyUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ProjectRolePolicy) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SnapshotListWhen(httpmock::When);
+    impl SnapshotListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/snapshots$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SnapshotListThen(httpmock::Then);
+    impl SnapshotListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SnapshotResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SnapshotCreateWhen(httpmock::When);
+    impl SnapshotCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/snapshots$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::SnapshotCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SnapshotCreateThen(httpmock::Then);
+    impl SnapshotCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Snapshot) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SnapshotViewWhen(httpmock::When);
+    impl SnapshotViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/snapshots/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn snapshot(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/snapshots/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct SnapshotViewThen(httpmock::Then);
+    impl SnapshotViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Snapshot) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SnapshotDeleteWhen(httpmock::When);
+    impl SnapshotDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/snapshots/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn snapshot(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/snapshots/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct SnapshotDeleteThen(httpmock::Then);
+    impl SnapshotDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct CertificateListWhen(httpmock::When);
+    impl CertificateListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/certificates$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct CertificateListThen(httpmock::Then);
+    impl CertificateListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::CertificateResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct CertificateCreateWhen(httpmock::When);
+    impl CertificateCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/certificates$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::CertificateCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct CertificateCreateThen(httpmock::Then);
+    impl CertificateCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Certificate) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct CertificateViewWhen(httpmock::When);
+    impl CertificateViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/certificates/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn certificate(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/certificates/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct CertificateViewThen(httpmock::Then);
+    impl CertificateViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Certificate) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct CertificateDeleteWhen(httpmock::When);
+    impl CertificateDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/system/certificates/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn certificate(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/certificates/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct CertificateDeleteThen(httpmock::Then);
+    impl CertificateDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct PhysicalDiskListWhen(httpmock::When);
+    impl PhysicalDiskListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/disks$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct PhysicalDiskListThen(httpmock::Then);
+    impl PhysicalDiskListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::PhysicalDiskResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct RackListWhen(httpmock::When);
+    impl RackListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/racks$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct RackListThen(httpmock::Then);
+    impl RackListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RackResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct RackViewWhen(httpmock::When);
+    impl RackViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/racks/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn rack_id(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/racks/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct RackViewThen(httpmock::Then);
+    impl RackViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Rack) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SledListWhen(httpmock::When);
+    impl SledListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/sleds$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SledListThen(httpmock::Then);
+    impl SledListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SledResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SledViewWhen(httpmock::When);
+    impl SledViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/sleds/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn sled_id(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/sleds/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SledViewThen(httpmock::Then);
+    impl SledViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Sled) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SledPhysicalDiskListWhen(httpmock::When);
+    impl SledPhysicalDiskListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/hardware/sleds/.*/disks$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn sled_id(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/sleds/{}/disks$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SledPhysicalDiskListThen(httpmock::Then);
+    impl SledPhysicalDiskListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::PhysicalDiskResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SiloIdentityProviderListWhen(httpmock::When);
+    impl SiloIdentityProviderListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/identity-providers$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SiloIdentityProviderListThen(httpmock::Then);
+    impl SiloIdentityProviderListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::IdentityProviderResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct LocalIdpUserCreateWhen(httpmock::When);
+    impl LocalIdpUserCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/identity-providers/local/users$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::UserCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct LocalIdpUserCreateThen(httpmock::Then);
+    impl LocalIdpUserCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::User) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct LocalIdpUserDeleteWhen(httpmock::When);
+    impl LocalIdpUserDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::DELETE).path_matches(
+                regex::Regex::new("^/v1/system/identity-providers/local/users/.*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn user_id(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/identity-providers/local/users/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+    }
+
+    pub struct LocalIdpUserDeleteThen(httpmock::Then);
+    impl LocalIdpUserDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct LocalIdpUserSetPasswordWhen(httpmock::When);
+    impl LocalIdpUserSetPasswordWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new(
+                        "^/v1/system/identity-providers/local/users/.*/set-password$",
+                    )
+                    .unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn user_id(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/identity-providers/local/users/{}/set-password$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::UserPassword) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct LocalIdpUserSetPasswordThen(httpmock::Then);
+    impl LocalIdpUserSetPasswordThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SamlIdentityProviderCreateWhen(httpmock::When);
+    impl SamlIdentityProviderCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/system/identity-providers/saml$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::SamlIdentityProviderCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SamlIdentityProviderCreateThen(httpmock::Then);
+    impl SamlIdentityProviderCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::SamlIdentityProvider) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SamlIdentityProviderViewWhen(httpmock::When);
+    impl SamlIdentityProviderViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/identity-providers/saml/.*$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn provider(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/identity-providers/saml/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+    }
+
+    pub struct SamlIdentityProviderViewThen(httpmock::Then);
+    impl SamlIdentityProviderViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SamlIdentityProvider) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolListWhen(httpmock::When);
+    impl IpPoolListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct IpPoolListThen(httpmock::Then);
+    impl IpPoolListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::IpPoolResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolCreateWhen(httpmock::When);
+    impl IpPoolCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::IpPoolCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolCreateThen(httpmock::Then);
+    impl IpPoolCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::IpPool) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolViewWhen(httpmock::When);
+    impl IpPoolViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/ip-pools/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct IpPoolViewThen(httpmock::Then);
+    impl IpPoolViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::IpPool) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolUpdateWhen(httpmock::When);
+    impl IpPoolUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/ip-pools/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::IpPoolUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolUpdateThen(httpmock::Then);
+    impl IpPoolUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::IpPool) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolDeleteWhen(httpmock::When);
+    impl IpPoolDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/ip-pools/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct IpPoolDeleteThen(httpmock::Then);
+    impl IpPoolDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolRangeListWhen(httpmock::When);
+    impl IpPoolRangeListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/.*/ranges$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/ip-pools/{}/ranges$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+    }
+
+    pub struct IpPoolRangeListThen(httpmock::Then);
+    impl IpPoolRangeListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::IpPoolRangeResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolRangeAddWhen(httpmock::When);
+    impl IpPoolRangeAddWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/system/ip-pools/.*/ranges/add$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/ip-pools/{}/ranges/add$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::IpRange) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolRangeAddThen(httpmock::Then);
+    impl IpPoolRangeAddThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::IpPoolRange) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolRangeRemoveWhen(httpmock::When);
+    impl IpPoolRangeRemoveWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/system/ip-pools/.*/ranges/remove$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn pool(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/ip-pools/{}/ranges/remove$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::IpRange) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolRangeRemoveThen(httpmock::Then);
+    impl IpPoolRangeRemoveThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolServiceViewWhen(httpmock::When);
+    impl IpPoolServiceViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools-service$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct IpPoolServiceViewThen(httpmock::Then);
+    impl IpPoolServiceViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::IpPool) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolServiceRangeListWhen(httpmock::When);
+    impl IpPoolServiceRangeListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/ip-pools-service/ranges$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+    }
+
+    pub struct IpPoolServiceRangeListThen(httpmock::Then);
+    impl IpPoolServiceRangeListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::IpPoolRangeResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolServiceRangeAddWhen(httpmock::When);
+    impl IpPoolServiceRangeAddWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/ip-pools-service/ranges/add$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::IpRange) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolServiceRangeAddThen(httpmock::Then);
+    impl IpPoolServiceRangeAddThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::IpPoolRange) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolServiceRangeRemoveWhen(httpmock::When);
+    impl IpPoolServiceRangeRemoveWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/ip-pools-service/ranges/remove$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::IpRange) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolServiceRangeRemoveThen(httpmock::Then);
+    impl IpPoolServiceRangeRemoveThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemMetricWhen(httpmock::When);
+    impl SystemMetricWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/metrics/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn metric_name(self, value: types::SystemMetricName) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/metrics/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn end_time(self, value: &chrono::DateTime<chrono::offset::Utc>) -> Self {
+            Self(self.0.query_param("end_time", value.to_string()))
+        }
+
+        pub fn id(self, value: &uuid::Uuid) -> Self {
+            Self(self.0.query_param("id", value.to_string()))
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn start_time(self, value: &chrono::DateTime<chrono::offset::Utc>) -> Self {
+            Self(self.0.query_param("start_time", value.to_string()))
+        }
+    }
+
+    pub struct SystemMetricThen(httpmock::Then);
+    impl SystemMetricThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemPolicyViewWhen(httpmock::When);
+    impl SystemPolicyViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/policy$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct SystemPolicyViewThen(httpmock::Then);
+    impl SystemPolicyViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::FleetRolePolicy) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemPolicyUpdateWhen(httpmock::When);
+    impl SystemPolicyUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/system/policy$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::FleetRolePolicy) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SystemPolicyUpdateThen(httpmock::Then);
+    impl SystemPolicyUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::FleetRolePolicy) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct RoleListWhen(httpmock::When);
+    impl RoleListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/roles$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+    }
+
+    pub struct RoleListThen(httpmock::Then);
+    impl RoleListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RoleResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct RoleViewWhen(httpmock::When);
+    impl RoleViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/roles/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn role_name(self, value: &str) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/roles/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct RoleViewThen(httpmock::Then);
+    impl RoleViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Role) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SagaListWhen(httpmock::When);
+    impl SagaListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/sagas$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SagaListThen(httpmock::Then);
+    impl SagaListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SagaResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SagaViewWhen(httpmock::When);
+    impl SagaViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/sagas/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn saga_id(self, value: &uuid::Uuid) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/sagas/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SagaViewThen(httpmock::Then);
+    impl SagaViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Saga) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SiloListWhen(httpmock::When);
+    impl SiloListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/silos$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SiloListThen(httpmock::Then);
+    impl SiloListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SiloCreateWhen(httpmock::When);
+    impl SiloCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/silos$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::SiloCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SiloCreateThen(httpmock::Then);
+    impl SiloCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Silo) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SiloViewWhen(httpmock::When);
+    impl SiloViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/silos/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/silos/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SiloViewThen(httpmock::Then);
+    impl SiloViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Silo) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SiloDeleteWhen(httpmock::When);
+    impl SiloDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/system/silos/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/silos/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SiloDeleteThen(httpmock::Then);
+    impl SiloDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SiloPolicyViewWhen(httpmock::When);
+    impl SiloPolicyViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/silos/.*/policy$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/silos/{}/policy$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SiloPolicyViewThen(httpmock::Then);
+    impl SiloPolicyViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SiloPolicyUpdateWhen(httpmock::When);
+    impl SiloPolicyUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/system/silos/.*/policy$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/silos/{}/policy$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::SiloRolePolicy) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SiloPolicyUpdateThen(httpmock::Then);
+    impl SiloPolicyUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemComponentVersionListWhen(httpmock::When);
+    impl SystemComponentVersionListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/update/components$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SystemComponentVersionListThen(httpmock::Then);
+    impl SystemComponentVersionListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UpdateableComponentResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct UpdateDeploymentsListWhen(httpmock::When);
+    impl UpdateDeploymentsListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/update/deployments$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct UpdateDeploymentsListThen(httpmock::Then);
+    impl UpdateDeploymentsListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UpdateDeploymentResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct UpdateDeploymentViewWhen(httpmock::When);
+    impl UpdateDeploymentViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/update/deployments/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn id(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/update/deployments/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct UpdateDeploymentViewThen(httpmock::Then);
+    impl UpdateDeploymentViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UpdateDeployment) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemUpdateRefreshWhen(httpmock::When);
+    impl SystemUpdateRefreshWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/update/refresh$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct SystemUpdateRefreshThen(httpmock::Then);
+    impl SystemUpdateRefreshThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemUpdateStartWhen(httpmock::When);
+    impl SystemUpdateStartWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/update/start$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::SystemUpdateStart) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SystemUpdateStartThen(httpmock::Then);
+    impl SystemUpdateStartThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::UpdateDeployment) -> Self {
+            Self(self.0.status(202u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemUpdateStopWhen(httpmock::When);
+    impl SystemUpdateStopWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/update/stop$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct SystemUpdateStopThen(httpmock::Then);
+    impl SystemUpdateStopThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemUpdateListWhen(httpmock::When);
+    impl SystemUpdateListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/update/updates$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SystemUpdateListThen(httpmock::Then);
+    impl SystemUpdateListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SystemUpdateResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemUpdateViewWhen(httpmock::When);
+    impl SystemUpdateViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/update/updates/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn version(self, value: &types::SemverVersion) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/update/updates/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SystemUpdateViewThen(httpmock::Then);
+    impl SystemUpdateViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SystemUpdate) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemUpdateComponentsListWhen(httpmock::When);
+    impl SystemUpdateComponentsListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/update/updates/.*/components$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn version(self, value: &types::SemverVersion) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/update/updates/{}/components$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SystemUpdateComponentsListThen(httpmock::Then);
+    impl SystemUpdateComponentsListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::ComponentUpdateResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SystemVersionWhen(httpmock::When);
+    impl SystemVersionWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/update/version$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct SystemVersionThen(httpmock::Then);
+    impl SystemVersionThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SystemVersion) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SiloUserListWhen(httpmock::When);
+    impl SiloUserListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/users$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SiloUserListThen(httpmock::Then);
+    impl SiloUserListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UserResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct SiloUserViewWhen(httpmock::When);
+    impl SiloUserViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/users/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn user_id(self, value: &uuid::Uuid) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/users/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+    }
+
+    pub struct SiloUserViewThen(httpmock::Then);
+    impl SiloUserViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::User) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct UserBuiltinListWhen(httpmock::When);
+    impl UserBuiltinListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/users-builtin$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct UserBuiltinListThen(httpmock::Then);
+    impl UserBuiltinListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UserBuiltinResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct UserBuiltinViewWhen(httpmock::When);
+    impl UserBuiltinViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/users-builtin/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn user(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/users-builtin/{}$", value.to_string()))
+                    .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct UserBuiltinViewThen(httpmock::Then);
+    impl UserBuiltinViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UserBuiltin) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct UserListWhen(httpmock::When);
+    impl UserListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/users$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn group(self, value: &uuid::Uuid) -> Self {
+            Self(self.0.query_param("group", value.to_string()))
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct UserListThen(httpmock::Then);
+    impl UserListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UserResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcFirewallRulesViewWhen(httpmock::When);
+    impl VpcFirewallRulesViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-firewall-rules$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcFirewallRulesViewThen(httpmock::Then);
+    impl VpcFirewallRulesViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcFirewallRules) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcFirewallRulesUpdateWhen(httpmock::When);
+    impl VpcFirewallRulesUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/vpc-firewall-rules$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::VpcFirewallRuleUpdateParams) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcFirewallRulesUpdateThen(httpmock::Then);
+    impl VpcFirewallRulesUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcFirewallRules) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterRouteListWhen(httpmock::When);
+    impl VpcRouterRouteListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("router", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcRouterRouteListThen(httpmock::Then);
+    impl VpcRouterRouteListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RouterRouteResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterRouteCreateWhen(httpmock::When);
+    impl VpcRouterRouteCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("router", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::RouterRouteCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterRouteCreateThen(httpmock::Then);
+    impl VpcRouterRouteCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::RouterRoute) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterRouteViewWhen(httpmock::When);
+    impl VpcRouterRouteViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn route(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/vpc-router-routes/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("router", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcRouterRouteViewThen(httpmock::Then);
+    impl VpcRouterRouteViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RouterRoute) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterRouteUpdateWhen(httpmock::When);
+    impl VpcRouterRouteUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn route(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/vpc-router-routes/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("router", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::RouterRouteUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterRouteUpdateThen(httpmock::Then);
+    impl VpcRouterRouteUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::RouterRoute) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterRouteDeleteWhen(httpmock::When);
+    impl VpcRouterRouteDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn route(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/vpc-router-routes/{}$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("router", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcRouterRouteDeleteThen(httpmock::Then);
+    impl VpcRouterRouteDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterListWhen(httpmock::When);
+    impl VpcRouterListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcRouterListThen(httpmock::Then);
+    impl VpcRouterListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcRouterResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterCreateWhen(httpmock::When);
+    impl VpcRouterCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::VpcRouterCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterCreateThen(httpmock::Then);
+    impl VpcRouterCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::VpcRouter) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterViewWhen(httpmock::When);
+    impl VpcRouterViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/vpc-routers/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcRouterViewThen(httpmock::Then);
+    impl VpcRouterViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcRouter) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterUpdateWhen(httpmock::When);
+    impl VpcRouterUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/vpc-routers/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::VpcRouterUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterUpdateThen(httpmock::Then);
+    impl VpcRouterUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcRouter) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcRouterDeleteWhen(httpmock::When);
+    impl VpcRouterDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn router(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/vpc-routers/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcRouterDeleteThen(httpmock::Then);
+    impl VpcRouterDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcSubnetListWhen(httpmock::When);
+    impl VpcSubnetListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-subnets$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcSubnetListThen(httpmock::Then);
+    impl VpcSubnetListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcSubnetResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcSubnetCreateWhen(httpmock::When);
+    impl VpcSubnetCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/vpc-subnets$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::VpcSubnetCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcSubnetCreateThen(httpmock::Then);
+    impl VpcSubnetCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::VpcSubnet) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcSubnetViewWhen(httpmock::When);
+    impl VpcSubnetViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpc-subnets/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn subnet(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/vpc-subnets/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcSubnetViewThen(httpmock::Then);
+    impl VpcSubnetViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcSubnet) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcSubnetUpdateWhen(httpmock::When);
+    impl VpcSubnetUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/vpc-subnets/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn subnet(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/vpc-subnets/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::VpcSubnetUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcSubnetUpdateThen(httpmock::Then);
+    impl VpcSubnetUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcSubnet) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcSubnetDeleteWhen(httpmock::When);
+    impl VpcSubnetDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/vpc-subnets/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn subnet(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/vpc-subnets/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcSubnetDeleteThen(httpmock::Then);
+    impl VpcSubnetDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcSubnetListNetworkInterfacesWhen(httpmock::When);
+    impl VpcSubnetListNetworkInterfacesWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/vpc-subnets/.*/network-interfaces$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn subnet(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/vpc-subnets/{}/network-interfaces$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("vpc", value.to_string()))
+        }
+    }
+
+    pub struct VpcSubnetListNetworkInterfacesThen(httpmock::Then);
+    impl VpcSubnetListNetworkInterfacesThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::InstanceNetworkInterfaceResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcListWhen(httpmock::When);
+    impl VpcListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpcs$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct VpcListThen(httpmock::Then);
+    impl VpcListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::VpcResultsPage) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcCreateWhen(httpmock::When);
+    impl VpcCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/vpcs$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::VpcCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcCreateThen(httpmock::Then);
+    impl VpcCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Vpc) -> Self {
+            Self(self.0.status(201u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcViewWhen(httpmock::When);
+    impl VpcViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/vpcs/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/vpcs/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct VpcViewThen(httpmock::Then);
+    impl VpcViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Vpc) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcUpdateWhen(httpmock::When);
+    impl VpcUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/vpcs/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/vpcs/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::VpcUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct VpcUpdateThen(httpmock::Then);
+    impl VpcUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Vpc) -> Self {
+            Self(self.0.status(200u16).json_body_obj(value))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+
+    pub struct VpcDeleteWhen(httpmock::When);
+    impl VpcDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/vpcs/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn vpc(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/vpcs/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct VpcDeleteThen(httpmock::Then);
+    impl VpcDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            Self(self.0.status(status).json_body_obj(value))
+        }
+    }
+}
+
+/// An extension trait for [`MockServer`](httpmock::MockServer) that
+/// adds a method for each operation. These are the equivalent of
+/// type-checked [`mock()`](httpmock::MockServer::mock) calls.
+pub trait MockServerExt {
+    fn device_auth_request<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DeviceAuthRequestWhen, operations::DeviceAuthRequestThen);
+    fn device_auth_confirm<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DeviceAuthConfirmWhen, operations::DeviceAuthConfirmThen);
+    fn device_access_token<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DeviceAccessTokenWhen, operations::DeviceAccessTokenThen);
+    fn login_spoof<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LoginSpoofWhen, operations::LoginSpoofThen);
+    fn login_local<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LoginLocalWhen, operations::LoginLocalThen);
+    fn login_saml_begin<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LoginSamlBeginWhen, operations::LoginSamlBeginThen);
+    fn login_saml<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LoginSamlWhen, operations::LoginSamlThen);
+    fn logout<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LogoutWhen, operations::LogoutThen);
+    fn system_image_view_by_id<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemImageViewByIdWhen, operations::SystemImageViewByIdThen);
+    fn system_image_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemImageListWhen, operations::SystemImageListThen);
+    fn system_image_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemImageCreateWhen, operations::SystemImageCreateThen);
+    fn system_image_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemImageViewWhen, operations::SystemImageViewThen);
+    fn system_image_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemImageDeleteWhen, operations::SystemImageDeleteThen);
+    fn disk_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskListWhen, operations::DiskListThen);
+    fn disk_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskCreateWhen, operations::DiskCreateThen);
+    fn disk_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskViewWhen, operations::DiskViewThen);
+    fn disk_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskDeleteWhen, operations::DiskDeleteThen);
+    fn disk_bulk_write_import<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskBulkWriteImportWhen, operations::DiskBulkWriteImportThen);
+    fn disk_bulk_write_import_start<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::DiskBulkWriteImportStartWhen,
+            operations::DiskBulkWriteImportStartThen,
+        );
+    fn disk_bulk_write_import_stop<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskBulkWriteImportStopWhen, operations::DiskBulkWriteImportStopThen);
+    fn disk_finalize_import<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskFinalizeImportWhen, operations::DiskFinalizeImportThen);
+    fn disk_import_blocks_from_url<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskImportBlocksFromUrlWhen, operations::DiskImportBlocksFromUrlThen);
+    fn disk_metrics_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskMetricsListWhen, operations::DiskMetricsListThen);
+    fn group_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::GroupListWhen, operations::GroupListThen);
+    fn group_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::GroupViewWhen, operations::GroupViewThen);
+    fn image_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ImageListWhen, operations::ImageListThen);
+    fn image_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ImageCreateWhen, operations::ImageCreateThen);
+    fn image_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ImageViewWhen, operations::ImageViewThen);
+    fn image_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ImageDeleteWhen, operations::ImageDeleteThen);
+    fn image_promote<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ImagePromoteWhen, operations::ImagePromoteThen);
+    fn instance_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceListWhen, operations::InstanceListThen);
+    fn instance_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceCreateWhen, operations::InstanceCreateThen);
+    fn instance_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceViewWhen, operations::InstanceViewThen);
+    fn instance_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceDeleteWhen, operations::InstanceDeleteThen);
+    fn instance_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceDiskListWhen, operations::InstanceDiskListThen);
+    fn instance_disk_attach<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceDiskAttachWhen, operations::InstanceDiskAttachThen);
+    fn instance_disk_detach<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceDiskDetachWhen, operations::InstanceDiskDetachThen);
+    fn instance_external_ip_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceExternalIpListWhen, operations::InstanceExternalIpListThen);
+    fn instance_migrate<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceMigrateWhen, operations::InstanceMigrateThen);
+    fn instance_reboot<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceRebootWhen, operations::InstanceRebootThen);
+    fn instance_serial_console<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceSerialConsoleWhen, operations::InstanceSerialConsoleThen);
+    fn instance_serial_console_stream<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InstanceSerialConsoleStreamWhen,
+            operations::InstanceSerialConsoleStreamThen,
+        );
+    fn instance_start<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceStartWhen, operations::InstanceStartThen);
+    fn instance_stop<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceStopWhen, operations::InstanceStopThen);
+    fn current_user_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CurrentUserViewWhen, operations::CurrentUserViewThen);
+    fn current_user_groups<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CurrentUserGroupsWhen, operations::CurrentUserGroupsThen);
+    fn current_user_ssh_key_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CurrentUserSshKeyListWhen, operations::CurrentUserSshKeyListThen);
+    fn current_user_ssh_key_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CurrentUserSshKeyCreateWhen, operations::CurrentUserSshKeyCreateThen);
+    fn current_user_ssh_key_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CurrentUserSshKeyViewWhen, operations::CurrentUserSshKeyViewThen);
+    fn current_user_ssh_key_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CurrentUserSshKeyDeleteWhen, operations::CurrentUserSshKeyDeleteThen);
+    fn instance_network_interface_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InstanceNetworkInterfaceListWhen,
+            operations::InstanceNetworkInterfaceListThen,
+        );
+    fn instance_network_interface_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InstanceNetworkInterfaceCreateWhen,
+            operations::InstanceNetworkInterfaceCreateThen,
+        );
+    fn instance_network_interface_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InstanceNetworkInterfaceViewWhen,
+            operations::InstanceNetworkInterfaceViewThen,
+        );
+    fn instance_network_interface_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InstanceNetworkInterfaceUpdateWhen,
+            operations::InstanceNetworkInterfaceUpdateThen,
+        );
+    fn instance_network_interface_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::InstanceNetworkInterfaceDeleteWhen,
+            operations::InstanceNetworkInterfaceDeleteThen,
+        );
+    fn policy_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::PolicyViewWhen, operations::PolicyViewThen);
+    fn policy_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::PolicyUpdateWhen, operations::PolicyUpdateThen);
+    fn project_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ProjectListWhen, operations::ProjectListThen);
+    fn project_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ProjectCreateWhen, operations::ProjectCreateThen);
+    fn project_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ProjectViewWhen, operations::ProjectViewThen);
+    fn project_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ProjectUpdateWhen, operations::ProjectUpdateThen);
+    fn project_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ProjectDeleteWhen, operations::ProjectDeleteThen);
+    fn project_policy_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ProjectPolicyViewWhen, operations::ProjectPolicyViewThen);
+    fn project_policy_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ProjectPolicyUpdateWhen, operations::ProjectPolicyUpdateThen);
+    fn snapshot_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SnapshotListWhen, operations::SnapshotListThen);
+    fn snapshot_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SnapshotCreateWhen, operations::SnapshotCreateThen);
+    fn snapshot_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SnapshotViewWhen, operations::SnapshotViewThen);
+    fn snapshot_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SnapshotDeleteWhen, operations::SnapshotDeleteThen);
+    fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen);
+    fn certificate_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateCreateWhen, operations::CertificateCreateThen);
+    fn certificate_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateViewWhen, operations::CertificateViewThen);
+    fn certificate_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateDeleteWhen, operations::CertificateDeleteThen);
+    fn physical_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::PhysicalDiskListWhen, operations::PhysicalDiskListThen);
+    fn rack_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::RackListWhen, operations::RackListThen);
+    fn rack_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::RackViewWhen, operations::RackViewThen);
+    fn sled_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SledListWhen, operations::SledListThen);
+    fn sled_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SledViewWhen, operations::SledViewThen);
+    fn sled_physical_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SledPhysicalDiskListWhen, operations::SledPhysicalDiskListThen);
+    fn silo_identity_provider_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SiloIdentityProviderListWhen,
+            operations::SiloIdentityProviderListThen,
+        );
+    fn local_idp_user_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LocalIdpUserCreateWhen, operations::LocalIdpUserCreateThen);
+    fn local_idp_user_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LocalIdpUserDeleteWhen, operations::LocalIdpUserDeleteThen);
+    fn local_idp_user_set_password<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LocalIdpUserSetPasswordWhen, operations::LocalIdpUserSetPasswordThen);
+    fn saml_identity_provider_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SamlIdentityProviderCreateWhen,
+            operations::SamlIdentityProviderCreateThen,
+        );
+    fn saml_identity_provider_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SamlIdentityProviderViewWhen,
+            operations::SamlIdentityProviderViewThen,
+        );
+    fn ip_pool_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolListWhen, operations::IpPoolListThen);
+    fn ip_pool_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolCreateWhen, operations::IpPoolCreateThen);
+    fn ip_pool_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolViewWhen, operations::IpPoolViewThen);
+    fn ip_pool_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolUpdateWhen, operations::IpPoolUpdateThen);
+    fn ip_pool_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolDeleteWhen, operations::IpPoolDeleteThen);
+    fn ip_pool_range_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolRangeListWhen, operations::IpPoolRangeListThen);
+    fn ip_pool_range_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolRangeAddWhen, operations::IpPoolRangeAddThen);
+    fn ip_pool_range_remove<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolRangeRemoveWhen, operations::IpPoolRangeRemoveThen);
+    fn ip_pool_service_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolServiceViewWhen, operations::IpPoolServiceViewThen);
+    fn ip_pool_service_range_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolServiceRangeListWhen, operations::IpPoolServiceRangeListThen);
+    fn ip_pool_service_range_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolServiceRangeAddWhen, operations::IpPoolServiceRangeAddThen);
+    fn ip_pool_service_range_remove<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::IpPoolServiceRangeRemoveWhen,
+            operations::IpPoolServiceRangeRemoveThen,
+        );
+    fn system_metric<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemMetricWhen, operations::SystemMetricThen);
+    fn system_policy_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemPolicyViewWhen, operations::SystemPolicyViewThen);
+    fn system_policy_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemPolicyUpdateWhen, operations::SystemPolicyUpdateThen);
+    fn role_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::RoleListWhen, operations::RoleListThen);
+    fn role_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::RoleViewWhen, operations::RoleViewThen);
+    fn saga_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SagaListWhen, operations::SagaListThen);
+    fn saga_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SagaViewWhen, operations::SagaViewThen);
+    fn silo_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloListWhen, operations::SiloListThen);
+    fn silo_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloCreateWhen, operations::SiloCreateThen);
+    fn silo_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloViewWhen, operations::SiloViewThen);
+    fn silo_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloDeleteWhen, operations::SiloDeleteThen);
+    fn silo_policy_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloPolicyViewWhen, operations::SiloPolicyViewThen);
+    fn silo_policy_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloPolicyUpdateWhen, operations::SiloPolicyUpdateThen);
+    fn system_component_version_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemComponentVersionListWhen,
+            operations::SystemComponentVersionListThen,
+        );
+    fn update_deployments_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::UpdateDeploymentsListWhen, operations::UpdateDeploymentsListThen);
+    fn update_deployment_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::UpdateDeploymentViewWhen, operations::UpdateDeploymentViewThen);
+    fn system_update_refresh<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemUpdateRefreshWhen, operations::SystemUpdateRefreshThen);
+    fn system_update_start<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemUpdateStartWhen, operations::SystemUpdateStartThen);
+    fn system_update_stop<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemUpdateStopWhen, operations::SystemUpdateStopThen);
+    fn system_update_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemUpdateListWhen, operations::SystemUpdateListThen);
+    fn system_update_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemUpdateViewWhen, operations::SystemUpdateViewThen);
+    fn system_update_components_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::SystemUpdateComponentsListWhen,
+            operations::SystemUpdateComponentsListThen,
+        );
+    fn system_version<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemVersionWhen, operations::SystemVersionThen);
+    fn silo_user_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloUserListWhen, operations::SiloUserListThen);
+    fn silo_user_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloUserViewWhen, operations::SiloUserViewThen);
+    fn user_builtin_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::UserBuiltinListWhen, operations::UserBuiltinListThen);
+    fn user_builtin_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::UserBuiltinViewWhen, operations::UserBuiltinViewThen);
+    fn user_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::UserListWhen, operations::UserListThen);
+    fn vpc_firewall_rules_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcFirewallRulesViewWhen, operations::VpcFirewallRulesViewThen);
+    fn vpc_firewall_rules_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcFirewallRulesUpdateWhen, operations::VpcFirewallRulesUpdateThen);
+    fn vpc_router_route_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteListWhen, operations::VpcRouterRouteListThen);
+    fn vpc_router_route_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteCreateWhen, operations::VpcRouterRouteCreateThen);
+    fn vpc_router_route_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteViewWhen, operations::VpcRouterRouteViewThen);
+    fn vpc_router_route_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteUpdateWhen, operations::VpcRouterRouteUpdateThen);
+    fn vpc_router_route_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterRouteDeleteWhen, operations::VpcRouterRouteDeleteThen);
+    fn vpc_router_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterListWhen, operations::VpcRouterListThen);
+    fn vpc_router_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterCreateWhen, operations::VpcRouterCreateThen);
+    fn vpc_router_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterViewWhen, operations::VpcRouterViewThen);
+    fn vpc_router_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterUpdateWhen, operations::VpcRouterUpdateThen);
+    fn vpc_router_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcRouterDeleteWhen, operations::VpcRouterDeleteThen);
+    fn vpc_subnet_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcSubnetListWhen, operations::VpcSubnetListThen);
+    fn vpc_subnet_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcSubnetCreateWhen, operations::VpcSubnetCreateThen);
+    fn vpc_subnet_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcSubnetViewWhen, operations::VpcSubnetViewThen);
+    fn vpc_subnet_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcSubnetUpdateWhen, operations::VpcSubnetUpdateThen);
+    fn vpc_subnet_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcSubnetDeleteWhen, operations::VpcSubnetDeleteThen);
+    fn vpc_subnet_list_network_interfaces<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::VpcSubnetListNetworkInterfacesWhen,
+            operations::VpcSubnetListNetworkInterfacesThen,
+        );
+    fn vpc_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcListWhen, operations::VpcListThen);
+    fn vpc_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcCreateWhen, operations::VpcCreateThen);
+    fn vpc_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcViewWhen, operations::VpcViewThen);
+    fn vpc_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcUpdateWhen, operations::VpcUpdateThen);
+    fn vpc_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::VpcDeleteWhen, operations::VpcDeleteThen);
 }
 
 impl MockServerExt for httpmock::MockServer {
-    fn device_auth_request<F>(&self, f: F) -> httpmock::Mock
+    fn device_auth_request<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DeviceAuthRequestWhen, DeviceAuthRequestThen),
+        F: FnOnce(operations::DeviceAuthRequestWhen, operations::DeviceAuthRequestThen),
     {
         self.mock(|when, then| {
-            f(
-                DeviceAuthRequestWhen::new(when),
-                DeviceAuthRequestThen::new(then),
+            config_fn(
+                operations::DeviceAuthRequestWhen::new(when),
+                operations::DeviceAuthRequestThen::new(then),
             )
         })
     }
 
-    fn device_auth_confirm<F>(&self, f: F) -> httpmock::Mock
+    fn device_auth_confirm<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DeviceAuthConfirmWhen, DeviceAuthConfirmThen),
+        F: FnOnce(operations::DeviceAuthConfirmWhen, operations::DeviceAuthConfirmThen),
     {
         self.mock(|when, then| {
-            f(
-                DeviceAuthConfirmWhen::new(when),
-                DeviceAuthConfirmThen::new(then),
+            config_fn(
+                operations::DeviceAuthConfirmWhen::new(when),
+                operations::DeviceAuthConfirmThen::new(then),
             )
         })
     }
 
-    fn device_access_token<F>(&self, f: F) -> httpmock::Mock
+    fn device_access_token<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DeviceAccessTokenWhen, DeviceAccessTokenThen),
+        F: FnOnce(operations::DeviceAccessTokenWhen, operations::DeviceAccessTokenThen),
     {
         self.mock(|when, then| {
-            f(
-                DeviceAccessTokenWhen::new(when),
-                DeviceAccessTokenThen::new(then),
+            config_fn(
+                operations::DeviceAccessTokenWhen::new(when),
+                operations::DeviceAccessTokenThen::new(then),
             )
         })
     }
 
-    fn login_spoof<F>(&self, f: F) -> httpmock::Mock
+    fn login_spoof<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(LoginSpoofWhen, LoginSpoofThen),
+        F: FnOnce(operations::LoginSpoofWhen, operations::LoginSpoofThen),
     {
-        self.mock(|when, then| f(LoginSpoofWhen::new(when), LoginSpoofThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::LoginSpoofWhen::new(when),
+                operations::LoginSpoofThen::new(then),
+            )
+        })
     }
 
-    fn login_local<F>(&self, f: F) -> httpmock::Mock
+    fn login_local<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(LoginLocalWhen, LoginLocalThen),
+        F: FnOnce(operations::LoginLocalWhen, operations::LoginLocalThen),
     {
-        self.mock(|when, then| f(LoginLocalWhen::new(when), LoginLocalThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::LoginLocalWhen::new(when),
+                operations::LoginLocalThen::new(then),
+            )
+        })
     }
 
-    fn login_saml_begin<F>(&self, f: F) -> httpmock::Mock
+    fn login_saml_begin<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(LoginSamlBeginWhen, LoginSamlBeginThen),
+        F: FnOnce(operations::LoginSamlBeginWhen, operations::LoginSamlBeginThen),
     {
-        self.mock(|when, then| f(LoginSamlBeginWhen::new(when), LoginSamlBeginThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::LoginSamlBeginWhen::new(when),
+                operations::LoginSamlBeginThen::new(then),
+            )
+        })
     }
 
-    fn login_saml<F>(&self, f: F) -> httpmock::Mock
+    fn login_saml<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(LoginSamlWhen, LoginSamlThen),
+        F: FnOnce(operations::LoginSamlWhen, operations::LoginSamlThen),
     {
-        self.mock(|when, then| f(LoginSamlWhen::new(when), LoginSamlThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::LoginSamlWhen::new(when),
+                operations::LoginSamlThen::new(then),
+            )
+        })
     }
 
-    fn logout<F>(&self, f: F) -> httpmock::Mock
+    fn logout<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(LogoutWhen, LogoutThen),
+        F: FnOnce(operations::LogoutWhen, operations::LogoutThen),
     {
-        self.mock(|when, then| f(LogoutWhen::new(when), LogoutThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::LogoutWhen::new(when),
+                operations::LogoutThen::new(then),
+            )
+        })
     }
 
-    fn system_image_view_by_id<F>(&self, f: F) -> httpmock::Mock
+    fn system_image_view_by_id<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemImageViewByIdWhen, SystemImageViewByIdThen),
+        F: FnOnce(operations::SystemImageViewByIdWhen, operations::SystemImageViewByIdThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemImageViewByIdWhen::new(when),
-                SystemImageViewByIdThen::new(then),
+            config_fn(
+                operations::SystemImageViewByIdWhen::new(when),
+                operations::SystemImageViewByIdThen::new(then),
             )
         })
     }
 
-    fn system_image_list<F>(&self, f: F) -> httpmock::Mock
+    fn system_image_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemImageListWhen, SystemImageListThen),
+        F: FnOnce(operations::SystemImageListWhen, operations::SystemImageListThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemImageListWhen::new(when),
-                SystemImageListThen::new(then),
+            config_fn(
+                operations::SystemImageListWhen::new(when),
+                operations::SystemImageListThen::new(then),
             )
         })
     }
 
-    fn system_image_create<F>(&self, f: F) -> httpmock::Mock
+    fn system_image_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemImageCreateWhen, SystemImageCreateThen),
+        F: FnOnce(operations::SystemImageCreateWhen, operations::SystemImageCreateThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemImageCreateWhen::new(when),
-                SystemImageCreateThen::new(then),
+            config_fn(
+                operations::SystemImageCreateWhen::new(when),
+                operations::SystemImageCreateThen::new(then),
             )
         })
     }
 
-    fn system_image_view<F>(&self, f: F) -> httpmock::Mock
+    fn system_image_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemImageViewWhen, SystemImageViewThen),
+        F: FnOnce(operations::SystemImageViewWhen, operations::SystemImageViewThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemImageViewWhen::new(when),
-                SystemImageViewThen::new(then),
+            config_fn(
+                operations::SystemImageViewWhen::new(when),
+                operations::SystemImageViewThen::new(then),
             )
         })
     }
 
-    fn system_image_delete<F>(&self, f: F) -> httpmock::Mock
+    fn system_image_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemImageDeleteWhen, SystemImageDeleteThen),
+        F: FnOnce(operations::SystemImageDeleteWhen, operations::SystemImageDeleteThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemImageDeleteWhen::new(when),
-                SystemImageDeleteThen::new(then),
+            config_fn(
+                operations::SystemImageDeleteWhen::new(when),
+                operations::SystemImageDeleteThen::new(then),
             )
         })
     }
 
-    fn disk_list<F>(&self, f: F) -> httpmock::Mock
+    fn disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DiskListWhen, DiskListThen),
+        F: FnOnce(operations::DiskListWhen, operations::DiskListThen),
     {
-        self.mock(|when, then| f(DiskListWhen::new(when), DiskListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::DiskListWhen::new(when),
+                operations::DiskListThen::new(then),
+            )
+        })
     }
 
-    fn disk_create<F>(&self, f: F) -> httpmock::Mock
+    fn disk_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DiskCreateWhen, DiskCreateThen),
+        F: FnOnce(operations::DiskCreateWhen, operations::DiskCreateThen),
     {
-        self.mock(|when, then| f(DiskCreateWhen::new(when), DiskCreateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::DiskCreateWhen::new(when),
+                operations::DiskCreateThen::new(then),
+            )
+        })
     }
 
-    fn disk_view<F>(&self, f: F) -> httpmock::Mock
+    fn disk_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DiskViewWhen, DiskViewThen),
+        F: FnOnce(operations::DiskViewWhen, operations::DiskViewThen),
     {
-        self.mock(|when, then| f(DiskViewWhen::new(when), DiskViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::DiskViewWhen::new(when),
+                operations::DiskViewThen::new(then),
+            )
+        })
     }
 
-    fn disk_delete<F>(&self, f: F) -> httpmock::Mock
+    fn disk_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DiskDeleteWhen, DiskDeleteThen),
+        F: FnOnce(operations::DiskDeleteWhen, operations::DiskDeleteThen),
     {
-        self.mock(|when, then| f(DiskDeleteWhen::new(when), DiskDeleteThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::DiskDeleteWhen::new(when),
+                operations::DiskDeleteThen::new(then),
+            )
+        })
     }
 
-    fn disk_bulk_write_import<F>(&self, f: F) -> httpmock::Mock
+    fn disk_bulk_write_import<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DiskBulkWriteImportWhen, DiskBulkWriteImportThen),
+        F: FnOnce(operations::DiskBulkWriteImportWhen, operations::DiskBulkWriteImportThen),
     {
         self.mock(|when, then| {
-            f(
-                DiskBulkWriteImportWhen::new(when),
-                DiskBulkWriteImportThen::new(then),
+            config_fn(
+                operations::DiskBulkWriteImportWhen::new(when),
+                operations::DiskBulkWriteImportThen::new(then),
             )
         })
     }
 
-    fn disk_bulk_write_import_start<F>(&self, f: F) -> httpmock::Mock
+    fn disk_bulk_write_import_start<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DiskBulkWriteImportStartWhen, DiskBulkWriteImportStartThen),
+        F: FnOnce(
+            operations::DiskBulkWriteImportStartWhen,
+            operations::DiskBulkWriteImportStartThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                DiskBulkWriteImportStartWhen::new(when),
-                DiskBulkWriteImportStartThen::new(then),
+            config_fn(
+                operations::DiskBulkWriteImportStartWhen::new(when),
+                operations::DiskBulkWriteImportStartThen::new(then),
             )
         })
     }
 
-    fn disk_bulk_write_import_stop<F>(&self, f: F) -> httpmock::Mock
+    fn disk_bulk_write_import_stop<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DiskBulkWriteImportStopWhen, DiskBulkWriteImportStopThen),
+        F: FnOnce(operations::DiskBulkWriteImportStopWhen, operations::DiskBulkWriteImportStopThen),
     {
         self.mock(|when, then| {
-            f(
-                DiskBulkWriteImportStopWhen::new(when),
-                DiskBulkWriteImportStopThen::new(then),
+            config_fn(
+                operations::DiskBulkWriteImportStopWhen::new(when),
+                operations::DiskBulkWriteImportStopThen::new(then),
             )
         })
     }
 
-    fn disk_finalize_import<F>(&self, f: F) -> httpmock::Mock
+    fn disk_finalize_import<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DiskFinalizeImportWhen, DiskFinalizeImportThen),
+        F: FnOnce(operations::DiskFinalizeImportWhen, operations::DiskFinalizeImportThen),
     {
         self.mock(|when, then| {
-            f(
-                DiskFinalizeImportWhen::new(when),
-                DiskFinalizeImportThen::new(then),
+            config_fn(
+                operations::DiskFinalizeImportWhen::new(when),
+                operations::DiskFinalizeImportThen::new(then),
             )
         })
     }
 
-    fn disk_import_blocks_from_url<F>(&self, f: F) -> httpmock::Mock
+    fn disk_import_blocks_from_url<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DiskImportBlocksFromUrlWhen, DiskImportBlocksFromUrlThen),
+        F: FnOnce(operations::DiskImportBlocksFromUrlWhen, operations::DiskImportBlocksFromUrlThen),
     {
         self.mock(|when, then| {
-            f(
-                DiskImportBlocksFromUrlWhen::new(when),
-                DiskImportBlocksFromUrlThen::new(then),
+            config_fn(
+                operations::DiskImportBlocksFromUrlWhen::new(when),
+                operations::DiskImportBlocksFromUrlThen::new(then),
             )
         })
     }
 
-    fn disk_metrics_list<F>(&self, f: F) -> httpmock::Mock
+    fn disk_metrics_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(DiskMetricsListWhen, DiskMetricsListThen),
+        F: FnOnce(operations::DiskMetricsListWhen, operations::DiskMetricsListThen),
     {
         self.mock(|when, then| {
-            f(
-                DiskMetricsListWhen::new(when),
-                DiskMetricsListThen::new(then),
+            config_fn(
+                operations::DiskMetricsListWhen::new(when),
+                operations::DiskMetricsListThen::new(then),
             )
         })
     }
 
-    fn group_list<F>(&self, f: F) -> httpmock::Mock
+    fn group_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(GroupListWhen, GroupListThen),
+        F: FnOnce(operations::GroupListWhen, operations::GroupListThen),
     {
-        self.mock(|when, then| f(GroupListWhen::new(when), GroupListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::GroupListWhen::new(when),
+                operations::GroupListThen::new(then),
+            )
+        })
     }
 
-    fn group_view<F>(&self, f: F) -> httpmock::Mock
+    fn group_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(GroupViewWhen, GroupViewThen),
+        F: FnOnce(operations::GroupViewWhen, operations::GroupViewThen),
     {
-        self.mock(|when, then| f(GroupViewWhen::new(when), GroupViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::GroupViewWhen::new(when),
+                operations::GroupViewThen::new(then),
+            )
+        })
     }
 
-    fn image_list<F>(&self, f: F) -> httpmock::Mock
+    fn image_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ImageListWhen, ImageListThen),
+        F: FnOnce(operations::ImageListWhen, operations::ImageListThen),
     {
-        self.mock(|when, then| f(ImageListWhen::new(when), ImageListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::ImageListWhen::new(when),
+                operations::ImageListThen::new(then),
+            )
+        })
     }
 
-    fn image_create<F>(&self, f: F) -> httpmock::Mock
+    fn image_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ImageCreateWhen, ImageCreateThen),
+        F: FnOnce(operations::ImageCreateWhen, operations::ImageCreateThen),
     {
-        self.mock(|when, then| f(ImageCreateWhen::new(when), ImageCreateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::ImageCreateWhen::new(when),
+                operations::ImageCreateThen::new(then),
+            )
+        })
     }
 
-    fn image_view<F>(&self, f: F) -> httpmock::Mock
+    fn image_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ImageViewWhen, ImageViewThen),
+        F: FnOnce(operations::ImageViewWhen, operations::ImageViewThen),
     {
-        self.mock(|when, then| f(ImageViewWhen::new(when), ImageViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::ImageViewWhen::new(when),
+                operations::ImageViewThen::new(then),
+            )
+        })
     }
 
-    fn image_delete<F>(&self, f: F) -> httpmock::Mock
+    fn image_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ImageDeleteWhen, ImageDeleteThen),
+        F: FnOnce(operations::ImageDeleteWhen, operations::ImageDeleteThen),
     {
-        self.mock(|when, then| f(ImageDeleteWhen::new(when), ImageDeleteThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::ImageDeleteWhen::new(when),
+                operations::ImageDeleteThen::new(then),
+            )
+        })
     }
 
-    fn image_promote<F>(&self, f: F) -> httpmock::Mock
+    fn image_promote<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ImagePromoteWhen, ImagePromoteThen),
+        F: FnOnce(operations::ImagePromoteWhen, operations::ImagePromoteThen),
     {
-        self.mock(|when, then| f(ImagePromoteWhen::new(when), ImagePromoteThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::ImagePromoteWhen::new(when),
+                operations::ImagePromoteThen::new(then),
+            )
+        })
     }
 
-    fn instance_list<F>(&self, f: F) -> httpmock::Mock
+    fn instance_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceListWhen, InstanceListThen),
+        F: FnOnce(operations::InstanceListWhen, operations::InstanceListThen),
     {
-        self.mock(|when, then| f(InstanceListWhen::new(when), InstanceListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceListWhen::new(when),
+                operations::InstanceListThen::new(then),
+            )
+        })
     }
 
-    fn instance_create<F>(&self, f: F) -> httpmock::Mock
+    fn instance_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceCreateWhen, InstanceCreateThen),
+        F: FnOnce(operations::InstanceCreateWhen, operations::InstanceCreateThen),
     {
-        self.mock(|when, then| f(InstanceCreateWhen::new(when), InstanceCreateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceCreateWhen::new(when),
+                operations::InstanceCreateThen::new(then),
+            )
+        })
     }
 
-    fn instance_view<F>(&self, f: F) -> httpmock::Mock
+    fn instance_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceViewWhen, InstanceViewThen),
+        F: FnOnce(operations::InstanceViewWhen, operations::InstanceViewThen),
     {
-        self.mock(|when, then| f(InstanceViewWhen::new(when), InstanceViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceViewWhen::new(when),
+                operations::InstanceViewThen::new(then),
+            )
+        })
     }
 
-    fn instance_delete<F>(&self, f: F) -> httpmock::Mock
+    fn instance_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceDeleteWhen, InstanceDeleteThen),
+        F: FnOnce(operations::InstanceDeleteWhen, operations::InstanceDeleteThen),
     {
-        self.mock(|when, then| f(InstanceDeleteWhen::new(when), InstanceDeleteThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceDeleteWhen::new(when),
+                operations::InstanceDeleteThen::new(then),
+            )
+        })
     }
 
-    fn instance_disk_list<F>(&self, f: F) -> httpmock::Mock
+    fn instance_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceDiskListWhen, InstanceDiskListThen),
+        F: FnOnce(operations::InstanceDiskListWhen, operations::InstanceDiskListThen),
     {
         self.mock(|when, then| {
-            f(
-                InstanceDiskListWhen::new(when),
-                InstanceDiskListThen::new(then),
+            config_fn(
+                operations::InstanceDiskListWhen::new(when),
+                operations::InstanceDiskListThen::new(then),
             )
         })
     }
 
-    fn instance_disk_attach<F>(&self, f: F) -> httpmock::Mock
+    fn instance_disk_attach<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceDiskAttachWhen, InstanceDiskAttachThen),
+        F: FnOnce(operations::InstanceDiskAttachWhen, operations::InstanceDiskAttachThen),
     {
         self.mock(|when, then| {
-            f(
-                InstanceDiskAttachWhen::new(when),
-                InstanceDiskAttachThen::new(then),
+            config_fn(
+                operations::InstanceDiskAttachWhen::new(when),
+                operations::InstanceDiskAttachThen::new(then),
             )
         })
     }
 
-    fn instance_disk_detach<F>(&self, f: F) -> httpmock::Mock
+    fn instance_disk_detach<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceDiskDetachWhen, InstanceDiskDetachThen),
+        F: FnOnce(operations::InstanceDiskDetachWhen, operations::InstanceDiskDetachThen),
     {
         self.mock(|when, then| {
-            f(
-                InstanceDiskDetachWhen::new(when),
-                InstanceDiskDetachThen::new(then),
+            config_fn(
+                operations::InstanceDiskDetachWhen::new(when),
+                operations::InstanceDiskDetachThen::new(then),
             )
         })
     }
 
-    fn instance_external_ip_list<F>(&self, f: F) -> httpmock::Mock
+    fn instance_external_ip_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceExternalIpListWhen, InstanceExternalIpListThen),
+        F: FnOnce(operations::InstanceExternalIpListWhen, operations::InstanceExternalIpListThen),
     {
         self.mock(|when, then| {
-            f(
-                InstanceExternalIpListWhen::new(when),
-                InstanceExternalIpListThen::new(then),
+            config_fn(
+                operations::InstanceExternalIpListWhen::new(when),
+                operations::InstanceExternalIpListThen::new(then),
             )
         })
     }
 
-    fn instance_migrate<F>(&self, f: F) -> httpmock::Mock
+    fn instance_migrate<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceMigrateWhen, InstanceMigrateThen),
+        F: FnOnce(operations::InstanceMigrateWhen, operations::InstanceMigrateThen),
     {
         self.mock(|when, then| {
-            f(
-                InstanceMigrateWhen::new(when),
-                InstanceMigrateThen::new(then),
+            config_fn(
+                operations::InstanceMigrateWhen::new(when),
+                operations::InstanceMigrateThen::new(then),
             )
         })
     }
 
-    fn instance_reboot<F>(&self, f: F) -> httpmock::Mock
+    fn instance_reboot<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceRebootWhen, InstanceRebootThen),
+        F: FnOnce(operations::InstanceRebootWhen, operations::InstanceRebootThen),
     {
-        self.mock(|when, then| f(InstanceRebootWhen::new(when), InstanceRebootThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceRebootWhen::new(when),
+                operations::InstanceRebootThen::new(then),
+            )
+        })
     }
 
-    fn instance_serial_console<F>(&self, f: F) -> httpmock::Mock
+    fn instance_serial_console<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceSerialConsoleWhen, InstanceSerialConsoleThen),
+        F: FnOnce(operations::InstanceSerialConsoleWhen, operations::InstanceSerialConsoleThen),
     {
         self.mock(|when, then| {
-            f(
-                InstanceSerialConsoleWhen::new(when),
-                InstanceSerialConsoleThen::new(then),
+            config_fn(
+                operations::InstanceSerialConsoleWhen::new(when),
+                operations::InstanceSerialConsoleThen::new(then),
             )
         })
     }
 
-    fn instance_serial_console_stream<F>(&self, f: F) -> httpmock::Mock
+    fn instance_serial_console_stream<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceSerialConsoleStreamWhen, InstanceSerialConsoleStreamThen),
+        F: FnOnce(
+            operations::InstanceSerialConsoleStreamWhen,
+            operations::InstanceSerialConsoleStreamThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                InstanceSerialConsoleStreamWhen::new(when),
-                InstanceSerialConsoleStreamThen::new(then),
+            config_fn(
+                operations::InstanceSerialConsoleStreamWhen::new(when),
+                operations::InstanceSerialConsoleStreamThen::new(then),
             )
         })
     }
 
-    fn instance_start<F>(&self, f: F) -> httpmock::Mock
+    fn instance_start<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceStartWhen, InstanceStartThen),
+        F: FnOnce(operations::InstanceStartWhen, operations::InstanceStartThen),
     {
-        self.mock(|when, then| f(InstanceStartWhen::new(when), InstanceStartThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceStartWhen::new(when),
+                operations::InstanceStartThen::new(then),
+            )
+        })
     }
 
-    fn instance_stop<F>(&self, f: F) -> httpmock::Mock
+    fn instance_stop<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceStopWhen, InstanceStopThen),
+        F: FnOnce(operations::InstanceStopWhen, operations::InstanceStopThen),
     {
-        self.mock(|when, then| f(InstanceStopWhen::new(when), InstanceStopThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceStopWhen::new(when),
+                operations::InstanceStopThen::new(then),
+            )
+        })
     }
 
-    fn current_user_view<F>(&self, f: F) -> httpmock::Mock
+    fn current_user_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(CurrentUserViewWhen, CurrentUserViewThen),
+        F: FnOnce(operations::CurrentUserViewWhen, operations::CurrentUserViewThen),
     {
         self.mock(|when, then| {
-            f(
-                CurrentUserViewWhen::new(when),
-                CurrentUserViewThen::new(then),
+            config_fn(
+                operations::CurrentUserViewWhen::new(when),
+                operations::CurrentUserViewThen::new(then),
             )
         })
     }
 
-    fn current_user_groups<F>(&self, f: F) -> httpmock::Mock
+    fn current_user_groups<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(CurrentUserGroupsWhen, CurrentUserGroupsThen),
+        F: FnOnce(operations::CurrentUserGroupsWhen, operations::CurrentUserGroupsThen),
     {
         self.mock(|when, then| {
-            f(
-                CurrentUserGroupsWhen::new(when),
-                CurrentUserGroupsThen::new(then),
+            config_fn(
+                operations::CurrentUserGroupsWhen::new(when),
+                operations::CurrentUserGroupsThen::new(then),
             )
         })
     }
 
-    fn current_user_ssh_key_list<F>(&self, f: F) -> httpmock::Mock
+    fn current_user_ssh_key_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(CurrentUserSshKeyListWhen, CurrentUserSshKeyListThen),
+        F: FnOnce(operations::CurrentUserSshKeyListWhen, operations::CurrentUserSshKeyListThen),
     {
         self.mock(|when, then| {
-            f(
-                CurrentUserSshKeyListWhen::new(when),
-                CurrentUserSshKeyListThen::new(then),
+            config_fn(
+                operations::CurrentUserSshKeyListWhen::new(when),
+                operations::CurrentUserSshKeyListThen::new(then),
             )
         })
     }
 
-    fn current_user_ssh_key_create<F>(&self, f: F) -> httpmock::Mock
+    fn current_user_ssh_key_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(CurrentUserSshKeyCreateWhen, CurrentUserSshKeyCreateThen),
+        F: FnOnce(operations::CurrentUserSshKeyCreateWhen, operations::CurrentUserSshKeyCreateThen),
     {
         self.mock(|when, then| {
-            f(
-                CurrentUserSshKeyCreateWhen::new(when),
-                CurrentUserSshKeyCreateThen::new(then),
+            config_fn(
+                operations::CurrentUserSshKeyCreateWhen::new(when),
+                operations::CurrentUserSshKeyCreateThen::new(then),
             )
         })
     }
 
-    fn current_user_ssh_key_view<F>(&self, f: F) -> httpmock::Mock
+    fn current_user_ssh_key_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(CurrentUserSshKeyViewWhen, CurrentUserSshKeyViewThen),
+        F: FnOnce(operations::CurrentUserSshKeyViewWhen, operations::CurrentUserSshKeyViewThen),
     {
         self.mock(|when, then| {
-            f(
-                CurrentUserSshKeyViewWhen::new(when),
-                CurrentUserSshKeyViewThen::new(then),
+            config_fn(
+                operations::CurrentUserSshKeyViewWhen::new(when),
+                operations::CurrentUserSshKeyViewThen::new(then),
             )
         })
     }
 
-    fn current_user_ssh_key_delete<F>(&self, f: F) -> httpmock::Mock
+    fn current_user_ssh_key_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(CurrentUserSshKeyDeleteWhen, CurrentUserSshKeyDeleteThen),
+        F: FnOnce(operations::CurrentUserSshKeyDeleteWhen, operations::CurrentUserSshKeyDeleteThen),
     {
         self.mock(|when, then| {
-            f(
-                CurrentUserSshKeyDeleteWhen::new(when),
-                CurrentUserSshKeyDeleteThen::new(then),
+            config_fn(
+                operations::CurrentUserSshKeyDeleteWhen::new(when),
+                operations::CurrentUserSshKeyDeleteThen::new(then),
             )
         })
     }
 
-    fn instance_network_interface_list<F>(&self, f: F) -> httpmock::Mock
+    fn instance_network_interface_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceNetworkInterfaceListWhen, InstanceNetworkInterfaceListThen),
+        F: FnOnce(
+            operations::InstanceNetworkInterfaceListWhen,
+            operations::InstanceNetworkInterfaceListThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                InstanceNetworkInterfaceListWhen::new(when),
-                InstanceNetworkInterfaceListThen::new(then),
+            config_fn(
+                operations::InstanceNetworkInterfaceListWhen::new(when),
+                operations::InstanceNetworkInterfaceListThen::new(then),
             )
         })
     }
 
-    fn instance_network_interface_create<F>(&self, f: F) -> httpmock::Mock
+    fn instance_network_interface_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceNetworkInterfaceCreateWhen, InstanceNetworkInterfaceCreateThen),
+        F: FnOnce(
+            operations::InstanceNetworkInterfaceCreateWhen,
+            operations::InstanceNetworkInterfaceCreateThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                InstanceNetworkInterfaceCreateWhen::new(when),
-                InstanceNetworkInterfaceCreateThen::new(then),
+            config_fn(
+                operations::InstanceNetworkInterfaceCreateWhen::new(when),
+                operations::InstanceNetworkInterfaceCreateThen::new(then),
             )
         })
     }
 
-    fn instance_network_interface_view<F>(&self, f: F) -> httpmock::Mock
+    fn instance_network_interface_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceNetworkInterfaceViewWhen, InstanceNetworkInterfaceViewThen),
+        F: FnOnce(
+            operations::InstanceNetworkInterfaceViewWhen,
+            operations::InstanceNetworkInterfaceViewThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                InstanceNetworkInterfaceViewWhen::new(when),
-                InstanceNetworkInterfaceViewThen::new(then),
+            config_fn(
+                operations::InstanceNetworkInterfaceViewWhen::new(when),
+                operations::InstanceNetworkInterfaceViewThen::new(then),
             )
         })
     }
 
-    fn instance_network_interface_update<F>(&self, f: F) -> httpmock::Mock
+    fn instance_network_interface_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceNetworkInterfaceUpdateWhen, InstanceNetworkInterfaceUpdateThen),
+        F: FnOnce(
+            operations::InstanceNetworkInterfaceUpdateWhen,
+            operations::InstanceNetworkInterfaceUpdateThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                InstanceNetworkInterfaceUpdateWhen::new(when),
-                InstanceNetworkInterfaceUpdateThen::new(then),
+            config_fn(
+                operations::InstanceNetworkInterfaceUpdateWhen::new(when),
+                operations::InstanceNetworkInterfaceUpdateThen::new(then),
             )
         })
     }
 
-    fn instance_network_interface_delete<F>(&self, f: F) -> httpmock::Mock
+    fn instance_network_interface_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(InstanceNetworkInterfaceDeleteWhen, InstanceNetworkInterfaceDeleteThen),
+        F: FnOnce(
+            operations::InstanceNetworkInterfaceDeleteWhen,
+            operations::InstanceNetworkInterfaceDeleteThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                InstanceNetworkInterfaceDeleteWhen::new(when),
-                InstanceNetworkInterfaceDeleteThen::new(then),
+            config_fn(
+                operations::InstanceNetworkInterfaceDeleteWhen::new(when),
+                operations::InstanceNetworkInterfaceDeleteThen::new(then),
             )
         })
     }
 
-    fn policy_view<F>(&self, f: F) -> httpmock::Mock
+    fn policy_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(PolicyViewWhen, PolicyViewThen),
+        F: FnOnce(operations::PolicyViewWhen, operations::PolicyViewThen),
     {
-        self.mock(|when, then| f(PolicyViewWhen::new(when), PolicyViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::PolicyViewWhen::new(when),
+                operations::PolicyViewThen::new(then),
+            )
+        })
     }
 
-    fn policy_update<F>(&self, f: F) -> httpmock::Mock
+    fn policy_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(PolicyUpdateWhen, PolicyUpdateThen),
+        F: FnOnce(operations::PolicyUpdateWhen, operations::PolicyUpdateThen),
     {
-        self.mock(|when, then| f(PolicyUpdateWhen::new(when), PolicyUpdateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::PolicyUpdateWhen::new(when),
+                operations::PolicyUpdateThen::new(then),
+            )
+        })
     }
 
-    fn project_list<F>(&self, f: F) -> httpmock::Mock
+    fn project_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ProjectListWhen, ProjectListThen),
+        F: FnOnce(operations::ProjectListWhen, operations::ProjectListThen),
     {
-        self.mock(|when, then| f(ProjectListWhen::new(when), ProjectListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProjectListWhen::new(when),
+                operations::ProjectListThen::new(then),
+            )
+        })
     }
 
-    fn project_create<F>(&self, f: F) -> httpmock::Mock
+    fn project_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ProjectCreateWhen, ProjectCreateThen),
+        F: FnOnce(operations::ProjectCreateWhen, operations::ProjectCreateThen),
     {
-        self.mock(|when, then| f(ProjectCreateWhen::new(when), ProjectCreateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProjectCreateWhen::new(when),
+                operations::ProjectCreateThen::new(then),
+            )
+        })
     }
 
-    fn project_view<F>(&self, f: F) -> httpmock::Mock
+    fn project_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ProjectViewWhen, ProjectViewThen),
+        F: FnOnce(operations::ProjectViewWhen, operations::ProjectViewThen),
     {
-        self.mock(|when, then| f(ProjectViewWhen::new(when), ProjectViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProjectViewWhen::new(when),
+                operations::ProjectViewThen::new(then),
+            )
+        })
     }
 
-    fn project_update<F>(&self, f: F) -> httpmock::Mock
+    fn project_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ProjectUpdateWhen, ProjectUpdateThen),
+        F: FnOnce(operations::ProjectUpdateWhen, operations::ProjectUpdateThen),
     {
-        self.mock(|when, then| f(ProjectUpdateWhen::new(when), ProjectUpdateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProjectUpdateWhen::new(when),
+                operations::ProjectUpdateThen::new(then),
+            )
+        })
     }
 
-    fn project_delete<F>(&self, f: F) -> httpmock::Mock
+    fn project_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ProjectDeleteWhen, ProjectDeleteThen),
+        F: FnOnce(operations::ProjectDeleteWhen, operations::ProjectDeleteThen),
     {
-        self.mock(|when, then| f(ProjectDeleteWhen::new(when), ProjectDeleteThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::ProjectDeleteWhen::new(when),
+                operations::ProjectDeleteThen::new(then),
+            )
+        })
     }
 
-    fn project_policy_view<F>(&self, f: F) -> httpmock::Mock
+    fn project_policy_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ProjectPolicyViewWhen, ProjectPolicyViewThen),
+        F: FnOnce(operations::ProjectPolicyViewWhen, operations::ProjectPolicyViewThen),
     {
         self.mock(|when, then| {
-            f(
-                ProjectPolicyViewWhen::new(when),
-                ProjectPolicyViewThen::new(then),
+            config_fn(
+                operations::ProjectPolicyViewWhen::new(when),
+                operations::ProjectPolicyViewThen::new(then),
             )
         })
     }
 
-    fn project_policy_update<F>(&self, f: F) -> httpmock::Mock
+    fn project_policy_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(ProjectPolicyUpdateWhen, ProjectPolicyUpdateThen),
+        F: FnOnce(operations::ProjectPolicyUpdateWhen, operations::ProjectPolicyUpdateThen),
     {
         self.mock(|when, then| {
-            f(
-                ProjectPolicyUpdateWhen::new(when),
-                ProjectPolicyUpdateThen::new(then),
+            config_fn(
+                operations::ProjectPolicyUpdateWhen::new(when),
+                operations::ProjectPolicyUpdateThen::new(then),
             )
         })
     }
 
-    fn snapshot_list<F>(&self, f: F) -> httpmock::Mock
+    fn snapshot_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SnapshotListWhen, SnapshotListThen),
+        F: FnOnce(operations::SnapshotListWhen, operations::SnapshotListThen),
     {
-        self.mock(|when, then| f(SnapshotListWhen::new(when), SnapshotListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SnapshotListWhen::new(when),
+                operations::SnapshotListThen::new(then),
+            )
+        })
     }
 
-    fn snapshot_create<F>(&self, f: F) -> httpmock::Mock
+    fn snapshot_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SnapshotCreateWhen, SnapshotCreateThen),
+        F: FnOnce(operations::SnapshotCreateWhen, operations::SnapshotCreateThen),
     {
-        self.mock(|when, then| f(SnapshotCreateWhen::new(when), SnapshotCreateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SnapshotCreateWhen::new(when),
+                operations::SnapshotCreateThen::new(then),
+            )
+        })
     }
 
-    fn snapshot_view<F>(&self, f: F) -> httpmock::Mock
+    fn snapshot_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SnapshotViewWhen, SnapshotViewThen),
+        F: FnOnce(operations::SnapshotViewWhen, operations::SnapshotViewThen),
     {
-        self.mock(|when, then| f(SnapshotViewWhen::new(when), SnapshotViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SnapshotViewWhen::new(when),
+                operations::SnapshotViewThen::new(then),
+            )
+        })
     }
 
-    fn snapshot_delete<F>(&self, f: F) -> httpmock::Mock
+    fn snapshot_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SnapshotDeleteWhen, SnapshotDeleteThen),
+        F: FnOnce(operations::SnapshotDeleteWhen, operations::SnapshotDeleteThen),
     {
-        self.mock(|when, then| f(SnapshotDeleteWhen::new(when), SnapshotDeleteThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SnapshotDeleteWhen::new(when),
+                operations::SnapshotDeleteThen::new(then),
+            )
+        })
     }
 
-    fn certificate_list<F>(&self, f: F) -> httpmock::Mock
+    fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(CertificateListWhen, CertificateListThen),
+        F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen),
     {
         self.mock(|when, then| {
-            f(
-                CertificateListWhen::new(when),
-                CertificateListThen::new(then),
+            config_fn(
+                operations::CertificateListWhen::new(when),
+                operations::CertificateListThen::new(then),
             )
         })
     }
 
-    fn certificate_create<F>(&self, f: F) -> httpmock::Mock
+    fn certificate_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(CertificateCreateWhen, CertificateCreateThen),
+        F: FnOnce(operations::CertificateCreateWhen, operations::CertificateCreateThen),
     {
         self.mock(|when, then| {
-            f(
-                CertificateCreateWhen::new(when),
-                CertificateCreateThen::new(then),
+            config_fn(
+                operations::CertificateCreateWhen::new(when),
+                operations::CertificateCreateThen::new(then),
             )
         })
     }
 
-    fn certificate_view<F>(&self, f: F) -> httpmock::Mock
+    fn certificate_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(CertificateViewWhen, CertificateViewThen),
+        F: FnOnce(operations::CertificateViewWhen, operations::CertificateViewThen),
     {
         self.mock(|when, then| {
-            f(
-                CertificateViewWhen::new(when),
-                CertificateViewThen::new(then),
+            config_fn(
+                operations::CertificateViewWhen::new(when),
+                operations::CertificateViewThen::new(then),
             )
         })
     }
 
-    fn certificate_delete<F>(&self, f: F) -> httpmock::Mock
+    fn certificate_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(CertificateDeleteWhen, CertificateDeleteThen),
+        F: FnOnce(operations::CertificateDeleteWhen, operations::CertificateDeleteThen),
     {
         self.mock(|when, then| {
-            f(
-                CertificateDeleteWhen::new(when),
-                CertificateDeleteThen::new(then),
+            config_fn(
+                operations::CertificateDeleteWhen::new(when),
+                operations::CertificateDeleteThen::new(then),
             )
         })
     }
 
-    fn physical_disk_list<F>(&self, f: F) -> httpmock::Mock
+    fn physical_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(PhysicalDiskListWhen, PhysicalDiskListThen),
+        F: FnOnce(operations::PhysicalDiskListWhen, operations::PhysicalDiskListThen),
     {
         self.mock(|when, then| {
-            f(
-                PhysicalDiskListWhen::new(when),
-                PhysicalDiskListThen::new(then),
+            config_fn(
+                operations::PhysicalDiskListWhen::new(when),
+                operations::PhysicalDiskListThen::new(then),
             )
         })
     }
 
-    fn rack_list<F>(&self, f: F) -> httpmock::Mock
+    fn rack_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(RackListWhen, RackListThen),
+        F: FnOnce(operations::RackListWhen, operations::RackListThen),
     {
-        self.mock(|when, then| f(RackListWhen::new(when), RackListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::RackListWhen::new(when),
+                operations::RackListThen::new(then),
+            )
+        })
     }
 
-    fn rack_view<F>(&self, f: F) -> httpmock::Mock
+    fn rack_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(RackViewWhen, RackViewThen),
+        F: FnOnce(operations::RackViewWhen, operations::RackViewThen),
     {
-        self.mock(|when, then| f(RackViewWhen::new(when), RackViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::RackViewWhen::new(when),
+                operations::RackViewThen::new(then),
+            )
+        })
     }
 
-    fn sled_list<F>(&self, f: F) -> httpmock::Mock
+    fn sled_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SledListWhen, SledListThen),
+        F: FnOnce(operations::SledListWhen, operations::SledListThen),
     {
-        self.mock(|when, then| f(SledListWhen::new(when), SledListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SledListWhen::new(when),
+                operations::SledListThen::new(then),
+            )
+        })
     }
 
-    fn sled_view<F>(&self, f: F) -> httpmock::Mock
+    fn sled_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SledViewWhen, SledViewThen),
+        F: FnOnce(operations::SledViewWhen, operations::SledViewThen),
     {
-        self.mock(|when, then| f(SledViewWhen::new(when), SledViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SledViewWhen::new(when),
+                operations::SledViewThen::new(then),
+            )
+        })
     }
 
-    fn sled_physical_disk_list<F>(&self, f: F) -> httpmock::Mock
+    fn sled_physical_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SledPhysicalDiskListWhen, SledPhysicalDiskListThen),
+        F: FnOnce(operations::SledPhysicalDiskListWhen, operations::SledPhysicalDiskListThen),
     {
         self.mock(|when, then| {
-            f(
-                SledPhysicalDiskListWhen::new(when),
-                SledPhysicalDiskListThen::new(then),
+            config_fn(
+                operations::SledPhysicalDiskListWhen::new(when),
+                operations::SledPhysicalDiskListThen::new(then),
             )
         })
     }
 
-    fn silo_identity_provider_list<F>(&self, f: F) -> httpmock::Mock
+    fn silo_identity_provider_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SiloIdentityProviderListWhen, SiloIdentityProviderListThen),
+        F: FnOnce(
+            operations::SiloIdentityProviderListWhen,
+            operations::SiloIdentityProviderListThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                SiloIdentityProviderListWhen::new(when),
-                SiloIdentityProviderListThen::new(then),
+            config_fn(
+                operations::SiloIdentityProviderListWhen::new(when),
+                operations::SiloIdentityProviderListThen::new(then),
             )
         })
     }
 
-    fn local_idp_user_create<F>(&self, f: F) -> httpmock::Mock
+    fn local_idp_user_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(LocalIdpUserCreateWhen, LocalIdpUserCreateThen),
+        F: FnOnce(operations::LocalIdpUserCreateWhen, operations::LocalIdpUserCreateThen),
     {
         self.mock(|when, then| {
-            f(
-                LocalIdpUserCreateWhen::new(when),
-                LocalIdpUserCreateThen::new(then),
+            config_fn(
+                operations::LocalIdpUserCreateWhen::new(when),
+                operations::LocalIdpUserCreateThen::new(then),
             )
         })
     }
 
-    fn local_idp_user_delete<F>(&self, f: F) -> httpmock::Mock
+    fn local_idp_user_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(LocalIdpUserDeleteWhen, LocalIdpUserDeleteThen),
+        F: FnOnce(operations::LocalIdpUserDeleteWhen, operations::LocalIdpUserDeleteThen),
     {
         self.mock(|when, then| {
-            f(
-                LocalIdpUserDeleteWhen::new(when),
-                LocalIdpUserDeleteThen::new(then),
+            config_fn(
+                operations::LocalIdpUserDeleteWhen::new(when),
+                operations::LocalIdpUserDeleteThen::new(then),
             )
         })
     }
 
-    fn local_idp_user_set_password<F>(&self, f: F) -> httpmock::Mock
+    fn local_idp_user_set_password<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(LocalIdpUserSetPasswordWhen, LocalIdpUserSetPasswordThen),
+        F: FnOnce(operations::LocalIdpUserSetPasswordWhen, operations::LocalIdpUserSetPasswordThen),
     {
         self.mock(|when, then| {
-            f(
-                LocalIdpUserSetPasswordWhen::new(when),
-                LocalIdpUserSetPasswordThen::new(then),
+            config_fn(
+                operations::LocalIdpUserSetPasswordWhen::new(when),
+                operations::LocalIdpUserSetPasswordThen::new(then),
             )
         })
     }
 
-    fn saml_identity_provider_create<F>(&self, f: F) -> httpmock::Mock
+    fn saml_identity_provider_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SamlIdentityProviderCreateWhen, SamlIdentityProviderCreateThen),
+        F: FnOnce(
+            operations::SamlIdentityProviderCreateWhen,
+            operations::SamlIdentityProviderCreateThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                SamlIdentityProviderCreateWhen::new(when),
-                SamlIdentityProviderCreateThen::new(then),
+            config_fn(
+                operations::SamlIdentityProviderCreateWhen::new(when),
+                operations::SamlIdentityProviderCreateThen::new(then),
             )
         })
     }
 
-    fn saml_identity_provider_view<F>(&self, f: F) -> httpmock::Mock
+    fn saml_identity_provider_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SamlIdentityProviderViewWhen, SamlIdentityProviderViewThen),
+        F: FnOnce(
+            operations::SamlIdentityProviderViewWhen,
+            operations::SamlIdentityProviderViewThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                SamlIdentityProviderViewWhen::new(when),
-                SamlIdentityProviderViewThen::new(then),
+            config_fn(
+                operations::SamlIdentityProviderViewWhen::new(when),
+                operations::SamlIdentityProviderViewThen::new(then),
             )
         })
     }
 
-    fn ip_pool_list<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolListWhen, IpPoolListThen),
+        F: FnOnce(operations::IpPoolListWhen, operations::IpPoolListThen),
     {
-        self.mock(|when, then| f(IpPoolListWhen::new(when), IpPoolListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::IpPoolListWhen::new(when),
+                operations::IpPoolListThen::new(then),
+            )
+        })
     }
 
-    fn ip_pool_create<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolCreateWhen, IpPoolCreateThen),
+        F: FnOnce(operations::IpPoolCreateWhen, operations::IpPoolCreateThen),
     {
-        self.mock(|when, then| f(IpPoolCreateWhen::new(when), IpPoolCreateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::IpPoolCreateWhen::new(when),
+                operations::IpPoolCreateThen::new(then),
+            )
+        })
     }
 
-    fn ip_pool_view<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolViewWhen, IpPoolViewThen),
+        F: FnOnce(operations::IpPoolViewWhen, operations::IpPoolViewThen),
     {
-        self.mock(|when, then| f(IpPoolViewWhen::new(when), IpPoolViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::IpPoolViewWhen::new(when),
+                operations::IpPoolViewThen::new(then),
+            )
+        })
     }
 
-    fn ip_pool_update<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolUpdateWhen, IpPoolUpdateThen),
+        F: FnOnce(operations::IpPoolUpdateWhen, operations::IpPoolUpdateThen),
     {
-        self.mock(|when, then| f(IpPoolUpdateWhen::new(when), IpPoolUpdateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::IpPoolUpdateWhen::new(when),
+                operations::IpPoolUpdateThen::new(then),
+            )
+        })
     }
 
-    fn ip_pool_delete<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolDeleteWhen, IpPoolDeleteThen),
+        F: FnOnce(operations::IpPoolDeleteWhen, operations::IpPoolDeleteThen),
     {
-        self.mock(|when, then| f(IpPoolDeleteWhen::new(when), IpPoolDeleteThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::IpPoolDeleteWhen::new(when),
+                operations::IpPoolDeleteThen::new(then),
+            )
+        })
     }
 
-    fn ip_pool_range_list<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_range_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolRangeListWhen, IpPoolRangeListThen),
+        F: FnOnce(operations::IpPoolRangeListWhen, operations::IpPoolRangeListThen),
     {
         self.mock(|when, then| {
-            f(
-                IpPoolRangeListWhen::new(when),
-                IpPoolRangeListThen::new(then),
+            config_fn(
+                operations::IpPoolRangeListWhen::new(when),
+                operations::IpPoolRangeListThen::new(then),
             )
         })
     }
 
-    fn ip_pool_range_add<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_range_add<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolRangeAddWhen, IpPoolRangeAddThen),
+        F: FnOnce(operations::IpPoolRangeAddWhen, operations::IpPoolRangeAddThen),
     {
-        self.mock(|when, then| f(IpPoolRangeAddWhen::new(when), IpPoolRangeAddThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::IpPoolRangeAddWhen::new(when),
+                operations::IpPoolRangeAddThen::new(then),
+            )
+        })
     }
 
-    fn ip_pool_range_remove<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_range_remove<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolRangeRemoveWhen, IpPoolRangeRemoveThen),
+        F: FnOnce(operations::IpPoolRangeRemoveWhen, operations::IpPoolRangeRemoveThen),
     {
         self.mock(|when, then| {
-            f(
-                IpPoolRangeRemoveWhen::new(when),
-                IpPoolRangeRemoveThen::new(then),
+            config_fn(
+                operations::IpPoolRangeRemoveWhen::new(when),
+                operations::IpPoolRangeRemoveThen::new(then),
             )
         })
     }
 
-    fn ip_pool_service_view<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_service_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolServiceViewWhen, IpPoolServiceViewThen),
+        F: FnOnce(operations::IpPoolServiceViewWhen, operations::IpPoolServiceViewThen),
     {
         self.mock(|when, then| {
-            f(
-                IpPoolServiceViewWhen::new(when),
-                IpPoolServiceViewThen::new(then),
+            config_fn(
+                operations::IpPoolServiceViewWhen::new(when),
+                operations::IpPoolServiceViewThen::new(then),
             )
         })
     }
 
-    fn ip_pool_service_range_list<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_service_range_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolServiceRangeListWhen, IpPoolServiceRangeListThen),
+        F: FnOnce(operations::IpPoolServiceRangeListWhen, operations::IpPoolServiceRangeListThen),
     {
         self.mock(|when, then| {
-            f(
-                IpPoolServiceRangeListWhen::new(when),
-                IpPoolServiceRangeListThen::new(then),
+            config_fn(
+                operations::IpPoolServiceRangeListWhen::new(when),
+                operations::IpPoolServiceRangeListThen::new(then),
             )
         })
     }
 
-    fn ip_pool_service_range_add<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_service_range_add<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolServiceRangeAddWhen, IpPoolServiceRangeAddThen),
+        F: FnOnce(operations::IpPoolServiceRangeAddWhen, operations::IpPoolServiceRangeAddThen),
     {
         self.mock(|when, then| {
-            f(
-                IpPoolServiceRangeAddWhen::new(when),
-                IpPoolServiceRangeAddThen::new(then),
+            config_fn(
+                operations::IpPoolServiceRangeAddWhen::new(when),
+                operations::IpPoolServiceRangeAddThen::new(then),
             )
         })
     }
 
-    fn ip_pool_service_range_remove<F>(&self, f: F) -> httpmock::Mock
+    fn ip_pool_service_range_remove<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(IpPoolServiceRangeRemoveWhen, IpPoolServiceRangeRemoveThen),
+        F: FnOnce(
+            operations::IpPoolServiceRangeRemoveWhen,
+            operations::IpPoolServiceRangeRemoveThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                IpPoolServiceRangeRemoveWhen::new(when),
-                IpPoolServiceRangeRemoveThen::new(then),
+            config_fn(
+                operations::IpPoolServiceRangeRemoveWhen::new(when),
+                operations::IpPoolServiceRangeRemoveThen::new(then),
             )
         })
     }
 
-    fn system_metric<F>(&self, f: F) -> httpmock::Mock
+    fn system_metric<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemMetricWhen, SystemMetricThen),
+        F: FnOnce(operations::SystemMetricWhen, operations::SystemMetricThen),
     {
-        self.mock(|when, then| f(SystemMetricWhen::new(when), SystemMetricThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemMetricWhen::new(when),
+                operations::SystemMetricThen::new(then),
+            )
+        })
     }
 
-    fn system_policy_view<F>(&self, f: F) -> httpmock::Mock
+    fn system_policy_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemPolicyViewWhen, SystemPolicyViewThen),
+        F: FnOnce(operations::SystemPolicyViewWhen, operations::SystemPolicyViewThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemPolicyViewWhen::new(when),
-                SystemPolicyViewThen::new(then),
+            config_fn(
+                operations::SystemPolicyViewWhen::new(when),
+                operations::SystemPolicyViewThen::new(then),
             )
         })
     }
 
-    fn system_policy_update<F>(&self, f: F) -> httpmock::Mock
+    fn system_policy_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemPolicyUpdateWhen, SystemPolicyUpdateThen),
+        F: FnOnce(operations::SystemPolicyUpdateWhen, operations::SystemPolicyUpdateThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemPolicyUpdateWhen::new(when),
-                SystemPolicyUpdateThen::new(then),
+            config_fn(
+                operations::SystemPolicyUpdateWhen::new(when),
+                operations::SystemPolicyUpdateThen::new(then),
             )
         })
     }
 
-    fn role_list<F>(&self, f: F) -> httpmock::Mock
+    fn role_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(RoleListWhen, RoleListThen),
+        F: FnOnce(operations::RoleListWhen, operations::RoleListThen),
     {
-        self.mock(|when, then| f(RoleListWhen::new(when), RoleListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::RoleListWhen::new(when),
+                operations::RoleListThen::new(then),
+            )
+        })
     }
 
-    fn role_view<F>(&self, f: F) -> httpmock::Mock
+    fn role_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(RoleViewWhen, RoleViewThen),
+        F: FnOnce(operations::RoleViewWhen, operations::RoleViewThen),
     {
-        self.mock(|when, then| f(RoleViewWhen::new(when), RoleViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::RoleViewWhen::new(when),
+                operations::RoleViewThen::new(then),
+            )
+        })
     }
 
-    fn saga_list<F>(&self, f: F) -> httpmock::Mock
+    fn saga_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SagaListWhen, SagaListThen),
+        F: FnOnce(operations::SagaListWhen, operations::SagaListThen),
     {
-        self.mock(|when, then| f(SagaListWhen::new(when), SagaListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SagaListWhen::new(when),
+                operations::SagaListThen::new(then),
+            )
+        })
     }
 
-    fn saga_view<F>(&self, f: F) -> httpmock::Mock
+    fn saga_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SagaViewWhen, SagaViewThen),
+        F: FnOnce(operations::SagaViewWhen, operations::SagaViewThen),
     {
-        self.mock(|when, then| f(SagaViewWhen::new(when), SagaViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SagaViewWhen::new(when),
+                operations::SagaViewThen::new(then),
+            )
+        })
     }
 
-    fn silo_list<F>(&self, f: F) -> httpmock::Mock
+    fn silo_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SiloListWhen, SiloListThen),
+        F: FnOnce(operations::SiloListWhen, operations::SiloListThen),
     {
-        self.mock(|when, then| f(SiloListWhen::new(when), SiloListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloListWhen::new(when),
+                operations::SiloListThen::new(then),
+            )
+        })
     }
 
-    fn silo_create<F>(&self, f: F) -> httpmock::Mock
+    fn silo_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SiloCreateWhen, SiloCreateThen),
+        F: FnOnce(operations::SiloCreateWhen, operations::SiloCreateThen),
     {
-        self.mock(|when, then| f(SiloCreateWhen::new(when), SiloCreateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloCreateWhen::new(when),
+                operations::SiloCreateThen::new(then),
+            )
+        })
     }
 
-    fn silo_view<F>(&self, f: F) -> httpmock::Mock
+    fn silo_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SiloViewWhen, SiloViewThen),
+        F: FnOnce(operations::SiloViewWhen, operations::SiloViewThen),
     {
-        self.mock(|when, then| f(SiloViewWhen::new(when), SiloViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloViewWhen::new(when),
+                operations::SiloViewThen::new(then),
+            )
+        })
     }
 
-    fn silo_delete<F>(&self, f: F) -> httpmock::Mock
+    fn silo_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SiloDeleteWhen, SiloDeleteThen),
+        F: FnOnce(operations::SiloDeleteWhen, operations::SiloDeleteThen),
     {
-        self.mock(|when, then| f(SiloDeleteWhen::new(when), SiloDeleteThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloDeleteWhen::new(when),
+                operations::SiloDeleteThen::new(then),
+            )
+        })
     }
 
-    fn silo_policy_view<F>(&self, f: F) -> httpmock::Mock
+    fn silo_policy_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SiloPolicyViewWhen, SiloPolicyViewThen),
+        F: FnOnce(operations::SiloPolicyViewWhen, operations::SiloPolicyViewThen),
     {
-        self.mock(|when, then| f(SiloPolicyViewWhen::new(when), SiloPolicyViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloPolicyViewWhen::new(when),
+                operations::SiloPolicyViewThen::new(then),
+            )
+        })
     }
 
-    fn silo_policy_update<F>(&self, f: F) -> httpmock::Mock
+    fn silo_policy_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SiloPolicyUpdateWhen, SiloPolicyUpdateThen),
+        F: FnOnce(operations::SiloPolicyUpdateWhen, operations::SiloPolicyUpdateThen),
     {
         self.mock(|when, then| {
-            f(
-                SiloPolicyUpdateWhen::new(when),
-                SiloPolicyUpdateThen::new(then),
+            config_fn(
+                operations::SiloPolicyUpdateWhen::new(when),
+                operations::SiloPolicyUpdateThen::new(then),
             )
         })
     }
 
-    fn system_component_version_list<F>(&self, f: F) -> httpmock::Mock
+    fn system_component_version_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemComponentVersionListWhen, SystemComponentVersionListThen),
+        F: FnOnce(
+            operations::SystemComponentVersionListWhen,
+            operations::SystemComponentVersionListThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                SystemComponentVersionListWhen::new(when),
-                SystemComponentVersionListThen::new(then),
+            config_fn(
+                operations::SystemComponentVersionListWhen::new(when),
+                operations::SystemComponentVersionListThen::new(then),
             )
         })
     }
 
-    fn update_deployments_list<F>(&self, f: F) -> httpmock::Mock
+    fn update_deployments_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(UpdateDeploymentsListWhen, UpdateDeploymentsListThen),
+        F: FnOnce(operations::UpdateDeploymentsListWhen, operations::UpdateDeploymentsListThen),
     {
         self.mock(|when, then| {
-            f(
-                UpdateDeploymentsListWhen::new(when),
-                UpdateDeploymentsListThen::new(then),
+            config_fn(
+                operations::UpdateDeploymentsListWhen::new(when),
+                operations::UpdateDeploymentsListThen::new(then),
             )
         })
     }
 
-    fn update_deployment_view<F>(&self, f: F) -> httpmock::Mock
+    fn update_deployment_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(UpdateDeploymentViewWhen, UpdateDeploymentViewThen),
+        F: FnOnce(operations::UpdateDeploymentViewWhen, operations::UpdateDeploymentViewThen),
     {
         self.mock(|when, then| {
-            f(
-                UpdateDeploymentViewWhen::new(when),
-                UpdateDeploymentViewThen::new(then),
+            config_fn(
+                operations::UpdateDeploymentViewWhen::new(when),
+                operations::UpdateDeploymentViewThen::new(then),
             )
         })
     }
 
-    fn system_update_refresh<F>(&self, f: F) -> httpmock::Mock
+    fn system_update_refresh<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemUpdateRefreshWhen, SystemUpdateRefreshThen),
+        F: FnOnce(operations::SystemUpdateRefreshWhen, operations::SystemUpdateRefreshThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemUpdateRefreshWhen::new(when),
-                SystemUpdateRefreshThen::new(then),
+            config_fn(
+                operations::SystemUpdateRefreshWhen::new(when),
+                operations::SystemUpdateRefreshThen::new(then),
             )
         })
     }
 
-    fn system_update_start<F>(&self, f: F) -> httpmock::Mock
+    fn system_update_start<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemUpdateStartWhen, SystemUpdateStartThen),
+        F: FnOnce(operations::SystemUpdateStartWhen, operations::SystemUpdateStartThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemUpdateStartWhen::new(when),
-                SystemUpdateStartThen::new(then),
+            config_fn(
+                operations::SystemUpdateStartWhen::new(when),
+                operations::SystemUpdateStartThen::new(then),
             )
         })
     }
 
-    fn system_update_stop<F>(&self, f: F) -> httpmock::Mock
+    fn system_update_stop<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemUpdateStopWhen, SystemUpdateStopThen),
+        F: FnOnce(operations::SystemUpdateStopWhen, operations::SystemUpdateStopThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemUpdateStopWhen::new(when),
-                SystemUpdateStopThen::new(then),
+            config_fn(
+                operations::SystemUpdateStopWhen::new(when),
+                operations::SystemUpdateStopThen::new(then),
             )
         })
     }
 
-    fn system_update_list<F>(&self, f: F) -> httpmock::Mock
+    fn system_update_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemUpdateListWhen, SystemUpdateListThen),
+        F: FnOnce(operations::SystemUpdateListWhen, operations::SystemUpdateListThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemUpdateListWhen::new(when),
-                SystemUpdateListThen::new(then),
+            config_fn(
+                operations::SystemUpdateListWhen::new(when),
+                operations::SystemUpdateListThen::new(then),
             )
         })
     }
 
-    fn system_update_view<F>(&self, f: F) -> httpmock::Mock
+    fn system_update_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemUpdateViewWhen, SystemUpdateViewThen),
+        F: FnOnce(operations::SystemUpdateViewWhen, operations::SystemUpdateViewThen),
     {
         self.mock(|when, then| {
-            f(
-                SystemUpdateViewWhen::new(when),
-                SystemUpdateViewThen::new(then),
+            config_fn(
+                operations::SystemUpdateViewWhen::new(when),
+                operations::SystemUpdateViewThen::new(then),
             )
         })
     }
 
-    fn system_update_components_list<F>(&self, f: F) -> httpmock::Mock
+    fn system_update_components_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemUpdateComponentsListWhen, SystemUpdateComponentsListThen),
+        F: FnOnce(
+            operations::SystemUpdateComponentsListWhen,
+            operations::SystemUpdateComponentsListThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                SystemUpdateComponentsListWhen::new(when),
-                SystemUpdateComponentsListThen::new(then),
+            config_fn(
+                operations::SystemUpdateComponentsListWhen::new(when),
+                operations::SystemUpdateComponentsListThen::new(then),
             )
         })
     }
 
-    fn system_version<F>(&self, f: F) -> httpmock::Mock
+    fn system_version<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SystemVersionWhen, SystemVersionThen),
+        F: FnOnce(operations::SystemVersionWhen, operations::SystemVersionThen),
     {
-        self.mock(|when, then| f(SystemVersionWhen::new(when), SystemVersionThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemVersionWhen::new(when),
+                operations::SystemVersionThen::new(then),
+            )
+        })
     }
 
-    fn silo_user_list<F>(&self, f: F) -> httpmock::Mock
+    fn silo_user_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SiloUserListWhen, SiloUserListThen),
+        F: FnOnce(operations::SiloUserListWhen, operations::SiloUserListThen),
     {
-        self.mock(|when, then| f(SiloUserListWhen::new(when), SiloUserListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloUserListWhen::new(when),
+                operations::SiloUserListThen::new(then),
+            )
+        })
     }
 
-    fn silo_user_view<F>(&self, f: F) -> httpmock::Mock
+    fn silo_user_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(SiloUserViewWhen, SiloUserViewThen),
+        F: FnOnce(operations::SiloUserViewWhen, operations::SiloUserViewThen),
     {
-        self.mock(|when, then| f(SiloUserViewWhen::new(when), SiloUserViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloUserViewWhen::new(when),
+                operations::SiloUserViewThen::new(then),
+            )
+        })
     }
 
-    fn user_builtin_list<F>(&self, f: F) -> httpmock::Mock
+    fn user_builtin_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(UserBuiltinListWhen, UserBuiltinListThen),
+        F: FnOnce(operations::UserBuiltinListWhen, operations::UserBuiltinListThen),
     {
         self.mock(|when, then| {
-            f(
-                UserBuiltinListWhen::new(when),
-                UserBuiltinListThen::new(then),
+            config_fn(
+                operations::UserBuiltinListWhen::new(when),
+                operations::UserBuiltinListThen::new(then),
             )
         })
     }
 
-    fn user_builtin_view<F>(&self, f: F) -> httpmock::Mock
+    fn user_builtin_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(UserBuiltinViewWhen, UserBuiltinViewThen),
+        F: FnOnce(operations::UserBuiltinViewWhen, operations::UserBuiltinViewThen),
     {
         self.mock(|when, then| {
-            f(
-                UserBuiltinViewWhen::new(when),
-                UserBuiltinViewThen::new(then),
+            config_fn(
+                operations::UserBuiltinViewWhen::new(when),
+                operations::UserBuiltinViewThen::new(then),
             )
         })
     }
 
-    fn user_list<F>(&self, f: F) -> httpmock::Mock
+    fn user_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(UserListWhen, UserListThen),
+        F: FnOnce(operations::UserListWhen, operations::UserListThen),
     {
-        self.mock(|when, then| f(UserListWhen::new(when), UserListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::UserListWhen::new(when),
+                operations::UserListThen::new(then),
+            )
+        })
     }
 
-    fn vpc_firewall_rules_view<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_firewall_rules_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcFirewallRulesViewWhen, VpcFirewallRulesViewThen),
+        F: FnOnce(operations::VpcFirewallRulesViewWhen, operations::VpcFirewallRulesViewThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcFirewallRulesViewWhen::new(when),
-                VpcFirewallRulesViewThen::new(then),
+            config_fn(
+                operations::VpcFirewallRulesViewWhen::new(when),
+                operations::VpcFirewallRulesViewThen::new(then),
             )
         })
     }
 
-    fn vpc_firewall_rules_update<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_firewall_rules_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcFirewallRulesUpdateWhen, VpcFirewallRulesUpdateThen),
+        F: FnOnce(operations::VpcFirewallRulesUpdateWhen, operations::VpcFirewallRulesUpdateThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcFirewallRulesUpdateWhen::new(when),
-                VpcFirewallRulesUpdateThen::new(then),
+            config_fn(
+                operations::VpcFirewallRulesUpdateWhen::new(when),
+                operations::VpcFirewallRulesUpdateThen::new(then),
             )
         })
     }
 
-    fn vpc_router_route_list<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_router_route_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcRouterRouteListWhen, VpcRouterRouteListThen),
+        F: FnOnce(operations::VpcRouterRouteListWhen, operations::VpcRouterRouteListThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcRouterRouteListWhen::new(when),
-                VpcRouterRouteListThen::new(then),
+            config_fn(
+                operations::VpcRouterRouteListWhen::new(when),
+                operations::VpcRouterRouteListThen::new(then),
             )
         })
     }
 
-    fn vpc_router_route_create<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_router_route_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcRouterRouteCreateWhen, VpcRouterRouteCreateThen),
+        F: FnOnce(operations::VpcRouterRouteCreateWhen, operations::VpcRouterRouteCreateThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcRouterRouteCreateWhen::new(when),
-                VpcRouterRouteCreateThen::new(then),
+            config_fn(
+                operations::VpcRouterRouteCreateWhen::new(when),
+                operations::VpcRouterRouteCreateThen::new(then),
             )
         })
     }
 
-    fn vpc_router_route_view<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_router_route_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcRouterRouteViewWhen, VpcRouterRouteViewThen),
+        F: FnOnce(operations::VpcRouterRouteViewWhen, operations::VpcRouterRouteViewThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcRouterRouteViewWhen::new(when),
-                VpcRouterRouteViewThen::new(then),
+            config_fn(
+                operations::VpcRouterRouteViewWhen::new(when),
+                operations::VpcRouterRouteViewThen::new(then),
             )
         })
     }
 
-    fn vpc_router_route_update<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_router_route_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcRouterRouteUpdateWhen, VpcRouterRouteUpdateThen),
+        F: FnOnce(operations::VpcRouterRouteUpdateWhen, operations::VpcRouterRouteUpdateThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcRouterRouteUpdateWhen::new(when),
-                VpcRouterRouteUpdateThen::new(then),
+            config_fn(
+                operations::VpcRouterRouteUpdateWhen::new(when),
+                operations::VpcRouterRouteUpdateThen::new(then),
             )
         })
     }
 
-    fn vpc_router_route_delete<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_router_route_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcRouterRouteDeleteWhen, VpcRouterRouteDeleteThen),
+        F: FnOnce(operations::VpcRouterRouteDeleteWhen, operations::VpcRouterRouteDeleteThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcRouterRouteDeleteWhen::new(when),
-                VpcRouterRouteDeleteThen::new(then),
+            config_fn(
+                operations::VpcRouterRouteDeleteWhen::new(when),
+                operations::VpcRouterRouteDeleteThen::new(then),
             )
         })
     }
 
-    fn vpc_router_list<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_router_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcRouterListWhen, VpcRouterListThen),
+        F: FnOnce(operations::VpcRouterListWhen, operations::VpcRouterListThen),
     {
-        self.mock(|when, then| f(VpcRouterListWhen::new(when), VpcRouterListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterListWhen::new(when),
+                operations::VpcRouterListThen::new(then),
+            )
+        })
     }
 
-    fn vpc_router_create<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_router_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcRouterCreateWhen, VpcRouterCreateThen),
+        F: FnOnce(operations::VpcRouterCreateWhen, operations::VpcRouterCreateThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcRouterCreateWhen::new(when),
-                VpcRouterCreateThen::new(then),
+            config_fn(
+                operations::VpcRouterCreateWhen::new(when),
+                operations::VpcRouterCreateThen::new(then),
             )
         })
     }
 
-    fn vpc_router_view<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_router_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcRouterViewWhen, VpcRouterViewThen),
+        F: FnOnce(operations::VpcRouterViewWhen, operations::VpcRouterViewThen),
     {
-        self.mock(|when, then| f(VpcRouterViewWhen::new(when), VpcRouterViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcRouterViewWhen::new(when),
+                operations::VpcRouterViewThen::new(then),
+            )
+        })
     }
 
-    fn vpc_router_update<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_router_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcRouterUpdateWhen, VpcRouterUpdateThen),
+        F: FnOnce(operations::VpcRouterUpdateWhen, operations::VpcRouterUpdateThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcRouterUpdateWhen::new(when),
-                VpcRouterUpdateThen::new(then),
+            config_fn(
+                operations::VpcRouterUpdateWhen::new(when),
+                operations::VpcRouterUpdateThen::new(then),
             )
         })
     }
 
-    fn vpc_router_delete<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_router_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcRouterDeleteWhen, VpcRouterDeleteThen),
+        F: FnOnce(operations::VpcRouterDeleteWhen, operations::VpcRouterDeleteThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcRouterDeleteWhen::new(when),
-                VpcRouterDeleteThen::new(then),
+            config_fn(
+                operations::VpcRouterDeleteWhen::new(when),
+                operations::VpcRouterDeleteThen::new(then),
             )
         })
     }
 
-    fn vpc_subnet_list<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_subnet_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcSubnetListWhen, VpcSubnetListThen),
+        F: FnOnce(operations::VpcSubnetListWhen, operations::VpcSubnetListThen),
     {
-        self.mock(|when, then| f(VpcSubnetListWhen::new(when), VpcSubnetListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcSubnetListWhen::new(when),
+                operations::VpcSubnetListThen::new(then),
+            )
+        })
     }
 
-    fn vpc_subnet_create<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_subnet_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcSubnetCreateWhen, VpcSubnetCreateThen),
+        F: FnOnce(operations::VpcSubnetCreateWhen, operations::VpcSubnetCreateThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcSubnetCreateWhen::new(when),
-                VpcSubnetCreateThen::new(then),
+            config_fn(
+                operations::VpcSubnetCreateWhen::new(when),
+                operations::VpcSubnetCreateThen::new(then),
             )
         })
     }
 
-    fn vpc_subnet_view<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_subnet_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcSubnetViewWhen, VpcSubnetViewThen),
+        F: FnOnce(operations::VpcSubnetViewWhen, operations::VpcSubnetViewThen),
     {
-        self.mock(|when, then| f(VpcSubnetViewWhen::new(when), VpcSubnetViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcSubnetViewWhen::new(when),
+                operations::VpcSubnetViewThen::new(then),
+            )
+        })
     }
 
-    fn vpc_subnet_update<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_subnet_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcSubnetUpdateWhen, VpcSubnetUpdateThen),
+        F: FnOnce(operations::VpcSubnetUpdateWhen, operations::VpcSubnetUpdateThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcSubnetUpdateWhen::new(when),
-                VpcSubnetUpdateThen::new(then),
+            config_fn(
+                operations::VpcSubnetUpdateWhen::new(when),
+                operations::VpcSubnetUpdateThen::new(then),
             )
         })
     }
 
-    fn vpc_subnet_delete<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_subnet_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcSubnetDeleteWhen, VpcSubnetDeleteThen),
+        F: FnOnce(operations::VpcSubnetDeleteWhen, operations::VpcSubnetDeleteThen),
     {
         self.mock(|when, then| {
-            f(
-                VpcSubnetDeleteWhen::new(when),
-                VpcSubnetDeleteThen::new(then),
+            config_fn(
+                operations::VpcSubnetDeleteWhen::new(when),
+                operations::VpcSubnetDeleteThen::new(then),
             )
         })
     }
 
-    fn vpc_subnet_list_network_interfaces<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_subnet_list_network_interfaces<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcSubnetListNetworkInterfacesWhen, VpcSubnetListNetworkInterfacesThen),
+        F: FnOnce(
+            operations::VpcSubnetListNetworkInterfacesWhen,
+            operations::VpcSubnetListNetworkInterfacesThen,
+        ),
     {
         self.mock(|when, then| {
-            f(
-                VpcSubnetListNetworkInterfacesWhen::new(when),
-                VpcSubnetListNetworkInterfacesThen::new(then),
+            config_fn(
+                operations::VpcSubnetListNetworkInterfacesWhen::new(when),
+                operations::VpcSubnetListNetworkInterfacesThen::new(then),
             )
         })
     }
 
-    fn vpc_list<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcListWhen, VpcListThen),
+        F: FnOnce(operations::VpcListWhen, operations::VpcListThen),
     {
-        self.mock(|when, then| f(VpcListWhen::new(when), VpcListThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcListWhen::new(when),
+                operations::VpcListThen::new(then),
+            )
+        })
     }
 
-    fn vpc_create<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcCreateWhen, VpcCreateThen),
+        F: FnOnce(operations::VpcCreateWhen, operations::VpcCreateThen),
     {
-        self.mock(|when, then| f(VpcCreateWhen::new(when), VpcCreateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcCreateWhen::new(when),
+                operations::VpcCreateThen::new(then),
+            )
+        })
     }
 
-    fn vpc_view<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcViewWhen, VpcViewThen),
+        F: FnOnce(operations::VpcViewWhen, operations::VpcViewThen),
     {
-        self.mock(|when, then| f(VpcViewWhen::new(when), VpcViewThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcViewWhen::new(when),
+                operations::VpcViewThen::new(then),
+            )
+        })
     }
 
-    fn vpc_update<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcUpdateWhen, VpcUpdateThen),
+        F: FnOnce(operations::VpcUpdateWhen, operations::VpcUpdateThen),
     {
-        self.mock(|when, then| f(VpcUpdateWhen::new(when), VpcUpdateThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcUpdateWhen::new(when),
+                operations::VpcUpdateThen::new(then),
+            )
+        })
     }
 
-    fn vpc_delete<F>(&self, f: F) -> httpmock::Mock
+    fn vpc_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(VpcDeleteWhen, VpcDeleteThen),
+        F: FnOnce(operations::VpcDeleteWhen, operations::VpcDeleteThen),
     {
-        self.mock(|when, then| f(VpcDeleteWhen::new(when), VpcDeleteThen::new(then)))
+        self.mock(|when, then| {
+            config_fn(
+                operations::VpcDeleteWhen::new(when),
+                operations::VpcDeleteThen::new(then),
+            )
+        })
     }
 }
