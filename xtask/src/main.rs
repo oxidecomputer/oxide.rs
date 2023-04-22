@@ -14,7 +14,6 @@ use similar::{Algorithm, ChangeTag, TextDiff};
 #[derive(Parser)]
 #[command(name = "xtask")]
 #[command(about = "build tasks")]
-
 enum Xtask {
     #[command(about = "generate CLI and SDK code from oxide.json")]
     Generate {
@@ -51,7 +50,7 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
             .with_derive("schemars::JsonSchema"),
     );
 
-    let mut result = Ok(());
+    let mut error = false;
 
     // TODO I'd like to generate a hash as well to have a way to check if the
     // spec has changed since the last generation.
@@ -69,25 +68,21 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
     out_path.push("src");
     out_path.push("generated_sdk.rs");
 
-    if check {
-        let checked_in = std::fs::read_to_string(out_path.clone()).unwrap();
-        let checked_in = dos2unix(&checked_in);
-        if checked_in != contents {
-            println!("❌");
-            if verbose {
-                show_diff(&checked_in, &contents);
-            }
-            result = Err(format!(
-                "{} is out of date relative to oxide.json",
-                out_path.to_string_lossy(),
-            ));
-        } else {
-            println!("👍");
-        }
-    } else {
-        std::fs::write(out_path, &contents).unwrap();
-        println!("done.");
-    }
+    error |= output_contents(check, out_path, contents, verbose).is_err();
+
+    // SDK httpmock library
+    print!("generating httpmock ... ");
+    std::io::stdout().flush().unwrap();
+    let code = generator.httpmock(&spec, "oxide_api").unwrap().to_string();
+    let contents = format_code(format!("{}\n\n{}", "use oxide_api::*;", code));
+    let loc_httpmock = contents.matches('\n').count();
+
+    let mut out_path = root_path.clone();
+    out_path.push("sdk-httpmock");
+    out_path.push("src");
+    out_path.push("generated_httpmock.rs");
+
+    error |= output_contents(check, out_path, contents, verbose).is_err();
 
     // CLI
     print!("generating cli ... ");
@@ -101,33 +96,20 @@ fn generate(check: bool, verbose: bool) -> Result<(), String> {
     out_path.push("src");
     out_path.push("generated_cli.rs");
 
-    if check {
-        let checked_in = std::fs::read_to_string(out_path.clone()).unwrap();
-        let checked_in = dos2unix(&checked_in);
-        if checked_in != contents {
-            println!("❌");
-            if verbose {
-                show_diff(&checked_in, &contents);
-            }
-            result = Err(format!(
-                "{} is out of date relative to oxide.json",
-                out_path.to_string_lossy(),
-            ));
-        } else {
-            println!("👍");
-        }
-    } else {
-        std::fs::write(out_path, &contents).unwrap();
-        println!("done.");
-        let duration = Instant::now().duration_since(start).as_millis();
-        println!(
-            "generation took {}ms ({:.3}ms per line)",
-            duration,
-            duration as f64 / (loc_sdk + loc_cli) as f64,
-        );
-    }
+    error |= output_contents(check, out_path, contents, verbose).is_err();
 
-    result
+    let duration = Instant::now().duration_since(start).as_micros();
+    println!(
+        "generation took {:.3}s ({}us per line)",
+        duration as f64 / 1_000_000_f64,
+        duration / (loc_sdk + loc_httpmock + loc_cli) as u128,
+    );
+
+    if error {
+        Err("Generated code is out of date relative to oxide.json".to_string())
+    } else {
+        Ok(())
+    }
 }
 
 fn format_code(code: String) -> String {
@@ -154,6 +136,32 @@ fn format_code(code: String) -> String {
 
     let regex = regex::Regex::new(r#"(\n\s*///)(\S)"#).unwrap();
     regex.replace_all(&contents, "$1 $2").to_string()
+}
+
+fn output_contents(
+    check: bool,
+    out_path: PathBuf,
+    contents: String,
+    verbose: bool,
+) -> Result<(), ()> {
+    if check {
+        let checked_in = std::fs::read_to_string(out_path.clone()).unwrap();
+        let checked_in = dos2unix(&checked_in);
+        if checked_in != contents {
+            println!("❌");
+            if verbose {
+                show_diff(&checked_in, &contents);
+            }
+            return Err(());
+        } else {
+            println!("👍");
+        }
+    } else {
+        std::fs::write(out_path, &contents).unwrap();
+        println!("done.");
+    }
+
+    Ok(())
 }
 
 fn show_diff(expected: &str, actual: &str) {

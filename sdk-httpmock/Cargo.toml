@@ -1,0 +1,24 @@
+[package]
+name = "oxide-httpmock"
+description = "httpmock for the Oxide rack API"
+version = "0.1.0"
+edition = "2021"
+license = "MPL-2.0"
+repository = "https://github.com/oxidecomputer/oxide.rs"
+readme = "README.md"
+
+[dependencies]
+# base64 = { workspace = true }
+# chrono = { workspace = true }
+# clap = { workspace = true, optional = true }
+# futures = { workspace = true }
+# progenitor-client = { workspace = true }
+# rand = { workspace = true }
+# regress = { workspace = true }
+# reqwest = { workspace = true }
+# serde = { workspace = true }
+# serde_json = { workspace = true }
+# schemars = { workspace = true }
+# uuid = { workspace = true }
+oxide-api = { workspace = true }
+httpmock = { workspace = true }
