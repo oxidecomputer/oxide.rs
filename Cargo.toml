@@ -19,7 +19,7 @@ expectorate = "1.0.7"
 futures = "0.3.28"
 http = "0.2.9"
 httpmock = "0.6.7"
-newline-converter = "0.2.2"
+newline-converter = "0.3.0"
 oauth2 = "4.3.0"
 open = "4.0.2"
 oxide-api = { path = "sdk" }
