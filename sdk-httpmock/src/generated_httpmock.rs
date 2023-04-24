@@ -1,7 +1,5 @@
 // The contents of this file are generated; do not modify them.
 
-use oxide_api::*;
-
 pub mod operations {
     //! [`When`](httpmock::When) and [`Then`](httpmock::Then)
     //! wrappers for each operation. Each can be converted to

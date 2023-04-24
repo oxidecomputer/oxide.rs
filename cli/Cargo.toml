@@ -37,6 +37,7 @@ uuid = { workspace = true }
 assert_cmd = { workspace = true }
 expectorate = { workspace = true }
 httpmock = { workspace = true }
+oxide-httpmock = { workspace = true }
 predicates = { workspace = true }
 pretty_assertions = { workspace = true }
 serial_test = { workspace = true }

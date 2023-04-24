@@ -8,16 +8,6 @@ repository = "https://github.com/oxidecomputer/oxide.rs"
 readme = "README.md"
 
 [dependencies]
-# base64 = { workspace = true }
-# clap = { workspace = true, optional = true }
-# futures = { workspace = true }
-# progenitor-client = { workspace = true }
-# rand = { workspace = true }
-# regress = { workspace = true }
-# reqwest = { workspace = true }
-# serde = { workspace = true }
-# schemars = { workspace = true }
-
 chrono = { workspace = true }
 httpmock = { workspace = true }
 oxide-api = { workspace = true }

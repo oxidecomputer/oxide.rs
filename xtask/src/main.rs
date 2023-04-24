@@ -101,7 +101,7 @@ fn generate(
         print!("generating httpmock ... ");
         std::io::stdout().flush().unwrap();
         let code = generator.httpmock(&spec, "oxide_api").unwrap().to_string();
-        let contents = format_code(format!("{}\n\n{}", "use oxide_api::*;", code));
+        let contents = format_code(code.to_string());
         loc += contents.matches('\n').count();
 
         let mut out_path = root_path.clone();

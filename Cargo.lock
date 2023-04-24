@@ -1742,6 +1742,7 @@ dependencies = [
  "oauth2",
  "open",
  "oxide-api",
+ "oxide-httpmock",
  "predicates",
  "pretty_assertions",
  "reqwest",
