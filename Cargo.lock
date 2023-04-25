@@ -1963,7 +1963,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#819ebb2d8bfebd103322729ab12604ff8432be68"
+source = "git+https://github.com/oxidecomputer/progenitor#b717086ef399b1d4cbac8fdad25dc34a0f9b7a6a"
 dependencies = [
  "anyhow",
  "built",
@@ -1973,6 +1973,7 @@ dependencies = [
  "progenitor-impl",
  "progenitor-macro",
  "project-root",
+ "rustfmt-wrapper",
  "serde",
  "serde_json",
  "serde_yaml",
@@ -1981,7 +1982,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#819ebb2d8bfebd103322729ab12604ff8432be68"
+source = "git+https://github.com/oxidecomputer/progenitor#b717086ef399b1d4cbac8fdad25dc34a0f9b7a6a"
 dependencies = [
  "bytes",
  "futures-core",
@@ -1995,16 +1996,16 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#819ebb2d8bfebd103322729ab12604ff8432be68"
+source = "git+https://github.com/oxidecomputer/progenitor#b717086ef399b1d4cbac8fdad25dc34a0f9b7a6a"
 dependencies = [
  "getopts",
  "heck",
+ "http",
  "indexmap",
  "openapiv3",
  "proc-macro2",
  "quote",
  "regex",
- "rustfmt-wrapper",
  "schemars",
  "serde",
  "serde_json",
@@ -2017,7 +2018,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#819ebb2d8bfebd103322729ab12604ff8432be68"
+source = "git+https://github.com/oxidecomputer/progenitor#b717086ef399b1d4cbac8fdad25dc34a0f9b7a6a"
 dependencies = [
  "openapiv3",
  "proc-macro2",
