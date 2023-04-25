@@ -61,9 +61,21 @@ fn to_json(cmd: &Command) -> JsonDoc {
     }
 }
 
+#[derive(Serialize, Debug, PartialEq, Eq)]
+pub struct OutputJson {
+    version: String,
+    commands: JsonDoc,
+}
+
 impl CmdDocs {
     pub async fn run(&self, app: &Command) -> Result<()> {
-        let pretty_json = serde_json::to_string_pretty(&to_json(app))?;
+        const CLI_VERSION: &str = env!("CARGO_PKG_VERSION");
+        let json_doc = to_json(app);
+        let output = OutputJson {
+            version: CLI_VERSION.to_string(),
+            commands: json_doc,
+        };
+        let pretty_json = serde_json::to_string_pretty(&output)?;
         println!("{}", pretty_json);
         Ok(())
     }
