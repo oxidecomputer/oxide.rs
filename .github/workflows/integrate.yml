@@ -77,8 +77,8 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --local user.name "reflector[bot]"
-          git config --local user.email "${{ inputs.reflector_user_id }}+reflector[bot]@users.noreply.github.com"
+          git config --local user.name "oxide-reflector-bot[bot]"
+          git config --local user.email "${{ inputs.reflector_user_id }}+oxide-reflector-bot[bot]@users.noreply.github.com"
 
           # Detect specific changes that will be committed back
           git diff --quiet cli/docs/cli.json || docsUpdate=$?

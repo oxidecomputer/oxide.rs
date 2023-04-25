@@ -424,9 +424,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.2.2"
+version = "4.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9b802d85aaf3a1cdb02b224ba472ebdea62014fccfcb269b95a4d76443b5ee5a"
+checksum = "956ac1f6381d8d82ab4684768f89c0ea3afe66925ceadb4eeb3fc452ffc55d62"
 dependencies = [
  "clap_builder",
  "clap_derive",
@@ -435,9 +435,9 @@ dependencies = [
 
 [[package]]
 name = "clap_builder"
-version = "4.2.2"
+version = "4.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14a1a858f532119338887a4b8e1af9c60de8249cd7bafd68036a489e261e37b6"
+checksum = "84080e799e54cff944f4b4a4b0e71630b0e0443b25b985175c7dddc1a859b749"
 dependencies = [
  "anstream",
  "anstyle",
@@ -825,7 +825,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "710ab6a2d57038a835d66f78d5af3fa5d27c1ec4682f823b9203c48826cb0591"
 dependencies = [
  "console",
- "newline-converter 0.3.0",
+ "newline-converter",
  "similar",
 ]
 
@@ -1571,15 +1571,6 @@ checksum = "e4a24736216ec316047a1fc4252e27dabb04218aa4a3f37c6e7ddbf1f9782b54"
 
 [[package]]
 name = "newline-converter"
-version = "0.2.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f71d09d5c87634207f894c6b31b6a2b2c64ea3bdcf71bd5599fdbbe1600c00f"
-dependencies = [
- "unicode-segmentation",
-]
-
-[[package]]
-name = "newline-converter"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "47b6b097ecb1cbfed438542d16e84fd7ad9b0c76c8a65b7f9039212a3d14dc7f"
@@ -1742,7 +1733,6 @@ dependencies = [
  "oauth2",
  "open",
  "oxide-api",
- "oxide-httpmock",
  "predicates",
  "pretty_assertions",
  "reqwest",
@@ -1772,18 +1762,6 @@ dependencies = [
  "reqwest",
  "schemars",
  "serde",
- "serde_json",
- "uuid",
-]
-
-[[package]]
-name = "oxide-httpmock"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "httpmock",
- "oxide-api",
- "regex",
  "serde_json",
  "uuid",
 ]
@@ -1985,7 +1963,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#f6f957f89f0c7211afa5a2e2687b675f6919819a"
+source = "git+https://github.com/oxidecomputer/progenitor#b717086ef399b1d4cbac8fdad25dc34a0f9b7a6a"
 dependencies = [
  "anyhow",
  "built",
@@ -1995,6 +1973,7 @@ dependencies = [
  "progenitor-impl",
  "progenitor-macro",
  "project-root",
+ "rustfmt-wrapper",
  "serde",
  "serde_json",
  "serde_yaml",
@@ -2003,7 +1982,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#f6f957f89f0c7211afa5a2e2687b675f6919819a"
+source = "git+https://github.com/oxidecomputer/progenitor#b717086ef399b1d4cbac8fdad25dc34a0f9b7a6a"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2017,7 +1996,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#f6f957f89f0c7211afa5a2e2687b675f6919819a"
+source = "git+https://github.com/oxidecomputer/progenitor#b717086ef399b1d4cbac8fdad25dc34a0f9b7a6a"
 dependencies = [
  "getopts",
  "heck",
@@ -2027,7 +2006,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "regex",
- "rustfmt-wrapper",
  "schemars",
  "serde",
  "serde_json",
@@ -2040,7 +2018,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#f6f957f89f0c7211afa5a2e2687b675f6919819a"
+source = "git+https://github.com/oxidecomputer/progenitor#b717086ef399b1d4cbac8fdad25dc34a0f9b7a6a"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -3470,7 +3448,7 @@ name = "xtask"
 version = "0.0.0"
 dependencies = [
  "clap",
- "newline-converter 0.2.2",
+ "newline-converter",
  "progenitor",
  "regex",
  "rustfmt-wrapper",
