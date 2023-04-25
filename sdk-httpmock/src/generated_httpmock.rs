@@ -36,7 +36,12 @@ pub mod operations {
         }
 
         pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
-            Self(self.0.status(status).json_body(value))
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body(value),
+            )
         }
     }
 
@@ -74,11 +79,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -112,7 +129,12 @@ pub mod operations {
         }
 
         pub fn default_response(self, status: u16, value: serde_json::Value) -> Self {
-            Self(self.0.status(status).json_body(value))
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body(value),
+            )
         }
     }
 
@@ -150,11 +172,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -197,15 +231,33 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn success(self, status: u16, value: serde_json::Value) -> Self {
-            Self(self.0.status(status).json_body(value))
+            assert_eq!(status / 100u16, 2u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body(value),
+            )
         }
     }
 
@@ -249,15 +301,33 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn success(self, status: u16, value: serde_json::Value) -> Self {
-            Self(self.0.status(status).json_body(value))
+            assert_eq!(status / 100u16, 2u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body(value),
+            )
         }
     }
 
@@ -305,15 +375,33 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn success(self, status: u16, value: serde_json::Value) -> Self {
-            Self(self.0.status(status).json_body(value))
+            assert_eq!(status / 100u16, 2u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body(value),
+            )
         }
     }
 
@@ -347,11 +435,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -387,15 +487,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::GlobalImage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -437,15 +554,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::GlobalImageResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -479,15 +613,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::GlobalImage) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -522,15 +673,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::GlobalImage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -569,11 +737,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -619,15 +799,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::DiskResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -665,15 +862,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::Disk) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -712,15 +926,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Disk) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -763,11 +994,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -815,11 +1058,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -866,11 +1121,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -917,11 +1184,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -969,11 +1248,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1021,11 +1312,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1087,15 +1390,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1137,15 +1457,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::GroupResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1180,15 +1517,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Group) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1238,15 +1592,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::ImageResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1284,15 +1655,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::Image) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1331,15 +1719,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Image) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1382,11 +1787,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1426,15 +1843,32 @@ pub mod operations {
         }
 
         pub fn accepted(self, value: &types::Image) -> Self {
-            Self(self.0.status(202u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1480,15 +1914,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::InstanceResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1526,15 +1977,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::Instance) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1573,15 +2041,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Instance) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1624,11 +2109,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1680,15 +2177,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::DiskResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1735,15 +2249,32 @@ pub mod operations {
         }
 
         pub fn accepted(self, value: &types::Disk) -> Self {
-            Self(self.0.status(202u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1790,15 +2321,32 @@ pub mod operations {
         }
 
         pub fn accepted(self, value: &types::Disk) -> Self {
-            Self(self.0.status(202u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1841,15 +2389,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::ExternalIpResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1893,15 +2458,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Instance) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -1941,15 +2523,32 @@ pub mod operations {
         }
 
         pub fn accepted(self, value: &types::Instance) -> Self {
-            Self(self.0.status(202u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2004,15 +2603,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::InstanceSerialConsoleData) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2109,15 +2725,32 @@ pub mod operations {
         }
 
         pub fn accepted(self, value: &types::Instance) -> Self {
-            Self(self.0.status(202u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2157,15 +2790,32 @@ pub mod operations {
         }
 
         pub fn accepted(self, value: &types::Instance) -> Self {
-            Self(self.0.status(202u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2195,15 +2845,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::CurrentUser) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2245,15 +2912,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::GroupResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2295,15 +2979,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SshKeyResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2337,15 +3038,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::SshKey) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2381,15 +3099,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SshKey) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2429,11 +3164,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2483,15 +3230,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::InstanceNetworkInterfaceResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2533,15 +3297,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::InstanceNetworkInterface) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2585,15 +3366,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::InstanceNetworkInterface) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2641,15 +3439,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::InstanceNetworkInterface) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2697,11 +3512,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2731,15 +3558,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2773,15 +3617,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2823,15 +3684,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::ProjectResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2865,15 +3743,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::Project) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2908,15 +3803,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Project) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -2955,15 +3867,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Project) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3002,11 +3931,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3042,15 +3983,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::ProjectRolePolicy) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3090,15 +4048,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::ProjectRolePolicy) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3144,15 +4119,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SnapshotResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3190,15 +4182,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::Snapshot) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3237,15 +4246,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Snapshot) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3288,11 +4314,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3334,15 +4372,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::CertificateResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3376,15 +4431,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::Certificate) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3420,15 +4492,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Certificate) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3468,11 +4557,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3514,15 +4615,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::PhysicalDiskResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3564,15 +4682,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::RackResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3611,15 +4746,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Rack) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3661,15 +4813,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SledResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3708,15 +4877,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Sled) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3767,15 +4953,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::PhysicalDiskResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3821,15 +5024,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::IdentityProviderResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3865,15 +5085,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::User) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3918,11 +5155,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -3976,11 +5225,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4018,15 +5279,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::SamlIdentityProvider) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4067,15 +5345,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SamlIdentityProvider) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4117,15 +5412,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::IpPoolResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4159,15 +5471,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::IpPool) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4203,15 +5532,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::IpPool) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4251,15 +5597,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::IpPool) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4299,11 +5662,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4350,15 +5725,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::IpPoolRangeResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4401,15 +5793,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::IpPoolRange) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4456,11 +5865,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4490,15 +5911,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::IpPool) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4536,15 +5974,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::IpPoolRangeResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4576,15 +6031,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::IpPoolRange) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4620,11 +6092,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4680,15 +6164,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4718,15 +6219,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::FleetRolePolicy) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4760,15 +6278,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::FleetRolePolicy) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4806,15 +6341,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::RoleResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4850,15 +6402,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Role) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4900,15 +6469,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SagaResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4944,15 +6530,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Saga) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -4994,15 +6597,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SiloResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5036,15 +6656,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::Silo) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5080,15 +6717,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Silo) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5128,11 +6782,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5168,15 +6834,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5216,15 +6899,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5266,15 +6966,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::UpdateableComponentResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5316,15 +7033,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::UpdateDeploymentResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5363,15 +7097,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::UpdateDeployment) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5405,11 +7156,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5443,15 +7206,32 @@ pub mod operations {
         }
 
         pub fn accepted(self, value: &types::UpdateDeployment) -> Self {
-            Self(self.0.status(202u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5485,11 +7265,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5531,15 +7323,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SystemUpdateResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5578,15 +7387,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SystemUpdate) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5623,15 +7449,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::ComponentUpdateResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5661,15 +7504,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SystemVersion) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5715,15 +7575,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::UserResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5763,15 +7640,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::User) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5813,15 +7707,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::UserBuiltinResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5858,15 +7769,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::UserBuiltin) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5912,15 +7840,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::UserResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -5958,15 +7903,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::VpcFirewallRules) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6008,15 +7970,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::VpcFirewallRules) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6070,15 +8049,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::RouterRouteResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6124,15 +8120,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::RouterRoute) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6180,15 +8193,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::RouterRoute) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6240,15 +8270,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::RouterRoute) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6300,11 +8347,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6354,15 +8413,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::VpcRouterResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6404,15 +8480,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::VpcRouter) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6456,15 +8549,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::VpcRouter) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6512,15 +8622,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::VpcRouter) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6568,11 +8695,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6622,15 +8761,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::VpcSubnetResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6672,15 +8828,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::VpcSubnet) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6724,15 +8897,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::VpcSubnet) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6780,15 +8970,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::VpcSubnet) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6836,11 +9043,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6897,15 +9116,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::InstanceNetworkInterfaceResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6951,15 +9187,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::VpcResultsPage) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -6997,15 +9250,32 @@ pub mod operations {
         }
 
         pub fn created(self, value: &types::Vpc) -> Self {
-            Self(self.0.status(201u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -7044,15 +9314,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Vpc) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -7095,15 +9382,32 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Vpc) -> Self {
-            Self(self.0.status(200u16).json_body_obj(value))
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 
@@ -7146,11 +9450,23 @@ pub mod operations {
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            Self(self.0.status(status).json_body_obj(value))
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
     }
 }
