@@ -64,6 +64,8 @@ fn to_json(cmd: &Command) -> JsonDoc {
 #[derive(Serialize, Debug, PartialEq, Eq)]
 pub struct OutputJson {
     version: String,
+
+    #[serde(flatten)]
     commands: JsonDoc,
 }
 
