@@ -1963,7 +1963,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#819ebb2d8bfebd103322729ab12604ff8432be68"
+source = "git+https://github.com/oxidecomputer/progenitor#f6f957f89f0c7211afa5a2e2687b675f6919819a"
 dependencies = [
  "anyhow",
  "built",
@@ -1981,7 +1981,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#819ebb2d8bfebd103322729ab12604ff8432be68"
+source = "git+https://github.com/oxidecomputer/progenitor#f6f957f89f0c7211afa5a2e2687b675f6919819a"
 dependencies = [
  "bytes",
  "futures-core",
@@ -1995,10 +1995,11 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#819ebb2d8bfebd103322729ab12604ff8432be68"
+source = "git+https://github.com/oxidecomputer/progenitor#f6f957f89f0c7211afa5a2e2687b675f6919819a"
 dependencies = [
  "getopts",
  "heck",
+ "http",
  "indexmap",
  "openapiv3",
  "proc-macro2",
@@ -2017,7 +2018,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#819ebb2d8bfebd103322729ab12604ff8432be68"
+source = "git+https://github.com/oxidecomputer/progenitor#f6f957f89f0c7211afa5a2e2687b675f6919819a"
 dependencies = [
  "openapiv3",
  "proc-macro2",
