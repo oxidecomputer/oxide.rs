@@ -4,6 +4,8 @@
 
 // Copyright 2023 Oxide Computer Company
 
+#[allow(clippy::unnecessary_to_owned)]
+#[allow(clippy::to_string_in_format_args)]
 mod generated_httpmock;
 
 pub use generated_httpmock::*;

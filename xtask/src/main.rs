@@ -101,7 +101,7 @@ fn generate(
         print!("generating httpmock ... ");
         std::io::stdout().flush().unwrap();
         let code = generator.httpmock(&spec, "oxide_api").unwrap().to_string();
-        let contents = format_code(code.to_string());
+        let contents = format_code(code);
         loc += contents.matches('\n').count();
 
         let mut out_path = root_path.clone();
@@ -175,7 +175,7 @@ fn output_contents(
     verbose: bool,
 ) -> Result<(), ()> {
     if check {
-        let checked_in = std::fs::read_to_string(out_path.clone()).unwrap();
+        let checked_in = std::fs::read_to_string(out_path).unwrap();
         let checked_in = dos2unix(&checked_in);
         if checked_in != contents {
             println!("❌");
