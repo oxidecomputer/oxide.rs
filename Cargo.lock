@@ -1733,17 +1733,14 @@ dependencies = [
  "oauth2",
  "open",
  "oxide-api",
- "oxide-httpmock",
  "predicates",
  "pretty_assertions",
- "rand",
  "reqwest",
  "schemars",
  "serde",
  "serde_json",
  "serial_test",
  "tabwriter",
- "test-common",
  "tokio",
  "toml 0.7.3",
  "toml_edit",
@@ -1765,18 +1762,6 @@ dependencies = [
  "reqwest",
  "schemars",
  "serde",
- "serde_json",
- "uuid",
-]
-
-[[package]]
-name = "oxide-httpmock"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "httpmock",
- "oxide-api",
- "regex",
  "serde_json",
  "uuid",
 ]
@@ -1978,7 +1963,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#d329bc0912210ea9dccb9b171cbf51b36557cc73"
+source = "git+https://github.com/oxidecomputer/progenitor#632cfeb81f346be7a7a5bdece91b1476abafc2ac"
 dependencies = [
  "anyhow",
  "built",
@@ -1997,7 +1982,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#d329bc0912210ea9dccb9b171cbf51b36557cc73"
+source = "git+https://github.com/oxidecomputer/progenitor#632cfeb81f346be7a7a5bdece91b1476abafc2ac"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2011,7 +1996,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#d329bc0912210ea9dccb9b171cbf51b36557cc73"
+source = "git+https://github.com/oxidecomputer/progenitor#632cfeb81f346be7a7a5bdece91b1476abafc2ac"
 dependencies = [
  "getopts",
  "heck",
@@ -2033,7 +2018,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#d329bc0912210ea9dccb9b171cbf51b36557cc73"
+source = "git+https://github.com/oxidecomputer/progenitor#632cfeb81f346be7a7a5bdece91b1476abafc2ac"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -2720,18 +2705,6 @@ name = "termtree"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3369f5ac52d5eb6ab48c6b4ffdc8efbcad6b89c765749064ba298f2c68a16a76"
-
-[[package]]
-name = "test-common"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "rand",
- "schemars",
- "serde",
- "serde_json",
- "uuid",
-]
 
 [[package]]
 name = "thiserror"
