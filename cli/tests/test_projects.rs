@@ -29,6 +29,7 @@ fn text_simple_list() {
 
     Command::cargo_bin("oxide")
         .unwrap()
+        .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
         .arg("project")

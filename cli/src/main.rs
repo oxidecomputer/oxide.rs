@@ -10,6 +10,7 @@ use clap::{Command, CommandFactory, FromArgMatches};
 
 use config::Config;
 use context::Context;
+use futures::FutureExt;
 use generated_cli::{Cli, CliCommand, CliOverride};
 use oxide_api::types::{IpRange, Ipv4Range, Ipv6Range};
 
@@ -169,7 +170,7 @@ async fn main() {
             let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
 
             // TODO error handling
-            cli.execute(node.cmd.unwrap(), sm).await;
+            cli.execute(node.cmd.unwrap(), sm).boxed().await;
             Ok(())
         }
     };
