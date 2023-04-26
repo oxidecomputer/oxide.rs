@@ -14,7 +14,7 @@ use test_common::JsonMock;
 
 #[test]
 fn text_simple_list() {
-    let mut src = rand::rngs::StdRng::from_seed([42; 32]);
+    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
     let results = ProjectResultsPage {

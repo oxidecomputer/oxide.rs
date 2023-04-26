@@ -10,3 +10,6 @@ schemars = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 uuid = { workspace = true }
+
+[dev-dependencies]
+rand = { workspace = true, features = ["small_rng"] }
