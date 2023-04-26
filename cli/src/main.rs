@@ -10,7 +10,6 @@ use clap::{Command, CommandFactory, FromArgMatches};
 
 use config::Config;
 use context::Context;
-use futures::FutureExt;
 use generated_cli::{Cli, CliCommand, CliOverride};
 use oxide_api::types::{IpRange, Ipv4Range, Ipv6Range};
 
@@ -159,18 +158,22 @@ async fn main() {
         }
 
         _ => {
-            let mut node = &root;
-            let mut sm = &matches;
+            tokio::spawn(async move {
+                let mut node = &root;
+                let mut sm = &matches;
 
-            while let Some((sub_name, sub_matches)) = sm.subcommand() {
-                node = node.children.get(sub_name).unwrap();
-                sm = sub_matches;
-            }
+                while let Some((sub_name, sub_matches)) = sm.subcommand() {
+                    node = node.children.get(sub_name).unwrap();
+                    sm = sub_matches;
+                }
 
-            let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
+                let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
 
-            // TODO error handling
-            cli.execute(node.cmd.unwrap(), sm).boxed().await;
+                // TODO error handling
+                cli.execute(node.cmd.unwrap(), sm).await;
+            })
+            .await
+            .unwrap();
             Ok(())
         }
     };
