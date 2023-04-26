@@ -9,34 +9,33 @@ use httpmock::MockServer;
 use oxide_api::types::{Project, ProjectResultsPage};
 use oxide_httpmock::MockServerExt;
 use predicates::prelude::*;
+use rand::SeedableRng;
+use test_common::JsonMock;
 
-/// Validate `oxide api` for a simple GET with parameters.
 #[test]
-fn text_xxx() {
+fn text_simple_list() {
+    let mut src = rand::rngs::StdRng::from_seed([42; 32]);
     let server = MockServer::start();
 
+    let results = ProjectResultsPage {
+        items: Vec::<Project>::mock_value(&mut src).unwrap(),
+        next_page: None,
+    };
+
     let mock = server.project_list(|when, then| {
-        when.limit(10.try_into().unwrap());
-        then.ok(&ProjectResultsPage {
-            items: vec![Project::builder()
-                .name("proj")
-                .description("dummy description")
-                .id(uuid::Uuid::new_v4())
-                .try_into()
-                .unwrap()],
-            next_page: None,
-        });
+        when.into_inner().any_request();
+        then.ok(&results);
     });
 
     Command::cargo_bin("oxide")
         .unwrap()
         .env("OXIDE_HOST", server.url(""))
         .env("OXIDE_TOKEN", "fake-token")
-        .arg("api")
-        .arg("/simple/test/call?param1=value1&param2=value2")
+        .arg("project")
+        .arg("list")
         .assert()
         .success()
-        .stdout(predicate::str::diff("{\n  \"a\": \"b\"\n}\n"));
+        .stdout(predicate::str::diff(format!("success\n{:#?}\n", results)));
 
     mock.assert();
 }

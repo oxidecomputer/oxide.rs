@@ -1733,14 +1733,17 @@ dependencies = [
  "oauth2",
  "open",
  "oxide-api",
+ "oxide-httpmock",
  "predicates",
  "pretty_assertions",
+ "rand",
  "reqwest",
  "schemars",
  "serde",
  "serde_json",
  "serial_test",
  "tabwriter",
+ "test-common",
  "tokio",
  "toml 0.7.3",
  "toml_edit",
@@ -1762,6 +1765,18 @@ dependencies = [
  "reqwest",
  "schemars",
  "serde",
+ "serde_json",
+ "uuid",
+]
+
+[[package]]
+name = "oxide-httpmock"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "httpmock",
+ "oxide-api",
+ "regex",
  "serde_json",
  "uuid",
 ]
@@ -2705,6 +2720,18 @@ name = "termtree"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3369f5ac52d5eb6ab48c6b4ffdc8efbcad6b89c765749064ba298f2c68a16a76"
+
+[[package]]
+name = "test-common"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "rand",
+ "schemars",
+ "serde",
+ "serde_json",
+ "uuid",
+]
 
 [[package]]
 name = "thiserror"
