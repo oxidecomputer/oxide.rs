@@ -1,6 +1,6 @@
 {
-  "version": "0.1.0",
   "name": "oxide",
+  "version": "0.1.0",
   "subcommands": [
     {
       "name": "api",
