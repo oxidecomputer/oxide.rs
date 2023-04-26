@@ -158,6 +158,8 @@ async fn main() {
         }
 
         _ => {
+            // Spawn a task so we get this potentially chunky Future off the
+            // main thread's stack.
             tokio::spawn(async move {
                 let mut node = &root;
                 let mut sm = &matches;
