@@ -93,7 +93,7 @@ jobs:
 
       - name: Update pull request
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ inputs.reflector_access_token }}
         run: |
           git checkout integration
           git pull origin integration
