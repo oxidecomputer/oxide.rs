@@ -22,6 +22,8 @@ pub struct JsonArg {
     long: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     short: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    values: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     help: Option<String>,
 }
@@ -51,6 +53,11 @@ fn to_json(cmd: &Command) -> JsonDoc {
         .map(|arg| JsonArg {
             short: arg.get_short().map(|char| char.to_string()),
             long: arg.get_long().map(ToString::to_string),
+            values: arg
+                .get_possible_values()
+                .into_iter()
+                .map(|value| value.get_name().to_string())
+                .collect(),
             help: arg.get_help().map(ToString::to_string),
         })
         .collect::<Vec<_>>();
