@@ -327,7 +327,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameSortMode::NameAscending.to_string(),
+                        ]),
+                        |s| types::NameSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about(
                 "List system-wide images\n\nReturns a list of all the system-wide images. \
@@ -404,7 +409,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List disks")
     }
@@ -616,7 +628,17 @@ impl Cli {
                 clap::Arg::new("metric")
                     .long("metric")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::DiskMetricName)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::DiskMetricName::Activated.to_string(),
+                            types::DiskMetricName::Flush.to_string(),
+                            types::DiskMetricName::Read.to_string(),
+                            types::DiskMetricName::ReadBytes.to_string(),
+                            types::DiskMetricName::Write.to_string(),
+                            types::DiskMetricName::WriteBytes.to_string(),
+                        ]),
+                        |s| types::DiskMetricName::try_from(s).unwrap(),
+                    )),
             )
             .arg(
                 clap::Arg::new("end-time")
@@ -662,7 +684,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List groups")
     }
@@ -709,7 +736,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about(
                 "List images\n\nList images which are global or scoped to the specified project. \
@@ -837,7 +871,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List instances")
     }
@@ -967,7 +1008,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List an instance's disks")
     }
@@ -1258,7 +1306,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("Fetch the silo\u{a0}groups the current user belongs to")
     }
@@ -1276,7 +1329,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about(
                 "List SSH public keys\n\nLists SSH public keys for the currently authenticated \
@@ -1371,7 +1431,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List network interfaces")
     }
@@ -1575,7 +1642,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List projects")
     }
@@ -1689,7 +1763,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List snapshots")
     }
@@ -1776,7 +1857,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about(
                 "List system-wide certificates\n\nReturns a list of all the system-wide \
@@ -1803,7 +1891,12 @@ impl Cli {
                 clap::Arg::new("service")
                     .long("service")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::ServiceUsingCertificate))
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::ServiceUsingCertificate::ExternalApi.to_string(),
+                        ]),
+                        |s| types::ServiceUsingCertificate::try_from(s).unwrap(),
+                    ))
                     .help("The service using this certificate"),
             )
             .about(
@@ -1850,7 +1943,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List physical disks")
     }
@@ -1868,7 +1966,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List racks")
     }
@@ -1898,7 +2001,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List sleds")
     }
@@ -1935,7 +2043,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List physical disks attached to sleds")
     }
@@ -1960,7 +2073,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List a silo's IDPs_name")
     }
@@ -2131,7 +2251,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List IP pools")
     }
@@ -2277,7 +2404,14 @@ impl Cli {
                 clap::Arg::new("metric-name")
                     .long("metric-name")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::SystemMetricName)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SystemMetricName::VirtualDiskSpaceProvisioned.to_string(),
+                            types::SystemMetricName::CpusProvisioned.to_string(),
+                            types::SystemMetricName::RamProvisioned.to_string(),
+                        ]),
+                        |s| types::SystemMetricName::try_from(s).unwrap(),
+                    )),
             )
             .arg(
                 clap::Arg::new("end-time")
@@ -2362,7 +2496,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List sagas")
     }
@@ -2391,7 +2530,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about(
                 "List silos\n\nLists silos that are discoverable based on the current permissions.",
@@ -2430,7 +2576,13 @@ impl Cli {
                 clap::Arg::new("identity-mode")
                     .long("identity-mode")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::SiloIdentityMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SiloIdentityMode::SamlJit.to_string(),
+                            types::SiloIdentityMode::LocalOnly.to_string(),
+                        ]),
+                        |s| types::SiloIdentityMode::try_from(s).unwrap(),
+                    )),
             )
             .arg(
                 clap::Arg::new("name")
@@ -2502,7 +2654,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("View version and update status of component tree")
     }
@@ -2520,7 +2677,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List all update deployments")
     }
@@ -2569,7 +2731,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List all updates")
     }
@@ -2620,7 +2787,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List users in a silo")
     }
@@ -2657,7 +2829,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameSortMode::NameAscending.to_string(),
+                        ]),
+                        |s| types::NameSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List built-in users")
     }
@@ -2692,7 +2869,12 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::IdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List users")
     }
@@ -2768,7 +2950,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -2969,7 +3158,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -3132,7 +3328,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -3325,7 +3528,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .arg(
                 clap::Arg::new("vpc")
@@ -3357,7 +3567,14 @@ impl Cli {
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::NameOrIdSortMode)),
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    )),
             )
             .about("List VPCs")
     }
