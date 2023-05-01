@@ -77,8 +77,8 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --local user.name "reflector[bot]"
-          git config --local user.email "${{ inputs.reflector_user_id }}+reflector[bot]@users.noreply.github.com"
+          git config --local user.name "oxide-reflector-bot[bot]"
+          git config --local user.email "${{ inputs.reflector_user_id }}+oxide-reflector-bot[bot]@users.noreply.github.com"
 
           # Detect specific changes that will be committed back
           git diff --quiet cli/docs/cli.json || docsUpdate=$?
@@ -93,7 +93,7 @@ jobs:
 
       - name: Update pull request
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ inputs.reflector_access_token }}
         run: |
           git checkout integration
           git pull origin integration

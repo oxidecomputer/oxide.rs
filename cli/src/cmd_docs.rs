@@ -4,6 +4,7 @@
 
 // Copyright 2023 Oxide Computer Company
 
+use super::cmd_version::built_info;
 use anyhow::Result;
 use clap::{Command, Parser};
 use serde::Serialize;
@@ -21,6 +22,8 @@ pub struct JsonArg {
     long: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     short: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    values: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     help: Option<String>,
 }
@@ -29,6 +32,8 @@ pub struct JsonArg {
 #[derive(Serialize, Debug, PartialEq, Eq)]
 pub struct JsonDoc {
     name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    version: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     about: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -48,12 +53,26 @@ fn to_json(cmd: &Command) -> JsonDoc {
         .map(|arg| JsonArg {
             short: arg.get_short().map(|char| char.to_string()),
             long: arg.get_long().map(ToString::to_string),
+            values: arg
+                .get_possible_values()
+                .into_iter()
+                .map(|value| value.get_name().to_string())
+                .collect(),
             help: arg.get_help().map(ToString::to_string),
         })
         .collect::<Vec<_>>();
     args.sort_unstable();
+
+    let name = cmd.get_name().to_string();
+    let version: Option<String> = if name == "oxide" {
+        Some(built_info::PKG_VERSION.to_string())
+    } else {
+        None
+    };
+
     JsonDoc {
-        name: cmd.get_name().to_string(),
+        name,
+        version,
         about: cmd.get_about().map(ToString::to_string),
         long_about: cmd.get_long_about().map(ToString::to_string),
         args,
@@ -63,7 +82,8 @@ fn to_json(cmd: &Command) -> JsonDoc {
 
 impl CmdDocs {
     pub async fn run(&self, app: &Command) -> Result<()> {
-        let pretty_json = serde_json::to_string_pretty(&to_json(app))?;
+        let json_doc = to_json(app);
+        let pretty_json = serde_json::to_string_pretty(&json_doc)?;
         println!("{}", pretty_json);
         Ok(())
     }

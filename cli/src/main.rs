@@ -159,23 +159,30 @@ async fn main() {
         }
 
         _ => {
-            let mut node = &root;
-            let mut sm = &matches;
+            // Spawn a task so we get this potentially chunky Future off the
+            // main thread's stack.
+            tokio::spawn(async move {
+                let mut node = &root;
+                let mut sm = &matches;
 
-            while let Some((sub_name, sub_matches)) = sm.subcommand() {
-                node = node.children.get(sub_name).unwrap();
-                sm = sub_matches;
-            }
+                while let Some((sub_name, sub_matches)) = sm.subcommand() {
+                    node = node.children.get(sub_name).unwrap();
+                    sm = sub_matches;
+                }
 
-            let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
+                let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
 
-            // TODO error handling
-            cli.execute(node.cmd.unwrap(), sm).await;
+                // TODO error handling
+                cli.execute(node.cmd.unwrap(), sm).await;
+            })
+            .await
+            .unwrap();
             Ok(())
         }
     };
 
-    if result.is_err() {
+    if let Err(e) = result {
+        println!("error: {}", e);
         std::process::exit(1)
     }
 }

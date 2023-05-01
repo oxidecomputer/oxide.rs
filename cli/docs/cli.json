@@ -1,5 +1,6 @@
 {
   "name": "oxide",
+  "version": "0.1.0",
   "subcommands": [
     {
       "name": "api",
@@ -126,6 +127,9 @@
             },
             {
               "long": "service",
+              "values": [
+                "external_api"
+              ],
               "help": "The service using this certificate"
             }
           ]
@@ -148,7 +152,12 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -175,7 +184,10 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -217,7 +229,12 @@
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "sort-by"
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
                 }
               ]
             },
@@ -343,7 +360,12 @@
               "help": "Name or ID of the project"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -366,7 +388,15 @@
                   "help": "Maximum number of items returned by a single call"
                 },
                 {
-                  "long": "metric"
+                  "long": "metric",
+                  "values": [
+                    "activated",
+                    "flush",
+                    "read",
+                    "read_bytes",
+                    "write",
+                    "write_bytes"
+                  ]
                 },
                 {
                   "long": "project",
@@ -412,7 +442,10 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
             }
           ]
         }
@@ -465,6 +498,10 @@
           "args": [
             {
               "long": "include-silo-images",
+              "values": [
+                "true",
+                "false"
+              ],
               "help": "Flag used to indicate if silo scoped images should be included when listing project images. Only valid when `project` is provided."
             },
             {
@@ -476,7 +513,12 @@
               "help": "Name or ID of the project"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -538,6 +580,10 @@
             },
             {
               "long": "start",
+              "values": [
+                "true",
+                "false"
+              ],
               "help": "Should this instance be started upon creation; true by default."
             },
             {
@@ -616,7 +662,12 @@
                   "help": "Name or ID of the project"
                 },
                 {
-                  "long": "sort-by"
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
                 }
               ]
             }
@@ -654,7 +705,12 @@
               "help": "Name or ID of the project"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -728,7 +784,12 @@
                   "help": "Name or ID of the project, only required if `instance` is provided as a `Name`"
                 },
                 {
-                  "long": "sort-by"
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
                 }
               ]
             },
@@ -752,6 +813,10 @@
                 },
                 {
                   "long": "primary",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
                   "help": "Make a secondary interface the instance's primary interface.\n\nIf applied to a secondary interface, that interface will become the primary on the next reboot of the instance. Note that this may have implications for routing between instances, as the new primary interface will be on a distinct subnet from the previous primary interface.\n\nNote that this can only be used to select a new primary interface for an instance. Requests to change the primary interface into a secondary will return an error."
                 },
                 {
@@ -872,7 +937,12 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -993,7 +1063,10 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
             }
           ]
         }
@@ -1046,7 +1119,12 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -1115,7 +1193,10 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -1143,7 +1224,10 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -1173,10 +1257,18 @@
               "long": "description"
             },
             {
-              "long": "discoverable"
+              "long": "discoverable",
+              "values": [
+                "true",
+                "false"
+              ]
             },
             {
-              "long": "identity-mode"
+              "long": "identity-mode",
+              "values": [
+                "saml_jit",
+                "local_only"
+              ]
             },
             {
               "long": "name"
@@ -1209,7 +1301,12 @@
                   "help": "Name or ID of the silo"
                 },
                 {
-                  "long": "sort-by"
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
                 }
               ]
             },
@@ -1335,7 +1432,12 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -1380,7 +1482,10 @@
                   "help": "Name or ID of the silo"
                 },
                 {
-                  "long": "sort-by"
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
                 }
               ]
             },
@@ -1428,7 +1533,10 @@
               "help": "The sled's unique ID."
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -1441,7 +1549,10 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -1507,7 +1618,12 @@
               "help": "Name or ID of the project"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -1560,7 +1676,10 @@
               "help": "Maximum number of items returned by a single call"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "id_ascending"
+              ]
             }
           ]
         }
@@ -1656,7 +1775,12 @@
               "help": "Name or ID of the project"
             },
             {
-              "long": "sort-by"
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
             }
           ]
         },
@@ -1714,7 +1838,12 @@
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
-                  "long": "sort-by"
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
                 },
                 {
                   "long": "vpc",
@@ -1788,7 +1917,12 @@
                       "help": "Name or ID of the router"
                     },
                     {
-                      "long": "sort-by"
+                      "long": "sort-by",
+                      "values": [
+                        "name_ascending",
+                        "name_descending",
+                        "id_ascending"
+                      ]
                     },
                     {
                       "long": "vpc",
@@ -1954,7 +2088,12 @@
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                 },
                 {
-                  "long": "sort-by"
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
                 },
                 {
                   "long": "vpc",
@@ -1978,7 +2117,12 @@
                       "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
                     },
                     {
-                      "long": "sort-by"
+                      "long": "sort-by",
+                      "values": [
+                        "name_ascending",
+                        "name_descending",
+                        "id_ascending"
+                      ]
                     },
                     {
                       "long": "subnet",
