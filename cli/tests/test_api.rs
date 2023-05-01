@@ -19,9 +19,11 @@ fn test_simple_api_call() {
             .path("/simple/test/call")
             .query_param("param1", "value1")
             .query_param("param2", "value2");
-        then.status(http::StatusCode::OK.as_u16()).json_body(json!({
-            "a": "b"
-        }));
+        then.status(http::StatusCode::OK.as_u16()).json_body(json!(
+            {
+                "a": "b"
+            }
+        ));
     });
 
     Command::cargo_bin("oxide")

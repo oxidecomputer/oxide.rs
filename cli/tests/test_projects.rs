@@ -13,7 +13,7 @@ use rand::SeedableRng;
 use test_common::JsonMock;
 
 #[test]
-fn text_simple_list() {
+fn test_simple_list() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -39,4 +39,102 @@ fn text_simple_list() {
         .stdout(predicate::str::diff(format!("success\n{:#?}\n", results)));
 
     mock.assert();
+}
+
+#[test]
+fn test_list_paginated() {
+    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let server = MockServer::start();
+
+    let results = (0..10)
+        .map(|_| Project::mock_value(&mut src).unwrap())
+        .collect::<Vec<_>>();
+
+    let mock_p3 = server.project_list(|when, then| {
+        when.page_token("page-3");
+        then.ok(&ProjectResultsPage {
+            items: Vec::new(),
+            next_page: None,
+        });
+    });
+    let mock_p2 = server.project_list(|when, then| {
+        when.page_token("page-2");
+        then.ok(&ProjectResultsPage {
+            items: results[5..].into(),
+            next_page: Some("page-3".to_string()),
+        });
+    });
+    let mock_p1 = server.project_list(|when, then| {
+        when.into_inner().any_request();
+        then.ok(&ProjectResultsPage {
+            items: results[0..5].into(),
+            next_page: Some("page-2".to_string()),
+        });
+    });
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("project")
+        .arg("list")
+        .assert()
+        .success()
+        .stdout(predicate::str::diff(format!("success\n{:#?}\n", results)));
+
+    mock_p1.assert();
+    mock_p2.assert();
+    mock_p3.assert();
+}
+
+#[test]
+fn test_list_paginated_fail() {
+    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let server = MockServer::start();
+
+    let results = (0..10)
+        .map(|_| Project::mock_value(&mut src).unwrap())
+        .collect::<Vec<_>>();
+
+    let mock_p3 = server.project_list(|when, then| {
+        when.page_token("page-3");
+        then.client_error(
+            400,
+            &oxide_api::types::Error {
+                error_code: None,
+                message: "".to_string(),
+                request_id: "".to_string(),
+            },
+        );
+    });
+    let mock_p2 = server.project_list(|when, then| {
+        when.page_token("page-2");
+        then.ok(&ProjectResultsPage {
+            items: results[5..].into(),
+            next_page: Some("page-3".to_string()),
+        });
+    });
+    let mock_p1 = server.project_list(|when, then| {
+        when.into_inner().any_request();
+        then.ok(&ProjectResultsPage {
+            items: results[0..5].into(),
+            next_page: Some("page-2".to_string()),
+        });
+    });
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("project")
+        .arg("list")
+        .assert()
+        .success()
+        .stdout(predicate::str::diff(format!("success\n{:#?}\n", results)));
+
+    mock_p1.assert();
+    mock_p2.assert();
+    mock_p3.assert();
 }

@@ -479,7 +479,7 @@ fn mock_string(
             return Ok(serde_json::to_value(uuid).unwrap());
         }
         Some("date-time") => {
-            let dt = NaiveDate::from_num_days_from_ce_opt(src.gen_range(700_000..800_000))
+            let dt = NaiveDate::from_num_days_from_ce_opt(src.gen_range(710_000..740_000))
                 .unwrap()
                 .and_time(
                     NaiveTime::from_num_seconds_from_midnight_opt(
@@ -510,7 +510,42 @@ fn mock_string(
     // 3. Use the TWL as a string source
     // 4. Randomly choose among e.g. kebab, snake, space, pascal, etc.
 
-    Ok(Value::String("cheese".to_string()))
+    const TWL_Q_QU: [&str; 30] = [
+        "buqsha",
+        "buqshas",
+        "faqir",
+        "faqirs",
+        "qaid",
+        "qaids",
+        "qanat",
+        "qanats",
+        "qat",
+        "qats",
+        "qindar",
+        "qindarka",
+        "qindarkas",
+        "qindars",
+        "qintar",
+        "qintars",
+        "qiviut",
+        "qiviuts",
+        "qoph",
+        "qophs",
+        "qwerty",
+        "qwertys",
+        "sheqalim",
+        "sheqel",
+        "suq",
+        "suqs",
+        "tranq",
+        "tranqs",
+        "umiaq",
+        "umiaqs",
+    ];
+
+    Ok(Value::String(
+        TWL_Q_QU[src.gen_range(0..TWL_Q_QU.len())].to_string(),
+    ))
 }
 
 fn mock_array(
