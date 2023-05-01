@@ -117,7 +117,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a new system-wide x.509 certificate.\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.",
+          "about": "Create a new system-wide x.509 certificate\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.",
           "args": [
             {
               "long": "description"
@@ -473,7 +473,7 @@
         },
         {
           "name": "promote",
-          "about": "Promote a project image to be visible to all projects in the silo",
+          "about": "Promote a project image\n\nPromote a project image to be visible to all projects in the silo",
           "args": [
             {
               "long": "image",
@@ -916,7 +916,7 @@
             },
             {
               "name": "list",
-              "about": "List ranges for an IP pool\n\nRanges are ordered by their first address.",
+              "about": "List ranges for an IP pool\n\nList ranges for an IP pool. Ranges are ordered by their first address.",
               "args": [
                 {
                   "long": "limit",
@@ -948,11 +948,11 @@
               "subcommands": [
                 {
                   "name": "add",
-                  "about": "Add a range to an IP pool used for Oxide services."
+                  "about": "Add a range to an IP pool used for Oxide services"
                 },
                 {
                   "name": "list",
-                  "about": "List ranges for the IP pool used for Oxide services.\n\nRanges are ordered by their first address.",
+                  "about": "List ranges for the IP pool used for Oxide services\n\nList ranges for the IP pool used for Oxide services. Ranges are ordered by their first address.",
                   "args": [
                     {
                       "long": "limit",
@@ -964,11 +964,11 @@
             },
             {
               "name": "remove",
-              "about": "Remove a range from an IP pool used for Oxide services."
+              "about": "Remove a range from an IP pool used for Oxide services"
             },
             {
               "name": "view",
-              "about": "Fetch the IP pool used for Oxide services."
+              "about": "Fetch the IP pool used for Oxide services"
             }
           ]
         },
@@ -1162,36 +1162,6 @@
       ]
     },
     {
-      "name": "saga",
-      "subcommands": [
-        {
-          "name": "list",
-          "about": "List sagas",
-          "args": [
-            {
-              "long": "limit",
-              "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "sort-by",
-              "values": [
-                "id_ascending"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "view",
-          "about": "Fetch a saga",
-          "args": [
-            {
-              "long": "saga-id"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "name": "silo",
       "subcommands": [
         {
@@ -1200,7 +1170,7 @@
           "args": [
             {
               "long": "admin-group-name",
-              "help": "If set, this group will be created during Silo creation and granted the \"Silo Admin\" role. Identity providers can assert that users belong to this group and those users can log in and further initialize the Silo.\n\nNote that if configuring a SAML based identity provider, group_attribute_name must be set for users to be considered part of a group. See [`SamlIdentityProviderCreate`] for more information."
+              "help": "If set, this group will be created during Silo creation and granted the \"Silo Admin\" role. Identity providers can assert that users belong to this group and those users can log in and further initialize the Silo.\n\nNote that if configuring a SAML based identity provider, group_attribute_name must be set for users to be considered part of a group. See `SamlIdentityProviderCreate` for more information."
             },
             {
               "long": "description"
@@ -1239,7 +1209,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List a silo's IDPs_name",
+              "about": "List a silo's IdP's name",
               "args": [
                 {
                   "long": "limit",
@@ -1316,7 +1286,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create a SAML IDP",
+                  "about": "Create a SAML IdP",
                   "args": [
                     {
                       "long": "acs-url",
@@ -1356,7 +1326,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Fetch a SAML IDP",
+                  "about": "Fetch a SAML IdP",
                   "args": [
                     {
                       "long": "provider",
@@ -1653,7 +1623,7 @@
             },
             {
               "long": "ipv6-prefix",
-              "help": "The IPv6 prefix for this VPC.\n\nAll IPv6 subnets created from this VPC must be taken from this range, which sould be a Unique Local Address in the range `fd00::/48`. The default VPC Subnet will have the first `/64` range from this prefix."
+              "help": "The IPv6 prefix for this VPC\n\nAll IPv6 subnets created from this VPC must be taken from this range, which should be a Unique Local Address in the range `fd00::/48`. The default VPC Subnet will have the first `/64` range from this prefix."
             },
             {
               "long": "name"
@@ -1957,7 +1927,7 @@
             },
             {
               "name": "view",
-              "about": "Get a router",
+              "about": "Fetch a router",
               "args": [
                 {
                   "long": "project",
@@ -2026,7 +1996,7 @@
             },
             {
               "name": "list",
-              "about": "Fetch a subnet",
+              "about": "List subnets",
               "args": [
                 {
                   "long": "limit",

@@ -312,8 +312,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SledPhysicalDiskList => Some("sled disk-led"),
         CliCommand::SystemPolicyView => Some("system policy view"),
         CliCommand::SystemPolicyUpdate => Some("system policy update"),
-        CliCommand::SagaList => Some("saga list"),
-        CliCommand::SagaView => Some("saga view"),
 
         CliCommand::CurrentUserView => Some("current-user view"),
         CliCommand::CurrentUserGroups => Some("current-user groups"),
