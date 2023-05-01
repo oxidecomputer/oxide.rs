@@ -6431,134 +6431,6 @@ pub mod operations {
         }
     }
 
-    pub struct SagaListWhen(httpmock::When);
-    impl SagaListWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/sagas$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
-        }
-
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
-        }
-
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
-        }
-    }
-
-    pub struct SagaListThen(httpmock::Then);
-    impl SagaListThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::SagaResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct SagaViewWhen(httpmock::When);
-    impl SagaViewWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/sagas/.*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn saga_id(self, value: &uuid::Uuid) -> Self {
-            let re =
-                regex::Regex::new(&format!("^/v1/system/sagas/{}$", value.to_string())).unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct SagaViewThen(httpmock::Then);
-    impl SagaViewThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::Saga) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
     pub struct SiloListWhen(httpmock::When);
     impl SiloListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -9811,12 +9683,6 @@ pub trait MockServerExt {
     fn role_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::RoleViewWhen, operations::RoleViewThen);
-    fn saga_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SagaListWhen, operations::SagaListThen);
-    fn saga_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SagaViewWhen, operations::SagaViewThen);
     fn silo_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SiloListWhen, operations::SiloListThen);
@@ -11202,30 +11068,6 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::RoleViewWhen::new(when),
                 operations::RoleViewThen::new(then),
-            )
-        })
-    }
-
-    fn saga_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SagaListWhen, operations::SagaListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SagaListWhen::new(when),
-                operations::SagaListThen::new(then),
-            )
-        })
-    }
-
-    fn saga_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SagaViewWhen, operations::SagaViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SagaViewWhen::new(when),
-                operations::SagaViewThen::new(then),
             )
         })
     }

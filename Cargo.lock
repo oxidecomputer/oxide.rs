@@ -1761,7 +1761,7 @@ dependencies = [
  "futures",
  "progenitor-client",
  "rand",
- "regress",
+ "regress 0.5.0",
  "reqwest",
  "schemars",
  "serde",
@@ -1978,7 +1978,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#6a515c304f737fc9a06f1f81ec3d8bbd026b38bc"
+source = "git+https://github.com/oxidecomputer/progenitor#235445e6b129be668fb720f42cdef8ed917b60f5"
 dependencies = [
  "anyhow",
  "built",
@@ -1997,7 +1997,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#6a515c304f737fc9a06f1f81ec3d8bbd026b38bc"
+source = "git+https://github.com/oxidecomputer/progenitor#235445e6b129be668fb720f42cdef8ed917b60f5"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2011,7 +2011,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#6a515c304f737fc9a06f1f81ec3d8bbd026b38bc"
+source = "git+https://github.com/oxidecomputer/progenitor#235445e6b129be668fb720f42cdef8ed917b60f5"
 dependencies = [
  "getopts",
  "heck",
@@ -2033,7 +2033,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.2.1-dev"
-source = "git+https://github.com/oxidecomputer/progenitor#6a515c304f737fc9a06f1f81ec3d8bbd026b38bc"
+source = "git+https://github.com/oxidecomputer/progenitor#235445e6b129be668fb720f42cdef8ed917b60f5"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -2146,6 +2146,16 @@ name = "regress"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d995d590bd8ec096d1893f414bf3f5e8b0ee4c9eed9a5642b9766ef2c8e2e8e9"
+dependencies = [
+ "hashbrown 0.13.2",
+ "memchr",
+]
+
+[[package]]
+name = "regress"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "82a9ecfa0cb04d0b04dddb99b8ccf4f66bc8dfd23df694b398570bd8ae3a50fb"
 dependencies = [
  "hashbrown 0.13.2",
  "memchr",
@@ -2973,7 +2983,7 @@ checksum = "497961ef93d974e23eb6f433eb5fe1b7930b659f06d12dec6fc44a8f554c0bba"
 [[package]]
 name = "typify"
 version = "0.0.12-dev"
-source = "git+https://github.com/oxidecomputer/typify#8d505f920c0865ead018db360d5c20e7cb668519"
+source = "git+https://github.com/oxidecomputer/typify#20b5ba40eaab9254831b4e18a18a9a428ab45daa"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -2982,13 +2992,13 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.0.12-dev"
-source = "git+https://github.com/oxidecomputer/typify#8d505f920c0865ead018db360d5c20e7cb668519"
+source = "git+https://github.com/oxidecomputer/typify#20b5ba40eaab9254831b4e18a18a9a428ab45daa"
 dependencies = [
  "heck",
  "log",
  "proc-macro2",
  "quote",
- "regress",
+ "regress 0.6.0",
  "schemars",
  "serde_json",
  "syn 2.0.11",
@@ -2999,7 +3009,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.0.12-dev"
-source = "git+https://github.com/oxidecomputer/typify#8d505f920c0865ead018db360d5c20e7cb668519"
+source = "git+https://github.com/oxidecomputer/typify#20b5ba40eaab9254831b4e18a18a9a428ab45daa"
 dependencies = [
  "proc-macro2",
  "quote",
