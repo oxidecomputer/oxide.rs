@@ -252,6 +252,22 @@ fn mock_schema_object(
             mock_schema(schema, definitions, src)
         }
 
+        // one way that Option is generated
+        SchemaObject {
+            metadata: _,
+            instance_type: Some(SingleOrVec::Single(instance_type)),
+            format: _,
+            enum_values: None,
+            const_value: None,
+            subschemas: None,
+            number: _,
+            string: _,
+            array: _,
+            object: _,
+            reference: None,
+            extensions: _,
+        } if instance_type.as_ref() == &InstanceType::Null => Ok(json! {null}),
+
         s => todo!("schema {}", serde_json::to_string_pretty(s).unwrap()),
     }
 }
