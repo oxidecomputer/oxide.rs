@@ -23,6 +23,7 @@ use oxide_api::Client;
 use oxide_api::ClientDisksExt;
 use oxide_api::ClientImagesExt;
 use oxide_api::ClientSnapshotsExt;
+use oxide_api::ResponseValue;
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
@@ -110,6 +111,34 @@ fn get_disk_size(path: &str, size: Option<u64>) -> Result<u64> {
     };
 
     Ok(disk_size)
+}
+
+fn err_if_object_exists<T>(
+    error_msg: String,
+    send_response: Result<ResponseValue<T>, oxide_api::Error<oxide_api::types::Error>>,
+) -> Result<()> {
+    match send_response {
+        Ok(_) => {
+            bail!(error_msg);
+        }
+
+        Err(e) => {
+            match &e {
+                // Match against 404
+                oxide_api::Error::ErrorResponse(response_value) => {
+                    if response_value.status() == 404 {
+                        // ok
+                    } else {
+                        bail!(e);
+                    }
+                }
+
+                // Bail on any other error
+                _ => bail!(e),
+            }
+        }
+    }
+    Ok(())
 }
 
 // Upload to Nexus in 512k byte chunks
@@ -203,10 +232,42 @@ impl CmdDiskImport {
             }
         }
 
-        // TODO validate that objects don't exist already:
-        // disk
+        // validate that objects don't exist already
+        err_if_object_exists(
+            format!("disk {:?} exists already", &self.disk_name),
+            client
+                .disk_view()
+                .project(&self.project)
+                .disk(NameOrId::Name(self.disk_name.clone()))
+                .send()
+                .await,
+        )?;
+
         // snapshot
+        if let Some(snapshot_name) = &self.snapshot_name {
+            err_if_object_exists(
+                format!("snapshot {:?} exists already", &snapshot_name),
+                client
+                    .snapshot_view()
+                    .project(&self.project)
+                    .snapshot(NameOrId::Name(snapshot_name.clone()))
+                    .send()
+                    .await,
+            )?;
+        }
+
         // image
+        if let Some(image_name) = &self.image_name {
+            err_if_object_exists(
+                format!("image {:?} exists already", &image_name),
+                client
+                    .image_view()
+                    .project(&self.project)
+                    .image(NameOrId::Name(image_name.clone()))
+                    .send()
+                    .await,
+            )?;
+        }
 
         let disk_size = get_disk_size(&self.path, self.disk_size)?;
 

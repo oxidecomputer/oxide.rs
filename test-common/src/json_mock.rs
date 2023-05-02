@@ -176,6 +176,24 @@ fn mock_schema_object(
             extensions: _,
         } if instance_type.as_ref() == &InstanceType::String => mock_string(format, string, src),
 
+        // UUID
+        SchemaObject {
+            metadata: _,
+            instance_type: Some(SingleOrVec::Vec(vec)),
+            format,
+            enum_values: None,
+            const_value: None,
+            subschemas: None,
+            number: _,
+            string,
+            array: _,
+            object: _,
+            reference: None,
+            extensions: _,
+        } if matches!(&vec[..], &[InstanceType::String, InstanceType::Null]) => {
+            mock_string(format, string, src)
+        }
+
         // Array
         SchemaObject {
             metadata: _,
@@ -208,6 +226,7 @@ fn mock_schema_object(
         } if instance_type.as_ref() == &InstanceType::Object => {
             mock_object(object, definitions, src)
         }
+
         SchemaObject {
             metadata: _,
             instance_type: None,
