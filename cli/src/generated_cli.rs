@@ -121,8 +121,6 @@ impl Cli {
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
             CliCommand::RoleList => Self::cli_role_list(),
             CliCommand::RoleView => Self::cli_role_view(),
-            CliCommand::SagaList => Self::cli_saga_list(),
-            CliCommand::SagaView => Self::cli_saga_view(),
             CliCommand::SiloList => Self::cli_silo_list(),
             CliCommand::SiloCreate => Self::cli_silo_create(),
             CliCommand::SiloView => Self::cli_silo_view(),
@@ -259,7 +257,7 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::UserId)),
             )
-            .about("Authenticate a user (i.e., log in) via username and password")
+            .about("Authenticate a user via username and password")
     }
 
     pub fn cli_login_saml_begin() -> clap::Command {
@@ -296,7 +294,7 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about("Authenticate a user (i.e., log in) via SAML")
+            .about("Authenticate a user via SAML")
     }
 
     pub fn cli_logout() -> clap::Command {
@@ -537,7 +535,10 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the project"),
             )
-            .about("Start the process of importing blocks into a disk")
+            .about(
+                "Start importing blocks into a disk\n\nStart the process of importing blocks into \
+                 a disk",
+            )
     }
 
     pub fn cli_disk_bulk_write_import_stop() -> clap::Command {
@@ -556,7 +557,10 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the project"),
             )
-            .about("Stop the process of importing blocks into a disk")
+            .about(
+                "Stop importing blocks into a disk\n\nStop the process of importing blocks into a \
+                 disk",
+            )
     }
 
     pub fn cli_disk_finalize_import() -> clap::Command {
@@ -587,7 +591,7 @@ impl Cli {
                          transitions into the `Detached` state.",
                     ),
             )
-            .about("Finalize disk when imports are done")
+            .about("Confirm disk block import completion")
     }
 
     pub fn cli_disk_import_blocks_from_url() -> clap::Command {
@@ -613,7 +617,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(String))
                     .help("the source to pull blocks from"),
             )
-            .about("Send request to import blocks from URL")
+            .about("Request to import blocks from URL")
     }
 
     pub fn cli_disk_metrics_list() -> clap::Command {
@@ -848,7 +852,10 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the project"),
             )
-            .about("Promote a project image to be visible to all projects in the silo")
+            .about(
+                "Promote a project image\n\nPromote a project image to be visible to all projects \
+                 in the silo",
+            )
     }
 
     pub fn cli_instance_list() -> clap::Command {
@@ -1900,7 +1907,7 @@ impl Cli {
                     .help("The service using this certificate"),
             )
             .about(
-                "Create a new system-wide x.509 certificate.\n\nThis certificate is automatically \
+                "Create a new system-wide x.509 certificate\n\nThis certificate is automatically \
                  used by the Oxide Control plane to serve external connections.",
             )
     }
@@ -2082,7 +2089,7 @@ impl Cli {
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     )),
             )
-            .about("List a silo's IDPs_name")
+            .about("List a silo's IdP's name")
     }
 
     pub fn cli_local_idp_user_create() -> clap::Command {
@@ -2216,7 +2223,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(String))
                     .help("customer's technical contact for saml configuration"),
             )
-            .about("Create a SAML IDP")
+            .about("Create a SAML IdP")
     }
 
     pub fn cli_saml_identity_provider_view() -> clap::Command {
@@ -2235,7 +2242,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a SAML IDP")
+            .about("Fetch a SAML IdP")
     }
 
     pub fn cli_ip_pool_list() -> clap::Command {
@@ -2344,7 +2351,10 @@ impl Cli {
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
                     .help("Maximum number of items returned by a single call"),
             )
-            .about("List ranges for an IP pool\n\nRanges are ordered by their first address.")
+            .about(
+                "List ranges for an IP pool\n\nList ranges for an IP pool. Ranges are ordered by \
+                 their first address.",
+            )
     }
 
     pub fn cli_ip_pool_range_add() -> clap::Command {
@@ -2372,7 +2382,7 @@ impl Cli {
     }
 
     pub fn cli_ip_pool_service_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the IP pool used for Oxide services.")
+        clap::Command::new("").about("Fetch the IP pool used for Oxide services")
     }
 
     pub fn cli_ip_pool_service_range_list() -> clap::Command {
@@ -2385,17 +2395,17 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .about(
-                "List ranges for the IP pool used for Oxide services.\n\nRanges are ordered by \
-                 their first address.",
+                "List ranges for the IP pool used for Oxide services\n\nList ranges for the IP \
+                 pool used for Oxide services. Ranges are ordered by their first address.",
             )
     }
 
     pub fn cli_ip_pool_service_range_add() -> clap::Command {
-        clap::Command::new("").about("Add a range to an IP pool used for Oxide services.")
+        clap::Command::new("").about("Add a range to an IP pool used for Oxide services")
     }
 
     pub fn cli_ip_pool_service_range_remove() -> clap::Command {
-        clap::Command::new("").about("Remove a range from an IP pool used for Oxide services.")
+        clap::Command::new("").about("Remove a range from an IP pool used for Oxide services")
     }
 
     pub fn cli_system_metric() -> clap::Command {
@@ -2483,40 +2493,6 @@ impl Cli {
             .about("Fetch a built-in role")
     }
 
-    pub fn cli_saga_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .required(false)
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
-                        ]),
-                        |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
-            )
-            .about("List sagas")
-    }
-
-    pub fn cli_saga_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("saga-id")
-                    .long("saga-id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
-            )
-            .about("Fetch a saga")
-    }
-
     pub fn cli_silo_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -2557,7 +2533,7 @@ impl Cli {
                          this group and those users can log in and further initialize the \
                          Silo.\n\nNote that if configuring a SAML based identity provider, \
                          group_attribute_name must be set for users to be considered part of a \
-                         group. See [`SamlIdentityProviderCreate`] for more information.",
+                         group. See `SamlIdentityProviderCreate` for more information.",
                     ),
             )
             .arg(
@@ -3235,7 +3211,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the VPC"),
             )
-            .about("Get a router")
+            .about("Fetch a router")
     }
 
     pub fn cli_vpc_router_update() -> clap::Command {
@@ -3344,7 +3320,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the VPC"),
             )
-            .about("Fetch a subnet")
+            .about("List subnets")
     }
 
     pub fn cli_vpc_subnet_create() -> clap::Command {
@@ -3606,8 +3582,8 @@ impl Cli {
                     .required(false)
                     .value_parser(clap::value_parser!(types::Ipv6Net))
                     .help(
-                        "The IPv6 prefix for this VPC.\n\nAll IPv6 subnets created from this VPC \
-                         must be taken from this range, which sould be a Unique Local Address in \
+                        "The IPv6 prefix for this VPC\n\nAll IPv6 subnets created from this VPC \
+                         must be taken from this range, which should be a Unique Local Address in \
                          the range `fd00::/48`. The default VPC Subnet will have the first `/64` \
                          range from this prefix.",
                     ),
@@ -4009,12 +3985,6 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::RoleView => {
                 self.execute_role_view(matches).await;
-            }
-            CliCommand::SagaList => {
-                self.execute_saga_list(matches).await;
-            }
-            CliCommand::SagaView => {
-                self.execute_saga_view(matches).await;
             }
             CliCommand::SiloList => {
                 self.execute_silo_list(matches).await;
@@ -6658,46 +6628,6 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
-    pub async fn execute_saga_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.saga_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
-        self.over.execute_saga_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_saga_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.saga_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("saga-id") {
-            request = request.saga_id(value.clone());
-        }
-
-        self.over.execute_saga_view(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
     pub async fn execute_silo_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.silo_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -8684,22 +8614,6 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_saga_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SagaList,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_saga_view(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SagaView,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
     fn execute_silo_list(
         &self,
         matches: &clap::ArgMatches,
@@ -9158,8 +9072,6 @@ pub enum CliCommand {
     SystemPolicyUpdate,
     RoleList,
     RoleView,
-    SagaList,
-    SagaView,
     SiloList,
     SiloCreate,
     SiloView,
@@ -9310,8 +9222,6 @@ impl CliCommand {
             CliCommand::SystemPolicyUpdate,
             CliCommand::RoleList,
             CliCommand::RoleView,
-            CliCommand::SagaList,
-            CliCommand::SagaView,
             CliCommand::SiloList,
             CliCommand::SiloCreate,
             CliCommand::SiloView,
