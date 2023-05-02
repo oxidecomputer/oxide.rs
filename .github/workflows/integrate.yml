@@ -81,8 +81,18 @@ jobs:
           git config --local user.email "${{ inputs.reflector_user_id }}+oxide-reflector-bot[bot]@users.noreply.github.com"
 
           # Detect specific changes that will be committed back
+
+          # Check if the spec file has been updated
+          git diff --quiet oxide.json || specUpdate=$?
+          echo "spec=${specUpdate}" >> $GITHUB_OUTPUT
+
+          # Check if the generated docs spec file has been updated
           git diff --quiet cli/docs/cli.json || docsUpdate=$?
           echo "docs=${docsUpdate}" >> $GITHUB_OUTPUT
+
+          # Check if anything in the lock file has updated
+          git diff --quiet Cargo.lock || depsUpdate=$?
+          echo "deps=${depsUpdate}" >> $GITHUB_OUTPUT
 
           git add .
           git commit -m "Rebuilt with latest dependency updates" || echo "Nothing to commit"
@@ -110,13 +120,6 @@ jobs:
 
           sleep 2
 
-          progenitorDiffUrl=""
-
-          if [ "${{ steps.progenitor_versions.outputs.from }}" != "${{ steps.progenitor_versions.outputs.to }}" ]
-          then
-            progenitorDiffUrl="https://github.com/oxidecomputer/progenitor/compare/${{ steps.progenitor_versions.outputs.from }}...${{ steps.progenitor_versions.outputs.to }}"
-          fi
-
           if [ "$mainToIntegration" -eq 0 -a "$integrationToMain" -eq 0 ]
           then
             echo "Main is up to date with integration. No pull request needed"
@@ -130,30 +133,48 @@ jobs:
           then
             echo "Main is behind integration ($mainToIntegration)"
 
-            title="Bump schema.json to omicron:${{ steps.schema_sha.outputs.short }}"
+            title=""
+            echo "" > body
 
-            echo "Integration dependency update" > body
-            echo "" >> body
-
-            if [ "$progenitorDiffUrl" != "" ]
+            if [ ${{ steps.committed.outputs.deps }} ]
             then
-              title+=" and progenitor to ${{ steps.progenitor_versions.outputs.to }}"
+              title+=" dependencies"
+
+              echo "Lock file updated" >> body
+              echo "" >> body
+            fi
+
+            if [ "${{ steps.progenitor_versions.outputs.from }}" != "${{ steps.progenitor_versions.outputs.to }}" ]
+            then
+              if [ title != "" ]; then title+=","; fi
+              title+=" progenitor to ${{ steps.progenitor_versions.outputs.to }}"
+
+              progenitorDiffUrl="https://github.com/oxidecomputer/progenitor/compare/${{ steps.progenitor_versions.outputs.from }}...${{ steps.progenitor_versions.outputs.to }}"
+
               echo "Bump [progenitor](https://github.com/oxidecomputer/progenitor) from \`${{ steps.progenitor_versions.outputs.from }}\` to \`${{ steps.progenitor_versions.outputs.to }}\`" >> body
               echo "Changes: ${progenitorDiffUrl}" >> body
               echo "" >> body
             fi
 
-            schemaLabel="nexus.json \`${{ steps.schema_sha.outputs.short }}\`"
-            schemaUrl="https://github.com/oxidecomputer/omicron/blob/${{ steps.schema_sha.outputs.full }}/openapi/nexus.json"
+            if [ ${{ steps.committed.outputs.spec }} ]
+            then
+              if [ title != "" ]; then title+=","; fi
+              title+=" oxide.json to omicron:${{ steps.schema_sha.outputs.short }}"
 
-            echo "Generated code against [$schemaLabel]($schemaUrl)" >> body
-            echo "" >> body
+              schemaLabel="nexus.json \`${{ steps.schema_sha.outputs.short }}\`"
+              schemaUrl="https://github.com/oxidecomputer/omicron/blob/${{ steps.schema_sha.outputs.full }}/openapi/nexus.json"
+
+              echo "Generated code against [$schemaLabel]($schemaUrl)" >> body
+              echo "" >> body
+            fi
 
             if [ ${{ steps.committed.outputs.docs }} ]
             then
               echo "CLI docs updated against the updated CLI" >> body
               echo "" >> body
             fi
+
+            title="Bump" + title
 
             if [ -z "$prNumber" ]
             then
