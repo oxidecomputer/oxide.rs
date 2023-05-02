@@ -8,7 +8,7 @@ members = [
 ]
 
 [workspace.dependencies]
-anyhow = "1.0.70"
+anyhow = "1.0.71"
 assert_cmd = "2.0.11"
 base64 = "0.21.0"
 built = { version = "0.6.0", features = ["git2"] }
@@ -23,7 +23,7 @@ http = "0.2.9"
 httpmock = "0.6.7"
 newline-converter = "0.3.0"
 oauth2 = "4.3.0"
-open = "4.0.2"
+open = "4.1.0"
 oxide-api = { path = "sdk" }
 oxide-httpmock = { path = "sdk-httpmock" }
 predicates = "3.0.3"
@@ -43,7 +43,7 @@ similar = "2.2.1"
 sha2 = "0.10.6"
 tabwriter = "1.2.1"
 test-common = { path = "test-common" }
-tokio = { version = "1.27.0", features = ["full"] }
+tokio = { version = "1.28.0", features = ["full"] }
 toml = "0.7.2"
 toml_edit = "0.19.8"
 url = "2.3.1"
