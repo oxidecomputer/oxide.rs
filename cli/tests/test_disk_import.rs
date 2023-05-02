@@ -15,14 +15,11 @@ use rand::SeedableRng;
 use test_common::JsonMock;
 use uuid::Uuid;
 
-// disk exists already
-// snapshot exists already
-// image exists already
-// any step fails
+// TODO: any step fails
 
 // A disk import where everything succeeds
 #[test]
-fn text_disk_import() {
+fn test_disk_import() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -95,7 +92,7 @@ fn text_disk_import() {
 
 // A disk import where everything succeeds and an image is created
 #[test]
-fn text_disk_import_with_image() {
+fn test_disk_import_with_image() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -220,7 +217,7 @@ fn text_disk_import_with_image() {
 
 // A disk import where the disk exists already
 #[test]
-fn text_disk_import_disk_exists_already() {
+fn test_disk_import_disk_exists_already() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -265,7 +262,7 @@ fn text_disk_import_disk_exists_already() {
 
 // A disk import where the snapshot exists already
 #[test]
-fn text_disk_import_snapshot_exists_already() {
+fn test_disk_import_snapshot_exists_already() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -323,7 +320,7 @@ fn text_disk_import_snapshot_exists_already() {
 
 // A disk import where the image exists already
 #[test]
-fn text_disk_import_image_exists_already() {
+fn test_disk_import_image_exists_already() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
