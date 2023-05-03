@@ -174,7 +174,7 @@ jobs:
               echo "" >> body
             fi
 
-            title="Bump" + title
+            title="Bump${title}"
 
             if [ -z "$prNumber" ]
             then
