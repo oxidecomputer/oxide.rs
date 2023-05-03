@@ -79,6 +79,12 @@ fn test_list_paginated() {
         });
     });
 
+    let output = results
+        .iter()
+        .map(|item| format!("{:#?}\n", item))
+        .collect::<Vec<_>>()
+        .join("");
+
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
@@ -88,7 +94,7 @@ fn test_list_paginated() {
         .arg("list")
         .assert()
         .success()
-        .stdout(predicate::str::diff(format!("success\n{:#?}\n", results)));
+        .stdout(predicate::str::diff(output));
 
     mock_p1.assert();
     mock_p2.assert();
@@ -130,6 +136,15 @@ fn test_list_paginated_fail() {
         });
     });
 
+    let output = format!(
+        "{}error\nError Response: status: 400 Bad Request",
+        results
+            .iter()
+            .map(|item| format!("{:#?}\n", item))
+            .collect::<Vec<_>>()
+            .join(""),
+    );
+
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
@@ -139,7 +154,7 @@ fn test_list_paginated_fail() {
         .arg("list")
         .assert()
         .success()
-        .stdout(predicate::str::diff(format!("success\n{:#?}\n", results)));
+        .stdout(predicate::str::starts_with(output));
 
     mock_p1.assert();
     mock_p2.assert();
