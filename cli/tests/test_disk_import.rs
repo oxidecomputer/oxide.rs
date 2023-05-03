@@ -15,8 +15,6 @@ use rand::SeedableRng;
 use test_common::JsonMock;
 use uuid::Uuid;
 
-// TODO: any step fails
-
 // A disk import where everything succeeds
 #[test]
 fn test_disk_import() {
@@ -91,6 +89,9 @@ fn test_disk_import() {
 }
 
 // A disk import where everything succeeds and an image is created
+// XXX this does not work because httpmock does not have a way for one endpoint
+// to return different values for the same request.
+/*
 #[test]
 fn test_disk_import_with_image() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
@@ -214,6 +215,7 @@ fn test_disk_import_with_image() {
     finalize_mock.assert();
     image_create_mock.assert();
 }
+*/
 
 // A disk import where the disk exists already
 #[test]
@@ -387,4 +389,162 @@ fn test_disk_import_image_exists_already() {
     disk_view_mock.assert();
     snapshot_view_mock.assert();
     image_view_mock.assert();
+}
+
+// A disk import where the bulk_import_start fails
+#[test]
+fn test_disk_import_bulk_import_start_fail() {
+    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let server = MockServer::start();
+
+    let disk_view_mock = server.disk_view(|when, then| {
+        when.into_inner().any_request();
+        then.client_error(
+            404,
+            &oxide_api::types::Error {
+                error_code: None,
+                message: "disk not found".into(),
+                request_id: Uuid::new_v4().to_string(),
+            },
+        );
+    });
+
+    let disk_create_mock = server.disk_create(|when, then| {
+        when.into_inner().any_request();
+        then.created(&Disk {
+            name: "test-import".parse().unwrap(),
+            ..Disk::mock_value(&mut src).unwrap()
+        });
+    });
+
+    let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
+        when.into_inner().any_request();
+        then.server_error(
+            503,
+            &oxide_api::types::Error {
+                error_code: None,
+                message: "I can't do that Dave".into(),
+                request_id: Uuid::new_v4().to_string(),
+            },
+        );
+    });
+
+    let unwind_finalize_mock = server.disk_finalize_import(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    let unwind_disk_delete_mock = server.disk_delete(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("--project")
+        .arg("myproj")
+        .arg("--description")
+        .arg("disk description")
+        .arg("--path")
+        .arg("tests/data/testpost.iso")
+        .arg("--disk-name")
+        .arg("test-import")
+        .assert()
+        .failure();
+
+    disk_view_mock.assert();
+    disk_create_mock.assert();
+    start_bulk_write_mock.assert();
+    unwind_finalize_mock.assert();
+    unwind_disk_delete_mock.assert();
+}
+
+// A disk import where the bulk_write_import fails
+#[test]
+fn test_disk_import_bulk_write_import_fail() {
+    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let server = MockServer::start();
+
+    let disk_view_mock = server.disk_view(|when, then| {
+        when.into_inner().any_request();
+        then.client_error(
+            404,
+            &oxide_api::types::Error {
+                error_code: None,
+                message: "disk not found".into(),
+                request_id: Uuid::new_v4().to_string(),
+            },
+        );
+    });
+
+    let disk_create_mock = server.disk_create(|when, then| {
+        when.into_inner().any_request();
+        then.created(&Disk {
+            name: "test-import".parse().unwrap(),
+            ..Disk::mock_value(&mut src).unwrap()
+        });
+    });
+
+    let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    let disk_bulk_write_mock = server.disk_bulk_write_import(|when, then| {
+        when.into_inner().any_request();
+        then.server_error(
+            503,
+            &oxide_api::types::Error {
+                error_code: None,
+                message: "I can't do that Dave".into(),
+                request_id: Uuid::new_v4().to_string(),
+            },
+        );
+    });
+
+    let unwind_stop_bulk_write_mock = server.disk_bulk_write_import_stop(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    let unwind_finalize_mock = server.disk_finalize_import(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    let unwind_disk_delete_mock = server.disk_delete(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("--project")
+        .arg("myproj")
+        .arg("--description")
+        .arg("disk description")
+        .arg("--path")
+        .arg("tests/data/testpost.iso")
+        .arg("--disk-name")
+        .arg("test-import")
+        .assert()
+        .failure();
+
+    disk_view_mock.assert();
+    disk_create_mock.assert();
+    start_bulk_write_mock.assert();
+    disk_bulk_write_mock.assert();
+    unwind_stop_bulk_write_mock.assert();
+    unwind_finalize_mock.assert();
+    unwind_disk_delete_mock.assert();
 }
