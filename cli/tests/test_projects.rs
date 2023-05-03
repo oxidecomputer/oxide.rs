@@ -13,7 +13,7 @@ use rand::SeedableRng;
 use test_common::JsonMock;
 
 #[test]
-fn text_simple_list() {
+fn test_simple_list() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -27,6 +27,13 @@ fn text_simple_list() {
         then.ok(&results);
     });
 
+    let output = results
+        .items
+        .iter()
+        .map(|item| format!("{:#?}\n", item))
+        .collect::<Vec<_>>()
+        .join("");
+
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
@@ -36,7 +43,7 @@ fn text_simple_list() {
         .arg("list")
         .assert()
         .success()
-        .stdout(predicate::str::diff(format!("success\n{:#?}\n", results)));
+        .stdout(predicate::str::diff(output));
 
     mock.assert();
 }
