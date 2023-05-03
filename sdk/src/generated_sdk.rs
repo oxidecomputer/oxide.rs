@@ -2497,7 +2497,9 @@ pub mod types {
     }
 
     /// An IPv4 subnet, including prefix and subnet mask
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct Ipv4Net(String);
     impl std::ops::Deref for Ipv4Net {
         type Target = String;
@@ -2593,7 +2595,9 @@ pub mod types {
     }
 
     /// An IPv6 subnet, including prefix and subnet mask
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct Ipv6Net(String);
     impl std::ops::Deref for Ipv6Net {
         type Target = String;
@@ -2689,7 +2693,9 @@ pub mod types {
 
     /// An inclusive-inclusive range of IP ports. The second port may be omitted
     /// to represent a single port
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct L4PortRange(String);
     impl std::ops::Deref for L4PortRange {
         type Target = String;
@@ -2763,7 +2769,9 @@ pub mod types {
     }
 
     /// A Media Access Control address, in EUI-48 format
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct MacAddr(String);
     impl std::ops::Deref for MacAddr {
         type Target = String;
@@ -2880,7 +2888,9 @@ pub mod types {
     /// Names must begin with a lower case ASCII letter, be composed exclusively
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
     /// with a '-'. Names cannot be a UUID though they may contain a UUID.
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct Name(String);
     impl std::ops::Deref for Name {
         type Target = String;
@@ -3158,7 +3168,9 @@ pub mod types {
     }
 
     /// Passwords may be subject to additional constraints.
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct Password(String);
     impl std::ops::Deref for Password {
         type Target = String;
@@ -3616,7 +3628,9 @@ pub mod types {
     }
 
     /// Role names consist of two string components separated by dot (".").
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct RoleName(String);
     impl std::ops::Deref for RoleName {
         type Target = String;
@@ -4056,7 +4070,9 @@ pub mod types {
         }
     }
 
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct SemverVersion(String);
     impl std::ops::Deref for SemverVersion {
         type Target = String;
@@ -5294,7 +5310,9 @@ pub mod types {
     /// Names must begin with a lower case ASCII letter, be composed exclusively
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
     /// with a '-'. Names cannot be a UUID though they may contain a UUID.
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct UserId(String);
     impl std::ops::Deref for UserId {
         type Target = String;
