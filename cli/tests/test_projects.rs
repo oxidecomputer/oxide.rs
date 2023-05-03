@@ -27,6 +27,13 @@ fn test_simple_list() {
         then.ok(&results);
     });
 
+    let output = results
+        .items
+        .iter()
+        .map(|item| format!("{:#?}\n", item))
+        .collect::<Vec<_>>()
+        .join("");
+
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
@@ -36,7 +43,7 @@ fn test_simple_list() {
         .arg("list")
         .assert()
         .success()
-        .stdout(predicate::str::diff(format!("success\n{:#?}\n", results)));
+        .stdout(predicate::str::diff(output));
 
     mock.assert();
 }

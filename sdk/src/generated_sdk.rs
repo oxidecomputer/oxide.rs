@@ -165,13 +165,7 @@ pub mod types {
         }
     }
 
-    /// A count of bytes, typically used either for memory or storage capacity
-    ///
-    /// The maximum supported byte count is [`i64::MAX`].  This makes it
-    /// somewhat inconvenient to define constructors: a u32 constructor can be
-    /// infallible, but an i64 constructor can fail (if the value is negative)
-    /// and a u64 constructor can fail (if the value is larger than i64::MAX).
-    /// We provide all of these for consumers' convenience.
+    /// Byte count to express memory or storage capacity.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ByteCount(pub u64);
     impl std::ops::Deref for ByteCount {
@@ -233,7 +227,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`Certificate`]
+    /// View of a Certificate
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Certificate {
         /// human-readable free-form text about a resource
@@ -261,8 +255,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a
-    /// [`Certificate`](crate::external_api::views::Certificate)
+    /// Create-time parameters for a `Certificate`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct CertificateCreate {
         /// PEM file containing public certificate chain
@@ -583,7 +576,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`Disk`]
+    /// View of a Disk
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Disk {
         pub block_size: ByteCount,
@@ -619,8 +612,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a
-    /// [`Disk`](omicron_common::api::external::Disk)
+    /// Create-time parameters for a `Disk`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct DiskCreate {
         pub description: String,
@@ -798,7 +790,7 @@ pub mod types {
         }
     }
 
-    /// State of a Disk (primarily: attached or not)
+    /// State of a Disk
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "state", content = "instance")]
     pub enum DiskState {
@@ -1045,8 +1037,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`Policy`], which describes how this resource may be
-    /// accessed
+    /// Policy for a particular resource
     ///
     /// Note that the Policy only describes access granted explicitly for this
     /// resource.  The policies of parent resources can also cause a user to
@@ -1072,8 +1063,8 @@ pub mod types {
     /// Describes the assignment of a particular role on a particular resource
     /// to a particular identity (user, group, etc.)
     ///
-    /// The resource is not part of this structure.  Rather, [`RoleAssignment`]s
-    /// are put into a [`Policy`] and that Policy is applied to a particular
+    /// The resource is not part of this structure.  Rather, `RoleAssignment`s
+    /// are put into a `Policy` and that Policy is applied to a particular
     /// resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FleetRoleRoleAssignment {
@@ -1094,7 +1085,9 @@ pub mod types {
         }
     }
 
-    /// Client view of global Images
+    /// View of a Global Image
+    ///
+    /// Global images are visible to all users within a Silo.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct GlobalImage {
         /// size of blocks in bytes
@@ -1135,8 +1128,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for an
-    /// [`GlobalImage`](crate::external_api::views::GlobalImage)
+    /// Create-time parameters for a `GlobalImage`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct GlobalImageCreate {
         /// block size in bytes
@@ -1183,7 +1175,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`Group`]
+    /// View of a Group
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Group {
         /// Human-readable name that can identify the group
@@ -1227,7 +1219,7 @@ pub mod types {
         }
     }
 
-    /// A simple type for managing a histogram metric.
+    /// Histogram metric
     ///
     /// A histogram maintains the count of any number of samples, over a set of
     /// bins. Bins are specified on construction via their _left_ edges,
@@ -1237,38 +1229,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// Example ------- ```rust use oximeter::histogram::{BinRange, Histogram};
-    ///
-    /// let edges = [0i64, 10, 20]; let mut hist =
-    /// Histogram::new(&edges).unwrap(); assert_eq!(hist.n_bins(), 4); // One
-    /// additional bin for the range (20..) assert_eq!(hist.n_samples(), 0);
-    /// hist.sample(4); hist.sample(100); assert_eq!(hist.n_samples(), 2);
-    ///
-    /// let data = hist.iter().collect::<Vec<_>>(); assert_eq!(data[0].range,
-    /// BinRange::range(i64::MIN, 0)); // An additional bin for `..0`
-    /// assert_eq!(data[0].count, 0); // Nothing is in this bin
-    ///
-    /// assert_eq!(data[1].range, BinRange::range(0, 10)); // The range `0..10`
-    /// assert_eq!(data[1].count, 1); // 4 is sampled into this bin ```
-    ///
-    /// Notes -----
-    ///
-    /// Histograms may be constructed either from their left bin edges, or from
-    /// a sequence of ranges. In either case, the left-most bin may be converted
-    /// upon construction. In particular, if the left-most value is not equal to
-    /// the minimum of the support, a new bin will be added from the minimum to
-    /// that provided value. If the left-most value _is_ the support's minimum,
-    /// because the provided bin was unbounded below, such as `(..0)`, then that
-    /// bin will be converted into one bounded below, `(MIN..0)` in this case.
-    ///
-    /// The short of this is that, most of the time, it shouldn't matter. If one
-    /// specifies the extremes of the support as their bins, be aware that the
-    /// left-most may be converted from a `BinRange::RangeTo` into a
-    /// `BinRange::Range`. In other words, the first bin of a histogram is
-    /// _always_ a `Bin::Range` or a `Bin::RangeFrom` after construction. In
-    /// fact, every bin is one of those variants, the `BinRange::RangeTo` is
-    /// only provided as a convenience during construction.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramdouble {
         pub bins: Vec<Bindouble>,
@@ -1288,7 +1248,7 @@ pub mod types {
         }
     }
 
-    /// A simple type for managing a histogram metric.
+    /// Histogram metric
     ///
     /// A histogram maintains the count of any number of samples, over a set of
     /// bins. Bins are specified on construction via their _left_ edges,
@@ -1298,38 +1258,6 @@ pub mod types {
     ///
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
-    ///
-    /// Example ------- ```rust use oximeter::histogram::{BinRange, Histogram};
-    ///
-    /// let edges = [0i64, 10, 20]; let mut hist =
-    /// Histogram::new(&edges).unwrap(); assert_eq!(hist.n_bins(), 4); // One
-    /// additional bin for the range (20..) assert_eq!(hist.n_samples(), 0);
-    /// hist.sample(4); hist.sample(100); assert_eq!(hist.n_samples(), 2);
-    ///
-    /// let data = hist.iter().collect::<Vec<_>>(); assert_eq!(data[0].range,
-    /// BinRange::range(i64::MIN, 0)); // An additional bin for `..0`
-    /// assert_eq!(data[0].count, 0); // Nothing is in this bin
-    ///
-    /// assert_eq!(data[1].range, BinRange::range(0, 10)); // The range `0..10`
-    /// assert_eq!(data[1].count, 1); // 4 is sampled into this bin ```
-    ///
-    /// Notes -----
-    ///
-    /// Histograms may be constructed either from their left bin edges, or from
-    /// a sequence of ranges. In either case, the left-most bin may be converted
-    /// upon construction. In particular, if the left-most value is not equal to
-    /// the minimum of the support, a new bin will be added from the minimum to
-    /// that provided value. If the left-most value _is_ the support's minimum,
-    /// because the provided bin was unbounded below, such as `(..0)`, then that
-    /// bin will be converted into one bounded below, `(MIN..0)` in this case.
-    ///
-    /// The short of this is that, most of the time, it shouldn't matter. If one
-    /// specifies the extremes of the support as their bins, be aware that the
-    /// left-most may be converted from a `BinRange::RangeTo` into a
-    /// `BinRange::Range`. In other words, the first bin of a histogram is
-    /// _always_ a `Bin::Range` or a `Bin::RangeFrom` after construction. In
-    /// fact, every bin is one of those variants, the `BinRange::RangeTo` is
-    /// only provided as a convenience during construction.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramint64 {
         pub bins: Vec<Binint64>,
@@ -1416,7 +1344,7 @@ pub mod types {
         }
     }
 
-    /// Client view of an [`IdentityProvider`]
+    /// View of an Identity Provider
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IdentityProvider {
         /// human-readable free-form text about a resource
@@ -1614,7 +1542,9 @@ pub mod types {
         }
     }
 
-    /// Client view of images
+    /// View of an Image
+    ///
+    /// Images are local to their containing project.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Image {
         /// size of blocks in bytes
@@ -1658,8 +1588,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for an
-    /// [`Image`](crate::external_api::views::Image)
+    /// Create-time parameters for an `Image`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ImageCreate {
         /// block size in bytes
@@ -1767,7 +1696,7 @@ pub mod types {
         }
     }
 
-    /// Client view of an [`Instance`]
+    /// View of an Instance
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Instance {
         /// human-readable free-form text about a resource
@@ -1866,8 +1795,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for an
-    /// [`Instance`](omicron_common::api::external::Instance)
+    /// Create-time parameters for an `Instance`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceCreate {
         pub description: String,
@@ -1939,8 +1867,7 @@ pub mod types {
         }
     }
 
-    /// Migration parameters for an
-    /// [`Instance`](omicron_common::api::external::Instance)
+    /// Migration parameters for an `Instance`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceMigrate {
         pub dst_sled_id: uuid::Uuid,
@@ -2028,9 +1955,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for an
-    /// [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface).
-    ///
+    /// Create-time parameters for an `InstanceNetworkInterface`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct InstanceNetworkInterfaceCreate {
         pub description: String,
@@ -2079,9 +2004,7 @@ pub mod types {
         }
     }
 
-    /// Parameters for updating an
-    /// [`InstanceNetworkInterface`](omicron_common::api::external::InstanceNetworkInterface).
-    ///
+    /// Parameters for updating an `InstanceNetworkInterface`
     ///
     /// Note that modifying IP addresses for an interface is not yet supported,
     /// a new interface must be created instead.
@@ -2445,9 +2368,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for an IP Pool.
-    ///
-    /// See [`IpPool`](crate::external_api::views::IpPool)
+    /// Create-time parameters for an `IpPool`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPoolCreate {
         pub description: String,
@@ -2576,7 +2497,9 @@ pub mod types {
     }
 
     /// An IPv4 subnet, including prefix and subnet mask
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct Ipv4Net(String);
     impl std::ops::Deref for Ipv4Net {
         type Target = String;
@@ -2672,7 +2595,9 @@ pub mod types {
     }
 
     /// An IPv6 subnet, including prefix and subnet mask
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct Ipv6Net(String);
     impl std::ops::Deref for Ipv6Net {
         type Target = String;
@@ -2768,7 +2693,9 @@ pub mod types {
 
     /// An inclusive-inclusive range of IP ports. The second port may be omitted
     /// to represent a single port
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct L4PortRange(String);
     impl std::ops::Deref for L4PortRange {
         type Target = String;
@@ -2842,7 +2769,9 @@ pub mod types {
     }
 
     /// A Media Access Control address, in EUI-48 format
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct MacAddr(String);
     impl std::ops::Deref for MacAddr {
         type Target = String;
@@ -2959,7 +2888,9 @@ pub mod types {
     /// Names must begin with a lower case ASCII letter, be composed exclusively
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
     /// with a '-'. Names cannot be a UUID though they may contain a UUID.
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct Name(String);
     impl std::ops::Deref for Name {
         type Target = String;
@@ -3236,54 +3167,10 @@ pub mod types {
         }
     }
 
-    /// Unique name for a saga [`Node`]
-    ///
-    /// Each node requires a string name that's unique within its DAG.  The name
-    /// is used to identify its output.  Nodes that depend on a given node
-    /// (either directly or indirectly) can access the node's output using its
-    /// name.
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct NodeName(pub String);
-    impl std::ops::Deref for NodeName {
-        type Target = String;
-        fn deref(&self) -> &String {
-            &self.0
-        }
-    }
-
-    impl From<NodeName> for String {
-        fn from(value: NodeName) -> Self {
-            value.0
-        }
-    }
-
-    impl From<&NodeName> for NodeName {
-        fn from(value: &NodeName) -> Self {
-            value.clone()
-        }
-    }
-
-    impl From<String> for NodeName {
-        fn from(value: String) -> Self {
-            Self(value)
-        }
-    }
-
-    impl std::str::FromStr for NodeName {
-        type Err = std::convert::Infallible;
-        fn from_str(value: &str) -> Result<Self, Self::Err> {
-            Ok(Self(value.to_string()))
-        }
-    }
-
-    impl ToString for NodeName {
-        fn to_string(&self) -> String {
-            self.0.to_string()
-        }
-    }
-
     /// Passwords may be subject to additional constraints.
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct Password(String);
     impl std::ops::Deref for Password {
         type Target = String;
@@ -3346,7 +3233,10 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`PhysicalDisk`]
+    /// View of a Physical Disk
+    ///
+    /// Physical disks reside in a particular sled and are used to store both
+    /// Instance Disk data as well as internal metadata.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct PhysicalDisk {
         pub disk_type: PhysicalDiskType,
@@ -3465,7 +3355,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`Project`]
+    /// View of a Project
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Project {
         /// human-readable free-form text about a resource
@@ -3492,8 +3382,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a
-    /// [`Project`](crate::external_api::views::Project)
+    /// Create-time parameters for a `Project`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectCreate {
         pub description: String,
@@ -3605,8 +3494,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`Policy`], which describes how this resource may be
-    /// accessed
+    /// Policy for a particular resource
     ///
     /// Note that the Policy only describes access granted explicitly for this
     /// resource.  The policies of parent resources can also cause a user to
@@ -3632,8 +3520,8 @@ pub mod types {
     /// Describes the assignment of a particular role on a particular resource
     /// to a particular identity (user, group, etc.)
     ///
-    /// The resource is not part of this structure.  Rather, [`RoleAssignment`]s
-    /// are put into a [`Policy`] and that Policy is applied to a particular
+    /// The resource is not part of this structure.  Rather, `RoleAssignment`s
+    /// are put into a `Policy` and that Policy is applied to a particular
     /// resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectRoleRoleAssignment {
@@ -3654,8 +3542,7 @@ pub mod types {
         }
     }
 
-    /// Updateable properties of a
-    /// [`Project`](crate::external_api::views::Project)
+    /// Updateable properties of a `Project`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ProjectUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3676,7 +3563,7 @@ pub mod types {
         }
     }
 
-    /// Client view of an [`Rack`]
+    /// View of an Rack
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Rack {
         /// unique, immutable, system-controlled identifier for each resource
@@ -3721,7 +3608,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`Role`]
+    /// View of a Role
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Role {
         pub description: String,
@@ -3741,7 +3628,9 @@ pub mod types {
     }
 
     /// Role names consist of two string components separated by dot (".").
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct RoleName(String);
     impl std::ops::Deref for RoleName {
         type Target = String;
@@ -3837,8 +3726,8 @@ pub mod types {
     /// the destination of that traffic.
     ///
     /// When traffic is to be sent to a destination that is within a given
-    /// `RouteDestination`, the corresponding [`RouterRoute`] applies, and
-    /// traffic will be forward to the [`RouteTarget`] for that rule.
+    /// `RouteDestination`, the corresponding `RouterRoute` applies, and traffic
+    /// will be forward to the `RouteTarget` for that rule.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
     pub enum RouteDestination {
@@ -3926,7 +3815,7 @@ pub mod types {
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        /// The VPC Router to which the route belongs.
+        /// The ID of the VPC Router to which the route belongs
         pub vpc_router_id: uuid::Uuid,
     }
 
@@ -3942,8 +3831,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a
-    /// [`omicron_common::api::external::RouterRoute`]
+    /// Create-time parameters for a `RouterRoute`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RouterRouteCreate {
         pub description: String,
@@ -3964,11 +3852,10 @@ pub mod types {
         }
     }
 
-    /// The classification of a [`RouterRoute`] as defined by the system. The
-    /// kind determines certain attributes such as if the route is modifiable
-    /// and describes how or where the route was created.
+    /// The kind of a `RouterRoute`
     ///
-    /// See [RFD-21](https://rfd.shared.oxide.computer/rfd/0021#concept-router) for more context
+    /// The kind determines certain attributes such as if the route is
+    /// modifiable and describes how or where the route was created.
     #[derive(
         Clone,
         Copy,
@@ -3999,7 +3886,7 @@ pub mod types {
         /// `Destination: A different VPC` `Modifiable: false`
         #[serde(rename = "vpc_peering")]
         VpcPeering,
-        /// Created by a user See [`RouteTarget`]
+        /// Created by a user; see `RouteTarget`
         ///
         /// `Destination: User defined` `Modifiable: true`
         #[serde(rename = "custom")]
@@ -4079,8 +3966,7 @@ pub mod types {
         }
     }
 
-    /// Updateable properties of a
-    /// [`omicron_common::api::external::RouterRoute`]
+    /// Updateable properties of a `RouterRoute`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct RouterRouteUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4100,87 +3986,6 @@ pub mod types {
     impl RouterRouteUpdate {
         pub fn builder() -> builder::RouterRouteUpdate {
             builder::RouterRouteUpdate::default()
-        }
-    }
-
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct Saga {
-        pub id: uuid::Uuid,
-        pub state: SagaState,
-    }
-
-    impl From<&Saga> for Saga {
-        fn from(value: &Saga) -> Self {
-            value.clone()
-        }
-    }
-
-    impl Saga {
-        pub fn builder() -> builder::Saga {
-            builder::Saga::default()
-        }
-    }
-
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    #[serde(tag = "error")]
-    pub enum SagaErrorInfo {
-        #[serde(rename = "action_failed")]
-        ActionFailed { source_error: serde_json::Value },
-        #[serde(rename = "deserialize_failed")]
-        DeserializeFailed { message: String },
-        #[serde(rename = "injected_error")]
-        InjectedError,
-        #[serde(rename = "serialize_failed")]
-        SerializeFailed { message: String },
-        #[serde(rename = "subsaga_create_failed")]
-        SubsagaCreateFailed { message: String },
-    }
-
-    impl From<&SagaErrorInfo> for SagaErrorInfo {
-        fn from(value: &SagaErrorInfo) -> Self {
-            value.clone()
-        }
-    }
-
-    /// A single page of results
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SagaResultsPage {
-        /// list of items on this page of results
-        pub items: Vec<Saga>,
-        /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
-    }
-
-    impl From<&SagaResultsPage> for SagaResultsPage {
-        fn from(value: &SagaResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl SagaResultsPage {
-        pub fn builder() -> builder::SagaResultsPage {
-            builder::SagaResultsPage::default()
-        }
-    }
-
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    #[serde(tag = "state")]
-    pub enum SagaState {
-        #[serde(rename = "running")]
-        Running,
-        #[serde(rename = "succeeded")]
-        Succeeded,
-        #[serde(rename = "failed")]
-        Failed {
-            error_info: SagaErrorInfo,
-            error_node_name: NodeName,
-        },
-    }
-
-    impl From<&SagaState> for SagaState {
-        fn from(value: &SagaState) -> Self {
-            value.clone()
         }
     }
 
@@ -4265,7 +4070,9 @@ pub mod types {
         }
     }
 
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct SemverVersion(String);
     impl std::ops::Deref for SemverVersion {
         type Target = String;
@@ -4405,7 +4212,9 @@ pub mod types {
         }
     }
 
-    /// Client view of a ['Silo']
+    /// View of a Silo
+    ///
+    /// A Silo is the highest level unit of isolation.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Silo {
         /// human-readable free-form text about a resource
@@ -4437,7 +4246,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a [`Silo`](crate::external_api::views::Silo)
+    /// Create-time parameters for a `Silo`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SiloCreate {
         /// If set, this group will be created during Silo creation and granted
@@ -4447,7 +4256,7 @@ pub mod types {
         ///
         /// Note that if configuring a SAML based identity provider,
         /// group_attribute_name must be set for users to be considered part of
-        /// a group. See [`SamlIdentityProviderCreate`] for more information.
+        /// a group. See `SamlIdentityProviderCreate` for more information.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub admin_group_name: Option<String>,
         pub description: String,
@@ -4636,8 +4445,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`Policy`], which describes how this resource may be
-    /// accessed
+    /// Policy for a particular resource
     ///
     /// Note that the Policy only describes access granted explicitly for this
     /// resource.  The policies of parent resources can also cause a user to
@@ -4663,8 +4471,8 @@ pub mod types {
     /// Describes the assignment of a particular role on a particular resource
     /// to a particular identity (user, group, etc.)
     ///
-    /// The resource is not part of this structure.  Rather, [`RoleAssignment`]s
-    /// are put into a [`Policy`] and that Policy is applied to a particular
+    /// The resource is not part of this structure.  Rather, `RoleAssignment`s
+    /// are put into a `Policy` and that Policy is applied to a particular
     /// resource.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SiloRoleRoleAssignment {
@@ -4737,7 +4545,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a Snapshot
+    /// View of a Snapshot
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Snapshot {
         /// human-readable free-form text about a resource
@@ -4768,8 +4576,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a
-    /// [`Snapshot`](crate::external_api::views::Snapshot)
+    /// Create-time parameters for a `Snapshot`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SnapshotCreate {
         pub description: String,
@@ -4904,7 +4711,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`SshKey`]
+    /// View of an SSH Key
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SshKey {
         /// human-readable free-form text about a resource
@@ -4935,8 +4742,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for an
-    /// [`SshKey`](crate::external_api::views::SshKey)
+    /// Create-time parameters for an `SshKey`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SshKeyCreate {
         pub description: String,
@@ -5406,7 +5212,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`User`]
+    /// View of a User
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct User {
         /// Human-readable name that can identify the user
@@ -5428,7 +5234,10 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`UserBuiltin`]
+    /// View of a Built-in User
+    ///
+    /// A Built-in User is explicitly created as opposed to being derived from
+    /// an Identify Provider.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UserBuiltin {
         /// human-readable free-form text about a resource
@@ -5477,7 +5286,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a [`User`](crate::external_api::views::User)
+    /// Create-time parameters for a `User`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UserCreate {
         /// username used to log in
@@ -5501,7 +5310,9 @@ pub mod types {
     /// Names must begin with a lower case ASCII letter, be composed exclusively
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
     /// with a '-'. Names cannot be a UUID though they may contain a UUID.
-    #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
     pub struct UserId(String);
     impl std::ops::Deref for UserId {
         type Target = String;
@@ -5650,7 +5461,7 @@ pub mod types {
         }
     }
 
-    /// Client view of a [`Vpc`]
+    /// View of a VPC
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Vpc {
         /// human-readable free-form text about a resource
@@ -5685,15 +5496,15 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a [`Vpc`](crate::external_api::views::Vpc)
+    /// Create-time parameters for a `Vpc`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcCreate {
         pub description: String,
         pub dns_name: Name,
-        /// The IPv6 prefix for this VPC.
+        /// The IPv6 prefix for this VPC
         ///
         /// All IPv6 subnets created from this VPC must be taken from this
-        /// range, which sould be a Unique Local Address in the range
+        /// range, which should be a Unique Local Address in the range
         /// `fd00::/48`. The default VPC Subnet will have the first `/64` range
         /// from this prefix.
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -6096,7 +5907,7 @@ pub mod types {
         }
     }
 
-    /// A `VpcFirewallRuleTarget` is used to specify the set of [`Instance`]s to
+    /// A `VpcFirewallRuleTarget` is used to specify the set of `Instance`s to
     /// which a firewall rule applies.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type", content = "value")]
@@ -6260,8 +6071,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a
-    /// [`VpcRouter`](crate::external_api::views::VpcRouter)
+    /// Create-time parameters for a `VpcRouter`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcRouterCreate {
         pub description: String,
@@ -6369,8 +6179,7 @@ pub mod types {
         }
     }
 
-    /// Updateable properties of a
-    /// [`VpcRouter`](crate::external_api::views::VpcRouter)
+    /// Updateable properties of a `VpcRouter`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcRouterUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -6426,8 +6235,7 @@ pub mod types {
         }
     }
 
-    /// Create-time parameters for a
-    /// [`VpcSubnet`](crate::external_api::views::VpcSubnet)
+    /// Create-time parameters for a `VpcSubnet`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnetCreate {
         pub description: String,
@@ -6481,8 +6289,7 @@ pub mod types {
         }
     }
 
-    /// Updateable properties of a
-    /// [`VpcSubnet`](crate::external_api::views::VpcSubnet)
+    /// Updateable properties of a `VpcSubnet`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnetUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -6503,7 +6310,7 @@ pub mod types {
         }
     }
 
-    /// Updateable properties of a [`Vpc`](crate::external_api::views::Vpc)
+    /// Updateable properties of a `Vpc`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcUpdate {
         #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -12369,120 +12176,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct Saga {
-            id: Result<uuid::Uuid, String>,
-            state: Result<super::SagaState, String>,
-        }
-
-        impl Default for Saga {
-            fn default() -> Self {
-                Self {
-                    id: Err("no value supplied for id".to_string()),
-                    state: Err("no value supplied for state".to_string()),
-                }
-            }
-        }
-
-        impl Saga {
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-            pub fn state<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::SagaState>,
-                T::Error: std::fmt::Display,
-            {
-                self.state = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for state: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<Saga> for super::Saga {
-            type Error = String;
-            fn try_from(value: Saga) -> Result<Self, String> {
-                Ok(Self {
-                    id: value.id?,
-                    state: value.state?,
-                })
-            }
-        }
-
-        impl From<super::Saga> for Saga {
-            fn from(value: super::Saga) -> Self {
-                Self {
-                    id: Ok(value.id),
-                    state: Ok(value.state),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct SagaResultsPage {
-            items: Result<Vec<super::Saga>, String>,
-            next_page: Result<Option<String>, String>,
-        }
-
-        impl Default for SagaResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl SagaResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::Saga>>,
-                T::Error: std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<SagaResultsPage> for super::SagaResultsPage {
-            type Error = String;
-            fn try_from(value: SagaResultsPage) -> Result<Self, String> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
-                })
-            }
-        }
-
-        impl From<super::SagaResultsPage> for SagaResultsPage {
-            fn from(value: super::SagaResultsPage) -> Self {
-                Self {
-                    items: Ok(value.items),
-                    next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct SamlIdentityProvider {
             acs_url: Result<String, String>,
             description: Result<String, String>,
@@ -16745,6 +16438,8 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_bulk_write_import(&self) -> builder::DiskBulkWriteImport;
+    /// Start importing blocks into a disk
+    ///
     /// Start the process of importing blocks into a disk
     ///
     /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write-start`
@@ -16760,6 +16455,8 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_bulk_write_import_start(&self) -> builder::DiskBulkWriteImportStart;
+    /// Stop importing blocks into a disk
+    ///
     /// Stop the process of importing blocks into a disk
     ///
     /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`
@@ -16775,7 +16472,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_bulk_write_import_stop(&self) -> builder::DiskBulkWriteImportStop;
-    /// Finalize disk when imports are done
+    /// Confirm disk block import completion
     ///
     /// Sends a `POST` request to `/v1/disks/{disk}/finalize`
     ///
@@ -16792,7 +16489,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_finalize_import(&self) -> builder::DiskFinalizeImport;
-    /// Send request to import blocks from URL
+    /// Request to import blocks from URL
     ///
     /// Sends a `POST` request to `/v1/disks/{disk}/import`
     ///
@@ -17048,6 +16745,8 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_delete(&self) -> builder::ImageDelete;
+    /// Promote a project image
+    ///
     /// Promote a project image to be visible to all projects in the silo
     ///
     /// Sends a `POST` request to `/v1/images/{image}/promote`
@@ -17536,7 +17235,7 @@ impl ClientInstancesExt for Client {
 }
 
 pub trait ClientLoginExt {
-    /// Authenticate a user (i.e., log in) via username and password
+    /// Authenticate a user via username and password
     ///
     /// Sends a `POST` request to `/login/{silo_name}/local`
     ///
@@ -17563,7 +17262,7 @@ pub trait ClientLoginExt {
     ///    .await;
     /// ```
     fn login_saml_begin(&self) -> builder::LoginSamlBegin;
-    /// Authenticate a user (i.e., log in) via SAML
+    /// Authenticate a user via SAML
     ///
     /// Sends a `POST` request to `/login/{silo_name}/saml/{provider_name}`
     ///
@@ -18344,7 +18043,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList;
-    /// List a silo's IDPs_name
+    /// List a silo's IdP's name
     ///
     /// Sends a `GET` request to `/v1/system/identity-providers`
     ///
@@ -18420,7 +18119,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
-    /// Create a SAML IDP
+    /// Create a SAML IdP
     ///
     /// Sends a `POST` request to `/v1/system/identity-providers/saml`
     ///
@@ -18435,7 +18134,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
-    /// Fetch a SAML IDP
+    /// Fetch a SAML IdP
     ///
     /// Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
     ///
@@ -18522,7 +18221,7 @@ pub trait ClientSystemExt {
     fn ip_pool_delete(&self) -> builder::IpPoolDelete;
     /// List ranges for an IP pool
     ///
-    /// Ranges are ordered by their first address.
+    /// List ranges for an IP pool. Ranges are ordered by their first address.
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`
     ///
@@ -18582,7 +18281,8 @@ pub trait ClientSystemExt {
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
     /// List ranges for the IP pool used for Oxide services
     ///
-    /// Ranges are ordered by their first address.
+    /// List ranges for the IP pool used for Oxide services. Ranges are ordered
+    /// by their first address.
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
     ///
@@ -18644,35 +18344,6 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_metric(&self) -> builder::SystemMetric;
-    /// List sagas
-    ///
-    /// Sends a `GET` request to `/v1/system/sagas`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.saga_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn saga_list(&self) -> builder::SagaList;
-    /// Fetch a saga
-    ///
-    /// Sends a `GET` request to `/v1/system/sagas/{saga_id}`
-    ///
-    /// ```ignore
-    /// let response = client.saga_view()
-    ///    .saga_id(saga_id)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn saga_view(&self) -> builder::SagaView;
     /// List silos
     ///
     /// Lists silos that are discoverable based on the current permissions.
@@ -19096,14 +18767,6 @@ impl ClientSystemExt for Client {
         builder::SystemMetric::new(self)
     }
 
-    fn saga_list(&self) -> builder::SagaList {
-        builder::SagaList::new(self)
-    }
-
-    fn saga_view(&self) -> builder::SagaView {
-        builder::SagaView::new(self)
-    }
-
     fn silo_list(&self) -> builder::SiloList {
         builder::SiloList::new(self)
     }
@@ -19375,7 +19038,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_create(&self) -> builder::VpcRouterCreate;
-    /// Get a router
+    /// Fetch a router
     ///
     /// Sends a `GET` request to `/v1/vpc-routers/{router}`
     ///
@@ -19431,7 +19094,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_router_delete(&self) -> builder::VpcRouterDelete;
-    /// Fetch a subnet
+    /// List subnets
     ///
     /// Sends a `GET` request to `/v1/vpc-subnets`
     ///
@@ -29395,213 +29058,6 @@ pub mod builder {
                 "{}/v1/system/roles/{}",
                 client.baseurl,
                 encode_path(&role_name.to_string()),
-            );
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemExt::saga_list`]
-    ///
-    /// [`ClientSystemExt::saga_list`]: super::ClientSystemExt::saga_list
-    #[derive(Debug, Clone)]
-    pub struct SagaList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
-    }
-
-    impl<'a> SagaList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/sagas`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SagaResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/sagas", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/system/sagas`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Saga, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemExt::saga_view`]
-    ///
-    /// [`ClientSystemExt::saga_view`]: super::ClientSystemExt::saga_view
-    #[derive(Debug, Clone)]
-    pub struct SagaView<'a> {
-        client: &'a super::Client,
-        saga_id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> SagaView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                saga_id: Err("saga_id was not initialized".to_string()),
-            }
-        }
-
-        pub fn saga_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.saga_id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for saga_id failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/sagas/{saga_id}`
-        pub async fn send(self) -> Result<ResponseValue<types::Saga>, Error<types::Error>> {
-            let Self { client, saga_id } = self;
-            let saga_id = saga_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/sagas/{}",
-                client.baseurl,
-                encode_path(&saga_id.to_string()),
             );
             let request = client
                 .client
