@@ -19,7 +19,6 @@ use oxide_api::types::ImageSource;
 use oxide_api::types::ImportBlocksBulkWrite;
 use oxide_api::types::Name;
 use oxide_api::types::NameOrId;
-use oxide_api::types::Snapshot;
 use oxide_api::Client;
 use oxide_api::ClientDisksExt;
 use oxide_api::ClientImagesExt;
@@ -530,13 +529,12 @@ impl CmdDiskImport {
             // a snapshot out of it. if this step fails, they can always
             // manually make an image out of the snapshot later and be sure that
             // the snapshot's contents are the same.
-            let snapshot: Snapshot = client
+            let snapshot = client
                 .snapshot_view()
                 .project(&self.project)
                 .snapshot(NameOrId::Name(snapshot_name.clone()))
                 .send()
-                .await?
-                .into_inner();
+                .await?;
 
             client
                 .image_create()
