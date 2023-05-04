@@ -10,7 +10,6 @@ use oxide_api::types::Disk;
 use oxide_api::types::Image;
 use oxide_api::types::Snapshot;
 use oxide_httpmock::MockServerExt;
-use predicates::prelude::*;
 use rand::SeedableRng;
 use test_common::JsonMock;
 use uuid::Uuid;
@@ -547,4 +546,30 @@ fn test_disk_import_bulk_write_import_fail() {
     unwind_stop_bulk_write_mock.assert();
     unwind_finalize_mock.assert();
     unwind_disk_delete_mock.assert();
+}
+
+// A disk import where the requested block size is invalid
+#[test]
+fn test_disk_import_bad_block_size() {
+    let server = MockServer::start();
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("--disk-block-size")
+        .arg("123")
+        .arg("--project")
+        .arg("myproj")
+        .arg("--description")
+        .arg("disk description")
+        .arg("--path")
+        .arg("tests/data/testpost.iso")
+        .arg("--disk-name")
+        .arg("test-import")
+        .assert()
+        .failure();
 }

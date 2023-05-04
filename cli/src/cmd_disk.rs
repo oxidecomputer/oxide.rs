@@ -10,6 +10,7 @@ use base64::Engine;
 use clap::Parser;
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use oxide_api::types::BlockSize;
+use oxide_api::types::ByteCount;
 use oxide_api::types::DiskCreate;
 use oxide_api::types::DiskSource;
 use oxide_api::types::FinalizeDisk;
@@ -60,11 +61,11 @@ pub struct CmdDiskImport {
     /// The size of the disk to create. If unspecified, the size of the file
     /// will be used, rounded up to the nearest GB.
     #[clap(long)]
-    disk_size: Option<u64>,
+    disk_size: Option<ByteCount>,
 
     /// The desired size of the disk's blocks.
     #[clap(long)]
-    disk_block_size: Option<i64>,
+    disk_block_size: Option<BlockSize>,
 
     /// If supplied, create a snapshot with this name.
     #[clap(long)]
@@ -269,17 +270,16 @@ impl CmdDiskImport {
             )?;
         }
 
-        let disk_size = get_disk_size(&self.path, self.disk_size)?;
+        let disk_size = get_disk_size(&self.path, self.disk_size.as_ref().map(|x| **x))?;
 
         if (disk_size % CHUNK_SIZE) != 0 {
             bail!("disk size must be a multiple of {}", CHUNK_SIZE);
         }
 
         let disk_block_size = match &self.disk_block_size {
-            Some(v) => BlockSize::try_from(*v),
-            None => BlockSize::try_from(512),
-        }
-        .unwrap();
+            Some(v) => v.clone(),
+            None => BlockSize::try_from(512).unwrap(),
+        };
 
         // If using more than 1 thread, make sure the number of threads divides
         // the total disk size
