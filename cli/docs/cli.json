@@ -27,6 +27,10 @@
           "help": "The file to use as body for the HTTP request (use \"-\" to read from standard input)"
         },
         {
+          "long": "limit",
+          "help": "Limit the number of paginated items retrieved"
+        },
+        {
           "long": "method",
           "short": "X",
           "help": "The HTTP method for the request"
