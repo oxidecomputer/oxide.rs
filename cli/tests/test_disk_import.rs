@@ -27,7 +27,7 @@ fn test_disk_import() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         );
     });
@@ -103,7 +103,7 @@ fn test_disk_import_with_image() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         );
     });
@@ -117,7 +117,7 @@ fn test_disk_import_with_image() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "snapshot not found".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         )
         // second time is when the snapshot was created by the finalize
@@ -134,7 +134,7 @@ fn test_disk_import_with_image() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "image not found".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         );
     });
@@ -274,7 +274,7 @@ fn test_disk_import_snapshot_exists_already() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         );
     });
@@ -332,7 +332,7 @@ fn test_disk_import_image_exists_already() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         );
     });
@@ -344,7 +344,7 @@ fn test_disk_import_image_exists_already() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "snapshot not found".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         );
     });
@@ -403,7 +403,7 @@ fn test_disk_import_bulk_import_start_fail() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         );
     });
@@ -423,7 +423,7 @@ fn test_disk_import_bulk_import_start_fail() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "I can't do that Dave".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         );
     });
@@ -476,7 +476,7 @@ fn test_disk_import_bulk_write_import_fail() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         );
     });
@@ -501,7 +501,7 @@ fn test_disk_import_bulk_write_import_fail() {
             &oxide_api::types::Error {
                 error_code: None,
                 message: "I can't do that Dave".into(),
-                request_id: Uuid::new_v4().to_string(),
+                request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
             },
         );
     });
