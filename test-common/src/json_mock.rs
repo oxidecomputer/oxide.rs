@@ -176,7 +176,7 @@ fn mock_schema_object(
             extensions: _,
         } if instance_type.as_ref() == &InstanceType::String => mock_string(format, string, src),
 
-        // UUID
+        // One way to express an option
         SchemaObject {
             metadata: _,
             instance_type: Some(SingleOrVec::Vec(vec)),
@@ -190,7 +190,7 @@ fn mock_schema_object(
             object: _,
             reference: None,
             extensions: _,
-        } if matches!(&vec[..], &[InstanceType::String, InstanceType::Null]) => {
+        } if matches!(&vec[..], &[InstanceType::String, InstanceType::Null]) | matches!(&vec[..], &[InstanceType::Null, InstanceType::String]) => {
             mock_string(format, string, src)
         }
 
@@ -252,7 +252,7 @@ fn mock_schema_object(
             mock_schema(schema, definitions, src)
         }
 
-        // one way that Option is generated
+        // The null schema--we see this sometimes in an `anyOf` resulting from an `Option`
         SchemaObject {
             metadata: _,
             instance_type: Some(SingleOrVec::Single(instance_type)),
