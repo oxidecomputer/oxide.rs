@@ -117,7 +117,8 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a new system-wide x.509 certificate\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.",
+          "about": "Create a new system-wide x.509 certificate",
+          "long_about": "This certificate is automatically used by the Oxide Control plane to serve external connections.",
           "args": [
             {
               "long": "description"
@@ -136,7 +137,8 @@
         },
         {
           "name": "delete",
-          "about": "Delete a certificate\n\nPermanently delete a certificate. This operation cannot be undone.",
+          "about": "Delete a certificate",
+          "long_about": "Permanently delete a certificate. This operation cannot be undone.",
           "args": [
             {
               "long": "certificate"
@@ -145,7 +147,8 @@
         },
         {
           "name": "list",
-          "about": "List system-wide certificates\n\nReturns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.",
+          "about": "List system-wide certificates",
+          "long_about": "Returns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.",
           "args": [
             {
               "long": "limit",
@@ -163,7 +166,8 @@
         },
         {
           "name": "view",
-          "about": "Fetch a certificate\n\nReturns the details of a specific certificate",
+          "about": "Fetch a certificate",
+          "long_about": "Returns the details of a specific certificate",
           "args": [
             {
               "long": "certificate"
@@ -196,7 +200,8 @@
           "subcommands": [
             {
               "name": "create",
-              "about": "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.",
+              "about": "Create an SSH public key",
+              "long_about": "Create an SSH public key for the currently authenticated user.",
               "args": [
                 {
                   "long": "description"
@@ -212,7 +217,8 @@
             },
             {
               "name": "delete",
-              "about": "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.",
+              "about": "Delete an SSH public key",
+              "long_about": "Delete an SSH public key associated with the currently authenticated user.",
               "args": [
                 {
                   "long": "ssh-key",
@@ -222,7 +228,8 @@
             },
             {
               "name": "list",
-              "about": "List SSH public keys\n\nLists SSH public keys for the currently authenticated user.",
+              "about": "List SSH public keys",
+              "long_about": "Lists SSH public keys for the currently authenticated user.",
               "args": [
                 {
                   "long": "limit",
@@ -240,7 +247,8 @@
             },
             {
               "name": "view",
-              "about": "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.",
+              "about": "Fetch an SSH public key",
+              "long_about": "Fetch an SSH public key associated with the currently authenticated user.",
               "args": [
                 {
                   "long": "ssh-key",
@@ -405,7 +413,8 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create an image\n\nCreate a new image in a project.",
+          "about": "Create an image",
+          "long_about": "Create a new image in a project.",
           "args": [
             {
               "long": "description"
@@ -429,7 +438,8 @@
         },
         {
           "name": "delete",
-          "about": "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
+          "about": "Delete an image",
+          "long_about": "Permanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
           "args": [
             {
               "long": "image",
@@ -443,7 +453,8 @@
         },
         {
           "name": "list",
-          "about": "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
+          "about": "List images",
+          "long_about": "List images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
           "args": [
             {
               "long": "include-silo-images",
@@ -473,7 +484,8 @@
         },
         {
           "name": "promote",
-          "about": "Promote a project image\n\nPromote a project image to be visible to all projects in the silo",
+          "about": "Promote a project image",
+          "long_about": "Promote a project image to be visible to all projects in the silo",
           "args": [
             {
               "long": "image",
@@ -487,7 +499,8 @@
         },
         {
           "name": "view",
-          "about": "Fetch an image\n\nFetch the details for a specific image in a project.",
+          "about": "Fetch an image",
+          "long_about": "Fetch the details for a specific image in a project.",
           "args": [
             {
               "long": "image",
@@ -700,7 +713,8 @@
             },
             {
               "name": "delete",
-              "about": "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
+              "about": "Delete a network interface",
+              "long_about": "Note that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
               "args": [
                 {
                   "long": "instance",
@@ -916,7 +930,8 @@
             },
             {
               "name": "list",
-              "about": "List ranges for an IP pool\n\nList ranges for an IP pool. Ranges are ordered by their first address.",
+              "about": "List ranges for an IP pool",
+              "long_about": "List ranges for an IP pool. Ranges are ordered by their first address.",
               "args": [
                 {
                   "long": "limit",
@@ -952,7 +967,8 @@
                 },
                 {
                   "name": "list",
-                  "about": "List ranges for the IP pool used for Oxide services\n\nList ranges for the IP pool used for Oxide services. Ranges are ordered by their first address.",
+                  "about": "List ranges for the IP pool used for Oxide services",
+                  "long_about": "List ranges for the IP pool used for Oxide services. Ranges are ordered by their first address.",
                   "args": [
                     {
                       "long": "limit",
@@ -1196,7 +1212,8 @@
         },
         {
           "name": "delete",
-          "about": "Delete a silo\n\nDelete a silo by name.",
+          "about": "Delete a silo",
+          "long_about": "Delete a silo by name.",
           "args": [
             {
               "long": "silo",
@@ -1237,7 +1254,8 @@
                   "subcommands": [
                     {
                       "name": "create",
-                      "about": "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
+                      "about": "Create a user",
+                      "long_about": "Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
                       "args": [
                         {
                           "long": "external-id",
@@ -1265,7 +1283,8 @@
                     },
                     {
                       "name": "set-password",
-                      "about": "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.",
+                      "about": "Set or invalidate a user's password",
+                      "long_about": "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
                       "args": [
                         {
                           "long": "silo",
@@ -1344,7 +1363,8 @@
         },
         {
           "name": "list",
-          "about": "List silos\n\nLists silos that are discoverable based on the current permissions.",
+          "about": "List silos",
+          "long_about": "Lists silos that are discoverable based on the current permissions.",
           "args": [
             {
               "long": "limit",
@@ -1426,7 +1446,8 @@
         },
         {
           "name": "view",
-          "about": "Fetch a silo\n\nFetch a silo by name.",
+          "about": "Fetch a silo",
+          "long_about": "Fetch a silo by name.",
           "args": [
             {
               "long": "silo",
@@ -1492,7 +1513,8 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a snapshot\n\nCreates a point-in-time snapshot from a disk.",
+          "about": "Create a snapshot",
+          "long_about": "Creates a point-in-time snapshot from a disk.",
           "args": [
             {
               "long": "description"
@@ -1821,7 +1843,8 @@
                 },
                 {
                   "name": "list",
-                  "about": "List routes\n\nList the routes associated with a router in a particular VPC.",
+                  "about": "List routes",
+                  "long_about": "List the routes associated with a router in a particular VPC.",
                   "args": [
                     {
                       "long": "limit",
