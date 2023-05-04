@@ -20095,6 +20095,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -20131,6 +20139,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -20448,6 +20457,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -20485,6 +20502,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -21410,6 +21428,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 end_time: Ok(None),
                 limit: Ok(None),
@@ -21448,6 +21474,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -21560,6 +21587,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -21596,6 +21631,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -21803,6 +21839,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 include_silo_images: Ok(None),
                 limit: Ok(None),
@@ -21841,6 +21885,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -22307,6 +22352,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -22344,6 +22397,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -22743,6 +22797,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -22780,6 +22842,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -23864,6 +23927,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -23900,6 +23971,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -24012,6 +24084,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -24048,6 +24128,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -24383,6 +24464,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 instance: Ok(None),
                 limit: Ok(None),
@@ -24421,6 +24510,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -25083,6 +25173,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -25119,6 +25217,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -25675,6 +25774,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -25712,6 +25819,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -26075,6 +26183,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -26111,6 +26227,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -26416,6 +26533,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -26452,6 +26577,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -26564,6 +26690,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -26600,6 +26734,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -26771,6 +26906,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -26807,6 +26950,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -26997,6 +27141,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -27033,6 +27185,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -27164,6 +27317,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -27201,6 +27362,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -27743,6 +27905,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -27779,6 +27949,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -28160,6 +28331,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -28195,6 +28374,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -28475,6 +28655,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -28510,6 +28698,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -28984,6 +29173,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -29019,6 +29216,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -29190,6 +29388,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -29226,6 +29432,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -29672,6 +29879,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -29708,6 +29923,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -29821,6 +30037,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -29857,6 +30081,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -30181,6 +30406,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -30217,6 +30450,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -30510,6 +30744,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -30547,6 +30789,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -30738,6 +30981,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -30774,6 +31025,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -30963,6 +31215,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 group: Ok(None),
                 limit: Ok(None),
@@ -31000,6 +31260,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -31355,6 +31616,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -31394,6 +31663,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -32046,6 +32316,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -32084,6 +32362,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -32663,6 +32942,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -32701,6 +32988,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -33302,6 +33590,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -33340,6 +33636,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
@@ -33470,6 +33767,14 @@ pub mod builder {
             use futures::StreamExt;
             use futures::TryFutureExt;
             use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -33507,6 +33812,7 @@ pub mod builder {
                     first.chain(rest)
                 })
                 .try_flatten_stream()
+                .take(limit)
                 .boxed()
         }
     }
