@@ -8,12 +8,11 @@ use assert_cmd::Command;
 use httpmock::MockServer;
 use oxide_api::types::{Project, ProjectResultsPage};
 use oxide_httpmock::MockServerExt;
-use predicates::prelude::*;
 use rand::SeedableRng;
 use test_common::JsonMock;
 
 #[test]
-fn test_simple_list() {
+fn test_projects_simple_list() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -27,13 +26,6 @@ fn test_simple_list() {
         then.ok(&results);
     });
 
-    let output = results
-        .items
-        .iter()
-        .map(|item| format!("{:#?}\n", item))
-        .collect::<Vec<_>>()
-        .join("");
-
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
@@ -43,13 +35,15 @@ fn test_simple_list() {
         .arg("list")
         .assert()
         .success()
-        .stdout(predicate::str::diff(output));
+        .stdout(expectorate::eq_file_or_panic(
+            "tests/output/test_projects_simple_list.stdout",
+        ));
 
     mock.assert();
 }
 
 #[test]
-fn test_list_paginated() {
+fn test_projects_list_paginated() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -79,12 +73,6 @@ fn test_list_paginated() {
         });
     });
 
-    let output = results
-        .iter()
-        .map(|item| format!("{:#?}\n", item))
-        .collect::<Vec<_>>()
-        .join("");
-
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
@@ -92,17 +80,22 @@ fn test_list_paginated() {
         .env("OXIDE_TOKEN", "fake-token")
         .arg("project")
         .arg("list")
+        .arg("--limit")
+        .arg("10")
         .assert()
         .success()
-        .stdout(predicate::str::diff(output));
+        .stdout(expectorate::eq_file_or_panic(
+            "tests/output/test_projects_list_paginated.stdout",
+        ));
 
     mock_p1.assert();
     mock_p2.assert();
-    mock_p3.assert();
+    // Because we hit the limit, we should not fetch the final page.
+    mock_p3.assert_hits(0);
 }
 
 #[test]
-fn test_list_paginated_fail() {
+fn test_projects_list_paginated_fail() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -154,7 +147,7 @@ fn test_list_paginated_fail() {
         .arg("list")
         .assert()
         .success()
-        .stdout(predicate::str::starts_with(output));
+        .stdout(predicates::str::starts_with(output));
 
     mock_p1.assert();
     mock_p2.assert();
