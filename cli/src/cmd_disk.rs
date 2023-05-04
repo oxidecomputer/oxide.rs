@@ -30,10 +30,12 @@ use std::io::Read;
 use std::path::Path;
 use tokio::sync::mpsc;
 
-/// Import a file to a disk
+/// Create a disk from a file upload
 ///
-/// Upload the contents of a file to a disk, optionally creating a snapshot
-/// and/or an image.
+/// Create a new disk and upload the contents of a file to that disk. Use
+/// `--snapshot` to optionally create a snapshot of the disk after the upload is
+/// complete. If creating a snapshot, optionally use the `--image` options to
+/// create an image from that snapshot.
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 #[clap(name = "import")]
@@ -67,12 +69,12 @@ pub struct CmdDiskImport {
     #[clap(long)]
     disk_block_size: Option<BlockSize>,
 
-    /// If supplied, create a snapshot with this name.
+    /// If supplied, create a snapshot with the given name.
     #[clap(long)]
     snapshot_name: Option<Name>,
 
-    /// If supplied, create an image from the snapshot of this disk. Requires
-    /// snapshot name to be supplied.
+    /// If supplied, create an image with the given name. Requires the creation
+    /// of a snapshot.
     #[clap(long)]
     image_name: Option<Name>,
 
@@ -80,16 +82,16 @@ pub struct CmdDiskImport {
     #[clap(long)]
     image_description: Option<String>,
 
-    /// The OS of this image (eg. Debian)
+    /// The OS of this image (e.g. Debian)
     #[clap(long)]
     image_os: Option<String>,
 
-    /// The version of this image (eg. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)
+    /// The version of this image (e.g. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)
     #[clap(long)]
     image_version: Option<String>,
 }
 
-/// Return a correct disk size for the path and size arguments
+/// Return a disk size that Nexus will accept for the path and size arguments
 fn get_disk_size(path: &str, size: Option<u64>) -> Result<u64> {
     const ONE_GB: u64 = 1024 * 1024 * 1024;
 
