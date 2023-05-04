@@ -295,8 +295,8 @@
         },
         {
           "name": "import",
-          "about": "Import a file to a disk",
-          "long_about": "Import a file to a disk\n\nUpload the contents of a file to a disk, optionally creating a snapshot\nand/or an image.",
+          "about": "Create a disk from a file upload",
+          "long_about": "Create a disk from a file upload\n\nCreate a new disk and upload the contents of a file to that disk. Use\n`--snapshot` to optionally create a snapshot of the disk after the upload is\ncomplete. If creating a snapshot, optionally use the `--image` options to\ncreate an image from that snapshot.",
           "args": [
             {
               "long": "description"
@@ -319,15 +319,15 @@
             },
             {
               "long": "image-name",
-              "help": "If supplied, create an image from the snapshot of this disk. Requires snapshot name to be supplied"
+              "help": "If supplied, create an image with the given name. Requires the creation of a snapshot"
             },
             {
               "long": "image-os",
-              "help": "The OS of this image (eg. Debian)"
+              "help": "The OS of this image (e.g. Debian)"
             },
             {
               "long": "image-version",
-              "help": "The version of this image (eg. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)"
+              "help": "The version of this image (e.g. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)"
             },
             {
               "long": "path",
@@ -339,7 +339,7 @@
             },
             {
               "long": "snapshot-name",
-              "help": "If supplied, create a snapshot with this name"
+              "help": "If supplied, create a snapshot with the given name"
             },
             {
               "long": "threads",
