@@ -820,12 +820,12 @@ checksum = "0206175f82b8d6bf6652ff7d71a1e27fd2e4efde587fd368662814d6ec1d9ce0"
 
 [[package]]
 name = "expectorate"
-version = "1.0.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "710ab6a2d57038a835d66f78d5af3fa5d27c1ec4682f823b9203c48826cb0591"
+version = "1.0.8"
+source = "git+https://github.com/oxidecomputer/expectorate#3d19fd396b85896e9b3c645a5a8bb56fa037c08b"
 dependencies = [
  "console",
  "newline-converter",
+ "predicates",
  "similar",
 ]
 
