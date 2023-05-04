@@ -502,7 +502,7 @@ impl CmdDiskImport {
             .project(&self.project)
             .disk(self.disk_name.clone())
             .body(FinalizeDisk {
-                snapshot_name: self.snapshot_name.as_ref().map(|x| x.clone()),
+                snapshot_name: self.snapshot_name.clone(),
             });
 
         let finalize_response = request.send().await;
