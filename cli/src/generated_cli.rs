@@ -178,11 +178,11 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid)),
             )
-            .about(
-                "Start an OAuth 2.0 Device Authorization Grant\n\nThis endpoint is designed to be \
-                 accessed from an *unauthenticated* API client. It generates and records a \
-                 `device_code` and `user_code` which must be verified and confirmed prior to a \
-                 token being granted.",
+            .about("Start an OAuth 2.0 Device Authorization Grant")
+            .long_about(
+                "This endpoint is designed to be accessed from an *unauthenticated* API client. \
+                 It generates and records a `device_code` and `user_code` which must be verified \
+                 and confirmed prior to a token being granted.",
             )
     }
 
@@ -194,11 +194,11 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(String)),
             )
-            .about(
-                "Confirm an OAuth 2.0 Device Authorization Grant\n\nThis endpoint is designed to \
-                 be accessed by the user agent (browser), not the client requesting the token. So \
-                 we do not actually return the token here; it will be returned in response to the \
-                 poll on `/device/token`.",
+            .about("Confirm an OAuth 2.0 Device Authorization Grant")
+            .long_about(
+                "This endpoint is designed to be accessed by the user agent (browser), not the \
+                 client requesting the token. So we do not actually return the token here; it \
+                 will be returned in response to the poll on `/device/token`.",
             )
     }
 
@@ -222,9 +222,10 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(String)),
             )
-            .about(
-                "Request a device access token\n\nThis endpoint should be polled by the client \
-                 until the user code is verified and the grant is confirmed.",
+            .about("Request a device access token")
+            .long_about(
+                "This endpoint should be polled by the client until the user code is verified and \
+                 the grant is confirmed.",
             )
     }
 
@@ -274,9 +275,10 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about(
-                "Prompt user login\n\nEither display a page asking a user for their credentials, \
-                 or redirect them to their identity provider.",
+            .about("Prompt user login")
+            .long_about(
+                "Either display a page asking a user for their credentials, or redirect them to \
+                 their identity provider.",
             )
     }
 
@@ -332,10 +334,10 @@ impl Cli {
                         |s| types::NameSortMode::try_from(s).unwrap(),
                     )),
             )
-            .about(
-                "List system-wide images\n\nReturns a list of all the system-wide images. \
-                 System-wide images are returned sorted by creation date, with the most recent \
-                 images appearing first.",
+            .about("List system-wide images")
+            .long_about(
+                "Returns a list of all the system-wide images. System-wide images are returned \
+                 sorted by creation date, with the most recent images appearing first.",
             )
     }
 
@@ -353,9 +355,10 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about(
-                "Create a system-wide image\n\nCreate a new system-wide image. This image can \
-                 then be used by any user in any silo as a base for instances.",
+            .about("Create a system-wide image")
+            .long_about(
+                "Create a new system-wide image. This image can then be used by any user in any \
+                 silo as a base for instances.",
             )
     }
 
@@ -367,9 +370,8 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about(
-                "Fetch a system-wide image\n\nReturns the details of a specific system-wide image.",
-            )
+            .about("Fetch a system-wide image")
+            .long_about("Returns the details of a specific system-wide image.")
     }
 
     pub fn cli_system_image_delete() -> clap::Command {
@@ -380,10 +382,11 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about(
-                "Delete a system-wide image\n\nPermanently delete a system-wide image. This \
-                 operation cannot be undone. Any instances using the system-wide image will \
-                 continue to run, however new instances can not be created with this image.",
+            .about("Delete a system-wide image")
+            .long_about(
+                "Permanently delete a system-wide image. This operation cannot be undone. Any \
+                 instances using the system-wide image will continue to run, however new \
+                 instances can not be created with this image.",
             )
     }
 
@@ -535,10 +538,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the project"),
             )
-            .about(
-                "Start importing blocks into a disk\n\nStart the process of importing blocks into \
-                 a disk",
-            )
+            .about("Start importing blocks into a disk")
+            .long_about("Start the process of importing blocks into a disk")
     }
 
     pub fn cli_disk_bulk_write_import_stop() -> clap::Command {
@@ -557,10 +558,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the project"),
             )
-            .about(
-                "Stop importing blocks into a disk\n\nStop the process of importing blocks into a \
-                 disk",
-            )
+            .about("Stop importing blocks into a disk")
+            .long_about("Stop the process of importing blocks into a disk")
     }
 
     pub fn cli_disk_finalize_import() -> clap::Command {
@@ -749,10 +748,10 @@ impl Cli {
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     )),
             )
-            .about(
-                "List images\n\nList images which are global or scoped to the specified project. \
-                 The images are returned sorted by creation date, with the most recent images \
-                 appearing first.",
+            .about("List images")
+            .long_about(
+                "List images which are global or scoped to the specified project. The images are \
+                 returned sorted by creation date, with the most recent images appearing first.",
             )
     }
 
@@ -791,7 +790,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(String))
                     .help("The version of the operating system (e.g. 18.04, 20.04, etc.)"),
             )
-            .about("Create an image\n\nCreate a new image in a project.")
+            .about("Create an image")
+            .long_about("Create a new image in a project.")
     }
 
     pub fn cli_image_view() -> clap::Command {
@@ -810,7 +810,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an image\n\nFetch the details for a specific image in a project.")
+            .about("Fetch an image")
+            .long_about("Fetch the details for a specific image in a project.")
     }
 
     pub fn cli_image_delete() -> clap::Command {
@@ -829,10 +830,11 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the project"),
             )
-            .about(
-                "Delete an image\n\nPermanently delete an image from a project. This operation \
-                 cannot be undone. Any instances in the project using the image will continue to \
-                 run, however new instances can not be created with this image.",
+            .about("Delete an image")
+            .long_about(
+                "Permanently delete an image from a project. This operation cannot be undone. Any \
+                 instances in the project using the image will continue to run, however new \
+                 instances can not be created with this image.",
             )
     }
 
@@ -852,10 +854,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the project"),
             )
-            .about(
-                "Promote a project image\n\nPromote a project image to be visible to all projects \
-                 in the silo",
-            )
+            .about("Promote a project image")
+            .long_about("Promote a project image to be visible to all projects in the silo")
     }
 
     pub fn cli_instance_list() -> clap::Command {
@@ -1345,10 +1345,8 @@ impl Cli {
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     )),
             )
-            .about(
-                "List SSH public keys\n\nLists SSH public keys for the currently authenticated \
-                 user.",
-            )
+            .about("List SSH public keys")
+            .long_about("Lists SSH public keys for the currently authenticated user.")
     }
 
     pub fn cli_current_user_ssh_key_create() -> clap::Command {
@@ -1372,10 +1370,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(String))
                     .help("SSH public key, e.g., `\"ssh-ed25519 AAAAC3NzaC...\"`"),
             )
-            .about(
-                "Create an SSH public key\n\nCreate an SSH public key for the currently \
-                 authenticated user.",
-            )
+            .about("Create an SSH public key")
+            .long_about("Create an SSH public key for the currently authenticated user.")
     }
 
     pub fn cli_current_user_ssh_key_view() -> clap::Command {
@@ -1387,10 +1383,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the SSH key"),
             )
-            .about(
-                "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently \
-                 authenticated user.",
-            )
+            .about("Fetch an SSH public key")
+            .long_about("Fetch an SSH public key associated with the currently authenticated user.")
     }
 
     pub fn cli_current_user_ssh_key_delete() -> clap::Command {
@@ -1402,9 +1396,9 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the SSH key"),
             )
-            .about(
-                "Delete an SSH public key\n\nDelete an SSH public key associated with the \
-                 currently authenticated user.",
+            .about("Delete an SSH public key")
+            .long_about(
+                "Delete an SSH public key associated with the currently authenticated user.",
             )
     }
 
@@ -1620,11 +1614,11 @@ impl Cli {
                          `Name`",
                     ),
             )
-            .about(
-                "Delete a network interface\n\nNote that the primary interface for an instance \
-                 cannot be deleted if there are any secondary interfaces. A new primary interface \
-                 must be designated first. The primary interface can be deleted if there are no \
-                 secondary interfaces.",
+            .about("Delete a network interface")
+            .long_about(
+                "Note that the primary interface for an instance cannot be deleted if there are \
+                 any secondary interfaces. A new primary interface must be designated first. The \
+                 primary interface can be deleted if there are no secondary interfaces.",
             )
     }
 
@@ -1810,7 +1804,8 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::Name)),
             )
-            .about("Create a snapshot\n\nCreates a point-in-time snapshot from a disk.")
+            .about("Create a snapshot")
+            .long_about("Creates a point-in-time snapshot from a disk.")
     }
 
     pub fn cli_snapshot_view() -> clap::Command {
@@ -1873,10 +1868,11 @@ impl Cli {
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     )),
             )
-            .about(
-                "List system-wide certificates\n\nReturns a list of all the system-wide \
-                 certificates. System-wide certificates are returned sorted by creation date, \
-                 with the most recent certificates appearing first.",
+            .about("List system-wide certificates")
+            .long_about(
+                "Returns a list of all the system-wide certificates. System-wide certificates are \
+                 returned sorted by creation date, with the most recent certificates appearing \
+                 first.",
             )
     }
 
@@ -1906,9 +1902,10 @@ impl Cli {
                     ))
                     .help("The service using this certificate"),
             )
-            .about(
-                "Create a new system-wide x.509 certificate\n\nThis certificate is automatically \
-                 used by the Oxide Control plane to serve external connections.",
+            .about("Create a new system-wide x.509 certificate")
+            .long_about(
+                "This certificate is automatically used by the Oxide Control plane to serve \
+                 external connections.",
             )
     }
 
@@ -1920,7 +1917,8 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
-            .about("Fetch a certificate\n\nReturns the details of a specific certificate")
+            .about("Fetch a certificate")
+            .long_about("Returns the details of a specific certificate")
     }
 
     pub fn cli_certificate_delete() -> clap::Command {
@@ -1931,10 +1929,8 @@ impl Cli {
                     .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId)),
             )
-            .about(
-                "Delete a certificate\n\nPermanently delete a certificate. This operation cannot \
-                 be undone.",
-            )
+            .about("Delete a certificate")
+            .long_about("Permanently delete a certificate. This operation cannot be undone.")
     }
 
     pub fn cli_physical_disk_list() -> clap::Command {
@@ -2108,10 +2104,11 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::UserId))
                     .help("username used to log in"),
             )
-            .about(
-                "Create a user\n\nUsers can only be created in Silos with `provision_type` == \
-                 `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user \
-                 first logs in using an external Identity Provider.",
+            .about("Create a user")
+            .long_about(
+                "Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, \
+                 Silo users are just-in-time (JIT) provisioned when a user first logs in using an \
+                 external Identity Provider.",
             )
     }
 
@@ -2150,9 +2147,9 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the silo"),
             )
-            .about(
-                "Set or invalidate a user's password\n\nPasswords can only be updated for users \
-                 in Silos with identity mode `LocalOnly`.",
+            .about("Set or invalidate a user's password")
+            .long_about(
+                "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
             )
     }
 
@@ -2351,10 +2348,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
                     .help("Maximum number of items returned by a single call"),
             )
-            .about(
-                "List ranges for an IP pool\n\nList ranges for an IP pool. Ranges are ordered by \
-                 their first address.",
-            )
+            .about("List ranges for an IP pool")
+            .long_about("List ranges for an IP pool. Ranges are ordered by their first address.")
     }
 
     pub fn cli_ip_pool_range_add() -> clap::Command {
@@ -2394,9 +2389,10 @@ impl Cli {
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
                     .help("Maximum number of items returned by a single call"),
             )
-            .about(
-                "List ranges for the IP pool used for Oxide services\n\nList ranges for the IP \
-                 pool used for Oxide services. Ranges are ordered by their first address.",
+            .about("List ranges for the IP pool used for Oxide services")
+            .long_about(
+                "List ranges for the IP pool used for Oxide services. Ranges are ordered by their \
+                 first address.",
             )
     }
 
@@ -2515,9 +2511,8 @@ impl Cli {
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
                     )),
             )
-            .about(
-                "List silos\n\nLists silos that are discoverable based on the current permissions.",
-            )
+            .about("List silos")
+            .long_about("Lists silos that are discoverable based on the current permissions.")
     }
 
     pub fn cli_silo_create() -> clap::Command {
@@ -2578,7 +2573,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a silo\n\nFetch a silo by name.")
+            .about("Fetch a silo")
+            .long_about("Fetch a silo by name.")
     }
 
     pub fn cli_silo_delete() -> clap::Command {
@@ -2590,7 +2586,8 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .help("Name or ID of the silo"),
             )
-            .about("Delete a silo\n\nDelete a silo by name.")
+            .about("Delete a silo")
+            .long_about("Delete a silo by name.")
     }
 
     pub fn cli_silo_policy_view() -> clap::Command {
@@ -2691,7 +2688,8 @@ impl Cli {
 
     pub fn cli_system_update_stop() -> clap::Command {
         clap::Command::new("")
-            .about("Stop system update\n\nIf there is no update in progress, do nothing.")
+            .about("Stop system update")
+            .long_about("If there is no update in progress, do nothing.")
     }
 
     pub fn cli_system_update_list() -> clap::Command {
@@ -2944,7 +2942,8 @@ impl Cli {
                         "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
                     ),
             )
-            .about("List routes\n\nList the routes associated with a router in a particular VPC.")
+            .about("List routes")
+            .long_about("List the routes associated with a router in a particular VPC.")
     }
 
     pub fn cli_vpc_router_route_create() -> clap::Command {
