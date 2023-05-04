@@ -118,10 +118,7 @@ fn test_get_disk_size() {
     const ARG1: &str = "not relevant because we're supplying a size";
 
     // test rounding up
-    assert_eq!(
-        get_disk_size(ARG1, Some(1)).unwrap(),
-        1024 * 1024 * 1024,
-    );
+    assert_eq!(get_disk_size(ARG1, Some(1)).unwrap(), 1024 * 1024 * 1024,);
 
     assert_eq!(
         get_disk_size(ARG1, Some(1024 * 1024 * 1024 - 1)).unwrap(),

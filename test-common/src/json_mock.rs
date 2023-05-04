@@ -190,7 +190,9 @@ fn mock_schema_object(
             object: _,
             reference: None,
             extensions: _,
-        } if matches!(&vec[..], &[InstanceType::String, InstanceType::Null]) | matches!(&vec[..], &[InstanceType::Null, InstanceType::String]) => {
+        } if matches!(&vec[..], &[InstanceType::String, InstanceType::Null])
+            | matches!(&vec[..], &[InstanceType::Null, InstanceType::String]) =>
+        {
             mock_string(format, string, src)
         }
 
