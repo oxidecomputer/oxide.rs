@@ -101,10 +101,8 @@ fn get_disk_size(path: &str, size: Option<u64>) -> Result<u64> {
         std::fs::metadata(path)?.len()
     };
 
-    // Nexus' disk size minimum is 1 GB
-    let disk_size = std::cmp::max(ONE_GB, disk_size);
-
-    // Nexus only supports disks whose size is a multiple of 1 GB
+    // Nexus' disk size minimum is 1 GB, and Nexus only supports disks whose
+    // size is a multiple of 1 GB
     let disk_size = if disk_size % ONE_GB != 0 {
         let rounded_down_gb: u64 = disk_size - disk_size % ONE_GB;
         assert_eq!(rounded_down_gb % ONE_GB, 0);
@@ -114,6 +112,44 @@ fn get_disk_size(path: &str, size: Option<u64>) -> Result<u64> {
     };
 
     Ok(disk_size)
+}
+
+#[test]
+fn test_get_disk_size() {
+    const ARG1: &str = "not relevant because we're supplying a size";
+
+    // test rounding up
+    assert_eq!(
+        get_disk_size(ARG1, Some(1)).unwrap(),
+        1024 * 1024 * 1024,
+    );
+
+    assert_eq!(
+        get_disk_size(ARG1, Some(1024 * 1024 * 1024 - 1)).unwrap(),
+        1024 * 1024 * 1024,
+    );
+
+    // test even multiples of GB
+    assert_eq!(
+        get_disk_size(ARG1, Some(1024 * 1024 * 1024)).unwrap(),
+        1024 * 1024 * 1024,
+    );
+
+    assert_eq!(
+        get_disk_size(ARG1, Some(2 * 1024 * 1024 * 1024)).unwrap(),
+        2 * 1024 * 1024 * 1024,
+    );
+
+    // test non-even multiples of GB
+    assert_eq!(
+        get_disk_size(ARG1, Some(2 * 1024 * 1024 * 1024 + 1)).unwrap(),
+        3 * 1024 * 1024 * 1024,
+    );
+
+    assert_eq!(
+        get_disk_size(ARG1, Some(3 * 1024 * 1024 * 1024 - 1)).unwrap(),
+        3 * 1024 * 1024 * 1024,
+    );
 }
 
 fn err_if_object_exists<T>(
