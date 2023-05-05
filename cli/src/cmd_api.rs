@@ -57,6 +57,10 @@ pub struct CmdApi {
     #[clap(long, conflicts_with = "input")]
     pub paginate: bool,
 
+    /// Limit the number of paginated items retrieved.
+    #[clap(long, requires = "paginate")]
+    pub limit: Option<std::num::NonZeroU32>,
+
     /// Add a typed parameter in key=value format.
     #[clap(short = 'F', long)]
     pub field: Vec<String>,
@@ -202,8 +206,6 @@ impl CmdApi {
 
             Ok(())
         } else {
-            print!("[");
-
             // If this is a paginated request, wrap the output in brackets, and
             // print out the contents of each page to make a unified json array
             // as the output.
@@ -218,7 +220,6 @@ impl CmdApi {
             let rest =
                 futures::stream::try_unfold(first_page.next_page, |maybe_page_token| async {
                     if let Some(page_token) = maybe_page_token {
-                        // TODO deal with limit
                         let uri = format!(
                             "{}{}?page_token={}",
                             ctx.client().baseurl(),
@@ -233,37 +234,40 @@ impl CmdApi {
 
                         let resp = req.send().await?.error_for_status()?;
                         let page = resp.json::<PaginatedResponse>().await?;
-                        Ok(Some((page.items, page.next_page)))
+                        reqwest::Result::Ok(Some((
+                            futures::stream::iter(page.items).map(Ok),
+                            page.next_page,
+                        )))
                     } else {
                         Ok(None)
                     }
-                });
+                })
+                .try_flatten();
 
-            let result = futures::stream::once(async { Ok(first_page.items) })
+            print!("[");
+
+            let limit = self.limit.map_or(u32::MAX, std::num::NonZeroU32::get);
+
+            let result = futures::stream::iter(first_page.items)
+                .map(Ok)
                 .chain(rest)
-                .try_fold(false, |comma_needed, items| async move {
-                    if items.is_empty() {
-                        Ok(false)
-                    } else {
-                        let items_out = serde_json::to_string_pretty(&items)?;
-                        let len = items_out.len();
-                        assert_eq!(&items_out[0..2], "[\n");
-                        assert_eq!(&items_out[len - 2..], "\n]");
-                        let items_core = &items_out[2..len - 2];
+                .take(limit as usize)
+                .try_fold(false, |comma_needed, value| async move {
+                    let value_out = serde_json::to_string_pretty(&vec![value])?;
+                    let len = value_out.len();
+                    assert_eq!(&value_out[0..2], "[\n");
+                    assert_eq!(&value_out[len - 2..], "\n]");
+                    let items_core = &value_out[2..len - 2];
 
-                        if comma_needed {
-                            print!(",");
-                        }
-                        println!();
-                        print!("{}", items_core);
-                        Ok(true)
+                    if comma_needed {
+                        print!(",");
                     }
+                    println!();
+                    print!("{}", items_core);
+                    Ok(true)
                 })
                 .await;
 
-            if let Ok(true) = result {
-                print!(",")
-            }
             println!();
             println!("]");
 
