@@ -128,6 +128,14 @@
               "long": "description"
             },
             {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
               "long": "name"
             },
             {
@@ -211,6 +219,14 @@
                   "long": "description"
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "name"
                 },
                 {
@@ -277,6 +293,14 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -424,6 +448,14 @@
               "long": "description"
             },
             {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
               "long": "name"
             },
             {
@@ -532,6 +564,14 @@
               "long": "hostname"
             },
             {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
               "long": "memory"
             },
             {
@@ -588,6 +628,14 @@
                   "help": "Name or ID of the instance"
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -604,6 +652,14 @@
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
                 },
                 {
                   "long": "project",
@@ -699,6 +755,14 @@
                   "help": "The IP address for the interface. One will be auto-assigned if not provided."
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "name"
                 },
                 {
@@ -774,6 +838,14 @@
                 {
                   "long": "interface",
                   "help": "Name or ID of the network interface"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
                 },
                 {
                   "long": "name"
@@ -881,6 +953,14 @@
               "long": "description"
             },
             {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
               "long": "name"
             }
           ]
@@ -924,6 +1004,14 @@
                   "long": "first"
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "last"
                 },
                 {
@@ -952,6 +1040,14 @@
               "about": "Remove a range from an IP pool",
               "args": [
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "pool",
                   "help": "Name or ID of the IP pool"
                 }
@@ -967,7 +1063,17 @@
               "subcommands": [
                 {
                   "name": "add",
-                  "about": "Add a range to an IP pool used for Oxide services"
+                  "about": "Add a range to an IP pool used for Oxide services",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    }
+                  ]
                 },
                 {
                   "name": "list",
@@ -984,7 +1090,17 @@
             },
             {
               "name": "remove",
-              "about": "Remove a range from an IP pool used for Oxide services"
+              "about": "Remove a range from an IP pool used for Oxide services",
+              "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                }
+              ]
             },
             {
               "name": "view",
@@ -998,6 +1114,14 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -1046,7 +1170,17 @@
       "subcommands": [
         {
           "name": "update",
-          "about": "Update the current silo's IAM policy"
+          "about": "Update the current silo's IAM policy",
+          "args": [
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            }
+          ]
         },
         {
           "name": "view",
@@ -1063,6 +1197,14 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -1105,6 +1247,14 @@
               "about": "Update a project's IAM policy",
               "args": [
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -1128,6 +1278,14 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -1210,6 +1368,14 @@
               ]
             },
             {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
               "long": "name"
             }
           ]
@@ -1266,6 +1432,14 @@
                           "help": "username used to log in"
                         },
                         {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
                           "long": "silo",
                           "help": "Name or ID of the silo"
                         }
@@ -1290,6 +1464,14 @@
                       "about": "Set or invalidate a user's password",
                       "long_about": "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
                       "args": [
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
                         {
                           "long": "silo",
                           "help": "Name or ID of the silo"
@@ -1325,6 +1507,14 @@
                     {
                       "long": "idp-entity-id",
                       "help": "idp's entity id"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
                     },
                     {
                       "long": "name"
@@ -1391,6 +1581,14 @@
               "name": "update",
               "about": "Update a silo's IAM policy",
               "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
                 {
                   "long": "silo",
                   "help": "Name or ID of the silo"
@@ -1528,6 +1726,14 @@
               "help": "The name of the disk to be snapshotted"
             },
             {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
               "long": "name"
             },
             {
@@ -1596,7 +1802,17 @@
           "subcommands": [
             {
               "name": "update",
-              "about": "Update the top-level IAM policy"
+              "about": "Update the top-level IAM policy",
+              "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                }
+              ]
             },
             {
               "name": "view",
@@ -1652,6 +1868,14 @@
               "help": "The IPv6 prefix for this VPC\n\nAll IPv6 subnets created from this VPC must be taken from this range, which should be a Unique Local Address in the range `fd00::/48`. The default VPC Subnet will have the first `/64` range from this prefix."
             },
             {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
               "long": "name"
             },
             {
@@ -1681,6 +1905,14 @@
               "name": "update",
               "about": "Replace firewall rules",
               "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
                 {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
@@ -1738,6 +1970,14 @@
               "args": [
                 {
                   "long": "description"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
                 },
                 {
                   "long": "name"
@@ -1805,6 +2045,14 @@
                   "args": [
                     {
                       "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
                     },
                     {
                       "long": "name"
@@ -1884,6 +2132,14 @@
                       "long": "description"
                     },
                     {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
                       "long": "name"
                     },
                     {
@@ -1934,6 +2190,14 @@
               "args": [
                 {
                   "long": "description"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
                 },
                 {
                   "long": "name"
@@ -1989,6 +2253,14 @@
                 {
                   "long": "ipv6-block",
                   "help": "The IPv6 address range for this subnet.\n\nIt must be allocated from the RFC 4193 Unique Local Address range, with the prefix equal to the parent VPC's prefix. A random `/64` block will be assigned if one is not provided. It must not overlap with any existing subnet in the VPC."
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
                 },
                 {
                   "long": "name"
@@ -2090,6 +2362,14 @@
                   "long": "description"
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "name"
                 },
                 {
@@ -2135,6 +2415,14 @@
             },
             {
               "long": "dns-name"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"

@@ -20112,7 +20112,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -20127,7 +20127,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -20475,7 +20475,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -20490,7 +20490,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -21447,7 +21447,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -21462,7 +21462,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -21604,7 +21604,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -21619,7 +21619,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -21858,7 +21858,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -21873,7 +21873,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -22370,7 +22370,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -22385,7 +22385,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -22815,7 +22815,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -22830,7 +22830,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -23944,7 +23944,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -23959,7 +23959,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -24101,7 +24101,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -24116,7 +24116,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -24483,7 +24483,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -24498,7 +24498,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -25190,7 +25190,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -25205,7 +25205,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -25792,7 +25792,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -25807,7 +25807,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -26200,7 +26200,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -26215,7 +26215,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -26550,7 +26550,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -26565,7 +26565,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -26707,7 +26707,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -26722,7 +26722,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -26923,7 +26923,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -26938,7 +26938,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -27158,7 +27158,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -27173,7 +27173,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -27335,7 +27335,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -27350,7 +27350,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -27922,7 +27922,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -27937,7 +27937,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -28347,7 +28347,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -28362,7 +28362,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -28671,7 +28671,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -28686,7 +28686,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -29189,7 +29189,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -29204,7 +29204,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -29405,7 +29405,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -29420,7 +29420,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -29896,7 +29896,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -29911,7 +29911,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -30054,7 +30054,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -30069,7 +30069,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -30423,7 +30423,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -30438,7 +30438,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -30762,7 +30762,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -30777,7 +30777,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -30998,7 +30998,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -31013,7 +31013,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -31233,7 +31233,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -31248,7 +31248,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -31636,7 +31636,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -31651,7 +31651,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -32335,7 +32335,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -32350,7 +32350,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -32961,7 +32961,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -32976,7 +32976,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -33609,7 +33609,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -33624,7 +33624,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
@@ -33785,7 +33785,7 @@ pub mod builder {
             self.send()
                 .map_ok(move |page| {
                     let page = page.into_inner();
-                    let first = futures::stream::iter(page.items.into_iter().map(Ok));
+                    let first = futures::stream::iter(page.items).map(Ok);
                     let rest = futures::stream::try_unfold(
                         (page.next_page, next),
                         |(next_page, next)| async {
@@ -33800,7 +33800,7 @@ pub mod builder {
                                 .map_ok(|page| {
                                     let page = page.into_inner();
                                     Some((
-                                        futures::stream::iter(page.items.into_iter().map(Ok)),
+                                        futures::stream::iter(page.items).map(Ok),
                                         (page.next_page, next),
                                     ))
                                 })
