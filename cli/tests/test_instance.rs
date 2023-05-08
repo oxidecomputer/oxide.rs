@@ -4,6 +4,8 @@
 
 // Copyright 2023 Oxide Computer Company
 
+use std::path::PathBuf;
+
 use assert_cmd::Command;
 use httpmock::prelude::*;
 use oxide_httpmock::MockServerExt;
@@ -49,6 +51,8 @@ fn test_instance_create() {
         });
     });
 
+    let path = PathBuf::from_iter(["tests", "output", "test_instance_create.stdout"].iter());
+
     Command::cargo_bin("oxide")
         .unwrap()
         .env("OXIDE_HOST", server.url(""))
@@ -62,9 +66,7 @@ fn test_instance_create() {
         .write_stdin(body_as_str)
         .assert()
         .success()
-        .stdout(expectorate::eq_file_or_panic(
-            "tests/output/test_instance_create.stdout",
-        ));
+        .stdout(expectorate::eq_file_or_panic(path));
 
     mock.assert();
 }
