@@ -38,7 +38,7 @@ regress = "0.6.0"
 reqwest = "0.11.17"
 rustfmt-wrapper = "0.2.0"
 schemars = { version = "0.8.12", features = ["chrono", "uuid1"] }
-serde = { version = "1.0.160", features = ["derive"] }
+serde = { version = "1.0.162", features = ["derive"] }
 serde_json = "1.0.96"
 serial_test = "1.0.0"
 similar = "2.2.1"
