@@ -1,0 +1,20 @@
+success
+Instance {
+    description: "description is required for some reason",
+    hostname: "hostname",
+    id: 2dcfc278-d448-4c62-34da-b6ae7f7f1572,
+    memory: ByteCount(
+        4294967296,
+    ),
+    name: Name(
+        "name",
+    ),
+    ncpus: InstanceCpuCount(
+        4,
+    ),
+    project_id: ac05e8b4-32ef-e69f-4160-476b03d381ef,
+    run_state: Creating,
+    time_created: 1981-07-08T10:30:49Z,
+    time_modified: 1974-08-09T09:13:10Z,
+    time_run_state_updated: 1979-08-25T16:08:57Z,
+}

@@ -452,6 +452,8 @@ fn mock_integer(
     src: &mut impl Source,
 ) -> Result<Value, Error> {
     match format.as_deref() {
+        Some("uint16") => mock_int_type!(number, u16, src),
+        Some("int16") => mock_int_type!(number, i16, src),
         Some("uint32") => mock_int_type!(number, u32, src),
         Some("int32") => mock_int_type!(number, i32, src),
         Some("uint64") => mock_int_type!(number, u64, src),
