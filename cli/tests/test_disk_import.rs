@@ -542,7 +542,8 @@ fn test_disk_import_bulk_write_import_fail() {
     disk_view_mock.assert();
     disk_create_mock.assert();
     start_bulk_write_mock.assert();
-    disk_bulk_write_mock.assert();
+    // there are 8 upload tasks, and both will receive a 500 on their POSTs
+    disk_bulk_write_mock.assert_hits(2);
     unwind_stop_bulk_write_mock.assert();
     unwind_finalize_mock.assert();
     unwind_disk_delete_mock.assert();

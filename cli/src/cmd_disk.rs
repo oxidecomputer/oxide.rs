@@ -8,7 +8,7 @@ use anyhow::bail;
 use anyhow::Result;
 use base64::Engine;
 use clap::Parser;
-use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
+use indicatif::{ProgressBar, ProgressStyle};
 use oxide_api::types::BlockSize;
 use oxide_api::types::ByteCount;
 use oxide_api::types::DiskCreate;
@@ -27,6 +27,7 @@ use oxide_api::ResponseValue;
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
+use std::sync::Arc;
 use tokio::sync::mpsc;
 
 /// Create a disk from a file upload
@@ -49,11 +50,6 @@ pub struct CmdDiskImport {
     /// Path to the file to import
     #[clap(long)]
     path: String,
-
-    /// How many upload threads to run. Disk size must be divisible by this
-    /// number.
-    #[clap(long, default_value = "1")]
-    threads: usize,
 
     /// The name of the disk to create
     #[clap(long)]
@@ -304,28 +300,26 @@ impl CmdDiskImport {
             )?;
         }
 
+        let file_size = std::fs::metadata(&self.path)?.len();
         let disk_size = get_disk_size(&self.path, self.disk_size.as_ref().map(|x| **x))?;
-
-        if (disk_size % CHUNK_SIZE) != 0 {
-            bail!("disk size must be a multiple of {}", CHUNK_SIZE);
-        }
 
         let disk_block_size = match &self.disk_block_size {
             Some(v) => v.clone(),
             None => BlockSize::try_from(512).unwrap(),
         };
 
-        // If using more than 1 thread, make sure the number of threads divides
-        // the total disk size
-        if (disk_size % self.threads as u64) != 0 {
-            bail!("thread count must evenly divide disk size {}", disk_size);
-        }
-        if ((disk_size / CHUNK_SIZE) % self.threads as u64) != 0 {
+        if (file_size % *disk_block_size as u64) != 0 {
             bail!(
-                "thread count must evenly divide number of chunks {}",
-                disk_size / CHUNK_SIZE
+                "file size {} is not divisible by block size{}!",
+                file_size,
+                *disk_block_size
             );
         }
+
+        // Use 8 upload tasks - this evenly divides all block sizes, and we know
+        // that the file size is evenly divided by the selected block size due
+        // to the above check.
+        const UPLOAD_TASKS: usize = 8;
 
         // Create the disk in state "importing blocks"
         client
@@ -367,27 +361,27 @@ impl CmdDiskImport {
 
         // Create one tokio task for each thread that will upload file chunks
         let mut handles: Vec<tokio::task::JoinHandle<Result<()>>> =
-            Vec::with_capacity(self.threads);
-        let mut senders = Vec::with_capacity(self.threads);
+            Vec::with_capacity(UPLOAD_TASKS);
+        let mut senders = Vec::with_capacity(UPLOAD_TASKS);
 
-        let mb = MultiProgress::new();
+        let pb = Arc::new(ProgressBar::new(disk_size / UPLOAD_TASKS as u64));
+        pb.set_style(ProgressStyle::default_bar()
+            .template("[{elapsed_precise}] [{wide_bar:.green}] {bytes}/{total_bytes} ({bytes_per_sec}, {eta})")?
+        );
 
-        for _i in 0..self.threads {
+        for _i in 0..UPLOAD_TASKS {
             let (tx, mut rx) = mpsc::channel(100);
-
-            let pb = mb.add(ProgressBar::new(disk_size / self.threads as u64));
-            pb.set_style(ProgressStyle::default_bar()
-                .template("[{elapsed_precise}] [{wide_bar:.green}] {bytes}/{total_bytes} ({bytes_per_sec}, {eta})")?
-            );
 
             let client = client.clone();
             let disk_name = self.disk_name.clone();
             let project = self.project.clone();
 
+            let pb = pb.clone();
+
             handles.push(tokio::spawn(async move {
                 pb.set_position(0);
 
-                while let Some((offset, base64_encoded_data)) = rx.recv().await {
+                while let Some((offset, base64_encoded_data, data_len)) = rx.recv().await {
                     client
                         .disk_bulk_write_import()
                         .disk(disk_name.clone())
@@ -399,10 +393,8 @@ impl CmdDiskImport {
                         .send()
                         .await?;
 
-                    pb.inc(CHUNK_SIZE);
+                    pb.inc(data_len as u64);
                 }
-
-                pb.finish();
 
                 Ok(())
             }));
@@ -433,22 +425,26 @@ impl CmdDiskImport {
 
             // If the chunk we just read is all zeroes, don't POST it.
             if !chunk.iter().all(|x| *x == 0) {
-                let encoded = base64::engine::general_purpose::STANDARD.encode(&chunk);
+                let encoded = base64::engine::general_purpose::STANDARD.encode(&chunk[0..n]);
 
-                if let Err(e) = senders[i % self.threads].send((offset, encoded)).await {
+                if let Err(e) = senders[i % UPLOAD_TASKS].send((offset, encoded, n)).await {
                     eprintln!("sending chunk to thread failed with {:?}", e);
                     break Err(e.into());
                 }
+            } else {
+                // Bump the progress bar here to make it consistent
+                pb.inc(n as u64);
             }
 
             offset += CHUNK_SIZE;
             i += 1;
         };
 
-        // wait for upload threads to complete
+        // wait for upload threads to complete, then finish the progress bar
         for tx in senders {
             drop(tx);
         }
+        pb.finish();
 
         if let Err(e) = read_result {
             // some part of reading from the disk and sending to the upload

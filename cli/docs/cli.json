@@ -340,10 +340,6 @@
             {
               "long": "snapshot-name",
               "help": "If supplied, create a snapshot with the given name"
-            },
-            {
-              "long": "threads",
-              "help": "How many upload threads to run. Disk size must be divisible by this number"
             }
           ]
         },
