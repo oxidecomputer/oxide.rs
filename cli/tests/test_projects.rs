@@ -36,7 +36,7 @@ fn test_projects_simple_list() {
         .assert()
         .success()
         .stdout(expectorate::eq_file_or_panic(
-            "tests/output/test_projects_simple_list.stdout",
+            "tests/data/test_projects_simple_list.stdout",
         ));
 
     mock.assert();
@@ -85,7 +85,7 @@ fn test_projects_list_paginated() {
         .assert()
         .success()
         .stdout(expectorate::eq_file_or_panic(
-            "tests/output/test_projects_list_paginated.stdout",
+            "tests/data/test_projects_list_paginated.stdout",
         ));
 
     mock_p1.assert();
