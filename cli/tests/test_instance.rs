@@ -50,8 +50,8 @@ fn test_instance_create() {
             ..JsonMock::mock_value(&mut src).unwrap()
         });
     });
-
-    let path = PathBuf::from_iter(["tests", "output", "test_instance_create.stdout"].iter());
+    let x = "tests/output/test_instance_create.stdout";
+    let path = AsRef::<std::path::Path>::as_ref(x);
 
     Command::cargo_bin("oxide")
         .unwrap()
