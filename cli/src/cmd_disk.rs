@@ -431,11 +431,14 @@ impl CmdDiskImport {
                 break Ok(());
             }
 
-            let encoded = base64::engine::general_purpose::STANDARD.encode(&chunk);
+            // If the chunk we just read is all zeroes, don't POST it.
+            if !chunk.iter().all(|x| *x == 0) {
+                let encoded = base64::engine::general_purpose::STANDARD.encode(&chunk);
 
-            if let Err(e) = senders[i % self.threads].send((offset, encoded)).await {
-                eprintln!("sending chunk to thread failed with {:?}", e);
-                break Err(e.into());
+                if let Err(e) = senders[i % self.threads].send((offset, encoded)).await {
+                    eprintln!("sending chunk to thread failed with {:?}", e);
+                    break Err(e.into());
+                }
             }
 
             offset += CHUNK_SIZE;
