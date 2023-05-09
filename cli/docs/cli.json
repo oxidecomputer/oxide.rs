@@ -1517,6 +1517,12 @@
                       "help": "XXX"
                     },
                     {
+                      "long": "metadata-url"
+                    },
+                    {
+                      "long": "metadata-value"
+                    },
+                    {
                       "long": "name"
                     },
                     {

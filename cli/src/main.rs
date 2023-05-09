@@ -11,7 +11,7 @@ use clap::{Command, CommandFactory, FromArgMatches};
 use config::Config;
 use context::Context;
 use generated_cli::{Cli, CliCommand, CliOverride};
-use oxide_api::types::{IpRange, Ipv4Range, Ipv6Range};
+use oxide_api::types::{IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
 
 mod cmd_api;
 mod cmd_auth;
@@ -53,6 +53,29 @@ impl<'a> Tree<'a> {
                             .value_name("ip-addr")
                             .required(true)
                             .value_parser(clap::value_parser!(std::net::IpAddr)),
+                    ),
+
+                CliCommand::SamlIdentityProviderCreate => cmd
+                    // We're filling in the missing required field so the full
+                    // body is no longer required.
+                    .mut_arg("json-body", |arg| arg.required(false))
+                    .arg(
+                        clap::Arg::new("metadata-url")
+                            .long("metadata-url")
+                            .value_name("url")
+                            .value_parser(clap::value_parser!(String)),
+                    )
+                    .arg(
+                        clap::Arg::new("metadata-value")
+                            .long("metadata-value")
+                            .value_name("xml")
+                            .value_parser(clap::value_parser!(String)),
+                    )
+                    .group(
+                        clap::ArgGroup::new("idp_metadata_source")
+                            .args(["metadata-url", "metadata-value"])
+                            .required(true)
+                            .multiple(false),
                     ),
 
                 // Command is fine as-is.
@@ -380,6 +403,34 @@ impl CliOverride for OxideOverride {
 
         *request = request.to_owned().body(range);
 
+        Ok(())
+    }
+
+    fn execute_saml_identity_provider_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut oxide_api::builder::SamlIdentityProviderCreate,
+    ) -> Result<(), String> {
+        match matches
+            .get_one::<clap::Id>("idp_metadata_source")
+            .map(clap::Id::as_str)
+        {
+            Some("metadata-url") => {
+                let value = matches.get_one::<String>("metadata-url").unwrap();
+                *request = request.to_owned().body_map(|body| {
+                    body.idp_metadata_source(IdpMetadataSource::Url { url: value.clone() })
+                });
+            }
+            Some("metadata-value") => {
+                let value = matches.get_one::<String>("metadata-value").unwrap();
+                *request = request.to_owned().body_map(|body| {
+                    body.idp_metadata_source(IdpMetadataSource::Base64EncodedXml {
+                        data: value.clone(),
+                    })
+                });
+            }
+            _ => unreachable!("invalid value for idp_metadata_source group"),
+        }
         Ok(())
     }
 }
