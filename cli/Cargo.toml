@@ -44,6 +44,7 @@ predicates = { workspace = true }
 pretty_assertions = { workspace = true }
 rand = { workspace = true, features = ["small_rng"] }
 serial_test = { workspace = true }
+tempfile = { workspace = true }
 test-common = { workspace = true }
 
 [build-dependencies]
