@@ -41,7 +41,7 @@ fn test_silo_idp_saml_create() {
             name: body.name.clone(),
             slo_url: body.slo_url.clone(),
             sp_client_id: body.sp_client_id.clone(),
-            technical_contact_email: body.technical_contact_email.clone(),
+            technical_contact_email: body.technical_contact_email,
             ..JsonMock::mock_value(&mut src).unwrap()
         });
     });
