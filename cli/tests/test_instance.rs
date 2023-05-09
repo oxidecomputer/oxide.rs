@@ -4,8 +4,6 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::path::PathBuf;
-
 use assert_cmd::Command;
 use httpmock::prelude::*;
 use oxide_httpmock::MockServerExt;
@@ -17,26 +15,10 @@ fn test_instance_create() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
-    let body = oxide_api::types::InstanceCreate {
-        description: "description is required for some reason".to_string(),
-        disks: vec![oxide_api::types::InstanceDiskAttachment::Create {
-            description: "boot disk".to_string(),
-            disk_source: oxide_api::types::DiskSource::Image {
-                image_id: JsonMock::mock_value(&mut src).unwrap(),
-            },
-            name: "boot".try_into().unwrap(),
-            size: (1024 * 1024 * 1024 * 1024).try_into().unwrap(),
-        }],
-        external_ips: vec![oxide_api::types::ExternalIpCreate::Ephemeral { pool_name: None }],
-        hostname: "hostname".to_string(),
-        memory: (4 * 1024 * 1024 * 1024).try_into().unwrap(),
-        name: "name".try_into().unwrap(),
-        ncpus: 4.try_into().unwrap(),
-        network_interfaces: oxide_api::types::InstanceNetworkInterfaceAttachment::Default,
-        start: true,
-        user_data: String::new(),
-    };
-    let body_as_str = serde_json::to_string_pretty(&body).unwrap();
+    let body = serde_json::from_str(
+        &std::fs::read_to_string("tests/data/test_instance_create.stdin").unwrap(),
+    )
+    .unwrap();
 
     let mock = server.instance_create(|when, then| {
         when.body(&body);
@@ -50,8 +32,6 @@ fn test_instance_create() {
             ..JsonMock::mock_value(&mut src).unwrap()
         });
     });
-    let x = "tests/output/test_instance_create.stdout";
-    let path = AsRef::<std::path::Path>::as_ref(x);
 
     Command::cargo_bin("oxide")
         .unwrap()
@@ -62,11 +42,12 @@ fn test_instance_create() {
         .arg("--project")
         .arg("projname")
         .arg("--json-body")
-        .arg("/dev/stdin")
-        .write_stdin(body_as_str)
+        .arg("tests/data/test_instance_create.stdin")
         .assert()
         .success()
-        .stdout(expectorate::eq_file_or_panic(path));
+        .stdout(expectorate::eq_file_or_panic(
+            "tests/data/test_instance_create.stdout",
+        ));
 
     mock.assert();
 }

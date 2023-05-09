@@ -2,7 +2,7 @@ success
 Instance {
     description: "description is required for some reason",
     hostname: "hostname",
-    id: 2dcfc278-d448-4c62-34da-b6ae7f7f1572,
+    id: 6270889a-e74d-fa7c-849b-22449cd6138e,
     memory: ByteCount(
         4294967296,
     ),
@@ -12,9 +12,9 @@ Instance {
     ncpus: InstanceCpuCount(
         4,
     ),
-    project_id: ac05e8b4-32ef-e69f-4160-476b03d381ef,
+    project_id: 78d4484c-6234-dab6-ae7f-7f1572d3814f,
     run_state: Creating,
-    time_created: 1981-07-08T10:30:49Z,
-    time_modified: 1974-08-09T09:13:10Z,
-    time_run_state_updated: 1979-08-25T16:08:57Z,
+    time_created: 2018-07-10T22:24:56Z,
+    time_modified: 2015-03-05T05:47:06Z,
+    time_run_state_updated: 2000-11-09T10:15:15Z,
 }
