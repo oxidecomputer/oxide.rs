@@ -7,15 +7,19 @@
 use std::{io::Write, time::Duration};
 
 use anyhow::Result;
+use async_trait::async_trait;
 use clap::Parser;
+
+use crate::RunnableCmd;
 
 #[derive(Parser, Debug, Clone)]
 #[clap(verbatim_doc_comment)]
 #[clap(name = "import")]
 pub struct CmdDiskImport {}
 
-impl CmdDiskImport {
-    pub async fn run(&self, _ctx: &mut crate::context::Context) -> Result<()> {
+#[async_trait]
+impl RunnableCmd for CmdDiskImport {
+    async fn run(&self, _ctx: crate::context::Context) -> Result<()> {
         print!("importing disk .");
         std::io::stdout().flush()?;
         for _ in 0..20 {

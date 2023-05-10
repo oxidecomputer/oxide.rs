@@ -7,6 +7,7 @@
 use std::{collections::HashMap, fs::File, io::Read, time::Duration};
 
 use anyhow::{anyhow, bail, Result};
+use async_trait::async_trait;
 use clap::Parser;
 use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse,
@@ -22,6 +23,7 @@ use reqwest::{
 use crate::{
     config::{Config, Host},
     context::Context,
+    RunnableCmd,
 };
 
 /// Login, logout, and get the status of your authentication.
@@ -42,11 +44,12 @@ enum SubCommand {
     Status(CmdAuthStatus),
 }
 
-impl CmdAuth {
-    pub async fn run(&self, ctx: &mut Context) -> Result<()> {
+#[async_trait]
+impl RunnableCmd for CmdAuth {
+    async fn run(&self, mut ctx: Context) -> Result<()> {
         match &self.subcmd {
-            SubCommand::Login(cmd) => cmd.run(ctx).await,
-            SubCommand::Logout(cmd) => cmd.run(ctx).await,
+            SubCommand::Login(cmd) => cmd.run(&mut ctx).await,
+            SubCommand::Logout(cmd) => cmd.run(&mut ctx).await,
             SubCommand::Status(cmd) => cmd.run().await,
         }
     }
