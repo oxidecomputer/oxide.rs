@@ -47,8 +47,7 @@ impl Testfile {
         if populate_with_random {
             let mut rng = thread_rng();
 
-            let mut data: Vec<u8> = Vec::with_capacity(sz);
-            data.resize(sz, 0u8);
+            let mut data: Vec<u8> = vec![0u8; sz];
             rng.fill(&mut data[..]);
             file.write_all(&data)?;
         } else {
@@ -74,9 +73,7 @@ impl Testfile {
             .open(&self.file_path)?;
         file.seek(SeekFrom::Start((i * CHUNK_SIZE) as u64))?;
 
-        let mut data: Vec<u8> = Vec::with_capacity(CHUNK_SIZE);
-        data.resize(CHUNK_SIZE, 0u8);
-
+        let mut data: Vec<u8> = vec![0u8; CHUNK_SIZE];
         let mut rng = thread_rng();
         rng.fill(&mut data[..]);
         file.write_all(&data)?;
