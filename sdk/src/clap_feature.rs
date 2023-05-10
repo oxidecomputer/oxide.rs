@@ -84,11 +84,20 @@ impl clap::builder::TypedValueParser for BlockSizeParser {
         ) -> Option<types::BlockSize> {
             let value: Option<i64> = value.to_str()?.parse().ok();
             match value {
-                Some(v) => v.try_into().ok(),
+                Some(512) => 512.try_into().ok(),
+                Some(2048) => 2048.try_into().ok(),
+                Some(4096) => 4096.try_into().ok(),
+                Some(_) => None,
                 None => None,
             }
         }
 
-        parse(cmd, arg, value).ok_or_else(|| clap::Error::new(clap::error::ErrorKind::InvalidValue))
+        parse(cmd, arg, value).ok_or_else(|| {
+            clap::Error::raw(
+                clap::error::ErrorKind::InvalidValue,
+                "block size must be 512, 2048, or 4096\n",
+            )
+            .with_cmd(cmd)
+        })
     }
 }
