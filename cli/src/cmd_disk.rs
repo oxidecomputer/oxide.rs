@@ -364,10 +364,11 @@ impl CmdDiskImport {
             Vec::with_capacity(UPLOAD_TASKS);
         let mut senders = Vec::with_capacity(UPLOAD_TASKS);
 
-        let pb = Arc::new(ProgressBar::new(disk_size / UPLOAD_TASKS as u64));
+        let pb = Arc::new(ProgressBar::new(file_size));
         pb.set_style(ProgressStyle::default_bar()
             .template("[{elapsed_precise}] [{wide_bar:.green}] {bytes}/{total_bytes} ({bytes_per_sec}, {eta})")?
         );
+        pb.set_position(0);
 
         for _i in 0..UPLOAD_TASKS {
             let (tx, mut rx) = mpsc::channel(100);
@@ -379,8 +380,6 @@ impl CmdDiskImport {
             let pb = pb.clone();
 
             handles.push(tokio::spawn(async move {
-                pb.set_position(0);
-
                 while let Some((offset, base64_encoded_data, data_len)) = rx.recv().await {
                     client
                         .disk_bulk_write_import()
@@ -440,11 +439,9 @@ impl CmdDiskImport {
             i += 1;
         };
 
-        // wait for upload threads to complete, then finish the progress bar
         for tx in senders {
             drop(tx);
         }
-        pb.finish();
 
         if let Err(e) = read_result {
             // some part of reading from the disk and sending to the upload
@@ -470,6 +467,9 @@ impl CmdDiskImport {
                 return Err(e);
             }
         }
+
+        // wait for upload threads to complete, then finish the progress bar
+        pb.finish();
 
         // Stop the bulk write process
         let stop_bulk_write_response = client
