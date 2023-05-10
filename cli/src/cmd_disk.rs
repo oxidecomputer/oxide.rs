@@ -53,7 +53,7 @@ pub struct CmdDiskImport {
 
     /// The name of the disk to create
     #[clap(long)]
-    disk_name: Name,
+    disk: Name,
 
     /// The size of the disk to create. If unspecified, the size of the file
     /// will be used, rounded up to the nearest GB.
@@ -66,12 +66,12 @@ pub struct CmdDiskImport {
 
     /// If supplied, create a snapshot with the given name.
     #[clap(long)]
-    snapshot_name: Option<Name>,
+    snapshot: Option<Name>,
 
     /// If supplied, create an image with the given name. Requires the creation
     /// of a snapshot.
-    #[clap(long)]
-    image_name: Option<Name>,
+    #[clap(long, requires = "snapshot")]
+    image: Option<Name>,
 
     /// The description for the image created out of the snapshot of this disk.
     #[clap(long)]
@@ -180,14 +180,14 @@ impl CmdDiskImport {
         let response = client
             .disk_delete()
             .project(&self.project)
-            .disk(self.disk_name.clone())
+            .disk(self.disk.clone())
             .send()
             .await;
 
         if let Err(e) = response {
             eprintln!(
                 "trying to unwind, deleting {:?} failed with {:?}",
-                self.disk_name, e
+                self.disk, e
             );
             return Err(e.into());
         }
@@ -199,7 +199,7 @@ impl CmdDiskImport {
         let response = client
             .disk_finalize_import()
             .project(&self.project)
-            .disk(self.disk_name.clone())
+            .disk(self.disk.clone())
             .send()
             .await;
 
@@ -207,7 +207,7 @@ impl CmdDiskImport {
         if let Err(e) = response {
             eprintln!(
                 "trying to unwind, finalizing {:?} failed with {:?}",
-                self.disk_name, e
+                self.disk, e
             );
             return Err(e.into());
         }
@@ -219,7 +219,7 @@ impl CmdDiskImport {
         let response = client
             .disk_bulk_write_import_stop()
             .project(&self.project)
-            .disk(self.disk_name.clone())
+            .disk(self.disk.clone())
             .send()
             .await;
 
@@ -228,7 +228,7 @@ impl CmdDiskImport {
         if let Err(e) = response {
             eprintln!(
                 "trying to unwind, stopping the bulk write process for {:?} failed with {:?}",
-                self.disk_name, e
+                self.disk, e
             );
             return Err(e.into());
         }
@@ -244,8 +244,8 @@ impl CmdDiskImport {
         }
 
         // If image name is supplied, then snapshot name must be supplied too.
-        if self.image_name.is_some() {
-            if self.snapshot_name.is_none() {
+        if self.image.is_some() {
+            if self.snapshot.is_none() {
                 bail!("When creating an image, snapshot name must be supplied!");
             }
 
@@ -265,17 +265,17 @@ impl CmdDiskImport {
 
         // validate that objects don't exist already
         err_if_object_exists(
-            format!("disk {:?} exists already", &self.disk_name),
+            format!("disk {:?} exists already", &self.disk),
             client
                 .disk_view()
                 .project(&self.project)
-                .disk(NameOrId::Name(self.disk_name.clone()))
+                .disk(NameOrId::Name(self.disk.clone()))
                 .send()
                 .await,
         )?;
 
         // snapshot
-        if let Some(snapshot_name) = &self.snapshot_name {
+        if let Some(snapshot_name) = &self.snapshot {
             err_if_object_exists(
                 format!("snapshot {:?} exists already", &snapshot_name),
                 client
@@ -288,7 +288,7 @@ impl CmdDiskImport {
         }
 
         // image
-        if let Some(image_name) = &self.image_name {
+        if let Some(image_name) = &self.image {
             err_if_object_exists(
                 format!("image {:?} exists already", &image_name),
                 client
@@ -326,7 +326,7 @@ impl CmdDiskImport {
             .disk_create()
             .project(&self.project)
             .body(DiskCreate {
-                name: self.disk_name.clone(),
+                name: self.disk.clone(),
                 description: self.description.clone(),
                 disk_source: DiskSource::ImportingBlocks {
                     block_size: disk_block_size.clone(),
@@ -340,7 +340,7 @@ impl CmdDiskImport {
         let start_bulk_write_response = client
             .disk_bulk_write_import_start()
             .project(&self.project)
-            .disk(self.disk_name.clone())
+            .disk(self.disk.clone())
             .send()
             .await;
 
@@ -374,7 +374,7 @@ impl CmdDiskImport {
             let (tx, mut rx) = mpsc::channel(100);
 
             let client = client.clone();
-            let disk_name = self.disk_name.clone();
+            let disk_name = self.disk.clone();
             let project = self.project.clone();
 
             let pb = pb.clone();
@@ -475,7 +475,7 @@ impl CmdDiskImport {
         let stop_bulk_write_response = client
             .disk_bulk_write_import_stop()
             .project(&self.project)
-            .disk(self.disk_name.clone())
+            .disk(self.disk.clone())
             .send()
             .await;
 
@@ -495,9 +495,9 @@ impl CmdDiskImport {
         let request = client
             .disk_finalize_import()
             .project(&self.project)
-            .disk(self.disk_name.clone())
+            .disk(self.disk.clone())
             .body(FinalizeDisk {
-                snapshot_name: self.snapshot_name.clone(),
+                snapshot_name: self.snapshot.clone(),
             });
 
         let finalize_response = request.send().await;
@@ -514,8 +514,8 @@ impl CmdDiskImport {
         }
 
         // optionally, make an image out of that snapshot
-        if let Some(image_name) = &self.image_name {
-            let snapshot_name = self.snapshot_name.as_ref().unwrap();
+        if let Some(image_name) = &self.image {
+            let snapshot_name = self.snapshot.as_ref().unwrap();
             let image_description = self.image_description.as_ref().unwrap();
             let image_os = self.image_os.as_ref().unwrap();
             let image_version = self.image_version.as_ref().unwrap();

@@ -302,24 +302,24 @@
               "long": "description"
             },
             {
-              "long": "disk-block-size",
-              "help": "The desired size of the disk's blocks"
+              "long": "disk",
+              "help": "The name of the disk to create"
             },
             {
-              "long": "disk-name",
-              "help": "The name of the disk to create"
+              "long": "disk-block-size",
+              "help": "The desired size of the disk's blocks"
             },
             {
               "long": "disk-size",
               "help": "The size of the disk to create. If unspecified, the size of the file will be used, rounded up to the nearest GB"
             },
             {
-              "long": "image-description",
-              "help": "The description for the image created out of the snapshot of this disk"
+              "long": "image",
+              "help": "If supplied, create an image with the given name. Requires the creation of a snapshot"
             },
             {
-              "long": "image-name",
-              "help": "If supplied, create an image with the given name. Requires the creation of a snapshot"
+              "long": "image-description",
+              "help": "The description for the image created out of the snapshot of this disk"
             },
             {
               "long": "image-os",
@@ -338,7 +338,7 @@
               "help": "Name or ID of the project"
             },
             {
-              "long": "snapshot-name",
+              "long": "snapshot",
               "help": "If supplied, create a snapshot with the given name"
             }
           ]
