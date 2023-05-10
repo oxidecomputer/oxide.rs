@@ -333,11 +333,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::RoleList
         | CliCommand::RoleView
         | CliCommand::SystemComponentVersionList
-        | CliCommand::SystemImageCreate
-        | CliCommand::SystemImageDelete
-        | CliCommand::SystemImageList
-        | CliCommand::SystemImageView
-        | CliCommand::SystemImageViewById
         | CliCommand::SystemMetric
         | CliCommand::SystemUpdateComponentsList
         | CliCommand::SystemUpdateList
