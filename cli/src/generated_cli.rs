@@ -22,11 +22,6 @@ impl Cli {
             CliCommand::LoginSamlBegin => Self::cli_login_saml_begin(),
             CliCommand::LoginSaml => Self::cli_login_saml(),
             CliCommand::Logout => Self::cli_logout(),
-            CliCommand::SystemImageViewById => Self::cli_system_image_view_by_id(),
-            CliCommand::SystemImageList => Self::cli_system_image_list(),
-            CliCommand::SystemImageCreate => Self::cli_system_image_create(),
-            CliCommand::SystemImageView => Self::cli_system_image_view(),
-            CliCommand::SystemImageDelete => Self::cli_system_image_delete(),
             CliCommand::DiskList => Self::cli_disk_list(),
             CliCommand::DiskCreate => Self::cli_disk_create(),
             CliCommand::DiskView => Self::cli_disk_view(),
@@ -372,107 +367,6 @@ impl Cli {
 
     pub fn cli_logout() -> clap::Command {
         clap::Command::new("")
-    }
-
-    pub fn cli_system_image_view_by_id() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("id")
-                    .long("id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
-                    .required(true),
-            )
-            .about("Fetch a system-wide image by id")
-    }
-
-    pub fn cli_system_image_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::NameSortMode::NameAscending.to_string(),
-                        ]),
-                        |s| types::NameSortMode::try_from(s).unwrap(),
-                    ))
-                    .required(false),
-            )
-            .about("List system-wide images")
-            .long_about(
-                "Returns a list of all the system-wide images. System-wide images are returned \
-                 sorted by creation date, with the most recent images appearing first.",
-            )
-    }
-
-    pub fn cli_system_image_create() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("description")
-                    .long("description")
-                    .value_parser(clap::value_parser!(String))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                clap::Arg::new("name")
-                    .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Create a system-wide image")
-            .long_about(
-                "Create a new system-wide image. This image can then be used by any user in any \
-                 silo as a base for instances.",
-            )
-    }
-
-    pub fn cli_system_image_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("image-name")
-                    .long("image-name")
-                    .value_parser(clap::value_parser!(types::Name))
-                    .required(true),
-            )
-            .about("Fetch a system-wide image")
-            .long_about("Returns the details of a specific system-wide image.")
-    }
-
-    pub fn cli_system_image_delete() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("image-name")
-                    .long("image-name")
-                    .value_parser(clap::value_parser!(types::Name))
-                    .required(true),
-            )
-            .about("Delete a system-wide image")
-            .long_about(
-                "Permanently delete a system-wide image. This operation cannot be undone. Any \
-                 instances using the system-wide image will continue to run, however new \
-                 instances can not be created with this image.",
-            )
     }
 
     pub fn cli_disk_list() -> clap::Command {
@@ -4352,21 +4246,6 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::Logout => {
                 self.execute_logout(matches).await;
             }
-            CliCommand::SystemImageViewById => {
-                self.execute_system_image_view_by_id(matches).await;
-            }
-            CliCommand::SystemImageList => {
-                self.execute_system_image_list(matches).await;
-            }
-            CliCommand::SystemImageCreate => {
-                self.execute_system_image_create(matches).await;
-            }
-            CliCommand::SystemImageView => {
-                self.execute_system_image_view(matches).await;
-            }
-            CliCommand::SystemImageDelete => {
-                self.execute_system_image_delete(matches).await;
-            }
             CliCommand::DiskList => {
                 self.execute_disk_list(matches).await;
             }
@@ -4967,126 +4846,6 @@ impl<T: CliOverride> Cli<T> {
     pub async fn execute_logout(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.logout();
         self.over.execute_logout(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_image_view_by_id(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_image_view_by_id();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("id") {
-            request = request.id(value.clone());
-        }
-
-        self.over
-            .execute_system_image_view_by_id(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_image_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_image_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
-        self.over
-            .execute_system_image_list(matches, &mut request)
-            .unwrap();
-        let mut stream = request.stream();
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    println!("error\n{:#?}", r);
-                    break;
-                }
-                Ok(None) => {
-                    break;
-                }
-                Ok(Some(value)) => {
-                    println!("{:#?}", value);
-                }
-            }
-        }
-    }
-
-    pub async fn execute_system_image_create(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_image_create();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::GlobalImageCreate>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        if let Some(value) = matches.get_one::<String>("description") {
-            request = request.body_map(|body| body.description(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::Name>("name") {
-            request = request.body_map(|body| body.name(value.clone()))
-        }
-
-        self.over
-            .execute_system_image_create(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_image_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_image_view();
-        if let Some(value) = matches.get_one::<types::Name>("image-name") {
-            request = request.image_name(value.clone());
-        }
-
-        self.over
-            .execute_system_image_view(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_image_delete(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_image_delete();
-        if let Some(value) = matches.get_one::<types::Name>("image-name") {
-            request = request.image_name(value.clone());
-        }
-
-        self.over
-            .execute_system_image_delete(matches, &mut request)
-            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -9005,46 +8764,6 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_system_image_view_by_id(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemImageViewById,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_image_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemImageList,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_image_create(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemImageCreate,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_image_view(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemImageView,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_image_delete(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemImageDelete,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
     fn execute_disk_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10114,11 +9833,6 @@ pub enum CliCommand {
     LoginSamlBegin,
     LoginSaml,
     Logout,
-    SystemImageViewById,
-    SystemImageList,
-    SystemImageCreate,
-    SystemImageView,
-    SystemImageDelete,
     DiskList,
     DiskCreate,
     DiskView,
@@ -10264,11 +9978,6 @@ impl CliCommand {
             CliCommand::LoginSamlBegin,
             CliCommand::LoginSaml,
             CliCommand::Logout,
-            CliCommand::SystemImageViewById,
-            CliCommand::SystemImageList,
-            CliCommand::SystemImageCreate,
-            CliCommand::SystemImageView,
-            CliCommand::SystemImageDelete,
             CliCommand::DiskList,
             CliCommand::DiskCreate,
             CliCommand::DiskView,
