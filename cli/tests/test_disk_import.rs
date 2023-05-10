@@ -11,6 +11,7 @@ use oxide_api::types::Disk;
 use oxide_api::types::Image;
 use oxide_api::types::Snapshot;
 use oxide_httpmock::MockServerExt;
+use predicates::prelude::*;
 use rand::SeedableRng;
 use rand::{thread_rng, Rng};
 use std::fs::File;
@@ -635,4 +636,137 @@ fn test_disk_import_bad_file_size() {
         .arg("test-import")
         .assert()
         .failure();
+}
+
+// Test for required parameters being supplied
+#[test]
+fn test_disk_import_required_parameters() {
+    let server = MockServer::start();
+    let test_file = Testfile::new_random(512 + 1).unwrap();
+
+    // only supplying --image-description won't work
+    let output: &str = r#"error: the following required arguments were not provided:
+  --snapshot <SNAPSHOT>
+  --image-os <IMAGE_OS>
+  --image-version <IMAGE_VERSION>
+  --image <IMAGE>"#;
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("--project")
+        .arg("myproj")
+        .arg("--path")
+        .arg(test_file.path())
+        .arg("--disk")
+        .arg("test-import")
+        .arg("--description")
+        .arg("disk description")
+        .arg("--image-description")
+        .arg("value")
+        .assert()
+        .failure()
+        .stderr(predicate::str::starts_with(output));
+
+    // only supplying --image won't work
+    let output: &str = r#"error: the following required arguments were not provided:
+  --snapshot <SNAPSHOT>
+  --image-os <IMAGE_OS>
+  --image-version <IMAGE_VERSION>
+  --image-description <IMAGE_DESCRIPTION>"#;
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("--project")
+        .arg("myproj")
+        .arg("--path")
+        .arg(test_file.path())
+        .arg("--disk")
+        .arg("test-import")
+        .arg("--description")
+        .arg("disk description")
+        .arg("--image")
+        .arg("value")
+        .assert()
+        .failure()
+        .stderr(predicate::str::starts_with(output));
+
+    // supplying all of the image group but no snapshot won't work
+    let output: &str = r#"error: the following required arguments were not provided:
+  --snapshot <SNAPSHOT>"#;
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("--project")
+        .arg("myproj")
+        .arg("--path")
+        .arg(test_file.path())
+        .arg("--disk")
+        .arg("test-import")
+        .arg("--description")
+        .arg("disk description")
+        .arg("--image")
+        .arg("value")
+        .arg("--image-description")
+        .arg("value")
+        .arg("--image-os")
+        .arg("value")
+        .arg("--image-version")
+        .arg("value")
+        .assert()
+        .failure()
+        .stderr(predicate::str::starts_with(output));
+
+    // supplying snapshot and all of the image group will work (and will error
+    // at the bad path)
+    let mut bad_path = test_file.path().clone();
+    bad_path.push("does.not.exist");
+
+    let output = format!(
+        "error: path {} does not exist",
+        bad_path.clone().into_os_string().to_str().unwrap()
+    );
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("--project")
+        .arg("myproj")
+        .arg("--path")
+        .arg(bad_path)
+        .arg("--disk")
+        .arg("test-import")
+        .arg("--description")
+        .arg("disk description")
+        .arg("--snapshot")
+        .arg("value")
+        .arg("--image")
+        .arg("value")
+        .arg("--image-description")
+        .arg("value")
+        .arg("--image-os")
+        .arg("value")
+        .arg("--image-version")
+        .arg("value")
+        .assert()
+        .failure()
+        .stdout(predicate::str::starts_with(output));
 }

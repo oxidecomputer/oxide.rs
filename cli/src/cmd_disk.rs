@@ -70,19 +70,19 @@ pub struct CmdDiskImport {
 
     /// If supplied, create an image with the given name. Requires the creation
     /// of a snapshot.
-    #[clap(long, requires = "snapshot")]
+    #[clap(long, requires_all = ["snapshot", "image_description", "image_os", "image_version"])]
     image: Option<Name>,
 
     /// The description for the image created out of the snapshot of this disk.
-    #[clap(long)]
+    #[clap(long, requires_all = ["snapshot", "image", "image_os", "image_version"])]
     image_description: Option<String>,
 
     /// The OS of this image (e.g. Debian)
-    #[clap(long)]
+    #[clap(long, requires_all = ["snapshot", "image", "image_description", "image_version"])]
     image_os: Option<String>,
 
     /// The version of this image (e.g. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)
-    #[clap(long)]
+    #[clap(long, requires_all = ["snapshot", "image", "image_description", "image_os"])]
     image_version: Option<String>,
 }
 
@@ -241,26 +241,6 @@ impl CmdDiskImport {
 
         if !Path::new(&self.path).exists() {
             bail!("path {} does not exist", self.path);
-        }
-
-        // If image name is supplied, then snapshot name must be supplied too.
-        if self.image.is_some() {
-            if self.snapshot.is_none() {
-                bail!("When creating an image, snapshot name must be supplied!");
-            }
-
-            // Description, OS, and version must also be supplied
-            if self.image_description.is_none() {
-                bail!("When creating an image, an image description must be supplied!");
-            }
-
-            if self.image_os.is_none() {
-                bail!("When creating an image, OS must be supplied!");
-            }
-
-            if self.image_version.is_none() {
-                bail!("When creating an image, version name must be supplied!");
-            }
         }
 
         // validate that objects don't exist already
