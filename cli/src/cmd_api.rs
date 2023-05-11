@@ -107,7 +107,7 @@ impl RunnableCmd<crate::context::Context> for CmdApi {
         };
 
         // Parse the fields.
-        let params = self.parse_fields(&ctx)?;
+        let params = self.parse_fields(ctx)?;
 
         // Set them as our body if they exist.
         let mut b = String::new();
@@ -196,7 +196,7 @@ impl RunnableCmd<crate::context::Context> for CmdApi {
         // Print the response headers if requested.
         if self.include {
             println!("{:?} {}", resp.version(), resp.status());
-            print_headers(&ctx, resp.headers())?;
+            print_headers(ctx, resp.headers())?;
         }
 
         if resp.status() == http::StatusCode::NO_CONTENT {
@@ -274,78 +274,6 @@ impl RunnableCmd<crate::context::Context> for CmdApi {
                 println!("An error occurred during a paginated query:\n{}", e);
             }
             result.map(|_| ())
-
-            /*
-            let rest =
-                futures::stream::try_unfold(first_page.next_page, |maybe_page_token| async {
-                    if let Some(page_token) = maybe_page_token {
-                        let uri = format!(
-                            "{}{}?page_token={}",
-                            ctx.client().baseurl(),
-                            endpoint,
-                            page_token,
-                        );
-
-                        let mut req = client.request(method.clone(), uri);
-                        for (key, value) in headers.clone() {
-                            req = req.header(key, value);
-                        }
-
-                        let resp = req.send().await?.error_for_status()?;
-                        let page = resp.json::<PaginatedResponse>().await?;
-                        reqwest::Result::Ok(Some((
-                            futures::stream::iter(page.items)
-                                .map(anyhow::Result::<serde_json::Value>::Ok),
-                            page.next_page,
-                        )))
-                    } else {
-                        Ok(None)
-                    }
-                })
-                .try_flatten();
-
-            print!("[");
-
-            let limit = self.limit.map_or(u32::MAX, std::num::NonZeroU32::get);
-
-            let xxx = futures::stream::iter(first_page.items)
-                // .map(anyhow::Result::<serde_json::Value>::Ok)
-                // .chain(rest)
-                .for_each(|x| async {
-                    println!("hi");
-                })
-                .await;
-
-            let result = futures::stream::iter(first_page.items)
-                .map(Ok)
-                .chain(rest)
-                .take(limit as usize)
-                .try_fold(false, |comma_needed, value| async move {
-                    let value_out = serde_json::to_string_pretty(&vec![value])?;
-                    let len = value_out.len();
-                    assert_eq!(&value_out[0..2], "[\n");
-                    assert_eq!(&value_out[len - 2..], "\n]");
-                    let items_core = &value_out[2..len - 2];
-
-                    if comma_needed {
-                        print!(",");
-                    }
-                    println!();
-                    print!("{}", items_core);
-                    Ok(true)
-                })
-                .await;
-
-            println!();
-            println!("]");
-
-            if let Err(e) = &result {
-                println!("An error occurred during a paginated query:\n{}", e);
-            }
-
-            result.map(|_| ())
-            Ok(())
-            */
         }
     }
 }
