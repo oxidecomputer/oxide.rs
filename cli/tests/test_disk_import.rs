@@ -92,11 +92,12 @@ impl Testfile {
 // A disk import where everything succeeds
 #[test]
 fn test_disk_import() {
-    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let mut src = rand::rngs::SmallRng::seed_from_u64(420);
     let server = MockServer::start();
+    eprintln!("test_disk_import {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -108,7 +109,7 @@ fn test_disk_import() {
     });
 
     let disk_create_mock = server.disk_create(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
         then.created(&Disk {
             name: "test-import".parse().unwrap(),
             ..Disk::mock_value(&mut src).unwrap()
@@ -116,22 +117,22 @@ fn test_disk_import() {
     });
 
     let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
         then.no_content();
     });
 
     let disk_bulk_write_mock = server.disk_bulk_write_import(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
         then.no_content();
     });
 
     let stop_bulk_write_mock = server.disk_bulk_write_import_stop(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
         then.no_content();
     });
 
     let finalize_mock = server.disk_finalize_import(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
         then.no_content();
     });
 
@@ -141,7 +142,7 @@ fn test_disk_import() {
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "fake-token")
+        .env("OXIDE_TOKEN", "test_disk_import")
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -151,7 +152,7 @@ fn test_disk_import() {
         .arg("--path")
         .arg(test_file.path())
         .arg("--disk")
-        .arg("test-import")
+        .arg("test-disk-import")
         .assert()
         .success();
 
@@ -167,11 +168,12 @@ fn test_disk_import() {
 // A disk import of a sparse file where everything succeeds
 #[test]
 fn test_disk_import_sparse() {
-    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let mut src = rand::rngs::SmallRng::seed_from_u64(421);
     let server = MockServer::start();
+    eprintln!("test_disk_import_sparse {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -183,30 +185,30 @@ fn test_disk_import_sparse() {
     });
 
     let disk_create_mock = server.disk_create(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
         then.created(&Disk {
-            name: "test-import".parse().unwrap(),
+            name: "test-disk-import-sparse".parse().unwrap(),
             ..Disk::mock_value(&mut src).unwrap()
         });
     });
 
     let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
         then.no_content();
     });
 
     let disk_bulk_write_mock = server.disk_bulk_write_import(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
         then.no_content();
     });
 
     let stop_bulk_write_mock = server.disk_bulk_write_import_stop(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
         then.no_content();
     });
 
     let finalize_mock = server.disk_finalize_import(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
         then.no_content();
     });
 
@@ -218,7 +220,7 @@ fn test_disk_import_sparse() {
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "fake-token")
+        .env("OXIDE_TOKEN", "test_disk_import_sparse")
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -228,7 +230,7 @@ fn test_disk_import_sparse() {
         .arg("--path")
         .arg(test_file.path())
         .arg("--disk")
-        .arg("test-import")
+        .arg("test-disk-import-sparse")
         .assert()
         .success();
 
@@ -244,13 +246,14 @@ fn test_disk_import_sparse() {
 // A disk import where the disk exists already
 #[test]
 fn test_disk_import_disk_exists_already() {
-    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let mut src = rand::rngs::SmallRng::seed_from_u64(422);
     let server = MockServer::start();
+    eprintln!("test_disk_import_disk_exists_already {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
         then.ok(&Disk {
-            name: "test-import".parse().unwrap(),
+            name: "test-disk-import-disk-exists-already".parse().unwrap(),
             ..Disk::mock_value(&mut src).unwrap()
         });
     });
@@ -261,7 +264,7 @@ fn test_disk_import_disk_exists_already() {
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "fake-token")
+        .env("OXIDE_TOKEN", "test_disk_import_sparse")
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -271,11 +274,11 @@ fn test_disk_import_disk_exists_already() {
         .arg("--path")
         .arg(test_file.path())
         .arg("--disk")
-        .arg("test-import")
+        .arg("test-disk-import-disk-exists-already")
         .arg("--snapshot")
-        .arg("test-import-snap")
+        .arg("test-disk-import-disk-exists-already-snap")
         .arg("--image")
-        .arg("test-import")
+        .arg("test-disk-import-disk-exists-already")
         .arg("--image-description")
         .arg("image description")
         .arg("--image-os")
@@ -291,11 +294,12 @@ fn test_disk_import_disk_exists_already() {
 // A disk import where the snapshot exists already
 #[test]
 fn test_disk_import_snapshot_exists_already() {
-    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let mut src = rand::rngs::SmallRng::seed_from_u64(423);
     let server = MockServer::start();
+    eprintln!("test_disk_import_snapshot_exists_already {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_snapshot_exists_already");
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -307,9 +311,9 @@ fn test_disk_import_snapshot_exists_already() {
     });
 
     let snapshot_view_mock = server.snapshot_view(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_snapshot_exists_already");
         then.ok(&Snapshot {
-            name: "test-import-snap".parse().unwrap(),
+            name: "test-disk-import-snapshot-exists-already-snap".parse().unwrap(),
             ..Snapshot::mock_value(&mut src).unwrap()
         });
     });
@@ -320,7 +324,7 @@ fn test_disk_import_snapshot_exists_already() {
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "fake-token")
+        .env("OXIDE_TOKEN", "test_disk_import_snapshot_exists_already")
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -330,11 +334,11 @@ fn test_disk_import_snapshot_exists_already() {
         .arg("--path")
         .arg(test_file.path())
         .arg("--disk")
-        .arg("test-import")
+        .arg("test-disk-import-snapshot-exists-already")
         .arg("--snapshot")
-        .arg("test-import-snap")
+        .arg("test-disk-import-snapshot-exists-already-snap")
         .arg("--image")
-        .arg("test-import")
+        .arg("test-disk-import-snapshot-exists-already")
         .arg("--image-description")
         .arg("image description")
         .arg("--image-os")
@@ -351,11 +355,12 @@ fn test_disk_import_snapshot_exists_already() {
 // A disk import where the image exists already
 #[test]
 fn test_disk_import_image_exists_already() {
-    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let mut src = rand::rngs::SmallRng::seed_from_u64(424);
     let server = MockServer::start();
+    eprintln!("test_disk_import_image_exists_already {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_image_exists_already");
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -367,7 +372,7 @@ fn test_disk_import_image_exists_already() {
     });
 
     let snapshot_view_mock = server.snapshot_view(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_image_exists_already");
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -379,9 +384,9 @@ fn test_disk_import_image_exists_already() {
     });
 
     let image_view_mock = server.image_view(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_image_exists_already");
         then.ok(&Image {
-            name: "test-import".parse().unwrap(),
+            name: "test-disk-import-image-exists-already".parse().unwrap(),
             ..Image::mock_value(&mut src).unwrap()
         });
     });
@@ -392,7 +397,7 @@ fn test_disk_import_image_exists_already() {
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "fake-token")
+        .env("OXIDE_TOKEN", "test_disk_import_image_exists_already")
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -402,11 +407,11 @@ fn test_disk_import_image_exists_already() {
         .arg("--path")
         .arg(test_file.path())
         .arg("--disk")
-        .arg("test-import")
+        .arg("test-disk-import-image-exists-already")
         .arg("--snapshot")
-        .arg("test-import-snap")
+        .arg("test-disk-import-image-exists-already-snap")
         .arg("--image")
-        .arg("test-import")
+        .arg("test-disk-import-image-exists-already")
         .arg("--image-description")
         .arg("image description")
         .arg("--image-os")
@@ -424,11 +429,12 @@ fn test_disk_import_image_exists_already() {
 // A disk import where the bulk_import_start fails
 #[test]
 fn test_disk_import_bulk_import_start_fail() {
-    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let mut src = rand::rngs::SmallRng::seed_from_u64(425);
     let server = MockServer::start();
+    eprintln!("test_disk_import_bulk_import_start_fail {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_import_start_fail");
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -440,15 +446,15 @@ fn test_disk_import_bulk_import_start_fail() {
     });
 
     let disk_create_mock = server.disk_create(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_import_start_fail");
         then.created(&Disk {
-            name: "test-import".parse().unwrap(),
+            name: "test-disk-import-bulk-import-start-fail".parse().unwrap(),
             ..Disk::mock_value(&mut src).unwrap()
         });
     });
 
     let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_import_start_fail");
         then.server_error(
             503,
             &oxide_api::types::Error {
@@ -460,12 +466,12 @@ fn test_disk_import_bulk_import_start_fail() {
     });
 
     let unwind_finalize_mock = server.disk_finalize_import(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_import_start_fail");
         then.no_content();
     });
 
     let unwind_disk_delete_mock = server.disk_delete(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_import_start_fail");
         then.no_content();
     });
 
@@ -475,7 +481,7 @@ fn test_disk_import_bulk_import_start_fail() {
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "fake-token")
+        .env("OXIDE_TOKEN", "test_disk_import_bulk_import_start_fail")
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -485,7 +491,7 @@ fn test_disk_import_bulk_import_start_fail() {
         .arg("--path")
         .arg(test_file.path())
         .arg("--disk")
-        .arg("test-import")
+        .arg("test-disk-import-bulk-import-start-fail")
         .assert()
         .failure();
 
@@ -499,11 +505,12 @@ fn test_disk_import_bulk_import_start_fail() {
 // A disk import where the bulk_write_import fails
 #[test]
 fn test_disk_import_bulk_write_import_fail() {
-    let mut src = rand::rngs::SmallRng::seed_from_u64(42);
+    let mut src = rand::rngs::SmallRng::seed_from_u64(426);
     let server = MockServer::start();
+    eprintln!("test_disk_import_bulk_write_import_fail {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -515,20 +522,20 @@ fn test_disk_import_bulk_write_import_fail() {
     });
 
     let disk_create_mock = server.disk_create(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
         then.created(&Disk {
-            name: "test-import".parse().unwrap(),
+            name: "test-disk-import-bulk-write-import-fail".parse().unwrap(),
             ..Disk::mock_value(&mut src).unwrap()
         });
     });
 
     let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
         then.no_content();
     });
 
     let disk_bulk_write_mock = server.disk_bulk_write_import(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
         then.server_error(
             503,
             &oxide_api::types::Error {
@@ -540,17 +547,17 @@ fn test_disk_import_bulk_write_import_fail() {
     });
 
     let unwind_stop_bulk_write_mock = server.disk_bulk_write_import_stop(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
         then.no_content();
     });
 
     let unwind_finalize_mock = server.disk_finalize_import(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
         then.no_content();
     });
 
     let unwind_disk_delete_mock = server.disk_delete(|when, then| {
-        when.into_inner().any_request();
+        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
         then.no_content();
     });
 
@@ -560,7 +567,7 @@ fn test_disk_import_bulk_write_import_fail() {
         .unwrap()
         .env("RUST_BACKTRACE", "1")
         .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "fake-token")
+        .env("OXIDE_TOKEN", "test_disk_import_bulk_write_import_fail")
         .arg("disk")
         .arg("import")
         .arg("--project")
@@ -570,7 +577,7 @@ fn test_disk_import_bulk_write_import_fail() {
         .arg("--path")
         .arg(test_file.path())
         .arg("--disk")
-        .arg("test-import")
+        .arg("test-disk-import-bulk-write-import-fail")
         .assert()
         .failure();
 
@@ -587,13 +594,12 @@ fn test_disk_import_bulk_write_import_fail() {
 // A disk import where the requested block size is invalid
 #[test]
 fn test_disk_import_bad_block_size() {
-    let server = MockServer::start();
     let test_file = Testfile::new_random(CHUNK_SIZE * 2).unwrap();
 
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
-        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
         .arg("disk")
         .arg("import")
@@ -614,13 +620,12 @@ fn test_disk_import_bad_block_size() {
 // A disk import where the file size doesn't divide the block size
 #[test]
 fn test_disk_import_bad_file_size() {
-    let server = MockServer::start();
     let test_file = Testfile::new_random(512 + 1).unwrap();
 
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
-        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
         .arg("disk")
         .arg("import")
@@ -641,7 +646,6 @@ fn test_disk_import_bad_file_size() {
 // Test for required parameters being supplied
 #[test]
 fn test_disk_import_required_parameters() {
-    let server = MockServer::start();
     let test_file = Testfile::new_random(512 + 1).unwrap();
 
     // only supplying --image-description won't work
@@ -654,7 +658,7 @@ fn test_disk_import_required_parameters() {
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
-        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
         .arg("disk")
         .arg("import")
@@ -682,7 +686,7 @@ fn test_disk_import_required_parameters() {
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
-        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
         .arg("disk")
         .arg("import")
@@ -707,7 +711,7 @@ fn test_disk_import_required_parameters() {
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
-        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
         .arg("disk")
         .arg("import")
@@ -744,7 +748,7 @@ fn test_disk_import_required_parameters() {
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
-        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_HOST", "http://no.mock.server.needed")
         .env("OXIDE_TOKEN", "fake-token")
         .arg("disk")
         .arg("import")
