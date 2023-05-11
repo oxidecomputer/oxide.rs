@@ -85,11 +85,12 @@ fn to_json(cmd: &Command) -> JsonDoc {
 
 #[async_trait]
 impl RunnableCmd for CmdDocs {
-    async fn run(&self, ctx: Context) -> Result<()> {
-        // let json_doc = to_json(app);
-        // let pretty_json = serde_json::to_string_pretty(&json_doc)?;
-        // println!("{}", pretty_json);
-        // Ok(())
-        todo!()
+    async fn run(&self, _ctx: Context) -> Result<()> {
+        let cli = crate::make_cli();
+        let app = cli.command();
+        let json_doc = to_json(app);
+        let pretty_json = serde_json::to_string_pretty(&json_doc)?;
+        println!("{}", pretty_json);
+        Ok(())
     }
 }

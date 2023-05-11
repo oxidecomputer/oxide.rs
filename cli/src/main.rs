@@ -31,6 +31,9 @@ mod generated_cli;
 #[async_trait]
 trait RunIt: Send + Sync {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: Context) -> Result<()>;
+    fn is_terminal(&self) -> bool {
+        false
+    }
 }
 
 #[derive(Default)]
@@ -44,9 +47,10 @@ struct Tree<'a> {
 struct CommandBuilder<'a> {
     children: BTreeMap<&'a str, CommandBuilder<'a>>,
     cmd: Option<Box<dyn RunIt>>,
+    terminal: bool,
 }
 
-struct NewCli<'a> {
+pub struct NewCli<'a> {
     parser: Command,
     runner: CommandBuilder<'a>,
 }
@@ -61,7 +65,30 @@ impl<'a> NewCli<'a> {
             };
             runner.add_cmd(path, GeneratedCmd(op));
 
-            parser = parser.add_subcommand(path, Cli::get_command(op));
+            let cmd = Cli::get_command(op);
+            let cmd = match op {
+                CliCommand::IpPoolRangeAdd => cmd
+                    .arg(
+                        clap::Arg::new("first")
+                            .long("first")
+                            .value_name("ip-addr")
+                            .required(true)
+                            .value_parser(clap::value_parser!(std::net::IpAddr)),
+                    )
+                    .arg(
+                        clap::Arg::new("last")
+                            .long("last")
+                            .value_name("ip-addr")
+                            .required(true)
+                            .value_parser(clap::value_parser!(std::net::IpAddr)),
+                    ),
+
+                // Command is fine as-is.
+                _ => cmd,
+            };
+
+            parser = parser.add_subcommand(path, cmd);
+            // print_cmd(&parser, 0);
         }
 
         Self { parser, runner }
@@ -73,6 +100,8 @@ impl<'a> NewCli<'a> {
     {
         self.runner.add_cmd(path, CustomCmd::<C>::new());
         self.parser = self.parser.add_subcommand(path, C::command());
+
+        // print_cmd(&self.parser, 0);
         self
     }
 
@@ -83,38 +112,78 @@ impl<'a> NewCli<'a> {
         let mut node = &runner;
         let mut sm = &matches;
         while let Some((sub_name, sub_matches)) = sm.subcommand() {
-            println!("sub_name {}", sub_name);
             node = node.children.get(sub_name).unwrap();
             sm = sub_matches;
-        }
-        node.cmd.as_ref().unwrap().run_cmd(&matches, ctx).await
-    }
-}
-
-impl<'a> CommandBuilder<'a> {
-    pub fn add_cmd(&mut self, path: &'a str, cmd: impl RunIt + 'static) {
-        let mut node = self;
-        let mut components = path.split(' ').peekable();
-        loop {
-            let Some(component) = components.next() else {panic!()};
-            if components.peek().is_some() {
-                node = node.children.entry(component).or_default();
-            } else {
-                assert!(
-                    node.children.get(component).is_none(),
-                    "two identical subcommands {}",
-                    path,
-                );
-                node.children.insert(
-                    component,
-                    CommandBuilder {
-                        children: Default::default(),
-                        cmd: Some(Box::new(cmd)),
-                    },
-                );
+            if node.terminal {
                 break;
             }
         }
+        node.cmd.as_ref().unwrap().run_cmd(sm, ctx).await
+    }
+
+    pub fn command(&self) -> &Command {
+        &self.parser
+    }
+}
+
+fn print_cmd(cmd: &Command, indent: usize) {
+    println!("{:width$} {}", "", cmd.get_name(), width = indent);
+    cmd.get_subcommands()
+        .for_each(|subcmd| print_cmd(subcmd, indent + 2));
+}
+
+impl<'a> CommandBuilder<'a> {
+    fn print(&self, indent: usize) {
+        self.children.iter().for_each(|(key, value)| {
+            println!("{:width$} {}", "", key, width = indent);
+            value.print(indent + 2);
+        });
+    }
+    pub fn add_cmd(&mut self, path: &'a str, cmd: impl RunIt + 'static) {
+        let mut node = self;
+        let mut components = path.split(' ').peekable();
+        while let (Some(component), next) = (components.next(), components.peek()) {
+            if next.is_some() {
+                node = node.children.entry(component).or_default();
+            } else {
+                let x = node.children.entry(component).or_default();
+                x.terminal = cmd.is_terminal();
+                x.cmd = Some(Box::new(cmd));
+                // assert!(
+                //     node.children.get(component).is_none(),
+                //     "two identical subcommands {}",
+                //     path,
+                // );
+                // node.children.insert(
+                //     component,
+                //     CommandBuilder {
+                //         children: Default::default(),
+                //         cmd: Some(Box::new(cmd)),
+                //     },
+                // );
+                break;
+            }
+        }
+        // loop {
+        //     let Some(component) = components.next() else {panic!()};
+        //     if components.peek().is_some() {
+        //         node = node.children.entry(component).or_default();
+        //     } else {
+        //         assert!(
+        //             node.children.get(component).is_none(),
+        //             "two identical subcommands {}",
+        //             path,
+        //         );
+        //         node.children.insert(
+        //             component,
+        //             CommandBuilder {
+        //                 children: Default::default(),
+        //                 cmd: Some(Box::new(cmd)),
+        //             },
+        //         );
+        //         break;
+        //     }
+        // }
     }
 
     pub async fn run(&self, ctx: Context) -> Result<()> {
@@ -143,7 +212,7 @@ impl<C> CustomCmd<C> {
 }
 
 #[async_trait]
-trait RunnableCmd {
+pub trait RunnableCmd: Send + Sync {
     async fn run(&self, ctx: Context) -> Result<()>;
 }
 
@@ -153,8 +222,12 @@ where
     C: Send + Sync + FromArgMatches + RunnableCmd,
 {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: Context) -> Result<()> {
-        let cmd = C::from_arg_matches(matches)?;
+        let cmd = C::from_arg_matches(matches).unwrap();
         cmd.run(ctx).await
+    }
+
+    fn is_terminal(&self) -> bool {
+        true
     }
 }
 
@@ -195,6 +268,15 @@ impl<'a> Tree<'a> {
 
         cmd
     }
+}
+
+pub fn make_cli() -> NewCli<'static> {
+    NewCli::new()
+        .add_custom::<cmd_auth::CmdAuth>("auth")
+        .add_custom::<cmd_api::CmdApi>("api")
+        .add_custom::<cmd_docs::CmdDocs>("docs")
+        .add_custom::<cmd_version::CmdVersion>("version")
+        .add_custom::<cmd_disk::CmdDiskImport>("disk import")
 }
 
 #[tokio::main]
@@ -241,12 +323,7 @@ async fn main() {
     // let matches = cmd.clone().get_matches();
 
     // XXX
-    let new_cli = NewCli::new()
-        .add_custom::<cmd_auth::CmdAuth>("auth")
-        .add_custom::<cmd_api::CmdApi>("api")
-        .add_custom::<cmd_docs::CmdDocs>("docs")
-        .add_custom::<cmd_version::CmdVersion>("version")
-        .add_custom::<cmd_disk::CmdDiskImport>("disk import");
+    let new_cli = make_cli();
 
     // Construct the global config. We do this **after** parsing options,
     // anticipating that top-level options may impact e.g. where we look for
@@ -254,7 +331,11 @@ async fn main() {
     let config = Config::default();
     let ctx = Context::new(config).unwrap();
 
-    let x = new_cli.run(ctx).await;
+    let result = new_cli.run(ctx).await;
+    if let Err(e) = result {
+        println!("error: {}", e);
+        std::process::exit(1)
+    }
 
     // let result = match matches.subcommand() {
     //     Some(("api", sub_matches)) => {
@@ -530,7 +611,11 @@ impl CommandExt for Command {
             if has_subcommand {
                 self.mut_subcommand(first, |cmd| cmd.add_subcommand(rest, subcmd))
             } else {
-                self.subcommand(Command::new(first.to_owned()).subcommand_required(true))
+                self.subcommand(
+                    Command::new(first.to_owned())
+                        .subcommand_required(true)
+                        .add_subcommand(rest, subcmd),
+                )
             }
         } else {
             let has_subcommand = self.find_subcommand(path).is_some();
