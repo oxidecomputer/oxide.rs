@@ -23,7 +23,7 @@ pub struct CmdVersion;
 
 #[async_trait]
 impl RunnableCmd for CmdVersion {
-    async fn run(&self, ctx: Context) -> Result<()> {
+    async fn run(&self, _ctx: Context) -> Result<()> {
         println!("Oxide CLI {}", built_info::PKG_VERSION);
 
         println!(

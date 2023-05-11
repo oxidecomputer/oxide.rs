@@ -12,7 +12,7 @@ use std::{
 use anyhow::{anyhow, Result};
 use async_trait::async_trait;
 use clap::Parser;
-use futures::{FutureExt, StreamExt, TryStreamExt};
+use futures::{StreamExt, TryStreamExt};
 use serde::Deserialize;
 
 use crate::RunnableCmd;

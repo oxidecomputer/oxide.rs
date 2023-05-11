@@ -37,13 +37,6 @@ trait RunIt: Send + Sync {
 }
 
 #[derive(Default)]
-struct Tree<'a> {
-    children: BTreeMap<&'a str, Tree<'a>>,
-    cmd: Option<CliCommand>,
-    new_cmd: Option<Box<dyn RunIt>>,
-}
-
-#[derive(Default)]
 struct CommandBuilder<'a> {
     children: BTreeMap<&'a str, CommandBuilder<'a>>,
     cmd: Option<Box<dyn RunIt>>,
@@ -55,8 +48,8 @@ pub struct NewCli<'a> {
     runner: CommandBuilder<'a>,
 }
 
-impl<'a> NewCli<'a> {
-    pub fn new() -> Self {
+impl<'a> Default for NewCli<'a> {
+    fn default() -> Self {
         let mut parser = Command::new("oxide").subcommand_required(true);
         let mut runner = CommandBuilder::default();
         for op in CliCommand::iter() {
@@ -93,7 +86,9 @@ impl<'a> NewCli<'a> {
 
         Self { parser, runner }
     }
+}
 
+impl<'a> NewCli<'a> {
     pub fn add_custom<C>(mut self, path: &'a str) -> Self
     where
         C: Send + Sync + FromArgMatches + RunnableCmd + CommandFactory + 'static,
@@ -126,19 +121,7 @@ impl<'a> NewCli<'a> {
     }
 }
 
-fn print_cmd(cmd: &Command, indent: usize) {
-    println!("{:width$} {}", "", cmd.get_name(), width = indent);
-    cmd.get_subcommands()
-        .for_each(|subcmd| print_cmd(subcmd, indent + 2));
-}
-
 impl<'a> CommandBuilder<'a> {
-    fn print(&self, indent: usize) {
-        self.children.iter().for_each(|(key, value)| {
-            println!("{:width$} {}", "", key, width = indent);
-            value.print(indent + 2);
-        });
-    }
     pub fn add_cmd(&mut self, path: &'a str, cmd: impl RunIt + 'static) {
         let mut node = self;
         let mut components = path.split(' ').peekable();
@@ -164,30 +147,6 @@ impl<'a> CommandBuilder<'a> {
                 break;
             }
         }
-        // loop {
-        //     let Some(component) = components.next() else {panic!()};
-        //     if components.peek().is_some() {
-        //         node = node.children.entry(component).or_default();
-        //     } else {
-        //         assert!(
-        //             node.children.get(component).is_none(),
-        //             "two identical subcommands {}",
-        //             path,
-        //         );
-        //         node.children.insert(
-        //             component,
-        //             CommandBuilder {
-        //                 children: Default::default(),
-        //                 cmd: Some(Box::new(cmd)),
-        //             },
-        //         );
-        //         break;
-        //     }
-        // }
-    }
-
-    pub async fn run(&self, ctx: Context) -> Result<()> {
-        todo!()
     }
 }
 
@@ -231,47 +190,8 @@ where
     }
 }
 
-impl<'a> Tree<'a> {
-    fn cmd(&self, name: &str) -> Command {
-        let mut cmd = if let Some(op) = self.cmd {
-            // Command node
-            // TODO
-            let cmd = Cli::get_command(op).name(name.to_owned());
-            match op {
-                CliCommand::IpPoolRangeAdd => cmd
-                    .arg(
-                        clap::Arg::new("first")
-                            .long("first")
-                            .value_name("ip-addr")
-                            .required(true)
-                            .value_parser(clap::value_parser!(std::net::IpAddr)),
-                    )
-                    .arg(
-                        clap::Arg::new("last")
-                            .long("last")
-                            .value_name("ip-addr")
-                            .required(true)
-                            .value_parser(clap::value_parser!(std::net::IpAddr)),
-                    ),
-
-                // Command is fine as-is.
-                _ => cmd,
-            }
-        } else {
-            // Internal node
-            Command::new(name.to_owned()).subcommand_required(true)
-        };
-
-        for (sub_name, sub_tree) in self.children.iter() {
-            cmd = cmd.subcommand(sub_tree.cmd(sub_name));
-        }
-
-        cmd
-    }
-}
-
 pub fn make_cli() -> NewCli<'static> {
-    NewCli::new()
+    NewCli::default()
         .add_custom::<cmd_auth::CmdAuth>("auth")
         .add_custom::<cmd_api::CmdApi>("api")
         .add_custom::<cmd_docs::CmdDocs>("docs")
@@ -283,46 +203,6 @@ pub fn make_cli() -> NewCli<'static> {
 async fn main() {
     env_logger::init();
 
-    // let mut root = Tree::default();
-    // for op in CliCommand::iter() {
-    //     let mut node = &mut root;
-    //     let Some(subcmd_str) = xxx(op) else {
-    //         continue
-    //     };
-
-    //     let mut path = subcmd_str.split(' ').peekable();
-    //     while let Some(ss) = path.next() {
-    //         if path.peek().is_some() {
-    //             node = node.children.entry(ss).or_default();
-    //         } else {
-    //             assert!(
-    //                 node.children.get(ss).is_none(),
-    //                 "two identical subcommands {}",
-    //                 subcmd_str,
-    //             );
-    //             node.children.insert(
-    //                 ss,
-    //                 Tree {
-    //                     cmd: Some(op),
-    //                     ..Default::default()
-    //                 },
-    //             );
-    //         }
-    //     }
-    // }
-
-    // let cmd = root
-    //     .cmd("oxide")
-    //     .bin_name("oxide")
-    //     .subcommand(cmd_auth::CmdAuth::command())
-    //     .subcommand(cmd_api::CmdApi::command())
-    //     .subcommand(cmd_docs::CmdDocs::command())
-    //     .subcommand(cmd_version::CmdVersion::command())
-    //     .add_subcommand("disk import", cmd_disk::CmdDiskImport::command());
-
-    // let matches = cmd.clone().get_matches();
-
-    // XXX
     let new_cli = make_cli();
 
     // Construct the global config. We do this **after** parsing options,
@@ -336,71 +216,6 @@ async fn main() {
         println!("error: {}", e);
         std::process::exit(1)
     }
-
-    // let result = match matches.subcommand() {
-    //     Some(("api", sub_matches)) => {
-    //         cmd_api::CmdApi::from_arg_matches(sub_matches)
-    //             .unwrap()
-    //             .run(&mut ctx)
-    //             .await
-    //     }
-
-    //     Some(("auth", sub_matches)) => {
-    //         cmd_auth::CmdAuth::from_arg_matches(sub_matches)
-    //             .unwrap()
-    //             .run(&mut ctx)
-    //             .await
-    //     }
-
-    //     // TODO this could be improved
-    //     Some(("disk", sub_matches)) if sub_matches.subcommand_name() == Some("import") => {
-    //         cmd_disk::CmdDiskImport::from_arg_matches(sub_matches)
-    //             .unwrap()
-    //             .run(&mut ctx)
-    //             .await
-    //     }
-
-    //     Some(("docs", sub_matches)) => {
-    //         cmd_docs::CmdDocs::from_arg_matches(sub_matches)
-    //             .unwrap()
-    //             .run(&cmd)
-    //             .await
-    //     }
-
-    //     Some(("version", sub_matches)) => {
-    //         cmd_version::CmdVersion::from_arg_matches(sub_matches)
-    //             .unwrap()
-    //             .run()
-    //             .await
-    //     }
-
-    //     _ => {
-    //         // Spawn a task so we get this potentially chunky Future off the
-    //         // main thread's stack.
-    //         tokio::spawn(async move {
-    //             let mut node = &root;
-    //             let mut sm = &matches;
-
-    //             while let Some((sub_name, sub_matches)) = sm.subcommand() {
-    //                 node = node.children.get(sub_name).unwrap();
-    //                 sm = sub_matches;
-    //             }
-
-    //             let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
-
-    //             // TODO error handling
-    //             cli.execute(node.cmd.unwrap(), sm).await;
-    //         })
-    //         .await
-    //         .unwrap();
-    //         Ok(())
-    //     }
-    // };
-
-    // if let Err(e) = result {
-    //     println!("error: {}", e);
-    //     std::process::exit(1)
-    // }
 }
 
 fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
