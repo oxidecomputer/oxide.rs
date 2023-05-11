@@ -18,7 +18,7 @@ use crate::RunnableCmd;
 pub struct CmdDiskImport {}
 
 #[async_trait]
-impl RunnableCmd for CmdDiskImport {
+impl RunnableCmd<crate::context::Context> for CmdDiskImport {
     async fn run(&self, _ctx: &crate::context::Context) -> Result<()> {
         print!("importing disk .");
         std::io::stdout().flush()?;

@@ -96,37 +96,9 @@ pub struct PaginatedResponse {
     pub next_page: Option<String>,
 }
 
-// impl RunnableCmd for CmdApi {
-//     fn run<'life0, 'async_trait>(
-//         &'life0 self,
-//         ctx: crate::context::Context,
-//     ) -> core::pin::Pin<
-//         Box<dyn core::future::Future<Output = Result<()>> + core::marker::Send + 'async_trait>,
-//     >
-//     where
-//         'life0: 'async_trait,
-//         Self: 'async_trait,
-//     {
-//         let x = self.clone().run2(ctx);
-//         let y = x.boxed();
-//         y
-//     }
-// }
 #[async_trait]
-impl RunnableCmd for CmdApi {
+impl RunnableCmd<crate::context::Context> for CmdApi {
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
-        // let x = vec![1, 2, 3];
-        // futures::stream::iter(x)
-        //     .for_each(|x| async {
-        //         println!("hi");
-        //     })
-        //     .await;
-        self.clone().run2(ctx).await
-    }
-}
-
-impl CmdApi {
-    pub async fn run2(self, ctx: &crate::context::Context) -> Result<()> {
         // Make sure the endpoint starts with a slash.
         let endpoint = if self.endpoint.starts_with('/') {
             self.endpoint.clone()

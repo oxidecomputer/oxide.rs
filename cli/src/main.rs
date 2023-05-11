@@ -31,9 +31,7 @@ mod generated_cli;
 #[async_trait]
 trait RunIt: Send + Sync {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()>;
-    fn is_terminal(&self) -> bool {
-        false
-    }
+    fn is_subtree(&self) -> bool;
 }
 
 #[derive(Default)]
@@ -91,7 +89,7 @@ impl<'a> Default for NewCli<'a> {
 impl<'a> NewCli<'a> {
     pub fn add_custom<C>(mut self, path: &'a str) -> Self
     where
-        C: Send + Sync + FromArgMatches + RunnableCmd + CommandFactory + 'static,
+        C: Send + Sync + FromArgMatches + RunnableCmd<Context> + CommandFactory + 'static,
     {
         self.runner.add_cmd(path, CustomCmd::<C>::new());
         self.parser = self.parser.add_subcommand(path, C::command());
@@ -127,7 +125,7 @@ impl<'a> CommandBuilder<'a> {
         for component in path.split(' ') {
             node = node.children.entry(component).or_default();
         }
-        node.terminal = cmd.is_terminal();
+        node.terminal = cmd.is_subtree();
         node.cmd = Some(Box::new(cmd));
     }
 }
@@ -139,6 +137,10 @@ impl RunIt for GeneratedCmd {
         let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
         cli.execute(self.0, matches).await;
         Ok(())
+    }
+
+    fn is_subtree(&self) -> bool {
+        false
     }
 }
 
@@ -153,21 +155,21 @@ impl<C> CustomCmd<C> {
 }
 
 #[async_trait]
-pub trait RunnableCmd: Send + Sync {
-    async fn run(&self, ctx: &Context) -> Result<()>;
+pub trait RunnableCmd<C>: Send + Sync {
+    async fn run(&self, ctx: &C) -> Result<()>;
 }
 
 #[async_trait]
 impl<C> RunIt for CustomCmd<C>
 where
-    C: Send + Sync + FromArgMatches + RunnableCmd,
+    C: Send + Sync + FromArgMatches + RunnableCmd<Context>,
 {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
         let cmd = C::from_arg_matches(matches).unwrap();
         cmd.run(ctx).await
     }
 
-    fn is_terminal(&self) -> bool {
+    fn is_subtree(&self) -> bool {
         true
     }
 }
