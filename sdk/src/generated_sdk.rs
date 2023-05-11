@@ -9,7 +9,7 @@ pub mod types {
     use serde::{Deserialize, Serialize};
     #[allow(unused_imports)]
     use std::convert::TryFrom;
-    /// Properties that should uniquely identify a Sled.
+    /// Properties that uniquely identify an Oxide hardware component
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Baseboard {
         pub part: String,
@@ -4666,6 +4666,54 @@ pub mod types {
     impl SshKeyResultsPage {
         pub fn builder() -> builder::SshKeyResultsPage {
             builder::SshKeyResultsPage::default()
+        }
+    }
+
+    /// An operator's view of a Switch.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Switch {
+        pub baseboard: Baseboard,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// The rack to which this Switch is currently attached
+        pub rack_id: uuid::Uuid,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Switch> for Switch {
+        fn from(value: &Switch) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Switch {
+        pub fn builder() -> builder::Switch {
+            builder::Switch::default()
+        }
+    }
+
+    /// A single page of results
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<Switch>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&SwitchResultsPage> for SwitchResultsPage {
+        fn from(value: &SwitchResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchResultsPage {
+        pub fn builder() -> builder::SwitchResultsPage {
+            builder::SwitchResultsPage::default()
         }
     }
 
@@ -13212,6 +13260,162 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Switch {
+            baseboard: Result<super::Baseboard, String>,
+            id: Result<uuid::Uuid, String>,
+            rack_id: Result<uuid::Uuid, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Switch {
+            fn default() -> Self {
+                Self {
+                    baseboard: Err("no value supplied for baseboard".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    rack_id: Err("no value supplied for rack_id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl Switch {
+            pub fn baseboard<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Baseboard>,
+                T::Error: std::fmt::Display,
+            {
+                self.baseboard = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for baseboard: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn rack_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.rack_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Switch> for super::Switch {
+            type Error = String;
+            fn try_from(value: Switch) -> Result<Self, String> {
+                Ok(Self {
+                    baseboard: value.baseboard?,
+                    id: value.id?,
+                    rack_id: value.rack_id?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::Switch> for Switch {
+            fn from(value: super::Switch) -> Self {
+                Self {
+                    baseboard: Ok(value.baseboard),
+                    id: Ok(value.id),
+                    rack_id: Ok(value.rack_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchResultsPage {
+            items: Result<Vec<super::Switch>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for SwitchResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SwitchResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Switch>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchResultsPage> for super::SwitchResultsPage {
+            type Error = String;
+            fn try_from(value: SwitchResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::SwitchResultsPage> for SwitchResultsPage {
+            fn from(value: super::SwitchResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SystemUpdate {
             id: Result<uuid::Uuid, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -16233,6 +16437,23 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_delete(&self) -> builder::ImageDelete;
+    /// Demote a silo image
+    ///
+    /// Demote a silo image to be visible only to a specified project
+    ///
+    /// Sends a `POST` request to `/v1/images/{image}/demote`
+    ///
+    /// Arguments:
+    /// - `image`: Name or ID of the image
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.image_demote()
+    ///    .image(image)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn image_demote(&self) -> builder::ImageDemote;
     /// Promote a project image
     ///
     /// Promote a project image to be visible to all projects in the silo
@@ -16267,6 +16488,10 @@ impl ClientImagesExt for Client {
 
     fn image_delete(&self) -> builder::ImageDelete {
         builder::ImageDelete::new(self)
+    }
+
+    fn image_demote(&self) -> builder::ImageDemote {
+        builder::ImageDemote::new(self)
     }
 
     fn image_promote(&self) -> builder::ImagePromote {
@@ -17129,13 +17354,13 @@ pub trait ClientSilosExt {
     fn group_list(&self) -> builder::GroupList;
     /// Fetch group
     ///
-    /// Sends a `GET` request to `/v1/groups/{group}`
+    /// Sends a `GET` request to `/v1/groups/{group_id}`
     ///
     /// Arguments:
-    /// - `group`: ID of the group
+    /// - `group_id`: ID of the group
     /// ```ignore
     /// let response = client.group_view()
-    ///    .group(group)
+    ///    .group_id(group_id)
     ///    .send()
     ///    .await;
     /// ```
@@ -17428,7 +17653,7 @@ pub trait ClientSystemExt {
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
     ///
     /// Arguments:
-    /// - `sled_id`: The sled's unique ID.
+    /// - `sled_id`: ID of the sled
     /// ```ignore
     /// let response = client.sled_view()
     ///    .sled_id(sled_id)
@@ -17441,7 +17666,7 @@ pub trait ClientSystemExt {
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/disks`
     ///
     /// Arguments:
-    /// - `sled_id`: The sled's unique ID.
+    /// - `sled_id`: ID of the sled
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
@@ -17456,6 +17681,37 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList;
+    /// List switches
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/switches`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.switch_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn switch_list(&self) -> builder::SwitchList;
+    /// Fetch a switch
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/switches/{switch_id}`
+    ///
+    /// Arguments:
+    /// - `switch_id`: ID of the switch
+    /// ```ignore
+    /// let response = client.switch_view()
+    ///    .switch_id(switch_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn switch_view(&self) -> builder::SwitchView;
     /// List a silo's IdP's name
     ///
     /// Sends a `GET` request to `/v1/system/identity-providers`
@@ -18082,6 +18338,14 @@ impl ClientSystemExt for Client {
 
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList {
         builder::SledPhysicalDiskList::new(self)
+    }
+
+    fn switch_list(&self) -> builder::SwitchList {
+        builder::SwitchList::new(self)
+    }
+
+    fn switch_view(&self) -> builder::SwitchView {
+        builder::SwitchView::new(self)
     }
 
     fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList {
@@ -20632,35 +20896,35 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct GroupView<'a> {
         client: &'a super::Client,
-        group: Result<uuid::Uuid, String>,
+        group_id: Result<uuid::Uuid, String>,
     }
 
     impl<'a> GroupView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                group: Err("group was not initialized".to_string()),
+                group_id: Err("group_id was not initialized".to_string()),
             }
         }
 
-        pub fn group<V>(mut self, value: V) -> Self
+        pub fn group_id<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<uuid::Uuid>,
         {
-            self.group = value
+            self.group_id = value
                 .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for group failed".to_string());
+                .map_err(|_| "conversion to `uuid :: Uuid` for group_id failed".to_string());
             self
         }
 
-        /// Sends a `GET` request to `/v1/groups/{group}`
+        /// Sends a `GET` request to `/v1/groups/{group_id}`
         pub async fn send(self) -> Result<ResponseValue<types::Group>, Error<types::Error>> {
-            let Self { client, group } = self;
-            let group = group.map_err(Error::InvalidRequest)?;
+            let Self { client, group_id } = self;
+            let group_id = group_id.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/groups/{}",
                 client.baseurl,
-                encode_path(&group.to_string()),
+                encode_path(&group_id.to_string()),
             );
             let request = client
                 .client
@@ -21123,6 +21387,85 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientImagesExt::image_demote`]
+    ///
+    /// [`ClientImagesExt::image_demote`]: super::ClientImagesExt::image_demote
+    #[derive(Debug, Clone)]
+    pub struct ImageDemote<'a> {
+        client: &'a super::Client,
+        image: Result<types::NameOrId, String>,
+        project: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> ImageDemote<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                image: Err("image was not initialized".to_string()),
+                project: Err("project was not initialized".to_string()),
+            }
+        }
+
+        pub fn image<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.image = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for image failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/images/{image}/demote`
+        pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
+            let Self {
+                client,
+                image,
+                project,
+            } = self;
+            let image = image.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/images/{}/demote",
+                client.baseurl,
+                encode_path(&image.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("project", project.to_string()));
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                202u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -26177,6 +26520,222 @@ pub mod builder {
                 .try_flatten_stream()
                 .take(limit)
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::switch_list`]
+    ///
+    /// [`ClientSystemExt::switch_list`]: super::ClientSystemExt::switch_list
+    #[derive(Debug, Clone)]
+    pub struct SwitchList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> SwitchList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/hardware/switches`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SwitchResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/hardware/switches", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/hardware/switches`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Switch, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::switch_view`]
+    ///
+    /// [`ClientSystemExt::switch_view`]: super::ClientSystemExt::switch_view
+    #[derive(Debug, Clone)]
+    pub struct SwitchView<'a> {
+        client: &'a super::Client,
+        switch_id: Result<uuid::Uuid, String>,
+    }
+
+    impl<'a> SwitchView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                switch_id: Err("switch_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn switch_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.switch_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for switch_id failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/hardware/switches/{switch_id}`
+        pub async fn send(self) -> Result<ResponseValue<types::Switch>, Error<types::Error>> {
+            let Self { client, switch_id } = self;
+            let switch_id = switch_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/switches/{}",
+                client.baseurl,
+                encode_path(&switch_id.to_string()),
+            );
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 

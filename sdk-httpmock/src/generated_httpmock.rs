@@ -1198,7 +1198,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn group(self, value: &uuid::Uuid) -> Self {
+        pub fn group_id(self, value: &uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!("^/v1/groups/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
@@ -1482,6 +1482,71 @@ pub mod operations {
 
         pub fn no_content(self) -> Self {
             Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct ImageDemoteWhen(httpmock::When);
+    impl ImageDemoteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/images/.*/demote$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn image(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/images/{}/demote$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct ImageDemoteThen(httpmock::Then);
+    impl ImageDemoteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::Image) -> Self {
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -4651,6 +4716,137 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::PhysicalDiskResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SwitchListWhen(httpmock::When);
+    impl SwitchListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/switches$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SwitchListThen(httpmock::Then);
+    impl SwitchListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SwitchResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SwitchViewWhen(httpmock::When);
+    impl SwitchViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/switches/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn switch_id(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/switches/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SwitchViewThen(httpmock::Then);
+    impl SwitchViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Switch) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -9120,6 +9316,9 @@ pub trait MockServerExt {
     fn image_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::ImageDeleteWhen, operations::ImageDeleteThen);
+    fn image_demote<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ImageDemoteWhen, operations::ImageDemoteThen);
     fn image_promote<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::ImagePromoteWhen, operations::ImagePromoteThen);
@@ -9285,6 +9484,12 @@ pub trait MockServerExt {
     fn sled_physical_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledPhysicalDiskListWhen, operations::SledPhysicalDiskListThen);
+    fn switch_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SwitchListWhen, operations::SwitchListThen);
+    fn switch_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SwitchViewWhen, operations::SwitchViewThen);
     fn silo_identity_provider_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
@@ -9797,6 +10002,18 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::ImageDeleteWhen::new(when),
                 operations::ImageDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn image_demote<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ImageDemoteWhen, operations::ImageDemoteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ImageDemoteWhen::new(when),
+                operations::ImageDemoteThen::new(then),
             )
         })
     }
@@ -10403,6 +10620,30 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::SledPhysicalDiskListWhen::new(when),
                 operations::SledPhysicalDiskListThen::new(then),
+            )
+        })
+    }
+
+    fn switch_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SwitchListWhen, operations::SwitchListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SwitchListWhen::new(when),
+                operations::SwitchListThen::new(then),
+            )
+        })
+    }
+
+    fn switch_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SwitchViewWhen, operations::SwitchViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SwitchViewWhen::new(when),
+                operations::SwitchViewThen::new(then),
             )
         })
     }

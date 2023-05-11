@@ -38,6 +38,7 @@ impl Cli {
             CliCommand::ImageCreate => Self::cli_image_create(),
             CliCommand::ImageView => Self::cli_image_view(),
             CliCommand::ImageDelete => Self::cli_image_delete(),
+            CliCommand::ImageDemote => Self::cli_image_demote(),
             CliCommand::ImagePromote => Self::cli_image_promote(),
             CliCommand::InstanceList => Self::cli_instance_list(),
             CliCommand::InstanceCreate => Self::cli_instance_create(),
@@ -93,6 +94,8 @@ impl Cli {
             CliCommand::SledList => Self::cli_sled_list(),
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
+            CliCommand::SwitchList => Self::cli_switch_list(),
+            CliCommand::SwitchView => Self::cli_switch_view(),
             CliCommand::SiloIdentityProviderList => Self::cli_silo_identity_provider_list(),
             CliCommand::LocalIdpUserCreate => Self::cli_local_idp_user_create(),
             CliCommand::LocalIdpUserDelete => Self::cli_local_idp_user_delete(),
@@ -735,8 +738,8 @@ impl Cli {
     pub fn cli_group_view() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("group")
-                    .long("group")
+                clap::Arg::new("group-id")
+                    .long("group-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
                     .help("ID of the group"),
@@ -885,6 +888,26 @@ impl Cli {
                  instances in the project using the image will continue to run, however new \
                  instances can not be created with this image.",
             )
+    }
+
+    pub fn cli_image_demote() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("image")
+                    .long("image")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the image"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .about("Demote a silo image")
+            .long_about("Demote a silo image to be visible only to a specified project")
     }
 
     pub fn cli_image_promote() -> clap::Command {
@@ -2253,7 +2276,7 @@ impl Cli {
                     .long("sled-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The sled's unique ID."),
+                    .help("ID of the sled"),
             )
             .about("Fetch a sled")
     }
@@ -2265,7 +2288,7 @@ impl Cli {
                     .long("sled-id")
                     .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The sled's unique ID."),
+                    .help("ID of the sled"),
             )
             .arg(
                 clap::Arg::new("limit")
@@ -2286,6 +2309,41 @@ impl Cli {
                     .required(false),
             )
             .about("List physical disks attached to sleds")
+    }
+
+    pub fn cli_switch_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List switches")
+    }
+
+    pub fn cli_switch_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("switch-id")
+                    .long("switch-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the switch"),
+            )
+            .about("Fetch a switch")
     }
 
     pub fn cli_silo_identity_provider_list() -> clap::Command {
@@ -4294,6 +4352,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::ImageDelete => {
                 self.execute_image_delete(matches).await;
             }
+            CliCommand::ImageDemote => {
+                self.execute_image_demote(matches).await;
+            }
             CliCommand::ImagePromote => {
                 self.execute_image_promote(matches).await;
             }
@@ -4443,6 +4504,12 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SledPhysicalDiskList => {
                 self.execute_sled_physical_disk_list(matches).await;
+            }
+            CliCommand::SwitchList => {
+                self.execute_switch_list(matches).await;
+            }
+            CliCommand::SwitchView => {
+                self.execute_switch_view(matches).await;
             }
             CliCommand::SiloIdentityProviderList => {
                 self.execute_silo_identity_provider_list(matches).await;
@@ -5205,8 +5272,8 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_group_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.group_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("group") {
-            request = request.group(value.clone());
+        if let Some(value) = matches.get_one::<uuid::Uuid>("group-id") {
+            request = request.group_id(value.clone());
         }
 
         self.over.execute_group_view(matches, &mut request).unwrap();
@@ -5333,6 +5400,30 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_image_delete(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_image_demote(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.image_demote();
+        if let Some(value) = matches.get_one::<types::NameOrId>("image") {
+            request = request.image(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_image_demote(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -6749,6 +6840,56 @@ impl<T: CliOverride> Cli<T> {
                 Ok(Some(value)) => {
                     println!("{:#?}", value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_switch_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.switch_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_switch_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_switch_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.switch_view();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("switch-id") {
+            request = request.switch_id(value.clone());
+        }
+
+        self.over
+            .execute_switch_view(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
             }
         }
     }
@@ -8892,6 +9033,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_image_demote(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ImageDemote,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_image_promote(
         &self,
         matches: &clap::ArgMatches,
@@ -9280,6 +9429,22 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SledPhysicalDiskList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_switch_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SwitchList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_switch_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SwitchView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -9849,6 +10014,7 @@ pub enum CliCommand {
     ImageCreate,
     ImageView,
     ImageDelete,
+    ImageDemote,
     ImagePromote,
     InstanceList,
     InstanceCreate,
@@ -9898,6 +10064,8 @@ pub enum CliCommand {
     SledList,
     SledView,
     SledPhysicalDiskList,
+    SwitchList,
+    SwitchView,
     SiloIdentityProviderList,
     LocalIdpUserCreate,
     LocalIdpUserDelete,
@@ -9994,6 +10162,7 @@ impl CliCommand {
             CliCommand::ImageCreate,
             CliCommand::ImageView,
             CliCommand::ImageDelete,
+            CliCommand::ImageDemote,
             CliCommand::ImagePromote,
             CliCommand::InstanceList,
             CliCommand::InstanceCreate,
@@ -10043,6 +10212,8 @@ impl CliCommand {
             CliCommand::SledList,
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
+            CliCommand::SwitchList,
+            CliCommand::SwitchView,
             CliCommand::SiloIdentityProviderList,
             CliCommand::LocalIdpUserCreate,
             CliCommand::LocalIdpUserDelete,
