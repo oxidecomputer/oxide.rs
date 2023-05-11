@@ -313,8 +313,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SledPhysicalDiskList => Some("sled disk-led"),
         CliCommand::SystemPolicyView => Some("system policy view"),
         CliCommand::SystemPolicyUpdate => Some("system policy update"),
-        CliCommand::SagaList => Some("saga list"),
-        CliCommand::SagaView => Some("saga view"),
 
         CliCommand::CurrentUserView => Some("current-user view"),
         CliCommand::CurrentUserGroups => Some("current-user groups"),
@@ -336,11 +334,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::RoleList
         | CliCommand::RoleView
         | CliCommand::SystemComponentVersionList
-        | CliCommand::SystemImageCreate
-        | CliCommand::SystemImageDelete
-        | CliCommand::SystemImageList
-        | CliCommand::SystemImageView
-        | CliCommand::SystemImageViewById
         | CliCommand::SystemMetric
         | CliCommand::SystemUpdateComponentsList
         | CliCommand::SystemUpdateList

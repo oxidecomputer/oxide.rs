@@ -22,11 +22,6 @@ impl Cli {
             CliCommand::LoginSamlBegin => Self::cli_login_saml_begin(),
             CliCommand::LoginSaml => Self::cli_login_saml(),
             CliCommand::Logout => Self::cli_logout(),
-            CliCommand::SystemImageViewById => Self::cli_system_image_view_by_id(),
-            CliCommand::SystemImageList => Self::cli_system_image_list(),
-            CliCommand::SystemImageCreate => Self::cli_system_image_create(),
-            CliCommand::SystemImageView => Self::cli_system_image_view(),
-            CliCommand::SystemImageDelete => Self::cli_system_image_delete(),
             CliCommand::DiskList => Self::cli_disk_list(),
             CliCommand::DiskCreate => Self::cli_disk_create(),
             CliCommand::DiskView => Self::cli_disk_view(),
@@ -121,8 +116,6 @@ impl Cli {
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
             CliCommand::RoleList => Self::cli_role_list(),
             CliCommand::RoleView => Self::cli_role_view(),
-            CliCommand::SagaList => Self::cli_saga_list(),
-            CliCommand::SagaView => Self::cli_saga_view(),
             CliCommand::SiloList => Self::cli_silo_list(),
             CliCommand::SiloCreate => Self::cli_silo_create(),
             CliCommand::SiloView => Self::cli_silo_view(),
@@ -177,14 +170,28 @@ impl Cli {
             .arg(
                 clap::Arg::new("client-id")
                     .long("client-id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required_unless_present("json-body"),
             )
-            .about(
-                "Start an OAuth 2.0 Device Authorization Grant\n\nThis endpoint is designed to be \
-                 accessed from an *unauthenticated* API client. It generates and records a \
-                 `device_code` and `user_code` which must be verified and confirmed prior to a \
-                 token being granted.",
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Start an OAuth 2.0 Device Authorization Grant")
+            .long_about(
+                "This endpoint is designed to be accessed from an *unauthenticated* API client. \
+                 It generates and records a `device_code` and `user_code` which must be verified \
+                 and confirmed prior to a token being granted.",
             )
     }
 
@@ -193,14 +200,28 @@ impl Cli {
             .arg(
                 clap::Arg::new("user-code")
                     .long("user-code")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
-            .about(
-                "Confirm an OAuth 2.0 Device Authorization Grant\n\nThis endpoint is designed to \
-                 be accessed by the user agent (browser), not the client requesting the token. So \
-                 we do not actually return the token here; it will be returned in response to the \
-                 poll on `/device/token`.",
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Confirm an OAuth 2.0 Device Authorization Grant")
+            .long_about(
+                "This endpoint is designed to be accessed by the user agent (browser), not the \
+                 client requesting the token. So we do not actually return the token here; it \
+                 will be returned in response to the poll on `/device/token`.",
             )
     }
 
@@ -209,34 +230,64 @@ impl Cli {
             .arg(
                 clap::Arg::new("client-id")
                     .long("client-id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("device-code")
                     .long("device-code")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("grant-type")
                     .long("grant-type")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
-            .about(
-                "Request a device access token\n\nThis endpoint should be polled by the client \
-                 until the user code is verified and the grant is confirmed.",
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Request a device access token")
+            .long_about(
+                "This endpoint should be polled by the client until the user code is verified and \
+                 the grant is confirmed.",
             )
     }
 
     pub fn cli_login_spoof() -> clap::Command {
-        clap::Command::new("").arg(
-            clap::Arg::new("username")
-                .long("username")
-                .required(true)
-                .value_parser(clap::value_parser!(String)),
-        )
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("username")
+                    .long("username")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
     }
 
     pub fn cli_login_local() -> clap::Command {
@@ -244,22 +295,36 @@ impl Cli {
             .arg(
                 clap::Arg::new("silo-name")
                     .long("silo-name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true),
             )
             .arg(
                 clap::Arg::new("password")
                     .long("password")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Password)),
+                    .value_parser(clap::value_parser!(types::Password))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("username")
                     .long("username")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::UserId)),
+                    .value_parser(clap::value_parser!(types::UserId))
+                    .required_unless_present("json-body"),
             )
-            .about("Authenticate a user (i.e., log in) via username and password")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Authenticate a user via username and password")
     }
 
     pub fn cli_login_saml_begin() -> clap::Command {
@@ -267,18 +332,19 @@ impl Cli {
             .arg(
                 clap::Arg::new("silo-name")
                     .long("silo-name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true),
             )
             .arg(
                 clap::Arg::new("provider-name")
                     .long("provider-name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true),
             )
-            .about(
-                "Prompt user login\n\nEither display a page asking a user for their credentials, \
-                 or redirect them to their identity provider.",
+            .about("Prompt user login")
+            .long_about(
+                "Either display a page asking a user for their credentials, or redirect them to \
+                 their identity provider.",
             )
     }
 
@@ -287,106 +353,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("silo-name")
                     .long("silo-name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true),
             )
             .arg(
                 clap::Arg::new("provider-name")
                     .long("provider-name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true),
             )
-            .about("Authenticate a user (i.e., log in) via SAML")
+            .about("Authenticate a user via SAML")
     }
 
     pub fn cli_logout() -> clap::Command {
         clap::Command::new("")
-    }
-
-    pub fn cli_system_image_view_by_id() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("id")
-                    .long("id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
-            )
-            .about("Fetch a system-wide image by id")
-    }
-
-    pub fn cli_system_image_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .required(false)
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::NameSortMode::NameAscending.to_string(),
-                        ]),
-                        |s| types::NameSortMode::try_from(s).unwrap(),
-                    )),
-            )
-            .about(
-                "List system-wide images\n\nReturns a list of all the system-wide images. \
-                 System-wide images are returned sorted by creation date, with the most recent \
-                 images appearing first.",
-            )
-    }
-
-    pub fn cli_system_image_create() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("description")
-                    .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
-            )
-            .arg(
-                clap::Arg::new("name")
-                    .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
-            )
-            .about(
-                "Create a system-wide image\n\nCreate a new system-wide image. This image can \
-                 then be used by any user in any silo as a base for instances.",
-            )
-    }
-
-    pub fn cli_system_image_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("image-name")
-                    .long("image-name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
-            )
-            .about(
-                "Fetch a system-wide image\n\nReturns the details of a specific system-wide image.",
-            )
-    }
-
-    pub fn cli_system_image_delete() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("image-name")
-                    .long("image-name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
-            )
-            .about(
-                "Delete a system-wide image\n\nPermanently delete a system-wide image. This \
-                 operation cannot be undone. Any instances using the system-wide image will \
-                 continue to run, however new instances can not be created with this image.",
-            )
     }
 
     pub fn cli_disk_list() -> clap::Command {
@@ -394,21 +374,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -416,7 +395,8 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List disks")
     }
@@ -426,28 +406,42 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("size")
                     .long("size")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::ByteCount))
+                    .required_unless_present("json-body")
                     .help("total size of the Disk in bytes"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Create a disk")
     }
@@ -457,15 +451,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Fetch a disk")
@@ -476,15 +470,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Delete a disk")
@@ -495,28 +489,42 @@ impl Cli {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("base64-encoded-data")
                     .long("base64-encoded-data")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("offset")
                     .long("offset")
-                    .required(true)
-                    .value_parser(clap::value_parser!(u64)),
+                    .value_parser(clap::value_parser!(u64))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Import blocks into a disk")
     }
@@ -526,18 +534,19 @@ impl Cli {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Start the process of importing blocks into a disk")
+            .about("Start importing blocks into a disk")
+            .long_about("Start the process of importing blocks into a disk")
     }
 
     pub fn cli_disk_bulk_write_import_stop() -> clap::Command {
@@ -545,18 +554,19 @@ impl Cli {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Stop the process of importing blocks into a disk")
+            .about("Stop importing blocks into a disk")
+            .long_about("Stop the process of importing blocks into a disk")
     }
 
     pub fn cli_disk_finalize_import() -> clap::Command {
@@ -564,22 +574,22 @@ impl Cli {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("snapshot-name")
                     .long("snapshot-name")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::Name))
+                    .required(false)
                     .help(
                         "If specified a snapshot of the disk will be created with the given name \
                          during finalization. If not specified, a snapshot for the disk will \
@@ -587,7 +597,21 @@ impl Cli {
                          transitions into the `Detached` state.",
                     ),
             )
-            .about("Finalize disk when imports are done")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Confirm disk block import completion")
     }
 
     pub fn cli_disk_import_blocks_from_url() -> clap::Command {
@@ -595,25 +619,39 @@ impl Cli {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the disk"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("url")
                     .long("url")
-                    .required(true)
                     .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
                     .help("the source to pull blocks from"),
             )
-            .about("Send request to import blocks from URL")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Request to import blocks from URL")
     }
 
     pub fn cli_disk_metrics_list() -> clap::Command {
@@ -621,13 +659,12 @@ impl Cli {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true),
             )
             .arg(
                 clap::Arg::new("metric")
                     .long("metric")
-                    .required(true)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::DiskMetricName::Activated.to_string(),
@@ -638,34 +675,35 @@ impl Cli {
                             types::DiskMetricName::WriteBytes.to_string(),
                         ]),
                         |s| types::DiskMetricName::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(true),
             )
             .arg(
                 clap::Arg::new("end-time")
                     .long("end-time")
-                    .required(false)
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .required(false)
                     .help("An exclusive end time of metrics."),
             )
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("start-time")
                     .long("start-time")
-                    .required(false)
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .required(false)
                     .help("An inclusive start time of metrics."),
             )
             .about("Fetch disk metrics")
@@ -676,20 +714,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List groups")
     }
@@ -699,8 +737,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("group")
                     .long("group")
-                    .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
                     .help("ID of the group"),
             )
             .about("Fetch group")
@@ -711,8 +749,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("include-silo-images")
                     .long("include-silo-images")
-                    .required(false)
                     .value_parser(clap::value_parser!(bool))
+                    .required(false)
                     .help(
                         "Flag used to indicate if silo scoped images should be included when \
                          listing project images. Only valid when `project` is provided.",
@@ -721,21 +759,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -743,12 +780,13 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
-            .about(
-                "List images\n\nList images which are global or scoped to the specified project. \
-                 The images are returned sorted by creation date, with the most recent images \
-                 appearing first.",
+            .about("List images")
+            .long_about(
+                "List images which are global or scoped to the specified project. The images are \
+                 returned sorted by creation date, with the most recent images appearing first.",
             )
     }
 
@@ -757,37 +795,52 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("os")
                     .long("os")
-                    .required(true)
                     .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
                     .help("The family of the operating system (e.g. Debian, Ubuntu, etc.)"),
             )
             .arg(
                 clap::Arg::new("version")
                     .long("version")
-                    .required(true)
                     .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
                     .help("The version of the operating system (e.g. 18.04, 20.04, etc.)"),
             )
-            .about("Create an image\n\nCreate a new image in a project.")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create an image")
+            .long_about("Create a new image in a project.")
     }
 
     pub fn cli_image_view() -> clap::Command {
@@ -795,18 +848,19 @@ impl Cli {
             .arg(
                 clap::Arg::new("image")
                     .long("image")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an image\n\nFetch the details for a specific image in a project.")
+            .about("Fetch an image")
+            .long_about("Fetch the details for a specific image in a project.")
     }
 
     pub fn cli_image_delete() -> clap::Command {
@@ -814,21 +868,22 @@ impl Cli {
             .arg(
                 clap::Arg::new("image")
                     .long("image")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
-            .about(
-                "Delete an image\n\nPermanently delete an image from a project. This operation \
-                 cannot be undone. Any instances in the project using the image will continue to \
-                 run, however new instances can not be created with this image.",
+            .about("Delete an image")
+            .long_about(
+                "Permanently delete an image from a project. This operation cannot be undone. Any \
+                 instances in the project using the image will continue to run, however new \
+                 instances can not be created with this image.",
             )
     }
 
@@ -837,18 +892,19 @@ impl Cli {
             .arg(
                 clap::Arg::new("image")
                     .long("image")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the image"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Promote a project image to be visible to all projects in the silo")
+            .about("Promote a project image")
+            .long_about("Promote a project image to be visible to all projects in the silo")
     }
 
     pub fn cli_instance_list() -> clap::Command {
@@ -856,21 +912,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -878,7 +933,8 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List instances")
     }
@@ -888,57 +944,71 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("hostname")
                     .long("hostname")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("memory")
                     .long("memory")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::ByteCount)),
+                    .value_parser(clap::value_parser!(types::ByteCount))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("ncpus")
                     .long("ncpus")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::InstanceCpuCount)),
+                    .value_parser(clap::value_parser!(types::InstanceCpuCount))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("start")
                     .long("start")
-                    .required(false)
                     .value_parser(clap::value_parser!(bool))
+                    .required(false)
                     .help("Should this instance be started upon creation; true by default."),
             )
             .arg(
                 clap::Arg::new("user-data")
                     .long("user-data")
-                    .required(false)
                     .value_parser(clap::value_parser!(String))
+                    .required(false)
                     .help(
                         "User data for instance initialization systems (such as cloud-init). Must \
                          be a Base64-encoded string, as specified in RFC 4648 § 4 (+ and / \
                          characters with padding). Maximum 32 KiB unencoded data.",
                     ),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Create an instance")
     }
@@ -948,15 +1018,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Fetch an instance")
@@ -967,15 +1037,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Delete an instance")
@@ -986,28 +1056,27 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -1015,7 +1084,8 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List an instance's disks")
     }
@@ -1025,23 +1095,37 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
                     .help("Name or ID of the disk"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Attach a disk to an instance")
     }
@@ -1051,23 +1135,37 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
                     .help("Name or ID of the disk"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Detach a disk from an instance")
     }
@@ -1077,15 +1175,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("List external IP addresses")
@@ -1096,22 +1194,36 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("dst-sled-id")
                     .long("dst-sled-id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Migrate an instance")
     }
@@ -1121,15 +1233,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Reboot an instance")
@@ -1140,15 +1252,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("from-start")
                     .long("from-start")
-                    .required(false)
                     .value_parser(clap::value_parser!(u64))
+                    .required(false)
                     .help(
                         "Character index in the serial buffer from which to read, counting the \
                          bytes output since instance start. If this is not provided, \
@@ -1159,8 +1271,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("max-bytes")
                     .long("max-bytes")
-                    .required(false)
                     .value_parser(clap::value_parser!(u64))
+                    .required(false)
                     .help(
                         "Maximum number of bytes of buffered serial console contents to return. \
                          If the requested range runs to the end of the available buffer, the data \
@@ -1172,8 +1284,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("most-recent")
                     .long("most-recent")
-                    .required(false)
                     .value_parser(clap::value_parser!(u64))
+                    .required(false)
                     .help(
                         "Character index in the serial buffer from which to read, counting \
                          *backward* from the most recently buffered data retrieved from the \
@@ -1183,8 +1295,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
                          `Name`",
@@ -1198,15 +1310,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("from-start")
                     .long("from-start")
-                    .required(false)
                     .value_parser(clap::value_parser!(u64))
+                    .required(false)
                     .help(
                         "Character index in the serial buffer from which to read, counting the \
                          bytes output since instance start. If this is not provided, \
@@ -1217,8 +1329,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("max-bytes")
                     .long("max-bytes")
-                    .required(false)
                     .value_parser(clap::value_parser!(u64))
+                    .required(false)
                     .help(
                         "Maximum number of bytes of buffered serial console contents to return. \
                          If the requested range runs to the end of the available buffer, the data \
@@ -1230,8 +1342,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("most-recent")
                     .long("most-recent")
-                    .required(false)
                     .value_parser(clap::value_parser!(u64))
+                    .required(false)
                     .help(
                         "Character index in the serial buffer from which to read, counting \
                          *backward* from the most recently buffered data retrieved from the \
@@ -1241,8 +1353,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
                          `Name`",
@@ -1256,15 +1368,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Boot an instance")
@@ -1275,15 +1387,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Stop an instance")
@@ -1298,20 +1410,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("Fetch the silo\u{a0}groups the current user belongs to")
     }
@@ -1321,14 +1433,13 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -1336,12 +1447,11 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
-            .about(
-                "List SSH public keys\n\nLists SSH public keys for the currently authenticated \
-                 user.",
-            )
+            .about("List SSH public keys")
+            .long_about("Lists SSH public keys for the currently authenticated user.")
     }
 
     pub fn cli_current_user_ssh_key_create() -> clap::Command {
@@ -1349,26 +1459,38 @@ impl Cli {
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("public-key")
                     .long("public-key")
-                    .required(true)
                     .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
                     .help("SSH public key, e.g., `\"ssh-ed25519 AAAAC3NzaC...\"`"),
             )
-            .about(
-                "Create an SSH public key\n\nCreate an SSH public key for the currently \
-                 authenticated user.",
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
             )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create an SSH public key")
+            .long_about("Create an SSH public key for the currently authenticated user.")
     }
 
     pub fn cli_current_user_ssh_key_view() -> clap::Command {
@@ -1376,14 +1498,12 @@ impl Cli {
             .arg(
                 clap::Arg::new("ssh-key")
                     .long("ssh-key")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the SSH key"),
             )
-            .about(
-                "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently \
-                 authenticated user.",
-            )
+            .about("Fetch an SSH public key")
+            .long_about("Fetch an SSH public key associated with the currently authenticated user.")
     }
 
     pub fn cli_current_user_ssh_key_delete() -> clap::Command {
@@ -1391,13 +1511,13 @@ impl Cli {
             .arg(
                 clap::Arg::new("ssh-key")
                     .long("ssh-key")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the SSH key"),
             )
-            .about(
-                "Delete an SSH public key\n\nDelete an SSH public key associated with the \
-                 currently authenticated user.",
+            .about("Delete an SSH public key")
+            .long_about(
+                "Delete an SSH public key associated with the currently authenticated user.",
             )
     }
 
@@ -1406,22 +1526,22 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
                          `Name`",
@@ -1430,7 +1550,6 @@ impl Cli {
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -1438,7 +1557,8 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List network interfaces")
     }
@@ -1448,15 +1568,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
                          `Name`",
@@ -1465,14 +1585,14 @@ impl Cli {
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("ip")
                     .long("ip")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required(false)
                     .help(
                         "The IP address for the interface. One will be auto-assigned if not \
                          provided.",
@@ -1481,22 +1601,36 @@ impl Cli {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("subnet-name")
                     .long("subnet-name")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
                     .help("The VPC Subnet in which to create the interface."),
             )
             .arg(
                 clap::Arg::new("vpc-name")
                     .long("vpc-name")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
                     .help("The VPC in which to create the interface."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Create a network interface")
     }
@@ -1506,22 +1640,22 @@ impl Cli {
             .arg(
                 clap::Arg::new("interface")
                     .long("interface")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the network interface"),
             )
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
                          `Name`",
@@ -1535,22 +1669,22 @@ impl Cli {
             .arg(
                 clap::Arg::new("interface")
                     .long("interface")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the network interface"),
             )
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
                          `Name`",
@@ -1559,20 +1693,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(false)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(false)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("primary")
                     .long("primary")
-                    .required(false)
                     .value_parser(clap::value_parser!(bool))
+                    .required(false)
                     .help(
                         "Make a secondary interface the instance's primary interface.\n\nIf \
                          applied to a secondary interface, that interface will become the primary \
@@ -1584,6 +1718,20 @@ impl Cli {
                          error.",
                     ),
             )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
             .about("Update a network interface")
     }
 
@@ -1592,32 +1740,32 @@ impl Cli {
             .arg(
                 clap::Arg::new("interface")
                     .long("interface")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the network interface"),
             )
             .arg(
                 clap::Arg::new("instance")
                     .long("instance")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the instance"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `instance` is provided as a \
                          `Name`",
                     ),
             )
-            .about(
-                "Delete a network interface\n\nNote that the primary interface for an instance \
-                 cannot be deleted if there are any secondary interfaces. A new primary interface \
-                 must be designated first. The primary interface can be deleted if there are no \
-                 secondary interfaces.",
+            .about("Delete a network interface")
+            .long_about(
+                "Note that the primary interface for an instance cannot be deleted if there are \
+                 any secondary interfaces. A new primary interface must be designated first. The \
+                 primary interface can be deleted if there are no secondary interfaces.",
             )
     }
 
@@ -1626,7 +1774,22 @@ impl Cli {
     }
 
     pub fn cli_policy_update() -> clap::Command {
-        clap::Command::new("").about("Update the current silo's IAM policy")
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update the current silo's IAM policy")
     }
 
     pub fn cli_project_list() -> clap::Command {
@@ -1634,14 +1797,13 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -1649,7 +1811,8 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List projects")
     }
@@ -1659,14 +1822,28 @@ impl Cli {
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Create a project")
     }
@@ -1676,8 +1853,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .about("Fetch a project")
@@ -1688,21 +1865,35 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(false)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Update a project")
     }
@@ -1712,8 +1903,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .about("Delete a project")
@@ -1724,8 +1915,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .about("Fetch a project's IAM policy")
@@ -1736,9 +1927,23 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Update a project's IAM policy")
     }
@@ -1748,21 +1953,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -1770,7 +1974,8 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List snapshots")
     }
@@ -1780,30 +1985,45 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
                     .help("The name of the disk to be snapshotted"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
             )
-            .about("Create a snapshot\n\nCreates a point-in-time snapshot from a disk.")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a snapshot")
+            .long_about("Creates a point-in-time snapshot from a disk.")
     }
 
     pub fn cli_snapshot_view() -> clap::Command {
@@ -1811,15 +2031,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("snapshot")
                     .long("snapshot")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the snapshot"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Fetch a snapshot")
@@ -1830,15 +2050,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("snapshot")
                     .long("snapshot")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the snapshot"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Delete a snapshot")
@@ -1849,14 +2069,13 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -1864,12 +2083,14 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
-            .about(
-                "List system-wide certificates\n\nReturns a list of all the system-wide \
-                 certificates. System-wide certificates are returned sorted by creation date, \
-                 with the most recent certificates appearing first.",
+            .about("List system-wide certificates")
+            .long_about(
+                "Returns a list of all the system-wide certificates. System-wide certificates are \
+                 returned sorted by creation date, with the most recent certificates appearing \
+                 first.",
             )
     }
 
@@ -1878,30 +2099,45 @@ impl Cli {
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("service")
                     .long("service")
-                    .required(true)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::ServiceUsingCertificate::ExternalApi.to_string(),
                         ]),
                         |s| types::ServiceUsingCertificate::try_from(s).unwrap(),
                     ))
+                    .required_unless_present("json-body")
                     .help("The service using this certificate"),
             )
-            .about(
-                "Create a new system-wide x.509 certificate.\n\nThis certificate is automatically \
-                 used by the Oxide Control plane to serve external connections.",
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a new system-wide x.509 certificate")
+            .long_about(
+                "This certificate is automatically used by the Oxide Control plane to serve \
+                 external connections.",
             )
     }
 
@@ -1910,10 +2146,11 @@ impl Cli {
             .arg(
                 clap::Arg::new("certificate")
                     .long("certificate")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true),
             )
-            .about("Fetch a certificate\n\nReturns the details of a specific certificate")
+            .about("Fetch a certificate")
+            .long_about("Returns the details of a specific certificate")
     }
 
     pub fn cli_certificate_delete() -> clap::Command {
@@ -1921,13 +2158,11 @@ impl Cli {
             .arg(
                 clap::Arg::new("certificate")
                     .long("certificate")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true),
             )
-            .about(
-                "Delete a certificate\n\nPermanently delete a certificate. This operation cannot \
-                 be undone.",
-            )
+            .about("Delete a certificate")
+            .long_about("Permanently delete a certificate. This operation cannot be undone.")
     }
 
     pub fn cli_physical_disk_list() -> clap::Command {
@@ -1935,20 +2170,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List physical disks")
     }
@@ -1958,20 +2193,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List racks")
     }
@@ -1981,8 +2216,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("rack-id")
                     .long("rack-id")
-                    .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
                     .help("The rack's unique ID."),
             )
             .about("Fetch a rack")
@@ -1993,20 +2228,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List sleds")
     }
@@ -2016,8 +2251,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("sled-id")
                     .long("sled-id")
-                    .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
                     .help("The sled's unique ID."),
             )
             .about("Fetch a sled")
@@ -2028,27 +2263,27 @@ impl Cli {
             .arg(
                 clap::Arg::new("sled-id")
                     .long("sled-id")
-                    .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
                     .help("The sled's unique ID."),
             )
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List physical disks attached to sleds")
     }
@@ -2058,21 +2293,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -2080,9 +2314,10 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
-            .about("List a silo's IDPs_name")
+            .about("List a silo's IdP's name")
     }
 
     pub fn cli_local_idp_user_create() -> clap::Command {
@@ -2090,21 +2325,36 @@ impl Cli {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("external-id")
                     .long("external-id")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::UserId))
+                    .required_unless_present("json-body")
                     .help("username used to log in"),
             )
-            .about(
-                "Create a user\n\nUsers can only be created in Silos with `provision_type` == \
-                 `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user \
-                 first logs in using an external Identity Provider.",
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a user")
+            .long_about(
+                "Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, \
+                 Silo users are just-in-time (JIT) provisioned when a user first logs in using an \
+                 external Identity Provider.",
             )
     }
 
@@ -2113,15 +2363,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("user-id")
                     .long("user-id")
-                    .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
                     .help("The user's internal id"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
             .about("Delete a user")
@@ -2132,20 +2382,34 @@ impl Cli {
             .arg(
                 clap::Arg::new("user-id")
                     .long("user-id")
-                    .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
                     .help("The user's internal id"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about(
-                "Set or invalidate a user's password\n\nPasswords can only be updated for users \
-                 in Silos with identity mode `LocalOnly`.",
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Set or invalidate a user's password")
+            .long_about(
+                "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
             )
     }
 
@@ -2154,28 +2418,28 @@ impl Cli {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("acs-url")
                     .long("acs-url")
-                    .required(true)
                     .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
                     .help("service provider endpoint where the response will be sent"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("group-attribute-name")
                     .long("group-attribute-name")
-                    .required(false)
                     .value_parser(clap::value_parser!(String))
+                    .required(false)
                     .help(
                         "If set, SAML attributes with this name will be considered to denote a \
                          user's group membership, where the attribute value(s) should be a \
@@ -2185,38 +2449,52 @@ impl Cli {
             .arg(
                 clap::Arg::new("idp-entity-id")
                     .long("idp-entity-id")
-                    .required(true)
                     .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
                     .help("idp's entity id"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("slo-url")
                     .long("slo-url")
-                    .required(true)
                     .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
                     .help("service provider endpoint where the idp should send log out requests"),
             )
             .arg(
                 clap::Arg::new("sp-client-id")
                     .long("sp-client-id")
-                    .required(true)
                     .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
                     .help("sp's client id"),
             )
             .arg(
                 clap::Arg::new("technical-contact-email")
                     .long("technical-contact-email")
-                    .required(true)
                     .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
                     .help("customer's technical contact for saml configuration"),
             )
-            .about("Create a SAML IDP")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a SAML IdP")
     }
 
     pub fn cli_saml_identity_provider_view() -> clap::Command {
@@ -2224,18 +2502,18 @@ impl Cli {
             .arg(
                 clap::Arg::new("provider")
                     .long("provider")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the SAML identity provider"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a SAML IDP")
+            .about("Fetch a SAML IdP")
     }
 
     pub fn cli_ip_pool_list() -> clap::Command {
@@ -2243,14 +2521,13 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -2258,7 +2535,8 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List IP pools")
     }
@@ -2268,14 +2546,28 @@ impl Cli {
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Create an IP pool")
     }
@@ -2285,8 +2577,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .about("Fetch an IP pool")
@@ -2297,21 +2589,35 @@ impl Cli {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(false)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Update an IP Pool")
     }
@@ -2321,8 +2627,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .about("Delete an IP Pool")
@@ -2333,18 +2639,19 @@ impl Cli {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the IP pool"),
             )
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
-            .about("List ranges for an IP pool\n\nRanges are ordered by their first address.")
+            .about("List ranges for an IP pool")
+            .long_about("List ranges for an IP pool. Ranges are ordered by their first address.")
     }
 
     pub fn cli_ip_pool_range_add() -> clap::Command {
@@ -2352,9 +2659,23 @@ impl Cli {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the IP pool"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Add a range to an IP pool")
     }
@@ -2364,15 +2685,29 @@ impl Cli {
             .arg(
                 clap::Arg::new("pool")
                     .long("pool")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the IP pool"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Remove a range from an IP pool")
     }
 
     pub fn cli_ip_pool_service_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the IP pool used for Oxide services.")
+        clap::Command::new("").about("Fetch the IP pool used for Oxide services")
     }
 
     pub fn cli_ip_pool_service_range_list() -> clap::Command {
@@ -2380,22 +2715,53 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
-            .about(
-                "List ranges for the IP pool used for Oxide services.\n\nRanges are ordered by \
-                 their first address.",
+            .about("List ranges for the IP pool used for Oxide services")
+            .long_about(
+                "List ranges for the IP pool used for Oxide services. Ranges are ordered by their \
+                 first address.",
             )
     }
 
     pub fn cli_ip_pool_service_range_add() -> clap::Command {
-        clap::Command::new("").about("Add a range to an IP pool used for Oxide services.")
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add a range to an IP pool used for Oxide services")
     }
 
     pub fn cli_ip_pool_service_range_remove() -> clap::Command {
-        clap::Command::new("").about("Remove a range from an IP pool used for Oxide services.")
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Remove a range from an IP pool used for Oxide services")
     }
 
     pub fn cli_system_metric() -> clap::Command {
@@ -2403,7 +2769,6 @@ impl Cli {
             .arg(
                 clap::Arg::new("metric-name")
                     .long("metric-name")
-                    .required(true)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::SystemMetricName::VirtualDiskSpaceProvisioned.to_string(),
@@ -2411,41 +2776,42 @@ impl Cli {
                             types::SystemMetricName::RamProvisioned.to_string(),
                         ]),
                         |s| types::SystemMetricName::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(true),
             )
             .arg(
                 clap::Arg::new("end-time")
                     .long("end-time")
-                    .required(false)
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .required(false)
                     .help("An exclusive end time of metrics."),
             )
             .arg(
                 clap::Arg::new("id")
                     .long("id")
-                    .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
                     .help("The UUID of the container being queried"),
             )
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("page-token")
                     .long("page-token")
-                    .required(false)
                     .value_parser(clap::value_parser!(String))
+                    .required(false)
                     .help("Token returned by previous call to retrieve the subsequent page"),
             )
             .arg(
                 clap::Arg::new("start-time")
                     .long("start-time")
-                    .required(false)
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .required(false)
                     .help("An inclusive start time of metrics."),
             )
             .about("Access metrics data")
@@ -2456,7 +2822,22 @@ impl Cli {
     }
 
     pub fn cli_system_policy_update() -> clap::Command {
-        clap::Command::new("").about("Update the top-level IAM policy")
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update the top-level IAM policy")
     }
 
     pub fn cli_role_list() -> clap::Command {
@@ -2464,8 +2845,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .about("List built-in roles")
@@ -2476,45 +2857,11 @@ impl Cli {
             .arg(
                 clap::Arg::new("role-name")
                     .long("role-name")
-                    .required(true)
                     .value_parser(clap::value_parser!(String))
+                    .required(true)
                     .help("The built-in role's unique name."),
             )
             .about("Fetch a built-in role")
-    }
-
-    pub fn cli_saga_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .required(false)
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
-                        ]),
-                        |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
-            )
-            .about("List sagas")
-    }
-
-    pub fn cli_saga_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("saga-id")
-                    .long("saga-id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
-            )
-            .about("Fetch a saga")
     }
 
     pub fn cli_silo_list() -> clap::Command {
@@ -2522,14 +2869,13 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -2537,11 +2883,11 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
-            .about(
-                "List silos\n\nLists silos that are discoverable based on the current permissions.",
-            )
+            .about("List silos")
+            .long_about("Lists silos that are discoverable based on the current permissions.")
     }
 
     pub fn cli_silo_create() -> clap::Command {
@@ -2549,46 +2895,60 @@ impl Cli {
             .arg(
                 clap::Arg::new("admin-group-name")
                     .long("admin-group-name")
-                    .required(false)
                     .value_parser(clap::value_parser!(String))
+                    .required(false)
                     .help(
                         "If set, this group will be created during Silo creation and granted the \
                          \"Silo Admin\" role. Identity providers can assert that users belong to \
                          this group and those users can log in and further initialize the \
                          Silo.\n\nNote that if configuring a SAML based identity provider, \
                          group_attribute_name must be set for users to be considered part of a \
-                         group. See [`SamlIdentityProviderCreate`] for more information.",
+                         group. See `SamlIdentityProviderCreate` for more information.",
                     ),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("discoverable")
                     .long("discoverable")
-                    .required(true)
-                    .value_parser(clap::value_parser!(bool)),
+                    .value_parser(clap::value_parser!(bool))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("identity-mode")
                     .long("identity-mode")
-                    .required(true)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::SiloIdentityMode::SamlJit.to_string(),
                             types::SiloIdentityMode::LocalOnly.to_string(),
                         ]),
                         |s| types::SiloIdentityMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Create a silo")
     }
@@ -2598,11 +2958,12 @@ impl Cli {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a silo\n\nFetch a silo by name.")
+            .about("Fetch a silo")
+            .long_about("Fetch a silo by name.")
     }
 
     pub fn cli_silo_delete() -> clap::Command {
@@ -2610,11 +2971,12 @@ impl Cli {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Delete a silo\n\nDelete a silo by name.")
+            .about("Delete a silo")
+            .long_about("Delete a silo by name.")
     }
 
     pub fn cli_silo_policy_view() -> clap::Command {
@@ -2622,8 +2984,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
             .about("Fetch a silo's IAM policy")
@@ -2634,9 +2996,23 @@ impl Cli {
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the silo"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Update a silo's IAM policy")
     }
@@ -2646,20 +3022,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("View version and update status of component tree")
     }
@@ -2669,20 +3045,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List all update deployments")
     }
@@ -2692,8 +3068,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("id")
                     .long("id")
-                    .required(true)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true),
             )
             .about("Fetch a system update deployment")
     }
@@ -2707,15 +3083,30 @@ impl Cli {
             .arg(
                 clap::Arg::new("version")
                     .long("version")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::SemverVersion)),
+                    .value_parser(clap::value_parser!(types::SemverVersion))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Start system update")
     }
 
     pub fn cli_system_update_stop() -> clap::Command {
         clap::Command::new("")
-            .about("Stop system update\n\nIf there is no update in progress, do nothing.")
+            .about("Stop system update")
+            .long_about("If there is no update in progress, do nothing.")
     }
 
     pub fn cli_system_update_list() -> clap::Command {
@@ -2723,20 +3114,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List all updates")
     }
@@ -2746,8 +3137,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("version")
                     .long("version")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::SemverVersion)),
+                    .value_parser(clap::value_parser!(types::SemverVersion))
+                    .required(true),
             )
             .about("View system update")
     }
@@ -2757,8 +3148,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("version")
                     .long("version")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::SemverVersion)),
+                    .value_parser(clap::value_parser!(types::SemverVersion))
+                    .required(true),
             )
             .about("View system update component tree")
     }
@@ -2772,27 +3163,27 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List users in a silo")
     }
@@ -2802,15 +3193,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("user-id")
                     .long("user-id")
-                    .required(true)
                     .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
                     .help("The user's internal id"),
             )
             .arg(
                 clap::Arg::new("silo")
                     .long("silo")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
             .about("Fetch a user")
@@ -2821,20 +3212,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameSortMode::NameAscending.to_string(),
                         ]),
                         |s| types::NameSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List built-in users")
     }
@@ -2844,8 +3235,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("user")
                     .long("user")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::NameOrId)),
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true),
             )
             .about("Fetch a built-in user")
     }
@@ -2855,26 +3246,26 @@ impl Cli {
             .arg(
                 clap::Arg::new("group")
                     .long("group")
-                    .required(false)
-                    .value_parser(clap::value_parser!(uuid::Uuid)),
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::IdSortMode::IdAscending.to_string()
                         ]),
                         |s| types::IdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List users")
     }
@@ -2884,8 +3275,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -2893,8 +3284,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the VPC"),
             )
             .about("List firewall rules")
@@ -2905,8 +3296,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -2914,9 +3305,23 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the VPC"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Replace firewall rules")
     }
@@ -2926,15 +3331,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -2942,14 +3347,13 @@ impl Cli {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -2957,18 +3361,20 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
                     ),
             )
-            .about("List routes\n\nList the routes associated with a router in a particular VPC.")
+            .about("List routes")
+            .long_about("List the routes associated with a router in a particular VPC.")
     }
 
     pub fn cli_vpc_router_route_create() -> clap::Command {
@@ -2976,8 +3382,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -2985,15 +3391,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
                     ),
@@ -3001,14 +3407,28 @@ impl Cli {
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
                     .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Create a router")
     }
@@ -3018,15 +3438,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("route")
                     .long("route")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the route"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3034,15 +3454,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
                     ),
@@ -3055,15 +3475,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("route")
                     .long("route")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the route"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3071,15 +3491,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
                     ),
@@ -3087,14 +3507,28 @@ impl Cli {
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(false)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(false)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Update a route")
     }
@@ -3104,15 +3538,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("route")
                     .long("route")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the route"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3120,15 +3554,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
                     ),
@@ -3141,15 +3575,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3157,7 +3591,6 @@ impl Cli {
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -3165,13 +3598,14 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("List routers")
@@ -3182,8 +3616,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3191,21 +3625,35 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Create a VPC router")
     }
@@ -3215,15 +3663,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3231,11 +3679,11 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the VPC"),
             )
-            .about("Get a router")
+            .about("Fetch a router")
     }
 
     pub fn cli_vpc_router_update() -> clap::Command {
@@ -3243,15 +3691,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3259,21 +3707,35 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(false)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Update a router")
     }
@@ -3283,15 +3745,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("router")
                     .long("router")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3299,8 +3761,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("Delete a router")
@@ -3311,15 +3773,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3327,7 +3789,6 @@ impl Cli {
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -3335,16 +3796,17 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the VPC"),
             )
-            .about("Fetch a subnet")
+            .about("List subnets")
     }
 
     pub fn cli_vpc_subnet_create() -> clap::Command {
@@ -3352,8 +3814,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3361,21 +3823,21 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("ipv4-block")
                     .long("ipv4-block")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::Ipv4Net))
+                    .required_unless_present("json-body")
                     .help(
                         "The IPv4 address range for this subnet.\n\nIt must be allocated from an \
                          RFC 1918 private address range, and must not overlap with any other \
@@ -3385,8 +3847,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("ipv6-block")
                     .long("ipv6-block")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::Ipv6Net))
+                    .required(false)
                     .help(
                         "The IPv6 address range for this subnet.\n\nIt must be allocated from the \
                          RFC 4193 Unique Local Address range, with the prefix equal to the parent \
@@ -3397,8 +3859,22 @@ impl Cli {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Create a subnet")
     }
@@ -3408,15 +3884,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("subnet")
                     .long("subnet")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3424,8 +3900,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("Fetch a subnet")
@@ -3436,15 +3912,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("subnet")
                     .long("subnet")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3452,21 +3928,35 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(false)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Update a subnet")
     }
@@ -3476,15 +3966,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("subnet")
                     .long("subnet")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3492,8 +3982,8 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("Delete a subnet")
@@ -3504,22 +3994,22 @@ impl Cli {
             .arg(
                 clap::Arg::new("subnet")
                     .long("subnet")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the subnet"),
             )
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help(
                         "Name or ID of the project, only required if `vpc` is provided as a `Name`",
                     ),
@@ -3527,7 +4017,6 @@ impl Cli {
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -3535,13 +4024,14 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the VPC"),
             )
             .about("List network interfaces")
@@ -3552,21 +4042,20 @@ impl Cli {
             .arg(
                 clap::Arg::new("limit")
                     .long("limit")
-                    .required(false)
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
-                    .required(false)
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
                             types::NameOrIdSortMode::NameAscending.to_string(),
@@ -3574,7 +4063,8 @@ impl Cli {
                             types::NameOrIdSortMode::IdAscending.to_string(),
                         ]),
                         |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    )),
+                    ))
+                    .required(false),
             )
             .about("List VPCs")
     }
@@ -3584,30 +4074,30 @@ impl Cli {
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(true)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("dns-name")
                     .long("dns-name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("ipv6-prefix")
                     .long("ipv6-prefix")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::Ipv6Net))
+                    .required(false)
                     .help(
-                        "The IPv6 prefix for this VPC.\n\nAll IPv6 subnets created from this VPC \
-                         must be taken from this range, which sould be a Unique Local Address in \
+                        "The IPv6 prefix for this VPC\n\nAll IPv6 subnets created from this VPC \
+                         must be taken from this range, which should be a Unique Local Address in \
                          the range `fd00::/48`. The default VPC Subnet will have the first `/64` \
                          range from this prefix.",
                     ),
@@ -3615,8 +4105,22 @@ impl Cli {
             .arg(
                 clap::Arg::new("name")
                     .long("name")
-                    .required(true)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Create a VPC")
     }
@@ -3626,15 +4130,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Fetch a VPC")
@@ -3645,34 +4149,48 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .arg(
                 clap::Arg::new("description")
                     .long("description")
-                    .required(false)
-                    .value_parser(clap::value_parser!(String)),
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("dns-name")
                     .long("dns-name")
-                    .required(false)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
             )
             .arg(
                 clap::Arg::new("name")
                     .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
                     .required(false)
-                    .value_parser(clap::value_parser!(types::Name)),
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
             )
             .about("Update a VPC")
     }
@@ -3682,15 +4200,15 @@ impl Cli {
             .arg(
                 clap::Arg::new("vpc")
                     .long("vpc")
-                    .required(true)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
                     .help("Name or ID of the VPC"),
             )
             .arg(
                 clap::Arg::new("project")
                     .long("project")
-                    .required(false)
                     .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
                     .help("Name or ID of the project"),
             )
             .about("Delete a VPC")
@@ -3727,21 +4245,6 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::Logout => {
                 self.execute_logout(matches).await;
-            }
-            CliCommand::SystemImageViewById => {
-                self.execute_system_image_view_by_id(matches).await;
-            }
-            CliCommand::SystemImageList => {
-                self.execute_system_image_list(matches).await;
-            }
-            CliCommand::SystemImageCreate => {
-                self.execute_system_image_create(matches).await;
-            }
-            CliCommand::SystemImageView => {
-                self.execute_system_image_view(matches).await;
-            }
-            CliCommand::SystemImageDelete => {
-                self.execute_system_image_delete(matches).await;
             }
             CliCommand::DiskList => {
                 self.execute_disk_list(matches).await;
@@ -4010,12 +4513,6 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::RoleView => {
                 self.execute_role_view(matches).await;
             }
-            CliCommand::SagaList => {
-                self.execute_saga_list(matches).await;
-            }
-            CliCommand::SagaView => {
-                self.execute_saga_view(matches).await;
-            }
             CliCommand::SiloList => {
                 self.execute_silo_list(matches).await;
             }
@@ -4154,6 +4651,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_device_auth_request(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.device_auth_request();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::DeviceAuthRequest>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
             request = request.body_map(|body| body.client_id(value.clone()))
         }
@@ -4174,6 +4677,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_device_auth_confirm(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.device_auth_confirm();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::DeviceAuthVerify>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<String>("user-code") {
             request = request.body_map(|body| body.user_code(value.clone()))
         }
@@ -4194,6 +4703,13 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_device_access_token(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.device_access_token();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::DeviceAccessTokenRequest>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
             request = request.body_map(|body| body.client_id(value.clone()))
         }
@@ -4222,6 +4738,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_login_spoof(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.login_spoof();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SpoofLoginBody>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<String>("username") {
             request = request.body_map(|body| body.username(value.clone()))
         }
@@ -4242,6 +4764,13 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_login_local(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.login_local();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::UsernamePasswordCredentials>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::Name>("silo-name") {
             request = request.silo_name(value.clone());
         }
@@ -4328,114 +4857,6 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
-    pub async fn execute_system_image_view_by_id(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_image_view_by_id();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("id") {
-            request = request.id(value.clone());
-        }
-
-        self.over
-            .execute_system_image_view_by_id(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_image_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_image_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
-        self.over
-            .execute_system_image_list(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_image_create(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_image_create();
-        if let Some(value) = matches.get_one::<String>("description") {
-            request = request.body_map(|body| body.description(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::Name>("name") {
-            request = request.body_map(|body| body.name(value.clone()))
-        }
-
-        self.over
-            .execute_system_image_create(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_image_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_image_view();
-        if let Some(value) = matches.get_one::<types::Name>("image-name") {
-            request = request.image_name(value.clone());
-        }
-
-        self.over
-            .execute_system_image_view(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_image_delete(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_image_delete();
-        if let Some(value) = matches.get_one::<types::Name>("image-name") {
-            request = request.image_name(value.clone());
-        }
-
-        self.over
-            .execute_system_image_delete(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
     pub async fn execute_disk_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.disk_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -4451,19 +4872,31 @@ impl<T: CliOverride> Cli<T> {
         }
 
         self.over.execute_disk_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_disk_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.disk_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::DiskCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -4542,6 +4975,13 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_disk_bulk_write_import(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.disk_bulk_write_import();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::ImportBlocksBulkWrite>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
         }
@@ -4622,6 +5062,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_disk_finalize_import(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.disk_finalize_import();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::FinalizeDisk>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
         }
@@ -4650,6 +5096,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_disk_import_blocks_from_url(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.disk_import_blocks_from_url();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::ImportBlocksFromUrl>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
         }
@@ -4706,13 +5158,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_disk_metrics_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -4728,13 +5186,19 @@ impl<T: CliOverride> Cli<T> {
         }
 
         self.over.execute_group_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -4776,19 +5240,31 @@ impl<T: CliOverride> Cli<T> {
         }
 
         self.over.execute_image_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_image_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.image_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::ImageCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -4910,19 +5386,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_instance_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_instance_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.instance_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::InstanceCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -5038,19 +5526,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_instance_disk_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_instance_disk_attach(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.instance_disk_attach();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
@@ -5079,6 +5579,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_instance_disk_detach(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.instance_disk_detach();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::DiskPath>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
@@ -5131,6 +5637,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_instance_migrate(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.instance_migrate();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::InstanceMigrate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
@@ -5330,13 +5842,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_current_user_groups(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -5354,19 +5872,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_current_user_ssh_key_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_current_user_ssh_key_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.current_user_ssh_key_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SshKeyCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -5454,19 +5984,32 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_instance_network_interface_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_instance_network_interface_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.instance_network_interface_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::InstanceNetworkInterfaceCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
         }
@@ -5539,6 +6082,13 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_instance_network_interface_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.instance_network_interface_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::InstanceNetworkInterfaceUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("interface") {
             request = request.interface(value.clone());
         }
@@ -5623,6 +6173,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_policy_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.policy_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         self.over
             .execute_policy_update(matches, &mut request)
             .unwrap();
@@ -5650,19 +6206,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_project_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_project_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.project_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::ProjectCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -5707,6 +6275,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_project_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.project_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::ProjectUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -5775,6 +6349,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_project_policy_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.project_policy_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::ProjectRolePolicy>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -5810,19 +6390,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_snapshot_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_snapshot_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.snapshot_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SnapshotCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -5914,19 +6506,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_certificate_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_certificate_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.certificate_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::CertificateCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -6006,13 +6610,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_physical_disk_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -6028,13 +6638,19 @@ impl<T: CliOverride> Cli<T> {
         }
 
         self.over.execute_rack_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -6068,13 +6684,19 @@ impl<T: CliOverride> Cli<T> {
         }
 
         self.over.execute_sled_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -6114,13 +6736,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_sled_physical_disk_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -6142,19 +6770,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_silo_identity_provider_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_local_idp_user_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.local_idp_user_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::UserCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
@@ -6203,6 +6843,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_local_idp_user_set_password(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.local_idp_user_set_password();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::UserPassword>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<uuid::Uuid>("user-id") {
             request = request.user_id(value.clone());
         }
@@ -6227,6 +6873,13 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_saml_identity_provider_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.saml_identity_provider_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SamlIdentityProviderCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
@@ -6314,19 +6967,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_ip_pool_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_ip_pool_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.ip_pool_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::IpPoolCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
         }
@@ -6371,6 +7036,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_ip_pool_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.ip_pool_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::IpPoolUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
@@ -6430,19 +7101,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_ip_pool_range_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_ip_pool_range_add(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.ip_pool_range_add();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
@@ -6463,6 +7146,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_ip_pool_range_remove(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.ip_pool_range_remove();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
@@ -6506,19 +7195,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_ip_pool_service_range_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_ip_pool_service_range_add(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.ip_pool_service_range_add();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         self.over
             .execute_ip_pool_service_range_add(matches, &mut request)
             .unwrap();
@@ -6535,6 +7236,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_ip_pool_service_range_remove(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.ip_pool_service_range_remove();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         self.over
             .execute_ip_pool_service_range_remove(matches, &mut request)
             .unwrap();
@@ -6608,6 +7315,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_system_policy_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.system_policy_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::FleetRolePolicy>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         self.over
             .execute_system_policy_update(matches, &mut request)
             .unwrap();
@@ -6629,13 +7342,19 @@ impl<T: CliOverride> Cli<T> {
         }
 
         self.over.execute_role_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -6658,46 +7377,6 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
-    pub async fn execute_saga_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.saga_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
-        self.over.execute_saga_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_saga_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.saga_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("saga-id") {
-            request = request.saga_id(value.clone());
-        }
-
-        self.over.execute_saga_view(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
     pub async fn execute_silo_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.silo_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -6709,19 +7388,31 @@ impl<T: CliOverride> Cli<T> {
         }
 
         self.over.execute_silo_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_silo_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.silo_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SiloCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<String>("admin-group-name") {
             request = request.body_map(|body| body.admin_group_name(value.clone()))
         }
@@ -6816,6 +7507,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_silo_policy_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.silo_policy_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SiloRolePolicy>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
@@ -6847,13 +7544,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_system_component_version_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -6871,13 +7574,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_update_deployments_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -6920,6 +7629,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_system_update_start(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.system_update_start();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SystemUpdateStart>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::SemverVersion>("version") {
             request = request.body_map(|body| body.version(value.clone()))
         }
@@ -6967,13 +7682,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_system_update_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -7051,13 +7772,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_silo_user_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -7099,13 +7826,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_user_builtin_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -7145,13 +7878,19 @@ impl<T: CliOverride> Cli<T> {
         }
 
         self.over.execute_user_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -7182,6 +7921,13 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_vpc_firewall_rules_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.vpc_firewall_rules_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::VpcFirewallRuleUpdateParams>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -7229,19 +7975,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_vpc_router_route_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_vpc_router_route_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.vpc_router_route_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::RouterRouteCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -7310,6 +8068,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_vpc_router_route_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.vpc_router_route_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::RouterRouteUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("route") {
             request = request.route(value.clone());
         }
@@ -7401,19 +8165,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_vpc_router_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_vpc_router_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.vpc_router_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::VpcRouterCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -7474,6 +8250,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_vpc_router_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.vpc_router_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::VpcRouterUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("router") {
             request = request.router(value.clone());
         }
@@ -7557,19 +8339,31 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_vpc_subnet_list(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_vpc_subnet_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.vpc_subnet_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::VpcSubnetCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -7638,6 +8432,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_vpc_subnet_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.vpc_subnet_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::VpcSubnetUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("subnet") {
             request = request.subnet(value.clone());
         }
@@ -7725,13 +8525,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_vpc_subnet_list_network_interfaces(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -7751,19 +8557,31 @@ impl<T: CliOverride> Cli<T> {
         }
 
         self.over.execute_vpc_list(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
 
     pub async fn execute_vpc_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.vpc_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::VpcCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
@@ -7820,6 +8638,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_vpc_update(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.vpc_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::VpcUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
         if let Some(value) = matches.get_one::<types::NameOrId>("vpc") {
             request = request.vpc(value.clone());
         }
@@ -7936,46 +8760,6 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::Logout,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_image_view_by_id(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemImageViewById,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_image_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemImageList,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_image_create(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemImageCreate,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_image_view(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemImageView,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_image_delete(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemImageDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -8684,22 +9468,6 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_saga_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SagaList,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_saga_view(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SagaView,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
     fn execute_silo_list(
         &self,
         matches: &clap::ArgMatches,
@@ -9065,11 +9833,6 @@ pub enum CliCommand {
     LoginSamlBegin,
     LoginSaml,
     Logout,
-    SystemImageViewById,
-    SystemImageList,
-    SystemImageCreate,
-    SystemImageView,
-    SystemImageDelete,
     DiskList,
     DiskCreate,
     DiskView,
@@ -9158,8 +9921,6 @@ pub enum CliCommand {
     SystemPolicyUpdate,
     RoleList,
     RoleView,
-    SagaList,
-    SagaView,
     SiloList,
     SiloCreate,
     SiloView,
@@ -9217,11 +9978,6 @@ impl CliCommand {
             CliCommand::LoginSamlBegin,
             CliCommand::LoginSaml,
             CliCommand::Logout,
-            CliCommand::SystemImageViewById,
-            CliCommand::SystemImageList,
-            CliCommand::SystemImageCreate,
-            CliCommand::SystemImageView,
-            CliCommand::SystemImageDelete,
             CliCommand::DiskList,
             CliCommand::DiskCreate,
             CliCommand::DiskView,
@@ -9310,8 +10066,6 @@ impl CliCommand {
             CliCommand::SystemPolicyUpdate,
             CliCommand::RoleList,
             CliCommand::RoleView,
-            CliCommand::SagaList,
-            CliCommand::SagaView,
             CliCommand::SiloList,
             CliCommand::SiloCreate,
             CliCommand::SiloView,

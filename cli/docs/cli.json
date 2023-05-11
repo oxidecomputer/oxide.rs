@@ -27,6 +27,10 @@
           "help": "The file to use as body for the HTTP request (use \"-\" to read from standard input)"
         },
         {
+          "long": "limit",
+          "help": "Limit the number of paginated items retrieved"
+        },
+        {
           "long": "method",
           "short": "X",
           "help": "The HTTP method for the request"
@@ -117,10 +121,19 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a new system-wide x.509 certificate.\n\nThis certificate is automatically used by the Oxide Control plane to serve external connections.",
+          "about": "Create a new system-wide x.509 certificate",
+          "long_about": "This certificate is automatically used by the Oxide Control plane to serve external connections.",
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -136,7 +149,8 @@
         },
         {
           "name": "delete",
-          "about": "Delete a certificate\n\nPermanently delete a certificate. This operation cannot be undone.",
+          "about": "Delete a certificate",
+          "long_about": "Permanently delete a certificate. This operation cannot be undone.",
           "args": [
             {
               "long": "certificate"
@@ -145,7 +159,8 @@
         },
         {
           "name": "list",
-          "about": "List system-wide certificates\n\nReturns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.",
+          "about": "List system-wide certificates",
+          "long_about": "Returns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.",
           "args": [
             {
               "long": "limit",
@@ -163,7 +178,8 @@
         },
         {
           "name": "view",
-          "about": "Fetch a certificate\n\nReturns the details of a specific certificate",
+          "about": "Fetch a certificate",
+          "long_about": "Returns the details of a specific certificate",
           "args": [
             {
               "long": "certificate"
@@ -196,10 +212,19 @@
           "subcommands": [
             {
               "name": "create",
-              "about": "Create an SSH public key\n\nCreate an SSH public key for the currently authenticated user.",
+              "about": "Create an SSH public key",
+              "long_about": "Create an SSH public key for the currently authenticated user.",
               "args": [
                 {
                   "long": "description"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
                 },
                 {
                   "long": "name"
@@ -212,7 +237,8 @@
             },
             {
               "name": "delete",
-              "about": "Delete an SSH public key\n\nDelete an SSH public key associated with the currently authenticated user.",
+              "about": "Delete an SSH public key",
+              "long_about": "Delete an SSH public key associated with the currently authenticated user.",
               "args": [
                 {
                   "long": "ssh-key",
@@ -222,7 +248,8 @@
             },
             {
               "name": "list",
-              "about": "List SSH public keys\n\nLists SSH public keys for the currently authenticated user.",
+              "about": "List SSH public keys",
+              "long_about": "Lists SSH public keys for the currently authenticated user.",
               "args": [
                 {
                   "long": "limit",
@@ -240,7 +267,8 @@
             },
             {
               "name": "view",
-              "about": "Fetch an SSH public key\n\nFetch an SSH public key associated with the currently authenticated user.",
+              "about": "Fetch an SSH public key",
+              "long_about": "Fetch an SSH public key associated with the currently authenticated user.",
               "args": [
                 {
                   "long": "ssh-key",
@@ -265,6 +293,14 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -452,10 +488,19 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create an image\n\nCreate a new image in a project.",
+          "about": "Create an image",
+          "long_about": "Create a new image in a project.",
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -476,7 +521,8 @@
         },
         {
           "name": "delete",
-          "about": "Delete an image\n\nPermanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
+          "about": "Delete an image",
+          "long_about": "Permanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
           "args": [
             {
               "long": "image",
@@ -490,7 +536,8 @@
         },
         {
           "name": "list",
-          "about": "List images\n\nList images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
+          "about": "List images",
+          "long_about": "List images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
           "args": [
             {
               "long": "include-silo-images",
@@ -520,7 +567,8 @@
         },
         {
           "name": "promote",
-          "about": "Promote a project image to be visible to all projects in the silo",
+          "about": "Promote a project image",
+          "long_about": "Promote a project image to be visible to all projects in the silo",
           "args": [
             {
               "long": "image",
@@ -534,7 +582,8 @@
         },
         {
           "name": "view",
-          "about": "Fetch an image\n\nFetch the details for a specific image in a project.",
+          "about": "Fetch an image",
+          "long_about": "Fetch the details for a specific image in a project.",
           "args": [
             {
               "long": "image",
@@ -560,6 +609,14 @@
             },
             {
               "long": "hostname"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "memory"
@@ -618,6 +675,14 @@
                   "help": "Name or ID of the instance"
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -634,6 +699,14 @@
                 {
                   "long": "instance",
                   "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
                 },
                 {
                   "long": "project",
@@ -729,6 +802,14 @@
                   "help": "The IP address for the interface. One will be auto-assigned if not provided."
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "name"
                 },
                 {
@@ -747,7 +828,8 @@
             },
             {
               "name": "delete",
-              "about": "Delete a network interface\n\nNote that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
+              "about": "Delete a network interface",
+              "long_about": "Note that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
               "args": [
                 {
                   "long": "instance",
@@ -803,6 +885,14 @@
                 {
                   "long": "interface",
                   "help": "Name or ID of the network interface"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
                 },
                 {
                   "long": "name"
@@ -910,6 +1000,14 @@
               "long": "description"
             },
             {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
               "long": "name"
             }
           ]
@@ -953,6 +1051,14 @@
                   "long": "first"
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "last"
                 },
                 {
@@ -963,7 +1069,8 @@
             },
             {
               "name": "list",
-              "about": "List ranges for an IP pool\n\nRanges are ordered by their first address.",
+              "about": "List ranges for an IP pool",
+              "long_about": "List ranges for an IP pool. Ranges are ordered by their first address.",
               "args": [
                 {
                   "long": "limit",
@@ -980,6 +1087,14 @@
               "about": "Remove a range from an IP pool",
               "args": [
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "pool",
                   "help": "Name or ID of the IP pool"
                 }
@@ -995,11 +1110,22 @@
               "subcommands": [
                 {
                   "name": "add",
-                  "about": "Add a range to an IP pool used for Oxide services."
+                  "about": "Add a range to an IP pool used for Oxide services",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    }
+                  ]
                 },
                 {
                   "name": "list",
-                  "about": "List ranges for the IP pool used for Oxide services.\n\nRanges are ordered by their first address.",
+                  "about": "List ranges for the IP pool used for Oxide services",
+                  "long_about": "List ranges for the IP pool used for Oxide services. Ranges are ordered by their first address.",
                   "args": [
                     {
                       "long": "limit",
@@ -1011,11 +1137,21 @@
             },
             {
               "name": "remove",
-              "about": "Remove a range from an IP pool used for Oxide services."
+              "about": "Remove a range from an IP pool used for Oxide services",
+              "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                }
+              ]
             },
             {
               "name": "view",
-              "about": "Fetch the IP pool used for Oxide services."
+              "about": "Fetch the IP pool used for Oxide services"
             }
           ]
         },
@@ -1025,6 +1161,14 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -1073,7 +1217,17 @@
       "subcommands": [
         {
           "name": "update",
-          "about": "Update the current silo's IAM policy"
+          "about": "Update the current silo's IAM policy",
+          "args": [
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            }
+          ]
         },
         {
           "name": "view",
@@ -1090,6 +1244,14 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -1132,6 +1294,14 @@
               "about": "Update a project's IAM policy",
               "args": [
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 }
@@ -1155,6 +1325,14 @@
           "args": [
             {
               "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -1209,36 +1387,6 @@
       ]
     },
     {
-      "name": "saga",
-      "subcommands": [
-        {
-          "name": "list",
-          "about": "List sagas",
-          "args": [
-            {
-              "long": "limit",
-              "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "sort-by",
-              "values": [
-                "id_ascending"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "view",
-          "about": "Fetch a saga",
-          "args": [
-            {
-              "long": "saga-id"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "name": "silo",
       "subcommands": [
         {
@@ -1247,7 +1395,7 @@
           "args": [
             {
               "long": "admin-group-name",
-              "help": "If set, this group will be created during Silo creation and granted the \"Silo Admin\" role. Identity providers can assert that users belong to this group and those users can log in and further initialize the Silo.\n\nNote that if configuring a SAML based identity provider, group_attribute_name must be set for users to be considered part of a group. See [`SamlIdentityProviderCreate`] for more information."
+              "help": "If set, this group will be created during Silo creation and granted the \"Silo Admin\" role. Identity providers can assert that users belong to this group and those users can log in and further initialize the Silo.\n\nNote that if configuring a SAML based identity provider, group_attribute_name must be set for users to be considered part of a group. See `SamlIdentityProviderCreate` for more information."
             },
             {
               "long": "description"
@@ -1267,13 +1415,22 @@
               ]
             },
             {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
               "long": "name"
             }
           ]
         },
         {
           "name": "delete",
-          "about": "Delete a silo\n\nDelete a silo by name.",
+          "about": "Delete a silo",
+          "long_about": "Delete a silo by name.",
           "args": [
             {
               "long": "silo",
@@ -1286,7 +1443,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List a silo's IDPs_name",
+              "about": "List a silo's IdP's name",
               "args": [
                 {
                   "long": "limit",
@@ -1314,11 +1471,20 @@
                   "subcommands": [
                     {
                       "name": "create",
-                      "about": "Create a user\n\nUsers can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
+                      "about": "Create a user",
+                      "long_about": "Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
                       "args": [
                         {
                           "long": "external-id",
                           "help": "username used to log in"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
                         },
                         {
                           "long": "silo",
@@ -1342,8 +1508,17 @@
                     },
                     {
                       "name": "set-password",
-                      "about": "Set or invalidate a user's password\n\nPasswords can only be updated for users in Silos with identity mode `LocalOnly`.",
+                      "about": "Set or invalidate a user's password",
+                      "long_about": "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
                       "args": [
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
                         {
                           "long": "silo",
                           "help": "Name or ID of the silo"
@@ -1363,7 +1538,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create a SAML IDP",
+                  "about": "Create a SAML IdP",
                   "args": [
                     {
                       "long": "acs-url",
@@ -1379,6 +1554,14 @@
                     {
                       "long": "idp-entity-id",
                       "help": "idp's entity id"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
                     },
                     {
                       "long": "name"
@@ -1403,7 +1586,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Fetch a SAML IDP",
+                  "about": "Fetch a SAML IdP",
                   "args": [
                     {
                       "long": "provider",
@@ -1421,7 +1604,8 @@
         },
         {
           "name": "list",
-          "about": "List silos\n\nLists silos that are discoverable based on the current permissions.",
+          "about": "List silos",
+          "long_about": "Lists silos that are discoverable based on the current permissions.",
           "args": [
             {
               "long": "limit",
@@ -1444,6 +1628,14 @@
               "name": "update",
               "about": "Update a silo's IAM policy",
               "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
                 {
                   "long": "silo",
                   "help": "Name or ID of the silo"
@@ -1503,7 +1695,8 @@
         },
         {
           "name": "view",
-          "about": "Fetch a silo\n\nFetch a silo by name.",
+          "about": "Fetch a silo",
+          "long_about": "Fetch a silo by name.",
           "args": [
             {
               "long": "silo",
@@ -1569,7 +1762,8 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a snapshot\n\nCreates a point-in-time snapshot from a disk.",
+          "about": "Create a snapshot",
+          "long_about": "Creates a point-in-time snapshot from a disk.",
           "args": [
             {
               "long": "description"
@@ -1577,6 +1771,14 @@
             {
               "long": "disk",
               "help": "The name of the disk to be snapshotted"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -1647,7 +1849,17 @@
           "subcommands": [
             {
               "name": "update",
-              "about": "Update the top-level IAM policy"
+              "about": "Update the top-level IAM policy",
+              "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                }
+              ]
             },
             {
               "name": "view",
@@ -1700,7 +1912,15 @@
             },
             {
               "long": "ipv6-prefix",
-              "help": "The IPv6 prefix for this VPC.\n\nAll IPv6 subnets created from this VPC must be taken from this range, which sould be a Unique Local Address in the range `fd00::/48`. The default VPC Subnet will have the first `/64` range from this prefix."
+              "help": "The IPv6 prefix for this VPC\n\nAll IPv6 subnets created from this VPC must be taken from this range, which should be a Unique Local Address in the range `fd00::/48`. The default VPC Subnet will have the first `/64` range from this prefix."
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
@@ -1732,6 +1952,14 @@
               "name": "update",
               "about": "Replace firewall rules",
               "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
                 {
                   "long": "project",
                   "help": "Name or ID of the project, only required if `vpc` is provided as a `Name`"
@@ -1789,6 +2017,14 @@
               "args": [
                 {
                   "long": "description"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
                 },
                 {
                   "long": "name"
@@ -1858,6 +2094,14 @@
                       "long": "description"
                     },
                     {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
                       "long": "name"
                     },
                     {
@@ -1898,7 +2142,8 @@
                 },
                 {
                   "name": "list",
-                  "about": "List routes\n\nList the routes associated with a router in a particular VPC.",
+                  "about": "List routes",
+                  "long_about": "List the routes associated with a router in a particular VPC.",
                   "args": [
                     {
                       "long": "limit",
@@ -1932,6 +2177,14 @@
                   "args": [
                     {
                       "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
                     },
                     {
                       "long": "name"
@@ -1986,6 +2239,14 @@
                   "long": "description"
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "name"
                 },
                 {
@@ -2004,7 +2265,7 @@
             },
             {
               "name": "view",
-              "about": "Get a router",
+              "about": "Fetch a router",
               "args": [
                 {
                   "long": "project",
@@ -2041,6 +2302,14 @@
                   "help": "The IPv6 address range for this subnet.\n\nIt must be allocated from the RFC 4193 Unique Local Address range, with the prefix equal to the parent VPC's prefix. A random `/64` block will be assigned if one is not provided. It must not overlap with any existing subnet in the VPC."
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "name"
                 },
                 {
@@ -2073,7 +2342,7 @@
             },
             {
               "name": "list",
-              "about": "Fetch a subnet",
+              "about": "List subnets",
               "args": [
                 {
                   "long": "limit",
@@ -2140,6 +2409,14 @@
                   "long": "description"
                 },
                 {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
                   "long": "name"
                 },
                 {
@@ -2185,6 +2462,14 @@
             },
             {
               "long": "dns-name"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
             },
             {
               "long": "name"
