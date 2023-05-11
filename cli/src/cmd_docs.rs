@@ -85,7 +85,7 @@ fn to_json(cmd: &Command) -> JsonDoc {
 
 #[async_trait]
 impl RunnableCmd for CmdDocs {
-    async fn run(&self, _ctx: Context) -> Result<()> {
+    async fn run(&self, _ctx: &Context) -> Result<()> {
         let cli = crate::make_cli();
         let app = cli.command();
         let json_doc = to_json(app);

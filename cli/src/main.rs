@@ -30,7 +30,7 @@ mod generated_cli;
 
 #[async_trait]
 trait RunIt: Send + Sync {
-    async fn run_cmd(&self, matches: &ArgMatches, ctx: Context) -> Result<()>;
+    async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()>;
     fn is_terminal(&self) -> bool {
         false
     }
@@ -100,7 +100,7 @@ impl<'a> NewCli<'a> {
         self
     }
 
-    pub async fn run(self, ctx: Context) -> Result<()> {
+    pub async fn run(self, ctx: &Context) -> Result<()> {
         let Self { parser, runner } = self;
         let matches = parser.get_matches();
 
@@ -124,36 +124,18 @@ impl<'a> NewCli<'a> {
 impl<'a> CommandBuilder<'a> {
     pub fn add_cmd(&mut self, path: &'a str, cmd: impl RunIt + 'static) {
         let mut node = self;
-        let mut components = path.split(' ').peekable();
-        while let (Some(component), next) = (components.next(), components.peek()) {
-            if next.is_some() {
-                node = node.children.entry(component).or_default();
-            } else {
-                let x = node.children.entry(component).or_default();
-                x.terminal = cmd.is_terminal();
-                x.cmd = Some(Box::new(cmd));
-                // assert!(
-                //     node.children.get(component).is_none(),
-                //     "two identical subcommands {}",
-                //     path,
-                // );
-                // node.children.insert(
-                //     component,
-                //     CommandBuilder {
-                //         children: Default::default(),
-                //         cmd: Some(Box::new(cmd)),
-                //     },
-                // );
-                break;
-            }
+        for component in path.split(' ') {
+            node = node.children.entry(component).or_default();
         }
+        node.terminal = cmd.is_terminal();
+        node.cmd = Some(Box::new(cmd));
     }
 }
 
 struct GeneratedCmd(CliCommand);
 #[async_trait]
 impl RunIt for GeneratedCmd {
-    async fn run_cmd(&self, matches: &ArgMatches, ctx: Context) -> Result<()> {
+    async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
         let cli = Cli::new_with_override(ctx.client().clone(), OxideOverride);
         cli.execute(self.0, matches).await;
         Ok(())
@@ -172,7 +154,7 @@ impl<C> CustomCmd<C> {
 
 #[async_trait]
 pub trait RunnableCmd: Send + Sync {
-    async fn run(&self, ctx: Context) -> Result<()>;
+    async fn run(&self, ctx: &Context) -> Result<()>;
 }
 
 #[async_trait]
@@ -180,7 +162,7 @@ impl<C> RunIt for CustomCmd<C>
 where
     C: Send + Sync + FromArgMatches + RunnableCmd,
 {
-    async fn run_cmd(&self, matches: &ArgMatches, ctx: Context) -> Result<()> {
+    async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
         let cmd = C::from_arg_matches(matches).unwrap();
         cmd.run(ctx).await
     }
@@ -211,7 +193,7 @@ async fn main() {
     let config = Config::default();
     let ctx = Context::new(config).unwrap();
 
-    let result = new_cli.run(ctx).await;
+    let result = new_cli.run(&ctx).await;
     if let Err(e) = result {
         println!("error: {}", e);
         std::process::exit(1)
@@ -433,16 +415,15 @@ impl CommandExt for Command {
                 )
             }
         } else {
+            let new_subcmd = subcmd.into().name(path.to_owned());
             let has_subcommand = self.find_subcommand(path).is_some();
             if has_subcommand {
                 self.mut_subcommand(path, |cmd| {
-                    subcmd
-                        .into()
-                        .name(path.to_owned())
-                        .subcommands(cmd.get_subcommands().cloned())
+                    // Replace the subcommand, but retain its subcommands.
+                    new_subcmd.subcommands(cmd.get_subcommands())
                 })
             } else {
-                self.subcommand(subcmd.into().name(path.to_owned()))
+                self.subcommand(new_subcmd)
             }
         }
     }

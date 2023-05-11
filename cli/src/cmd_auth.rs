@@ -46,10 +46,10 @@ enum SubCommand {
 
 #[async_trait]
 impl RunnableCmd for CmdAuth {
-    async fn run(&self, mut ctx: Context) -> Result<()> {
+    async fn run(&self, ctx: &Context) -> Result<()> {
         match &self.subcmd {
-            SubCommand::Login(cmd) => cmd.run(&mut ctx).await,
-            SubCommand::Logout(cmd) => cmd.run(&mut ctx).await,
+            SubCommand::Login(cmd) => cmd.run(ctx).await,
+            SubCommand::Logout(cmd) => cmd.run(ctx).await,
             SubCommand::Status(cmd) => cmd.run().await,
         }
     }
@@ -168,7 +168,7 @@ pub struct CmdAuthLogin {
 }
 
 impl CmdAuthLogin {
-    pub async fn run(&self, ctx: &mut Context) -> Result<()> {
+    pub async fn run(&self, ctx: &Context) -> Result<()> {
         // if !ctx.io.can_prompt() && !self.with_token {
         //     return Err(anyhow!(
         //         "--with-token required when not running interactively"
@@ -341,7 +341,7 @@ pub struct CmdAuthLogout {
 }
 
 impl CmdAuthLogout {
-    pub async fn run(&self, ctx: &mut Context) -> Result<()> {
+    pub async fn run(&self, ctx: &Context) -> Result<()> {
         if !self.force {
             match dialoguer::Confirm::new()
                 .with_prompt("Confirm authentication information deletion:")

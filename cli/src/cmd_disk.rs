@@ -19,7 +19,7 @@ pub struct CmdDiskImport {}
 
 #[async_trait]
 impl RunnableCmd for CmdDiskImport {
-    async fn run(&self, _ctx: crate::context::Context) -> Result<()> {
+    async fn run(&self, _ctx: &crate::context::Context) -> Result<()> {
         print!("importing disk .");
         std::io::stdout().flush()?;
         for _ in 0..20 {
