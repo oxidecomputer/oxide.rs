@@ -330,7 +330,54 @@
           ]
         },
         {
-          "name": "import"
+          "name": "import",
+          "about": "Create a disk from a file upload",
+          "long_about": "Create a disk from a file upload\n\nCreate a new disk and upload the contents of a file to that disk. Use\n`--snapshot` to optionally create a snapshot of the disk after the upload is\ncomplete. If creating a snapshot, optionally use the `--image` options to\ncreate an image from that snapshot.",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "disk",
+              "help": "The name of the disk to create"
+            },
+            {
+              "long": "disk-block-size",
+              "help": "The desired size of the disk's blocks"
+            },
+            {
+              "long": "disk-size",
+              "help": "The size of the disk to create. If unspecified, the size of the file will be used, rounded up to the nearest GB"
+            },
+            {
+              "long": "image",
+              "help": "If supplied, create an image with the given name. Requires the creation of a snapshot"
+            },
+            {
+              "long": "image-description",
+              "help": "The description for the image created out of the snapshot of this disk"
+            },
+            {
+              "long": "image-os",
+              "help": "The OS of this image (e.g. Debian)"
+            },
+            {
+              "long": "image-version",
+              "help": "The version of this image (e.g. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)"
+            },
+            {
+              "long": "path",
+              "help": "Path to the file to import"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "snapshot",
+              "help": "If supplied, create a snapshot with the given name"
+            }
+          ]
         },
         {
           "name": "list",

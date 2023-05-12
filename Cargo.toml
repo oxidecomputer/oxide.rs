@@ -23,6 +23,7 @@ expectorate = { git = "https://github.com/oxidecomputer/expectorate", features =
 futures = "0.3.28"
 http = "0.2.9"
 httpmock = "0.6.7"
+indicatif = "0.17"
 newline-converter = "0.3.0"
 oauth2 = "4.3.0"
 open = "4.1.0"
@@ -44,6 +45,7 @@ serial_test = "1.0.0"
 similar = "2.2.1"
 sha2 = "0.10.6"
 tabwriter = "1.2.1"
+tempfile = "3.5.0"
 test-common = { path = "test-common" }
 tokio = { version = "1.28.0", features = ["full"] }
 toml = "0.7.2"
