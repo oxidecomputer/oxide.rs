@@ -159,8 +159,8 @@
         },
         {
           "name": "list",
-          "about": "List system-wide certificates",
-          "long_about": "Returns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.",
+          "about": "List certificates for external endpoints",
+          "long_about": "Returns a list of TLS certificates used for the external API (for the current Silo).  These are sorted by creation date, with the most recent certificates appearing first.",
           "args": [
             {
               "long": "limit",

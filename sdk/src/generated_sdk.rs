@@ -17334,6 +17334,68 @@ impl ClientSessionExt for Client {
 }
 
 pub trait ClientSilosExt {
+    /// List certificates for external endpoints
+    ///
+    /// Returns a list of TLS certificates used for the external API (for the
+    /// current Silo).  These are sorted by creation date, with the most recent
+    /// certificates appearing first.
+    ///
+    /// Sends a `GET` request to `/v1/certificates`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.certificate_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn certificate_list(&self) -> builder::CertificateList;
+    /// Create a new system-wide x.509 certificate
+    ///
+    /// This certificate is automatically used by the Oxide Control plane to
+    /// serve external connections.
+    ///
+    /// Sends a `POST` request to `/v1/certificates`
+    ///
+    /// ```ignore
+    /// let response = client.certificate_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn certificate_create(&self) -> builder::CertificateCreate;
+    /// Fetch a certificate
+    ///
+    /// Returns the details of a specific certificate
+    ///
+    /// Sends a `GET` request to `/v1/certificates/{certificate}`
+    ///
+    /// ```ignore
+    /// let response = client.certificate_view()
+    ///    .certificate(certificate)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn certificate_view(&self) -> builder::CertificateView;
+    /// Delete a certificate
+    ///
+    /// Permanently delete a certificate. This operation cannot be undone.
+    ///
+    /// Sends a `DELETE` request to `/v1/certificates/{certificate}`
+    ///
+    /// ```ignore
+    /// let response = client.certificate_delete()
+    ///    .certificate(certificate)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn certificate_delete(&self) -> builder::CertificateDelete;
     /// List groups
     ///
     /// Sends a `GET` request to `/v1/groups`
@@ -17409,6 +17471,22 @@ pub trait ClientSilosExt {
 }
 
 impl ClientSilosExt for Client {
+    fn certificate_list(&self) -> builder::CertificateList {
+        builder::CertificateList::new(self)
+    }
+
+    fn certificate_create(&self) -> builder::CertificateCreate {
+        builder::CertificateCreate::new(self)
+    }
+
+    fn certificate_view(&self) -> builder::CertificateView {
+        builder::CertificateView::new(self)
+    }
+
+    fn certificate_delete(&self) -> builder::CertificateDelete {
+        builder::CertificateDelete::new(self)
+    }
+
     fn group_list(&self) -> builder::GroupList {
         builder::GroupList::new(self)
     }
@@ -17519,68 +17597,6 @@ impl ClientSnapshotsExt for Client {
 }
 
 pub trait ClientSystemExt {
-    /// List system-wide certificates
-    ///
-    /// Returns a list of all the system-wide certificates. System-wide
-    /// certificates are returned sorted by creation date, with the most recent
-    /// certificates appearing first.
-    ///
-    /// Sends a `GET` request to `/v1/system/certificates`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.certificate_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn certificate_list(&self) -> builder::CertificateList;
-    /// Create a new system-wide x.509 certificate
-    ///
-    /// This certificate is automatically used by the Oxide Control plane to
-    /// serve external connections.
-    ///
-    /// Sends a `POST` request to `/v1/system/certificates`
-    ///
-    /// ```ignore
-    /// let response = client.certificate_create()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn certificate_create(&self) -> builder::CertificateCreate;
-    /// Fetch a certificate
-    ///
-    /// Returns the details of a specific certificate
-    ///
-    /// Sends a `GET` request to `/v1/system/certificates/{certificate}`
-    ///
-    /// ```ignore
-    /// let response = client.certificate_view()
-    ///    .certificate(certificate)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn certificate_view(&self) -> builder::CertificateView;
-    /// Delete a certificate
-    ///
-    /// Permanently delete a certificate. This operation cannot be undone.
-    ///
-    /// Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
-    ///
-    /// ```ignore
-    /// let response = client.certificate_delete()
-    ///    .certificate(certificate)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn certificate_delete(&self) -> builder::CertificateDelete;
     /// List physical disks
     ///
     /// Sends a `GET` request to `/v1/system/hardware/disks`
@@ -18300,22 +18316,6 @@ pub trait ClientSystemExt {
 }
 
 impl ClientSystemExt for Client {
-    fn certificate_list(&self) -> builder::CertificateList {
-        builder::CertificateList::new(self)
-    }
-
-    fn certificate_create(&self) -> builder::CertificateCreate {
-        builder::CertificateCreate::new(self)
-    }
-
-    fn certificate_view(&self) -> builder::CertificateView {
-        builder::CertificateView::new(self)
-    }
-
-    fn certificate_delete(&self) -> builder::CertificateDelete {
-        builder::CertificateDelete::new(self)
-    }
-
     fn physical_disk_list(&self) -> builder::PhysicalDiskList {
         builder::PhysicalDiskList::new(self)
     }
@@ -19565,6 +19565,356 @@ pub mod builder {
             let request = client
                 .client
                 .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::certificate_list`]
+    ///
+    /// [`ClientSilosExt::certificate_list`]: super::ClientSilosExt::certificate_list
+    #[derive(Debug, Clone)]
+    pub struct CertificateList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> CertificateList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/certificates`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::CertificateResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/certificates", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/certificates`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Certificate, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::certificate_create`]
+    ///
+    /// [`ClientSilosExt::certificate_create`]: super::ClientSilosExt::certificate_create
+    #[derive(Debug, Clone)]
+    pub struct CertificateCreate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::CertificateCreate, String>,
+    }
+
+    impl<'a> CertificateCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                body: Ok(types::builder::CertificateCreate::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::CertificateCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `CertificateCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::CertificateCreate,
+            ) -> types::builder::CertificateCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/certificates`
+        pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(std::convert::TryInto::<types::CertificateCreate>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/certificates", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::certificate_view`]
+    ///
+    /// [`ClientSilosExt::certificate_view`]: super::ClientSilosExt::certificate_view
+    #[derive(Debug, Clone)]
+    pub struct CertificateView<'a> {
+        client: &'a super::Client,
+        certificate: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> CertificateView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                certificate: Err("certificate was not initialized".to_string()),
+            }
+        }
+
+        pub fn certificate<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.certificate = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for certificate failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/certificates/{certificate}`
+        pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
+            let Self {
+                client,
+                certificate,
+            } = self;
+            let certificate = certificate.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/certificates/{}",
+                client.baseurl,
+                encode_path(&certificate.to_string()),
+            );
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::certificate_delete`]
+    ///
+    /// [`ClientSilosExt::certificate_delete`]: super::ClientSilosExt::certificate_delete
+    #[derive(Debug, Clone)]
+    pub struct CertificateDelete<'a> {
+        client: &'a super::Client,
+        certificate: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> CertificateDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                certificate: Err("certificate was not initialized".to_string()),
+            }
+        }
+
+        pub fn certificate<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.certificate = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for certificate failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/certificates/{certificate}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                certificate,
+            } = self;
+            let certificate = certificate.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/certificates/{}",
+                client.baseurl,
+                encode_path(&certificate.to_string()),
+            );
+            let request = client
+                .client
+                .delete(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
@@ -25392,356 +25742,6 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemExt::certificate_list`]
-    ///
-    /// [`ClientSystemExt::certificate_list`]: super::ClientSystemExt::certificate_list
-    #[derive(Debug, Clone)]
-    pub struct CertificateList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
-    }
-
-    impl<'a> CertificateList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrIdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/certificates`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::CertificateResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/certificates", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/system/certificates`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::Certificate, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let limit = self
-                .limit
-                .clone()
-                .ok()
-                .flatten()
-                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
-                .map(std::num::NonZeroUsize::get)
-                .unwrap_or(usize::MAX);
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .take(limit)
-                .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemExt::certificate_create`]
-    ///
-    /// [`ClientSystemExt::certificate_create`]: super::ClientSystemExt::certificate_create
-    #[derive(Debug, Clone)]
-    pub struct CertificateCreate<'a> {
-        client: &'a super::Client,
-        body: Result<types::builder::CertificateCreate, String>,
-    }
-
-    impl<'a> CertificateCreate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Ok(types::builder::CertificateCreate::default()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::CertificateCreate>,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|_| "conversion to `CertificateCreate` for body failed".to_string());
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::CertificateCreate,
-            ) -> types::builder::CertificateCreate,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/system/certificates`
-        pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body
-                .and_then(std::convert::TryInto::<types::CertificateCreate>::try_into)
-                .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/certificates", client.baseurl,);
-            let request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemExt::certificate_view`]
-    ///
-    /// [`ClientSystemExt::certificate_view`]: super::ClientSystemExt::certificate_view
-    #[derive(Debug, Clone)]
-    pub struct CertificateView<'a> {
-        client: &'a super::Client,
-        certificate: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> CertificateView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                certificate: Err("certificate was not initialized".to_string()),
-            }
-        }
-
-        pub fn certificate<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.certificate = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for certificate failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/certificates/{certificate}`
-        pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
-            let Self {
-                client,
-                certificate,
-            } = self;
-            let certificate = certificate.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/certificates/{}",
-                client.baseurl,
-                encode_path(&certificate.to_string()),
-            );
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemExt::certificate_delete`]
-    ///
-    /// [`ClientSystemExt::certificate_delete`]: super::ClientSystemExt::certificate_delete
-    #[derive(Debug, Clone)]
-    pub struct CertificateDelete<'a> {
-        client: &'a super::Client,
-        certificate: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> CertificateDelete<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                certificate: Err("certificate was not initialized".to_string()),
-            }
-        }
-
-        pub fn certificate<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.certificate = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for certificate failed".to_string());
-            self
-        }
-
-        /// Sends a `DELETE` request to `/v1/system/certificates/{certificate}`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                certificate,
-            } = self;
-            let certificate = certificate.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/certificates/{}",
-                client.baseurl,
-                encode_path(&certificate.to_string()),
-            );
-            let request = client
-                .client
-                .delete(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;

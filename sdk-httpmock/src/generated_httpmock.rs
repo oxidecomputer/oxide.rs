@@ -455,6 +455,249 @@ pub mod operations {
         }
     }
 
+    pub struct CertificateListWhen(httpmock::When);
+    impl CertificateListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/certificates$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct CertificateListThen(httpmock::Then);
+    impl CertificateListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::CertificateResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct CertificateCreateWhen(httpmock::When);
+    impl CertificateCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/certificates$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::CertificateCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct CertificateCreateThen(httpmock::Then);
+    impl CertificateCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Certificate) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct CertificateViewWhen(httpmock::When);
+    impl CertificateViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/certificates/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn certificate(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/certificates/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct CertificateViewThen(httpmock::Then);
+    impl CertificateViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Certificate) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct CertificateDeleteWhen(httpmock::When);
+    impl CertificateDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/certificates/.*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn certificate(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/certificates/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct CertificateDeleteThen(httpmock::Then);
+    impl CertificateDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct DiskListWhen(httpmock::When);
     impl DiskListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -4064,249 +4307,6 @@ pub mod operations {
 
     pub struct SnapshotDeleteThen(httpmock::Then);
     impl SnapshotDeleteThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn no_content(self) -> Self {
-            Self(self.0.status(204u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct CertificateListWhen(httpmock::When);
-    impl CertificateListWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/certificates$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
-        }
-
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
-        }
-
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
-        }
-    }
-
-    pub struct CertificateListThen(httpmock::Then);
-    impl CertificateListThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::CertificateResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct CertificateCreateWhen(httpmock::When);
-    impl CertificateCreateWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/system/certificates$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn body(self, value: &types::CertificateCreate) -> Self {
-            Self(self.0.json_body_obj(value))
-        }
-    }
-
-    pub struct CertificateCreateThen(httpmock::Then);
-    impl CertificateCreateThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn created(self, value: &types::Certificate) -> Self {
-            Self(
-                self.0
-                    .status(201u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct CertificateViewWhen(httpmock::When);
-    impl CertificateViewWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/certificates/.*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn certificate(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!("^/v1/system/certificates/{}$", value.to_string()))
-                .unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct CertificateViewThen(httpmock::Then);
-    impl CertificateViewThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::Certificate) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct CertificateDeleteWhen(httpmock::When);
-    impl CertificateDeleteWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/system/certificates/.*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn certificate(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!("^/v1/system/certificates/{}$", value.to_string()))
-                .unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct CertificateDeleteThen(httpmock::Then);
-    impl CertificateDeleteThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -9265,6 +9265,18 @@ pub trait MockServerExt {
     fn logout<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::LogoutWhen, operations::LogoutThen);
+    fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen);
+    fn certificate_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateCreateWhen, operations::CertificateCreateThen);
+    fn certificate_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateViewWhen, operations::CertificateViewThen);
+    fn certificate_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateDeleteWhen, operations::CertificateDeleteThen);
     fn disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::DiskListWhen, operations::DiskListThen);
@@ -9454,18 +9466,6 @@ pub trait MockServerExt {
     fn snapshot_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SnapshotDeleteWhen, operations::SnapshotDeleteThen);
-    fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen);
-    fn certificate_create<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateCreateWhen, operations::CertificateCreateThen);
-    fn certificate_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateViewWhen, operations::CertificateViewThen);
-    fn certificate_delete<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateDeleteWhen, operations::CertificateDeleteThen);
     fn physical_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::PhysicalDiskListWhen, operations::PhysicalDiskListThen);
@@ -9807,6 +9807,54 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::LogoutWhen::new(when),
                 operations::LogoutThen::new(then),
+            )
+        })
+    }
+
+    fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CertificateListWhen::new(when),
+                operations::CertificateListThen::new(then),
+            )
+        })
+    }
+
+    fn certificate_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateCreateWhen, operations::CertificateCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CertificateCreateWhen::new(when),
+                operations::CertificateCreateThen::new(then),
+            )
+        })
+    }
+
+    fn certificate_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateViewWhen, operations::CertificateViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CertificateViewWhen::new(when),
+                operations::CertificateViewThen::new(then),
+            )
+        })
+    }
+
+    fn certificate_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateDeleteWhen, operations::CertificateDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CertificateDeleteWhen::new(when),
+                operations::CertificateDeleteThen::new(then),
             )
         })
     }
@@ -10500,54 +10548,6 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::SnapshotDeleteWhen::new(when),
                 operations::SnapshotDeleteThen::new(then),
-            )
-        })
-    }
-
-    fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::CertificateListWhen::new(when),
-                operations::CertificateListThen::new(then),
-            )
-        })
-    }
-
-    fn certificate_create<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateCreateWhen, operations::CertificateCreateThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::CertificateCreateWhen::new(when),
-                operations::CertificateCreateThen::new(then),
-            )
-        })
-    }
-
-    fn certificate_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateViewWhen, operations::CertificateViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::CertificateViewWhen::new(when),
-                operations::CertificateViewThen::new(then),
-            )
-        })
-    }
-
-    fn certificate_delete<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateDeleteWhen, operations::CertificateDeleteThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::CertificateDeleteWhen::new(when),
-                operations::CertificateDeleteThen::new(then),
             )
         })
     }
