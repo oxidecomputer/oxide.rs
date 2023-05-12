@@ -58,3 +58,46 @@ impl clap::builder::TypedValueParser for ByteCountParser {
         parse(cmd, arg, value).ok_or_else(|| clap::Error::new(clap::error::ErrorKind::InvalidValue))
     }
 }
+
+impl clap::builder::ValueParserFactory for types::BlockSize {
+    type Parser = BlockSizeParser;
+    fn value_parser() -> Self::Parser {
+        BlockSizeParser
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct BlockSizeParser;
+impl clap::builder::TypedValueParser for BlockSizeParser {
+    type Value = types::BlockSize;
+
+    fn parse_ref(
+        &self,
+        cmd: &clap::Command,
+        arg: Option<&clap::Arg>,
+        value: &std::ffi::OsStr,
+    ) -> Result<Self::Value, clap::Error> {
+        fn parse(
+            _cmd: &clap::Command,
+            _arg: Option<&clap::Arg>,
+            value: &std::ffi::OsStr,
+        ) -> Option<types::BlockSize> {
+            let value: Option<i64> = value.to_str()?.parse().ok();
+            match value {
+                Some(512) => 512.try_into().ok(),
+                Some(2048) => 2048.try_into().ok(),
+                Some(4096) => 4096.try_into().ok(),
+                Some(_) => None,
+                None => None,
+            }
+        }
+
+        parse(cmd, arg, value).ok_or_else(|| {
+            clap::Error::raw(
+                clap::error::ErrorKind::InvalidValue,
+                "block size must be 512, 2048, or 4096\n",
+            )
+            .with_cmd(cmd)
+        })
+    }
+}

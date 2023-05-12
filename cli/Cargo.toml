@@ -12,6 +12,7 @@ default-run = "oxide"
 [dependencies]
 anyhow = { workspace = true }
 async-trait = { workspace = true }
+base64 = { workspace = true }
 chrono = { workspace = true }
 clap = { workspace = true }
 dialoguer = { workspace = true }
@@ -19,6 +20,7 @@ dirs = { workspace = true }
 env_logger = { workspace = true }
 futures = { workspace = true }
 http = { workspace = true }
+indicatif = { workspace = true }
 oauth2 = { workspace = true }
 open = { workspace = true }
 oxide-api = { workspace = true }
@@ -43,6 +45,7 @@ predicates = { workspace = true }
 pretty_assertions = { workspace = true }
 rand = { workspace = true, features = ["small_rng"] }
 serial_test = { workspace = true }
+tempfile = { workspace = true }
 test-common = { workspace = true }
 
 [build-dependencies]

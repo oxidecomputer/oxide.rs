@@ -159,8 +159,8 @@
         },
         {
           "name": "list",
-          "about": "List system-wide certificates",
-          "long_about": "Returns a list of all the system-wide certificates. System-wide certificates are returned sorted by creation date, with the most recent certificates appearing first.",
+          "about": "List certificates for external endpoints",
+          "long_about": "Returns a list of TLS certificates used for the external API (for the current Silo).  These are sorted by creation date, with the most recent certificates appearing first.",
           "args": [
             {
               "long": "limit",
@@ -330,7 +330,54 @@
           ]
         },
         {
-          "name": "import"
+          "name": "import",
+          "about": "Create a disk from a file upload",
+          "long_about": "Create a disk from a file upload\n\nCreate a new disk and upload the contents of a file to that disk. Use\n`--snapshot` to optionally create a snapshot of the disk after the upload is\ncomplete. If creating a snapshot, optionally use the `--image` options to\ncreate an image from that snapshot.",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "disk",
+              "help": "The name of the disk to create"
+            },
+            {
+              "long": "disk-block-size",
+              "help": "The desired size of the disk's blocks"
+            },
+            {
+              "long": "disk-size",
+              "help": "The size of the disk to create. If unspecified, the size of the file will be used, rounded up to the nearest GB"
+            },
+            {
+              "long": "image",
+              "help": "If supplied, create an image with the given name. Requires the creation of a snapshot"
+            },
+            {
+              "long": "image-description",
+              "help": "The description for the image created out of the snapshot of this disk"
+            },
+            {
+              "long": "image-os",
+              "help": "The OS of this image (e.g. Debian)"
+            },
+            {
+              "long": "image-version",
+              "help": "The version of this image (e.g. 11, focal, a9e77e3a, 2023-04-06T14:23:34Z)"
+            },
+            {
+              "long": "path",
+              "help": "Path to the file to import"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "snapshot",
+              "help": "If supplied, create a snapshot with the given name"
+            }
+          ]
         },
         {
           "name": "list",
@@ -437,6 +484,145 @@
       ]
     },
     {
+      "name": "hardware",
+      "subcommands": [
+        {
+          "name": "disk",
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List physical disks",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rack",
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List racks",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "Fetch a rack",
+              "args": [
+                {
+                  "long": "rack-id",
+                  "help": "The rack's unique ID."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "sled",
+          "subcommands": [
+            {
+              "name": "disk-led",
+              "about": "List physical disks attached to sleds",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "sled-id",
+                  "help": "ID of the sled"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List sleds",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "Fetch a sled",
+              "args": [
+                {
+                  "long": "sled-id",
+                  "help": "ID of the sled"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "switch",
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List switches",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "Fetch a switch",
+              "args": [
+                {
+                  "long": "switch-id",
+                  "help": "ID of the switch"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "image",
       "subcommands": [
         {
@@ -476,6 +662,21 @@
           "name": "delete",
           "about": "Delete an image",
           "long_about": "Permanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
+          "args": [
+            {
+              "long": "image",
+              "help": "Name or ID of the image"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "demote",
+          "about": "Demote a silo image",
+          "long_about": "Demote a silo image to be visible only to a specified project",
           "args": [
             {
               "long": "image",
@@ -1145,27 +1346,6 @@
       ]
     },
     {
-      "name": "physical-disk",
-      "subcommands": [
-        {
-          "name": "list",
-          "about": "List physical disks",
-          "args": [
-            {
-              "long": "limit",
-              "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "sort-by",
-              "values": [
-                "id_ascending"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
       "name": "policy",
       "subcommands": [
         {
@@ -1303,37 +1483,6 @@
             {
               "long": "project",
               "help": "Name or ID of the project"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "rack",
-      "subcommands": [
-        {
-          "name": "list",
-          "about": "List racks",
-          "args": [
-            {
-              "long": "limit",
-              "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "sort-by",
-              "values": [
-                "id_ascending"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "view",
-          "about": "Fetch a rack",
-          "args": [
-            {
-              "long": "rack-id",
-              "help": "The rack's unique ID."
             }
           ]
         }
@@ -1517,6 +1666,12 @@
                       "help": "XXX"
                     },
                     {
+                      "long": "metadata-url"
+                    },
+                    {
+                      "long": "metadata-value"
+                    },
+                    {
                       "long": "name"
                     },
                     {
@@ -1654,57 +1809,6 @@
             {
               "long": "silo",
               "help": "Name or ID of the silo"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "sled",
-      "subcommands": [
-        {
-          "name": "disk-led",
-          "about": "List physical disks attached to sleds",
-          "args": [
-            {
-              "long": "limit",
-              "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "sled-id",
-              "help": "The sled's unique ID."
-            },
-            {
-              "long": "sort-by",
-              "values": [
-                "id_ascending"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "list",
-          "about": "List sleds",
-          "args": [
-            {
-              "long": "limit",
-              "help": "Maximum number of items returned by a single call"
-            },
-            {
-              "long": "sort-by",
-              "values": [
-                "id_ascending"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "view",
-          "about": "Fetch a sled",
-          "args": [
-            {
-              "long": "sled-id",
-              "help": "The sled's unique ID."
             }
           ]
         }

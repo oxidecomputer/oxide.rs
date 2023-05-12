@@ -198,7 +198,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/login/.*/local$").unwrap()),
+                    .path_matches(regex::Regex::new("^/login/[^/]*/local$").unwrap()),
             )
         }
 
@@ -267,7 +267,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/login/.*/saml/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/login/[^/]*/saml/[^/]*$").unwrap()),
             )
         }
 
@@ -337,7 +337,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/login/.*/saml/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/login/[^/]*/saml/[^/]*$").unwrap()),
             )
         }
 
@@ -422,6 +422,249 @@ pub mod operations {
 
     pub struct LogoutThen(httpmock::Then);
     impl LogoutThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct CertificateListWhen(httpmock::When);
+    impl CertificateListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/certificates$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct CertificateListThen(httpmock::Then);
+    impl CertificateListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::CertificateResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct CertificateCreateWhen(httpmock::When);
+    impl CertificateCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/certificates$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::CertificateCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct CertificateCreateThen(httpmock::Then);
+    impl CertificateCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::Certificate) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct CertificateViewWhen(httpmock::When);
+    impl CertificateViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/certificates/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn certificate(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/certificates/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct CertificateViewThen(httpmock::Then);
+    impl CertificateViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Certificate) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct CertificateDeleteWhen(httpmock::When);
+    impl CertificateDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/certificates/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn certificate(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/certificates/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct CertificateDeleteThen(httpmock::Then);
+    impl CertificateDeleteThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -595,7 +838,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/disks/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/disks/[^/]*$").unwrap()),
             )
         }
 
@@ -659,7 +902,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/disks/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/disks/[^/]*$").unwrap()),
             )
         }
 
@@ -718,7 +961,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/disks/.*/bulk-write$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/disks/[^/]*/bulk-write$").unwrap()),
             )
         }
 
@@ -782,7 +1025,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/disks/.*/bulk-write-start$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/disks/[^/]*/bulk-write-start$").unwrap()),
             )
         }
 
@@ -845,7 +1088,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/disks/.*/bulk-write-stop$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/disks/[^/]*/bulk-write-stop$").unwrap()),
             )
         }
 
@@ -908,7 +1151,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/disks/.*/finalize$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/disks/[^/]*/finalize$").unwrap()),
             )
         }
 
@@ -972,7 +1215,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/disks/.*/import$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/disks/[^/]*/import$").unwrap()),
             )
         }
 
@@ -1036,7 +1279,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/disks/.*/metrics/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/disks/[^/]*/metrics/[^/]*$").unwrap()),
             )
         }
 
@@ -1190,7 +1433,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/groups/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/groups/[^/]*$").unwrap()),
             )
         }
 
@@ -1198,7 +1441,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn group(self, value: &uuid::Uuid) -> Self {
+        pub fn group_id(self, value: &uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!("^/v1/groups/{}$", value.to_string())).unwrap();
             Self(self.0.path_matches(re))
         }
@@ -1388,7 +1631,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/images/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/images/[^/]*$").unwrap()),
             )
         }
 
@@ -1452,7 +1695,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/images/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/images/[^/]*$").unwrap()),
             )
         }
 
@@ -1505,13 +1748,78 @@ pub mod operations {
         }
     }
 
+    pub struct ImageDemoteWhen(httpmock::When);
+    impl ImageDemoteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/images/[^/]*/demote$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn image(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/images/{}/demote$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct ImageDemoteThen(httpmock::Then);
+    impl ImageDemoteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn accepted(self, value: &types::Image) -> Self {
+            Self(
+                self.0
+                    .status(202u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct ImagePromoteWhen(httpmock::When);
     impl ImagePromoteWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/images/.*/promote$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/images/[^/]*/promote$").unwrap()),
             )
         }
 
@@ -1710,7 +2018,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*$").unwrap()),
             )
         }
 
@@ -1774,7 +2082,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*$").unwrap()),
             )
         }
 
@@ -1833,7 +2141,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*/disks$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*/disks$").unwrap()),
             )
         }
 
@@ -1910,7 +2218,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*/disks/attach$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*/disks/attach$").unwrap()),
             )
         }
 
@@ -1982,7 +2290,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*/disks/detach$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*/disks/detach$").unwrap()),
             )
         }
 
@@ -2054,7 +2362,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*/external-ips$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*/external-ips$").unwrap()),
             )
         }
 
@@ -2122,7 +2430,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*/migrate$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*/migrate$").unwrap()),
             )
         }
 
@@ -2191,7 +2499,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*/reboot$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*/reboot$").unwrap()),
             )
         }
 
@@ -2254,9 +2562,9 @@ pub mod operations {
     impl InstanceSerialConsoleWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*/serial-console$").unwrap()),
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/instances/[^/]*/serial-console$").unwrap(),
+                ),
             )
         }
 
@@ -2334,7 +2642,7 @@ pub mod operations {
     impl InstanceSerialConsoleStreamWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(inner.method(httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/instances/.*/serial-console/stream$").unwrap(),
+                regex::Regex::new("^/v1/instances/[^/]*/serial-console/stream$").unwrap(),
             ))
         }
 
@@ -2393,7 +2701,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*/start$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*/start$").unwrap()),
             )
         }
 
@@ -2458,7 +2766,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/instances/.*/stop$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*/stop$").unwrap()),
             )
         }
 
@@ -2771,7 +3079,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/me/ssh-keys/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/me/ssh-keys/[^/]*$").unwrap()),
             )
         }
 
@@ -2832,7 +3140,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/me/ssh-keys/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/me/ssh-keys/[^/]*$").unwrap()),
             )
         }
 
@@ -3030,7 +3338,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/network-interfaces/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/network-interfaces/[^/]*$").unwrap()),
             )
         }
 
@@ -3099,7 +3407,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::PUT)
-                    .path_matches(regex::Regex::new("^/v1/network-interfaces/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/network-interfaces/[^/]*$").unwrap()),
             )
         }
 
@@ -3172,7 +3480,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/network-interfaces/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/network-interfaces/[^/]*$").unwrap()),
             )
         }
 
@@ -3476,7 +3784,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/projects/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/projects/[^/]*$").unwrap()),
             )
         }
 
@@ -3536,7 +3844,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::PUT)
-                    .path_matches(regex::Regex::new("^/v1/projects/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/projects/[^/]*$").unwrap()),
             )
         }
 
@@ -3600,7 +3908,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/projects/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/projects/[^/]*$").unwrap()),
             )
         }
 
@@ -3655,7 +3963,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/projects/.*/policy$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/projects/[^/]*/policy$").unwrap()),
             )
         }
 
@@ -3716,7 +4024,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::PUT)
-                    .path_matches(regex::Regex::new("^/v1/projects/.*/policy$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/projects/[^/]*/policy$").unwrap()),
             )
         }
 
@@ -3915,7 +4223,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/snapshots/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/snapshots/[^/]*$").unwrap()),
             )
         }
 
@@ -3979,7 +4287,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/snapshots/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/snapshots/[^/]*$").unwrap()),
             )
         }
 
@@ -3999,249 +4307,6 @@ pub mod operations {
 
     pub struct SnapshotDeleteThen(httpmock::Then);
     impl SnapshotDeleteThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn no_content(self) -> Self {
-            Self(self.0.status(204u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct CertificateListWhen(httpmock::When);
-    impl CertificateListWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/certificates$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
-        }
-
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
-        }
-
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
-        }
-    }
-
-    pub struct CertificateListThen(httpmock::Then);
-    impl CertificateListThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::CertificateResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct CertificateCreateWhen(httpmock::When);
-    impl CertificateCreateWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/system/certificates$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn body(self, value: &types::CertificateCreate) -> Self {
-            Self(self.0.json_body_obj(value))
-        }
-    }
-
-    pub struct CertificateCreateThen(httpmock::Then);
-    impl CertificateCreateThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn created(self, value: &types::Certificate) -> Self {
-            Self(
-                self.0
-                    .status(201u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct CertificateViewWhen(httpmock::When);
-    impl CertificateViewWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/certificates/.*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn certificate(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!("^/v1/system/certificates/{}$", value.to_string()))
-                .unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct CertificateViewThen(httpmock::Then);
-    impl CertificateViewThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::Certificate) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct CertificateDeleteWhen(httpmock::When);
-    impl CertificateDeleteWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/system/certificates/.*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn certificate(self, value: &types::NameOrId) -> Self {
-            let re = regex::Regex::new(&format!("^/v1/system/certificates/{}$", value.to_string()))
-                .unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct CertificateDeleteThen(httpmock::Then);
-    impl CertificateDeleteThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -4415,7 +4480,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/hardware/racks/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/racks/[^/]*$").unwrap()),
             )
         }
 
@@ -4546,7 +4611,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/hardware/sleds/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/sleds/[^/]*$").unwrap()),
             )
         }
 
@@ -4607,11 +4672,9 @@ pub mod operations {
     pub struct SledPhysicalDiskListWhen(httpmock::When);
     impl SledPhysicalDiskListWhen {
         pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner.method(httpmock::Method::GET).path_matches(
-                    regex::Regex::new("^/v1/system/hardware/sleds/.*/disks$").unwrap(),
-                ),
-            )
+            Self(inner.method(httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/hardware/sleds/[^/]*/disks$").unwrap(),
+            ))
         }
 
         pub fn into_inner(self) -> httpmock::When {
@@ -4651,6 +4714,137 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::PhysicalDiskResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SwitchListWhen(httpmock::When);
+    impl SwitchListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/hardware/switches$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
+            Self(self.0.query_param("limit", value.to_string()))
+        }
+
+        pub fn page_token(self, value: &str) -> Self {
+            Self(self.0.query_param("page_token", value.to_string()))
+        }
+
+        pub fn sort_by(self, value: types::IdSortMode) -> Self {
+            Self(self.0.query_param("sort_by", value.to_string()))
+        }
+    }
+
+    pub struct SwitchListThen(httpmock::Then);
+    impl SwitchListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SwitchResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SwitchViewWhen(httpmock::When);
+    impl SwitchViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/hardware/switches/[^/]*$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn switch_id(self, value: &uuid::Uuid) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/hardware/switches/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SwitchViewThen(httpmock::Then);
+    impl SwitchViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Switch) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -4816,7 +5010,7 @@ pub mod operations {
     impl LocalIdpUserDeleteWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(inner.method(httpmock::Method::DELETE).path_matches(
-                regex::Regex::new("^/v1/system/identity-providers/local/users/.*$").unwrap(),
+                regex::Regex::new("^/v1/system/identity-providers/local/users/[^/]*$").unwrap(),
             ))
         }
 
@@ -4879,7 +5073,7 @@ pub mod operations {
             Self(
                 inner.method(httpmock::Method::POST).path_matches(
                     regex::Regex::new(
-                        "^/v1/system/identity-providers/local/users/.*/set-password$",
+                        "^/v1/system/identity-providers/local/users/[^/]*/set-password$",
                     )
                     .unwrap(),
                 ),
@@ -5010,7 +5204,7 @@ pub mod operations {
     impl SamlIdentityProviderViewWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(inner.method(httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/system/identity-providers/saml/.*$").unwrap(),
+                regex::Regex::new("^/v1/system/identity-providers/saml/[^/]*$").unwrap(),
             ))
         }
 
@@ -5204,7 +5398,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/[^/]*$").unwrap()),
             )
         }
 
@@ -5265,7 +5459,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::PUT)
-                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/[^/]*$").unwrap()),
             )
         }
 
@@ -5330,7 +5524,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/[^/]*$").unwrap()),
             )
         }
 
@@ -5386,7 +5580,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/.*/ranges$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools/[^/]*/ranges$").unwrap()),
             )
         }
 
@@ -5457,7 +5651,7 @@ pub mod operations {
         pub fn new(inner: httpmock::When) -> Self {
             Self(
                 inner.method(httpmock::Method::POST).path_matches(
-                    regex::Regex::new("^/v1/system/ip-pools/.*/ranges/add$").unwrap(),
+                    regex::Regex::new("^/v1/system/ip-pools/[^/]*/ranges/add$").unwrap(),
                 ),
             )
         }
@@ -5523,11 +5717,9 @@ pub mod operations {
     pub struct IpPoolRangeRemoveWhen(httpmock::When);
     impl IpPoolRangeRemoveWhen {
         pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner.method(httpmock::Method::POST).path_matches(
-                    regex::Regex::new("^/v1/system/ip-pools/.*/ranges/remove$").unwrap(),
-                ),
-            )
+            Self(inner.method(httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/ip-pools/[^/]*/ranges/remove$").unwrap(),
+            ))
         }
 
         pub fn into_inner(self) -> httpmock::When {
@@ -5816,7 +6008,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/metrics/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/metrics/[^/]*$").unwrap()),
             )
         }
 
@@ -6074,7 +6266,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/roles/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/roles/[^/]*$").unwrap()),
             )
         }
 
@@ -6261,7 +6453,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/silos/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/silos/[^/]*$").unwrap()),
             )
         }
 
@@ -6322,7 +6514,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/system/silos/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/silos/[^/]*$").unwrap()),
             )
         }
 
@@ -6378,7 +6570,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/silos/.*/policy$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/silos/[^/]*/policy$").unwrap()),
             )
         }
 
@@ -6439,7 +6631,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::PUT)
-                    .path_matches(regex::Regex::new("^/v1/system/silos/.*/policy$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/silos/[^/]*/policy$").unwrap()),
             )
         }
 
@@ -6636,9 +6828,9 @@ pub mod operations {
     impl UpdateDeploymentViewWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/update/deployments/.*$").unwrap()),
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/update/deployments/[^/]*$").unwrap(),
+                ),
             )
         }
 
@@ -6928,7 +7120,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/update/updates/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/update/updates/[^/]*$").unwrap()),
             )
         }
 
@@ -6990,7 +7182,7 @@ pub mod operations {
     impl SystemUpdateComponentsListWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(inner.method(httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/system/update/updates/.*/components$").unwrap(),
+                regex::Regex::new("^/v1/system/update/updates/[^/]*/components$").unwrap(),
             ))
         }
 
@@ -7180,7 +7372,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/users/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/users/[^/]*$").unwrap()),
             )
         }
 
@@ -7312,7 +7504,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/users-builtin/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/system/users-builtin/[^/]*$").unwrap()),
             )
         }
 
@@ -7725,7 +7917,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/[^/]*$").unwrap()),
             )
         }
 
@@ -7798,7 +7990,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::PUT)
-                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/[^/]*$").unwrap()),
             )
         }
 
@@ -7875,7 +8067,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpc-router-routes/[^/]*$").unwrap()),
             )
         }
 
@@ -8085,7 +8277,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/vpc-routers/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers/[^/]*$").unwrap()),
             )
         }
 
@@ -8154,7 +8346,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::PUT)
-                    .path_matches(regex::Regex::new("^/v1/vpc-routers/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers/[^/]*$").unwrap()),
             )
         }
 
@@ -8227,7 +8419,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/vpc-routers/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpc-routers/[^/]*$").unwrap()),
             )
         }
 
@@ -8433,7 +8625,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/vpc-subnets/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpc-subnets/[^/]*$").unwrap()),
             )
         }
 
@@ -8502,7 +8694,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::PUT)
-                    .path_matches(regex::Regex::new("^/v1/vpc-subnets/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpc-subnets/[^/]*$").unwrap()),
             )
         }
 
@@ -8575,7 +8767,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/vpc-subnets/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpc-subnets/[^/]*$").unwrap()),
             )
         }
 
@@ -8637,7 +8829,7 @@ pub mod operations {
     impl VpcSubnetListNetworkInterfacesWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(inner.method(httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/vpc-subnets/.*/network-interfaces$").unwrap(),
+                regex::Regex::new("^/v1/vpc-subnets/[^/]*/network-interfaces$").unwrap(),
             ))
         }
 
@@ -8855,7 +9047,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/vpcs/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpcs/[^/]*$").unwrap()),
             )
         }
 
@@ -8919,7 +9111,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::PUT)
-                    .path_matches(regex::Regex::new("^/v1/vpcs/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpcs/[^/]*$").unwrap()),
             )
         }
 
@@ -8987,7 +9179,7 @@ pub mod operations {
             Self(
                 inner
                     .method(httpmock::Method::DELETE)
-                    .path_matches(regex::Regex::new("^/v1/vpcs/.*$").unwrap()),
+                    .path_matches(regex::Regex::new("^/v1/vpcs/[^/]*$").unwrap()),
             )
         }
 
@@ -9069,6 +9261,18 @@ pub trait MockServerExt {
     fn logout<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::LogoutWhen, operations::LogoutThen);
+    fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen);
+    fn certificate_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateCreateWhen, operations::CertificateCreateThen);
+    fn certificate_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateViewWhen, operations::CertificateViewThen);
+    fn certificate_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateDeleteWhen, operations::CertificateDeleteThen);
     fn disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::DiskListWhen, operations::DiskListThen);
@@ -9120,6 +9324,9 @@ pub trait MockServerExt {
     fn image_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::ImageDeleteWhen, operations::ImageDeleteThen);
+    fn image_demote<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ImageDemoteWhen, operations::ImageDemoteThen);
     fn image_promote<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::ImagePromoteWhen, operations::ImagePromoteThen);
@@ -9255,18 +9462,6 @@ pub trait MockServerExt {
     fn snapshot_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SnapshotDeleteWhen, operations::SnapshotDeleteThen);
-    fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen);
-    fn certificate_create<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateCreateWhen, operations::CertificateCreateThen);
-    fn certificate_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateViewWhen, operations::CertificateViewThen);
-    fn certificate_delete<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateDeleteWhen, operations::CertificateDeleteThen);
     fn physical_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::PhysicalDiskListWhen, operations::PhysicalDiskListThen);
@@ -9285,6 +9480,12 @@ pub trait MockServerExt {
     fn sled_physical_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledPhysicalDiskListWhen, operations::SledPhysicalDiskListThen);
+    fn switch_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SwitchListWhen, operations::SwitchListThen);
+    fn switch_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SwitchViewWhen, operations::SwitchViewThen);
     fn silo_identity_provider_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
@@ -9606,6 +9807,54 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
+    fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CertificateListWhen::new(when),
+                operations::CertificateListThen::new(then),
+            )
+        })
+    }
+
+    fn certificate_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateCreateWhen, operations::CertificateCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CertificateCreateWhen::new(when),
+                operations::CertificateCreateThen::new(then),
+            )
+        })
+    }
+
+    fn certificate_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateViewWhen, operations::CertificateViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CertificateViewWhen::new(when),
+                operations::CertificateViewThen::new(then),
+            )
+        })
+    }
+
+    fn certificate_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::CertificateDeleteWhen, operations::CertificateDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::CertificateDeleteWhen::new(when),
+                operations::CertificateDeleteThen::new(then),
+            )
+        })
+    }
+
     fn disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::DiskListWhen, operations::DiskListThen),
@@ -9797,6 +10046,18 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::ImageDeleteWhen::new(when),
                 operations::ImageDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn image_demote<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::ImageDemoteWhen, operations::ImageDemoteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::ImageDemoteWhen::new(when),
+                operations::ImageDemoteThen::new(then),
             )
         })
     }
@@ -10287,54 +10548,6 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
-    fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::CertificateListWhen::new(when),
-                operations::CertificateListThen::new(then),
-            )
-        })
-    }
-
-    fn certificate_create<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateCreateWhen, operations::CertificateCreateThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::CertificateCreateWhen::new(when),
-                operations::CertificateCreateThen::new(then),
-            )
-        })
-    }
-
-    fn certificate_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateViewWhen, operations::CertificateViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::CertificateViewWhen::new(when),
-                operations::CertificateViewThen::new(then),
-            )
-        })
-    }
-
-    fn certificate_delete<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::CertificateDeleteWhen, operations::CertificateDeleteThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::CertificateDeleteWhen::new(when),
-                operations::CertificateDeleteThen::new(then),
-            )
-        })
-    }
-
     fn physical_disk_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::PhysicalDiskListWhen, operations::PhysicalDiskListThen),
@@ -10403,6 +10616,30 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::SledPhysicalDiskListWhen::new(when),
                 operations::SledPhysicalDiskListThen::new(then),
+            )
+        })
+    }
+
+    fn switch_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SwitchListWhen, operations::SwitchListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SwitchListWhen::new(when),
+                operations::SwitchListThen::new(then),
+            )
+        })
+    }
+
+    fn switch_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SwitchViewWhen, operations::SwitchViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SwitchViewWhen::new(when),
+                operations::SwitchViewThen::new(then),
             )
         })
     }

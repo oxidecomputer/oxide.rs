@@ -13,7 +13,7 @@ use async_trait::async_trait;
 use config::Config;
 use context::Context;
 use generated_cli::{Cli, CliCommand, CliOverride};
-use oxide_api::types::{IpRange, Ipv4Range, Ipv6Range};
+use oxide_api::types::{IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
 
 mod cmd_api;
 mod cmd_auth;
@@ -72,6 +72,29 @@ impl<'a> Default for NewCli<'a> {
                             .value_name("ip-addr")
                             .required(true)
                             .value_parser(clap::value_parser!(std::net::IpAddr)),
+                    ),
+
+                CliCommand::SamlIdentityProviderCreate => cmd
+                    // We're filling in the missing required field so the full
+                    // body is no longer required.
+                    .mut_arg("json-body", |arg| arg.required(false))
+                    .arg(
+                        clap::Arg::new("metadata-url")
+                            .long("metadata-url")
+                            .value_name("url")
+                            .value_parser(clap::value_parser!(String)),
+                    )
+                    .arg(
+                        clap::Arg::new("metadata-value")
+                            .long("metadata-value")
+                            .value_name("xml")
+                            .value_parser(clap::value_parser!(String)),
+                    )
+                    .group(
+                        clap::ArgGroup::new("idp_metadata_source")
+                            .args(["metadata-url", "metadata-value"])
+                            .required(true)
+                            .multiple(false),
                     ),
 
                 // Command is fine as-is.
@@ -224,12 +247,12 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ProjectPolicyView => Some("project policy view"),
         CliCommand::ProjectPolicyUpdate => Some("project policy update"),
 
-        CliCommand::DiskMetricsList => Some("disk metrics list"),
         CliCommand::ImageList => Some("image list"),
         CliCommand::ImageCreate => Some("image create"),
         CliCommand::ImageView => Some("image view"),
         CliCommand::ImageDelete => Some("image delete"),
         CliCommand::ImagePromote => Some("image promote"),
+        CliCommand::ImageDemote => Some("image demote"),
 
         CliCommand::SiloIdentityProviderList => Some("silo idp list"),
         CliCommand::LocalIdpUserCreate => Some("silo idp local user create"),
@@ -295,6 +318,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::DiskCreate => Some("disk create"),
         CliCommand::DiskView => Some("disk view"),
         CliCommand::DiskDelete => Some("disk delete"),
+        CliCommand::DiskMetricsList => Some("disk metrics list"),
+
         CliCommand::DiskBulkWriteImport
         | CliCommand::DiskBulkWriteImportStart
         | CliCommand::DiskBulkWriteImportStop
@@ -320,12 +345,16 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CertificateCreate => Some("certificate create"),
         CliCommand::CertificateView => Some("certificate view"),
         CliCommand::CertificateDelete => Some("certificate delete"),
-        CliCommand::PhysicalDiskList => Some("physical-disk list"),
-        CliCommand::RackList => Some("rack list"),
-        CliCommand::RackView => Some("rack view"),
-        CliCommand::SledList => Some("sled list"),
-        CliCommand::SledView => Some("sled view"),
-        CliCommand::SledPhysicalDiskList => Some("sled disk-led"),
+
+        CliCommand::SwitchList => Some("hardware switch list"),
+        CliCommand::SwitchView => Some("hardware switch view"),
+        CliCommand::RackList => Some("hardware rack list"),
+        CliCommand::RackView => Some("hardware rack view"),
+        CliCommand::SledList => Some("hardware sled list"),
+        CliCommand::SledView => Some("hardware sled view"),
+        CliCommand::PhysicalDiskList => Some("hardware disk list"),
+        CliCommand::SledPhysicalDiskList => Some("hardware sled disk-led"),
+
         CliCommand::SystemPolicyView => Some("system policy view"),
         CliCommand::SystemPolicyUpdate => Some("system policy update"),
 
@@ -391,6 +420,34 @@ impl CliOverride for OxideOverride {
 
         *request = request.to_owned().body(range);
 
+        Ok(())
+    }
+
+    fn execute_saml_identity_provider_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut oxide_api::builder::SamlIdentityProviderCreate,
+    ) -> Result<(), String> {
+        match matches
+            .get_one::<clap::Id>("idp_metadata_source")
+            .map(clap::Id::as_str)
+        {
+            Some("metadata-url") => {
+                let value = matches.get_one::<String>("metadata-url").unwrap();
+                *request = request.to_owned().body_map(|body| {
+                    body.idp_metadata_source(IdpMetadataSource::Url { url: value.clone() })
+                });
+            }
+            Some("metadata-value") => {
+                let value = matches.get_one::<String>("metadata-value").unwrap();
+                *request = request.to_owned().body_map(|body| {
+                    body.idp_metadata_source(IdpMetadataSource::Base64EncodedXml {
+                        data: value.clone(),
+                    })
+                });
+            }
+            _ => unreachable!("invalid value for idp_metadata_source group"),
+        }
         Ok(())
     }
 }
