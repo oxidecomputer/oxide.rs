@@ -1,6 +1,14 @@
 {
   "name": "oxide",
   "version": "0.1.0",
+  "args": [
+    {
+      "long": "config-dir"
+    },
+    {
+      "long": "debug"
+    }
+  ],
   "subcommands": [
     {
       "name": "api",

@@ -45,7 +45,7 @@ enum SubCommand {
 }
 
 #[async_trait]
-impl RunnableCmd<Context> for CmdAuth {
+impl RunnableCmd for CmdAuth {
     async fn run(&self, ctx: &Context) -> Result<()> {
         match &self.subcmd {
             SubCommand::Login(cmd) => cmd.run(ctx).await,

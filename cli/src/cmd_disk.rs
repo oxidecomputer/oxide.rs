@@ -240,7 +240,7 @@ impl CmdDiskImport {
 }
 
 #[async_trait]
-impl RunnableCmd<crate::context::Context> for CmdDiskImport {
+impl RunnableCmd for CmdDiskImport {
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         let client = ctx.client();
 

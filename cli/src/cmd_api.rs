@@ -97,7 +97,7 @@ pub struct PaginatedResponse {
 }
 
 #[async_trait]
-impl RunnableCmd<crate::context::Context> for CmdApi {
+impl RunnableCmd for CmdApi {
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         // Make sure the endpoint starts with a slash.
         let endpoint = if self.endpoint.starts_with('/') {
