@@ -4,9 +4,9 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::BTreeMap, marker::PhantomData, net::IpAddr};
+use std::{collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf};
 
-use clap::{ArgMatches, Command, CommandFactory, FromArgMatches};
+use clap::{ArgMatches, Command, CommandFactory, FromArgMatches, Parser};
 
 use anyhow::Result;
 use async_trait::async_trait;
@@ -48,7 +48,8 @@ pub struct NewCli<'a> {
 
 impl<'a> Default for NewCli<'a> {
     fn default() -> Self {
-        let mut parser = Command::new("oxide").subcommand_required(true);
+        let mut parser = OxideCli::command().name("oxide").subcommand_required(true);
+        // let mut parser = Command::new("oxide").subcommand_required(true);
         let mut runner = CommandBuilder::default();
         for op in CliCommand::iter() {
             let Some(path) = xxx(op) else {
@@ -117,13 +118,16 @@ impl<'a> NewCli<'a> {
         self.runner.add_cmd(path, CustomCmd::<C>::new());
         self.parser = self.parser.add_subcommand(path, C::command());
 
-        // print_cmd(&self.parser, 0);
         self
     }
 
     pub async fn run(self, ctx: &Context) -> Result<()> {
         let Self { parser, runner } = self;
         let matches = parser.get_matches();
+
+        let x = OxideCli::from_arg_matches(&matches).unwrap();
+
+        println!("{:#?}", x);
 
         let mut node = &runner;
         let mut sm = &matches;
@@ -205,6 +209,23 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_version::CmdVersion>("version")
         .add_custom::<cmd_disk::CmdDiskImport>("disk import")
 }
+
+#[derive(clap::Parser, Debug, Clone)]
+#[command(name = "oxide")]
+struct OxideCli {
+    #[clap(long)]
+    debug: bool,
+
+    #[clap(long)]
+    config_dir: Option<PathBuf>,
+}
+
+enum MySubcommand {
+    Generated,
+    Custom,
+}
+
+trait SomeTrait {}
 
 #[tokio::main]
 async fn main() {
