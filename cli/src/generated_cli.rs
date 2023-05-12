@@ -22,6 +22,10 @@ impl Cli {
             CliCommand::LoginSamlBegin => Self::cli_login_saml_begin(),
             CliCommand::LoginSaml => Self::cli_login_saml(),
             CliCommand::Logout => Self::cli_logout(),
+            CliCommand::CertificateList => Self::cli_certificate_list(),
+            CliCommand::CertificateCreate => Self::cli_certificate_create(),
+            CliCommand::CertificateView => Self::cli_certificate_view(),
+            CliCommand::CertificateDelete => Self::cli_certificate_delete(),
             CliCommand::DiskList => Self::cli_disk_list(),
             CliCommand::DiskCreate => Self::cli_disk_create(),
             CliCommand::DiskView => Self::cli_disk_view(),
@@ -84,10 +88,6 @@ impl Cli {
             CliCommand::SnapshotCreate => Self::cli_snapshot_create(),
             CliCommand::SnapshotView => Self::cli_snapshot_view(),
             CliCommand::SnapshotDelete => Self::cli_snapshot_delete(),
-            CliCommand::CertificateList => Self::cli_certificate_list(),
-            CliCommand::CertificateCreate => Self::cli_certificate_create(),
-            CliCommand::CertificateView => Self::cli_certificate_view(),
-            CliCommand::CertificateDelete => Self::cli_certificate_delete(),
             CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
             CliCommand::RackList => Self::cli_rack_list(),
             CliCommand::RackView => Self::cli_rack_view(),
@@ -370,6 +370,107 @@ impl Cli {
 
     pub fn cli_logout() -> clap::Command {
         clap::Command::new("")
+    }
+
+    pub fn cli_certificate_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List certificates for external endpoints")
+            .long_about(
+                "Returns a list of TLS certificates used for the external API (for the current \
+                 Silo).  These are sorted by creation date, with the most recent certificates \
+                 appearing first.",
+            )
+    }
+
+    pub fn cli_certificate_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("service")
+                    .long("service")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::ServiceUsingCertificate::ExternalApi.to_string(),
+                        ]),
+                        |s| types::ServiceUsingCertificate::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("The service using this certificate"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a new system-wide x.509 certificate")
+            .long_about(
+                "This certificate is automatically used by the Oxide Control plane to serve \
+                 external connections.",
+            )
+    }
+
+    pub fn cli_certificate_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("certificate")
+                    .long("certificate")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .about("Fetch a certificate")
+            .long_about("Returns the details of a specific certificate")
+    }
+
+    pub fn cli_certificate_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("certificate")
+                    .long("certificate")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .about("Delete a certificate")
+            .long_about("Permanently delete a certificate. This operation cannot be undone.")
     }
 
     pub fn cli_disk_list() -> clap::Command {
@@ -2085,107 +2186,6 @@ impl Cli {
                     .help("Name or ID of the project"),
             )
             .about("Delete a snapshot")
-    }
-
-    pub fn cli_certificate_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::NameOrIdSortMode::NameAscending.to_string(),
-                            types::NameOrIdSortMode::NameDescending.to_string(),
-                            types::NameOrIdSortMode::IdAscending.to_string(),
-                        ]),
-                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
-                    ))
-                    .required(false),
-            )
-            .about("List system-wide certificates")
-            .long_about(
-                "Returns a list of all the system-wide certificates. System-wide certificates are \
-                 returned sorted by creation date, with the most recent certificates appearing \
-                 first.",
-            )
-    }
-
-    pub fn cli_certificate_create() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("description")
-                    .long("description")
-                    .value_parser(clap::value_parser!(String))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                clap::Arg::new("name")
-                    .long("name")
-                    .value_parser(clap::value_parser!(types::Name))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                clap::Arg::new("service")
-                    .long("service")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::ServiceUsingCertificate::ExternalApi.to_string(),
-                        ]),
-                        |s| types::ServiceUsingCertificate::try_from(s).unwrap(),
-                    ))
-                    .required_unless_present("json-body")
-                    .help("The service using this certificate"),
-            )
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Create a new system-wide x.509 certificate")
-            .long_about(
-                "This certificate is automatically used by the Oxide Control plane to serve \
-                 external connections.",
-            )
-    }
-
-    pub fn cli_certificate_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("certificate")
-                    .long("certificate")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true),
-            )
-            .about("Fetch a certificate")
-            .long_about("Returns the details of a specific certificate")
-    }
-
-    pub fn cli_certificate_delete() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("certificate")
-                    .long("certificate")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true),
-            )
-            .about("Delete a certificate")
-            .long_about("Permanently delete a certificate. This operation cannot be undone.")
     }
 
     pub fn cli_physical_disk_list() -> clap::Command {
@@ -4304,6 +4304,18 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::Logout => {
                 self.execute_logout(matches).await;
             }
+            CliCommand::CertificateList => {
+                self.execute_certificate_list(matches).await;
+            }
+            CliCommand::CertificateCreate => {
+                self.execute_certificate_create(matches).await;
+            }
+            CliCommand::CertificateView => {
+                self.execute_certificate_view(matches).await;
+            }
+            CliCommand::CertificateDelete => {
+                self.execute_certificate_delete(matches).await;
+            }
             CliCommand::DiskList => {
                 self.execute_disk_list(matches).await;
             }
@@ -4474,18 +4486,6 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SnapshotDelete => {
                 self.execute_snapshot_delete(matches).await;
-            }
-            CliCommand::CertificateList => {
-                self.execute_certificate_list(matches).await;
-            }
-            CliCommand::CertificateCreate => {
-                self.execute_certificate_create(matches).await;
-            }
-            CliCommand::CertificateView => {
-                self.execute_certificate_view(matches).await;
-            }
-            CliCommand::CertificateDelete => {
-                self.execute_certificate_delete(matches).await;
             }
             CliCommand::PhysicalDiskList => {
                 self.execute_physical_disk_list(matches).await;
@@ -4913,6 +4913,110 @@ impl<T: CliOverride> Cli<T> {
     pub async fn execute_logout(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.logout();
         self.over.execute_logout(matches, &mut request).unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_certificate_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.certificate_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_certificate_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_certificate_create(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.certificate_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::CertificateCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::ServiceUsingCertificate>("service") {
+            request = request.body_map(|body| body.service(value.clone()))
+        }
+
+        self.over
+            .execute_certificate_create(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_certificate_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.certificate_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
+            request = request.certificate(value.clone());
+        }
+
+        self.over
+            .execute_certificate_view(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_certificate_delete(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.certificate_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
+            request = request.certificate(value.clone());
+        }
+
+        self.over
+            .execute_certificate_delete(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -6572,110 +6676,6 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_snapshot_delete(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_certificate_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.certificate_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
-        self.over
-            .execute_certificate_list(matches, &mut request)
-            .unwrap();
-        let mut stream = request.stream();
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    println!("error\n{:#?}", r);
-                    break;
-                }
-                Ok(None) => {
-                    break;
-                }
-                Ok(Some(value)) => {
-                    println!("{:#?}", value);
-                }
-            }
-        }
-    }
-
-    pub async fn execute_certificate_create(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.certificate_create();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::CertificateCreate>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        if let Some(value) = matches.get_one::<String>("description") {
-            request = request.body_map(|body| body.description(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::Name>("name") {
-            request = request.body_map(|body| body.name(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::ServiceUsingCertificate>("service") {
-            request = request.body_map(|body| body.service(value.clone()))
-        }
-
-        self.over
-            .execute_certificate_create(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_certificate_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.certificate_view();
-        if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
-            request = request.certificate(value.clone());
-        }
-
-        self.over
-            .execute_certificate_view(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_certificate_delete(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.certificate_delete();
-        if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
-            request = request.certificate(value.clone());
-        }
-
-        self.over
-            .execute_certificate_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -8905,6 +8905,38 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_certificate_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::CertificateList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_certificate_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::CertificateCreate,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_certificate_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::CertificateView,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_certificate_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::CertificateDelete,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_disk_list(
         &self,
         matches: &clap::ArgMatches,
@@ -9349,38 +9381,6 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SnapshotDelete,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_certificate_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::CertificateList,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_certificate_create(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::CertificateCreate,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_certificate_view(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::CertificateView,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_certificate_delete(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::CertificateDelete,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -9998,6 +9998,10 @@ pub enum CliCommand {
     LoginSamlBegin,
     LoginSaml,
     Logout,
+    CertificateList,
+    CertificateCreate,
+    CertificateView,
+    CertificateDelete,
     DiskList,
     DiskCreate,
     DiskView,
@@ -10054,10 +10058,6 @@ pub enum CliCommand {
     SnapshotCreate,
     SnapshotView,
     SnapshotDelete,
-    CertificateList,
-    CertificateCreate,
-    CertificateView,
-    CertificateDelete,
     PhysicalDiskList,
     RackList,
     RackView,
@@ -10146,6 +10146,10 @@ impl CliCommand {
             CliCommand::LoginSamlBegin,
             CliCommand::LoginSaml,
             CliCommand::Logout,
+            CliCommand::CertificateList,
+            CliCommand::CertificateCreate,
+            CliCommand::CertificateView,
+            CliCommand::CertificateDelete,
             CliCommand::DiskList,
             CliCommand::DiskCreate,
             CliCommand::DiskView,
@@ -10202,10 +10206,6 @@ impl CliCommand {
             CliCommand::SnapshotCreate,
             CliCommand::SnapshotView,
             CliCommand::SnapshotDelete,
-            CliCommand::CertificateList,
-            CliCommand::CertificateCreate,
-            CliCommand::CertificateView,
-            CliCommand::CertificateDelete,
             CliCommand::PhysicalDiskList,
             CliCommand::RackList,
             CliCommand::RackView,
