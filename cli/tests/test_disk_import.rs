@@ -94,10 +94,9 @@ impl Testfile {
 fn test_disk_import() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(420);
     let server = MockServer::start();
-    eprintln!("test_disk_import {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
+        when.into_inner().any_request();
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -109,7 +108,7 @@ fn test_disk_import() {
     });
 
     let disk_create_mock = server.disk_create(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
+        when.into_inner().any_request();
         then.created(&Disk {
             name: "test-import".parse().unwrap(),
             ..Disk::mock_value(&mut src).unwrap()
@@ -117,22 +116,22 @@ fn test_disk_import() {
     });
 
     let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
+        when.into_inner().any_request();
         then.no_content();
     });
 
     let disk_bulk_write_mock = server.disk_bulk_write_import(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
+        when.into_inner().any_request();
         then.no_content();
     });
 
     let stop_bulk_write_mock = server.disk_bulk_write_import_stop(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
+        when.into_inner().any_request();
         then.no_content();
     });
 
     let finalize_mock = server.disk_finalize_import(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import");
+        when.into_inner().any_request();
         then.no_content();
     });
 
@@ -170,10 +169,9 @@ fn test_disk_import() {
 fn test_disk_import_sparse() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(421);
     let server = MockServer::start();
-    eprintln!("test_disk_import_sparse {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
+        when.into_inner().any_request();
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -185,7 +183,7 @@ fn test_disk_import_sparse() {
     });
 
     let disk_create_mock = server.disk_create(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
+        when.into_inner().any_request();
         then.created(&Disk {
             name: "test-disk-import-sparse".parse().unwrap(),
             ..Disk::mock_value(&mut src).unwrap()
@@ -193,22 +191,22 @@ fn test_disk_import_sparse() {
     });
 
     let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
+        when.into_inner().any_request();
         then.no_content();
     });
 
     let disk_bulk_write_mock = server.disk_bulk_write_import(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
+        when.into_inner().any_request();
         then.no_content();
     });
 
     let stop_bulk_write_mock = server.disk_bulk_write_import_stop(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
+        when.into_inner().any_request();
         then.no_content();
     });
 
     let finalize_mock = server.disk_finalize_import(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
+        when.into_inner().any_request();
         then.no_content();
     });
 
@@ -248,10 +246,9 @@ fn test_disk_import_sparse() {
 fn test_disk_import_disk_exists_already() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(422);
     let server = MockServer::start();
-    eprintln!("test_disk_import_disk_exists_already {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_sparse");
+        when.into_inner().any_request();
         then.ok(&Disk {
             name: "test-disk-import-disk-exists-already".parse().unwrap(),
             ..Disk::mock_value(&mut src).unwrap()
@@ -296,10 +293,9 @@ fn test_disk_import_disk_exists_already() {
 fn test_disk_import_snapshot_exists_already() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(423);
     let server = MockServer::start();
-    eprintln!("test_disk_import_snapshot_exists_already {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_snapshot_exists_already");
+        when.into_inner().any_request();
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -311,9 +307,11 @@ fn test_disk_import_snapshot_exists_already() {
     });
 
     let snapshot_view_mock = server.snapshot_view(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_snapshot_exists_already");
+        when.into_inner().any_request();
         then.ok(&Snapshot {
-            name: "test-disk-import-snapshot-exists-already-snap".parse().unwrap(),
+            name: "test-disk-import-snapshot-exists-already-snap"
+                .parse()
+                .unwrap(),
             ..Snapshot::mock_value(&mut src).unwrap()
         });
     });
@@ -357,10 +355,9 @@ fn test_disk_import_snapshot_exists_already() {
 fn test_disk_import_image_exists_already() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(424);
     let server = MockServer::start();
-    eprintln!("test_disk_import_image_exists_already {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_image_exists_already");
+        when.into_inner().any_request();
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -372,7 +369,7 @@ fn test_disk_import_image_exists_already() {
     });
 
     let snapshot_view_mock = server.snapshot_view(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_image_exists_already");
+        when.into_inner().any_request();
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -384,7 +381,7 @@ fn test_disk_import_image_exists_already() {
     });
 
     let image_view_mock = server.image_view(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_image_exists_already");
+        when.into_inner().any_request();
         then.ok(&Image {
             name: "test-disk-import-image-exists-already".parse().unwrap(),
             ..Image::mock_value(&mut src).unwrap()
@@ -431,10 +428,9 @@ fn test_disk_import_image_exists_already() {
 fn test_disk_import_bulk_import_start_fail() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(425);
     let server = MockServer::start();
-    eprintln!("test_disk_import_bulk_import_start_fail {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_import_start_fail");
+        when.into_inner().any_request();
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -446,7 +442,7 @@ fn test_disk_import_bulk_import_start_fail() {
     });
 
     let disk_create_mock = server.disk_create(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_import_start_fail");
+        when.into_inner().any_request();
         then.created(&Disk {
             name: "test-disk-import-bulk-import-start-fail".parse().unwrap(),
             ..Disk::mock_value(&mut src).unwrap()
@@ -454,7 +450,7 @@ fn test_disk_import_bulk_import_start_fail() {
     });
 
     let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_import_start_fail");
+        when.into_inner().any_request();
         then.server_error(
             503,
             &oxide_api::types::Error {
@@ -466,12 +462,12 @@ fn test_disk_import_bulk_import_start_fail() {
     });
 
     let unwind_finalize_mock = server.disk_finalize_import(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_import_start_fail");
+        when.into_inner().any_request();
         then.no_content();
     });
 
     let unwind_disk_delete_mock = server.disk_delete(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_import_start_fail");
+        when.into_inner().any_request();
         then.no_content();
     });
 
@@ -507,10 +503,9 @@ fn test_disk_import_bulk_import_start_fail() {
 fn test_disk_import_bulk_write_import_fail() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(426);
     let server = MockServer::start();
-    eprintln!("test_disk_import_bulk_write_import_fail {:?}", server.url(""));
 
     let disk_view_mock = server.disk_view(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
+        when.into_inner().any_request();
         then.client_error(
             404,
             &oxide_api::types::Error {
@@ -522,7 +517,7 @@ fn test_disk_import_bulk_write_import_fail() {
     });
 
     let disk_create_mock = server.disk_create(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
+        when.into_inner().any_request();
         then.created(&Disk {
             name: "test-disk-import-bulk-write-import-fail".parse().unwrap(),
             ..Disk::mock_value(&mut src).unwrap()
@@ -530,12 +525,12 @@ fn test_disk_import_bulk_write_import_fail() {
     });
 
     let start_bulk_write_mock = server.disk_bulk_write_import_start(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
+        when.into_inner().any_request();
         then.no_content();
     });
 
     let disk_bulk_write_mock = server.disk_bulk_write_import(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
+        when.into_inner().any_request();
         then.server_error(
             503,
             &oxide_api::types::Error {
@@ -547,17 +542,17 @@ fn test_disk_import_bulk_write_import_fail() {
     });
 
     let unwind_stop_bulk_write_mock = server.disk_bulk_write_import_stop(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
+        when.into_inner().any_request();
         then.no_content();
     });
 
     let unwind_finalize_mock = server.disk_finalize_import(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
+        when.into_inner().any_request();
         then.no_content();
     });
 
     let unwind_disk_delete_mock = server.disk_delete(|when, then| {
-        when.into_inner().any_request().header("Authorization", "Bearer test_disk_import_bulk_write_import_fail");
+        when.into_inner().any_request();
         then.no_content();
     });
 
