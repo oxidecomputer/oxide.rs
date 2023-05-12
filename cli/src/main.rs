@@ -4,6 +4,8 @@
 
 // Copyright 2023 Oxide Computer Company
 
+#![forbid(unsafe_code)]
+
 use std::{collections::BTreeMap, net::IpAddr};
 
 use clap::{Command, CommandFactory, FromArgMatches};
