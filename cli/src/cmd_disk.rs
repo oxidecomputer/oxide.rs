@@ -435,17 +435,19 @@ impl CmdDiskImport {
             return Err(e);
         }
 
+        let mut results = Vec::with_capacity(handles.len());
         for handle in handles {
             let result = handle.await?;
+            results.push(result);
+        }
 
-            // If one of the upload threads returned an error, unwind the disk.
-            if let Err(e) = result {
-                eprintln!("one of the upload threads failed with {:?}", e);
-                self.unwind_disk_bulk_write_stop(&client).await?;
-                self.unwind_disk_finalize(&client).await?;
-                self.unwind_disk_delete(&client).await?;
-                return Err(e);
-            }
+        if results.iter().any(|x| x.is_err()) {
+            // If any of the upload threads returned an error, unwind the disk.
+            eprintln!("one of the upload threads failed");
+            self.unwind_disk_bulk_write_stop(&client).await?;
+            self.unwind_disk_finalize(&client).await?;
+            self.unwind_disk_delete(&client).await?;
+            bail!("one of the upload threads failed");
         }
 
         // wait for upload threads to complete, then finish the progress bar
