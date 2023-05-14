@@ -4,8 +4,11 @@
 
 // Copyright 2023 Oxide Computer Company
 
+use crate::{context::Context, RunnableCmd};
+
 use super::cmd_version::built_info;
 use anyhow::Result;
+use async_trait::async_trait;
 use clap::{Command, Parser};
 use serde::Serialize;
 
@@ -80,8 +83,11 @@ fn to_json(cmd: &Command) -> JsonDoc {
     }
 }
 
-impl CmdDocs {
-    pub async fn run(&self, app: &Command) -> Result<()> {
+#[async_trait]
+impl RunnableCmd for CmdDocs {
+    async fn run(&self, _ctx: &Context) -> Result<()> {
+        let cli = crate::make_cli();
+        let app = cli.command();
         let json_doc = to_json(app);
         let pretty_json = serde_json::to_string_pretty(&json_doc)?;
         println!("{}", pretty_json);

@@ -174,7 +174,6 @@ fn test_pagination_midway_failure() {
         when.method(GET)
             .path("/paginated")
             .query_param("page_token", "page-3");
-        // TODO
         then.status(http::StatusCode::NOT_FOUND.as_u16())
             .json_body(json!({ "oh": "noes!" }));
     });

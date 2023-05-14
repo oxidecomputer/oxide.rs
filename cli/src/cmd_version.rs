@@ -5,8 +5,11 @@
 // Copyright 2023 Oxide Computer Company
 
 use anyhow::Result;
+use async_trait::async_trait;
 use clap::Parser;
 use oxide_api::Client;
+
+use crate::{context::Context, RunnableCmd};
 
 pub mod built_info {
     include!(concat!(env!("OUT_DIR"), "/built.rs"));
@@ -18,8 +21,9 @@ pub mod built_info {
 #[clap(name = "version")]
 pub struct CmdVersion;
 
-impl CmdVersion {
-    pub async fn run(&self) -> Result<()> {
+#[async_trait]
+impl RunnableCmd for CmdVersion {
+    async fn run(&self, _ctx: &Context) -> Result<()> {
         println!("Oxide CLI {}", built_info::PKG_VERSION);
 
         println!(

@@ -4,8 +4,8 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::collections::HashMap;
 use std::fs::create_dir_all;
+use std::{collections::HashMap, path::PathBuf};
 
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
@@ -47,7 +47,12 @@ impl Default for Config {
         dir.push(".config");
         dir.push("oxide");
         create_dir_all(&dir).unwrap();
+        Self::new_with_config_dir(dir)
+    }
+}
 
+impl Config {
+    pub fn new_with_config_dir(dir: PathBuf) -> Self {
         let hosts_path = dir.join("hosts.toml");
         let hosts = if let Ok(contents) = std::fs::read_to_string(hosts_path) {
             toml::from_str(&contents).unwrap()
@@ -60,9 +65,7 @@ impl Default for Config {
             hosts,
         }
     }
-}
 
-impl Config {
     pub fn update_host(&self, hostname: String, host_entry: Host) -> Result<()> {
         let mut dir = dirs::home_dir().unwrap();
         dir.push(".config");

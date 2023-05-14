@@ -10,9 +10,12 @@ use std::{
 };
 
 use anyhow::{anyhow, Result};
+use async_trait::async_trait;
 use clap::Parser;
 use futures::{StreamExt, TryStreamExt};
 use serde::Deserialize;
+
+use crate::RunnableCmd;
 
 /// Makes an authenticated HTTP request to the Oxide API and prints the response.
 ///
@@ -93,8 +96,9 @@ pub struct PaginatedResponse {
     pub next_page: Option<String>,
 }
 
-impl CmdApi {
-    pub async fn run(&self, ctx: &mut crate::context::Context) -> Result<()> {
+#[async_trait]
+impl RunnableCmd for CmdApi {
+    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         // Make sure the endpoint starts with a slash.
         let endpoint = if self.endpoint.starts_with('/') {
             self.endpoint.clone()
@@ -216,65 +220,59 @@ impl CmdApi {
                 None => endpoint.as_str(),
             };
 
-            let first_page = resp.json::<PaginatedResponse>().await?;
-            let rest =
-                futures::stream::try_unfold(first_page.next_page, |maybe_page_token| async {
-                    if let Some(page_token) = maybe_page_token {
-                        let uri = format!(
-                            "{}{}?page_token={}",
-                            ctx.client().baseurl(),
-                            endpoint,
-                            page_token,
-                        );
+            let PaginatedResponse { items, next_page } = resp.json::<PaginatedResponse>().await?;
+            let first = futures::stream::once(futures::future::ready(Ok(items)));
+            let rest = futures::stream::try_unfold(next_page, |maybe_page_token| async {
+                let Some(page_token) = maybe_page_token
+                else {
+                    return Result::<Option<(Vec<serde_json::Value>, Option<String>)>>::Ok(None);
+                };
+                let uri = format!(
+                    "{}{}?page_token={}",
+                    ctx.client().baseurl(),
+                    endpoint,
+                    page_token,
+                );
 
-                        let mut req = client.request(method.clone(), uri);
-                        for (key, value) in headers.clone() {
-                            req = req.header(key, value);
-                        }
+                let mut req = client.request(method.clone(), uri);
+                for (key, value) in headers.clone() {
+                    req = req.header(key, value);
+                }
 
-                        let resp = req.send().await?.error_for_status()?;
-                        let page = resp.json::<PaginatedResponse>().await?;
-                        reqwest::Result::Ok(Some((
-                            futures::stream::iter(page.items).map(Ok),
-                            page.next_page,
-                        )))
-                    } else {
-                        Ok(None)
-                    }
-                })
-                .try_flatten();
+                let resp = req.send().await?.error_for_status()?;
+                let PaginatedResponse { items, next_page } =
+                    resp.json::<PaginatedResponse>().await?;
+
+                Result::Ok(Some((items, next_page)))
+            });
 
             print!("[");
 
-            let limit = self.limit.map_or(u32::MAX, std::num::NonZeroU32::get);
-
-            let result = futures::stream::iter(first_page.items)
-                .map(Ok)
+            let result = first
                 .chain(rest)
-                .take(limit as usize)
-                .try_fold(false, |comma_needed, value| async move {
-                    let value_out = serde_json::to_string_pretty(&vec![value])?;
-                    let len = value_out.len();
-                    assert_eq!(&value_out[0..2], "[\n");
-                    assert_eq!(&value_out[len - 2..], "\n]");
-                    let items_core = &value_out[2..len - 2];
+                .try_fold(false, |comma_needed, items| async move {
+                    if !items.is_empty() {
+                        let value_out = serde_json::to_string_pretty(&items)?;
+                        let len = value_out.len();
+                        assert_eq!(&value_out[0..2], "[\n");
+                        assert_eq!(&value_out[len - 2..], "\n]");
+                        let items_core = &value_out[2..len - 2];
 
-                    if comma_needed {
-                        print!(",");
+                        if comma_needed {
+                            print!(",");
+                        }
+                        println!();
+                        print!("{}", items_core);
                     }
-                    println!();
-                    print!("{}", items_core);
                     Ok(true)
                 })
                 .await;
-
             println!();
             println!("]");
 
             if let Err(e) = &result {
                 println!("An error occurred during a paginated query:\n{}", e);
             }
-
             result.map(|_| ())
         }
     }
