@@ -4,7 +4,9 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::net::IpAddr;
+#![forbid(unsafe_code)]
+
+use std::{collections::BTreeMap, net::IpAddr};
 
 use anyhow::Result;
 use async_trait::async_trait;

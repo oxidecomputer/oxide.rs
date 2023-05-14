@@ -4,6 +4,8 @@
 
 // Copyright 2023 Oxide Computer Company
 
+#![forbid(unsafe_code)]
+
 use std::{fs::File, io::Write, path::PathBuf, time::Instant};
 
 use clap::Parser;

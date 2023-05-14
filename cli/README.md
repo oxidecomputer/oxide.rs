@@ -1,5 +1,9 @@
 # The Oxide CLI
 
+## Installation
+
+Build with `cargo build --bin oxide` and add the executable in `target/debug` to your `PATH`.
+
 ## Authentication
 
 There are two ways to authenticate against the Oxide rack using the CLI:

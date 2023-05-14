@@ -469,16 +469,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -712,20 +748,68 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -851,8 +935,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -915,8 +1011,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -975,8 +1083,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::ImportBlocksBulkWrite) -> Self {
@@ -1042,8 +1162,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -1105,8 +1237,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -1165,8 +1309,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::FinalizeDisk) -> Self {
@@ -1229,8 +1385,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::ImportBlocksFromUrl) -> Self {
@@ -1299,24 +1467,84 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn end_time(self, value: &chrono::DateTime<chrono::offset::Utc>) -> Self {
-            Self(self.0.query_param("end_time", value.to_string()))
+        pub fn end_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a chrono::DateTime<chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("end_time", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "end_time"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn start_time(self, value: &chrono::DateTime<chrono::offset::Utc>) -> Self {
-            Self(self.0.query_param("start_time", value.to_string()))
+        pub fn start_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a chrono::DateTime<chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("start_time", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "start_time"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -1374,16 +1602,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -1501,24 +1765,84 @@ pub mod operations {
             self.0
         }
 
-        pub fn include_silo_images(self, value: bool) -> Self {
-            Self(self.0.query_param("include_silo_images", value.to_string()))
+        pub fn include_silo_images<T>(self, value: T) -> Self
+        where
+            T: Into<Option<bool>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("include_silo_images", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "include_silo_images"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -1576,8 +1900,20 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::ImageCreate) -> Self {
@@ -1644,8 +1980,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -1708,8 +2056,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -1833,8 +2193,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -1892,20 +2264,68 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2031,8 +2451,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2095,8 +2527,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2155,20 +2599,68 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2235,8 +2727,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::DiskPath) -> Self {
@@ -2307,8 +2811,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::DiskPath) -> Self {
@@ -2379,8 +2895,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2444,8 +2972,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::InstanceMigrate) -> Self {
@@ -2513,8 +3053,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2581,20 +3133,68 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn from_start(self, value: u64) -> Self {
-            Self(self.0.query_param("from_start", value.to_string()))
+        pub fn from_start<T>(self, value: T) -> Self
+        where
+            T: Into<Option<u64>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("from_start", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "from_start"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn max_bytes(self, value: u64) -> Self {
-            Self(self.0.query_param("max_bytes", value.to_string()))
+        pub fn max_bytes<T>(self, value: T) -> Self
+        where
+            T: Into<Option<u64>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("max_bytes", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "max_bytes"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn most_recent(self, value: u64) -> Self {
-            Self(self.0.query_param("most_recent", value.to_string()))
+        pub fn most_recent<T>(self, value: T) -> Self
+        where
+            T: Into<Option<u64>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("most_recent", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "most_recent"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2659,20 +3259,68 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn from_start(self, value: u64) -> Self {
-            Self(self.0.query_param("from_start", value.to_string()))
+        pub fn from_start<T>(self, value: T) -> Self
+        where
+            T: Into<Option<u64>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("from_start", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "from_start"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn max_bytes(self, value: u64) -> Self {
-            Self(self.0.query_param("max_bytes", value.to_string()))
+        pub fn max_bytes<T>(self, value: T) -> Self
+        where
+            T: Into<Option<u64>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("max_bytes", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "max_bytes"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn most_recent(self, value: u64) -> Self {
-            Self(self.0.query_param("most_recent", value.to_string()))
+        pub fn most_recent<T>(self, value: T) -> Self
+        where
+            T: Into<Option<u64>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("most_recent", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "most_recent"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2715,8 +3363,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2780,8 +3440,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2894,16 +3566,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -2961,16 +3669,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -3204,24 +3948,84 @@ pub mod operations {
             self.0
         }
 
-        pub fn instance(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("instance", value.to_string()))
+        pub fn instance<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("instance", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "instance"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -3283,8 +4087,20 @@ pub mod operations {
             Self(self.0.query_param("instance", value.to_string()))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::InstanceNetworkInterfaceCreate) -> Self {
@@ -3352,12 +4168,36 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn instance(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("instance", value.to_string()))
+        pub fn instance<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("instance", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "instance"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -3421,12 +4261,36 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn instance(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("instance", value.to_string()))
+        pub fn instance<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("instance", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "instance"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::InstanceNetworkInterfaceUpdate) -> Self {
@@ -3494,12 +4358,36 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn instance(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("instance", value.to_string()))
+        pub fn instance<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("instance", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "instance"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -3666,16 +4554,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -4097,20 +5021,68 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -4236,8 +5208,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -4300,8 +5284,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -4354,16 +5350,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -4421,16 +5453,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -4552,16 +5620,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -4690,16 +5794,52 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -4757,16 +5897,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -4888,20 +6064,68 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn silo(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("silo", value.to_string()))
+        pub fn silo<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("silo", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "silo"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -5280,16 +6504,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -5597,12 +6857,36 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -5844,12 +7128,36 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -6022,24 +7330,72 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn end_time(self, value: &chrono::DateTime<chrono::offset::Utc>) -> Self {
-            Self(self.0.query_param("end_time", value.to_string()))
+        pub fn end_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a chrono::DateTime<chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("end_time", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "end_time"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn id(self, value: &uuid::Uuid) -> Self {
             Self(self.0.query_param("id", value.to_string()))
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn start_time(self, value: &chrono::DateTime<chrono::offset::Utc>) -> Self {
-            Self(self.0.query_param("start_time", value.to_string()))
+        pub fn start_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a chrono::DateTime<chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("start_time", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "start_time"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -6211,12 +7567,36 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -6335,16 +7715,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -6704,16 +8120,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -6771,16 +8223,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -7061,16 +8549,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -7309,20 +8833,68 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn silo(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("silo", value.to_string()))
+        pub fn silo<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("silo", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "silo"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -7445,16 +9017,52 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -7574,20 +9182,68 @@ pub mod operations {
             self.0
         }
 
-        pub fn group(self, value: &uuid::Uuid) -> Self {
-            Self(self.0.query_param("group", value.to_string()))
+        pub fn group<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a uuid::Uuid>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("group", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "group"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::IdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -7645,8 +9301,20 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn vpc(self, value: &types::NameOrId) -> Self {
@@ -7708,8 +9376,20 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn vpc(self, value: &types::NameOrId) -> Self {
@@ -7775,28 +9455,100 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn router(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("router", value.to_string()))
+        pub fn router<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("router", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -7854,16 +9606,40 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn router(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("router", value.to_string()))
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::RouterRouteCreate) -> Self {
@@ -7931,16 +9707,40 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn router(self, value: &types::NameOrId) -> Self {
             Self(self.0.query_param("router", value.to_string()))
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -8004,16 +9804,52 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn router(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("router", value.to_string()))
+        pub fn router<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("router", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::RouterRouteUpdate) -> Self {
@@ -8081,16 +9917,52 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn router(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("router", value.to_string()))
+        pub fn router<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("router", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "router"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -8143,24 +10015,84 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -8218,8 +10150,20 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn vpc(self, value: &types::NameOrId) -> Self {
@@ -8291,12 +10235,36 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -8360,12 +10328,36 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::VpcRouterUpdate) -> Self {
@@ -8433,12 +10425,36 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -8491,24 +10507,84 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -8566,8 +10642,20 @@ pub mod operations {
             self.0
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn vpc(self, value: &types::NameOrId) -> Self {
@@ -8639,12 +10727,36 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -8708,12 +10820,36 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::VpcSubnetUpdate) -> Self {
@@ -8781,12 +10917,36 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -8846,24 +11006,84 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn vpc(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("vpc", value.to_string()))
+        pub fn vpc<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("vpc", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "vpc"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -8921,20 +11141,68 @@ pub mod operations {
             self.0
         }
 
-        pub fn limit(self, value: std::num::NonZeroU32) -> Self {
-            Self(self.0.query_param("limit", value.to_string()))
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn page_token(self, value: &str) -> Self {
-            Self(self.0.query_param("page_token", value.to_string()))
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
-        pub fn sort_by(self, value: types::NameOrIdSortMode) -> Self {
-            Self(self.0.query_param("sort_by", value.to_string()))
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -9060,8 +11328,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
@@ -9124,8 +11404,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
 
         pub fn body(self, value: &types::VpcUpdate) -> Self {
@@ -9192,8 +11484,20 @@ pub mod operations {
             Self(self.0.path_matches(re))
         }
 
-        pub fn project(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("project", value.to_string()))
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
         }
     }
 
