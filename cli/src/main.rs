@@ -117,7 +117,11 @@ impl CliOverride for OxideOverride {
 
 #[cfg(test)]
 mod tests {
+    use clap::Command;
+    use expectorate::assert_contents;
     use oxide_api::types::ByteCount;
+
+    use crate::make_cli;
 
     // This is the real trait that we're going to tell people about
     trait MyFromStr: Sized {
@@ -177,5 +181,33 @@ mod tests {
             AutoRefTarget::<ByteCount>::new().auto_ref_from_str("900")
         };
         println!("{:?}", y)
+    }
+
+    #[test]
+    fn test_json_body_required() {
+        fn find_json_body_required(path: String, cmd: &Command) -> Vec<String> {
+            let mut ret = cmd
+                .get_subcommands()
+                .flat_map(|subcmd| {
+                    find_json_body_required(format!("{} {}", path, subcmd.get_name()), subcmd)
+                })
+                .collect::<Vec<_>>();
+
+            if cmd
+                .get_arguments()
+                .any(|arg| arg.get_long() == Some("json-body") && arg.is_required_set())
+            {
+                ret.push(path);
+            }
+
+            ret
+        }
+
+        let cli = make_cli();
+        let cmd = cli.command();
+        let out = find_json_body_required("oxide".to_string(), cmd).join("\n");
+
+        // We want this list to shrink, not grow.
+        assert_contents("tests/data/json-body-required.txt", &out);
     }
 }

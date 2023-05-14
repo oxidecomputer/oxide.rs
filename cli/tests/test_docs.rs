@@ -1,14 +1,17 @@
-use expectorate::assert_contents;
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+// Copyright 2023 Oxide Computer Company
+
+use assert_cmd::Command;
 
 #[test]
 fn test_docs_json() {
-    use assert_cmd::Command;
-
-    let output = Command::cargo_bin("oxide")
+    Command::cargo_bin("oxide")
         .unwrap()
         .arg("docs")
-        .output()
-        .unwrap();
-    let stdout = String::from_utf8(output.stdout).unwrap();
-    assert_contents("./docs/cli.json", &stdout);
+        .assert()
+        .success()
+        .stdout(expectorate::eq_file_or_panic("docs/cli.json"));
 }
