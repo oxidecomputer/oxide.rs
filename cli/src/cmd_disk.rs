@@ -334,10 +334,10 @@ impl RunnableCmd for CmdDiskImport {
 
             // If this fails, the disk is in state import-ready. Finalize it so
             // it can be deleted.
-            self.unwind_disk_finalize(&client).await?;
+            self.unwind_disk_finalize(client).await?;
 
             // The finalize succeeded, so delete the disk.
-            self.unwind_disk_delete(&client).await?;
+            self.unwind_disk_delete(client).await?;
 
             // Finalizing and deleting the disk succeeded, so return the
             // original error.
@@ -432,9 +432,9 @@ impl RunnableCmd for CmdDiskImport {
             // some part of reading from the disk and sending to the upload
             // threads failed, so unwind. stop the bulk write process, finalize
             // the disk, then delete it.
-            self.unwind_disk_bulk_write_stop(&client).await?;
-            self.unwind_disk_finalize(&client).await?;
-            self.unwind_disk_delete(&client).await?;
+            self.unwind_disk_bulk_write_stop(client).await?;
+            self.unwind_disk_finalize(client).await?;
+            self.unwind_disk_delete(client).await?;
 
             // return the original error
             return Err(e);
@@ -449,9 +449,9 @@ impl RunnableCmd for CmdDiskImport {
         if results.iter().any(|x| x.is_err()) {
             // If any of the upload threads returned an error, unwind the disk.
             eprintln!("one of the upload threads failed");
-            self.unwind_disk_bulk_write_stop(&client).await?;
-            self.unwind_disk_finalize(&client).await?;
-            self.unwind_disk_delete(&client).await?;
+            self.unwind_disk_bulk_write_stop(client).await?;
+            self.unwind_disk_finalize(client).await?;
+            self.unwind_disk_delete(client).await?;
             bail!("one of the upload threads failed");
         }
 
@@ -471,9 +471,9 @@ impl RunnableCmd for CmdDiskImport {
 
             // Attempt to unwind the disk, although it will probably fail - the
             // first step is to stop the bulk write process!
-            self.unwind_disk_bulk_write_stop(&client).await?;
-            self.unwind_disk_finalize(&client).await?;
-            self.unwind_disk_delete(&client).await?;
+            self.unwind_disk_bulk_write_stop(client).await?;
+            self.unwind_disk_finalize(client).await?;
+            self.unwind_disk_delete(client).await?;
 
             return Err(e.into());
         }
@@ -494,8 +494,8 @@ impl RunnableCmd for CmdDiskImport {
 
             // Attempt to unwind the disk, although it will probably fail - the
             // first step is to finalize the disk!
-            self.unwind_disk_finalize(&client).await?;
-            self.unwind_disk_delete(&client).await?;
+            self.unwind_disk_finalize(client).await?;
+            self.unwind_disk_delete(client).await?;
 
             return Err(e.into());
         }

@@ -6,7 +6,7 @@
 
 #![forbid(unsafe_code)]
 
-use std::{collections::BTreeMap, net::IpAddr};
+use std::net::IpAddr;
 
 use anyhow::Result;
 use async_trait::async_trait;
