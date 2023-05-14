@@ -7,7 +7,6 @@
 #![forbid(unsafe_code)]
 
 use std::net::IpAddr;
-use std::net::IpAddr;
 
 use anyhow::Result;
 use async_trait::async_trait;
