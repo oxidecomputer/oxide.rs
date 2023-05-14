@@ -49,7 +49,11 @@ async fn main() {
 
     let new_cli = make_cli();
 
-    let result = new_cli.run().await;
+    // Spawn a task so we get this potentially chunky Future off the
+    // main thread's stack.
+    let result = tokio::spawn(async move { new_cli.run().await })
+        .await
+        .unwrap();
     if let Err(e) = result {
         println!("error: {}", e);
         std::process::exit(1)
