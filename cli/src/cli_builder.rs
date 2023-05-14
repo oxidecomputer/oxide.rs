@@ -9,6 +9,7 @@ use std::{collections::BTreeMap, marker::PhantomData, path::PathBuf};
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::{ArgMatches, Command, CommandFactory, FromArgMatches};
+use log::LevelFilter;
 
 use crate::{
     config::Config,
@@ -21,10 +22,10 @@ use crate::{
 #[command(name = "oxide")]
 pub struct OxideCli {
     #[clap(long)]
-    debug: bool,
+    pub debug: bool,
 
     #[clap(long)]
-    config_dir: Option<PathBuf>,
+    pub config_dir: Option<PathBuf>,
 }
 
 #[async_trait]
@@ -48,7 +49,6 @@ pub struct NewCli<'a> {
 impl<'a> Default for NewCli<'a> {
     fn default() -> Self {
         let mut parser = OxideCli::command().name("oxide").subcommand_required(true);
-        // let mut parser = Command::new("oxide").subcommand_required(true);
         let mut runner = CommandBuilder::default();
         for op in CliCommand::iter() {
             let Some(path) = xxx(op) else {
@@ -139,12 +139,17 @@ impl<'a> NewCli<'a> {
         let Self { parser, runner } = self;
         let matches = parser.get_matches();
 
-        let top = OxideCli::from_arg_matches(&matches).unwrap();
+        let OxideCli { debug, config_dir } = OxideCli::from_arg_matches(&matches).unwrap();
 
-        // Construct the global config. We do this **after** parsing options,
-        // anticipating that top-level options may impact e.g. where we look for
-        // config files.
-        let config = Config::default();
+        if debug {
+            env_logger::builder().filter_level(LevelFilter::Debug);
+        }
+
+        let config = if let Some(dir) = config_dir {
+            Config::new_with_config_dir(dir)
+        } else {
+            Config::default()
+        };
         let ctx = Context::new(config).unwrap();
 
         let mut node = &runner;

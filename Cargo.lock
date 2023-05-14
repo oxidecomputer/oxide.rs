@@ -1751,6 +1751,7 @@ dependencies = [
  "http",
  "httpmock",
  "indicatif",
+ "log",
  "oauth2",
  "open",
  "oxide-api",
