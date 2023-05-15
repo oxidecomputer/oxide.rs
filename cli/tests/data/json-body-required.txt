@@ -1,0 +1,11 @@
+oxide certificate create
+oxide image create
+oxide policy update
+oxide project policy update
+oxide system policy update
+oxide silo idp local user create
+oxide silo policy update
+oxide vpc firewall-rules update
+oxide vpc router route create
+oxide vpc router route update
+oxide disk create
