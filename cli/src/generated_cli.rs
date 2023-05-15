@@ -486,7 +486,7 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
@@ -786,7 +786,7 @@ impl Cli {
                 clap::Arg::new("end-time")
                     .long("end-time")
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
-                    .required(false)
+                    .required(true)
                     .help("An exclusive end time of metrics."),
             )
             .arg(
@@ -807,7 +807,7 @@ impl Cli {
                 clap::Arg::new("start-time")
                     .long("start-time")
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
-                    .required(false)
+                    .required(true)
                     .help("An inclusive start time of metrics."),
             )
             .about("Fetch disk metrics")
@@ -1044,7 +1044,7 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
@@ -1651,7 +1651,7 @@ impl Cli {
                 clap::Arg::new("instance")
                     .long("instance")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required(true)
                     .help("Name or ID of the instance"),
             )
             .arg(
@@ -2085,7 +2085,7 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
@@ -2359,7 +2359,7 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
@@ -3229,7 +3229,7 @@ impl Cli {
                 clap::Arg::new("silo")
                     .long("silo")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required(true)
                     .help("Name or ID of the silo"),
             )
             .arg(
@@ -3406,7 +3406,7 @@ impl Cli {
                 clap::Arg::new("router")
                     .long("router")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required(true)
                     .help("Name or ID of the router"),
             )
             .arg(
@@ -3663,7 +3663,7 @@ impl Cli {
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required(true)
                     .help("Name or ID of the VPC"),
             )
             .about("List routers")
@@ -3861,7 +3861,7 @@ impl Cli {
                 clap::Arg::new("vpc")
                     .long("vpc")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required(true)
                     .help("Name or ID of the VPC"),
             )
             .about("List subnets")
@@ -4108,7 +4108,7 @@ impl Cli {
                 clap::Arg::new("project")
                     .long("project")
                     .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
+                    .required(true)
                     .help("Name or ID of the project"),
             )
             .arg(
