@@ -49,7 +49,7 @@ sha2 = "0.10.6"
 tabwriter = "1.2.1"
 tempfile = "3.5.0"
 test-common = { path = "test-common" }
-tokio = { version = "1.28.0", features = ["full"] }
+tokio = { version = "1.28.1", features = ["full"] }
 toml = "0.7.2"
 toml_edit = "0.19.8"
 url = "2.3.1"
