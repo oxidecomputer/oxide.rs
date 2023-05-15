@@ -1249,12 +1249,18 @@
               "about": "Remove a range from an IP pool",
               "args": [
                 {
+                  "long": "first"
+                },
+                {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
                 },
                 {
                   "long": "json-body-template",
                   "help": "XXX"
+                },
+                {
+                  "long": "last"
                 },
                 {
                   "long": "pool",
@@ -1275,12 +1281,18 @@
                   "about": "Add a range to an IP pool used for Oxide services",
                   "args": [
                     {
+                      "long": "first"
+                    },
+                    {
                       "long": "json-body",
                       "help": "Path to a file that contains the full json body."
                     },
                     {
                       "long": "json-body-template",
                       "help": "XXX"
+                    },
+                    {
+                      "long": "last"
                     }
                   ]
                 },
@@ -1302,12 +1314,18 @@
               "about": "Remove a range from an IP pool used for Oxide services",
               "args": [
                 {
+                  "long": "first"
+                },
+                {
                   "long": "json-body",
                   "help": "Path to a file that contains the full json body."
                 },
                 {
                   "long": "json-body-template",
                   "help": "XXX"
+                },
+                {
+                  "long": "last"
                 }
               ]
             },

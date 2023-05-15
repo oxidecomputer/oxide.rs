@@ -62,31 +62,57 @@ async fn main() {
 
 struct OxideOverride;
 
+impl OxideOverride {
+    fn ip_range(matches: &clap::ArgMatches) -> Result<IpRange, String> {
+        let first = matches.get_one::<IpAddr>("first").unwrap();
+        let last = matches.get_one::<IpAddr>("last").unwrap();
+
+        match (first, last) {
+            (IpAddr::V4(first), IpAddr::V4(last)) => {
+                let range: Ipv4Range = Ipv4Range::builder().first(*first).last(*last).try_into()?;
+                Ok(range.into())
+            }
+            (IpAddr::V6(first), IpAddr::V6(last)) => {
+                let range: Ipv6Range = Ipv6Range::builder().first(*first).last(*last).try_into()?;
+                Ok(range.into())
+            }
+            _ => Err("first and last must either both be ipv4 or ipv6 addresses".to_string()),
+        }
+    }
+}
+
 impl CliOverride for OxideOverride {
+    // Deal with all the operations that require an `IpPool` as input
     fn execute_ip_pool_range_add(
         &self,
         matches: &clap::ArgMatches,
         request: &mut oxide_api::builder::IpPoolRangeAdd,
     ) -> Result<(), String> {
-        let first = matches.get_one::<IpAddr>("first").unwrap();
-        let last = matches.get_one::<IpAddr>("last").unwrap();
-
-        let range: IpRange = match (first, last) {
-            (IpAddr::V4(first), IpAddr::V4(last)) => {
-                let range: Ipv4Range = Ipv4Range::builder().first(*first).last(*last).try_into()?;
-                range.into()
-            }
-            (IpAddr::V6(first), IpAddr::V6(last)) => {
-                let range: Ipv6Range = Ipv6Range::builder().first(*first).last(*last).try_into()?;
-                range.into()
-            }
-            _ => {
-                return Err("first and last must either both be ipv4 or ipv6 addresses".to_string())
-            }
-        };
-
-        *request = request.to_owned().body(range);
-
+        *request = request.to_owned().body(Self::ip_range(matches)?);
+        Ok(())
+    }
+    fn execute_ip_pool_range_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut oxide_api::builder::IpPoolRangeRemove,
+    ) -> Result<(), String> {
+        *request = request.to_owned().body(Self::ip_range(matches)?);
+        Ok(())
+    }
+    fn execute_ip_pool_service_range_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut oxide_api::builder::IpPoolServiceRangeAdd,
+    ) -> Result<(), String> {
+        *request = request.to_owned().body(Self::ip_range(matches)?);
+        Ok(())
+    }
+    fn execute_ip_pool_service_range_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut oxide_api::builder::IpPoolServiceRangeRemove,
+    ) -> Result<(), String> {
+        *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
     }
 

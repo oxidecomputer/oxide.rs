@@ -58,7 +58,11 @@ impl<'a> Default for NewCli<'a> {
 
             let cmd = Cli::get_command(op);
             let cmd = match op {
-                CliCommand::IpPoolRangeAdd => cmd
+                CliCommand::IpPoolRangeAdd
+                | CliCommand::IpPoolRangeRemove
+                | CliCommand::IpPoolServiceRangeAdd
+                | CliCommand::IpPoolServiceRangeRemove => cmd
+                    .mut_arg("json-body", |arg| arg.required(false))
                     .arg(
                         clap::Arg::new("first")
                             .long("first")
@@ -75,8 +79,6 @@ impl<'a> Default for NewCli<'a> {
                     ),
 
                 CliCommand::SamlIdentityProviderCreate => cmd
-                    // We're filling in the missing required field so the full
-                    // body is no longer required.
                     .mut_arg("json-body", |arg| arg.required(false))
                     .arg(
                         clap::Arg::new("metadata-url")
