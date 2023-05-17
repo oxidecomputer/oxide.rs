@@ -214,7 +214,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceDelete => Some("instance delete"),
         CliCommand::InstanceMigrate => None, // TODO delete from API?
         CliCommand::InstanceReboot => Some("instance reboot"),
-        CliCommand::InstanceSerialConsole => None, // TODO not sure how to handle this
+        CliCommand::InstanceSerialConsole => None, // Special-cased
         CliCommand::InstanceSerialConsoleStream => None, // Ditto
         CliCommand::InstanceStart => Some("instance start"),
         CliCommand::InstanceStop => Some("instance stop"),
