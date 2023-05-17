@@ -4,6 +4,7 @@ oxide policy update
 oxide project policy update
 oxide system policy update
 oxide silo idp local user create
+oxide silo create
 oxide silo policy update
 oxide vpc firewall-rules update
 oxide vpc router route create
