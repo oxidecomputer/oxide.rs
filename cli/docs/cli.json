@@ -1116,11 +1116,6 @@
               "about": "Connect to an instance's serial console interactively.",
               "args": [
                 {
-                  "long": "byte-offset",
-                  "short": "b",
-                  "help": "The offset since boot (or if negative, the current end of the buffered data) from which to retrieve output history"
-                },
-                {
                   "long": "escape-prefix-length",
                   "help": "The number of bytes from the beginning of the escape string to pass to the VM before beginning to buffer inputs until a mismatch. Defaults to 0, such that input matching the escape string does not get sent to the VM at all until a non-matching character is typed. For example, to mimic the escape sequence for exiting SSH (\"\\n~.\"), you may pass `-e '^M~.' --escape-prefix-length=1` such that newline gets sent to the VM immediately while still continuing to match the rest of the sequence"
                 },
@@ -1133,6 +1128,11 @@
                   "long": "instance",
                   "short": "i",
                   "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "most-recent",
+                  "short": "m",
+                  "help": "The number of bytes from the most recent output to retrieve as context before connecting to the interactive session directly"
                 },
                 {
                   "long": "project",

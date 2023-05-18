@@ -50,10 +50,10 @@ pub struct CmdInstanceSerialConsole {
     #[clap(long, short)]
     project: Option<NameOrId>,
 
-    /// The offset since boot (or if negative, the current end of the
-    /// buffered data) from which to retrieve output history.
+    /// The number of bytes from the most recent output to retrieve as context
+    /// before connecting to the interactive session directly.
     #[clap(long, short)]
-    byte_offset: Option<i64>,
+    most_recent: Option<u64>,
 
     /// If this sequence of bytes is typed, the client will exit.
     /// Defaults to "^]^C" (Ctrl+], Ctrl+C). Note that the string passed
@@ -106,10 +106,8 @@ impl RunnableCmd for CmdInstanceSerialConsole {
             anyhow::bail!("Must provide --project when specifying instance by name rather than ID");
         }
 
-        match self.byte_offset {
-            Some(x) if x >= 0 => req = req.from_start(x as u64),
-            Some(x) => req = req.most_recent(-x as u64),
-            None => {}
+        if let Some(x) = self.most_recent {
+            req = req.most_recent(x);
         }
 
         let upgraded = req.send().await.map_err(|e| e.into_untyped())?.into_inner();
