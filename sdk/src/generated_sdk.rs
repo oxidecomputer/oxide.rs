@@ -4151,6 +4151,9 @@ pub mod types {
         pub discoverable: bool,
         pub identity_mode: SiloIdentityMode,
         pub name: Name,
+        /// Initial TLS certificates to be used for the new Silo's console and
+        /// API endpoints.  These should be valid for the Silo's DNS name(s).
+        pub tls_certificates: Vec<CertificateCreate>,
     }
 
     impl From<&SiloCreate> for SiloCreate {
@@ -12219,6 +12222,7 @@ pub mod types {
             discoverable: Result<bool, String>,
             identity_mode: Result<super::SiloIdentityMode, String>,
             name: Result<super::Name, String>,
+            tls_certificates: Result<Vec<super::CertificateCreate>, String>,
         }
 
         impl Default for SiloCreate {
@@ -12229,6 +12233,7 @@ pub mod types {
                     discoverable: Err("no value supplied for discoverable".to_string()),
                     identity_mode: Err("no value supplied for identity_mode".to_string()),
                     name: Err("no value supplied for name".to_string()),
+                    tls_certificates: Err("no value supplied for tls_certificates".to_string()),
                 }
             }
         }
@@ -12287,6 +12292,19 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
+            pub fn tls_certificates<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::CertificateCreate>>,
+                T::Error: std::fmt::Display,
+            {
+                self.tls_certificates = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for tls_certificates: {}",
+                        e
+                    )
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<SiloCreate> for super::SiloCreate {
@@ -12298,6 +12316,7 @@ pub mod types {
                     discoverable: value.discoverable?,
                     identity_mode: value.identity_mode?,
                     name: value.name?,
+                    tls_certificates: value.tls_certificates?,
                 })
             }
         }
@@ -12310,6 +12329,7 @@ pub mod types {
                     discoverable: Ok(value.discoverable),
                     identity_mode: Ok(value.identity_mode),
                     name: Ok(value.name),
+                    tls_certificates: Ok(value.tls_certificates),
                 }
             }
         }
