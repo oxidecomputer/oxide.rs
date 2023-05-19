@@ -108,18 +108,17 @@ fn test_instance_serial_console() {
         then.switching_protocols();
     });
 
-    // should fail to call tcgetattr on the non-tty stdout, with differing
+    // should fail to get the mode of the non-tty stdout, with differing
     // specifics on what the syscall number is / how the IOErrors format
     // depending on the OS.
     #[cfg(target_family = "unix")]
     let pred = predicate::str::starts_with(
         "error: Failed to set raw mode: tcgetattr(stdout, termios) call failed:",
     );
-
-    // non-unix should unconditionally fail
-    #[cfg(not(target_family = "unix"))]
-    let pred =
-        expectorate::eq_file_or_panic("tests/data/test_instance_serial_console_windows.stdout");
+    #[cfg(target_family = "windows")]
+    let pred = predicate::str::starts_with(
+        "error: Failed to set raw mode: GetConsoleMode(hConsoleHandle, lpMode) call failed:",
+    );
 
     Command::cargo_bin("oxide")
         .unwrap()
@@ -137,9 +136,5 @@ fn test_instance_serial_console() {
         .failure()
         .stdout(pred);
 
-    if cfg!(target_family = "unix") {
-        mock.assert();
-    } else {
-        mock.assert_hits(0);
-    }
+    mock.assert();
 }
