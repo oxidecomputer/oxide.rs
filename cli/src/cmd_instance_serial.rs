@@ -52,8 +52,8 @@ pub struct CmdInstanceSerialConsole {
 
     /// The number of bytes from the most recent output to retrieve as context
     /// before connecting to the interactive session directly.
-    #[clap(long, short)]
-    most_recent: Option<u64>,
+    #[clap(long, short, default_value = "262144")]
+    most_recent: u64,
 
     /// If this sequence of bytes is typed, the client will exit.
     /// Defaults to "^]^C" (Ctrl+], Ctrl+C). Note that the string passed
@@ -96,7 +96,8 @@ impl RunnableCmd for CmdInstanceSerialConsole {
         let mut req = ctx
             .client()
             .instance_serial_console_stream()
-            .instance(self.instance.clone());
+            .instance(self.instance.clone())
+            .most_recent(self.most_recent);
 
         if let Some(value) = &self.project {
             req = req.project(value.clone());
@@ -104,10 +105,6 @@ impl RunnableCmd for CmdInstanceSerialConsole {
             // on the server end, the connection is upgraded by the server
             // before the worker thread attempts to look up the instance.
             anyhow::bail!("Must provide --project when specifying instance by name rather than ID");
-        }
-
-        if let Some(x) = self.most_recent {
-            req = req.most_recent(x);
         }
 
         let upgraded = req.send().await.map_err(|e| e.into_untyped())?.into_inner();
