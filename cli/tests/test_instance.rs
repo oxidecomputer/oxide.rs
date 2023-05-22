@@ -132,7 +132,7 @@ fn test_instance_serial_console() {
         .arg("miniwheats")
         .arg("--project")
         .arg("influences")
-        .arg("--byte-offset=-3")
+        .arg("--most-recent=3")
         .assert()
         .failure()
         .stdout(pred);
