@@ -570,6 +570,26 @@
               ]
             },
             {
+              "name": "instance-list",
+              "about": "List instances running on a given sled",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "sled-id",
+                  "help": "ID of the sled"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
               "name": "list",
               "about": "List sleds",
               "args": [
