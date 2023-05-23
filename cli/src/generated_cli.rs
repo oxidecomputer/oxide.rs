@@ -94,6 +94,7 @@ impl Cli {
             CliCommand::SledList => Self::cli_sled_list(),
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
+            CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
             CliCommand::SwitchList => Self::cli_switch_list(),
             CliCommand::SwitchView => Self::cli_switch_view(),
             CliCommand::SiloIdentityProviderList => Self::cli_silo_identity_provider_list(),
@@ -1400,9 +1401,7 @@ impl Cli {
                     .help(
                         "Maximum number of bytes of buffered serial console contents to return. \
                          If the requested range runs to the end of the available buffer, the data \
-                         returned will be shorter than `max_bytes`. This parameter is only useful \
-                         for the non-streaming GET request for serial console data, and *ignored* \
-                         by the streaming websocket endpoint.",
+                         returned will be shorter than `max_bytes`.",
                     ),
             )
             .arg(
@@ -1439,31 +1438,6 @@ impl Cli {
                     .help("Name or ID of the instance"),
             )
             .arg(
-                clap::Arg::new("from-start")
-                    .long("from-start")
-                    .value_parser(clap::value_parser!(u64))
-                    .required(false)
-                    .help(
-                        "Character index in the serial buffer from which to read, counting the \
-                         bytes output since instance start. If this is not provided, \
-                         `most_recent` must be provided, and if this *is* provided, `most_recent` \
-                         must *not* be provided.",
-                    ),
-            )
-            .arg(
-                clap::Arg::new("max-bytes")
-                    .long("max-bytes")
-                    .value_parser(clap::value_parser!(u64))
-                    .required(false)
-                    .help(
-                        "Maximum number of bytes of buffered serial console contents to return. \
-                         If the requested range runs to the end of the available buffer, the data \
-                         returned will be shorter than `max_bytes`. This parameter is only useful \
-                         for the non-streaming GET request for serial console data, and *ignored* \
-                         by the streaming websocket endpoint.",
-                    ),
-            )
-            .arg(
                 clap::Arg::new("most-recent")
                     .long("most-recent")
                     .value_parser(clap::value_parser!(u64))
@@ -1471,7 +1445,7 @@ impl Cli {
                     .help(
                         "Character index in the serial buffer from which to read, counting \
                          *backward* from the most recently buffered data retrieved from the \
-                         instance. (See note on `from_start` about mutual exclusivity)",
+                         instance.",
                     ),
             )
             .arg(
@@ -2309,6 +2283,36 @@ impl Cli {
                     .required(false),
             )
             .about("List physical disks attached to sleds")
+    }
+
+    pub fn cli_sled_instance_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("sled-id")
+                    .long("sled-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the sled"),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List instances running on a given sled")
     }
 
     pub fn cli_switch_list() -> clap::Command {
@@ -4505,6 +4509,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::SledPhysicalDiskList => {
                 self.execute_sled_physical_disk_list(matches).await;
             }
+            CliCommand::SledInstanceList => {
+                self.execute_sled_instance_list(matches).await;
+            }
             CliCommand::SwitchList => {
                 self.execute_switch_list(matches).await;
             }
@@ -5930,14 +5937,6 @@ impl<T: CliOverride> Cli<T> {
             request = request.instance(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<u64>("from-start") {
-            request = request.from_start(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<u64>("max-bytes") {
-            request = request.max_bytes(value.clone());
-        }
-
         if let Some(value) = matches.get_one::<u64>("most-recent") {
             request = request.most_recent(value.clone());
         }
@@ -6826,6 +6825,40 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_sled_physical_disk_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_sled_instance_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.sled_instance_list();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
+            request = request.sled_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_sled_instance_list(matches, &mut request)
             .unwrap();
         let mut stream = request.stream();
         loop {
@@ -9433,6 +9466,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_sled_instance_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SledInstanceList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_switch_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10064,6 +10105,7 @@ pub enum CliCommand {
     SledList,
     SledView,
     SledPhysicalDiskList,
+    SledInstanceList,
     SwitchList,
     SwitchView,
     SiloIdentityProviderList,
@@ -10212,6 +10254,7 @@ impl CliCommand {
             CliCommand::SledList,
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
+            CliCommand::SledInstanceList,
             CliCommand::SwitchList,
             CliCommand::SwitchView,
             CliCommand::SiloIdentityProviderList,

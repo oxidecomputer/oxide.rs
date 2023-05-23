@@ -333,6 +333,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::RackView => Some("hardware rack view"),
         CliCommand::SledList => Some("hardware sled list"),
         CliCommand::SledView => Some("hardware sled view"),
+        CliCommand::SledInstanceList => Some("hardware sled instance-list"),
         CliCommand::PhysicalDiskList => Some("hardware disk list"),
         CliCommand::SledPhysicalDiskList => Some("hardware sled disk-led"),
 
