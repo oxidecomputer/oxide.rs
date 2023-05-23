@@ -3881,25 +3881,29 @@ pub mod types {
     /// objects
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SamlIdentityProvider {
-        /// service provider endpoint where the response will be sent
+        /// Service provider endpoint where the response will be sent
         pub acs_url: String,
         /// human-readable free-form text about a resource
         pub description: String,
+        /// If set, attributes with this name will be considered to denote a
+        /// user's group membership, where the values will be the group names.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub group_attribute_name: Option<String>,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        /// idp's entity id
+        /// IdP's entity id
         pub idp_entity_id: String,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        /// optional request signing public certificate (base64 encoded der
+        /// Optional request signing public certificate (base64 encoded der
         /// file)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub public_cert: Option<String>,
-        /// service provider endpoint where the idp should send log out requests
+        /// Service provider endpoint where the idp should send log out requests
         pub slo_url: String,
-        /// sp's client id
+        /// SP's client id
         pub sp_client_id: String,
-        /// customer's technical contact for saml configuration
+        /// Customer's technical contact for saml configuration
         pub technical_contact_email: String,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
@@ -4411,6 +4415,60 @@ pub mod types {
     impl Sled {
         pub fn builder() -> builder::Sled {
             builder::Sled::default()
+        }
+    }
+
+    /// An operator's view of an instance running on a given sled
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SledInstance {
+        pub active_sled_id: uuid::Uuid,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        pub memory: i64,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub migration_id: Option<uuid::Uuid>,
+        pub name: Name,
+        pub ncpus: i64,
+        pub project_name: Name,
+        pub silo_name: Name,
+        pub state: InstanceState,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&SledInstance> for SledInstance {
+        fn from(value: &SledInstance) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SledInstance {
+        pub fn builder() -> builder::SledInstance {
+            builder::SledInstance::default()
+        }
+    }
+
+    /// A single page of results
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SledInstanceResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<SledInstance>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&SledInstanceResultsPage> for SledInstanceResultsPage {
+        fn from(value: &SledInstanceResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SledInstanceResultsPage {
+        pub fn builder() -> builder::SledInstanceResultsPage {
+            builder::SledInstanceResultsPage::default()
         }
     }
 
@@ -11722,6 +11780,7 @@ pub mod types {
         pub struct SamlIdentityProvider {
             acs_url: Result<String, String>,
             description: Result<String, String>,
+            group_attribute_name: Result<Option<String>, String>,
             id: Result<uuid::Uuid, String>,
             idp_entity_id: Result<String, String>,
             name: Result<super::Name, String>,
@@ -11738,6 +11797,7 @@ pub mod types {
                 Self {
                     acs_url: Err("no value supplied for acs_url".to_string()),
                     description: Err("no value supplied for description".to_string()),
+                    group_attribute_name: Ok(Default::default()),
                     id: Err("no value supplied for id".to_string()),
                     idp_entity_id: Err("no value supplied for idp_entity_id".to_string()),
                     name: Err("no value supplied for name".to_string()),
@@ -11772,6 +11832,19 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn group_attribute_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.group_attribute_name = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for group_attribute_name: {}",
+                        e
+                    )
+                });
                 self
             }
             pub fn id<T>(mut self, value: T) -> Self
@@ -11875,6 +11948,7 @@ pub mod types {
                 Ok(Self {
                     acs_url: value.acs_url?,
                     description: value.description?,
+                    group_attribute_name: value.group_attribute_name?,
                     id: value.id?,
                     idp_entity_id: value.idp_entity_id?,
                     name: value.name?,
@@ -11893,6 +11967,7 @@ pub mod types {
                 Self {
                     acs_url: Ok(value.acs_url),
                     description: Ok(value.description),
+                    group_attribute_name: Ok(value.group_attribute_name),
                     id: Ok(value.id),
                     idp_entity_id: Ok(value.idp_entity_id),
                     name: Ok(value.name),
@@ -12641,6 +12716,246 @@ pub mod types {
                     time_modified: Ok(value.time_modified),
                     usable_hardware_threads: Ok(value.usable_hardware_threads),
                     usable_physical_ram: Ok(value.usable_physical_ram),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SledInstance {
+            active_sled_id: Result<uuid::Uuid, String>,
+            id: Result<uuid::Uuid, String>,
+            memory: Result<i64, String>,
+            migration_id: Result<Option<uuid::Uuid>, String>,
+            name: Result<super::Name, String>,
+            ncpus: Result<i64, String>,
+            project_name: Result<super::Name, String>,
+            silo_name: Result<super::Name, String>,
+            state: Result<super::InstanceState, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for SledInstance {
+            fn default() -> Self {
+                Self {
+                    active_sled_id: Err("no value supplied for active_sled_id".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    memory: Err("no value supplied for memory".to_string()),
+                    migration_id: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    ncpus: Err("no value supplied for ncpus".to_string()),
+                    project_name: Err("no value supplied for project_name".to_string()),
+                    silo_name: Err("no value supplied for silo_name".to_string()),
+                    state: Err("no value supplied for state".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl SledInstance {
+            pub fn active_sled_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.active_sled_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for active_sled_id: {}", e)
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn memory<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.memory = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
+                self
+            }
+            pub fn migration_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.migration_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for migration_id: {}", e)
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn ncpus<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.ncpus = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ncpus: {}", e));
+                self
+            }
+            pub fn project_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.project_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for project_name: {}", e)
+                });
+                self
+            }
+            pub fn silo_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_name: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::InstanceState>,
+                T::Error: std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SledInstance> for super::SledInstance {
+            type Error = String;
+            fn try_from(value: SledInstance) -> Result<Self, String> {
+                Ok(Self {
+                    active_sled_id: value.active_sled_id?,
+                    id: value.id?,
+                    memory: value.memory?,
+                    migration_id: value.migration_id?,
+                    name: value.name?,
+                    ncpus: value.ncpus?,
+                    project_name: value.project_name?,
+                    silo_name: value.silo_name?,
+                    state: value.state?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::SledInstance> for SledInstance {
+            fn from(value: super::SledInstance) -> Self {
+                Self {
+                    active_sled_id: Ok(value.active_sled_id),
+                    id: Ok(value.id),
+                    memory: Ok(value.memory),
+                    migration_id: Ok(value.migration_id),
+                    name: Ok(value.name),
+                    ncpus: Ok(value.ncpus),
+                    project_name: Ok(value.project_name),
+                    silo_name: Ok(value.silo_name),
+                    state: Ok(value.state),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SledInstanceResultsPage {
+            items: Result<Vec<super::SledInstance>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for SledInstanceResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SledInstanceResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SledInstance>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SledInstanceResultsPage> for super::SledInstanceResultsPage {
+            type Error = String;
+            fn try_from(value: SledInstanceResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::SledInstanceResultsPage> for SledInstanceResultsPage {
+            fn from(value: super::SledInstanceResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
                 }
             }
         }
@@ -16705,9 +17020,6 @@ pub trait ClientInstancesExt {
     /// - `max_bytes`: Maximum number of bytes of buffered serial console
     ///   contents to return. If the requested range runs to the end of the
     ///   available buffer, the data returned will be shorter than `max_bytes`.
-    ///   This parameter is only useful for the non-streaming GET request for
-    ///   serial console data, and *ignored* by the streaming websocket
-    ///   endpoint.
     /// - `most_recent`: Character index in the serial buffer from which to
     ///   read, counting *backward* from the most recently buffered data
     ///   retrieved from the instance. (See note on `from_start` about mutual
@@ -16732,27 +17044,14 @@ pub trait ClientInstancesExt {
     ///
     /// Arguments:
     /// - `instance`: Name or ID of the instance
-    /// - `from_start`: Character index in the serial buffer from which to read,
-    ///   counting the bytes output since instance start. If this is not
-    ///   provided, `most_recent` must be provided, and if this *is* provided,
-    ///   `most_recent` must *not* be provided.
-    /// - `max_bytes`: Maximum number of bytes of buffered serial console
-    ///   contents to return. If the requested range runs to the end of the
-    ///   available buffer, the data returned will be shorter than `max_bytes`.
-    ///   This parameter is only useful for the non-streaming GET request for
-    ///   serial console data, and *ignored* by the streaming websocket
-    ///   endpoint.
     /// - `most_recent`: Character index in the serial buffer from which to
     ///   read, counting *backward* from the most recently buffered data
-    ///   retrieved from the instance. (See note on `from_start` about mutual
-    ///   exclusivity)
+    ///   retrieved from the instance.
     /// - `project`: Name or ID of the project, only required if `instance` is
     ///   provided as a `Name`
     /// ```ignore
     /// let response = client.instance_serial_console_stream()
     ///    .instance(instance)
-    ///    .from_start(from_start)
-    ///    .max_bytes(max_bytes)
     ///    .most_recent(most_recent)
     ///    .project(project)
     ///    .send()
@@ -17721,6 +18020,26 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList;
+    /// List instances running on a given sled
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/instances`
+    ///
+    /// Arguments:
+    /// - `sled_id`: ID of the sled
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.sled_instance_list()
+    ///    .sled_id(sled_id)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn sled_instance_list(&self) -> builder::SledInstanceList;
     /// List switches
     ///
     /// Sends a `GET` request to `/v1/system/hardware/switches`
@@ -18362,6 +18681,10 @@ impl ClientSystemExt for Client {
 
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList {
         builder::SledPhysicalDiskList::new(self)
+    }
+
+    fn sled_instance_list(&self) -> builder::SledInstanceList {
+        builder::SledInstanceList::new(self)
     }
 
     fn switch_list(&self) -> builder::SwitchList {
@@ -23189,8 +23512,6 @@ pub mod builder {
     pub struct InstanceSerialConsoleStream<'a> {
         client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
-        from_start: Result<Option<u64>, String>,
-        max_bytes: Result<Option<u64>, String>,
         most_recent: Result<Option<u64>, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -23200,8 +23521,6 @@ pub mod builder {
             Self {
                 client,
                 instance: Err("instance was not initialized".to_string()),
-                from_start: Ok(None),
-                max_bytes: Ok(None),
                 most_recent: Ok(None),
                 project: Ok(None),
             }
@@ -23214,28 +23533,6 @@ pub mod builder {
             self.instance = value
                 .try_into()
                 .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
-            self
-        }
-
-        pub fn from_start<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<u64>,
-        {
-            self.from_start = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `u64` for from_start failed".to_string());
-            self
-        }
-
-        pub fn max_bytes<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<u64>,
-        {
-            self.max_bytes = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `u64` for max_bytes failed".to_string());
             self
         }
 
@@ -23269,14 +23566,10 @@ pub mod builder {
             let Self {
                 client,
                 instance,
-                from_start,
-                max_bytes,
                 most_recent,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
-            let from_start = from_start.map_err(Error::InvalidRequest)?;
-            let max_bytes = max_bytes.map_err(Error::InvalidRequest)?;
             let most_recent = most_recent.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -23284,13 +23577,7 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
-            if let Some(v) = &from_start {
-                query.push(("from_start", v.to_string()));
-            }
-            if let Some(v) = &max_bytes {
-                query.push(("max_bytes", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(2usize);
             if let Some(v) = &most_recent {
                 query.push(("most_recent", v.to_string()));
             }
@@ -26494,6 +26781,183 @@ pub mod builder {
         pub fn stream(
             self,
         ) -> impl futures::Stream<Item = Result<types::PhysicalDisk, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::sled_instance_list`]
+    ///
+    /// [`ClientSystemExt::sled_instance_list`]: super::ClientSystemExt::sled_instance_list
+    #[derive(Debug, Clone)]
+    pub struct SledInstanceList<'a> {
+        client: &'a super::Client,
+        sled_id: Result<uuid::Uuid, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> SledInstanceList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                sled_id: Err("sled_id was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn sled_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.sled_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for sled_id failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/hardware/sleds/{sled_id}/instances`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SledInstanceResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                sled_id,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let sled_id = sled_id.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/sleds/{}/instances",
+                client.baseurl,
+                encode_path(&sled_id.to_string()),
+            );
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to
+        /// `/v1/system/hardware/sleds/{sled_id}/instances`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SledInstance, Error<types::Error>>> + Unpin + 'a
         {
             use futures::StreamExt;
             use futures::TryFutureExt;
