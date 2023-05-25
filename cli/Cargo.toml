@@ -20,6 +20,8 @@ dirs = { workspace = true }
 env_logger = { workspace = true }
 futures = { workspace = true }
 http = { workspace = true }
+# TODO remove
+hyper = "0.14.26"
 indicatif = { workspace = true }
 log = { workspace = true }
 oauth2 = { workspace = true }
@@ -41,11 +43,13 @@ uuid = { workspace = true }
 
 [dev-dependencies]
 assert_cmd = { workspace = true }
+dropshot = { workspace = true }
 expectorate = { workspace = true }
 httpmock = { workspace = true }
 oxide-httpmock = { workspace = true }
 predicates = { workspace = true }
 pretty_assertions = { workspace = true }
+rcgen = { workspace = true }
 rand = { workspace = true, features = ["small_rng"] }
 serial_test = { workspace = true }
 tempfile = { workspace = true }
