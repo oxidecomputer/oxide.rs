@@ -492,165 +492,6 @@
       ]
     },
     {
-      "name": "hardware",
-      "subcommands": [
-        {
-          "name": "disk",
-          "subcommands": [
-            {
-              "name": "list",
-              "about": "List physical disks",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "id_ascending"
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "rack",
-          "subcommands": [
-            {
-              "name": "list",
-              "about": "List racks",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "id_ascending"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "view",
-              "about": "Fetch a rack",
-              "args": [
-                {
-                  "long": "rack-id",
-                  "help": "The rack's unique ID."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "sled",
-          "subcommands": [
-            {
-              "name": "disk-led",
-              "about": "List physical disks attached to sleds",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "sled-id",
-                  "help": "ID of the sled"
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "id_ascending"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "instance-list",
-              "about": "List instances running on a given sled",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "sled-id",
-                  "help": "ID of the sled"
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "id_ascending"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "list",
-              "about": "List sleds",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "id_ascending"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "view",
-              "about": "Fetch a sled",
-              "args": [
-                {
-                  "long": "sled-id",
-                  "help": "ID of the sled"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "switch",
-          "subcommands": [
-            {
-              "name": "list",
-              "about": "List switches",
-              "args": [
-                {
-                  "long": "limit",
-                  "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "sort-by",
-                  "values": [
-                    "id_ascending"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "view",
-              "about": "Fetch a switch",
-              "args": [
-                {
-                  "long": "switch-id",
-                  "help": "ID of the switch"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
       "name": "image",
       "subcommands": [
         {
@@ -2019,6 +1860,473 @@
     {
       "name": "system",
       "subcommands": [
+        {
+          "name": "hardware",
+          "subcommands": [
+            {
+              "name": "disk",
+              "subcommands": [
+                {
+                  "name": "list",
+                  "about": "List physical disks",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "rack",
+              "subcommands": [
+                {
+                  "name": "list",
+                  "about": "List racks",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch a rack",
+                  "args": [
+                    {
+                      "long": "rack-id",
+                      "help": "The rack's unique ID."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "sled",
+              "subcommands": [
+                {
+                  "name": "disk-led",
+                  "about": "List physical disks attached to sleds",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "sled-id",
+                      "help": "ID of the sled"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "instance-list",
+                  "about": "List instances running on a given sled",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "sled-id",
+                      "help": "ID of the sled"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List sleds",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch a sled",
+                  "args": [
+                    {
+                      "long": "sled-id",
+                      "help": "ID of the sled"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "switch",
+              "subcommands": [
+                {
+                  "name": "list",
+                  "about": "List switches",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Fetch a switch",
+                  "args": [
+                    {
+                      "long": "switch-id",
+                      "help": "ID of the switch"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "switch-port",
+              "subcommands": [
+                {
+                  "name": "apply-settings",
+                  "about": "Apply switch port settings.",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "port",
+                      "help": "A name to use when selecting switch ports."
+                    },
+                    {
+                      "long": "port-settings",
+                      "help": "A name or id to use when applying switch port settings."
+                    },
+                    {
+                      "long": "rack-id",
+                      "help": "A rack id to use when selecting switch ports."
+                    },
+                    {
+                      "long": "switch-location",
+                      "help": "A switch location to use when selecting switch ports."
+                    }
+                  ]
+                },
+                {
+                  "name": "clear-settings",
+                  "about": "Clear switch port settings.",
+                  "args": [
+                    {
+                      "long": "port",
+                      "help": "A name to use when selecting switch ports."
+                    },
+                    {
+                      "long": "rack-id",
+                      "help": "A rack id to use when selecting switch ports."
+                    },
+                    {
+                      "long": "switch-location",
+                      "help": "A switch location to use when selecting switch ports."
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List switch ports.",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    },
+                    {
+                      "long": "switch-port-id",
+                      "help": "An optional switch port id to use when listing switch ports."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "networking",
+          "subcommands": [
+            {
+              "name": "address-lot",
+              "subcommands": [
+                {
+                  "name": "block",
+                  "subcommands": [
+                    {
+                      "name": "list",
+                      "about": "List the blocks in an address lot.",
+                      "args": [
+                        {
+                          "long": "address-lot",
+                          "help": "Name or ID of the address lot"
+                        },
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "sort-by",
+                          "values": [
+                            "id_ascending"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "create",
+                  "about": "Create an address lot.",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "kind",
+                      "values": [
+                        "infra",
+                        "pool"
+                      ],
+                      "help": "The kind of address lot to create."
+                    },
+                    {
+                      "long": "name"
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete an address lot.",
+                  "args": [
+                    {
+                      "long": "address-lot",
+                      "help": "Name or ID of the address lot"
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List address lots.",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "name_ascending",
+                        "name_descending",
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "loopback-address",
+              "subcommands": [
+                {
+                  "name": "create",
+                  "about": "Create a loopback address.",
+                  "args": [
+                    {
+                      "long": "address",
+                      "help": "The address to create."
+                    },
+                    {
+                      "long": "address-lot",
+                      "help": "The name or id of the address lot this loopback address will pull an address from."
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "mask",
+                      "help": "The subnet mask to use for the address."
+                    },
+                    {
+                      "long": "rack-id",
+                      "help": "The containing the switch this loopback address will be configured on."
+                    },
+                    {
+                      "long": "switch-location",
+                      "help": "The location of the switch within the rack this loopback address will be configured on."
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete a loopback address.",
+                  "args": [
+                    {
+                      "long": "address",
+                      "help": "The IP address and subnet mask to use when selecting the loopback address."
+                    },
+                    {
+                      "long": "rack-id",
+                      "help": "The rack to use when selecting the loopback address."
+                    },
+                    {
+                      "long": "subnet-mask",
+                      "help": "The IP address and subnet mask to use when selecting the loopback address."
+                    },
+                    {
+                      "long": "switch-location",
+                      "help": "The switch location to use when selecting the loopback address."
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "Get loopback addresses, optionally filtering by id.",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "switch-port-settings",
+              "subcommands": [
+                {
+                  "name": "create",
+                  "about": "Create port settings.",
+                  "args": [
+                    {
+                      "long": "description"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "name"
+                    }
+                  ]
+                },
+                {
+                  "name": "delete",
+                  "about": "Delete port settings.",
+                  "args": [
+                    {
+                      "long": "port-settings",
+                      "help": "An optional name or id to use when selecting port settings."
+                    }
+                  ]
+                },
+                {
+                  "name": "list",
+                  "about": "List port settings.",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    },
+                    {
+                      "long": "port-settings",
+                      "help": "An optional name or id to use when selecting port settings."
+                    },
+                    {
+                      "long": "sort-by",
+                      "values": [
+                        "name_ascending",
+                        "name_descending",
+                        "id_ascending"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Get information about a switch port.",
+                  "args": [
+                    {
+                      "long": "port",
+                      "help": "A name or id to use when selecting switch port settings info objects."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
         {
           "name": "policy",
           "subcommands": [
