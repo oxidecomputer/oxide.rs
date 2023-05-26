@@ -2015,7 +2015,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.3.0"
-source = "git+https://github.com/oxidecomputer/progenitor#6af969081a475d85e686960b917f2ee6e24251e9"
+source = "git+https://github.com/oxidecomputer/progenitor#25799724f3cc6a42bc6fec041fabd313b7b572a9"
 dependencies = [
  "progenitor-client",
  "progenitor-impl",
@@ -2026,7 +2026,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.3.0"
-source = "git+https://github.com/oxidecomputer/progenitor#6af969081a475d85e686960b917f2ee6e24251e9"
+source = "git+https://github.com/oxidecomputer/progenitor#25799724f3cc6a42bc6fec041fabd313b7b572a9"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2040,7 +2040,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.3.0"
-source = "git+https://github.com/oxidecomputer/progenitor#6af969081a475d85e686960b917f2ee6e24251e9"
+source = "git+https://github.com/oxidecomputer/progenitor#25799724f3cc6a42bc6fec041fabd313b7b572a9"
 dependencies = [
  "getopts",
  "heck",
@@ -2062,7 +2062,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.3.0"
-source = "git+https://github.com/oxidecomputer/progenitor#6af969081a475d85e686960b917f2ee6e24251e9"
+source = "git+https://github.com/oxidecomputer/progenitor#25799724f3cc6a42bc6fec041fabd313b7b572a9"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -2799,7 +2799,7 @@ dependencies = [
 [[package]]
 name = "thouart"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/thouart.git#f346ad55bb3bc7f3d4455534d66a93db8ee1c18a"
+source = "git+https://github.com/oxidecomputer/thouart.git#02a2bfed045ccadab7da119f7ee7b1687744d718"
 dependencies = [
  "futures",
  "libc",
@@ -2807,6 +2807,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-tungstenite",
+ "winapi",
 ]
 
 [[package]]
