@@ -85,12 +85,6 @@ pub struct CmdInstanceSerialConsole {
 
 #[async_trait]
 impl RunnableCmd for CmdInstanceSerialConsole {
-    #[cfg(not(target_family = "unix"))]
-    async fn run(&self, _ctx: &crate::context::Context) -> Result<()> {
-        anyhow::bail!("Sorry, this subcommand is only supported on Unix-like platforms");
-    }
-
-    #[cfg(target_family = "unix")]
     // cli process becomes an interactive remote shell.
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         let mut req = ctx
@@ -192,15 +186,8 @@ impl RunnableCmd for CmdInstanceSerialHistory {
         if self.json {
             println!("{}", serde_json::to_string(&data)?);
         } else {
-            #[cfg(not(target_family = "unix"))]
-            anyhow::bail!(
-                "Sorry, only --json mode is available for this subcommand on this platform"
-            );
-            #[cfg(target_family = "unix")]
-            {
-                let mut tty = thouart::Console::new_stdio(None).await?;
-                tty.write_stdout(&data.data).await?;
-            }
+            let mut tty = thouart::Console::new_stdio(None).await?;
+            tty.write_stdout(&data.data).await?;
         }
         Ok(())
     }
