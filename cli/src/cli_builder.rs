@@ -294,6 +294,42 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::VpcSubnetDelete => Some("vpc subnet delete"),
         CliCommand::VpcSubnetListNetworkInterfaces => Some("vpc subnet nic list"),
 
+        CliCommand::NetworkingAddressLotList => Some("system networking address-lot list"),
+        CliCommand::NetworkingAddressLotCreate => Some("system networking address-lot create"),
+        CliCommand::NetworkingAddressLotDelete => Some("system networking address-lot delete"),
+        CliCommand::NetworkingAddressLotBlockList => {
+            Some("system networking address-lot block list")
+        }
+        CliCommand::NetworkingLoopbackAddressList => {
+            Some("system networking loopback-address list")
+        }
+        CliCommand::NetworkingLoopbackAddressCreate => {
+            Some("system networking loopback-address create")
+        }
+        CliCommand::NetworkingLoopbackAddressDelete => {
+            Some("system networking loopback-address delete")
+        }
+
+        CliCommand::NetworkingSwitchPortList => Some("system hardware switch-port list"),
+        CliCommand::NetworkingSwitchPortApplySettings => {
+            Some("system hardware switch-port apply-settings")
+        }
+        CliCommand::NetworkingSwitchPortClearSettings => {
+            Some("system hardware switch-port clear-settings")
+        }
+        CliCommand::NetworkingSwitchPortSettingsList => {
+            Some("system networking switch-port-settings list")
+        }
+        CliCommand::NetworkingSwitchPortSettingsCreate => {
+            Some("system networking switch-port-settings create")
+        }
+        CliCommand::NetworkingSwitchPortSettingsDelete => {
+            Some("system networking switch-port-settings delete")
+        }
+        CliCommand::NetworkingSwitchPortSettingsInfo => {
+            Some("system networking switch-port-settings view")
+        }
+
         // Subcommand: disk
         CliCommand::DiskList => Some("disk list"),
         CliCommand::DiskCreate => Some("disk create"),
@@ -327,15 +363,15 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CertificateView => Some("certificate view"),
         CliCommand::CertificateDelete => Some("certificate delete"),
 
-        CliCommand::SwitchList => Some("hardware switch list"),
-        CliCommand::SwitchView => Some("hardware switch view"),
-        CliCommand::RackList => Some("hardware rack list"),
-        CliCommand::RackView => Some("hardware rack view"),
-        CliCommand::SledList => Some("hardware sled list"),
-        CliCommand::SledView => Some("hardware sled view"),
-        CliCommand::SledInstanceList => Some("hardware sled instance-list"),
-        CliCommand::PhysicalDiskList => Some("hardware disk list"),
-        CliCommand::SledPhysicalDiskList => Some("hardware sled disk-led"),
+        CliCommand::SwitchList => Some("system hardware switch list"),
+        CliCommand::SwitchView => Some("system hardware switch view"),
+        CliCommand::RackList => Some("system hardware rack list"),
+        CliCommand::RackView => Some("system hardware rack view"),
+        CliCommand::SledList => Some("system hardware sled list"),
+        CliCommand::SledView => Some("system hardware sled view"),
+        CliCommand::SledInstanceList => Some("system hardware sled instance-list"),
+        CliCommand::PhysicalDiskList => Some("system hardware disk list"),
+        CliCommand::SledPhysicalDiskList => Some("system hardware sled disk-led"),
 
         CliCommand::SystemPolicyView => Some("system policy view"),
         CliCommand::SystemPolicyUpdate => Some("system policy update"),
