@@ -95,6 +95,13 @@ impl Cli {
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
+            CliCommand::NetworkingSwitchPortList => Self::cli_networking_switch_port_list(),
+            CliCommand::NetworkingSwitchPortApplySettings => {
+                Self::cli_networking_switch_port_apply_settings()
+            }
+            CliCommand::NetworkingSwitchPortClearSettings => {
+                Self::cli_networking_switch_port_clear_settings()
+            }
             CliCommand::SwitchList => Self::cli_switch_list(),
             CliCommand::SwitchView => Self::cli_switch_view(),
             CliCommand::SiloIdentityProviderList => Self::cli_silo_identity_provider_list(),
@@ -116,6 +123,33 @@ impl Cli {
             CliCommand::IpPoolServiceRangeAdd => Self::cli_ip_pool_service_range_add(),
             CliCommand::IpPoolServiceRangeRemove => Self::cli_ip_pool_service_range_remove(),
             CliCommand::SystemMetric => Self::cli_system_metric(),
+            CliCommand::NetworkingAddressLotList => Self::cli_networking_address_lot_list(),
+            CliCommand::NetworkingAddressLotCreate => Self::cli_networking_address_lot_create(),
+            CliCommand::NetworkingAddressLotDelete => Self::cli_networking_address_lot_delete(),
+            CliCommand::NetworkingAddressLotBlockList => {
+                Self::cli_networking_address_lot_block_list()
+            }
+            CliCommand::NetworkingLoopbackAddressList => {
+                Self::cli_networking_loopback_address_list()
+            }
+            CliCommand::NetworkingLoopbackAddressCreate => {
+                Self::cli_networking_loopback_address_create()
+            }
+            CliCommand::NetworkingLoopbackAddressDelete => {
+                Self::cli_networking_loopback_address_delete()
+            }
+            CliCommand::NetworkingSwitchPortSettingsList => {
+                Self::cli_networking_switch_port_settings_list()
+            }
+            CliCommand::NetworkingSwitchPortSettingsCreate => {
+                Self::cli_networking_switch_port_settings_create()
+            }
+            CliCommand::NetworkingSwitchPortSettingsDelete => {
+                Self::cli_networking_switch_port_settings_delete()
+            }
+            CliCommand::NetworkingSwitchPortSettingsInfo => {
+                Self::cli_networking_switch_port_settings_info()
+            }
             CliCommand::SystemPolicyView => Self::cli_system_policy_view(),
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
             CliCommand::RoleList => Self::cli_role_list(),
@@ -2315,6 +2349,109 @@ impl Cli {
             .about("List instances running on a given sled")
     }
 
+    pub fn cli_networking_switch_port_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("switch-port-id")
+                    .long("switch-port-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(false)
+                    .help("An optional switch port id to use when listing switch ports."),
+            )
+            .about("List switch ports.")
+    }
+
+    pub fn cli_networking_switch_port_apply_settings() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("port")
+                    .long("port")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A name to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("A rack id to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("switch-location")
+                    .long("switch-location")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A switch location to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("port-settings")
+                    .long("port-settings")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help("A name or id to use when applying switch port settings."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Apply switch port settings.")
+    }
+
+    pub fn cli_networking_switch_port_clear_settings() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("port")
+                    .long("port")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A name to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("A rack id to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("switch-location")
+                    .long("switch-location")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A switch location to use when selecting switch ports."),
+            )
+            .about("Clear switch port settings.")
+    }
+
     pub fn cli_switch_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -2877,6 +3014,326 @@ impl Cli {
                     .help("An inclusive start time of metrics."),
             )
             .about("Access metrics data")
+    }
+
+    pub fn cli_networking_address_lot_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List address lots.")
+    }
+
+    pub fn cli_networking_address_lot_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("kind")
+                    .long("kind")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::AddressLotKind::Infra.to_string(),
+                            types::AddressLotKind::Pool.to_string(),
+                        ]),
+                        |s| types::AddressLotKind::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("The kind of address lot to create."),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create an address lot.")
+    }
+
+    pub fn cli_networking_address_lot_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("address-lot")
+                    .long("address-lot")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the address lot"),
+            )
+            .about("Delete an address lot.")
+    }
+
+    pub fn cli_networking_address_lot_block_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("address-lot")
+                    .long("address-lot")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the address lot"),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List the blocks in an address lot.")
+    }
+
+    pub fn cli_networking_loopback_address_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("Get loopback addresses, optionally filtering by id.")
+    }
+
+    pub fn cli_networking_loopback_address_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("address")
+                    .long("address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("The address to create."),
+            )
+            .arg(
+                clap::Arg::new("address-lot")
+                    .long("address-lot")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The name or id of the address lot this loopback address will pull an \
+                         address from.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("mask")
+                    .long("mask")
+                    .value_parser(clap::value_parser!(u8))
+                    .required_unless_present("json-body")
+                    .help("The subnet mask to use for the address."),
+            )
+            .arg(
+                clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required_unless_present("json-body")
+                    .help("The containing the switch this loopback address will be configured on."),
+            )
+            .arg(
+                clap::Arg::new("switch-location")
+                    .long("switch-location")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The location of the switch within the rack this loopback address will be \
+                         configured on.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a loopback address.")
+    }
+
+    pub fn cli_networking_loopback_address_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("The rack to use when selecting the loopback address."),
+            )
+            .arg(
+                clap::Arg::new("switch-location")
+                    .long("switch-location")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("The switch location to use when selecting the loopback address."),
+            )
+            .arg(
+                clap::Arg::new("address")
+                    .long("address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required(true)
+                    .help(
+                        "The IP address and subnet mask to use when selecting the loopback \
+                         address.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("subnet-mask")
+                    .long("subnet-mask")
+                    .value_parser(clap::value_parser!(u8))
+                    .required(true)
+                    .help(
+                        "The IP address and subnet mask to use when selecting the loopback \
+                         address.",
+                    ),
+            )
+            .about("Delete a loopback address.")
+    }
+
+    pub fn cli_networking_switch_port_settings_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("port-settings")
+                    .long("port-settings")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("An optional name or id to use when selecting port settings."),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List port settings.")
+    }
+
+    pub fn cli_networking_switch_port_settings_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create port settings.")
+    }
+
+    pub fn cli_networking_switch_port_settings_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("port-settings")
+                    .long("port-settings")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("An optional name or id to use when selecting port settings."),
+            )
+            .about("Delete port settings.")
+    }
+
+    pub fn cli_networking_switch_port_settings_info() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("port")
+                    .long("port")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting switch port settings info objects."),
+            )
+            .about("Get information about a switch port.")
     }
 
     pub fn cli_system_policy_view() -> clap::Command {
@@ -4512,6 +4969,17 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::SledInstanceList => {
                 self.execute_sled_instance_list(matches).await;
             }
+            CliCommand::NetworkingSwitchPortList => {
+                self.execute_networking_switch_port_list(matches).await;
+            }
+            CliCommand::NetworkingSwitchPortApplySettings => {
+                self.execute_networking_switch_port_apply_settings(matches)
+                    .await;
+            }
+            CliCommand::NetworkingSwitchPortClearSettings => {
+                self.execute_networking_switch_port_clear_settings(matches)
+                    .await;
+            }
             CliCommand::SwitchList => {
                 self.execute_switch_list(matches).await;
             }
@@ -4574,6 +5042,46 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SystemMetric => {
                 self.execute_system_metric(matches).await;
+            }
+            CliCommand::NetworkingAddressLotList => {
+                self.execute_networking_address_lot_list(matches).await;
+            }
+            CliCommand::NetworkingAddressLotCreate => {
+                self.execute_networking_address_lot_create(matches).await;
+            }
+            CliCommand::NetworkingAddressLotDelete => {
+                self.execute_networking_address_lot_delete(matches).await;
+            }
+            CliCommand::NetworkingAddressLotBlockList => {
+                self.execute_networking_address_lot_block_list(matches)
+                    .await;
+            }
+            CliCommand::NetworkingLoopbackAddressList => {
+                self.execute_networking_loopback_address_list(matches).await;
+            }
+            CliCommand::NetworkingLoopbackAddressCreate => {
+                self.execute_networking_loopback_address_create(matches)
+                    .await;
+            }
+            CliCommand::NetworkingLoopbackAddressDelete => {
+                self.execute_networking_loopback_address_delete(matches)
+                    .await;
+            }
+            CliCommand::NetworkingSwitchPortSettingsList => {
+                self.execute_networking_switch_port_settings_list(matches)
+                    .await;
+            }
+            CliCommand::NetworkingSwitchPortSettingsCreate => {
+                self.execute_networking_switch_port_settings_create(matches)
+                    .await;
+            }
+            CliCommand::NetworkingSwitchPortSettingsDelete => {
+                self.execute_networking_switch_port_settings_delete(matches)
+                    .await;
+            }
+            CliCommand::NetworkingSwitchPortSettingsInfo => {
+                self.execute_networking_switch_port_settings_info(matches)
+                    .await;
             }
             CliCommand::SystemPolicyView => {
                 self.execute_system_policy_view(matches).await;
@@ -6877,6 +7385,107 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_switch_port_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_switch_port_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("switch-port-id") {
+            request = request.switch_port_id(value.clone());
+        }
+
+        self.over
+            .execute_networking_switch_port_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_apply_settings(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_switch_port_apply_settings();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SwitchPortApplySettings>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("port") {
+            request = request.port(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+            request = request.switch_location(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
+            request = request.body_map(|body| body.port_settings(value.clone()))
+        }
+
+        self.over
+            .execute_networking_switch_port_apply_settings(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_clear_settings(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_switch_port_clear_settings();
+        if let Some(value) = matches.get_one::<types::Name>("port") {
+            request = request.port(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+            request = request.switch_location(value.clone());
+        }
+
+        self.over
+            .execute_networking_switch_port_clear_settings(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_switch_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.switch_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -7459,6 +8068,334 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_system_metric(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_address_lot_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_address_lot_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_networking_address_lot_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_networking_address_lot_create(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_address_lot_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::AddressLotCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::AddressLotKind>("kind") {
+            request = request.body_map(|body| body.kind(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        self.over
+            .execute_networking_address_lot_create(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_address_lot_delete(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_address_lot_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
+            request = request.address_lot(value.clone());
+        }
+
+        self.over
+            .execute_networking_address_lot_delete(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_address_lot_block_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_address_lot_block_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
+            request = request.address_lot(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_networking_address_lot_block_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_networking_loopback_address_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_loopback_address_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_networking_loopback_address_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_networking_loopback_address_create(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_loopback_address_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::LoopbackAddressCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
+            request = request.body_map(|body| body.address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
+            request = request.body_map(|body| body.address_lot(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u8>("mask") {
+            request = request.body_map(|body| body.mask(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.body_map(|body| body.rack_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+            request = request.body_map(|body| body.switch_location(value.clone()))
+        }
+
+        self.over
+            .execute_networking_loopback_address_create(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_loopback_address_delete(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_loopback_address_delete();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+            request = request.switch_location(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
+            request = request.address(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<u8>("subnet-mask") {
+            request = request.subnet_mask(value.clone());
+        }
+
+        self.over
+            .execute_networking_loopback_address_delete(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_settings_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_switch_port_settings_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
+            request = request.port_settings(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_networking_switch_port_settings_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_settings_create(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_switch_port_settings_create();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SwitchPortSettingsCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        self.over
+            .execute_networking_switch_port_settings_create(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_settings_delete(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_switch_port_settings_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
+            request = request.port_settings(value.clone());
+        }
+
+        self.over
+            .execute_networking_switch_port_settings_delete(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_settings_info(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_switch_port_settings_info();
+        if let Some(value) = matches.get_one::<types::NameOrId>("port") {
+            request = request.port(value.clone());
+        }
+
+        self.over
+            .execute_networking_switch_port_settings_info(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -9474,6 +10411,30 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_networking_switch_port_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_apply_settings(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortApplySettings,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_clear_settings(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortClearSettings,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_switch_list(
         &self,
         matches: &clap::ArgMatches,
@@ -9638,6 +10599,94 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SystemMetric,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_address_lot_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingAddressLotList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_address_lot_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingAddressLotCreate,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_address_lot_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingAddressLotDelete,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_address_lot_block_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingAddressLotBlockList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_loopback_address_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingLoopbackAddressList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_loopback_address_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingLoopbackAddressCreate,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_loopback_address_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingLoopbackAddressDelete,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_settings_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortSettingsList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_settings_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortSettingsCreate,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_settings_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortSettingsDelete,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_switch_port_settings_info(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortSettingsInfo,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -10106,6 +11155,9 @@ pub enum CliCommand {
     SledView,
     SledPhysicalDiskList,
     SledInstanceList,
+    NetworkingSwitchPortList,
+    NetworkingSwitchPortApplySettings,
+    NetworkingSwitchPortClearSettings,
     SwitchList,
     SwitchView,
     SiloIdentityProviderList,
@@ -10127,6 +11179,17 @@ pub enum CliCommand {
     IpPoolServiceRangeAdd,
     IpPoolServiceRangeRemove,
     SystemMetric,
+    NetworkingAddressLotList,
+    NetworkingAddressLotCreate,
+    NetworkingAddressLotDelete,
+    NetworkingAddressLotBlockList,
+    NetworkingLoopbackAddressList,
+    NetworkingLoopbackAddressCreate,
+    NetworkingLoopbackAddressDelete,
+    NetworkingSwitchPortSettingsList,
+    NetworkingSwitchPortSettingsCreate,
+    NetworkingSwitchPortSettingsDelete,
+    NetworkingSwitchPortSettingsInfo,
     SystemPolicyView,
     SystemPolicyUpdate,
     RoleList,
@@ -10255,6 +11318,9 @@ impl CliCommand {
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
             CliCommand::SledInstanceList,
+            CliCommand::NetworkingSwitchPortList,
+            CliCommand::NetworkingSwitchPortApplySettings,
+            CliCommand::NetworkingSwitchPortClearSettings,
             CliCommand::SwitchList,
             CliCommand::SwitchView,
             CliCommand::SiloIdentityProviderList,
@@ -10276,6 +11342,17 @@ impl CliCommand {
             CliCommand::IpPoolServiceRangeAdd,
             CliCommand::IpPoolServiceRangeRemove,
             CliCommand::SystemMetric,
+            CliCommand::NetworkingAddressLotList,
+            CliCommand::NetworkingAddressLotCreate,
+            CliCommand::NetworkingAddressLotDelete,
+            CliCommand::NetworkingAddressLotBlockList,
+            CliCommand::NetworkingLoopbackAddressList,
+            CliCommand::NetworkingLoopbackAddressCreate,
+            CliCommand::NetworkingLoopbackAddressDelete,
+            CliCommand::NetworkingSwitchPortSettingsList,
+            CliCommand::NetworkingSwitchPortSettingsCreate,
+            CliCommand::NetworkingSwitchPortSettingsDelete,
+            CliCommand::NetworkingSwitchPortSettingsInfo,
             CliCommand::SystemPolicyView,
             CliCommand::SystemPolicyUpdate,
             CliCommand::RoleList,

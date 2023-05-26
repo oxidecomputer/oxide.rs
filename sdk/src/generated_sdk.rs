@@ -9,6 +9,280 @@ pub mod types {
     use serde::{Deserialize, Serialize};
     #[allow(unused_imports)]
     use std::convert::TryFrom;
+    /// An address tied to an address lot.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Address {
+        /// The address and prefix length of this address.
+        pub address: IpNet,
+        /// The address lot this address is drawn from.
+        pub address_lot: NameOrId,
+    }
+
+    impl From<&Address> for Address {
+        fn from(value: &Address) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Address {
+        pub fn builder() -> builder::Address {
+            builder::Address::default()
+        }
+    }
+
+    /// A set of addresses associated with a port configuration.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AddressConfig {
+        /// The set of addresses assigned to the port configuration.
+        pub addresses: Vec<Address>,
+    }
+
+    impl From<&AddressConfig> for AddressConfig {
+        fn from(value: &AddressConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AddressConfig {
+        pub fn builder() -> builder::AddressConfig {
+            builder::AddressConfig::default()
+        }
+    }
+
+    /// Represents an address lot object, containing the id of the lot that can
+    /// be used in other API calls.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AddressLot {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&AddressLot> for AddressLot {
+        fn from(value: &AddressLot) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AddressLot {
+        pub fn builder() -> builder::AddressLot {
+            builder::AddressLot::default()
+        }
+    }
+
+    /// An address lot block is a part of an address lot and contains a range of
+    /// addresses. The range is inclusive.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AddressLotBlock {
+        /// The first address of the block (inclusive).
+        pub first_address: std::net::IpAddr,
+        /// The id of the address lot block.
+        pub id: uuid::Uuid,
+        /// The last address of the block (inclusive).
+        pub last_address: std::net::IpAddr,
+    }
+
+    impl From<&AddressLotBlock> for AddressLotBlock {
+        fn from(value: &AddressLotBlock) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AddressLotBlock {
+        pub fn builder() -> builder::AddressLotBlock {
+            builder::AddressLotBlock::default()
+        }
+    }
+
+    /// Parameters for creating an address lot block. Fist and last addresses
+    /// are inclusive.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AddressLotBlockCreate {
+        /// The first address in the lot (inclusive).
+        pub first_address: std::net::IpAddr,
+        /// The last address in the lot (inclusive).
+        pub last_address: std::net::IpAddr,
+    }
+
+    impl From<&AddressLotBlockCreate> for AddressLotBlockCreate {
+        fn from(value: &AddressLotBlockCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AddressLotBlockCreate {
+        pub fn builder() -> builder::AddressLotBlockCreate {
+            builder::AddressLotBlockCreate::default()
+        }
+    }
+
+    /// A single page of results
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AddressLotBlockResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<AddressLotBlock>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&AddressLotBlockResultsPage> for AddressLotBlockResultsPage {
+        fn from(value: &AddressLotBlockResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AddressLotBlockResultsPage {
+        pub fn builder() -> builder::AddressLotBlockResultsPage {
+            builder::AddressLotBlockResultsPage::default()
+        }
+    }
+
+    /// Parameters for creating an address lot.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AddressLotCreate {
+        /// The blocks to add along with the new address lot.
+        pub blocks: Vec<AddressLotBlockCreate>,
+        pub description: String,
+        /// The kind of address lot to create.
+        pub kind: AddressLotKind,
+        pub name: Name,
+    }
+
+    impl From<&AddressLotCreate> for AddressLotCreate {
+        fn from(value: &AddressLotCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AddressLotCreate {
+        pub fn builder() -> builder::AddressLotCreate {
+            builder::AddressLotCreate::default()
+        }
+    }
+
+    /// An address lot and associated blocks resulting from creating an address
+    /// lot.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AddressLotCreateResponse {
+        /// The address lot blocks that were created.
+        pub blocks: Vec<AddressLotBlock>,
+        /// The address lot that was created.
+        pub lot: AddressLot,
+    }
+
+    impl From<&AddressLotCreateResponse> for AddressLotCreateResponse {
+        fn from(value: &AddressLotCreateResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AddressLotCreateResponse {
+        pub fn builder() -> builder::AddressLotCreateResponse {
+            builder::AddressLotCreateResponse::default()
+        }
+    }
+
+    /// The kind associated with an address lot.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum AddressLotKind {
+        /// Infrastructure address lots are used for network infrastructure like
+        /// addresses assigned to rack switches.
+        #[serde(rename = "infra")]
+        Infra,
+        /// Pool address lots are used by IP pools.
+        #[serde(rename = "pool")]
+        Pool,
+    }
+
+    impl From<&AddressLotKind> for AddressLotKind {
+        fn from(value: &AddressLotKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for AddressLotKind {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Infra => "infra".to_string(),
+                Self::Pool => "pool".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for AddressLotKind {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "infra" => Ok(Self::Infra),
+                "pool" => Ok(Self::Pool),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for AddressLotKind {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for AddressLotKind {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for AddressLotKind {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    /// A single page of results
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AddressLotResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<AddressLot>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&AddressLotResultsPage> for AddressLotResultsPage {
+        fn from(value: &AddressLotResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AddressLotResultsPage {
+        pub fn builder() -> builder::AddressLotResultsPage {
+            builder::AddressLotResultsPage::default()
+        }
+    }
+
     /// Properties that uniquely identify an Oxide hardware component
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Baseboard {
@@ -26,6 +300,39 @@ pub mod types {
     impl Baseboard {
         pub fn builder() -> builder::Baseboard {
             builder::Baseboard::default()
+        }
+    }
+
+    /// A BGP peer configuration for an interface. Includes the set of
+    /// announcements that will be advertised to the peer identified by `addr`.
+    /// The `bgp_config` parameter is a reference to global BGP parameters. The
+    /// `interface_name` indicates what interface the peer should be contacted
+    /// on.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpPeerConfig {
+        /// The address of the host to peer with.
+        pub addr: std::net::IpAddr,
+        /// The set of announcements advertised by the peer.
+        pub bgp_announce_set: NameOrId,
+        /// The global BGP configuration used for establishing a session with
+        /// this peer.
+        pub bgp_config: NameOrId,
+        /// The name of interface to peer on. This is relative to the port
+        /// configuration this BGP peer configuration is a part of. For example
+        /// this value could be phy0 to refer to a primary physical interface.
+        /// Or it could be vlan47 to refer to a VLAN interface.
+        pub interface_name: String,
+    }
+
+    impl From<&BgpPeerConfig> for BgpPeerConfig {
+        fn from(value: &BgpPeerConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpPeerConfig {
+        pub fn builder() -> builder::BgpPeerConfig {
+            builder::BgpPeerConfig::default()
         }
     }
 
@@ -2414,7 +2721,7 @@ pub mod types {
             if regress::Regex::new(
                 "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.\
                  ){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/\
-                 ([8-9]|1[0-9]|2[0-9]|3[0-2])$",
+                 ([0-9]|1[0-9]|2[0-9]|3[0-2])$",
             )
             .unwrap()
             .find(value)
@@ -2423,7 +2730,7 @@ pub mod types {
                 return Err("doesn't match pattern \
                             \"^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.\
                             ){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/\
-                            ([8-9]|1[0-9]|2[0-9]|3[0-2])$\"");
+                            ([0-9]|1[0-9]|2[0-9]|3[0-2])$\"");
             }
             Ok(Self(value.to_string()))
         }
@@ -2511,7 +2818,7 @@ pub mod types {
         fn from_str(value: &str) -> Result<Self, &'static str> {
             if regress::Regex::new(
                 "^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,\
-                 4}:){1,6}:)\\/([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
+                 4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
             )
             .unwrap()
             .find(value)
@@ -2519,8 +2826,8 @@ pub mod types {
             {
                 return Err("doesn't match pattern \
                             \"^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,\
-                            4}|([0-9a-fA-F]{1,4}:){1,6}:)\\/\
-                            ([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$\"");
+                            4}|([0-9a-fA-F]{1,4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/\
+                            ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$\"");
             }
             Ok(Self(value.to_string()))
         }
@@ -2653,6 +2960,132 @@ pub mod types {
             String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: &'static str| <D::Error as serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    /// Switch link configuration.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct LinkConfig {
+        /// The link-layer discovery protocol (LLDP) configuration for the link.
+        pub lldp: LldpServiceConfig,
+        /// Maximum transmission unit for the link.
+        pub mtu: u16,
+    }
+
+    impl From<&LinkConfig> for LinkConfig {
+        fn from(value: &LinkConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl LinkConfig {
+        pub fn builder() -> builder::LinkConfig {
+            builder::LinkConfig::default()
+        }
+    }
+
+    /// The LLDP configuration associated with a port. LLDP may be either
+    /// enabled or disabled, if enabled, an LLDP configuration must be provided
+    /// by name or id.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct LldpServiceConfig {
+        /// Whether or not LLDP is enabled.
+        pub enabled: bool,
+        /// A reference to the LLDP configuration used. Must not be `None` when
+        /// `enabled` is `true`.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub lldp_config: Option<NameOrId>,
+    }
+
+    impl From<&LldpServiceConfig> for LldpServiceConfig {
+        fn from(value: &LldpServiceConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl LldpServiceConfig {
+        pub fn builder() -> builder::LldpServiceConfig {
+            builder::LldpServiceConfig::default()
+        }
+    }
+
+    /// A loopback address is an address that is assigned to a rack switch but
+    /// is not associated with any particular port.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct LoopbackAddress {
+        /// The loopback IP address and prefix length.
+        pub address: IpNet,
+        /// The address lot block this address came from.
+        pub address_lot_block_id: uuid::Uuid,
+        /// The id of the loopback address.
+        pub id: uuid::Uuid,
+        /// The id of the rack where this loopback address is assigned.
+        pub rack_id: uuid::Uuid,
+        /// Switch location where this loopback address is assigned.
+        pub switch_location: String,
+    }
+
+    impl From<&LoopbackAddress> for LoopbackAddress {
+        fn from(value: &LoopbackAddress) -> Self {
+            value.clone()
+        }
+    }
+
+    impl LoopbackAddress {
+        pub fn builder() -> builder::LoopbackAddress {
+            builder::LoopbackAddress::default()
+        }
+    }
+
+    /// Parameters for creating a loopback address on a particular rack switch.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct LoopbackAddressCreate {
+        /// The address to create.
+        pub address: std::net::IpAddr,
+        /// The name or id of the address lot this loopback address will pull an
+        /// address from.
+        pub address_lot: NameOrId,
+        /// The subnet mask to use for the address.
+        pub mask: u8,
+        /// The containing the switch this loopback address will be configured
+        /// on.
+        pub rack_id: uuid::Uuid,
+        /// The location of the switch within the rack this loopback address
+        /// will be configured on.
+        pub switch_location: Name,
+    }
+
+    impl From<&LoopbackAddressCreate> for LoopbackAddressCreate {
+        fn from(value: &LoopbackAddressCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl LoopbackAddressCreate {
+        pub fn builder() -> builder::LoopbackAddressCreate {
+            builder::LoopbackAddressCreate::default()
+        }
+    }
+
+    /// A single page of results
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct LoopbackAddressResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<LoopbackAddress>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&LoopbackAddressResultsPage> for LoopbackAddressResultsPage {
+        fn from(value: &LoopbackAddressResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl LoopbackAddressResultsPage {
+        pub fn builder() -> builder::LoopbackAddressResultsPage {
+            builder::LoopbackAddressResultsPage::default()
         }
     }
 
@@ -3607,6 +4040,46 @@ pub mod types {
     impl RoleResultsPage {
         pub fn builder() -> builder::RoleResultsPage {
             builder::RoleResultsPage::default()
+        }
+    }
+
+    /// A route to a destination network through a gateway address.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Route {
+        /// The route destination.
+        pub dst: IpNet,
+        /// The route gateway.
+        pub gw: std::net::IpAddr,
+    }
+
+    impl From<&Route> for Route {
+        fn from(value: &Route) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Route {
+        pub fn builder() -> builder::Route {
+            builder::Route::default()
+        }
+    }
+
+    /// Route configuration data associated with a switch port configuration.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct RouteConfig {
+        /// The set of routes assigned to a switch port.
+        pub routes: Vec<Route>,
+    }
+
+    impl From<&RouteConfig> for RouteConfig {
+        fn from(value: &RouteConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl RouteConfig {
+        pub fn builder() -> builder::RouteConfig {
+            builder::RouteConfig::default()
         }
     }
 
@@ -4760,6 +5233,478 @@ pub mod types {
         }
     }
 
+    /// A layer-3 switch interface configuration. When IPv6 is enabled, a link
+    /// local address will be created for the interface.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchInterfaceConfig {
+        /// What kind of switch interface this configuration represents.
+        pub kind: SwitchInterfaceKind,
+        /// Whether or not IPv6 is enabled.
+        pub v6_enabled: bool,
+    }
+
+    impl From<&SwitchInterfaceConfig> for SwitchInterfaceConfig {
+        fn from(value: &SwitchInterfaceConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchInterfaceConfig {
+        pub fn builder() -> builder::SwitchInterfaceConfig {
+            builder::SwitchInterfaceConfig::default()
+        }
+    }
+
+    /// Indicates the kind for a switch interface.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type", content = "vid")]
+    pub enum SwitchInterfaceKind {
+        #[serde(rename = "primary")]
+        Primary,
+        /// VLAN interfaces allow physical interfaces to be multiplexed onto
+        /// multiple logical links, each distinguished by a 12-bit 802.1Q
+        /// Ethernet tag.
+        #[serde(rename = "vlan")]
+        Vlan(u16),
+        #[serde(rename = "loopback")]
+        Loopback,
+    }
+
+    impl From<&SwitchInterfaceKind> for SwitchInterfaceKind {
+        fn from(value: &SwitchInterfaceKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<u16> for SwitchInterfaceKind {
+        fn from(value: u16) -> Self {
+            Self::Vlan(value)
+        }
+    }
+
+    /// A switch port represents a physical external port on a rack switch.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPort {
+        /// The id of the switch port.
+        pub id: uuid::Uuid,
+        /// The name of this switch port.
+        pub port_name: String,
+        /// The primary settings group of this switch port. Will be `None` until
+        /// this switch port is configured.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub port_settings_id: Option<uuid::Uuid>,
+        /// The rack this switch port belongs to.
+        pub rack_id: uuid::Uuid,
+        /// The switch location of this switch port.
+        pub switch_location: String,
+    }
+
+    impl From<&SwitchPort> for SwitchPort {
+        fn from(value: &SwitchPort) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPort {
+        pub fn builder() -> builder::SwitchPort {
+            builder::SwitchPort::default()
+        }
+    }
+
+    /// An IP address configuration for a port settings object.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortAddressConfig {
+        /// The IP address and prefix.
+        pub address: IpNet,
+        /// The id of the address lot block this address is drawn from.
+        pub address_lot_block_id: uuid::Uuid,
+        /// The interface name this address belongs to.
+        pub interface_name: String,
+        /// The port settings object this address configuration belongs to.
+        pub port_settings_id: uuid::Uuid,
+    }
+
+    impl From<&SwitchPortAddressConfig> for SwitchPortAddressConfig {
+        fn from(value: &SwitchPortAddressConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortAddressConfig {
+        pub fn builder() -> builder::SwitchPortAddressConfig {
+            builder::SwitchPortAddressConfig::default()
+        }
+    }
+
+    /// Parameters for applying settings to switch ports.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortApplySettings {
+        /// A name or id to use when applying switch port settings.
+        pub port_settings: NameOrId,
+    }
+
+    impl From<&SwitchPortApplySettings> for SwitchPortApplySettings {
+        fn from(value: &SwitchPortApplySettings) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortApplySettings {
+        pub fn builder() -> builder::SwitchPortApplySettings {
+            builder::SwitchPortApplySettings::default()
+        }
+    }
+
+    /// A BGP peer configuration for a port settings object.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortBgpPeerConfig {
+        /// The address of the peer.
+        pub addr: std::net::IpAddr,
+        /// The id for the set of prefixes announced in this peer configuration.
+        pub bgp_announce_set_id: uuid::Uuid,
+        /// The id of the global BGP configuration referenced by this peer
+        /// configuration.
+        pub bgp_config_id: uuid::Uuid,
+        /// The interface name used to establish a peer session.
+        pub interface_name: String,
+        /// The port settings object this BGP configuration belongs to.
+        pub port_settings_id: uuid::Uuid,
+    }
+
+    impl From<&SwitchPortBgpPeerConfig> for SwitchPortBgpPeerConfig {
+        fn from(value: &SwitchPortBgpPeerConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortBgpPeerConfig {
+        pub fn builder() -> builder::SwitchPortBgpPeerConfig {
+            builder::SwitchPortBgpPeerConfig::default()
+        }
+    }
+
+    /// Physical switch port configuration.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortConfig {
+        /// Link geometry for the switch port.
+        pub geometry: SwitchPortGeometry,
+    }
+
+    impl From<&SwitchPortConfig> for SwitchPortConfig {
+        fn from(value: &SwitchPortConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortConfig {
+        pub fn builder() -> builder::SwitchPortConfig {
+            builder::SwitchPortConfig::default()
+        }
+    }
+
+    /// The link geometry associated with a switch port.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum SwitchPortGeometry {
+        /// The port contains a single QSFP28 link with four lanes.
+        #[serde(rename = "qsfp28x1")]
+        Qsfp28x1,
+        /// The port contains two QSFP28 links each with two lanes.
+        #[serde(rename = "qsfp28x2")]
+        Qsfp28x2,
+        /// The port contains four SFP28 links each with one lane.
+        #[serde(rename = "sfp28x4")]
+        Sfp28x4,
+    }
+
+    impl From<&SwitchPortGeometry> for SwitchPortGeometry {
+        fn from(value: &SwitchPortGeometry) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for SwitchPortGeometry {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Qsfp28x1 => "qsfp28x1".to_string(),
+                Self::Qsfp28x2 => "qsfp28x2".to_string(),
+                Self::Sfp28x4 => "sfp28x4".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for SwitchPortGeometry {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "qsfp28x1" => Ok(Self::Qsfp28x1),
+                "qsfp28x2" => Ok(Self::Qsfp28x2),
+                "sfp28x4" => Ok(Self::Sfp28x4),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for SwitchPortGeometry {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for SwitchPortGeometry {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for SwitchPortGeometry {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    /// A link configuration for a port settings object.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortLinkConfig {
+        /// The name of this link.
+        pub link_name: String,
+        /// The link-layer discovery protocol service configuration id for this
+        /// link.
+        pub lldp_service_config_id: uuid::Uuid,
+        /// The maximum transmission unit for this link.
+        pub mtu: u16,
+        /// The port settings this link configuration belongs to.
+        pub port_settings_id: uuid::Uuid,
+    }
+
+    impl From<&SwitchPortLinkConfig> for SwitchPortLinkConfig {
+        fn from(value: &SwitchPortLinkConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortLinkConfig {
+        pub fn builder() -> builder::SwitchPortLinkConfig {
+            builder::SwitchPortLinkConfig::default()
+        }
+    }
+
+    /// A single page of results
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<SwitchPort>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&SwitchPortResultsPage> for SwitchPortResultsPage {
+        fn from(value: &SwitchPortResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortResultsPage {
+        pub fn builder() -> builder::SwitchPortResultsPage {
+            builder::SwitchPortResultsPage::default()
+        }
+    }
+
+    /// A route configuration for a port settings object.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortRouteConfig {
+        /// The route's destination network.
+        pub dst: IpNet,
+        /// The route's gateway address.
+        pub gw: IpNet,
+        /// The interface name this route configuration is assigned to.
+        pub interface_name: String,
+        /// The port settings object this route configuration belongs to.
+        pub port_settings_id: uuid::Uuid,
+    }
+
+    impl From<&SwitchPortRouteConfig> for SwitchPortRouteConfig {
+        fn from(value: &SwitchPortRouteConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortRouteConfig {
+        pub fn builder() -> builder::SwitchPortRouteConfig {
+            builder::SwitchPortRouteConfig::default()
+        }
+    }
+
+    /// Represents a port settings object by containing its id. This id may be
+    /// used in other API calls to view and manage port settings. This is the
+    /// central object for configuring external networking. At face value this
+    /// likely seems off as there is only an `identity` member. However most
+    /// other configuration objects reference this object by id. This includes -
+    /// SwitchPortConfig - SwitchPortLinkConfig - LldpServiceConfig -
+    /// SwitchInterfaceConfig - SwitchVlanInterfaceConfig -
+    /// SwitchPortRouteConfig - SwitchPortBgpPeerConfig -
+    /// SwitchPortAddressConfig With the exception of the port configuration all
+    /// of these relationships are many to one. So SwitchPortSettings object can
+    /// contain several link configs, interface configs, route configs, etc.
+    ///
+    /// The relationships betwen these objects are futher described in RFD 267.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortSettings {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&SwitchPortSettings> for SwitchPortSettings {
+        fn from(value: &SwitchPortSettings) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortSettings {
+        pub fn builder() -> builder::SwitchPortSettings {
+            builder::SwitchPortSettings::default()
+        }
+    }
+
+    /// Parameters for creating switch port settings. Switch port settings are
+    /// the central data structure for setting up external networking. Switch
+    /// port settings include link, interface, route, address and dynamic
+    /// network protocol configuration.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortSettingsCreate {
+        pub addresses: std::collections::HashMap<String, AddressConfig>,
+        pub bgp_peers: std::collections::HashMap<String, BgpPeerConfig>,
+        pub description: String,
+        pub groups: Vec<NameOrId>,
+        pub interfaces: std::collections::HashMap<String, SwitchInterfaceConfig>,
+        pub links: std::collections::HashMap<String, LinkConfig>,
+        pub name: Name,
+        pub port_config: SwitchPortConfig,
+        pub routes: std::collections::HashMap<String, RouteConfig>,
+    }
+
+    impl From<&SwitchPortSettingsCreate> for SwitchPortSettingsCreate {
+        fn from(value: &SwitchPortSettingsCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortSettingsCreate {
+        pub fn builder() -> builder::SwitchPortSettingsCreate {
+            builder::SwitchPortSettingsCreate::default()
+        }
+    }
+
+    /// This structure maps a port settings object to a port settings groups.
+    /// Port settings objects may inherit settings from groups. This mapping
+    /// defines the relationship between settings objects and the groups they
+    /// reference.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortSettingsGroups {
+        /// The id of a port settings group being referenced by a port settings
+        /// object.
+        pub port_settings_group_id: uuid::Uuid,
+        /// The id of a port settings object referencing a port settings group.
+        pub port_settings_id: uuid::Uuid,
+    }
+
+    impl From<&SwitchPortSettingsGroups> for SwitchPortSettingsGroups {
+        fn from(value: &SwitchPortSettingsGroups) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortSettingsGroups {
+        pub fn builder() -> builder::SwitchPortSettingsGroups {
+            builder::SwitchPortSettingsGroups::default()
+        }
+    }
+
+    /// This structure contains all port settings information in one place. It's
+    /// a convenience data structure for getting a complete view of a particular
+    /// port's settings.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortSettingsInfo {
+        /// Layer 3 IP address settings.
+        pub addresses: Vec<SwitchPortAddressConfig>,
+        /// BGP peer settings.
+        pub bgp_peers: Vec<SwitchPortBgpPeerConfig>,
+        /// Switch port settings included from other switch port settings
+        /// groups.
+        pub groups: Vec<SwitchPortSettingsGroups>,
+        /// Layer 3 interface settings.
+        pub interfaces: Vec<SwitchInterfaceConfig>,
+        /// Link-layer discovery protocol (LLDP) settings.
+        pub link_lldp: Vec<LldpServiceConfig>,
+        /// Layer 2 link settings.
+        pub links: Vec<SwitchPortLinkConfig>,
+        /// Layer 1 physical port settings.
+        pub port: SwitchPortConfig,
+        /// IP route settings.
+        pub routes: Vec<SwitchPortRouteConfig>,
+        /// The primary switch port settings handle.
+        pub settings: SwitchPortSettings,
+        /// Vlan interface settings.
+        pub vlan_interfaces: Vec<SwitchVlanInterfaceConfig>,
+    }
+
+    impl From<&SwitchPortSettingsInfo> for SwitchPortSettingsInfo {
+        fn from(value: &SwitchPortSettingsInfo) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortSettingsInfo {
+        pub fn builder() -> builder::SwitchPortSettingsInfo {
+            builder::SwitchPortSettingsInfo::default()
+        }
+    }
+
+    /// A single page of results
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortSettingsResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<SwitchPortSettings>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&SwitchPortSettingsResultsPage> for SwitchPortSettingsResultsPage {
+        fn from(value: &SwitchPortSettingsResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortSettingsResultsPage {
+        pub fn builder() -> builder::SwitchPortSettingsResultsPage {
+            builder::SwitchPortSettingsResultsPage::default()
+        }
+    }
+
     /// A single page of results
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SwitchResultsPage {
@@ -4779,6 +5724,30 @@ pub mod types {
     impl SwitchResultsPage {
         pub fn builder() -> builder::SwitchResultsPage {
             builder::SwitchResultsPage::default()
+        }
+    }
+
+    /// A switch port VLAN interface configuration for a port settings object.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchVlanInterfaceConfig {
+        /// The switch interface configuration this VLAN interface configuration
+        /// belongs to.
+        pub interface_config_id: uuid::Uuid,
+        /// The virtual network id (VID) that distinguishes this interface and
+        /// is used for producing and consuming 802.1Q Ethernet tags. This field
+        /// has a maximum value of 4095 as 802.1Q tags are twelve bits.
+        pub vid: u16,
+    }
+
+    impl From<&SwitchVlanInterfaceConfig> for SwitchVlanInterfaceConfig {
+        fn from(value: &SwitchVlanInterfaceConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchVlanInterfaceConfig {
+        pub fn builder() -> builder::SwitchVlanInterfaceConfig {
+            builder::SwitchVlanInterfaceConfig::default()
         }
     }
 
@@ -6332,6 +7301,589 @@ pub mod types {
 
     pub mod builder {
         #[derive(Clone, Debug)]
+        pub struct Address {
+            address: Result<super::IpNet, String>,
+            address_lot: Result<super::NameOrId, String>,
+        }
+
+        impl Default for Address {
+            fn default() -> Self {
+                Self {
+                    address: Err("no value supplied for address".to_string()),
+                    address_lot: Err("no value supplied for address_lot".to_string()),
+                }
+            }
+        }
+
+        impl Address {
+            pub fn address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.address = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
+                self
+            }
+            pub fn address_lot<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.address_lot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address_lot: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Address> for super::Address {
+            type Error = String;
+            fn try_from(value: Address) -> Result<Self, String> {
+                Ok(Self {
+                    address: value.address?,
+                    address_lot: value.address_lot?,
+                })
+            }
+        }
+
+        impl From<super::Address> for Address {
+            fn from(value: super::Address) -> Self {
+                Self {
+                    address: Ok(value.address),
+                    address_lot: Ok(value.address_lot),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AddressConfig {
+            addresses: Result<Vec<super::Address>, String>,
+        }
+
+        impl Default for AddressConfig {
+            fn default() -> Self {
+                Self {
+                    addresses: Err("no value supplied for addresses".to_string()),
+                }
+            }
+        }
+
+        impl AddressConfig {
+            pub fn addresses<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Address>>,
+                T::Error: std::fmt::Display,
+            {
+                self.addresses = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for addresses: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AddressConfig> for super::AddressConfig {
+            type Error = String;
+            fn try_from(value: AddressConfig) -> Result<Self, String> {
+                Ok(Self {
+                    addresses: value.addresses?,
+                })
+            }
+        }
+
+        impl From<super::AddressConfig> for AddressConfig {
+            fn from(value: super::AddressConfig) -> Self {
+                Self {
+                    addresses: Ok(value.addresses),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AddressLot {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            name: Result<super::Name, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for AddressLot {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl AddressLot {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AddressLot> for super::AddressLot {
+            type Error = String;
+            fn try_from(value: AddressLot) -> Result<Self, String> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::AddressLot> for AddressLot {
+            fn from(value: super::AddressLot) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AddressLotBlock {
+            first_address: Result<std::net::IpAddr, String>,
+            id: Result<uuid::Uuid, String>,
+            last_address: Result<std::net::IpAddr, String>,
+        }
+
+        impl Default for AddressLotBlock {
+            fn default() -> Self {
+                Self {
+                    first_address: Err("no value supplied for first_address".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    last_address: Err("no value supplied for last_address".to_string()),
+                }
+            }
+        }
+
+        impl AddressLotBlock {
+            pub fn first_address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.first_address = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for first_address: {}", e)
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn last_address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.last_address = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_address: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AddressLotBlock> for super::AddressLotBlock {
+            type Error = String;
+            fn try_from(value: AddressLotBlock) -> Result<Self, String> {
+                Ok(Self {
+                    first_address: value.first_address?,
+                    id: value.id?,
+                    last_address: value.last_address?,
+                })
+            }
+        }
+
+        impl From<super::AddressLotBlock> for AddressLotBlock {
+            fn from(value: super::AddressLotBlock) -> Self {
+                Self {
+                    first_address: Ok(value.first_address),
+                    id: Ok(value.id),
+                    last_address: Ok(value.last_address),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AddressLotBlockCreate {
+            first_address: Result<std::net::IpAddr, String>,
+            last_address: Result<std::net::IpAddr, String>,
+        }
+
+        impl Default for AddressLotBlockCreate {
+            fn default() -> Self {
+                Self {
+                    first_address: Err("no value supplied for first_address".to_string()),
+                    last_address: Err("no value supplied for last_address".to_string()),
+                }
+            }
+        }
+
+        impl AddressLotBlockCreate {
+            pub fn first_address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.first_address = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for first_address: {}", e)
+                });
+                self
+            }
+            pub fn last_address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.last_address = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_address: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AddressLotBlockCreate> for super::AddressLotBlockCreate {
+            type Error = String;
+            fn try_from(value: AddressLotBlockCreate) -> Result<Self, String> {
+                Ok(Self {
+                    first_address: value.first_address?,
+                    last_address: value.last_address?,
+                })
+            }
+        }
+
+        impl From<super::AddressLotBlockCreate> for AddressLotBlockCreate {
+            fn from(value: super::AddressLotBlockCreate) -> Self {
+                Self {
+                    first_address: Ok(value.first_address),
+                    last_address: Ok(value.last_address),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AddressLotBlockResultsPage {
+            items: Result<Vec<super::AddressLotBlock>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for AddressLotBlockResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AddressLotBlockResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::AddressLotBlock>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AddressLotBlockResultsPage> for super::AddressLotBlockResultsPage {
+            type Error = String;
+            fn try_from(value: AddressLotBlockResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::AddressLotBlockResultsPage> for AddressLotBlockResultsPage {
+            fn from(value: super::AddressLotBlockResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AddressLotCreate {
+            blocks: Result<Vec<super::AddressLotBlockCreate>, String>,
+            description: Result<String, String>,
+            kind: Result<super::AddressLotKind, String>,
+            name: Result<super::Name, String>,
+        }
+
+        impl Default for AddressLotCreate {
+            fn default() -> Self {
+                Self {
+                    blocks: Err("no value supplied for blocks".to_string()),
+                    description: Err("no value supplied for description".to_string()),
+                    kind: Err("no value supplied for kind".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                }
+            }
+        }
+
+        impl AddressLotCreate {
+            pub fn blocks<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::AddressLotBlockCreate>>,
+                T::Error: std::fmt::Display,
+            {
+                self.blocks = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for blocks: {}", e));
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::AddressLotKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AddressLotCreate> for super::AddressLotCreate {
+            type Error = String;
+            fn try_from(value: AddressLotCreate) -> Result<Self, String> {
+                Ok(Self {
+                    blocks: value.blocks?,
+                    description: value.description?,
+                    kind: value.kind?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl From<super::AddressLotCreate> for AddressLotCreate {
+            fn from(value: super::AddressLotCreate) -> Self {
+                Self {
+                    blocks: Ok(value.blocks),
+                    description: Ok(value.description),
+                    kind: Ok(value.kind),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AddressLotCreateResponse {
+            blocks: Result<Vec<super::AddressLotBlock>, String>,
+            lot: Result<super::AddressLot, String>,
+        }
+
+        impl Default for AddressLotCreateResponse {
+            fn default() -> Self {
+                Self {
+                    blocks: Err("no value supplied for blocks".to_string()),
+                    lot: Err("no value supplied for lot".to_string()),
+                }
+            }
+        }
+
+        impl AddressLotCreateResponse {
+            pub fn blocks<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::AddressLotBlock>>,
+                T::Error: std::fmt::Display,
+            {
+                self.blocks = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for blocks: {}", e));
+                self
+            }
+            pub fn lot<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::AddressLot>,
+                T::Error: std::fmt::Display,
+            {
+                self.lot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for lot: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AddressLotCreateResponse> for super::AddressLotCreateResponse {
+            type Error = String;
+            fn try_from(value: AddressLotCreateResponse) -> Result<Self, String> {
+                Ok(Self {
+                    blocks: value.blocks?,
+                    lot: value.lot?,
+                })
+            }
+        }
+
+        impl From<super::AddressLotCreateResponse> for AddressLotCreateResponse {
+            fn from(value: super::AddressLotCreateResponse) -> Self {
+                Self {
+                    blocks: Ok(value.blocks),
+                    lot: Ok(value.lot),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AddressLotResultsPage {
+            items: Result<Vec<super::AddressLot>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for AddressLotResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl AddressLotResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::AddressLot>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AddressLotResultsPage> for super::AddressLotResultsPage {
+            type Error = String;
+            fn try_from(value: AddressLotResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::AddressLotResultsPage> for AddressLotResultsPage {
+            fn from(value: super::AddressLotResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Baseboard {
             part: Result<String, String>,
             revision: Result<i64, String>,
@@ -6398,6 +7950,94 @@ pub mod types {
                     part: Ok(value.part),
                     revision: Ok(value.revision),
                     serial: Ok(value.serial),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpPeerConfig {
+            addr: Result<std::net::IpAddr, String>,
+            bgp_announce_set: Result<super::NameOrId, String>,
+            bgp_config: Result<super::NameOrId, String>,
+            interface_name: Result<String, String>,
+        }
+
+        impl Default for BgpPeerConfig {
+            fn default() -> Self {
+                Self {
+                    addr: Err("no value supplied for addr".to_string()),
+                    bgp_announce_set: Err("no value supplied for bgp_announce_set".to_string()),
+                    bgp_config: Err("no value supplied for bgp_config".to_string()),
+                    interface_name: Err("no value supplied for interface_name".to_string()),
+                }
+            }
+        }
+
+        impl BgpPeerConfig {
+            pub fn addr<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.addr = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for addr: {}", e));
+                self
+            }
+            pub fn bgp_announce_set<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.bgp_announce_set = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for bgp_announce_set: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn bgp_config<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.bgp_config = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bgp_config: {}", e));
+                self
+            }
+            pub fn interface_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for interface_name: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpPeerConfig> for super::BgpPeerConfig {
+            type Error = String;
+            fn try_from(value: BgpPeerConfig) -> Result<Self, String> {
+                Ok(Self {
+                    addr: value.addr?,
+                    bgp_announce_set: value.bgp_announce_set?,
+                    bgp_config: value.bgp_config?,
+                    interface_name: value.interface_name?,
+                })
+            }
+        }
+
+        impl From<super::BgpPeerConfig> for BgpPeerConfig {
+            fn from(value: super::BgpPeerConfig) -> Self {
+                Self {
+                    addr: Ok(value.addr),
+                    bgp_announce_set: Ok(value.bgp_announce_set),
+                    bgp_config: Ok(value.bgp_config),
+                    interface_name: Ok(value.interface_name),
                 }
             }
         }
@@ -10454,6 +12094,380 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct LinkConfig {
+            lldp: Result<super::LldpServiceConfig, String>,
+            mtu: Result<u16, String>,
+        }
+
+        impl Default for LinkConfig {
+            fn default() -> Self {
+                Self {
+                    lldp: Err("no value supplied for lldp".to_string()),
+                    mtu: Err("no value supplied for mtu".to_string()),
+                }
+            }
+        }
+
+        impl LinkConfig {
+            pub fn lldp<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::LldpServiceConfig>,
+                T::Error: std::fmt::Display,
+            {
+                self.lldp = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for lldp: {}", e));
+                self
+            }
+            pub fn mtu<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.mtu = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mtu: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<LinkConfig> for super::LinkConfig {
+            type Error = String;
+            fn try_from(value: LinkConfig) -> Result<Self, String> {
+                Ok(Self {
+                    lldp: value.lldp?,
+                    mtu: value.mtu?,
+                })
+            }
+        }
+
+        impl From<super::LinkConfig> for LinkConfig {
+            fn from(value: super::LinkConfig) -> Self {
+                Self {
+                    lldp: Ok(value.lldp),
+                    mtu: Ok(value.mtu),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct LldpServiceConfig {
+            enabled: Result<bool, String>,
+            lldp_config: Result<Option<super::NameOrId>, String>,
+        }
+
+        impl Default for LldpServiceConfig {
+            fn default() -> Self {
+                Self {
+                    enabled: Err("no value supplied for enabled".to_string()),
+                    lldp_config: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl LldpServiceConfig {
+            pub fn enabled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.enabled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for enabled: {}", e));
+                self
+            }
+            pub fn lldp_config<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.lldp_config = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for lldp_config: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<LldpServiceConfig> for super::LldpServiceConfig {
+            type Error = String;
+            fn try_from(value: LldpServiceConfig) -> Result<Self, String> {
+                Ok(Self {
+                    enabled: value.enabled?,
+                    lldp_config: value.lldp_config?,
+                })
+            }
+        }
+
+        impl From<super::LldpServiceConfig> for LldpServiceConfig {
+            fn from(value: super::LldpServiceConfig) -> Self {
+                Self {
+                    enabled: Ok(value.enabled),
+                    lldp_config: Ok(value.lldp_config),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct LoopbackAddress {
+            address: Result<super::IpNet, String>,
+            address_lot_block_id: Result<uuid::Uuid, String>,
+            id: Result<uuid::Uuid, String>,
+            rack_id: Result<uuid::Uuid, String>,
+            switch_location: Result<String, String>,
+        }
+
+        impl Default for LoopbackAddress {
+            fn default() -> Self {
+                Self {
+                    address: Err("no value supplied for address".to_string()),
+                    address_lot_block_id: Err(
+                        "no value supplied for address_lot_block_id".to_string()
+                    ),
+                    id: Err("no value supplied for id".to_string()),
+                    rack_id: Err("no value supplied for rack_id".to_string()),
+                    switch_location: Err("no value supplied for switch_location".to_string()),
+                }
+            }
+        }
+
+        impl LoopbackAddress {
+            pub fn address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.address = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
+                self
+            }
+            pub fn address_lot_block_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.address_lot_block_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for address_lot_block_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn rack_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.rack_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
+                self
+            }
+            pub fn switch_location<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch_location = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for switch_location: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<LoopbackAddress> for super::LoopbackAddress {
+            type Error = String;
+            fn try_from(value: LoopbackAddress) -> Result<Self, String> {
+                Ok(Self {
+                    address: value.address?,
+                    address_lot_block_id: value.address_lot_block_id?,
+                    id: value.id?,
+                    rack_id: value.rack_id?,
+                    switch_location: value.switch_location?,
+                })
+            }
+        }
+
+        impl From<super::LoopbackAddress> for LoopbackAddress {
+            fn from(value: super::LoopbackAddress) -> Self {
+                Self {
+                    address: Ok(value.address),
+                    address_lot_block_id: Ok(value.address_lot_block_id),
+                    id: Ok(value.id),
+                    rack_id: Ok(value.rack_id),
+                    switch_location: Ok(value.switch_location),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct LoopbackAddressCreate {
+            address: Result<std::net::IpAddr, String>,
+            address_lot: Result<super::NameOrId, String>,
+            mask: Result<u8, String>,
+            rack_id: Result<uuid::Uuid, String>,
+            switch_location: Result<super::Name, String>,
+        }
+
+        impl Default for LoopbackAddressCreate {
+            fn default() -> Self {
+                Self {
+                    address: Err("no value supplied for address".to_string()),
+                    address_lot: Err("no value supplied for address_lot".to_string()),
+                    mask: Err("no value supplied for mask".to_string()),
+                    rack_id: Err("no value supplied for rack_id".to_string()),
+                    switch_location: Err("no value supplied for switch_location".to_string()),
+                }
+            }
+        }
+
+        impl LoopbackAddressCreate {
+            pub fn address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.address = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
+                self
+            }
+            pub fn address_lot<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.address_lot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address_lot: {}", e));
+                self
+            }
+            pub fn mask<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u8>,
+                T::Error: std::fmt::Display,
+            {
+                self.mask = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mask: {}", e));
+                self
+            }
+            pub fn rack_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.rack_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
+                self
+            }
+            pub fn switch_location<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch_location = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for switch_location: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<LoopbackAddressCreate> for super::LoopbackAddressCreate {
+            type Error = String;
+            fn try_from(value: LoopbackAddressCreate) -> Result<Self, String> {
+                Ok(Self {
+                    address: value.address?,
+                    address_lot: value.address_lot?,
+                    mask: value.mask?,
+                    rack_id: value.rack_id?,
+                    switch_location: value.switch_location?,
+                })
+            }
+        }
+
+        impl From<super::LoopbackAddressCreate> for LoopbackAddressCreate {
+            fn from(value: super::LoopbackAddressCreate) -> Self {
+                Self {
+                    address: Ok(value.address),
+                    address_lot: Ok(value.address_lot),
+                    mask: Ok(value.mask),
+                    rack_id: Ok(value.rack_id),
+                    switch_location: Ok(value.switch_location),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct LoopbackAddressResultsPage {
+            items: Result<Vec<super::LoopbackAddress>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for LoopbackAddressResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl LoopbackAddressResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::LoopbackAddress>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<LoopbackAddressResultsPage> for super::LoopbackAddressResultsPage {
+            type Error = String;
+            fn try_from(value: LoopbackAddressResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::LoopbackAddressResultsPage> for LoopbackAddressResultsPage {
+            fn from(value: super::LoopbackAddressResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Measurement {
             datum: Result<super::Datum, String>,
             timestamp: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -11390,6 +13404,106 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Route {
+            dst: Result<super::IpNet, String>,
+            gw: Result<std::net::IpAddr, String>,
+        }
+
+        impl Default for Route {
+            fn default() -> Self {
+                Self {
+                    dst: Err("no value supplied for dst".to_string()),
+                    gw: Err("no value supplied for gw".to_string()),
+                }
+            }
+        }
+
+        impl Route {
+            pub fn dst<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.dst = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for dst: {}", e));
+                self
+            }
+            pub fn gw<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.gw = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for gw: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Route> for super::Route {
+            type Error = String;
+            fn try_from(value: Route) -> Result<Self, String> {
+                Ok(Self {
+                    dst: value.dst?,
+                    gw: value.gw?,
+                })
+            }
+        }
+
+        impl From<super::Route> for Route {
+            fn from(value: super::Route) -> Self {
+                Self {
+                    dst: Ok(value.dst),
+                    gw: Ok(value.gw),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct RouteConfig {
+            routes: Result<Vec<super::Route>, String>,
+        }
+
+        impl Default for RouteConfig {
+            fn default() -> Self {
+                Self {
+                    routes: Err("no value supplied for routes".to_string()),
+                }
+            }
+        }
+
+        impl RouteConfig {
+            pub fn routes<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Route>>,
+                T::Error: std::fmt::Display,
+            {
+                self.routes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for routes: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<RouteConfig> for super::RouteConfig {
+            type Error = String;
+            fn try_from(value: RouteConfig) -> Result<Self, String> {
+                Ok(Self {
+                    routes: value.routes?,
+                })
+            }
+        }
+
+        impl From<super::RouteConfig> for RouteConfig {
+            fn from(value: super::RouteConfig) -> Self {
+                Self {
+                    routes: Ok(value.routes),
                 }
             }
         }
@@ -13698,6 +15812,1237 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SwitchInterfaceConfig {
+            kind: Result<super::SwitchInterfaceKind, String>,
+            v6_enabled: Result<bool, String>,
+        }
+
+        impl Default for SwitchInterfaceConfig {
+            fn default() -> Self {
+                Self {
+                    kind: Err("no value supplied for kind".to_string()),
+                    v6_enabled: Err("no value supplied for v6_enabled".to_string()),
+                }
+            }
+        }
+
+        impl SwitchInterfaceConfig {
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchInterfaceKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn v6_enabled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.v6_enabled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for v6_enabled: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchInterfaceConfig> for super::SwitchInterfaceConfig {
+            type Error = String;
+            fn try_from(value: SwitchInterfaceConfig) -> Result<Self, String> {
+                Ok(Self {
+                    kind: value.kind?,
+                    v6_enabled: value.v6_enabled?,
+                })
+            }
+        }
+
+        impl From<super::SwitchInterfaceConfig> for SwitchInterfaceConfig {
+            fn from(value: super::SwitchInterfaceConfig) -> Self {
+                Self {
+                    kind: Ok(value.kind),
+                    v6_enabled: Ok(value.v6_enabled),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPort {
+            id: Result<uuid::Uuid, String>,
+            port_name: Result<String, String>,
+            port_settings_id: Result<Option<uuid::Uuid>, String>,
+            rack_id: Result<uuid::Uuid, String>,
+            switch_location: Result<String, String>,
+        }
+
+        impl Default for SwitchPort {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    port_name: Err("no value supplied for port_name".to_string()),
+                    port_settings_id: Ok(Default::default()),
+                    rack_id: Err("no value supplied for rack_id".to_string()),
+                    switch_location: Err("no value supplied for switch_location".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPort {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn port_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for port_name: {}", e));
+                self
+            }
+            pub fn port_settings_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_settings_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn rack_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.rack_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
+                self
+            }
+            pub fn switch_location<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch_location = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for switch_location: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPort> for super::SwitchPort {
+            type Error = String;
+            fn try_from(value: SwitchPort) -> Result<Self, String> {
+                Ok(Self {
+                    id: value.id?,
+                    port_name: value.port_name?,
+                    port_settings_id: value.port_settings_id?,
+                    rack_id: value.rack_id?,
+                    switch_location: value.switch_location?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPort> for SwitchPort {
+            fn from(value: super::SwitchPort) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    port_name: Ok(value.port_name),
+                    port_settings_id: Ok(value.port_settings_id),
+                    rack_id: Ok(value.rack_id),
+                    switch_location: Ok(value.switch_location),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortAddressConfig {
+            address: Result<super::IpNet, String>,
+            address_lot_block_id: Result<uuid::Uuid, String>,
+            interface_name: Result<String, String>,
+            port_settings_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for SwitchPortAddressConfig {
+            fn default() -> Self {
+                Self {
+                    address: Err("no value supplied for address".to_string()),
+                    address_lot_block_id: Err(
+                        "no value supplied for address_lot_block_id".to_string()
+                    ),
+                    interface_name: Err("no value supplied for interface_name".to_string()),
+                    port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortAddressConfig {
+            pub fn address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.address = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
+                self
+            }
+            pub fn address_lot_block_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.address_lot_block_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for address_lot_block_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn interface_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for interface_name: {}", e)
+                });
+                self
+            }
+            pub fn port_settings_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_settings_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortAddressConfig> for super::SwitchPortAddressConfig {
+            type Error = String;
+            fn try_from(value: SwitchPortAddressConfig) -> Result<Self, String> {
+                Ok(Self {
+                    address: value.address?,
+                    address_lot_block_id: value.address_lot_block_id?,
+                    interface_name: value.interface_name?,
+                    port_settings_id: value.port_settings_id?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortAddressConfig> for SwitchPortAddressConfig {
+            fn from(value: super::SwitchPortAddressConfig) -> Self {
+                Self {
+                    address: Ok(value.address),
+                    address_lot_block_id: Ok(value.address_lot_block_id),
+                    interface_name: Ok(value.interface_name),
+                    port_settings_id: Ok(value.port_settings_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortApplySettings {
+            port_settings: Result<super::NameOrId, String>,
+        }
+
+        impl Default for SwitchPortApplySettings {
+            fn default() -> Self {
+                Self {
+                    port_settings: Err("no value supplied for port_settings".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortApplySettings {
+            pub fn port_settings<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_settings = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for port_settings: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortApplySettings> for super::SwitchPortApplySettings {
+            type Error = String;
+            fn try_from(value: SwitchPortApplySettings) -> Result<Self, String> {
+                Ok(Self {
+                    port_settings: value.port_settings?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortApplySettings> for SwitchPortApplySettings {
+            fn from(value: super::SwitchPortApplySettings) -> Self {
+                Self {
+                    port_settings: Ok(value.port_settings),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortBgpPeerConfig {
+            addr: Result<std::net::IpAddr, String>,
+            bgp_announce_set_id: Result<uuid::Uuid, String>,
+            bgp_config_id: Result<uuid::Uuid, String>,
+            interface_name: Result<String, String>,
+            port_settings_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for SwitchPortBgpPeerConfig {
+            fn default() -> Self {
+                Self {
+                    addr: Err("no value supplied for addr".to_string()),
+                    bgp_announce_set_id: Err(
+                        "no value supplied for bgp_announce_set_id".to_string()
+                    ),
+                    bgp_config_id: Err("no value supplied for bgp_config_id".to_string()),
+                    interface_name: Err("no value supplied for interface_name".to_string()),
+                    port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortBgpPeerConfig {
+            pub fn addr<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.addr = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for addr: {}", e));
+                self
+            }
+            pub fn bgp_announce_set_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.bgp_announce_set_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for bgp_announce_set_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn bgp_config_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.bgp_config_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for bgp_config_id: {}", e)
+                });
+                self
+            }
+            pub fn interface_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for interface_name: {}", e)
+                });
+                self
+            }
+            pub fn port_settings_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_settings_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortBgpPeerConfig> for super::SwitchPortBgpPeerConfig {
+            type Error = String;
+            fn try_from(value: SwitchPortBgpPeerConfig) -> Result<Self, String> {
+                Ok(Self {
+                    addr: value.addr?,
+                    bgp_announce_set_id: value.bgp_announce_set_id?,
+                    bgp_config_id: value.bgp_config_id?,
+                    interface_name: value.interface_name?,
+                    port_settings_id: value.port_settings_id?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortBgpPeerConfig> for SwitchPortBgpPeerConfig {
+            fn from(value: super::SwitchPortBgpPeerConfig) -> Self {
+                Self {
+                    addr: Ok(value.addr),
+                    bgp_announce_set_id: Ok(value.bgp_announce_set_id),
+                    bgp_config_id: Ok(value.bgp_config_id),
+                    interface_name: Ok(value.interface_name),
+                    port_settings_id: Ok(value.port_settings_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortConfig {
+            geometry: Result<super::SwitchPortGeometry, String>,
+        }
+
+        impl Default for SwitchPortConfig {
+            fn default() -> Self {
+                Self {
+                    geometry: Err("no value supplied for geometry".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortConfig {
+            pub fn geometry<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchPortGeometry>,
+                T::Error: std::fmt::Display,
+            {
+                self.geometry = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for geometry: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortConfig> for super::SwitchPortConfig {
+            type Error = String;
+            fn try_from(value: SwitchPortConfig) -> Result<Self, String> {
+                Ok(Self {
+                    geometry: value.geometry?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortConfig> for SwitchPortConfig {
+            fn from(value: super::SwitchPortConfig) -> Self {
+                Self {
+                    geometry: Ok(value.geometry),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortLinkConfig {
+            link_name: Result<String, String>,
+            lldp_service_config_id: Result<uuid::Uuid, String>,
+            mtu: Result<u16, String>,
+            port_settings_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for SwitchPortLinkConfig {
+            fn default() -> Self {
+                Self {
+                    link_name: Err("no value supplied for link_name".to_string()),
+                    lldp_service_config_id: Err(
+                        "no value supplied for lldp_service_config_id".to_string()
+                    ),
+                    mtu: Err("no value supplied for mtu".to_string()),
+                    port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortLinkConfig {
+            pub fn link_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.link_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for link_name: {}", e));
+                self
+            }
+            pub fn lldp_service_config_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.lldp_service_config_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for lldp_service_config_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn mtu<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.mtu = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mtu: {}", e));
+                self
+            }
+            pub fn port_settings_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_settings_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortLinkConfig> for super::SwitchPortLinkConfig {
+            type Error = String;
+            fn try_from(value: SwitchPortLinkConfig) -> Result<Self, String> {
+                Ok(Self {
+                    link_name: value.link_name?,
+                    lldp_service_config_id: value.lldp_service_config_id?,
+                    mtu: value.mtu?,
+                    port_settings_id: value.port_settings_id?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortLinkConfig> for SwitchPortLinkConfig {
+            fn from(value: super::SwitchPortLinkConfig) -> Self {
+                Self {
+                    link_name: Ok(value.link_name),
+                    lldp_service_config_id: Ok(value.lldp_service_config_id),
+                    mtu: Ok(value.mtu),
+                    port_settings_id: Ok(value.port_settings_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortResultsPage {
+            items: Result<Vec<super::SwitchPort>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for SwitchPortResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SwitchPortResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchPort>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortResultsPage> for super::SwitchPortResultsPage {
+            type Error = String;
+            fn try_from(value: SwitchPortResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortResultsPage> for SwitchPortResultsPage {
+            fn from(value: super::SwitchPortResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortRouteConfig {
+            dst: Result<super::IpNet, String>,
+            gw: Result<super::IpNet, String>,
+            interface_name: Result<String, String>,
+            port_settings_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for SwitchPortRouteConfig {
+            fn default() -> Self {
+                Self {
+                    dst: Err("no value supplied for dst".to_string()),
+                    gw: Err("no value supplied for gw".to_string()),
+                    interface_name: Err("no value supplied for interface_name".to_string()),
+                    port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortRouteConfig {
+            pub fn dst<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.dst = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for dst: {}", e));
+                self
+            }
+            pub fn gw<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.gw = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for gw: {}", e));
+                self
+            }
+            pub fn interface_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for interface_name: {}", e)
+                });
+                self
+            }
+            pub fn port_settings_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_settings_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortRouteConfig> for super::SwitchPortRouteConfig {
+            type Error = String;
+            fn try_from(value: SwitchPortRouteConfig) -> Result<Self, String> {
+                Ok(Self {
+                    dst: value.dst?,
+                    gw: value.gw?,
+                    interface_name: value.interface_name?,
+                    port_settings_id: value.port_settings_id?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortRouteConfig> for SwitchPortRouteConfig {
+            fn from(value: super::SwitchPortRouteConfig) -> Self {
+                Self {
+                    dst: Ok(value.dst),
+                    gw: Ok(value.gw),
+                    interface_name: Ok(value.interface_name),
+                    port_settings_id: Ok(value.port_settings_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortSettings {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            name: Result<super::Name, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for SwitchPortSettings {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortSettings {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortSettings> for super::SwitchPortSettings {
+            type Error = String;
+            fn try_from(value: SwitchPortSettings) -> Result<Self, String> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortSettings> for SwitchPortSettings {
+            fn from(value: super::SwitchPortSettings) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortSettingsCreate {
+            addresses: Result<std::collections::HashMap<String, super::AddressConfig>, String>,
+            bgp_peers: Result<std::collections::HashMap<String, super::BgpPeerConfig>, String>,
+            description: Result<String, String>,
+            groups: Result<Vec<super::NameOrId>, String>,
+            interfaces:
+                Result<std::collections::HashMap<String, super::SwitchInterfaceConfig>, String>,
+            links: Result<std::collections::HashMap<String, super::LinkConfig>, String>,
+            name: Result<super::Name, String>,
+            port_config: Result<super::SwitchPortConfig, String>,
+            routes: Result<std::collections::HashMap<String, super::RouteConfig>, String>,
+        }
+
+        impl Default for SwitchPortSettingsCreate {
+            fn default() -> Self {
+                Self {
+                    addresses: Err("no value supplied for addresses".to_string()),
+                    bgp_peers: Err("no value supplied for bgp_peers".to_string()),
+                    description: Err("no value supplied for description".to_string()),
+                    groups: Err("no value supplied for groups".to_string()),
+                    interfaces: Err("no value supplied for interfaces".to_string()),
+                    links: Err("no value supplied for links".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    port_config: Err("no value supplied for port_config".to_string()),
+                    routes: Err("no value supplied for routes".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortSettingsCreate {
+            pub fn addresses<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::collections::HashMap<String, super::AddressConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.addresses = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for addresses: {}", e));
+                self
+            }
+            pub fn bgp_peers<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::collections::HashMap<String, super::BgpPeerConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bgp_peers = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bgp_peers: {}", e));
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn groups<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.groups = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for groups: {}", e));
+                self
+            }
+            pub fn interfaces<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<
+                    std::collections::HashMap<String, super::SwitchInterfaceConfig>,
+                >,
+                T::Error: std::fmt::Display,
+            {
+                self.interfaces = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for interfaces: {}", e));
+                self
+            }
+            pub fn links<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::collections::HashMap<String, super::LinkConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.links = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for links: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn port_config<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchPortConfig>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_config = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for port_config: {}", e));
+                self
+            }
+            pub fn routes<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::collections::HashMap<String, super::RouteConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.routes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for routes: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortSettingsCreate> for super::SwitchPortSettingsCreate {
+            type Error = String;
+            fn try_from(value: SwitchPortSettingsCreate) -> Result<Self, String> {
+                Ok(Self {
+                    addresses: value.addresses?,
+                    bgp_peers: value.bgp_peers?,
+                    description: value.description?,
+                    groups: value.groups?,
+                    interfaces: value.interfaces?,
+                    links: value.links?,
+                    name: value.name?,
+                    port_config: value.port_config?,
+                    routes: value.routes?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortSettingsCreate> for SwitchPortSettingsCreate {
+            fn from(value: super::SwitchPortSettingsCreate) -> Self {
+                Self {
+                    addresses: Ok(value.addresses),
+                    bgp_peers: Ok(value.bgp_peers),
+                    description: Ok(value.description),
+                    groups: Ok(value.groups),
+                    interfaces: Ok(value.interfaces),
+                    links: Ok(value.links),
+                    name: Ok(value.name),
+                    port_config: Ok(value.port_config),
+                    routes: Ok(value.routes),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortSettingsGroups {
+            port_settings_group_id: Result<uuid::Uuid, String>,
+            port_settings_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for SwitchPortSettingsGroups {
+            fn default() -> Self {
+                Self {
+                    port_settings_group_id: Err(
+                        "no value supplied for port_settings_group_id".to_string()
+                    ),
+                    port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortSettingsGroups {
+            pub fn port_settings_group_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_settings_group_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for port_settings_group_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn port_settings_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_settings_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortSettingsGroups> for super::SwitchPortSettingsGroups {
+            type Error = String;
+            fn try_from(value: SwitchPortSettingsGroups) -> Result<Self, String> {
+                Ok(Self {
+                    port_settings_group_id: value.port_settings_group_id?,
+                    port_settings_id: value.port_settings_id?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortSettingsGroups> for SwitchPortSettingsGroups {
+            fn from(value: super::SwitchPortSettingsGroups) -> Self {
+                Self {
+                    port_settings_group_id: Ok(value.port_settings_group_id),
+                    port_settings_id: Ok(value.port_settings_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortSettingsInfo {
+            addresses: Result<Vec<super::SwitchPortAddressConfig>, String>,
+            bgp_peers: Result<Vec<super::SwitchPortBgpPeerConfig>, String>,
+            groups: Result<Vec<super::SwitchPortSettingsGroups>, String>,
+            interfaces: Result<Vec<super::SwitchInterfaceConfig>, String>,
+            link_lldp: Result<Vec<super::LldpServiceConfig>, String>,
+            links: Result<Vec<super::SwitchPortLinkConfig>, String>,
+            port: Result<super::SwitchPortConfig, String>,
+            routes: Result<Vec<super::SwitchPortRouteConfig>, String>,
+            settings: Result<super::SwitchPortSettings, String>,
+            vlan_interfaces: Result<Vec<super::SwitchVlanInterfaceConfig>, String>,
+        }
+
+        impl Default for SwitchPortSettingsInfo {
+            fn default() -> Self {
+                Self {
+                    addresses: Err("no value supplied for addresses".to_string()),
+                    bgp_peers: Err("no value supplied for bgp_peers".to_string()),
+                    groups: Err("no value supplied for groups".to_string()),
+                    interfaces: Err("no value supplied for interfaces".to_string()),
+                    link_lldp: Err("no value supplied for link_lldp".to_string()),
+                    links: Err("no value supplied for links".to_string()),
+                    port: Err("no value supplied for port".to_string()),
+                    routes: Err("no value supplied for routes".to_string()),
+                    settings: Err("no value supplied for settings".to_string()),
+                    vlan_interfaces: Err("no value supplied for vlan_interfaces".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortSettingsInfo {
+            pub fn addresses<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchPortAddressConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.addresses = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for addresses: {}", e));
+                self
+            }
+            pub fn bgp_peers<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchPortBgpPeerConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bgp_peers = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bgp_peers: {}", e));
+                self
+            }
+            pub fn groups<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchPortSettingsGroups>>,
+                T::Error: std::fmt::Display,
+            {
+                self.groups = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for groups: {}", e));
+                self
+            }
+            pub fn interfaces<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchInterfaceConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.interfaces = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for interfaces: {}", e));
+                self
+            }
+            pub fn link_lldp<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::LldpServiceConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.link_lldp = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for link_lldp: {}", e));
+                self
+            }
+            pub fn links<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchPortLinkConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.links = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for links: {}", e));
+                self
+            }
+            pub fn port<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchPortConfig>,
+                T::Error: std::fmt::Display,
+            {
+                self.port = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for port: {}", e));
+                self
+            }
+            pub fn routes<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchPortRouteConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.routes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for routes: {}", e));
+                self
+            }
+            pub fn settings<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchPortSettings>,
+                T::Error: std::fmt::Display,
+            {
+                self.settings = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for settings: {}", e));
+                self
+            }
+            pub fn vlan_interfaces<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchVlanInterfaceConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.vlan_interfaces = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for vlan_interfaces: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortSettingsInfo> for super::SwitchPortSettingsInfo {
+            type Error = String;
+            fn try_from(value: SwitchPortSettingsInfo) -> Result<Self, String> {
+                Ok(Self {
+                    addresses: value.addresses?,
+                    bgp_peers: value.bgp_peers?,
+                    groups: value.groups?,
+                    interfaces: value.interfaces?,
+                    link_lldp: value.link_lldp?,
+                    links: value.links?,
+                    port: value.port?,
+                    routes: value.routes?,
+                    settings: value.settings?,
+                    vlan_interfaces: value.vlan_interfaces?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortSettingsInfo> for SwitchPortSettingsInfo {
+            fn from(value: super::SwitchPortSettingsInfo) -> Self {
+                Self {
+                    addresses: Ok(value.addresses),
+                    bgp_peers: Ok(value.bgp_peers),
+                    groups: Ok(value.groups),
+                    interfaces: Ok(value.interfaces),
+                    link_lldp: Ok(value.link_lldp),
+                    links: Ok(value.links),
+                    port: Ok(value.port),
+                    routes: Ok(value.routes),
+                    settings: Ok(value.settings),
+                    vlan_interfaces: Ok(value.vlan_interfaces),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortSettingsResultsPage {
+            items: Result<Vec<super::SwitchPortSettings>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for SwitchPortSettingsResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SwitchPortSettingsResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchPortSettings>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortSettingsResultsPage> for super::SwitchPortSettingsResultsPage {
+            type Error = String;
+            fn try_from(value: SwitchPortSettingsResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortSettingsResultsPage> for SwitchPortSettingsResultsPage {
+            fn from(value: super::SwitchPortSettingsResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SwitchResultsPage {
             items: Result<Vec<super::Switch>, String>,
             next_page: Result<Option<String>, String>,
@@ -13750,6 +17095,68 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchVlanInterfaceConfig {
+            interface_config_id: Result<uuid::Uuid, String>,
+            vid: Result<u16, String>,
+        }
+
+        impl Default for SwitchVlanInterfaceConfig {
+            fn default() -> Self {
+                Self {
+                    interface_config_id: Err(
+                        "no value supplied for interface_config_id".to_string()
+                    ),
+                    vid: Err("no value supplied for vid".to_string()),
+                }
+            }
+        }
+
+        impl SwitchVlanInterfaceConfig {
+            pub fn interface_config_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface_config_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for interface_config_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn vid<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.vid = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vid: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchVlanInterfaceConfig> for super::SwitchVlanInterfaceConfig {
+            type Error = String;
+            fn try_from(value: SwitchVlanInterfaceConfig) -> Result<Self, String> {
+                Ok(Self {
+                    interface_config_id: value.interface_config_id?,
+                    vid: value.vid?,
+                })
+            }
+        }
+
+        impl From<super::SwitchVlanInterfaceConfig> for SwitchVlanInterfaceConfig {
+            fn from(value: super::SwitchVlanInterfaceConfig) -> Self {
+                Self {
+                    interface_config_id: Ok(value.interface_config_id),
+                    vid: Ok(value.vid),
                 }
             }
         }
@@ -18040,6 +21447,67 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn sled_instance_list(&self) -> builder::SledInstanceList;
+    /// List switch ports
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/switch-port`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// - `switch_port_id`: An optional switch port id to use when listing
+    ///   switch ports.
+    /// ```ignore
+    /// let response = client.networking_switch_port_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .switch_port_id(switch_port_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_list(&self) -> builder::NetworkingSwitchPortList;
+    /// Apply switch port settings
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/hardware/switch-port/{port}/settings`
+    ///
+    /// Arguments:
+    /// - `port`: A name to use when selecting switch ports.
+    /// - `rack_id`: A rack id to use when selecting switch ports.
+    /// - `switch_location`: A switch location to use when selecting switch
+    ///   ports.
+    /// - `body`
+    /// ```ignore
+    /// let response = client.networking_switch_port_apply_settings()
+    ///    .port(port)
+    ///    .rack_id(rack_id)
+    ///    .switch_location(switch_location)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_apply_settings(&self) -> builder::NetworkingSwitchPortApplySettings;
+    /// Clear switch port settings
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/system/hardware/switch-port/{port}/settings`
+    ///
+    /// Arguments:
+    /// - `port`: A name to use when selecting switch ports.
+    /// - `rack_id`: A rack id to use when selecting switch ports.
+    /// - `switch_location`: A switch location to use when selecting switch
+    ///   ports.
+    /// ```ignore
+    /// let response = client.networking_switch_port_clear_settings()
+    ///    .port(port)
+    ///    .rack_id(rack_id)
+    ///    .switch_location(switch_location)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_clear_settings(&self) -> builder::NetworkingSwitchPortClearSettings;
     /// List switches
     ///
     /// Sends a `GET` request to `/v1/system/hardware/switches`
@@ -18372,6 +21840,186 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_metric(&self) -> builder::SystemMetric;
+    /// List address lots
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/address-lot`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.networking_address_lot_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_address_lot_list(&self) -> builder::NetworkingAddressLotList;
+    /// Create an address lot
+    ///
+    /// Sends a `POST` request to `/v1/system/networking/address-lot`
+    ///
+    /// ```ignore
+    /// let response = client.networking_address_lot_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_address_lot_create(&self) -> builder::NetworkingAddressLotCreate;
+    /// Delete an address lot
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/system/networking/address-lot/{address_lot}`
+    ///
+    /// Arguments:
+    /// - `address_lot`: Name or ID of the address lot
+    /// ```ignore
+    /// let response = client.networking_address_lot_delete()
+    ///    .address_lot(address_lot)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_address_lot_delete(&self) -> builder::NetworkingAddressLotDelete;
+    /// List the blocks in an address lot
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/networking/address-lot/{address_lot}/blocks`
+    ///
+    /// Arguments:
+    /// - `address_lot`: Name or ID of the address lot
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.networking_address_lot_block_list()
+    ///    .address_lot(address_lot)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList;
+    /// Get loopback addresses, optionally filtering by id
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/loopback-address`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.networking_loopback_address_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_loopback_address_list(&self) -> builder::NetworkingLoopbackAddressList;
+    /// Create a loopback address
+    ///
+    /// Sends a `POST` request to `/v1/system/networking/loopback-address`
+    ///
+    /// ```ignore
+    /// let response = client.networking_loopback_address_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_loopback_address_create(&self) -> builder::NetworkingLoopbackAddressCreate;
+    /// Delete a loopback address
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/system/networking/loopback-address/{rack_id}/{switch_location}/
+    /// {address}/{subnet_mask}`
+    ///
+    /// Arguments:
+    /// - `rack_id`: The rack to use when selecting the loopback address.
+    /// - `switch_location`: The switch location to use when selecting the
+    ///   loopback address.
+    /// - `address`: The IP address and subnet mask to use when selecting the
+    ///   loopback address.
+    /// - `subnet_mask`: The IP address and subnet mask to use when selecting
+    ///   the loopback address.
+    /// ```ignore
+    /// let response = client.networking_loopback_address_delete()
+    ///    .rack_id(rack_id)
+    ///    .switch_location(switch_location)
+    ///    .address(address)
+    ///    .subnet_mask(subnet_mask)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_loopback_address_delete(&self) -> builder::NetworkingLoopbackAddressDelete;
+    /// List port settings
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/switch-port-settings`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `port_settings`: An optional name or id to use when selecting port
+    ///   settings.
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.networking_switch_port_settings_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .port_settings(port_settings)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_settings_list(&self) -> builder::NetworkingSwitchPortSettingsList;
+    /// Create port settings
+    ///
+    /// Sends a `POST` request to `/v1/system/networking/switch-port-settings`
+    ///
+    /// ```ignore
+    /// let response = client.networking_switch_port_settings_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_settings_create(&self)
+        -> builder::NetworkingSwitchPortSettingsCreate;
+    /// Delete port settings
+    ///
+    /// Sends a `DELETE` request to `/v1/system/networking/switch-port-settings`
+    ///
+    /// Arguments:
+    /// - `port_settings`: An optional name or id to use when selecting port
+    ///   settings.
+    /// ```ignore
+    /// let response = client.networking_switch_port_settings_delete()
+    ///    .port_settings(port_settings)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_settings_delete(&self)
+        -> builder::NetworkingSwitchPortSettingsDelete;
+    /// Get information about a switch port
+    ///
+    /// Sends a `GET` request to
+    /// `/v1/system/networking/switch-port-settings/{port}/info`
+    ///
+    /// Arguments:
+    /// - `port`: A name or id to use when selecting switch port settings info
+    ///   objects.
+    /// ```ignore
+    /// let response = client.networking_switch_port_settings_info()
+    ///    .port(port)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_settings_info(&self) -> builder::NetworkingSwitchPortSettingsInfo;
     /// List silos
     ///
     /// Lists silos that are discoverable based on the current permissions.
@@ -18687,6 +22335,18 @@ impl ClientSystemExt for Client {
         builder::SledInstanceList::new(self)
     }
 
+    fn networking_switch_port_list(&self) -> builder::NetworkingSwitchPortList {
+        builder::NetworkingSwitchPortList::new(self)
+    }
+
+    fn networking_switch_port_apply_settings(&self) -> builder::NetworkingSwitchPortApplySettings {
+        builder::NetworkingSwitchPortApplySettings::new(self)
+    }
+
+    fn networking_switch_port_clear_settings(&self) -> builder::NetworkingSwitchPortClearSettings {
+        builder::NetworkingSwitchPortClearSettings::new(self)
+    }
+
     fn switch_list(&self) -> builder::SwitchList {
         builder::SwitchList::new(self)
     }
@@ -18769,6 +22429,54 @@ impl ClientSystemExt for Client {
 
     fn system_metric(&self) -> builder::SystemMetric {
         builder::SystemMetric::new(self)
+    }
+
+    fn networking_address_lot_list(&self) -> builder::NetworkingAddressLotList {
+        builder::NetworkingAddressLotList::new(self)
+    }
+
+    fn networking_address_lot_create(&self) -> builder::NetworkingAddressLotCreate {
+        builder::NetworkingAddressLotCreate::new(self)
+    }
+
+    fn networking_address_lot_delete(&self) -> builder::NetworkingAddressLotDelete {
+        builder::NetworkingAddressLotDelete::new(self)
+    }
+
+    fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList {
+        builder::NetworkingAddressLotBlockList::new(self)
+    }
+
+    fn networking_loopback_address_list(&self) -> builder::NetworkingLoopbackAddressList {
+        builder::NetworkingLoopbackAddressList::new(self)
+    }
+
+    fn networking_loopback_address_create(&self) -> builder::NetworkingLoopbackAddressCreate {
+        builder::NetworkingLoopbackAddressCreate::new(self)
+    }
+
+    fn networking_loopback_address_delete(&self) -> builder::NetworkingLoopbackAddressDelete {
+        builder::NetworkingLoopbackAddressDelete::new(self)
+    }
+
+    fn networking_switch_port_settings_list(&self) -> builder::NetworkingSwitchPortSettingsList {
+        builder::NetworkingSwitchPortSettingsList::new(self)
+    }
+
+    fn networking_switch_port_settings_create(
+        &self,
+    ) -> builder::NetworkingSwitchPortSettingsCreate {
+        builder::NetworkingSwitchPortSettingsCreate::new(self)
+    }
+
+    fn networking_switch_port_settings_delete(
+        &self,
+    ) -> builder::NetworkingSwitchPortSettingsDelete {
+        builder::NetworkingSwitchPortSettingsDelete::new(self)
+    }
+
+    fn networking_switch_port_settings_info(&self) -> builder::NetworkingSwitchPortSettingsInfo {
+        builder::NetworkingSwitchPortSettingsInfo::new(self)
     }
 
     fn silo_list(&self) -> builder::SiloList {
@@ -27011,6 +30719,400 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemExt::networking_switch_port_list`]
+    ///
+    /// [`ClientSystemExt::networking_switch_port_list`]: super::ClientSystemExt::networking_switch_port_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+        switch_port_id: Result<Option<uuid::Uuid>, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                switch_port_id: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        pub fn switch_port_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.switch_port_id = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `uuid :: Uuid` for switch_port_id failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/hardware/switch-port`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SwitchPortResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+                switch_port_id,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let switch_port_id = switch_port_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/hardware/switch-port", client.baseurl,);
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            if let Some(v) = &switch_port_id {
+                query.push(("switch_port_id", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/hardware/switch-port`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SwitchPort, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                switch_port_id: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_switch_port_apply_settings`]
+    ///
+    /// [`ClientSystemExt::networking_switch_port_apply_settings`]: super::ClientSystemExt::networking_switch_port_apply_settings
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortApplySettings<'a> {
+        client: &'a super::Client,
+        port: Result<types::Name, String>,
+        rack_id: Result<uuid::Uuid, String>,
+        switch_location: Result<types::Name, String>,
+        body: Result<types::builder::SwitchPortApplySettings, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortApplySettings<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                port: Err("port was not initialized".to_string()),
+                rack_id: Err("rack_id was not initialized".to_string()),
+                switch_location: Err("switch_location was not initialized".to_string()),
+                body: Ok(types::builder::SwitchPortApplySettings::default()),
+            }
+        }
+
+        pub fn port<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.port = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for port failed".to_string());
+            self
+        }
+
+        pub fn rack_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.rack_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+            self
+        }
+
+        pub fn switch_location<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.switch_location = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SwitchPortApplySettings>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `SwitchPortApplySettings` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SwitchPortApplySettings,
+            ) -> types::builder::SwitchPortApplySettings,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/hardware/switch-port/{port}/settings`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                port,
+                rack_id,
+                switch_location,
+                body,
+            } = self;
+            let port = port.map_err(Error::InvalidRequest)?;
+            let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(std::convert::TryInto::<types::SwitchPortApplySettings>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/switch-port/{}/settings",
+                client.baseurl,
+                encode_path(&port.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            query.push(("rack_id", rack_id.to_string()));
+            query.push(("switch_location", switch_location.to_string()));
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_switch_port_clear_settings`]
+    ///
+    /// [`ClientSystemExt::networking_switch_port_clear_settings`]: super::ClientSystemExt::networking_switch_port_clear_settings
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortClearSettings<'a> {
+        client: &'a super::Client,
+        port: Result<types::Name, String>,
+        rack_id: Result<uuid::Uuid, String>,
+        switch_location: Result<types::Name, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortClearSettings<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                port: Err("port was not initialized".to_string()),
+                rack_id: Err("rack_id was not initialized".to_string()),
+                switch_location: Err("switch_location was not initialized".to_string()),
+            }
+        }
+
+        pub fn port<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.port = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for port failed".to_string());
+            self
+        }
+
+        pub fn rack_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.rack_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+            self
+        }
+
+        pub fn switch_location<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.switch_location = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/system/hardware/switch-port/{port}/settings`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                port,
+                rack_id,
+                switch_location,
+            } = self;
+            let port = port.map_err(Error::InvalidRequest)?;
+            let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/switch-port/{}/settings",
+                client.baseurl,
+                encode_path(&port.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            query.push(("rack_id", rack_id.to_string()));
+            query.push(("switch_location", switch_location.to_string()));
+            let request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientSystemExt::switch_list`]
     ///
     /// [`ClientSystemExt::switch_list`]: super::ClientSystemExt::switch_list
@@ -28993,6 +33095,1198 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_address_lot_list`]
+    ///
+    /// [`ClientSystemExt::networking_address_lot_list`]: super::ClientSystemExt::networking_address_lot_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingAddressLotList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> NetworkingAddressLotList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/address-lot`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AddressLotResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/address-lot", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/networking/address-lot`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AddressLot, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_address_lot_create`]
+    ///
+    /// [`ClientSystemExt::networking_address_lot_create`]: super::ClientSystemExt::networking_address_lot_create
+    #[derive(Debug, Clone)]
+    pub struct NetworkingAddressLotCreate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::AddressLotCreate, String>,
+    }
+
+    impl<'a> NetworkingAddressLotCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                body: Ok(types::builder::AddressLotCreate::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AddressLotCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `AddressLotCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::AddressLotCreate,
+            ) -> types::builder::AddressLotCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/networking/address-lot`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AddressLotCreateResponse>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(std::convert::TryInto::<types::AddressLotCreate>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/address-lot", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_address_lot_delete`]
+    ///
+    /// [`ClientSystemExt::networking_address_lot_delete`]: super::ClientSystemExt::networking_address_lot_delete
+    #[derive(Debug, Clone)]
+    pub struct NetworkingAddressLotDelete<'a> {
+        client: &'a super::Client,
+        address_lot: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> NetworkingAddressLotDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                address_lot: Err("address_lot was not initialized".to_string()),
+            }
+        }
+
+        pub fn address_lot<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.address_lot = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for address_lot failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/system/networking/address-lot/{address_lot}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                address_lot,
+            } = self;
+            let address_lot = address_lot.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/address-lot/{}",
+                client.baseurl,
+                encode_path(&address_lot.to_string()),
+            );
+            let request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_address_lot_block_list`]
+    ///
+    /// [`ClientSystemExt::networking_address_lot_block_list`]: super::ClientSystemExt::networking_address_lot_block_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingAddressLotBlockList<'a> {
+        client: &'a super::Client,
+        address_lot: Result<types::NameOrId, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> NetworkingAddressLotBlockList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                address_lot: Err("address_lot was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn address_lot<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.address_lot = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for address_lot failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/networking/address-lot/{address_lot}/blocks`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AddressLotBlockResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                address_lot,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let address_lot = address_lot.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/address-lot/{}/blocks",
+                client.baseurl,
+                encode_path(&address_lot.to_string()),
+            );
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to
+        /// `/v1/system/networking/address-lot/{address_lot}/blocks`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::AddressLotBlock, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_loopback_address_list`]
+    ///
+    /// [`ClientSystemExt::networking_loopback_address_list`]: super::ClientSystemExt::networking_loopback_address_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingLoopbackAddressList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> NetworkingLoopbackAddressList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/loopback-address`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::LoopbackAddressResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/loopback-address", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/networking/loopback-address`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::LoopbackAddress, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_loopback_address_create`]
+    ///
+    /// [`ClientSystemExt::networking_loopback_address_create`]: super::ClientSystemExt::networking_loopback_address_create
+    #[derive(Debug, Clone)]
+    pub struct NetworkingLoopbackAddressCreate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::LoopbackAddressCreate, String>,
+    }
+
+    impl<'a> NetworkingLoopbackAddressCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                body: Ok(types::builder::LoopbackAddressCreate::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::LoopbackAddressCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `LoopbackAddressCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::LoopbackAddressCreate,
+            ) -> types::builder::LoopbackAddressCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/networking/loopback-address`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::LoopbackAddress>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(std::convert::TryInto::<types::LoopbackAddressCreate>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/loopback-address", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_loopback_address_delete`]
+    ///
+    /// [`ClientSystemExt::networking_loopback_address_delete`]: super::ClientSystemExt::networking_loopback_address_delete
+    #[derive(Debug, Clone)]
+    pub struct NetworkingLoopbackAddressDelete<'a> {
+        client: &'a super::Client,
+        rack_id: Result<uuid::Uuid, String>,
+        switch_location: Result<types::Name, String>,
+        address: Result<std::net::IpAddr, String>,
+        subnet_mask: Result<u8, String>,
+    }
+
+    impl<'a> NetworkingLoopbackAddressDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                rack_id: Err("rack_id was not initialized".to_string()),
+                switch_location: Err("switch_location was not initialized".to_string()),
+                address: Err("address was not initialized".to_string()),
+                subnet_mask: Err("subnet_mask was not initialized".to_string()),
+            }
+        }
+
+        pub fn rack_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.rack_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+            self
+        }
+
+        pub fn switch_location<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.switch_location = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+            self
+        }
+
+        pub fn address<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::net::IpAddr>,
+        {
+            self.address = value
+                .try_into()
+                .map_err(|_| "conversion to `std :: net :: IpAddr` for address failed".to_string());
+            self
+        }
+
+        pub fn subnet_mask<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<u8>,
+        {
+            self.subnet_mask = value
+                .try_into()
+                .map_err(|_| "conversion to `u8` for subnet_mask failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/system/networking/loopback-address/{rack_id}/{switch_location}/
+        /// {address}/{subnet_mask}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                rack_id,
+                switch_location,
+                address,
+                subnet_mask,
+            } = self;
+            let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let address = address.map_err(Error::InvalidRequest)?;
+            let subnet_mask = subnet_mask.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/loopback-address/{}/{}/{}/{}",
+                client.baseurl,
+                encode_path(&rack_id.to_string()),
+                encode_path(&switch_location.to_string()),
+                encode_path(&address.to_string()),
+                encode_path(&subnet_mask.to_string()),
+            );
+            let request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_switch_port_settings_list`]
+    ///
+    /// [`ClientSystemExt::networking_switch_port_settings_list`]: super::ClientSystemExt::networking_switch_port_settings_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortSettingsList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        port_settings: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortSettingsList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                port_settings: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn port_settings<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.port_settings = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for port_settings failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/networking/switch-port-settings`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SwitchPortSettingsResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+                port_settings,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let port_settings = port_settings.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-settings",
+                client.baseurl,
+            );
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &port_settings {
+                query.push(("port_settings", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to
+        /// `/v1/system/networking/switch-port-settings`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SwitchPortSettings, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                port_settings: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_switch_port_settings_create`]
+    ///
+    /// [`ClientSystemExt::networking_switch_port_settings_create`]: super::ClientSystemExt::networking_switch_port_settings_create
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortSettingsCreate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::SwitchPortSettingsCreate, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortSettingsCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                body: Ok(types::builder::SwitchPortSettingsCreate::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SwitchPortSettingsCreate>,
+        {
+            self.body = value.try_into().map(From::from).map_err(|_| {
+                "conversion to `SwitchPortSettingsCreate` for body failed".to_string()
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SwitchPortSettingsCreate,
+            ) -> types::builder::SwitchPortSettingsCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/networking/switch-port-settings`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SwitchPortSettingsInfo>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(std::convert::TryInto::<types::SwitchPortSettingsCreate>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-settings",
+                client.baseurl,
+            );
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_switch_port_settings_delete`]
+    ///
+    /// [`ClientSystemExt::networking_switch_port_settings_delete`]: super::ClientSystemExt::networking_switch_port_settings_delete
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortSettingsDelete<'a> {
+        client: &'a super::Client,
+        port_settings: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortSettingsDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                port_settings: Ok(None),
+            }
+        }
+
+        pub fn port_settings<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.port_settings = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for port_settings failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/system/networking/switch-port-settings`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                port_settings,
+            } = self;
+            let port_settings = port_settings.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-settings",
+                client.baseurl,
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &port_settings {
+                query.push(("port_settings", v.to_string()));
+            }
+            let request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemExt::networking_switch_port_settings_info`]
+    ///
+    /// [`ClientSystemExt::networking_switch_port_settings_info`]: super::ClientSystemExt::networking_switch_port_settings_info
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortSettingsInfo<'a> {
+        client: &'a super::Client,
+        port: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortSettingsInfo<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                port: Err("port was not initialized".to_string()),
+            }
+        }
+
+        pub fn port<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.port = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for port failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/networking/switch-port-settings/{port}/info`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SwitchPortSettingsInfo>, Error<types::Error>> {
+            let Self { client, port } = self;
+            let port = port.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/switch-port-settings/{}/info",
+                client.baseurl,
+                encode_path(&port.to_string()),
+            );
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
