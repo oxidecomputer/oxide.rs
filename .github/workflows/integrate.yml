@@ -24,10 +24,41 @@ jobs:
       cancel-in-progress: true
     runs-on: ubuntu-22.04
     steps:
+
+      # Checkout both the main and integration branches
       - uses: actions/checkout@v3.5.0
         with:
           token: ${{ inputs.reflector_access_token }}
-          ref: main
+          fetch-depth: 0
+
+      # Attempt to merge main in to integration. Discarding any generated code on the integration
+      # branch
+      - name: Merge main
+        run: |
+          git checkout integration
+          git merge main || echo 'Found conflicts. Attempt to use changes from main'
+
+          # Reset generated files
+          git checkout main -- cli/docs/cli.json
+          git checkout main -- cli/src/generated_cli.rs
+          git checkout main -- sdk/src/generated_sdk.rs
+          git checkout main -- sdk-httpmock/src/generated_httpmock.rs
+
+          # Commit the merge
+          git commit -m 'Merge main'
+
+          # Ensure there are no outstanding conflicts
+          STATUS=$(git status --porcelain=v1 2>/dev/null | wc -l)
+          if [ $STATUS -eq 0 ]
+          then
+            exit 0
+          else
+            echo 'Found additional conflicts from merge attempt that need to be manually resolved'
+            git status
+            exit 1
+          fi
+
+      # Configure Rust tools
       - name: Install nightly rustfmt
         uses: actions-rs/toolchain@v1
         with:
@@ -96,18 +127,13 @@ jobs:
 
           git add .
           git commit -m "Rebuilt with latest dependency updates" || echo "Nothing to commit"
-          git push origin main:integration --force
-          # Reset back to the original main
-          git reset --hard origin/main
+          git push origin integration
         id: committed
 
       - name: Update pull request
         env:
           GH_TOKEN: ${{ inputs.reflector_access_token }}
         run: |
-          git checkout integration
-          git pull origin integration
-
           mainToIntegration="$(git rev-list --count main..integration)"
           integrationToMain="$(git rev-list --count integration..main)"
 
