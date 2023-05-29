@@ -49,7 +49,7 @@ jobs:
             git checkout main -- sdk-httpmock/src/generated_httpmock.rs
 
             # Commit the merge
-            git commit -m 'Merge branch 'main' into integration and reset generated code'
+            git commit -m "Merge branch 'main' into integration and reset generated code"
           fi
 
           # Ensure there are no outstanding conflicts
