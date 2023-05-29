@@ -35,17 +35,22 @@ jobs:
       # branch
       - name: Merge main
         run: |
+          MERGE_STATUS=0
           git checkout integration
-          git merge main || echo 'Found conflicts. Attempt to use changes from main'
+          git merge main || MERGE_STATUS=$? && echo 'Found conflicts. Attempt to use changes from main'
 
-          # Reset generated files
-          git checkout main -- cli/docs/cli.json
-          git checkout main -- cli/src/generated_cli.rs
-          git checkout main -- sdk/src/generated_sdk.rs
-          git checkout main -- sdk-httpmock/src/generated_httpmock.rs
+          # If there was a merge conflict attempt to reset the generated files and commit them back
+          if [ $MERGE_STATUS -eq 1 ]
+          then
+            # Reset generated files
+            git checkout main -- cli/docs/cli.json
+            git checkout main -- cli/src/generated_cli.rs
+            git checkout main -- sdk/src/generated_sdk.rs
+            git checkout main -- sdk-httpmock/src/generated_httpmock.rs
 
-          # Commit the merge
-          git commit -m 'Merge main'
+            # Commit the merge
+            git commit -m 'Merge branch 'main' into integration and reset generated code'
+          fi
 
           # Ensure there are no outstanding conflicts
           STATUS=$(git status --porcelain=v1 2>/dev/null | wc -l)
