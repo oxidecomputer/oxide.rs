@@ -503,15 +503,15 @@ dependencies = [
 
 [[package]]
 name = "console"
-version = "0.15.5"
+version = "0.15.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c3d79fbe8970a77e3e34151cc13d3b3e248aa0faaecb9f6091fa07ebefe5ad60"
+checksum = "c926e00cc70edefdc64d3a5ff31cc65bb97a3460097762bd23afb4d8145fccf8"
 dependencies = [
  "encode_unicode",
  "lazy_static",
  "libc",
  "unicode-width",
- "windows-sys 0.42.0",
+ "windows-sys 0.45.0",
 ]
 
 [[package]]
@@ -833,7 +833,7 @@ checksum = "0206175f82b8d6bf6652ff7d71a1e27fd2e4efde587fd368662814d6ec1d9ce0"
 [[package]]
 name = "expectorate"
 version = "1.0.8"
-source = "git+https://github.com/oxidecomputer/expectorate#3d19fd396b85896e9b3c645a5a8bb56fa037c08b"
+source = "git+https://github.com/oxidecomputer/expectorate#f1f95cb4cb0a044197255a01b7a40f2606db25c4"
 dependencies = [
  "console",
  "newline-converter",
