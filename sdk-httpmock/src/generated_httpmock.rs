@@ -192,75 +192,6 @@ pub mod operations {
         }
     }
 
-    pub struct LoginLocalWhen(httpmock::When);
-    impl LoginLocalWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/login/[^/]*/local$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn silo_name(self, value: &types::Name) -> Self {
-            let re = regex::Regex::new(&format!("^/login/{}/local$", value.to_string())).unwrap();
-            Self(self.0.path_matches(re))
-        }
-
-        pub fn body(self, value: &types::UsernamePasswordCredentials) -> Self {
-            Self(self.0.json_body_obj(value))
-        }
-    }
-
-    pub struct LoginLocalThen(httpmock::Then);
-    impl LoginLocalThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn see_other(self) -> Self {
-            Self(self.0.status(303u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn success(self, status: u16, value: serde_json::Value) -> Self {
-            assert_eq!(status / 100u16, 2u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body(value),
-            )
-        }
-    }
-
     pub struct LoginSamlBeginWhen(httpmock::When);
     impl LoginSamlBeginWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -401,56 +332,6 @@ pub mod operations {
                     .status(status)
                     .header("content-type", "application/json")
                     .json_body(value),
-            )
-        }
-    }
-
-    pub struct LogoutWhen(httpmock::When);
-    impl LogoutWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/logout$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-    }
-
-    pub struct LogoutThen(httpmock::Then);
-    impl LogoutThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn no_content(self) -> Self {
-            Self(self.0.status(204u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
             )
         }
     }
@@ -3442,6 +3323,116 @@ pub mod operations {
                     .header("content-type", "application/json")
                     .json_body_obj(value),
             )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct LoginLocalWhen(httpmock::When);
+    impl LoginLocalWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/login/[^/]*/local$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo_name(self, value: &types::Name) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/login/{}/local$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::UsernamePasswordCredentials) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct LoginLocalThen(httpmock::Then);
+    impl LoginLocalThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct LogoutWhen(httpmock::When);
+    impl LogoutWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/logout$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct LogoutThen(httpmock::Then);
+    impl LogoutThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -8490,7 +8481,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn created(self, value: &types::SwitchPortSettingsInfo) -> Self {
+        pub fn created(self, value: &types::SwitchPortSettingsView) -> Self {
             Self(
                 self.0
                     .status(201u16)
@@ -8584,15 +8575,12 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingSwitchPortSettingsInfoWhen(httpmock::When);
-    impl NetworkingSwitchPortSettingsInfoWhen {
+    pub struct NetworkingSwitchPortSettingsViewWhen(httpmock::When);
+    impl NetworkingSwitchPortSettingsViewWhen {
         pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner.method(httpmock::Method::GET).path_matches(
-                    regex::Regex::new("^/v1/system/networking/switch-port-settings/[^/]*/info$")
-                        .unwrap(),
-                ),
-            )
+            Self(inner.method(httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/networking/switch-port-settings/[^/]*$").unwrap(),
+            ))
         }
 
         pub fn into_inner(self) -> httpmock::When {
@@ -8601,7 +8589,7 @@ pub mod operations {
 
         pub fn port(self, value: &types::NameOrId) -> Self {
             let re = regex::Regex::new(&format!(
-                "^/v1/system/networking/switch-port-settings/{}/info$",
+                "^/v1/system/networking/switch-port-settings/{}$",
                 value.to_string()
             ))
             .unwrap();
@@ -8609,8 +8597,8 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingSwitchPortSettingsInfoThen(httpmock::Then);
-    impl NetworkingSwitchPortSettingsInfoThen {
+    pub struct NetworkingSwitchPortSettingsViewThen(httpmock::Then);
+    impl NetworkingSwitchPortSettingsViewThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -8619,7 +8607,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SwitchPortSettingsInfo) -> Self {
+        pub fn ok(self, value: &types::SwitchPortSettingsView) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12763,18 +12751,12 @@ pub trait MockServerExt {
     fn login_spoof<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::LoginSpoofWhen, operations::LoginSpoofThen);
-    fn login_local<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::LoginLocalWhen, operations::LoginLocalThen);
     fn login_saml_begin<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::LoginSamlBeginWhen, operations::LoginSamlBeginThen);
     fn login_saml<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::LoginSamlWhen, operations::LoginSamlThen);
-    fn logout<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::LogoutWhen, operations::LogoutThen);
     fn certificate_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::CertificateListWhen, operations::CertificateListThen);
@@ -12889,6 +12871,12 @@ pub trait MockServerExt {
     fn instance_stop<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::InstanceStopWhen, operations::InstanceStopThen);
+    fn login_local<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LoginLocalWhen, operations::LoginLocalThen);
+    fn logout<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LogoutWhen, operations::LogoutThen);
     fn current_user_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::CurrentUserViewWhen, operations::CurrentUserViewThen);
@@ -13150,11 +13138,11 @@ pub trait MockServerExt {
             operations::NetworkingSwitchPortSettingsDeleteWhen,
             operations::NetworkingSwitchPortSettingsDeleteThen,
         );
-    fn networking_switch_port_settings_info<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_switch_port_settings_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingSwitchPortSettingsInfoWhen,
-            operations::NetworkingSwitchPortSettingsInfoThen,
+            operations::NetworkingSwitchPortSettingsViewWhen,
+            operations::NetworkingSwitchPortSettingsViewThen,
         );
     fn system_policy_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
@@ -13360,18 +13348,6 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
-    fn login_local<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::LoginLocalWhen, operations::LoginLocalThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::LoginLocalWhen::new(when),
-                operations::LoginLocalThen::new(then),
-            )
-        })
-    }
-
     fn login_saml_begin<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::LoginSamlBeginWhen, operations::LoginSamlBeginThen),
@@ -13392,18 +13368,6 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::LoginSamlWhen::new(when),
                 operations::LoginSamlThen::new(then),
-            )
-        })
-    }
-
-    fn logout<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::LogoutWhen, operations::LogoutThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::LogoutWhen::new(when),
-                operations::LogoutThen::new(then),
             )
         })
     }
@@ -13842,6 +13806,30 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::InstanceStopWhen::new(when),
                 operations::InstanceStopThen::new(then),
+            )
+        })
+    }
+
+    fn login_local<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LoginLocalWhen, operations::LoginLocalThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::LoginLocalWhen::new(when),
+                operations::LoginLocalThen::new(then),
+            )
+        })
+    }
+
+    fn logout<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::LogoutWhen, operations::LogoutThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::LogoutWhen::new(when),
+                operations::LogoutThen::new(then),
             )
         })
     }
@@ -14692,17 +14680,17 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
-    fn networking_switch_port_settings_info<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_switch_port_settings_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingSwitchPortSettingsInfoWhen,
-            operations::NetworkingSwitchPortSettingsInfoThen,
+            operations::NetworkingSwitchPortSettingsViewWhen,
+            operations::NetworkingSwitchPortSettingsViewThen,
         ),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::NetworkingSwitchPortSettingsInfoWhen::new(when),
-                operations::NetworkingSwitchPortSettingsInfoThen::new(then),
+                operations::NetworkingSwitchPortSettingsViewWhen::new(when),
+                operations::NetworkingSwitchPortSettingsViewThen::new(then),
             )
         })
     }
