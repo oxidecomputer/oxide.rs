@@ -50,7 +50,7 @@ tabwriter = "1.2.1"
 tempfile = "3.5.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
-tokio = { version = "1.28.1", features = ["full"] }
+tokio = { version = "1.28.2", features = ["full"] }
 tokio-tungstenite = "0.18.0"
 toml = "0.7.4"
 toml_edit = "0.19.10"
