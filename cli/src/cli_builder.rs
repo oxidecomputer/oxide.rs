@@ -326,7 +326,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingSwitchPortSettingsDelete => {
             Some("system networking switch-port-settings delete")
         }
-        CliCommand::NetworkingSwitchPortSettingsInfo => {
+        CliCommand::NetworkingSwitchPortSettingsView => {
             Some("system networking switch-port-settings view")
         }
 
