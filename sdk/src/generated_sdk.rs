@@ -5550,19 +5550,8 @@ pub mod types {
         }
     }
 
-    /// Represents a port settings object by containing its id. This id may be
-    /// used in other API calls to view and manage port settings. This is the
-    /// central object for configuring external networking. At face value this
-    /// likely seems off as there is only an `identity` member. However most
-    /// other configuration objects reference this object by id. This includes -
-    /// SwitchPortConfig - SwitchPortLinkConfig - LldpServiceConfig -
-    /// SwitchInterfaceConfig - SwitchVlanInterfaceConfig -
-    /// SwitchPortRouteConfig - SwitchPortBgpPeerConfig -
-    /// SwitchPortAddressConfig With the exception of the port configuration all
-    /// of these relationships are many to one. So SwitchPortSettings object can
-    /// contain several link configs, interface configs, route configs, etc.
-    ///
-    /// The relationships betwen these objects are futher described in RFD 267.
+    /// A switch port settings identity whose id may be used to view additional
+    /// details.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SwitchPortSettings {
         /// human-readable free-form text about a resource
@@ -5643,11 +5632,33 @@ pub mod types {
         }
     }
 
+    /// A single page of results
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortSettingsResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<SwitchPortSettings>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&SwitchPortSettingsResultsPage> for SwitchPortSettingsResultsPage {
+        fn from(value: &SwitchPortSettingsResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortSettingsResultsPage {
+        pub fn builder() -> builder::SwitchPortSettingsResultsPage {
+            builder::SwitchPortSettingsResultsPage::default()
+        }
+    }
+
     /// This structure contains all port settings information in one place. It's
     /// a convenience data structure for getting a complete view of a particular
     /// port's settings.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SwitchPortSettingsInfo {
+    pub struct SwitchPortSettingsView {
         /// Layer 3 IP address settings.
         pub addresses: Vec<SwitchPortAddressConfig>,
         /// BGP peer settings.
@@ -5671,37 +5682,15 @@ pub mod types {
         pub vlan_interfaces: Vec<SwitchVlanInterfaceConfig>,
     }
 
-    impl From<&SwitchPortSettingsInfo> for SwitchPortSettingsInfo {
-        fn from(value: &SwitchPortSettingsInfo) -> Self {
+    impl From<&SwitchPortSettingsView> for SwitchPortSettingsView {
+        fn from(value: &SwitchPortSettingsView) -> Self {
             value.clone()
         }
     }
 
-    impl SwitchPortSettingsInfo {
-        pub fn builder() -> builder::SwitchPortSettingsInfo {
-            builder::SwitchPortSettingsInfo::default()
-        }
-    }
-
-    /// A single page of results
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SwitchPortSettingsResultsPage {
-        /// list of items on this page of results
-        pub items: Vec<SwitchPortSettings>,
-        /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
-    }
-
-    impl From<&SwitchPortSettingsResultsPage> for SwitchPortSettingsResultsPage {
-        fn from(value: &SwitchPortSettingsResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl SwitchPortSettingsResultsPage {
-        pub fn builder() -> builder::SwitchPortSettingsResultsPage {
-            builder::SwitchPortSettingsResultsPage::default()
+    impl SwitchPortSettingsView {
+        pub fn builder() -> builder::SwitchPortSettingsView {
+            builder::SwitchPortSettingsView::default()
         }
     }
 
@@ -16817,7 +16806,64 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SwitchPortSettingsInfo {
+        pub struct SwitchPortSettingsResultsPage {
+            items: Result<Vec<super::SwitchPortSettings>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for SwitchPortSettingsResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SwitchPortSettingsResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchPortSettings>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortSettingsResultsPage> for super::SwitchPortSettingsResultsPage {
+            type Error = String;
+            fn try_from(value: SwitchPortSettingsResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortSettingsResultsPage> for SwitchPortSettingsResultsPage {
+            fn from(value: super::SwitchPortSettingsResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortSettingsView {
             addresses: Result<Vec<super::SwitchPortAddressConfig>, String>,
             bgp_peers: Result<Vec<super::SwitchPortBgpPeerConfig>, String>,
             groups: Result<Vec<super::SwitchPortSettingsGroups>, String>,
@@ -16830,7 +16876,7 @@ pub mod types {
             vlan_interfaces: Result<Vec<super::SwitchVlanInterfaceConfig>, String>,
         }
 
-        impl Default for SwitchPortSettingsInfo {
+        impl Default for SwitchPortSettingsView {
             fn default() -> Self {
                 Self {
                     addresses: Err("no value supplied for addresses".to_string()),
@@ -16847,7 +16893,7 @@ pub mod types {
             }
         }
 
-        impl SwitchPortSettingsInfo {
+        impl SwitchPortSettingsView {
             pub fn addresses<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<Vec<super::SwitchPortAddressConfig>>,
@@ -16950,9 +16996,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortSettingsInfo> for super::SwitchPortSettingsInfo {
+        impl std::convert::TryFrom<SwitchPortSettingsView> for super::SwitchPortSettingsView {
             type Error = String;
-            fn try_from(value: SwitchPortSettingsInfo) -> Result<Self, String> {
+            fn try_from(value: SwitchPortSettingsView) -> Result<Self, String> {
                 Ok(Self {
                     addresses: value.addresses?,
                     bgp_peers: value.bgp_peers?,
@@ -16968,8 +17014,8 @@ pub mod types {
             }
         }
 
-        impl From<super::SwitchPortSettingsInfo> for SwitchPortSettingsInfo {
-            fn from(value: super::SwitchPortSettingsInfo) -> Self {
+        impl From<super::SwitchPortSettingsView> for SwitchPortSettingsView {
+            fn from(value: super::SwitchPortSettingsView) -> Self {
                 Self {
                     addresses: Ok(value.addresses),
                     bgp_peers: Ok(value.bgp_peers),
@@ -16981,63 +17027,6 @@ pub mod types {
                     routes: Ok(value.routes),
                     settings: Ok(value.settings),
                     vlan_interfaces: Ok(value.vlan_interfaces),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct SwitchPortSettingsResultsPage {
-            items: Result<Vec<super::SwitchPortSettings>, String>,
-            next_page: Result<Option<String>, String>,
-        }
-
-        impl Default for SwitchPortSettingsResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl SwitchPortSettingsResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::SwitchPortSettings>>,
-                T::Error: std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<SwitchPortSettingsResultsPage> for super::SwitchPortSettingsResultsPage {
-            type Error = String;
-            fn try_from(value: SwitchPortSettingsResultsPage) -> Result<Self, String> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
-                })
-            }
-        }
-
-        impl From<super::SwitchPortSettingsResultsPage> for SwitchPortSettingsResultsPage {
-            fn from(value: super::SwitchPortSettingsResultsPage) -> Self {
-                Self {
-                    items: Ok(value.items),
-                    next_page: Ok(value.next_page),
                 }
             }
         }
@@ -20069,7 +20058,9 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn login_spoof(&self) -> builder::LoginSpoof;
-    /// Sends a `POST` request to `/logout`
+    /// Log user out of web console by deleting session on client and server
+    ///
+    /// Sends a `POST` request to `/v1/logout`
     ///
     /// ```ignore
     /// let response = client.logout()
@@ -20678,18 +20669,6 @@ impl ClientInstancesExt for Client {
 }
 
 pub trait ClientLoginExt {
-    /// Authenticate a user via username and password
-    ///
-    /// Sends a `POST` request to `/login/{silo_name}/local`
-    ///
-    /// ```ignore
-    /// let response = client.login_local()
-    ///    .silo_name(silo_name)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn login_local(&self) -> builder::LoginLocal;
     /// Prompt user login
     ///
     /// Either display a page asking a user for their credentials, or redirect
@@ -20718,19 +20697,31 @@ pub trait ClientLoginExt {
     ///    .await;
     /// ```
     fn login_saml(&self) -> builder::LoginSaml;
+    /// Authenticate a user via username and password
+    ///
+    /// Sends a `POST` request to `/v1/login/{silo_name}/local`
+    ///
+    /// ```ignore
+    /// let response = client.login_local()
+    ///    .silo_name(silo_name)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn login_local(&self) -> builder::LoginLocal;
 }
 
 impl ClientLoginExt for Client {
-    fn login_local(&self) -> builder::LoginLocal {
-        builder::LoginLocal::new(self)
-    }
-
     fn login_saml_begin(&self) -> builder::LoginSamlBegin {
         builder::LoginSamlBegin::new(self)
     }
 
     fn login_saml(&self) -> builder::LoginSaml {
         builder::LoginSaml::new(self)
+    }
+
+    fn login_local(&self) -> builder::LoginLocal {
+        builder::LoginLocal::new(self)
     }
 }
 
@@ -21957,7 +21948,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn networking_loopback_address_delete(&self) -> builder::NetworkingLoopbackAddressDelete;
-    /// List port settings
+    /// List switch port settings
     ///
     /// Sends a `GET` request to `/v1/system/networking/switch-port-settings`
     ///
@@ -21978,7 +21969,7 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn networking_switch_port_settings_list(&self) -> builder::NetworkingSwitchPortSettingsList;
-    /// Create port settings
+    /// Create switch port settings
     ///
     /// Sends a `POST` request to `/v1/system/networking/switch-port-settings`
     ///
@@ -21990,7 +21981,7 @@ pub trait ClientSystemExt {
     /// ```
     fn networking_switch_port_settings_create(&self)
         -> builder::NetworkingSwitchPortSettingsCreate;
-    /// Delete port settings
+    /// Delete switch port settings
     ///
     /// Sends a `DELETE` request to `/v1/system/networking/switch-port-settings`
     ///
@@ -22008,18 +21999,18 @@ pub trait ClientSystemExt {
     /// Get information about a switch port
     ///
     /// Sends a `GET` request to
-    /// `/v1/system/networking/switch-port-settings/{port}/info`
+    /// `/v1/system/networking/switch-port-settings/{port}`
     ///
     /// Arguments:
     /// - `port`: A name or id to use when selecting switch port settings info
     ///   objects.
     /// ```ignore
-    /// let response = client.networking_switch_port_settings_info()
+    /// let response = client.networking_switch_port_settings_view()
     ///    .port(port)
     ///    .send()
     ///    .await;
     /// ```
-    fn networking_switch_port_settings_info(&self) -> builder::NetworkingSwitchPortSettingsInfo;
+    fn networking_switch_port_settings_view(&self) -> builder::NetworkingSwitchPortSettingsView;
     /// List silos
     ///
     /// Lists silos that are discoverable based on the current permissions.
@@ -22475,8 +22466,8 @@ impl ClientSystemExt for Client {
         builder::NetworkingSwitchPortSettingsDelete::new(self)
     }
 
-    fn networking_switch_port_settings_info(&self) -> builder::NetworkingSwitchPortSettingsInfo {
-        builder::NetworkingSwitchPortSettingsInfo::new(self)
+    fn networking_switch_port_settings_view(&self) -> builder::NetworkingSwitchPortSettingsView {
+        builder::NetworkingSwitchPortSettingsView::new(self)
     }
 
     fn silo_list(&self) -> builder::SiloList {
@@ -23357,87 +23348,6 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientLoginExt::login_local`]
-    ///
-    /// [`ClientLoginExt::login_local`]: super::ClientLoginExt::login_local
-    #[derive(Debug, Clone)]
-    pub struct LoginLocal<'a> {
-        client: &'a super::Client,
-        silo_name: Result<types::Name, String>,
-        body: Result<types::builder::UsernamePasswordCredentials, String>,
-    }
-
-    impl<'a> LoginLocal<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                silo_name: Err("silo_name was not initialized".to_string()),
-                body: Ok(types::builder::UsernamePasswordCredentials::default()),
-            }
-        }
-
-        pub fn silo_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.silo_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::UsernamePasswordCredentials>,
-        {
-            self.body = value.try_into().map(From::from).map_err(|_| {
-                "conversion to `UsernamePasswordCredentials` for body failed".to_string()
-            });
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::UsernamePasswordCredentials,
-            ) -> types::builder::UsernamePasswordCredentials,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/login/{silo_name}/local`
-        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<types::Error>> {
-            let Self {
-                client,
-                silo_name,
-                body,
-            } = self;
-            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(std::convert::TryInto::<types::UsernamePasswordCredentials>::try_into)
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/login/{}/local",
-                client.baseurl,
-                encode_path(&silo_name.to_string()),
-            );
-            let request = client.client.post(url).json(&body).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
     /// Builder for [`ClientLoginExt::login_saml_begin`]
     ///
     /// [`ClientLoginExt::login_saml_begin`]: super::ClientLoginExt::login_saml_begin
@@ -23589,46 +23499,6 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientHiddenExt::logout`]
-    ///
-    /// [`ClientHiddenExt::logout`]: super::ClientHiddenExt::logout
-    #[derive(Debug, Clone)]
-    pub struct Logout<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> Logout<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
-        }
-
-        /// Sends a `POST` request to `/logout`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/logout", client.baseurl,);
-            let request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -27470,6 +27340,135 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientLoginExt::login_local`]
+    ///
+    /// [`ClientLoginExt::login_local`]: super::ClientLoginExt::login_local
+    #[derive(Debug, Clone)]
+    pub struct LoginLocal<'a> {
+        client: &'a super::Client,
+        silo_name: Result<types::Name, String>,
+        body: Result<types::builder::UsernamePasswordCredentials, String>,
+    }
+
+    impl<'a> LoginLocal<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                silo_name: Err("silo_name was not initialized".to_string()),
+                body: Ok(types::builder::UsernamePasswordCredentials::default()),
+            }
+        }
+
+        pub fn silo_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.silo_name = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::UsernamePasswordCredentials>,
+        {
+            self.body = value.try_into().map(From::from).map_err(|_| {
+                "conversion to `UsernamePasswordCredentials` for body failed".to_string()
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::UsernamePasswordCredentials,
+            ) -> types::builder::UsernamePasswordCredentials,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/login/{silo_name}/local`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                silo_name,
+                body,
+            } = self;
+            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(std::convert::TryInto::<types::UsernamePasswordCredentials>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/login/{}/local",
+                client.baseurl,
+                encode_path(&silo_name.to_string()),
+            );
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::logout`]
+    ///
+    /// [`ClientHiddenExt::logout`]: super::ClientHiddenExt::logout
+    #[derive(Debug, Clone)]
+    pub struct Logout<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> Logout<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client }
+        }
+
+        /// Sends a `POST` request to `/v1/logout`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/logout", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -34140,7 +34139,7 @@ pub mod builder {
         /// `/v1/system/networking/switch-port-settings`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::SwitchPortSettingsInfo>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::SwitchPortSettingsView>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::SwitchPortSettingsCreate>::try_into)
@@ -34241,16 +34240,16 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_switch_port_settings_info`]
+    /// Builder for [`ClientSystemExt::networking_switch_port_settings_view`]
     ///
-    /// [`ClientSystemExt::networking_switch_port_settings_info`]: super::ClientSystemExt::networking_switch_port_settings_info
+    /// [`ClientSystemExt::networking_switch_port_settings_view`]: super::ClientSystemExt::networking_switch_port_settings_view
     #[derive(Debug, Clone)]
-    pub struct NetworkingSwitchPortSettingsInfo<'a> {
+    pub struct NetworkingSwitchPortSettingsView<'a> {
         client: &'a super::Client,
         port: Result<types::NameOrId, String>,
     }
 
-    impl<'a> NetworkingSwitchPortSettingsInfo<'a> {
+    impl<'a> NetworkingSwitchPortSettingsView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
@@ -34269,14 +34268,14 @@ pub mod builder {
         }
 
         /// Sends a `GET` request to
-        /// `/v1/system/networking/switch-port-settings/{port}/info`
+        /// `/v1/system/networking/switch-port-settings/{port}`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::SwitchPortSettingsInfo>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::SwitchPortSettingsView>, Error<types::Error>> {
             let Self { client, port } = self;
             let port = port.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/v1/system/networking/switch-port-settings/{}/info",
+                "{}/v1/system/networking/switch-port-settings/{}",
                 client.baseurl,
                 encode_path(&port.to_string()),
             );

@@ -2022,7 +2022,7 @@
               "subcommands": [
                 {
                   "name": "apply-settings",
-                  "about": "Apply switch port settings.",
+                  "about": "Apply switch port settings",
                   "args": [
                     {
                       "long": "json-body",
@@ -2052,7 +2052,7 @@
                 },
                 {
                   "name": "clear-settings",
-                  "about": "Clear switch port settings.",
+                  "about": "Clear switch port settings",
                   "args": [
                     {
                       "long": "port",
@@ -2070,7 +2070,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "List switch ports.",
+                  "about": "List switch ports",
                   "args": [
                     {
                       "long": "limit",
@@ -2103,7 +2103,7 @@
                   "subcommands": [
                     {
                       "name": "list",
-                      "about": "List the blocks in an address lot.",
+                      "about": "List the blocks in an address lot",
                       "args": [
                         {
                           "long": "address-lot",
@@ -2125,7 +2125,7 @@
                 },
                 {
                   "name": "create",
-                  "about": "Create an address lot.",
+                  "about": "Create an address lot",
                   "args": [
                     {
                       "long": "description"
@@ -2153,7 +2153,7 @@
                 },
                 {
                   "name": "delete",
-                  "about": "Delete an address lot.",
+                  "about": "Delete an address lot",
                   "args": [
                     {
                       "long": "address-lot",
@@ -2163,7 +2163,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "List address lots.",
+                  "about": "List address lots",
                   "args": [
                     {
                       "long": "limit",
@@ -2186,7 +2186,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create a loopback address.",
+                  "about": "Create a loopback address",
                   "args": [
                     {
                       "long": "address",
@@ -2220,7 +2220,7 @@
                 },
                 {
                   "name": "delete",
-                  "about": "Delete a loopback address.",
+                  "about": "Delete a loopback address",
                   "args": [
                     {
                       "long": "address",
@@ -2242,7 +2242,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "Get loopback addresses, optionally filtering by id.",
+                  "about": "Get loopback addresses, optionally filtering by id",
                   "args": [
                     {
                       "long": "limit",
@@ -2263,7 +2263,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create port settings.",
+                  "about": "Create switch port settings",
                   "args": [
                     {
                       "long": "description"
@@ -2283,7 +2283,7 @@
                 },
                 {
                   "name": "delete",
-                  "about": "Delete port settings.",
+                  "about": "Delete switch port settings",
                   "args": [
                     {
                       "long": "port-settings",
@@ -2293,7 +2293,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "List port settings.",
+                  "about": "List switch port settings",
                   "args": [
                     {
                       "long": "limit",
@@ -2315,7 +2315,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Get information about a switch port.",
+                  "about": "Get information about a switch port",
                   "args": [
                     {
                       "long": "port",

@@ -18,10 +18,8 @@ impl Cli {
             CliCommand::DeviceAuthConfirm => Self::cli_device_auth_confirm(),
             CliCommand::DeviceAccessToken => Self::cli_device_access_token(),
             CliCommand::LoginSpoof => Self::cli_login_spoof(),
-            CliCommand::LoginLocal => Self::cli_login_local(),
             CliCommand::LoginSamlBegin => Self::cli_login_saml_begin(),
             CliCommand::LoginSaml => Self::cli_login_saml(),
-            CliCommand::Logout => Self::cli_logout(),
             CliCommand::CertificateList => Self::cli_certificate_list(),
             CliCommand::CertificateCreate => Self::cli_certificate_create(),
             CliCommand::CertificateView => Self::cli_certificate_view(),
@@ -58,6 +56,8 @@ impl Cli {
             CliCommand::InstanceSerialConsoleStream => Self::cli_instance_serial_console_stream(),
             CliCommand::InstanceStart => Self::cli_instance_start(),
             CliCommand::InstanceStop => Self::cli_instance_stop(),
+            CliCommand::LoginLocal => Self::cli_login_local(),
+            CliCommand::Logout => Self::cli_logout(),
             CliCommand::CurrentUserView => Self::cli_current_user_view(),
             CliCommand::CurrentUserGroups => Self::cli_current_user_groups(),
             CliCommand::CurrentUserSshKeyList => Self::cli_current_user_ssh_key_list(),
@@ -147,8 +147,8 @@ impl Cli {
             CliCommand::NetworkingSwitchPortSettingsDelete => {
                 Self::cli_networking_switch_port_settings_delete()
             }
-            CliCommand::NetworkingSwitchPortSettingsInfo => {
-                Self::cli_networking_switch_port_settings_info()
+            CliCommand::NetworkingSwitchPortSettingsView => {
+                Self::cli_networking_switch_port_settings_view()
             }
             CliCommand::SystemPolicyView => Self::cli_system_policy_view(),
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
@@ -328,43 +328,6 @@ impl Cli {
             )
     }
 
-    pub fn cli_login_local() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("silo-name")
-                    .long("silo-name")
-                    .value_parser(clap::value_parser!(types::Name))
-                    .required(true),
-            )
-            .arg(
-                clap::Arg::new("password")
-                    .long("password")
-                    .value_parser(clap::value_parser!(types::Password))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                clap::Arg::new("username")
-                    .long("username")
-                    .value_parser(clap::value_parser!(types::UserId))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Authenticate a user via username and password")
-    }
-
     pub fn cli_login_saml_begin() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -401,10 +364,6 @@ impl Cli {
                     .required(true),
             )
             .about("Authenticate a user via SAML")
-    }
-
-    pub fn cli_logout() -> clap::Command {
-        clap::Command::new("")
     }
 
     pub fn cli_certificate_list() -> clap::Command {
@@ -1533,6 +1492,48 @@ impl Cli {
             .about("Stop an instance")
     }
 
+    pub fn cli_login_local() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("silo-name")
+                    .long("silo-name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true),
+            )
+            .arg(
+                clap::Arg::new("password")
+                    .long("password")
+                    .value_parser(clap::value_parser!(types::Password))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("username")
+                    .long("username")
+                    .value_parser(clap::value_parser!(types::UserId))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Authenticate a user via username and password")
+    }
+
+    pub fn cli_logout() -> clap::Command {
+        clap::Command::new("")
+            .about("Log user out of web console by deleting session on client and server")
+    }
+
     pub fn cli_current_user_view() -> clap::Command {
         clap::Command::new("").about("Fetch the user associated with the current session")
     }
@@ -2376,7 +2377,7 @@ impl Cli {
                     .required(false)
                     .help("An optional switch port id to use when listing switch ports."),
             )
-            .about("List switch ports.")
+            .about("List switch ports")
     }
 
     pub fn cli_networking_switch_port_apply_settings() -> clap::Command {
@@ -2423,7 +2424,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Apply switch port settings.")
+            .about("Apply switch port settings")
     }
 
     pub fn cli_networking_switch_port_clear_settings() -> clap::Command {
@@ -2449,7 +2450,7 @@ impl Cli {
                     .required(true)
                     .help("A switch location to use when selecting switch ports."),
             )
-            .about("Clear switch port settings.")
+            .about("Clear switch port settings")
     }
 
     pub fn cli_switch_list() -> clap::Command {
@@ -3038,7 +3039,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List address lots.")
+            .about("List address lots")
     }
 
     pub fn cli_networking_address_lot_create() -> clap::Command {
@@ -3082,7 +3083,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an address lot.")
+            .about("Create an address lot")
     }
 
     pub fn cli_networking_address_lot_delete() -> clap::Command {
@@ -3094,7 +3095,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the address lot"),
             )
-            .about("Delete an address lot.")
+            .about("Delete an address lot")
     }
 
     pub fn cli_networking_address_lot_block_list() -> clap::Command {
@@ -3124,7 +3125,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List the blocks in an address lot.")
+            .about("List the blocks in an address lot")
     }
 
     pub fn cli_networking_loopback_address_list() -> clap::Command {
@@ -3147,7 +3148,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("Get loopback addresses, optionally filtering by id.")
+            .about("Get loopback addresses, optionally filtering by id")
     }
 
     pub fn cli_networking_loopback_address_create() -> clap::Command {
@@ -3207,7 +3208,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a loopback address.")
+            .about("Create a loopback address")
     }
 
     pub fn cli_networking_loopback_address_delete() -> clap::Command {
@@ -3246,7 +3247,7 @@ impl Cli {
                          address.",
                     ),
             )
-            .about("Delete a loopback address.")
+            .about("Delete a loopback address")
     }
 
     pub fn cli_networking_switch_port_settings_list() -> clap::Command {
@@ -3278,7 +3279,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List port settings.")
+            .about("List switch port settings")
     }
 
     pub fn cli_networking_switch_port_settings_create() -> clap::Command {
@@ -3309,7 +3310,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create port settings.")
+            .about("Create switch port settings")
     }
 
     pub fn cli_networking_switch_port_settings_delete() -> clap::Command {
@@ -3321,10 +3322,10 @@ impl Cli {
                     .required(false)
                     .help("An optional name or id to use when selecting port settings."),
             )
-            .about("Delete port settings.")
+            .about("Delete switch port settings")
     }
 
-    pub fn cli_networking_switch_port_settings_info() -> clap::Command {
+    pub fn cli_networking_switch_port_settings_view() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("port")
@@ -3333,7 +3334,7 @@ impl Cli {
                     .required(true)
                     .help("A name or id to use when selecting switch port settings info objects."),
             )
-            .about("Get information about a switch port.")
+            .about("Get information about a switch port")
     }
 
     pub fn cli_system_policy_view() -> clap::Command {
@@ -4753,17 +4754,11 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::LoginSpoof => {
                 self.execute_login_spoof(matches).await;
             }
-            CliCommand::LoginLocal => {
-                self.execute_login_local(matches).await;
-            }
             CliCommand::LoginSamlBegin => {
                 self.execute_login_saml_begin(matches).await;
             }
             CliCommand::LoginSaml => {
                 self.execute_login_saml(matches).await;
-            }
-            CliCommand::Logout => {
-                self.execute_logout(matches).await;
             }
             CliCommand::CertificateList => {
                 self.execute_certificate_list(matches).await;
@@ -4872,6 +4867,12 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::InstanceStop => {
                 self.execute_instance_stop(matches).await;
+            }
+            CliCommand::LoginLocal => {
+                self.execute_login_local(matches).await;
+            }
+            CliCommand::Logout => {
+                self.execute_logout(matches).await;
             }
             CliCommand::CurrentUserView => {
                 self.execute_current_user_view(matches).await;
@@ -5079,8 +5080,8 @@ impl<T: CliOverride> Cli<T> {
                 self.execute_networking_switch_port_settings_delete(matches)
                     .await;
             }
-            CliCommand::NetworkingSwitchPortSettingsInfo => {
-                self.execute_networking_switch_port_settings_info(matches)
+            CliCommand::NetworkingSwitchPortSettingsView => {
+                self.execute_networking_switch_port_settings_view(matches)
                     .await;
             }
             CliCommand::SystemPolicyView => {
@@ -5344,41 +5345,6 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
-    pub async fn execute_login_local(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.login_local();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::UsernamePasswordCredentials>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        if let Some(value) = matches.get_one::<types::Name>("silo-name") {
-            request = request.silo_name(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::Password>("password") {
-            request = request.body_map(|body| body.password(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::UserId>("username") {
-            request = request.body_map(|body| body.username(value.clone()))
-        }
-
-        self.over
-            .execute_login_local(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                todo!()
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
     pub async fn execute_login_saml_begin(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.login_saml_begin();
         if let Some(value) = matches.get_one::<types::Name>("silo-name") {
@@ -5418,20 +5384,6 @@ impl<T: CliOverride> Cli<T> {
         match result {
             Ok(r) => {
                 todo!()
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_logout(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.logout();
-        self.over.execute_logout(matches, &mut request).unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
@@ -6504,6 +6456,55 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_instance_stop(matches, &mut request)
             .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_login_local(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.login_local();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::UsernamePasswordCredentials>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("silo-name") {
+            request = request.silo_name(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Password>("password") {
+            request = request.body_map(|body| body.password(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::UserId>("username") {
+            request = request.body_map(|body| body.username(value.clone()))
+        }
+
+        self.over
+            .execute_login_local(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_logout(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.logout();
+        self.over.execute_logout(matches, &mut request).unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -8388,14 +8389,14 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_switch_port_settings_info(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.networking_switch_port_settings_info();
+    pub async fn execute_networking_switch_port_settings_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_switch_port_settings_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("port") {
             request = request.port(value.clone());
         }
 
         self.over
-            .execute_networking_switch_port_settings_info(matches, &mut request)
+            .execute_networking_switch_port_settings_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -9843,14 +9844,6 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_login_local(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::LoginLocal,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
     fn execute_login_saml_begin(
         &self,
         matches: &clap::ArgMatches,
@@ -9863,14 +9856,6 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::LoginSaml,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_logout(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::Logout,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -10159,6 +10144,22 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceStop,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_login_local(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::LoginLocal,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_logout(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::Logout,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -10683,10 +10684,10 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_networking_switch_port_settings_info(
+    fn execute_networking_switch_port_settings_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::NetworkingSwitchPortSettingsInfo,
+        request: &mut builder::NetworkingSwitchPortSettingsView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -11084,10 +11085,8 @@ pub enum CliCommand {
     DeviceAuthConfirm,
     DeviceAccessToken,
     LoginSpoof,
-    LoginLocal,
     LoginSamlBegin,
     LoginSaml,
-    Logout,
     CertificateList,
     CertificateCreate,
     CertificateView,
@@ -11124,6 +11123,8 @@ pub enum CliCommand {
     InstanceSerialConsoleStream,
     InstanceStart,
     InstanceStop,
+    LoginLocal,
+    Logout,
     CurrentUserView,
     CurrentUserGroups,
     CurrentUserSshKeyList,
@@ -11189,7 +11190,7 @@ pub enum CliCommand {
     NetworkingSwitchPortSettingsList,
     NetworkingSwitchPortSettingsCreate,
     NetworkingSwitchPortSettingsDelete,
-    NetworkingSwitchPortSettingsInfo,
+    NetworkingSwitchPortSettingsView,
     SystemPolicyView,
     SystemPolicyUpdate,
     RoleList,
@@ -11247,10 +11248,8 @@ impl CliCommand {
             CliCommand::DeviceAuthConfirm,
             CliCommand::DeviceAccessToken,
             CliCommand::LoginSpoof,
-            CliCommand::LoginLocal,
             CliCommand::LoginSamlBegin,
             CliCommand::LoginSaml,
-            CliCommand::Logout,
             CliCommand::CertificateList,
             CliCommand::CertificateCreate,
             CliCommand::CertificateView,
@@ -11287,6 +11286,8 @@ impl CliCommand {
             CliCommand::InstanceSerialConsoleStream,
             CliCommand::InstanceStart,
             CliCommand::InstanceStop,
+            CliCommand::LoginLocal,
+            CliCommand::Logout,
             CliCommand::CurrentUserView,
             CliCommand::CurrentUserGroups,
             CliCommand::CurrentUserSshKeyList,
@@ -11352,7 +11353,7 @@ impl CliCommand {
             CliCommand::NetworkingSwitchPortSettingsList,
             CliCommand::NetworkingSwitchPortSettingsCreate,
             CliCommand::NetworkingSwitchPortSettingsDelete,
-            CliCommand::NetworkingSwitchPortSettingsInfo,
+            CliCommand::NetworkingSwitchPortSettingsView,
             CliCommand::SystemPolicyView,
             CliCommand::SystemPolicyUpdate,
             CliCommand::RoleList,
