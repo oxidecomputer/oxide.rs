@@ -23,33 +23,36 @@ jobs:
       group: integration
       cancel-in-progress: true
     runs-on: ubuntu-22.04
+    env:
+      INT_BRANCH: integration
+      TARGET_BRANCH: main
     steps:
 
-      # Checkout both the main and integration branches
+      # Checkout both the target and integration branches
       - uses: actions/checkout@v3.5.0
         with:
           token: ${{ inputs.reflector_access_token }}
           fetch-depth: 0
 
-      # Attempt to merge main in to integration. Discarding any generated code on the integration
-      # branch
-      - name: Merge main
+      # Attempt to merge target branch in to integration branch. Discarding any generated code on
+      # the integration branch
+      - name: Merge target
         run: |
           MERGE_STATUS=0
-          git checkout integration
-          git merge main || MERGE_STATUS=$? && echo 'Found conflicts. Attempt to use changes from main'
+          git checkout $INT_BRANCH
+          git merge $TARGET_BRANCH || MERGE_STATUS=$? && echo 'Found conflicts. Attempt to use changes from $TARGET_BRANCH'
 
           # If there was a merge conflict attempt to reset the generated files and commit them back
           if [ $MERGE_STATUS -eq 1 ]
           then
             # Reset generated files
-            git checkout main -- cli/docs/cli.json
-            git checkout main -- cli/src/generated_cli.rs
-            git checkout main -- sdk/src/generated_sdk.rs
-            git checkout main -- sdk-httpmock/src/generated_httpmock.rs
+            git checkout $TARGET_BRANCH -- cli/docs/cli.json
+            git checkout $TARGET_BRANCH -- cli/src/generated_cli.rs
+            git checkout $TARGET_BRANCH -- sdk/src/generated_sdk.rs
+            git checkout $TARGET_BRANCH -- sdk-httpmock/src/generated_httpmock.rs
 
             # Commit the merge
-            git commit -m "Merge branch 'main' into integration and reset generated code"
+            git commit -m "Merge branch '$TARGET_BRANCH' into $INT_BRANCH and reset generated code"
           fi
 
           # Ensure there are no outstanding conflicts
@@ -132,37 +135,34 @@ jobs:
 
           git add .
           git commit -m "Rebuilt with latest dependency updates" || echo "Nothing to commit"
-          git push origin integration
+          git push origin $INT_BRANCH
         id: committed
 
       - name: Update pull request
         env:
           GH_TOKEN: ${{ inputs.reflector_access_token }}
         run: |
-          mainToIntegration="$(git rev-list --count main..integration)"
-          integrationToMain="$(git rev-list --count integration..main)"
+          # Compare the integration branch with the target branch
+          TARGET_TO_INT="$(git rev-list --count $TARGET_BRANCH..$INT_BRANCH)"
+          INT_TO_TARGET="$(git rev-list --count $INT_BRANCH..$TARGET_BRANCH)"
 
-          prUrl=$(gh search prs --head integration --base main --state open --repo $GITHUB_REPOSITORY --json url --jq .[].url)
+          # Check for an existing pull request from the integration branch to the target branch
+          eval $(gh pr view $INT_BRANCH --repo $GITHUB_REPOSITORY --json url,number,state | jq -r 'to_entries[] | "\(.key | ascii_upcase)=\(.value)"')
+          HASPR=0
+          [ "$NUMBER" != "" ] && [ "$BASEREFNAME" == "$TARGET_BRANCH" ] || HASPR=$?
 
-          # Sleep to help prevent GitHub cli from tripping over itself
-          sleep 2
-
-          prNumber=$(gh search prs --head integration --base main --state open --repo $GITHUB_REPOSITORY --json number --jq .[].number)
-
-          sleep 2
-
-          if [ "$mainToIntegration" -eq 0 -a "$integrationToMain" -eq 0 ]
+          if [ "$TARGET_TO_INT" -eq 0 -a "$INT_TO_TARGET" -eq 0 ]
           then
-            echo "Main is up to date with integration. No pull request needed"
+            echo "$TARGET_BRANCH is up to date with $INT_BRANCH. No pull request needed"
 
-            if [ "$prNumber" != "" ]
+            if [ "$HASPR" -eq 0 -a "$NUMBER" != "" ]
             then
               echo "Closing existing PR"
-              gh pr close $prNumber
+              gh pr close $NUMBER
             fi
-          elif [ "$mainToIntegration" -gt 0 ]
+          elif [ "$TARGET_TO_INT" -gt 0 ]
           then
-            echo "Main is behind integration ($mainToIntegration)"
+            echo "$TARGET_BRANCH is behind $INT_BRANCH ($TARGET_TO_INT)"
 
             title=""
             echo "" > body
@@ -207,14 +207,14 @@ jobs:
 
             title="Bump${title}"
 
-            if [ -z "$prNumber" ]
+            if [ -z "$NUMBER" -o "$STATE" != "OPEN" ]
             then
-              gh pr create -B main -H integration --title "$title" --body-file body
+              gh pr create -B $TARGET_BRANCH -H $INT_BRANCH --title "$title" --body-file body
             else
-              echo "PR already exists: ($prNumber) $prUrl . Updating..."
-              gh pr edit "$prNumber" --title "$title" --body-file body
+              echo "PR already exists: ($NUMBER) $URL . Updating..."
+              gh pr edit "$NUMBER" --title "$title" --body-file body
             fi
           else
-            echo "Integration is behind main ($integrationToMain). This is likely an error"
+            echo "$INT_BRANCH is behind $TARGET_BRANCH ($INT_TO_TARGET). This is likely an error"
             exit 1
           fi
