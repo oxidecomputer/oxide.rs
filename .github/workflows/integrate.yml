@@ -39,12 +39,14 @@ jobs:
       - name: Merge target
         run: |
           MERGE_STATUS=0
-          git checkout $INT_BRANCH
-          git merge $TARGET_BRANCH || MERGE_STATUS=$? && echo 'Found conflicts. Attempt to use changes from $TARGET_BRANCH'
+          git checkout $INT_BRANCH 2>/dev/null || git checkout -b $INT_BRANCH
+          git merge $TARGET_BRANCH || MERGE_STATUS=$?
 
           # If there was a merge conflict attempt to reset the generated files and commit them back
           if [ $MERGE_STATUS -eq 1 ]
           then
+            echo "Found conflicts. Attempt to use changes from $TARGET_BRANCH"
+
             # Reset generated files
             git checkout $TARGET_BRANCH -- cli/docs/cli.json
             git checkout $TARGET_BRANCH -- cli/src/generated_cli.rs
@@ -119,23 +121,23 @@ jobs:
           git config --local user.name "oxide-reflector-bot[bot]"
           git config --local user.email "${{ inputs.reflector_user_id }}+oxide-reflector-bot[bot]@users.noreply.github.com"
 
-          # Detect specific changes that will be committed back
-
-          # Check if the spec file has been updated
-          git diff --quiet oxide.json || specUpdate=$?
-          echo "spec=${specUpdate}" >> $GITHUB_OUTPUT
-
-          # Check if the generated docs spec file has been updated
-          git diff --quiet cli/docs/cli.json || docsUpdate=$?
-          echo "docs=${docsUpdate}" >> $GITHUB_OUTPUT
-
-          # Check if anything in the lock file has updated
-          git diff --quiet Cargo.lock || depsUpdate=$?
-          echo "deps=${depsUpdate}" >> $GITHUB_OUTPUT
-
           git add .
           git commit -m "Rebuilt with latest dependency updates" || echo "Nothing to commit"
           git push origin $INT_BRANCH
+
+          # Detect changes to report back
+
+          # Check if the spec file has been updated
+          git diff $TARGET_BRANCH...$INT_BRANCH --quiet oxide.json || specUpdate=$?
+          echo "spec=${specUpdate}" >> $GITHUB_OUTPUT
+
+          # Check if the generated docs spec file has been updated
+          git diff $TARGET_BRANCH...$INT_BRANCH --quiet cli/docs/cli.json || docsUpdate=$?
+          echo "docs=${docsUpdate}" >> $GITHUB_OUTPUT
+
+          # Check if anything in the lock file has updated
+          git diff $TARGET_BRANCH...$INT_BRANCH --quiet Cargo.lock || depsUpdate=$?
+          echo "deps=${depsUpdate}" >> $GITHUB_OUTPUT
         id: committed
 
       - name: Update pull request
