@@ -391,7 +391,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::LoginLocal
         | CliCommand::LoginSaml
         | CliCommand::LoginSamlBegin
-        | CliCommand::LoginSpoof
         | CliCommand::Logout
         | CliCommand::RoleList
         | CliCommand::RoleView
