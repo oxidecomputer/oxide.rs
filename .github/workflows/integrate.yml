@@ -23,11 +23,52 @@ jobs:
       group: integration
       cancel-in-progress: true
     runs-on: ubuntu-22.04
+    env:
+      INT_BRANCH: integration
+      TARGET_BRANCH: main
     steps:
+
+      # Checkout both the target and integration branches
       - uses: actions/checkout@v3.5.0
         with:
           token: ${{ inputs.reflector_access_token }}
-          ref: main
+          fetch-depth: 0
+
+      # Attempt to merge target branch in to integration branch. Discarding any generated code on
+      # the integration branch
+      - name: Merge target
+        run: |
+          MERGE_STATUS=0
+          git checkout $INT_BRANCH 2>/dev/null || git checkout -b $INT_BRANCH
+          git merge $TARGET_BRANCH || MERGE_STATUS=$?
+
+          # If there was a merge conflict attempt to reset the generated files and commit them back
+          if [ $MERGE_STATUS -eq 1 ]
+          then
+            echo "Found conflicts. Attempt to use changes from $TARGET_BRANCH"
+
+            # Reset generated files
+            git checkout $TARGET_BRANCH -- cli/docs/cli.json
+            git checkout $TARGET_BRANCH -- cli/src/generated_cli.rs
+            git checkout $TARGET_BRANCH -- sdk/src/generated_sdk.rs
+            git checkout $TARGET_BRANCH -- sdk-httpmock/src/generated_httpmock.rs
+
+            # Commit the merge
+            git commit -m "Merge branch '$TARGET_BRANCH' into $INT_BRANCH and reset generated code"
+          fi
+
+          # Ensure there are no outstanding conflicts
+          STATUS=$(git status --porcelain=v1 2>/dev/null | wc -l)
+          if [ $STATUS -eq 0 ]
+          then
+            exit 0
+          else
+            echo 'Found additional conflicts from merge attempt that need to be manually resolved'
+            git status
+            exit 1
+          fi
+
+      # Configure Rust tools
       - name: Install nightly rustfmt
         uses: actions-rs/toolchain@v1
         with:
@@ -80,58 +121,50 @@ jobs:
           git config --local user.name "oxide-reflector-bot[bot]"
           git config --local user.email "${{ inputs.reflector_user_id }}+oxide-reflector-bot[bot]@users.noreply.github.com"
 
-          # Detect specific changes that will be committed back
+          git add .
+          git commit -m "Rebuilt with latest dependency updates" || echo "Nothing to commit"
+          git push origin $INT_BRANCH
+
+          # Detect changes to report back
 
           # Check if the spec file has been updated
-          git diff --quiet oxide.json || specUpdate=$?
+          git diff $TARGET_BRANCH...$INT_BRANCH --quiet oxide.json || specUpdate=$?
           echo "spec=${specUpdate}" >> $GITHUB_OUTPUT
 
           # Check if the generated docs spec file has been updated
-          git diff --quiet cli/docs/cli.json || docsUpdate=$?
+          git diff $TARGET_BRANCH...$INT_BRANCH --quiet cli/docs/cli.json || docsUpdate=$?
           echo "docs=${docsUpdate}" >> $GITHUB_OUTPUT
 
           # Check if anything in the lock file has updated
-          git diff --quiet Cargo.lock || depsUpdate=$?
+          git diff $TARGET_BRANCH...$INT_BRANCH --quiet Cargo.lock || depsUpdate=$?
           echo "deps=${depsUpdate}" >> $GITHUB_OUTPUT
-
-          git add .
-          git commit -m "Rebuilt with latest dependency updates" || echo "Nothing to commit"
-          git push origin main:integration --force
-          # Reset back to the original main
-          git reset --hard origin/main
         id: committed
 
       - name: Update pull request
         env:
           GH_TOKEN: ${{ inputs.reflector_access_token }}
         run: |
-          git checkout integration
-          git pull origin integration
+          # Compare the integration branch with the target branch
+          TARGET_TO_INT="$(git rev-list --count $TARGET_BRANCH..$INT_BRANCH)"
+          INT_TO_TARGET="$(git rev-list --count $INT_BRANCH..$TARGET_BRANCH)"
 
-          mainToIntegration="$(git rev-list --count main..integration)"
-          integrationToMain="$(git rev-list --count integration..main)"
+          # Check for an existing pull request from the integration branch to the target branch
+          eval $(gh pr view $INT_BRANCH --repo $GITHUB_REPOSITORY --json url,number,state | jq -r 'to_entries[] | "\(.key | ascii_upcase)=\(.value)"')
+          HASPR=0
+          [ "$NUMBER" != "" ] && [ "$BASEREFNAME" == "$TARGET_BRANCH" ] || HASPR=$?
 
-          prUrl=$(gh search prs --head integration --base main --state open --repo $GITHUB_REPOSITORY --json url --jq .[].url)
-
-          # Sleep to help prevent GitHub cli from tripping over itself
-          sleep 2
-
-          prNumber=$(gh search prs --head integration --base main --state open --repo $GITHUB_REPOSITORY --json number --jq .[].number)
-
-          sleep 2
-
-          if [ "$mainToIntegration" -eq 0 -a "$integrationToMain" -eq 0 ]
+          if [ "$TARGET_TO_INT" -eq 0 -a "$INT_TO_TARGET" -eq 0 ]
           then
-            echo "Main is up to date with integration. No pull request needed"
+            echo "$TARGET_BRANCH is up to date with $INT_BRANCH. No pull request needed"
 
-            if [ "$prNumber" != "" ]
+            if [ "$HASPR" -eq 0 -a "$NUMBER" != "" ]
             then
               echo "Closing existing PR"
-              gh pr close $prNumber
+              gh pr close $NUMBER
             fi
-          elif [ "$mainToIntegration" -gt 0 ]
+          elif [ "$TARGET_TO_INT" -gt 0 ]
           then
-            echo "Main is behind integration ($mainToIntegration)"
+            echo "$TARGET_BRANCH is behind $INT_BRANCH ($TARGET_TO_INT)"
 
             title=""
             echo "" > body
@@ -176,14 +209,14 @@ jobs:
 
             title="Bump${title}"
 
-            if [ -z "$prNumber" ]
+            if [ -z "$NUMBER" -o "$STATE" != "OPEN" ]
             then
-              gh pr create -B main -H integration --title "$title" --body-file body
+              gh pr create -B $TARGET_BRANCH -H $INT_BRANCH --title "$title" --body-file body
             else
-              echo "PR already exists: ($prNumber) $prUrl . Updating..."
-              gh pr edit "$prNumber" --title "$title" --body-file body
+              echo "PR already exists: ($NUMBER) $URL . Updating..."
+              gh pr edit "$NUMBER" --title "$title" --body-file body
             fi
           else
-            echo "Integration is behind main ($integrationToMain). This is likely an error"
+            echo "$INT_BRANCH is behind $TARGET_BRANCH ($INT_TO_TARGET). This is likely an error"
             exit 1
           fi
