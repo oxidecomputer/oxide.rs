@@ -57,6 +57,8 @@ pub mod types {
         pub description: String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
+        /// Desired use of `AddressLot`
+        pub kind: AddressLotKind,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
@@ -3488,6 +3490,75 @@ pub mod types {
         }
     }
 
+    /// The order in which the client wants to page through the requested
+    /// collection
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum PaginationOrder {
+        #[serde(rename = "ascending")]
+        Ascending,
+        #[serde(rename = "descending")]
+        Descending,
+    }
+
+    impl From<&PaginationOrder> for PaginationOrder {
+        fn from(value: &PaginationOrder) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for PaginationOrder {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Ascending => "ascending".to_string(),
+                Self::Descending => "descending".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for PaginationOrder {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "ascending" => Ok(Self::Ascending),
+                "descending" => Ok(Self::Descending),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for PaginationOrder {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for PaginationOrder {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for PaginationOrder {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
     /// Passwords may be subject to additional constraints.
     #[derive(
         Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
@@ -5113,23 +5184,6 @@ pub mod types {
         type Error = &'static str;
         fn try_from(value: String) -> Result<Self, &'static str> {
             value.parse()
-        }
-    }
-
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SpoofLoginBody {
-        pub username: String,
-    }
-
-    impl From<&SpoofLoginBody> for SpoofLoginBody {
-        fn from(value: &SpoofLoginBody) -> Self {
-            value.clone()
-        }
-    }
-
-    impl SpoofLoginBody {
-        pub fn builder() -> builder::SpoofLoginBody {
-            builder::SpoofLoginBody::default()
         }
     }
 
@@ -7393,6 +7447,7 @@ pub mod types {
         pub struct AddressLot {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
+            kind: Result<super::AddressLotKind, String>,
             name: Result<super::Name, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -7403,6 +7458,7 @@ pub mod types {
                 Self {
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    kind: Err("no value supplied for kind".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
@@ -7429,6 +7485,16 @@ pub mod types {
                 self.id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::AddressLotKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -7469,6 +7535,7 @@ pub mod types {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
+                    kind: value.kind?,
                     name: value.name?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
@@ -7481,6 +7548,7 @@ pub mod types {
                 Self {
                     description: Ok(value.description),
                     id: Ok(value.id),
+                    kind: Ok(value.kind),
                     name: Ok(value.name),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
@@ -15404,49 +15472,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SpoofLoginBody {
-            username: Result<String, String>,
-        }
-
-        impl Default for SpoofLoginBody {
-            fn default() -> Self {
-                Self {
-                    username: Err("no value supplied for username".to_string()),
-                }
-            }
-        }
-
-        impl SpoofLoginBody {
-            pub fn username<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<String>,
-                T::Error: std::fmt::Display,
-            {
-                self.username = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for username: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<SpoofLoginBody> for super::SpoofLoginBody {
-            type Error = String;
-            fn try_from(value: SpoofLoginBody) -> Result<Self, String> {
-                Ok(Self {
-                    username: value.username?,
-                })
-            }
-        }
-
-        impl From<super::SpoofLoginBody> for SpoofLoginBody {
-            fn from(value: super::SpoofLoginBody) -> Self {
-                Self {
-                    username: Ok(value.username),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct SshKey {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -19942,6 +19967,7 @@ pub trait ClientDisksExt {
     /// - `metric`
     /// - `end_time`: An exclusive end time of metrics.
     /// - `limit`: Maximum number of items returned by a single call
+    /// - `order`: Query result order
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `project`: Name or ID of the project
@@ -19952,6 +19978,7 @@ pub trait ClientDisksExt {
     ///    .metric(metric)
     ///    .end_time(end_time)
     ///    .limit(limit)
+    ///    .order(order)
     ///    .page_token(page_token)
     ///    .project(project)
     ///    .start_time(start_time)
@@ -20049,15 +20076,6 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn device_access_token(&self) -> builder::DeviceAccessToken;
-    /// Sends a `POST` request to `/login`
-    ///
-    /// ```ignore
-    /// let response = client.login_spoof()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn login_spoof(&self) -> builder::LoginSpoof;
     /// Log user out of web console by deleting session on client and server
     ///
     /// Sends a `POST` request to `/v1/logout`
@@ -20081,10 +20099,6 @@ impl ClientHiddenExt for Client {
 
     fn device_access_token(&self) -> builder::DeviceAccessToken {
         builder::DeviceAccessToken::new(self)
-    }
-
-    fn login_spoof(&self) -> builder::LoginSpoof {
-        builder::LoginSpoof::new(self)
     }
 
     fn logout(&self) -> builder::Logout {
@@ -20760,6 +20774,41 @@ impl ClientPolicyExt for Client {
 }
 
 pub trait ClientProjectsExt {
+    /// List all IP Pools that can be used by a given project
+    ///
+    /// Sends a `GET` request to `/v1/ip-pools`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.project_ip_pool_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn project_ip_pool_list(&self) -> builder::ProjectIpPoolList;
+    /// Fetch an IP pool
+    ///
+    /// Sends a `GET` request to `/v1/ip-pools/{pool}`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the IP pool
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.project_ip_pool_view()
+    ///    .pool(pool)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn project_ip_pool_view(&self) -> builder::ProjectIpPoolView;
     /// List projects
     ///
     /// Sends a `GET` request to `/v1/projects`
@@ -20861,6 +20910,14 @@ pub trait ClientProjectsExt {
 }
 
 impl ClientProjectsExt for Client {
+    fn project_ip_pool_list(&self) -> builder::ProjectIpPoolList {
+        builder::ProjectIpPoolList::new(self)
+    }
+
+    fn project_ip_pool_view(&self) -> builder::ProjectIpPoolView {
+        builder::ProjectIpPoolView::new(self)
+    }
+
     fn project_list(&self) -> builder::ProjectList {
         builder::ProjectList::new(self)
     }
@@ -21816,6 +21873,7 @@ pub trait ClientSystemExt {
     /// - `end_time`: An exclusive end time of metrics.
     /// - `id`: The UUID of the container being queried
     /// - `limit`: Maximum number of items returned by a single call
+    /// - `order`: Query result order
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
     /// - `start_time`: An inclusive start time of metrics.
@@ -21825,6 +21883,7 @@ pub trait ClientSystemExt {
     ///    .end_time(end_time)
     ///    .id(id)
     ///    .limit(limit)
+    ///    .order(order)
     ///    .page_token(page_token)
     ///    .start_time(start_time)
     ///    .send()
@@ -23281,73 +23340,6 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientHiddenExt::login_spoof`]
-    ///
-    /// [`ClientHiddenExt::login_spoof`]: super::ClientHiddenExt::login_spoof
-    #[derive(Debug, Clone)]
-    pub struct LoginSpoof<'a> {
-        client: &'a super::Client,
-        body: Result<types::builder::SpoofLoginBody, String>,
-    }
-
-    impl<'a> LoginSpoof<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Ok(types::builder::SpoofLoginBody::default()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SpoofLoginBody>,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|_| "conversion to `SpoofLoginBody` for body failed".to_string());
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::SpoofLoginBody) -> types::builder::SpoofLoginBody,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/login`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body
-                .and_then(std::convert::TryInto::<types::SpoofLoginBody>::try_into)
-                .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/login", client.baseurl,);
-            let request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
     /// Builder for [`ClientLoginExt::login_saml_begin`]
     ///
     /// [`ClientLoginExt::login_saml_begin`]: super::ClientLoginExt::login_saml_begin
@@ -24789,6 +24781,7 @@ pub mod builder {
         metric: Result<types::DiskMetricName, String>,
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
+        order: Result<Option<types::PaginationOrder>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
         start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
@@ -24802,6 +24795,7 @@ pub mod builder {
                 metric: Err("metric was not initialized".to_string()),
                 end_time: Ok(None),
                 limit: Ok(None),
+                order: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 start_time: Ok(None),
@@ -24849,6 +24843,17 @@ pub mod builder {
             self
         }
 
+        pub fn order<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::PaginationOrder>,
+        {
+            self.order = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `PaginationOrder` for order failed".to_string());
+            self
+        }
+
         pub fn page_token<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<String>,
@@ -24893,6 +24898,7 @@ pub mod builder {
                 metric,
                 end_time,
                 limit,
+                order,
                 page_token,
                 project,
                 start_time,
@@ -24901,6 +24907,7 @@ pub mod builder {
             let metric = metric.map_err(Error::InvalidRequest)?;
             let end_time = end_time.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
+            let order = order.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
@@ -24910,12 +24917,15 @@ pub mod builder {
                 encode_path(&disk.to_string()),
                 encode_path(&metric.to_string()),
             );
-            let mut query = Vec::with_capacity(5usize);
+            let mut query = Vec::with_capacity(6usize);
             if let Some(v) = &end_time {
                 query.push(("end_time", v.to_string()));
             }
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &order {
+                query.push(("order", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
@@ -24968,6 +24978,7 @@ pub mod builder {
             let next = Self {
                 end_time: Ok(None),
                 limit: Ok(None),
+                order: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 start_time: Ok(None),
@@ -27340,6 +27351,264 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 202u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientProjectsExt::project_ip_pool_list`]
+    ///
+    /// [`ClientProjectsExt::project_ip_pool_list`]: super::ClientProjectsExt::project_ip_pool_list
+    #[derive(Debug, Clone)]
+    pub struct ProjectIpPoolList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> ProjectIpPoolList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/ip-pools`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IpPoolResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/ip-pools", client.baseurl,);
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/ip-pools`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::IpPool, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientProjectsExt::project_ip_pool_view`]
+    ///
+    /// [`ClientProjectsExt::project_ip_pool_view`]: super::ClientProjectsExt::project_ip_pool_view
+    #[derive(Debug, Clone)]
+    pub struct ProjectIpPoolView<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> ProjectIpPoolView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                pool: Err("pool was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/ip-pools/{pool}`
+        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
+            let Self {
+                client,
+                pool,
+                project,
+            } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/ip-pools/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -32967,6 +33236,7 @@ pub mod builder {
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
         id: Result<uuid::Uuid, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
+        order: Result<Option<types::PaginationOrder>, String>,
         page_token: Result<Option<String>, String>,
         start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
     }
@@ -32979,6 +33249,7 @@ pub mod builder {
                 end_time: Ok(None),
                 id: Err("id was not initialized".to_string()),
                 limit: Ok(None),
+                order: Ok(None),
                 page_token: Ok(None),
                 start_time: Ok(None),
             }
@@ -33025,6 +33296,17 @@ pub mod builder {
             self
         }
 
+        pub fn order<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::PaginationOrder>,
+        {
+            self.order = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `PaginationOrder` for order failed".to_string());
+            self
+        }
+
         pub fn page_token<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<String>,
@@ -33058,6 +33340,7 @@ pub mod builder {
                 end_time,
                 id,
                 limit,
+                order,
                 page_token,
                 start_time,
             } = self;
@@ -33065,6 +33348,7 @@ pub mod builder {
             let end_time = end_time.map_err(Error::InvalidRequest)?;
             let id = id.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
+            let order = order.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -33072,13 +33356,16 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&metric_name.to_string()),
             );
-            let mut query = Vec::with_capacity(5usize);
+            let mut query = Vec::with_capacity(6usize);
             if let Some(v) = &end_time {
                 query.push(("end_time", v.to_string()));
             }
             query.push(("id", id.to_string()));
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &order {
+                query.push(("order", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));

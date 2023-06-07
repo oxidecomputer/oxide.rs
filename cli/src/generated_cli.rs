@@ -17,7 +17,6 @@ impl Cli {
             CliCommand::DeviceAuthRequest => Self::cli_device_auth_request(),
             CliCommand::DeviceAuthConfirm => Self::cli_device_auth_confirm(),
             CliCommand::DeviceAccessToken => Self::cli_device_access_token(),
-            CliCommand::LoginSpoof => Self::cli_login_spoof(),
             CliCommand::LoginSamlBegin => Self::cli_login_saml_begin(),
             CliCommand::LoginSaml => Self::cli_login_saml(),
             CliCommand::CertificateList => Self::cli_certificate_list(),
@@ -56,6 +55,8 @@ impl Cli {
             CliCommand::InstanceSerialConsoleStream => Self::cli_instance_serial_console_stream(),
             CliCommand::InstanceStart => Self::cli_instance_start(),
             CliCommand::InstanceStop => Self::cli_instance_stop(),
+            CliCommand::ProjectIpPoolList => Self::cli_project_ip_pool_list(),
+            CliCommand::ProjectIpPoolView => Self::cli_project_ip_pool_view(),
             CliCommand::LoginLocal => Self::cli_login_local(),
             CliCommand::Logout => Self::cli_logout(),
             CliCommand::CurrentUserView => Self::cli_current_user_view(),
@@ -301,30 +302,6 @@ impl Cli {
             .long_about(
                 "This endpoint should be polled by the client until the user code is verified and \
                  the grant is confirmed.",
-            )
-    }
-
-    pub fn cli_login_spoof() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("username")
-                    .long("username")
-                    .value_parser(clap::value_parser!(String))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
             )
     }
 
@@ -789,6 +766,19 @@ impl Cli {
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("order")
+                    .long("order")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::PaginationOrder::Ascending.to_string(),
+                            types::PaginationOrder::Descending.to_string(),
+                        ]),
+                        |s| types::PaginationOrder::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help("Query result order"),
             )
             .arg(
                 clap::Arg::new("project")
@@ -1490,6 +1480,57 @@ impl Cli {
                     .help("Name or ID of the project"),
             )
             .about("Stop an instance")
+    }
+
+    pub fn cli_project_ip_pool_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List all IP Pools that can be used by a given project.")
+    }
+
+    pub fn cli_project_ip_pool_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the IP pool"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Fetch an IP pool")
     }
 
     pub fn cli_login_local() -> clap::Command {
@@ -2999,6 +3040,19 @@ impl Cli {
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("order")
+                    .long("order")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::PaginationOrder::Ascending.to_string(),
+                            types::PaginationOrder::Descending.to_string(),
+                        ]),
+                        |s| types::PaginationOrder::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help("Query result order"),
             )
             .arg(
                 clap::Arg::new("page-token")
@@ -4751,9 +4805,6 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::DeviceAccessToken => {
                 self.execute_device_access_token(matches).await;
             }
-            CliCommand::LoginSpoof => {
-                self.execute_login_spoof(matches).await;
-            }
             CliCommand::LoginSamlBegin => {
                 self.execute_login_saml_begin(matches).await;
             }
@@ -4867,6 +4918,12 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::InstanceStop => {
                 self.execute_instance_stop(matches).await;
+            }
+            CliCommand::ProjectIpPoolList => {
+                self.execute_project_ip_pool_list(matches).await;
+            }
+            CliCommand::ProjectIpPoolView => {
+                self.execute_project_ip_pool_view(matches).await;
             }
             CliCommand::LoginLocal => {
                 self.execute_login_local(matches).await;
@@ -5319,32 +5376,6 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
-    pub async fn execute_login_spoof(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.login_spoof();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SpoofLoginBody>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        if let Some(value) = matches.get_one::<String>("username") {
-            request = request.body_map(|body| body.username(value.clone()))
-        }
-
-        self.over
-            .execute_login_spoof(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
     pub async fn execute_login_saml_begin(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.login_saml_begin();
         if let Some(value) = matches.get_one::<types::Name>("silo-name") {
@@ -5782,6 +5813,10 @@ impl<T: CliOverride> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::PaginationOrder>("order") {
+            request = request.order(value.clone());
         }
 
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
@@ -6455,6 +6490,64 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_instance_stop(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_project_ip_pool_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.project_ip_pool_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_project_ip_pool_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_project_ip_pool_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.project_ip_pool_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_project_ip_pool_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -8056,6 +8149,10 @@ impl<T: CliOverride> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::PaginationOrder>("order") {
+            request = request.order(value.clone());
         }
 
         if let Some(value) = matches.get_one::<String>("page-token") {
@@ -9836,14 +9933,6 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_login_spoof(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::LoginSpoof,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
     fn execute_login_saml_begin(
         &self,
         matches: &clap::ArgMatches,
@@ -10144,6 +10233,22 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceStop,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_project_ip_pool_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ProjectIpPoolList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_project_ip_pool_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ProjectIpPoolView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -11084,7 +11189,6 @@ pub enum CliCommand {
     DeviceAuthRequest,
     DeviceAuthConfirm,
     DeviceAccessToken,
-    LoginSpoof,
     LoginSamlBegin,
     LoginSaml,
     CertificateList,
@@ -11123,6 +11227,8 @@ pub enum CliCommand {
     InstanceSerialConsoleStream,
     InstanceStart,
     InstanceStop,
+    ProjectIpPoolList,
+    ProjectIpPoolView,
     LoginLocal,
     Logout,
     CurrentUserView,
@@ -11247,7 +11353,6 @@ impl CliCommand {
             CliCommand::DeviceAuthRequest,
             CliCommand::DeviceAuthConfirm,
             CliCommand::DeviceAccessToken,
-            CliCommand::LoginSpoof,
             CliCommand::LoginSamlBegin,
             CliCommand::LoginSaml,
             CliCommand::CertificateList,
@@ -11286,6 +11391,8 @@ impl CliCommand {
             CliCommand::InstanceSerialConsoleStream,
             CliCommand::InstanceStart,
             CliCommand::InstanceStop,
+            CliCommand::ProjectIpPoolList,
+            CliCommand::ProjectIpPoolView,
             CliCommand::LoginLocal,
             CliCommand::Logout,
             CliCommand::CurrentUserView,
