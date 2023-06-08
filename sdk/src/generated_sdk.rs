@@ -20683,21 +20683,6 @@ impl ClientInstancesExt for Client {
 }
 
 pub trait ClientLoginExt {
-    /// Prompt user login
-    ///
-    /// Either display a page asking a user for their credentials, or redirect
-    /// them to their identity provider.
-    ///
-    /// Sends a `GET` request to `/login/{silo_name}/saml/{provider_name}`
-    ///
-    /// ```ignore
-    /// let response = client.login_saml_begin()
-    ///    .silo_name(silo_name)
-    ///    .provider_name(provider_name)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn login_saml_begin(&self) -> builder::LoginSamlBegin;
     /// Authenticate a user via SAML
     ///
     /// Sends a `POST` request to `/login/{silo_name}/saml/{provider_name}`
@@ -20726,10 +20711,6 @@ pub trait ClientLoginExt {
 }
 
 impl ClientLoginExt for Client {
-    fn login_saml_begin(&self) -> builder::LoginSamlBegin {
-        builder::LoginSamlBegin::new(self)
-    }
-
     fn login_saml(&self) -> builder::LoginSaml {
         builder::LoginSaml::new(self)
     }
@@ -23336,76 +23317,6 @@ pub mod builder {
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
                 _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
-            }
-        }
-    }
-
-    /// Builder for [`ClientLoginExt::login_saml_begin`]
-    ///
-    /// [`ClientLoginExt::login_saml_begin`]: super::ClientLoginExt::login_saml_begin
-    #[derive(Debug, Clone)]
-    pub struct LoginSamlBegin<'a> {
-        client: &'a super::Client,
-        silo_name: Result<types::Name, String>,
-        provider_name: Result<types::Name, String>,
-    }
-
-    impl<'a> LoginSamlBegin<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                silo_name: Err("silo_name was not initialized".to_string()),
-                provider_name: Err("provider_name was not initialized".to_string()),
-            }
-        }
-
-        pub fn silo_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.silo_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for silo_name failed".to_string());
-            self
-        }
-
-        pub fn provider_name<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::Name>,
-        {
-            self.provider_name = value
-                .try_into()
-                .map_err(|_| "conversion to `Name` for provider_name failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/login/{silo_name}/saml/{provider_name}`
-        pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<types::Error>> {
-            let Self {
-                client,
-                silo_name,
-                provider_name,
-            } = self;
-            let silo_name = silo_name.map_err(Error::InvalidRequest)?;
-            let provider_name = provider_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/login/{}/saml/{}",
-                client.baseurl,
-                encode_path(&silo_name.to_string()),
-                encode_path(&provider_name.to_string()),
-            );
-            let request = client.client.get(url).build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }

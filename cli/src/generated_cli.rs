@@ -17,7 +17,6 @@ impl Cli {
             CliCommand::DeviceAuthRequest => Self::cli_device_auth_request(),
             CliCommand::DeviceAuthConfirm => Self::cli_device_auth_confirm(),
             CliCommand::DeviceAccessToken => Self::cli_device_access_token(),
-            CliCommand::LoginSamlBegin => Self::cli_login_saml_begin(),
             CliCommand::LoginSaml => Self::cli_login_saml(),
             CliCommand::CertificateList => Self::cli_certificate_list(),
             CliCommand::CertificateCreate => Self::cli_certificate_create(),
@@ -302,27 +301,6 @@ impl Cli {
             .long_about(
                 "This endpoint should be polled by the client until the user code is verified and \
                  the grant is confirmed.",
-            )
-    }
-
-    pub fn cli_login_saml_begin() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("silo-name")
-                    .long("silo-name")
-                    .value_parser(clap::value_parser!(types::Name))
-                    .required(true),
-            )
-            .arg(
-                clap::Arg::new("provider-name")
-                    .long("provider-name")
-                    .value_parser(clap::value_parser!(types::Name))
-                    .required(true),
-            )
-            .about("Prompt user login")
-            .long_about(
-                "Either display a page asking a user for their credentials, or redirect them to \
-                 their identity provider.",
             )
     }
 
@@ -4805,9 +4783,6 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::DeviceAccessToken => {
                 self.execute_device_access_token(matches).await;
             }
-            CliCommand::LoginSamlBegin => {
-                self.execute_login_saml_begin(matches).await;
-            }
             CliCommand::LoginSaml => {
                 self.execute_login_saml(matches).await;
             }
@@ -5372,30 +5347,6 @@ impl<T: CliOverride> Cli<T> {
             }
             Err(r) => {
                 todo!()
-            }
-        }
-    }
-
-    pub async fn execute_login_saml_begin(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.login_saml_begin();
-        if let Some(value) = matches.get_one::<types::Name>("silo-name") {
-            request = request.silo_name(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::Name>("provider-name") {
-            request = request.provider_name(value.clone());
-        }
-
-        self.over
-            .execute_login_saml_begin(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                todo!()
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
             }
         }
     }
@@ -9933,14 +9884,6 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_login_saml_begin(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::LoginSamlBegin,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
     fn execute_login_saml(
         &self,
         matches: &clap::ArgMatches,
@@ -11189,7 +11132,6 @@ pub enum CliCommand {
     DeviceAuthRequest,
     DeviceAuthConfirm,
     DeviceAccessToken,
-    LoginSamlBegin,
     LoginSaml,
     CertificateList,
     CertificateCreate,
@@ -11353,7 +11295,6 @@ impl CliCommand {
             CliCommand::DeviceAuthRequest,
             CliCommand::DeviceAuthConfirm,
             CliCommand::DeviceAccessToken,
-            CliCommand::LoginSamlBegin,
             CliCommand::LoginSaml,
             CliCommand::CertificateList,
             CliCommand::CertificateCreate,

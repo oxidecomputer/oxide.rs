@@ -138,76 +138,6 @@ pub mod operations {
         }
     }
 
-    pub struct LoginSamlBeginWhen(httpmock::When);
-    impl LoginSamlBeginWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/login/[^/]*/saml/[^/]*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn silo_name(self, value: &types::Name) -> Self {
-            let re = regex::Regex::new(&format!("^/login/{}/saml/.*$", value.to_string())).unwrap();
-            Self(self.0.path_matches(re))
-        }
-
-        pub fn provider_name(self, value: &types::Name) -> Self {
-            let re = regex::Regex::new(&format!("^/login/.*/saml/{}$", value.to_string())).unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct LoginSamlBeginThen(httpmock::Then);
-    impl LoginSamlBeginThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn found(self) -> Self {
-            Self(self.0.status(302u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn success(self, status: u16, value: serde_json::Value) -> Self {
-            assert_eq!(status / 100u16, 2u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body(value),
-            )
-        }
-    }
-
     pub struct LoginSamlWhen(httpmock::When);
     impl LoginSamlWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -12921,9 +12851,6 @@ pub trait MockServerExt {
     fn device_access_token<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::DeviceAccessTokenWhen, operations::DeviceAccessTokenThen);
-    fn login_saml_begin<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::LoginSamlBeginWhen, operations::LoginSamlBeginThen);
     fn login_saml<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::LoginSamlWhen, operations::LoginSamlThen);
@@ -13508,18 +13435,6 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::DeviceAccessTokenWhen::new(when),
                 operations::DeviceAccessTokenThen::new(then),
-            )
-        })
-    }
-
-    fn login_saml_begin<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::LoginSamlBeginWhen, operations::LoginSamlBeginThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::LoginSamlBeginWhen::new(when),
-                operations::LoginSamlBeginThen::new(then),
             )
         })
     }
