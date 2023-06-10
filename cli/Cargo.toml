@@ -20,8 +20,6 @@ dirs = { workspace = true }
 env_logger = { workspace = true }
 futures = { workspace = true }
 http = { workspace = true }
-# TODO remove
-hyper = "0.14.26"
 indicatif = { workspace = true }
 log = { workspace = true }
 oauth2 = { workspace = true }

@@ -1894,7 +1894,6 @@ dependencies = [
  "futures",
  "http",
  "httpmock",
- "hyper",
  "indicatif",
  "log",
  "oauth2",
