@@ -38,6 +38,9 @@ jobs:
       # the integration branch
       - name: Merge target
         run: |
+          git config --local user.name "oxide-reflector-bot[bot]"
+          git config --local user.email "${{ inputs.reflector_user_id }}+oxide-reflector-bot[bot]@users.noreply.github.com"
+
           MERGE_STATUS=0
           git checkout $INT_BRANCH 2>/dev/null || git checkout -b $INT_BRANCH
           git merge $TARGET_BRANCH || MERGE_STATUS=$?
