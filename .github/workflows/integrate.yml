@@ -94,7 +94,12 @@ jobs:
 
       - name: Update progenitor
         run: |
+          # Capture the progenitor commit from the target branch
+          git checkout $TARGET_BRANCH
           FROM=$(cargo tree -i progenitor | grep -Eo '#([0-9a-z]+)')
+
+          # Perform the update and capture the new commit on the integration branch
+          git checkout $INT_BRANCH
           cargo update -p progenitor
           cargo update -p progenitor-client
           TO=$(cargo tree -i progenitor | grep -Eo '#([0-9a-z]+)')
