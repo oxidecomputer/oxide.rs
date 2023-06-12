@@ -41,11 +41,13 @@ uuid = { workspace = true }
 
 [dev-dependencies]
 assert_cmd = { workspace = true }
+dropshot = { workspace = true }
 expectorate = { workspace = true }
 httpmock = { workspace = true }
 oxide-httpmock = { workspace = true }
 predicates = { workspace = true }
 pretty_assertions = { workspace = true }
+rcgen = { workspace = true }
 rand = { workspace = true, features = ["small_rng"] }
 serial_test = { workspace = true }
 tempfile = { workspace = true }
