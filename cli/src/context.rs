@@ -4,10 +4,14 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use anyhow::{anyhow, Result};
-use oxide_api::Client;
+use std::{net::SocketAddr, time::Duration};
 
-use crate::config::Config;
+use anyhow::{anyhow, Result};
+use http::{HeaderMap, HeaderValue};
+use oxide_api::Client;
+use reqwest::ClientBuilder;
+
+use crate::{cli_builder::ResolveValue, config::Config};
 
 pub struct Context {
     client: Option<Client>,
@@ -52,22 +56,27 @@ fn get_client(config: &Config) -> Result<Option<Client>> {
         }
     };
 
-    // TODO use make_client()
-    let auth = format!("Bearer {}", token);
-    let mut auth_value = reqwest::header::HeaderValue::from_str(&auth)?;
-    auth_value.set_sensitive(true);
+    Ok(Some(make_client(&host, token, config)))
+}
 
-    let dur = std::time::Duration::from_secs(15);
-    let rclient = reqwest::Client::builder()
-        .connect_timeout(dur)
-        .timeout(dur)
-        .default_headers(
-            [(http::header::AUTHORIZATION, auth_value)]
-                .into_iter()
-                .collect(),
-        )
-        .build()
-        .unwrap();
-    let client = oxide_api::Client::new_with_client(&host, rclient);
-    Ok(Some(client))
+pub fn make_client(host: &str, token: String, config: &Config) -> Client {
+    let mut bearer = HeaderValue::from_str(format!("Bearer {}", token).as_str()).unwrap();
+    bearer.set_sensitive(true);
+    let mut headers = HeaderMap::new();
+    headers.insert(http::header::AUTHORIZATION, bearer);
+
+    let mut client_builder = ClientBuilder::new()
+        .connect_timeout(Duration::from_secs(15))
+        .default_headers(headers);
+
+    if let Some(ResolveValue { host, port, addr }) = &config.resolve {
+        client_builder = client_builder.resolve(host, SocketAddr::new(*addr, *port));
+    }
+    if let Some(cert) = &config.cert {
+        client_builder = client_builder.add_root_certificate(cert.clone());
+    }
+
+    let rclient = client_builder.build().unwrap();
+
+    Client::new_with_client(host, rclient)
 }

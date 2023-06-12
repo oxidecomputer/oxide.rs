@@ -3,10 +3,20 @@
   "version": "0.1.0",
   "args": [
     {
-      "long": "config-dir"
+      "long": "cacert",
+      "help": "Specify a trusted CA cert"
     },
     {
-      "long": "debug"
+      "long": "config-dir",
+      "help": "Directory to use for configuration"
+    },
+    {
+      "long": "debug",
+      "help": "Enable debug output"
+    },
+    {
+      "long": "resolve",
+      "help": "Modify name resolution"
     }
   ],
   "subcommands": [

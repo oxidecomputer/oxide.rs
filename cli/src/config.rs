@@ -12,9 +12,13 @@ use serde::{Deserialize, Serialize};
 use toml_edit::{Item, Table};
 use uuid::Uuid;
 
+use crate::cli_builder::ResolveValue;
+
 pub struct Config {
     pub client_id: Uuid,
     pub hosts: Hosts,
+    pub resolve: Option<ResolveValue>,
+    pub cert: Option<reqwest::Certificate>,
 }
 
 #[derive(Default, Debug, Deserialize, Serialize)]
@@ -63,6 +67,8 @@ impl Config {
         Self {
             client_id: Default::default(),
             hosts,
+            resolve: None,
+            cert: None,
         }
     }
 
@@ -101,5 +107,15 @@ impl Config {
         std::fs::write(hosts_path, hosts.to_string())?;
 
         Ok(())
+    }
+
+    pub fn with_resolve(mut self, resolve: ResolveValue) -> Self {
+        self.resolve = Some(resolve);
+        self
+    }
+
+    pub fn with_cert(mut self, cert: reqwest::Certificate) -> Self {
+        self.cert = Some(cert);
+        self
     }
 }

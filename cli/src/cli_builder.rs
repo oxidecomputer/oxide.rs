@@ -4,9 +4,9 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::BTreeMap, marker::PhantomData, path::PathBuf};
+use std::{collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf, str::FromStr};
 
-use anyhow::Result;
+use anyhow::{bail, Result};
 use async_trait::async_trait;
 use clap::{ArgMatches, Command, CommandFactory, FromArgMatches};
 use log::LevelFilter;
@@ -20,12 +20,50 @@ use crate::{
 
 #[derive(clap::Parser, Debug, Clone)]
 #[command(name = "oxide")]
-pub struct OxideCli {
+struct OxideCli {
+    /// Enable debug output
     #[clap(long)]
     pub debug: bool,
 
-    #[clap(long)]
+    /// Directory to use for configuration
+    #[clap(long, value_name = "DIR")]
     pub config_dir: Option<PathBuf>,
+
+    /// Modify name resolution
+    #[clap(long, value_name = "HOST:PORT:ADDR")]
+    pub resolve: Option<ResolveValue>,
+
+    /// Specify a trusted CA cert
+    #[clap(long, value_name = "FILE")]
+    pub cacert: Option<PathBuf>,
+}
+
+#[derive(Debug, Clone)]
+pub struct ResolveValue {
+    pub host: String,
+    pub port: u16,
+    pub addr: IpAddr,
+}
+
+impl FromStr for ResolveValue {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        let values = s.split(':').collect::<Vec<_>>();
+        let [host, port, addr] = values.as_slice() else {
+            return Err(r#"value must be "host:port:addr"#.to_string());
+        };
+
+        let host = host.to_string();
+        let port = port
+            .parse()
+            .map_err(|_| format!("error parsing port '{}'", port))?;
+        let addr = addr
+            .parse()
+            .map_err(|_| format!("error parsing address '{}'", addr))?;
+
+        Ok(Self { host, port, addr })
+    }
 }
 
 #[async_trait]
@@ -141,17 +179,48 @@ impl<'a> NewCli<'a> {
         let Self { parser, runner } = self;
         let matches = parser.get_matches();
 
-        let OxideCli { debug, config_dir } = OxideCli::from_arg_matches(&matches).unwrap();
+        let OxideCli {
+            debug,
+            config_dir,
+            resolve,
+            cacert,
+        } = OxideCli::from_arg_matches(&matches).unwrap();
 
         if debug {
             env_logger::builder().filter_level(LevelFilter::Debug);
         }
 
-        let config = if let Some(dir) = config_dir {
+        let mut config = if let Some(dir) = config_dir {
             Config::new_with_config_dir(dir)
         } else {
             Config::default()
         };
+        if let Some(resolve) = resolve {
+            config = config.with_resolve(resolve);
+        }
+        if let Some(cacert_path) = cacert {
+            enum CertType {
+                Pem,
+                Der,
+            }
+
+            let extension = cacert_path
+                .extension()
+                .map(std::ffi::OsStr::to_ascii_lowercase);
+            let ct = match extension.as_ref().and_then(|ex| ex.to_str()) {
+                Some("pem") => CertType::Pem,
+                Some("der") => CertType::Der,
+                _ => bail!("--cacert path must be a 'pem' or 'der' file".to_string()),
+            };
+
+            let contents = std::fs::read(cacert_path)?;
+
+            let cert = match ct {
+                CertType::Pem => reqwest::tls::Certificate::from_pem(&contents),
+                CertType::Der => reqwest::tls::Certificate::from_der(&contents),
+            }?;
+            config = config.with_cert(cert);
+        }
         let ctx = Context::new(config).unwrap();
 
         let mut node = &runner;

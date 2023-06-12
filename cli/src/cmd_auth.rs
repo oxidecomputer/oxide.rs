@@ -4,7 +4,7 @@
 
 // Copyright 2023 Oxide Computer Company
 
-use std::{collections::HashMap, fs::File, io::Read, time::Duration};
+use std::{collections::HashMap, fs::File, io::Read};
 
 use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
@@ -14,15 +14,11 @@ use oauth2::{
     reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
     TokenUrl,
 };
-use oxide_api::{Client, ClientSessionExt};
-use reqwest::{
-    header::{HeaderMap, HeaderValue, AUTHORIZATION},
-    ClientBuilder,
-};
+use oxide_api::ClientSessionExt;
 
 use crate::{
     config::{Config, Host},
-    context::Context,
+    context::{make_client, Context},
     RunnableCmd,
 };
 
@@ -50,7 +46,7 @@ impl RunnableCmd for CmdAuth {
         match &self.subcmd {
             SubCommand::Login(cmd) => cmd.run(ctx).await,
             SubCommand::Logout(cmd) => cmd.run(ctx).await,
-            SubCommand::Status(cmd) => cmd.run().await,
+            SubCommand::Status(cmd) => cmd.run(ctx).await,
         }
     }
 }
@@ -96,20 +92,6 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
         }
         Err(err) => anyhow::bail!(err),
     }
-}
-
-fn make_client(host: &str, token: String) -> Client {
-    let mut bearer = HeaderValue::from_str(format!("Bearer {}", token).as_str()).unwrap();
-    bearer.set_sensitive(true);
-    let mut headers = HeaderMap::new();
-    headers.insert(AUTHORIZATION, bearer);
-
-    let rclient = ClientBuilder::new()
-        .connect_timeout(Duration::from_secs(15))
-        .default_headers(headers)
-        .build()
-        .unwrap();
-    Client::new_with_client(host, rclient)
 }
 
 // fn parse_host_interactively(ctx: &mut crate::context::Context) -> Result<url::Url> {
@@ -285,7 +267,7 @@ impl CmdAuthLogin {
         // Construct a one-off API client, authenticated with the token
         // returned in the previous step, so that we can extract and save the
         // identity of the authenticated user.
-        let client = make_client(self.host.as_ref(), token.clone());
+        let client = make_client(self.host.as_ref(), token.clone(), ctx.config());
 
         let user = client.current_user_view().send().await?;
 
@@ -405,7 +387,7 @@ pub struct CmdAuthStatus {
 }
 
 impl CmdAuthStatus {
-    pub async fn run(&self) -> Result<()> {
+    pub async fn run(&self, ctx: &Context) -> Result<()> {
         let mut status_info: HashMap<String, Vec<String>> = HashMap::new();
 
         // Initialising a new Config here instead of taking ctx (&Context)
@@ -453,7 +435,7 @@ impl CmdAuthStatus {
 
         for (host, info) in host_list.iter() {
             // Construct a client with each host/token combination
-            let client = make_client(host, info.token.clone());
+            let client = make_client(host, info.token.clone(), ctx.config());
 
             let result = client.current_user_view().send().await;
             let user = match result {
