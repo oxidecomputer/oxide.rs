@@ -449,6 +449,14 @@
                   ]
                 },
                 {
+                  "long": "order",
+                  "values": [
+                    "ascending",
+                    "descending"
+                  ],
+                  "help": "Query result order"
+                },
+                {
                   "long": "project",
                   "help": "Name or ID of the project"
                 },
@@ -1367,6 +1375,47 @@
             {
               "long": "project",
               "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "ip-pool",
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List all IP Pools that can be used by a given project.",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "Fetch an IP pool",
+              "args": [
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the IP pool"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
             }
           ]
         },

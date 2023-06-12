@@ -296,6 +296,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ProjectDelete => Some("project delete"),
         CliCommand::ProjectPolicyView => Some("project policy view"),
         CliCommand::ProjectPolicyUpdate => Some("project policy update"),
+        CliCommand::ProjectIpPoolList => Some("project ip-pool list"),
+        CliCommand::ProjectIpPoolView => Some("project ip-pool view"),
 
         CliCommand::ImageList => Some("image list"),
         CliCommand::ImageCreate => Some("image create"),
@@ -459,7 +461,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::GroupView
         | CliCommand::LoginLocal
         | CliCommand::LoginSaml
-        | CliCommand::LoginSamlBegin
         | CliCommand::Logout
         | CliCommand::RoleList
         | CliCommand::RoleView
