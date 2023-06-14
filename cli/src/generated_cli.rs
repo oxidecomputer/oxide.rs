@@ -3737,7 +3737,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List users in a silo")
+            .about("List built-in (system) users in a silo")
     }
 
     pub fn cli_silo_user_view() -> clap::Command {
@@ -3756,7 +3756,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a user")
+            .about("Fetch a built-in (system) user")
     }
 
     pub fn cli_user_builtin_list() -> clap::Command {

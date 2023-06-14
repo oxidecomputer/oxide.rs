@@ -1785,7 +1785,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List users in a silo",
+              "about": "List built-in (system) users in a silo",
               "args": [
                 {
                   "long": "limit",
@@ -1805,7 +1805,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch a user",
+              "about": "Fetch a built-in (system) user",
               "args": [
                 {
                   "long": "silo",
