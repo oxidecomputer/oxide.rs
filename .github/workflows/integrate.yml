@@ -83,15 +83,6 @@ jobs:
       - name: Report rustfmt version
         run: cargo fmt -- --version
 
-      - name: Update schema
-        run: |
-          curl -s https://raw.githubusercontent.com/oxidecomputer/omicron/main/openapi/nexus.json --output oxide.json
-
-          SHA=$(curl -s "https://api.github.com/repos/oxidecomputer/omicron/commits?path=openapi/nexus.json&per_page=1" | jq -r '.[].sha')
-          echo "full=${SHA}" >> $GITHUB_OUTPUT
-          echo "short=${SHA:0:8}" >> $GITHUB_OUTPUT
-        id: schema_sha
-
       - name: Update progenitor
         run: |
           # Capture the progenitor commit from the target branch
@@ -107,6 +98,15 @@ jobs:
           echo "from=${FROM:1}" >> $GITHUB_OUTPUT
           echo "to=${TO:1}" >> $GITHUB_OUTPUT
         id: progenitor_versions
+
+      - name: Update schema
+        run: |
+          curl -s https://raw.githubusercontent.com/oxidecomputer/omicron/main/openapi/nexus.json --output oxide.json
+
+          SHA=$(curl -s "https://api.github.com/repos/oxidecomputer/omicron/commits?path=openapi/nexus.json&per_page=1" | jq -r '.[].sha')
+          echo "full=${SHA}" >> $GITHUB_OUTPUT
+          echo "short=${SHA:0:8}" >> $GITHUB_OUTPUT
+        id: schema_sha
 
       - name: Rebuild client
         run: |
