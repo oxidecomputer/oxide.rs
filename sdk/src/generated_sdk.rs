@@ -21355,7 +21355,7 @@ impl ClientSnapshotsExt for Client {
     }
 }
 
-pub trait ClientSystemExt {
+pub trait ClientSystemHardwareExt {
     /// List physical disks
     ///
     /// Sends a `GET` request to `/v1/system/hardware/disks`
@@ -21568,112 +21568,94 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn switch_view(&self) -> builder::SwitchView;
-    /// List a silo's IdP's name
+}
+
+impl ClientSystemHardwareExt for Client {
+    fn physical_disk_list(&self) -> builder::PhysicalDiskList {
+        builder::PhysicalDiskList::new(self)
+    }
+
+    fn rack_list(&self) -> builder::RackList {
+        builder::RackList::new(self)
+    }
+
+    fn rack_view(&self) -> builder::RackView {
+        builder::RackView::new(self)
+    }
+
+    fn sled_list(&self) -> builder::SledList {
+        builder::SledList::new(self)
+    }
+
+    fn sled_view(&self) -> builder::SledView {
+        builder::SledView::new(self)
+    }
+
+    fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList {
+        builder::SledPhysicalDiskList::new(self)
+    }
+
+    fn sled_instance_list(&self) -> builder::SledInstanceList {
+        builder::SledInstanceList::new(self)
+    }
+
+    fn networking_switch_port_list(&self) -> builder::NetworkingSwitchPortList {
+        builder::NetworkingSwitchPortList::new(self)
+    }
+
+    fn networking_switch_port_apply_settings(&self) -> builder::NetworkingSwitchPortApplySettings {
+        builder::NetworkingSwitchPortApplySettings::new(self)
+    }
+
+    fn networking_switch_port_clear_settings(&self) -> builder::NetworkingSwitchPortClearSettings {
+        builder::NetworkingSwitchPortClearSettings::new(self)
+    }
+
+    fn switch_list(&self) -> builder::SwitchList {
+        builder::SwitchList::new(self)
+    }
+
+    fn switch_view(&self) -> builder::SwitchView {
+        builder::SwitchView::new(self)
+    }
+}
+
+pub trait ClientSystemMetricsExt {
+    /// Access metrics data
     ///
-    /// Sends a `GET` request to `/v1/system/identity-providers`
+    /// Sends a `GET` request to `/v1/system/metrics/{metric_name}`
     ///
     /// Arguments:
+    /// - `metric_name`
+    /// - `end_time`: An exclusive end time of metrics.
+    /// - `id`: The UUID of the container being queried
     /// - `limit`: Maximum number of items returned by a single call
+    /// - `order`: Query result order
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
-    /// - `silo`: Name or ID of the silo
-    /// - `sort_by`
+    /// - `start_time`: An inclusive start time of metrics.
     /// ```ignore
-    /// let response = client.silo_identity_provider_list()
+    /// let response = client.system_metric()
+    ///    .metric_name(metric_name)
+    ///    .end_time(end_time)
+    ///    .id(id)
     ///    .limit(limit)
+    ///    .order(order)
     ///    .page_token(page_token)
-    ///    .silo(silo)
-    ///    .sort_by(sort_by)
+    ///    .start_time(start_time)
     ///    .send()
     ///    .await;
     /// ```
-    fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
-    /// Create a user
-    ///
-    /// Users can only be created in Silos with `provision_type` == `Fixed`.
-    /// Otherwise, Silo users are just-in-time (JIT) provisioned when a user
-    /// first logs in using an external Identity Provider.
-    ///
-    /// Sends a `POST` request to `/v1/system/identity-providers/local/users`
-    ///
-    /// Arguments:
-    /// - `silo`: Name or ID of the silo
-    /// - `body`
-    /// ```ignore
-    /// let response = client.local_idp_user_create()
-    ///    .silo(silo)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
-    /// Delete a user
-    ///
-    /// Sends a `DELETE` request to
-    /// `/v1/system/identity-providers/local/users/{user_id}`
-    ///
-    /// Arguments:
-    /// - `user_id`: The user's internal id
-    /// - `silo`: Name or ID of the silo
-    /// ```ignore
-    /// let response = client.local_idp_user_delete()
-    ///    .user_id(user_id)
-    ///    .silo(silo)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
-    /// Set or invalidate a user's password
-    ///
-    /// Passwords can only be updated for users in Silos with identity mode
-    /// `LocalOnly`.
-    ///
-    /// Sends a `POST` request to
-    /// `/v1/system/identity-providers/local/users/{user_id}/set-password`
-    ///
-    /// Arguments:
-    /// - `user_id`: The user's internal id
-    /// - `silo`: Name or ID of the silo
-    /// - `body`
-    /// ```ignore
-    /// let response = client.local_idp_user_set_password()
-    ///    .user_id(user_id)
-    ///    .silo(silo)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
-    /// Create a SAML IdP
-    ///
-    /// Sends a `POST` request to `/v1/system/identity-providers/saml`
-    ///
-    /// Arguments:
-    /// - `silo`: Name or ID of the silo
-    /// - `body`
-    /// ```ignore
-    /// let response = client.saml_identity_provider_create()
-    ///    .silo(silo)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
-    /// Fetch a SAML IdP
-    ///
-    /// Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
-    ///
-    /// Arguments:
-    /// - `provider`: Name or ID of the SAML identity provider
-    /// - `silo`: Name or ID of the silo
-    /// ```ignore
-    /// let response = client.saml_identity_provider_view()
-    ///    .provider(provider)
-    ///    .silo(silo)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView;
+    fn system_metric(&self) -> builder::SystemMetric;
+}
+
+impl ClientSystemMetricsExt for Client {
+    fn system_metric(&self) -> builder::SystemMetric {
+        builder::SystemMetric::new(self)
+    }
+}
+
+pub trait ClientSystemNetworkingExt {
     /// List IP pools
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools`
@@ -21845,32 +21827,6 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
-    /// Access metrics data
-    ///
-    /// Sends a `GET` request to `/v1/system/metrics/{metric_name}`
-    ///
-    /// Arguments:
-    /// - `metric_name`
-    /// - `end_time`: An exclusive end time of metrics.
-    /// - `id`: The UUID of the container being queried
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `order`: Query result order
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `start_time`: An inclusive start time of metrics.
-    /// ```ignore
-    /// let response = client.system_metric()
-    ///    .metric_name(metric_name)
-    ///    .end_time(end_time)
-    ///    .id(id)
-    ///    .limit(limit)
-    ///    .order(order)
-    ///    .page_token(page_token)
-    ///    .start_time(start_time)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_metric(&self) -> builder::SystemMetric;
     /// List address lots
     ///
     /// Sends a `GET` request to `/v1/system/networking/address-lot`
@@ -22051,6 +22007,213 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn networking_switch_port_settings_view(&self) -> builder::NetworkingSwitchPortSettingsView;
+}
+
+impl ClientSystemNetworkingExt for Client {
+    fn ip_pool_list(&self) -> builder::IpPoolList {
+        builder::IpPoolList::new(self)
+    }
+
+    fn ip_pool_create(&self) -> builder::IpPoolCreate {
+        builder::IpPoolCreate::new(self)
+    }
+
+    fn ip_pool_view(&self) -> builder::IpPoolView {
+        builder::IpPoolView::new(self)
+    }
+
+    fn ip_pool_update(&self) -> builder::IpPoolUpdate {
+        builder::IpPoolUpdate::new(self)
+    }
+
+    fn ip_pool_delete(&self) -> builder::IpPoolDelete {
+        builder::IpPoolDelete::new(self)
+    }
+
+    fn ip_pool_range_list(&self) -> builder::IpPoolRangeList {
+        builder::IpPoolRangeList::new(self)
+    }
+
+    fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd {
+        builder::IpPoolRangeAdd::new(self)
+    }
+
+    fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove {
+        builder::IpPoolRangeRemove::new(self)
+    }
+
+    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
+        builder::IpPoolServiceView::new(self)
+    }
+
+    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList {
+        builder::IpPoolServiceRangeList::new(self)
+    }
+
+    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd {
+        builder::IpPoolServiceRangeAdd::new(self)
+    }
+
+    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove {
+        builder::IpPoolServiceRangeRemove::new(self)
+    }
+
+    fn networking_address_lot_list(&self) -> builder::NetworkingAddressLotList {
+        builder::NetworkingAddressLotList::new(self)
+    }
+
+    fn networking_address_lot_create(&self) -> builder::NetworkingAddressLotCreate {
+        builder::NetworkingAddressLotCreate::new(self)
+    }
+
+    fn networking_address_lot_delete(&self) -> builder::NetworkingAddressLotDelete {
+        builder::NetworkingAddressLotDelete::new(self)
+    }
+
+    fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList {
+        builder::NetworkingAddressLotBlockList::new(self)
+    }
+
+    fn networking_loopback_address_list(&self) -> builder::NetworkingLoopbackAddressList {
+        builder::NetworkingLoopbackAddressList::new(self)
+    }
+
+    fn networking_loopback_address_create(&self) -> builder::NetworkingLoopbackAddressCreate {
+        builder::NetworkingLoopbackAddressCreate::new(self)
+    }
+
+    fn networking_loopback_address_delete(&self) -> builder::NetworkingLoopbackAddressDelete {
+        builder::NetworkingLoopbackAddressDelete::new(self)
+    }
+
+    fn networking_switch_port_settings_list(&self) -> builder::NetworkingSwitchPortSettingsList {
+        builder::NetworkingSwitchPortSettingsList::new(self)
+    }
+
+    fn networking_switch_port_settings_create(
+        &self,
+    ) -> builder::NetworkingSwitchPortSettingsCreate {
+        builder::NetworkingSwitchPortSettingsCreate::new(self)
+    }
+
+    fn networking_switch_port_settings_delete(
+        &self,
+    ) -> builder::NetworkingSwitchPortSettingsDelete {
+        builder::NetworkingSwitchPortSettingsDelete::new(self)
+    }
+
+    fn networking_switch_port_settings_view(&self) -> builder::NetworkingSwitchPortSettingsView {
+        builder::NetworkingSwitchPortSettingsView::new(self)
+    }
+}
+
+pub trait ClientSystemSilosExt {
+    /// List a silo's IdP's name
+    ///
+    /// Sends a `GET` request to `/v1/system/identity-providers`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `silo`: Name or ID of the silo
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.silo_identity_provider_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .silo(silo)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
+    /// Create a user
+    ///
+    /// Users can only be created in Silos with `provision_type` == `Fixed`.
+    /// Otherwise, Silo users are just-in-time (JIT) provisioned when a user
+    /// first logs in using an external Identity Provider.
+    ///
+    /// Sends a `POST` request to `/v1/system/identity-providers/local/users`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// - `body`
+    /// ```ignore
+    /// let response = client.local_idp_user_create()
+    ///    .silo(silo)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
+    /// Delete a user
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/system/identity-providers/local/users/{user_id}`
+    ///
+    /// Arguments:
+    /// - `user_id`: The user's internal id
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.local_idp_user_delete()
+    ///    .user_id(user_id)
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
+    /// Set or invalidate a user's password
+    ///
+    /// Passwords can only be updated for users in Silos with identity mode
+    /// `LocalOnly`.
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/system/identity-providers/local/users/{user_id}/set-password`
+    ///
+    /// Arguments:
+    /// - `user_id`: The user's internal id
+    /// - `silo`: Name or ID of the silo
+    /// - `body`
+    /// ```ignore
+    /// let response = client.local_idp_user_set_password()
+    ///    .user_id(user_id)
+    ///    .silo(silo)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
+    /// Create a SAML IdP
+    ///
+    /// Sends a `POST` request to `/v1/system/identity-providers/saml`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// - `body`
+    /// ```ignore
+    /// let response = client.saml_identity_provider_create()
+    ///    .silo(silo)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
+    /// Fetch a SAML IdP
+    ///
+    /// Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
+    ///
+    /// Arguments:
+    /// - `provider`: Name or ID of the SAML identity provider
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.saml_identity_provider_view()
+    ///    .provider(provider)
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView;
     /// List silos
     ///
     /// Lists silos that are discoverable based on the current permissions.
@@ -22140,6 +22303,139 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate;
+    /// List built-in (system) users in a silo
+    ///
+    /// Sends a `GET` request to `/v1/system/users`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `silo`: Name or ID of the silo
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.silo_user_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .silo(silo)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_user_list(&self) -> builder::SiloUserList;
+    /// Fetch a built-in (system) user
+    ///
+    /// Sends a `GET` request to `/v1/system/users/{user_id}`
+    ///
+    /// Arguments:
+    /// - `user_id`: The user's internal id
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.silo_user_view()
+    ///    .user_id(user_id)
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_user_view(&self) -> builder::SiloUserView;
+    /// List built-in users
+    ///
+    /// Sends a `GET` request to `/v1/system/users-builtin`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.user_builtin_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn user_builtin_list(&self) -> builder::UserBuiltinList;
+    /// Fetch a built-in user
+    ///
+    /// Sends a `GET` request to `/v1/system/users-builtin/{user}`
+    ///
+    /// ```ignore
+    /// let response = client.user_builtin_view()
+    ///    .user(user)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn user_builtin_view(&self) -> builder::UserBuiltinView;
+}
+
+impl ClientSystemSilosExt for Client {
+    fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList {
+        builder::SiloIdentityProviderList::new(self)
+    }
+
+    fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate {
+        builder::LocalIdpUserCreate::new(self)
+    }
+
+    fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete {
+        builder::LocalIdpUserDelete::new(self)
+    }
+
+    fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword {
+        builder::LocalIdpUserSetPassword::new(self)
+    }
+
+    fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate {
+        builder::SamlIdentityProviderCreate::new(self)
+    }
+
+    fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView {
+        builder::SamlIdentityProviderView::new(self)
+    }
+
+    fn silo_list(&self) -> builder::SiloList {
+        builder::SiloList::new(self)
+    }
+
+    fn silo_create(&self) -> builder::SiloCreate {
+        builder::SiloCreate::new(self)
+    }
+
+    fn silo_view(&self) -> builder::SiloView {
+        builder::SiloView::new(self)
+    }
+
+    fn silo_delete(&self) -> builder::SiloDelete {
+        builder::SiloDelete::new(self)
+    }
+
+    fn silo_policy_view(&self) -> builder::SiloPolicyView {
+        builder::SiloPolicyView::new(self)
+    }
+
+    fn silo_policy_update(&self) -> builder::SiloPolicyUpdate {
+        builder::SiloPolicyUpdate::new(self)
+    }
+
+    fn silo_user_list(&self) -> builder::SiloUserList {
+        builder::SiloUserList::new(self)
+    }
+
+    fn silo_user_view(&self) -> builder::SiloUserView {
+        builder::SiloUserView::new(self)
+    }
+
+    fn user_builtin_list(&self) -> builder::UserBuiltinList {
+        builder::UserBuiltinList::new(self)
+    }
+
+    fn user_builtin_view(&self) -> builder::UserBuiltinView {
+        builder::UserBuiltinView::new(self)
+    }
+}
+
+pub trait ClientSystemUpdateExt {
     /// View version and update status of component tree
     ///
     /// Sends a `GET` request to `/v1/system/update/components`
@@ -22271,269 +22567,9 @@ pub trait ClientSystemExt {
     ///    .await;
     /// ```
     fn system_version(&self) -> builder::SystemVersion;
-    /// List users in a silo
-    ///
-    /// Sends a `GET` request to `/v1/system/users`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `silo`: Name or ID of the silo
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.silo_user_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .silo(silo)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn silo_user_list(&self) -> builder::SiloUserList;
-    /// Fetch a user
-    ///
-    /// Sends a `GET` request to `/v1/system/users/{user_id}`
-    ///
-    /// Arguments:
-    /// - `user_id`: The user's internal id
-    /// - `silo`: Name or ID of the silo
-    /// ```ignore
-    /// let response = client.silo_user_view()
-    ///    .user_id(user_id)
-    ///    .silo(silo)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn silo_user_view(&self) -> builder::SiloUserView;
-    /// List built-in users
-    ///
-    /// Sends a `GET` request to `/v1/system/users-builtin`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.user_builtin_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn user_builtin_list(&self) -> builder::UserBuiltinList;
-    /// Fetch a built-in user
-    ///
-    /// Sends a `GET` request to `/v1/system/users-builtin/{user}`
-    ///
-    /// ```ignore
-    /// let response = client.user_builtin_view()
-    ///    .user(user)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn user_builtin_view(&self) -> builder::UserBuiltinView;
 }
 
-impl ClientSystemExt for Client {
-    fn physical_disk_list(&self) -> builder::PhysicalDiskList {
-        builder::PhysicalDiskList::new(self)
-    }
-
-    fn rack_list(&self) -> builder::RackList {
-        builder::RackList::new(self)
-    }
-
-    fn rack_view(&self) -> builder::RackView {
-        builder::RackView::new(self)
-    }
-
-    fn sled_list(&self) -> builder::SledList {
-        builder::SledList::new(self)
-    }
-
-    fn sled_view(&self) -> builder::SledView {
-        builder::SledView::new(self)
-    }
-
-    fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList {
-        builder::SledPhysicalDiskList::new(self)
-    }
-
-    fn sled_instance_list(&self) -> builder::SledInstanceList {
-        builder::SledInstanceList::new(self)
-    }
-
-    fn networking_switch_port_list(&self) -> builder::NetworkingSwitchPortList {
-        builder::NetworkingSwitchPortList::new(self)
-    }
-
-    fn networking_switch_port_apply_settings(&self) -> builder::NetworkingSwitchPortApplySettings {
-        builder::NetworkingSwitchPortApplySettings::new(self)
-    }
-
-    fn networking_switch_port_clear_settings(&self) -> builder::NetworkingSwitchPortClearSettings {
-        builder::NetworkingSwitchPortClearSettings::new(self)
-    }
-
-    fn switch_list(&self) -> builder::SwitchList {
-        builder::SwitchList::new(self)
-    }
-
-    fn switch_view(&self) -> builder::SwitchView {
-        builder::SwitchView::new(self)
-    }
-
-    fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList {
-        builder::SiloIdentityProviderList::new(self)
-    }
-
-    fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate {
-        builder::LocalIdpUserCreate::new(self)
-    }
-
-    fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete {
-        builder::LocalIdpUserDelete::new(self)
-    }
-
-    fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword {
-        builder::LocalIdpUserSetPassword::new(self)
-    }
-
-    fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate {
-        builder::SamlIdentityProviderCreate::new(self)
-    }
-
-    fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView {
-        builder::SamlIdentityProviderView::new(self)
-    }
-
-    fn ip_pool_list(&self) -> builder::IpPoolList {
-        builder::IpPoolList::new(self)
-    }
-
-    fn ip_pool_create(&self) -> builder::IpPoolCreate {
-        builder::IpPoolCreate::new(self)
-    }
-
-    fn ip_pool_view(&self) -> builder::IpPoolView {
-        builder::IpPoolView::new(self)
-    }
-
-    fn ip_pool_update(&self) -> builder::IpPoolUpdate {
-        builder::IpPoolUpdate::new(self)
-    }
-
-    fn ip_pool_delete(&self) -> builder::IpPoolDelete {
-        builder::IpPoolDelete::new(self)
-    }
-
-    fn ip_pool_range_list(&self) -> builder::IpPoolRangeList {
-        builder::IpPoolRangeList::new(self)
-    }
-
-    fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd {
-        builder::IpPoolRangeAdd::new(self)
-    }
-
-    fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove {
-        builder::IpPoolRangeRemove::new(self)
-    }
-
-    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
-        builder::IpPoolServiceView::new(self)
-    }
-
-    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList {
-        builder::IpPoolServiceRangeList::new(self)
-    }
-
-    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd {
-        builder::IpPoolServiceRangeAdd::new(self)
-    }
-
-    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove {
-        builder::IpPoolServiceRangeRemove::new(self)
-    }
-
-    fn system_metric(&self) -> builder::SystemMetric {
-        builder::SystemMetric::new(self)
-    }
-
-    fn networking_address_lot_list(&self) -> builder::NetworkingAddressLotList {
-        builder::NetworkingAddressLotList::new(self)
-    }
-
-    fn networking_address_lot_create(&self) -> builder::NetworkingAddressLotCreate {
-        builder::NetworkingAddressLotCreate::new(self)
-    }
-
-    fn networking_address_lot_delete(&self) -> builder::NetworkingAddressLotDelete {
-        builder::NetworkingAddressLotDelete::new(self)
-    }
-
-    fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList {
-        builder::NetworkingAddressLotBlockList::new(self)
-    }
-
-    fn networking_loopback_address_list(&self) -> builder::NetworkingLoopbackAddressList {
-        builder::NetworkingLoopbackAddressList::new(self)
-    }
-
-    fn networking_loopback_address_create(&self) -> builder::NetworkingLoopbackAddressCreate {
-        builder::NetworkingLoopbackAddressCreate::new(self)
-    }
-
-    fn networking_loopback_address_delete(&self) -> builder::NetworkingLoopbackAddressDelete {
-        builder::NetworkingLoopbackAddressDelete::new(self)
-    }
-
-    fn networking_switch_port_settings_list(&self) -> builder::NetworkingSwitchPortSettingsList {
-        builder::NetworkingSwitchPortSettingsList::new(self)
-    }
-
-    fn networking_switch_port_settings_create(
-        &self,
-    ) -> builder::NetworkingSwitchPortSettingsCreate {
-        builder::NetworkingSwitchPortSettingsCreate::new(self)
-    }
-
-    fn networking_switch_port_settings_delete(
-        &self,
-    ) -> builder::NetworkingSwitchPortSettingsDelete {
-        builder::NetworkingSwitchPortSettingsDelete::new(self)
-    }
-
-    fn networking_switch_port_settings_view(&self) -> builder::NetworkingSwitchPortSettingsView {
-        builder::NetworkingSwitchPortSettingsView::new(self)
-    }
-
-    fn silo_list(&self) -> builder::SiloList {
-        builder::SiloList::new(self)
-    }
-
-    fn silo_create(&self) -> builder::SiloCreate {
-        builder::SiloCreate::new(self)
-    }
-
-    fn silo_view(&self) -> builder::SiloView {
-        builder::SiloView::new(self)
-    }
-
-    fn silo_delete(&self) -> builder::SiloDelete {
-        builder::SiloDelete::new(self)
-    }
-
-    fn silo_policy_view(&self) -> builder::SiloPolicyView {
-        builder::SiloPolicyView::new(self)
-    }
-
-    fn silo_policy_update(&self) -> builder::SiloPolicyUpdate {
-        builder::SiloPolicyUpdate::new(self)
-    }
-
+impl ClientSystemUpdateExt for Client {
     fn system_component_version_list(&self) -> builder::SystemComponentVersionList {
         builder::SystemComponentVersionList::new(self)
     }
@@ -22572,22 +22608,6 @@ impl ClientSystemExt for Client {
 
     fn system_version(&self) -> builder::SystemVersion {
         builder::SystemVersion::new(self)
-    }
-
-    fn silo_user_list(&self) -> builder::SiloUserList {
-        builder::SiloUserList::new(self)
-    }
-
-    fn silo_user_view(&self) -> builder::SiloUserView {
-        builder::SiloUserView::new(self)
-    }
-
-    fn user_builtin_list(&self) -> builder::UserBuiltinList {
-        builder::UserBuiltinList::new(self)
-    }
-
-    fn user_builtin_view(&self) -> builder::UserBuiltinView {
-        builder::UserBuiltinView::new(self)
     }
 }
 
@@ -29956,9 +29976,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::physical_disk_list`]
+    /// Builder for [`ClientSystemHardwareExt::physical_disk_list`]
     ///
-    /// [`ClientSystemExt::physical_disk_list`]: super::ClientSystemExt::physical_disk_list
+    /// [`ClientSystemHardwareExt::physical_disk_list`]: super::ClientSystemHardwareExt::physical_disk_list
     #[derive(Debug, Clone)]
     pub struct PhysicalDiskList<'a> {
         client: &'a super::Client,
@@ -30113,9 +30133,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::rack_list`]
+    /// Builder for [`ClientSystemHardwareExt::rack_list`]
     ///
-    /// [`ClientSystemExt::rack_list`]: super::ClientSystemExt::rack_list
+    /// [`ClientSystemHardwareExt::rack_list`]: super::ClientSystemHardwareExt::rack_list
     #[derive(Debug, Clone)]
     pub struct RackList<'a> {
         client: &'a super::Client,
@@ -30270,9 +30290,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::rack_view`]
+    /// Builder for [`ClientSystemHardwareExt::rack_view`]
     ///
-    /// [`ClientSystemExt::rack_view`]: super::ClientSystemExt::rack_view
+    /// [`ClientSystemHardwareExt::rack_view`]: super::ClientSystemHardwareExt::rack_view
     #[derive(Debug, Clone)]
     pub struct RackView<'a> {
         client: &'a super::Client,
@@ -30329,9 +30349,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::sled_list`]
+    /// Builder for [`ClientSystemHardwareExt::sled_list`]
     ///
-    /// [`ClientSystemExt::sled_list`]: super::ClientSystemExt::sled_list
+    /// [`ClientSystemHardwareExt::sled_list`]: super::ClientSystemHardwareExt::sled_list
     #[derive(Debug, Clone)]
     pub struct SledList<'a> {
         client: &'a super::Client,
@@ -30486,9 +30506,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::sled_view`]
+    /// Builder for [`ClientSystemHardwareExt::sled_view`]
     ///
-    /// [`ClientSystemExt::sled_view`]: super::ClientSystemExt::sled_view
+    /// [`ClientSystemHardwareExt::sled_view`]: super::ClientSystemHardwareExt::sled_view
     #[derive(Debug, Clone)]
     pub struct SledView<'a> {
         client: &'a super::Client,
@@ -30545,9 +30565,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::sled_physical_disk_list`]
+    /// Builder for [`ClientSystemHardwareExt::sled_physical_disk_list`]
     ///
-    /// [`ClientSystemExt::sled_physical_disk_list`]: super::ClientSystemExt::sled_physical_disk_list
+    /// [`ClientSystemHardwareExt::sled_physical_disk_list`]: super::ClientSystemHardwareExt::sled_physical_disk_list
     #[derive(Debug, Clone)]
     pub struct SledPhysicalDiskList<'a> {
         client: &'a super::Client,
@@ -30721,9 +30741,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::sled_instance_list`]
+    /// Builder for [`ClientSystemHardwareExt::sled_instance_list`]
     ///
-    /// [`ClientSystemExt::sled_instance_list`]: super::ClientSystemExt::sled_instance_list
+    /// [`ClientSystemHardwareExt::sled_instance_list`]: super::ClientSystemHardwareExt::sled_instance_list
     #[derive(Debug, Clone)]
     pub struct SledInstanceList<'a> {
         client: &'a super::Client,
@@ -30898,9 +30918,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_switch_port_list`]
+    /// Builder for [`ClientSystemHardwareExt::networking_switch_port_list`]
     ///
-    /// [`ClientSystemExt::networking_switch_port_list`]: super::ClientSystemExt::networking_switch_port_list
+    /// [`ClientSystemHardwareExt::networking_switch_port_list`]: super::ClientSystemHardwareExt::networking_switch_port_list
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortList<'a> {
         client: &'a super::Client,
@@ -31074,9 +31094,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_switch_port_apply_settings`]
+    /// Builder for
+    /// [`ClientSystemHardwareExt::networking_switch_port_apply_settings`]
     ///
-    /// [`ClientSystemExt::networking_switch_port_apply_settings`]: super::ClientSystemExt::networking_switch_port_apply_settings
+    /// [`ClientSystemHardwareExt::networking_switch_port_apply_settings`]: super::ClientSystemHardwareExt::networking_switch_port_apply_settings
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortApplySettings<'a> {
         client: &'a super::Client,
@@ -31197,9 +31218,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_switch_port_clear_settings`]
+    /// Builder for
+    /// [`ClientSystemHardwareExt::networking_switch_port_clear_settings`]
     ///
-    /// [`ClientSystemExt::networking_switch_port_clear_settings`]: super::ClientSystemExt::networking_switch_port_clear_settings
+    /// [`ClientSystemHardwareExt::networking_switch_port_clear_settings`]: super::ClientSystemHardwareExt::networking_switch_port_clear_settings
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortClearSettings<'a> {
         client: &'a super::Client,
@@ -31292,9 +31314,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::switch_list`]
+    /// Builder for [`ClientSystemHardwareExt::switch_list`]
     ///
-    /// [`ClientSystemExt::switch_list`]: super::ClientSystemExt::switch_list
+    /// [`ClientSystemHardwareExt::switch_list`]: super::ClientSystemHardwareExt::switch_list
     #[derive(Debug, Clone)]
     pub struct SwitchList<'a> {
         client: &'a super::Client,
@@ -31449,9 +31471,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::switch_view`]
+    /// Builder for [`ClientSystemHardwareExt::switch_view`]
     ///
-    /// [`ClientSystemExt::switch_view`]: super::ClientSystemExt::switch_view
+    /// [`ClientSystemHardwareExt::switch_view`]: super::ClientSystemHardwareExt::switch_view
     #[derive(Debug, Clone)]
     pub struct SwitchView<'a> {
         client: &'a super::Client,
@@ -31508,9 +31530,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::silo_identity_provider_list`]
+    /// Builder for [`ClientSystemSilosExt::silo_identity_provider_list`]
     ///
-    /// [`ClientSystemExt::silo_identity_provider_list`]: super::ClientSystemExt::silo_identity_provider_list
+    /// [`ClientSystemSilosExt::silo_identity_provider_list`]: super::ClientSystemSilosExt::silo_identity_provider_list
     #[derive(Debug, Clone)]
     pub struct SiloIdentityProviderList<'a> {
         client: &'a super::Client,
@@ -31685,9 +31707,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::local_idp_user_create`]
+    /// Builder for [`ClientSystemSilosExt::local_idp_user_create`]
     ///
-    /// [`ClientSystemExt::local_idp_user_create`]: super::ClientSystemExt::local_idp_user_create
+    /// [`ClientSystemSilosExt::local_idp_user_create`]: super::ClientSystemSilosExt::local_idp_user_create
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserCreate<'a> {
         client: &'a super::Client,
@@ -31772,9 +31794,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::local_idp_user_delete`]
+    /// Builder for [`ClientSystemSilosExt::local_idp_user_delete`]
     ///
-    /// [`ClientSystemExt::local_idp_user_delete`]: super::ClientSystemExt::local_idp_user_delete
+    /// [`ClientSystemSilosExt::local_idp_user_delete`]: super::ClientSystemSilosExt::local_idp_user_delete
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserDelete<'a> {
         client: &'a super::Client,
@@ -31852,9 +31874,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::local_idp_user_set_password`]
+    /// Builder for [`ClientSystemSilosExt::local_idp_user_set_password`]
     ///
-    /// [`ClientSystemExt::local_idp_user_set_password`]: super::ClientSystemExt::local_idp_user_set_password
+    /// [`ClientSystemSilosExt::local_idp_user_set_password`]: super::ClientSystemSilosExt::local_idp_user_set_password
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserSetPassword<'a> {
         client: &'a super::Client,
@@ -31947,9 +31969,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::saml_identity_provider_create`]
+    /// Builder for [`ClientSystemSilosExt::saml_identity_provider_create`]
     ///
-    /// [`ClientSystemExt::saml_identity_provider_create`]: super::ClientSystemExt::saml_identity_provider_create
+    /// [`ClientSystemSilosExt::saml_identity_provider_create`]: super::ClientSystemSilosExt::saml_identity_provider_create
     #[derive(Debug, Clone)]
     pub struct SamlIdentityProviderCreate<'a> {
         client: &'a super::Client,
@@ -32033,9 +32055,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::saml_identity_provider_view`]
+    /// Builder for [`ClientSystemSilosExt::saml_identity_provider_view`]
     ///
-    /// [`ClientSystemExt::saml_identity_provider_view`]: super::ClientSystemExt::saml_identity_provider_view
+    /// [`ClientSystemSilosExt::saml_identity_provider_view`]: super::ClientSystemSilosExt::saml_identity_provider_view
     #[derive(Debug, Clone)]
     pub struct SamlIdentityProviderView<'a> {
         client: &'a super::Client,
@@ -32115,9 +32137,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_list`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_list`]
     ///
-    /// [`ClientSystemExt::ip_pool_list`]: super::ClientSystemExt::ip_pool_list
+    /// [`ClientSystemNetworkingExt::ip_pool_list`]: super::ClientSystemNetworkingExt::ip_pool_list
     #[derive(Debug, Clone)]
     pub struct IpPoolList<'a> {
         client: &'a super::Client,
@@ -32272,9 +32294,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_create`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_create`]
     ///
-    /// [`ClientSystemExt::ip_pool_create`]: super::ClientSystemExt::ip_pool_create
+    /// [`ClientSystemNetworkingExt::ip_pool_create`]: super::ClientSystemNetworkingExt::ip_pool_create
     #[derive(Debug, Clone)]
     pub struct IpPoolCreate<'a> {
         client: &'a super::Client,
@@ -32339,9 +32361,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_view`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_view`]
     ///
-    /// [`ClientSystemExt::ip_pool_view`]: super::ClientSystemExt::ip_pool_view
+    /// [`ClientSystemNetworkingExt::ip_pool_view`]: super::ClientSystemNetworkingExt::ip_pool_view
     #[derive(Debug, Clone)]
     pub struct IpPoolView<'a> {
         client: &'a super::Client,
@@ -32398,9 +32420,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_update`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_update`]
     ///
-    /// [`ClientSystemExt::ip_pool_update`]: super::ClientSystemExt::ip_pool_update
+    /// [`ClientSystemNetworkingExt::ip_pool_update`]: super::ClientSystemNetworkingExt::ip_pool_update
     #[derive(Debug, Clone)]
     pub struct IpPoolUpdate<'a> {
         client: &'a super::Client,
@@ -32482,9 +32504,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_delete`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_delete`]
     ///
-    /// [`ClientSystemExt::ip_pool_delete`]: super::ClientSystemExt::ip_pool_delete
+    /// [`ClientSystemNetworkingExt::ip_pool_delete`]: super::ClientSystemNetworkingExt::ip_pool_delete
     #[derive(Debug, Clone)]
     pub struct IpPoolDelete<'a> {
         client: &'a super::Client,
@@ -32541,9 +32563,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_range_list`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_range_list`]
     ///
-    /// [`ClientSystemExt::ip_pool_range_list`]: super::ClientSystemExt::ip_pool_range_list
+    /// [`ClientSystemNetworkingExt::ip_pool_range_list`]: super::ClientSystemNetworkingExt::ip_pool_range_list
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeList<'a> {
         client: &'a super::Client,
@@ -32697,9 +32719,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_range_add`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_range_add`]
     ///
-    /// [`ClientSystemExt::ip_pool_range_add`]: super::ClientSystemExt::ip_pool_range_add
+    /// [`ClientSystemNetworkingExt::ip_pool_range_add`]: super::ClientSystemNetworkingExt::ip_pool_range_add
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeAdd<'a> {
         client: &'a super::Client,
@@ -32770,9 +32792,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_range_remove`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_range_remove`]
     ///
-    /// [`ClientSystemExt::ip_pool_range_remove`]: super::ClientSystemExt::ip_pool_range_remove
+    /// [`ClientSystemNetworkingExt::ip_pool_range_remove`]: super::ClientSystemNetworkingExt::ip_pool_range_remove
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeRemove<'a> {
         client: &'a super::Client,
@@ -32843,9 +32865,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_service_view`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_view`]
     ///
-    /// [`ClientSystemExt::ip_pool_service_view`]: super::ClientSystemExt::ip_pool_service_view
+    /// [`ClientSystemNetworkingExt::ip_pool_service_view`]: super::ClientSystemNetworkingExt::ip_pool_service_view
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceView<'a> {
         client: &'a super::Client,
@@ -32883,9 +32905,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_service_range_list`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_list`]
     ///
-    /// [`ClientSystemExt::ip_pool_service_range_list`]: super::ClientSystemExt::ip_pool_service_range_list
+    /// [`ClientSystemNetworkingExt::ip_pool_service_range_list`]: super::ClientSystemNetworkingExt::ip_pool_service_range_list
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeList<'a> {
         client: &'a super::Client,
@@ -33021,9 +33043,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_service_range_add`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_add`]
     ///
-    /// [`ClientSystemExt::ip_pool_service_range_add`]: super::ClientSystemExt::ip_pool_service_range_add
+    /// [`ClientSystemNetworkingExt::ip_pool_service_range_add`]: super::ClientSystemNetworkingExt::ip_pool_service_range_add
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeAdd<'a> {
         client: &'a super::Client,
@@ -33077,9 +33099,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::ip_pool_service_range_remove`]
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]
     ///
-    /// [`ClientSystemExt::ip_pool_service_range_remove`]: super::ClientSystemExt::ip_pool_service_range_remove
+    /// [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]: super::ClientSystemNetworkingExt::ip_pool_service_range_remove
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeRemove<'a> {
         client: &'a super::Client,
@@ -33137,9 +33159,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::system_metric`]
+    /// Builder for [`ClientSystemMetricsExt::system_metric`]
     ///
-    /// [`ClientSystemExt::system_metric`]: super::ClientSystemExt::system_metric
+    /// [`ClientSystemMetricsExt::system_metric`]: super::ClientSystemMetricsExt::system_metric
     #[derive(Debug, Clone)]
     pub struct SystemMetric<'a> {
         client: &'a super::Client,
@@ -33308,9 +33330,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_address_lot_list`]
+    /// Builder for [`ClientSystemNetworkingExt::networking_address_lot_list`]
     ///
-    /// [`ClientSystemExt::networking_address_lot_list`]: super::ClientSystemExt::networking_address_lot_list
+    /// [`ClientSystemNetworkingExt::networking_address_lot_list`]: super::ClientSystemNetworkingExt::networking_address_lot_list
     #[derive(Debug, Clone)]
     pub struct NetworkingAddressLotList<'a> {
         client: &'a super::Client,
@@ -33465,9 +33487,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_address_lot_create`]
+    /// Builder for [`ClientSystemNetworkingExt::networking_address_lot_create`]
     ///
-    /// [`ClientSystemExt::networking_address_lot_create`]: super::ClientSystemExt::networking_address_lot_create
+    /// [`ClientSystemNetworkingExt::networking_address_lot_create`]: super::ClientSystemNetworkingExt::networking_address_lot_create
     #[derive(Debug, Clone)]
     pub struct NetworkingAddressLotCreate<'a> {
         client: &'a super::Client,
@@ -33536,9 +33558,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_address_lot_delete`]
+    /// Builder for [`ClientSystemNetworkingExt::networking_address_lot_delete`]
     ///
-    /// [`ClientSystemExt::networking_address_lot_delete`]: super::ClientSystemExt::networking_address_lot_delete
+    /// [`ClientSystemNetworkingExt::networking_address_lot_delete`]: super::ClientSystemNetworkingExt::networking_address_lot_delete
     #[derive(Debug, Clone)]
     pub struct NetworkingAddressLotDelete<'a> {
         client: &'a super::Client,
@@ -33599,9 +33621,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_address_lot_block_list`]
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_address_lot_block_list`]
     ///
-    /// [`ClientSystemExt::networking_address_lot_block_list`]: super::ClientSystemExt::networking_address_lot_block_list
+    /// [`ClientSystemNetworkingExt::networking_address_lot_block_list`]: super::ClientSystemNetworkingExt::networking_address_lot_block_list
     #[derive(Debug, Clone)]
     pub struct NetworkingAddressLotBlockList<'a> {
         client: &'a super::Client,
@@ -33776,9 +33799,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_loopback_address_list`]
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_loopback_address_list`]
     ///
-    /// [`ClientSystemExt::networking_loopback_address_list`]: super::ClientSystemExt::networking_loopback_address_list
+    /// [`ClientSystemNetworkingExt::networking_loopback_address_list`]: super::ClientSystemNetworkingExt::networking_loopback_address_list
     #[derive(Debug, Clone)]
     pub struct NetworkingLoopbackAddressList<'a> {
         client: &'a super::Client,
@@ -33933,9 +33957,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_loopback_address_create`]
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_loopback_address_create`]
     ///
-    /// [`ClientSystemExt::networking_loopback_address_create`]: super::ClientSystemExt::networking_loopback_address_create
+    /// [`ClientSystemNetworkingExt::networking_loopback_address_create`]: super::ClientSystemNetworkingExt::networking_loopback_address_create
     #[derive(Debug, Clone)]
     pub struct NetworkingLoopbackAddressCreate<'a> {
         client: &'a super::Client,
@@ -34004,9 +34029,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_loopback_address_delete`]
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_loopback_address_delete`]
     ///
-    /// [`ClientSystemExt::networking_loopback_address_delete`]: super::ClientSystemExt::networking_loopback_address_delete
+    /// [`ClientSystemNetworkingExt::networking_loopback_address_delete`]: super::ClientSystemNetworkingExt::networking_loopback_address_delete
     #[derive(Debug, Clone)]
     pub struct NetworkingLoopbackAddressDelete<'a> {
         client: &'a super::Client,
@@ -34113,9 +34139,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_switch_port_settings_list`]
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_settings_list`]
     ///
-    /// [`ClientSystemExt::networking_switch_port_settings_list`]: super::ClientSystemExt::networking_switch_port_settings_list
+    /// [`ClientSystemNetworkingExt::networking_switch_port_settings_list`]: super::ClientSystemNetworkingExt::networking_switch_port_settings_list
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortSettingsList<'a> {
         client: &'a super::Client,
@@ -34296,9 +34323,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_switch_port_settings_create`]
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_settings_create`]
     ///
-    /// [`ClientSystemExt::networking_switch_port_settings_create`]: super::ClientSystemExt::networking_switch_port_settings_create
+    /// [`ClientSystemNetworkingExt::networking_switch_port_settings_create`]: super::ClientSystemNetworkingExt::networking_switch_port_settings_create
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortSettingsCreate<'a> {
         client: &'a super::Client,
@@ -34370,9 +34398,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_switch_port_settings_delete`]
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_settings_delete`]
     ///
-    /// [`ClientSystemExt::networking_switch_port_settings_delete`]: super::ClientSystemExt::networking_switch_port_settings_delete
+    /// [`ClientSystemNetworkingExt::networking_switch_port_settings_delete`]: super::ClientSystemNetworkingExt::networking_switch_port_settings_delete
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortSettingsDelete<'a> {
         client: &'a super::Client,
@@ -34438,9 +34467,10 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::networking_switch_port_settings_view`]
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_switch_port_settings_view`]
     ///
-    /// [`ClientSystemExt::networking_switch_port_settings_view`]: super::ClientSystemExt::networking_switch_port_settings_view
+    /// [`ClientSystemNetworkingExt::networking_switch_port_settings_view`]: super::ClientSystemNetworkingExt::networking_switch_port_settings_view
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortSettingsView<'a> {
         client: &'a super::Client,
@@ -34808,9 +34838,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::silo_list`]
+    /// Builder for [`ClientSystemSilosExt::silo_list`]
     ///
-    /// [`ClientSystemExt::silo_list`]: super::ClientSystemExt::silo_list
+    /// [`ClientSystemSilosExt::silo_list`]: super::ClientSystemSilosExt::silo_list
     #[derive(Debug, Clone)]
     pub struct SiloList<'a> {
         client: &'a super::Client,
@@ -34965,9 +34995,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::silo_create`]
+    /// Builder for [`ClientSystemSilosExt::silo_create`]
     ///
-    /// [`ClientSystemExt::silo_create`]: super::ClientSystemExt::silo_create
+    /// [`ClientSystemSilosExt::silo_create`]: super::ClientSystemSilosExt::silo_create
     #[derive(Debug, Clone)]
     pub struct SiloCreate<'a> {
         client: &'a super::Client,
@@ -35032,9 +35062,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::silo_view`]
+    /// Builder for [`ClientSystemSilosExt::silo_view`]
     ///
-    /// [`ClientSystemExt::silo_view`]: super::ClientSystemExt::silo_view
+    /// [`ClientSystemSilosExt::silo_view`]: super::ClientSystemSilosExt::silo_view
     #[derive(Debug, Clone)]
     pub struct SiloView<'a> {
         client: &'a super::Client,
@@ -35091,9 +35121,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::silo_delete`]
+    /// Builder for [`ClientSystemSilosExt::silo_delete`]
     ///
-    /// [`ClientSystemExt::silo_delete`]: super::ClientSystemExt::silo_delete
+    /// [`ClientSystemSilosExt::silo_delete`]: super::ClientSystemSilosExt::silo_delete
     #[derive(Debug, Clone)]
     pub struct SiloDelete<'a> {
         client: &'a super::Client,
@@ -35150,9 +35180,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::silo_policy_view`]
+    /// Builder for [`ClientSystemSilosExt::silo_policy_view`]
     ///
-    /// [`ClientSystemExt::silo_policy_view`]: super::ClientSystemExt::silo_policy_view
+    /// [`ClientSystemSilosExt::silo_policy_view`]: super::ClientSystemSilosExt::silo_policy_view
     #[derive(Debug, Clone)]
     pub struct SiloPolicyView<'a> {
         client: &'a super::Client,
@@ -35211,9 +35241,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::silo_policy_update`]
+    /// Builder for [`ClientSystemSilosExt::silo_policy_update`]
     ///
-    /// [`ClientSystemExt::silo_policy_update`]: super::ClientSystemExt::silo_policy_update
+    /// [`ClientSystemSilosExt::silo_policy_update`]: super::ClientSystemSilosExt::silo_policy_update
     #[derive(Debug, Clone)]
     pub struct SiloPolicyUpdate<'a> {
         client: &'a super::Client,
@@ -35297,9 +35327,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::system_component_version_list`]
+    /// Builder for [`ClientSystemUpdateExt::system_component_version_list`]
     ///
-    /// [`ClientSystemExt::system_component_version_list`]: super::ClientSystemExt::system_component_version_list
+    /// [`ClientSystemUpdateExt::system_component_version_list`]: super::ClientSystemUpdateExt::system_component_version_list
     #[derive(Debug, Clone)]
     pub struct SystemComponentVersionList<'a> {
         client: &'a super::Client,
@@ -35456,9 +35486,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::update_deployments_list`]
+    /// Builder for [`ClientSystemUpdateExt::update_deployments_list`]
     ///
-    /// [`ClientSystemExt::update_deployments_list`]: super::ClientSystemExt::update_deployments_list
+    /// [`ClientSystemUpdateExt::update_deployments_list`]: super::ClientSystemUpdateExt::update_deployments_list
     #[derive(Debug, Clone)]
     pub struct UpdateDeploymentsList<'a> {
         client: &'a super::Client,
@@ -35614,9 +35644,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::update_deployment_view`]
+    /// Builder for [`ClientSystemUpdateExt::update_deployment_view`]
     ///
-    /// [`ClientSystemExt::update_deployment_view`]: super::ClientSystemExt::update_deployment_view
+    /// [`ClientSystemUpdateExt::update_deployment_view`]: super::ClientSystemUpdateExt::update_deployment_view
     #[derive(Debug, Clone)]
     pub struct UpdateDeploymentView<'a> {
         client: &'a super::Client,
@@ -35675,9 +35705,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::system_update_refresh`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_refresh`]
     ///
-    /// [`ClientSystemExt::system_update_refresh`]: super::ClientSystemExt::system_update_refresh
+    /// [`ClientSystemUpdateExt::system_update_refresh`]: super::ClientSystemUpdateExt::system_update_refresh
     #[derive(Debug, Clone)]
     pub struct SystemUpdateRefresh<'a> {
         client: &'a super::Client,
@@ -35715,9 +35745,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::system_update_start`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_start`]
     ///
-    /// [`ClientSystemExt::system_update_start`]: super::ClientSystemExt::system_update_start
+    /// [`ClientSystemUpdateExt::system_update_start`]: super::ClientSystemUpdateExt::system_update_start
     #[derive(Debug, Clone)]
     pub struct SystemUpdateStart<'a> {
         client: &'a super::Client,
@@ -35786,9 +35816,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::system_update_stop`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_stop`]
     ///
-    /// [`ClientSystemExt::system_update_stop`]: super::ClientSystemExt::system_update_stop
+    /// [`ClientSystemUpdateExt::system_update_stop`]: super::ClientSystemUpdateExt::system_update_stop
     #[derive(Debug, Clone)]
     pub struct SystemUpdateStop<'a> {
         client: &'a super::Client,
@@ -35826,9 +35856,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::system_update_list`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_list`]
     ///
-    /// [`ClientSystemExt::system_update_list`]: super::ClientSystemExt::system_update_list
+    /// [`ClientSystemUpdateExt::system_update_list`]: super::ClientSystemUpdateExt::system_update_list
     #[derive(Debug, Clone)]
     pub struct SystemUpdateList<'a> {
         client: &'a super::Client,
@@ -35983,9 +36013,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::system_update_view`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_view`]
     ///
-    /// [`ClientSystemExt::system_update_view`]: super::ClientSystemExt::system_update_view
+    /// [`ClientSystemUpdateExt::system_update_view`]: super::ClientSystemUpdateExt::system_update_view
     #[derive(Debug, Clone)]
     pub struct SystemUpdateView<'a> {
         client: &'a super::Client,
@@ -36042,9 +36072,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::system_update_components_list`]
+    /// Builder for [`ClientSystemUpdateExt::system_update_components_list`]
     ///
-    /// [`ClientSystemExt::system_update_components_list`]: super::ClientSystemExt::system_update_components_list
+    /// [`ClientSystemUpdateExt::system_update_components_list`]: super::ClientSystemUpdateExt::system_update_components_list
     #[derive(Debug, Clone)]
     pub struct SystemUpdateComponentsList<'a> {
         client: &'a super::Client,
@@ -36104,9 +36134,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::system_version`]
+    /// Builder for [`ClientSystemUpdateExt::system_version`]
     ///
-    /// [`ClientSystemExt::system_version`]: super::ClientSystemExt::system_version
+    /// [`ClientSystemUpdateExt::system_version`]: super::ClientSystemUpdateExt::system_version
     #[derive(Debug, Clone)]
     pub struct SystemVersion<'a> {
         client: &'a super::Client,
@@ -36146,9 +36176,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::silo_user_list`]
+    /// Builder for [`ClientSystemSilosExt::silo_user_list`]
     ///
-    /// [`ClientSystemExt::silo_user_list`]: super::ClientSystemExt::silo_user_list
+    /// [`ClientSystemSilosExt::silo_user_list`]: super::ClientSystemSilosExt::silo_user_list
     #[derive(Debug, Clone)]
     pub struct SiloUserList<'a> {
         client: &'a super::Client,
@@ -36322,9 +36352,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::silo_user_view`]
+    /// Builder for [`ClientSystemSilosExt::silo_user_view`]
     ///
-    /// [`ClientSystemExt::silo_user_view`]: super::ClientSystemExt::silo_user_view
+    /// [`ClientSystemSilosExt::silo_user_view`]: super::ClientSystemSilosExt::silo_user_view
     #[derive(Debug, Clone)]
     pub struct SiloUserView<'a> {
         client: &'a super::Client,
@@ -36401,9 +36431,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::user_builtin_list`]
+    /// Builder for [`ClientSystemSilosExt::user_builtin_list`]
     ///
-    /// [`ClientSystemExt::user_builtin_list`]: super::ClientSystemExt::user_builtin_list
+    /// [`ClientSystemSilosExt::user_builtin_list`]: super::ClientSystemSilosExt::user_builtin_list
     #[derive(Debug, Clone)]
     pub struct UserBuiltinList<'a> {
         client: &'a super::Client,
@@ -36558,9 +36588,9 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemExt::user_builtin_view`]
+    /// Builder for [`ClientSystemSilosExt::user_builtin_view`]
     ///
-    /// [`ClientSystemExt::user_builtin_view`]: super::ClientSystemExt::user_builtin_view
+    /// [`ClientSystemSilosExt::user_builtin_view`]: super::ClientSystemSilosExt::user_builtin_view
     #[derive(Debug, Clone)]
     pub struct UserBuiltinView<'a> {
         client: &'a super::Client,
@@ -39718,6 +39748,10 @@ pub mod prelude {
     pub use super::ClientSessionExt;
     pub use super::ClientSilosExt;
     pub use super::ClientSnapshotsExt;
-    pub use super::ClientSystemExt;
+    pub use super::ClientSystemHardwareExt;
+    pub use super::ClientSystemMetricsExt;
+    pub use super::ClientSystemNetworkingExt;
+    pub use super::ClientSystemSilosExt;
+    pub use super::ClientSystemUpdateExt;
     pub use super::ClientVpcsExt;
 }
