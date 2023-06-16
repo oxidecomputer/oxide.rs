@@ -7,9 +7,12 @@
 //! Enabled with the "clap" feature. This is to support clap consumers such as
 //! the `oxide` CLI.
 
-use std::ffi::OsString;
+use std::str::FromStr;
 
 use crate::*;
+
+// Note that we make use of clap's impl of TypedValueParser for Fn(&str) ->
+// Result<..>.
 
 impl clap::builder::ValueParserFactory for types::ByteCount {
     type Parser = ByteCountParser;
@@ -30,32 +33,30 @@ impl clap::builder::TypedValueParser for ByteCountParser {
         arg: Option<&clap::Arg>,
         value: &std::ffi::OsStr,
     ) -> Result<Self::Value, clap::Error> {
-        fn parse(
-            cmd: &clap::Command,
-            arg: Option<&clap::Arg>,
-            value: &std::ffi::OsStr,
-        ) -> Option<types::ByteCount> {
-            let bytes = value.to_str()?.as_bytes();
-            let ii = bytes.partition_point(|c| (*c as char).is_ascii_digit());
-            let number = OsString::from(std::str::from_utf8(&bytes[..ii]).ok()?);
-            let suffix = std::str::from_utf8(&bytes[ii..]).ok()?.to_lowercase();
+        fn parse(value: &str) -> Result<types::ByteCount, String> {
+            let ii = value
+                .find(|c: char| !c.is_ascii_digit())
+                .unwrap_or(value.len());
 
-            let multiple = match suffix.as_str() {
+            let number = &value[..ii];
+            let suffix = &value[ii..];
+
+            let multiple = match suffix {
                 "kib" | "k" => 1024,
                 "mib" | "m" => 1024 * 1024,
                 "gib" | "g" => 1024 * 1024 * 1024,
                 "tib" | "t" => 1024 * 1024 * 1024 * 1024,
                 "" => 1,
-                _ => None?,
+                _ => return Err(format!("unknown suffix '{}'", suffix)),
             };
 
-            let inner = clap::value_parser!(u64);
-            let val = inner.parse_ref(cmd, arg, number.as_os_str()).ok()? * multiple;
-
-            Some(types::ByteCount(val))
+            number
+                .parse()
+                .map(|n: u64| types::ByteCount(n * multiple))
+                .map_err(|e| e.to_string())
         }
 
-        parse(cmd, arg, value).ok_or_else(|| clap::Error::new(clap::error::ErrorKind::InvalidValue))
+        parse.parse_ref(cmd, arg, value)
     }
 }
 
@@ -77,27 +78,103 @@ impl clap::builder::TypedValueParser for BlockSizeParser {
         arg: Option<&clap::Arg>,
         value: &std::ffi::OsStr,
     ) -> Result<Self::Value, clap::Error> {
-        fn parse(
-            _cmd: &clap::Command,
-            _arg: Option<&clap::Arg>,
-            value: &std::ffi::OsStr,
-        ) -> Option<types::BlockSize> {
-            let value: Option<i64> = value.to_str()?.parse().ok();
-            match value {
-                Some(512) => 512.try_into().ok(),
-                Some(2048) => 2048.try_into().ok(),
-                Some(4096) => 4096.try_into().ok(),
-                Some(_) => None,
-                None => None,
-            }
+        fn parse(value: &str) -> Result<types::BlockSize, String> {
+            i64::from_str(value)
+                .map_err(|e| e.to_string())?
+                .try_into()
+                .map_err(|_| "block size must be 512, 2048, or 4096".to_string())
         }
 
-        parse(cmd, arg, value).ok_or_else(|| {
-            clap::Error::raw(
-                clap::error::ErrorKind::InvalidValue,
-                "block size must be 512, 2048, or 4096\n",
-            )
-            .with_cmd(cmd)
-        })
+        parse.parse_ref(cmd, arg, value)
+    }
+
+    fn possible_values(
+        &self,
+    ) -> Option<Box<dyn Iterator<Item = clap::builder::PossibleValue> + '_>> {
+        Some(Box::new(
+            [
+                clap::builder::PossibleValue::new("512"),
+                clap::builder::PossibleValue::new("2048"),
+                clap::builder::PossibleValue::new("4096"),
+            ]
+            .into_iter(),
+        ))
+    }
+}
+
+// It would be nice if progenitor were able to give a nice, specific error
+// message, but since it can't we'll craft one for the CLI.
+impl clap::builder::ValueParserFactory for types::NameOrId {
+    type Parser = NameOrIdParser;
+    fn value_parser() -> Self::Parser {
+        NameOrIdParser
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct NameOrIdParser;
+impl clap::builder::TypedValueParser for NameOrIdParser {
+    type Value = types::NameOrId;
+
+    fn parse_ref(
+        &self,
+        cmd: &clap::Command,
+        arg: Option<&clap::Arg>,
+        value: &std::ffi::OsStr,
+    ) -> Result<Self::Value, clap::Error> {
+        fn parse(value: &str) -> Result<types::NameOrId, String> {
+            value
+                .parse()
+                .map_err(|_| "value must be a UUID or name".to_string())
+        }
+
+        parse.parse_ref(cmd, arg, value)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use clap::{builder::TypedValueParser, value_parser};
+
+    use crate::types::{BlockSize, ByteCount, NameOrId};
+
+    #[test]
+    fn test_byte_count() {
+        let parser = value_parser!(ByteCount);
+        let cmd = clap::Command::new("cmd");
+        let arg = None;
+        let value = std::ffi::OsStr::new("1.21jiggabytes");
+        let Err(err) = parser.parse_ref(&cmd, arg, value)
+        else { panic!() };
+        assert!(err.to_string().contains("unknown suffix"), "{err}",);
+    }
+
+    #[test]
+    fn test_block_size() {
+        let parser = value_parser!(BlockSize);
+        let cmd = clap::Command::new("cmd");
+        let arg = None;
+        let value = std::ffi::OsStr::new("123");
+        let Err(err) = parser.parse_ref(&cmd, arg, value)
+        else { panic!() };
+        assert!(
+            err.to_string()
+                .contains("block size must be 512, 2048, or 4096"),
+            "{err}",
+        );
+    }
+
+    #[test]
+    fn test_name_or_id() {
+        let parser = value_parser!(NameOrId);
+        let cmd = clap::Command::new("cmd");
+        let arg = None;
+        let value = std::ffi::OsStr::new("123");
+        let Err(err) = parser.parse_ref(&cmd, arg, value)
+        else { panic!() };
+        assert!(
+            err.to_string().contains("value must be a UUID or name"),
+            "{err}",
+        );
     }
 }

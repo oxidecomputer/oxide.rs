@@ -29,6 +29,7 @@ use oxide_api::ResponseValue;
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
+use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::sync::mpsc;
 
@@ -44,14 +45,14 @@ use tokio::sync::mpsc;
 pub struct CmdDiskImport {
     /// Name or ID of the project
     #[clap(long)]
-    project: String,
+    project: NameOrId,
 
     #[clap(long)]
     description: String,
 
     /// Path to the file to import
     #[clap(long)]
-    path: String,
+    path: PathBuf,
 
     /// The name of the disk to create
     #[clap(long)]
@@ -89,7 +90,7 @@ pub struct CmdDiskImport {
 }
 
 /// Return a disk size that Nexus will accept for the path and size arguments
-fn get_disk_size(path: &str, size: Option<u64>) -> Result<u64> {
+fn get_disk_size(path: &PathBuf, size: Option<u64>) -> Result<u64> {
     const ONE_GB: u64 = 1024 * 1024 * 1024;
 
     let disk_size = if let Some(size) = size {
@@ -113,35 +114,35 @@ fn get_disk_size(path: &str, size: Option<u64>) -> Result<u64> {
 
 #[test]
 fn test_get_disk_size() {
-    const ARG1: &str = "not relevant because we're supplying a size";
+    let path = PathBuf::from("not relevant because we're supplying a size");
 
     // test rounding up
-    assert_eq!(get_disk_size(ARG1, Some(1)).unwrap(), 1024 * 1024 * 1024,);
+    assert_eq!(get_disk_size(&path, Some(1)).unwrap(), 1024 * 1024 * 1024,);
 
     assert_eq!(
-        get_disk_size(ARG1, Some(1024 * 1024 * 1024 - 1)).unwrap(),
+        get_disk_size(&path, Some(1024 * 1024 * 1024 - 1)).unwrap(),
         1024 * 1024 * 1024,
     );
 
     // test even multiples of GB
     assert_eq!(
-        get_disk_size(ARG1, Some(1024 * 1024 * 1024)).unwrap(),
+        get_disk_size(&path, Some(1024 * 1024 * 1024)).unwrap(),
         1024 * 1024 * 1024,
     );
 
     assert_eq!(
-        get_disk_size(ARG1, Some(2 * 1024 * 1024 * 1024)).unwrap(),
+        get_disk_size(&path, Some(2 * 1024 * 1024 * 1024)).unwrap(),
         2 * 1024 * 1024 * 1024,
     );
 
     // test non-even multiples of GB
     assert_eq!(
-        get_disk_size(ARG1, Some(2 * 1024 * 1024 * 1024 + 1)).unwrap(),
+        get_disk_size(&path, Some(2 * 1024 * 1024 * 1024 + 1)).unwrap(),
         3 * 1024 * 1024 * 1024,
     );
 
     assert_eq!(
-        get_disk_size(ARG1, Some(3 * 1024 * 1024 * 1024 - 1)).unwrap(),
+        get_disk_size(&path, Some(3 * 1024 * 1024 * 1024 - 1)).unwrap(),
         3 * 1024 * 1024 * 1024,
     );
 }
@@ -245,7 +246,7 @@ impl RunnableCmd for CmdDiskImport {
         let client = ctx.client();
 
         if !Path::new(&self.path).exists() {
-            bail!("path {} does not exist", self.path);
+            bail!("path {} does not exist", self.path.to_string_lossy());
         }
 
         // validate that objects don't exist already
@@ -398,7 +399,11 @@ impl RunnableCmd for CmdDiskImport {
             let n = match file.by_ref().take(CHUNK_SIZE).read_to_end(&mut chunk) {
                 Ok(n) => n,
                 Err(e) => {
-                    eprintln!("reading from {} failed with {:?}", self.path, e);
+                    eprintln!(
+                        "reading from {} failed with {:?}",
+                        self.path.to_string_lossy(),
+                        e,
+                    );
                     break Err(e.into());
                 }
             };
