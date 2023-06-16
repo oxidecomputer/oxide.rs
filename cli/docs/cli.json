@@ -361,6 +361,11 @@
             },
             {
               "long": "disk-block-size",
+              "values": [
+                "512",
+                "2048",
+                "4096"
+              ],
               "help": "The desired size of the disk's blocks"
             },
             {

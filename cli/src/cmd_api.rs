@@ -414,7 +414,7 @@ fn add_query_string(endpoint: &str, query_string: &str) -> String {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use pretty_assertions::assert_eq;
 
     use super::*;
