@@ -19,6 +19,7 @@ pub struct Config {
     pub hosts: Hosts,
     pub resolve: Option<ResolveValue>,
     pub cert: Option<reqwest::Certificate>,
+    pub timeout: Option<u64>,
 }
 
 #[derive(Default, Debug, Deserialize, Serialize)]
@@ -69,6 +70,7 @@ impl Config {
             hosts,
             resolve: None,
             cert: None,
+            timeout: None,
         }
     }
 
@@ -116,6 +118,11 @@ impl Config {
 
     pub fn with_cert(mut self, cert: reqwest::Certificate) -> Self {
         self.cert = Some(cert);
+        self
+    }
+
+    pub fn with_timeout(mut self, timeout: u64) -> Self {
+        self.timeout = Some(timeout);
         self
     }
 }
