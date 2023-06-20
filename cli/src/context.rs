@@ -75,6 +75,9 @@ pub fn make_client(host: &str, token: String, config: &Config) -> Client {
     if let Some(cert) = &config.cert {
         client_builder = client_builder.add_root_certificate(cert.clone());
     }
+    if let Some(timeout) = &config.timeout {
+        client_builder = client_builder.timeout(Duration::from_secs(*timeout));
+    }
 
     let rclient = client_builder.build().unwrap();
 

@@ -17,6 +17,10 @@
     {
       "long": "resolve",
       "help": "Modify name resolution"
+    },
+    {
+      "long": "timeout",
+      "help": "Timeout value for individual API invocations"
     }
   ],
   "subcommands": [

@@ -36,6 +36,10 @@ struct OxideCli {
     /// Specify a trusted CA cert
     #[clap(long, value_name = "FILE")]
     pub cacert: Option<PathBuf>,
+
+    /// Timeout value for individual API invocations
+    #[clap(long, value_name = "SECONDS")]
+    pub timeout: Option<u64>,
 }
 
 #[derive(Debug, Clone)]
@@ -184,6 +188,7 @@ impl<'a> NewCli<'a> {
             config_dir,
             resolve,
             cacert,
+            timeout,
         } = OxideCli::from_arg_matches(&matches).unwrap();
 
         if debug {
@@ -220,6 +225,9 @@ impl<'a> NewCli<'a> {
                 CertType::Der => reqwest::tls::Certificate::from_der(&contents),
             }?;
             config = config.with_cert(cert);
+        }
+        if let Some(timeout) = timeout {
+            config = config.with_timeout(timeout);
         }
         let ctx = Context::new(config).unwrap();
 
