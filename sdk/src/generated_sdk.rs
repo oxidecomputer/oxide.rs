@@ -4662,6 +4662,7 @@ pub mod types {
         pub id: uuid::Uuid,
         /// How users and groups are managed in this Silo
         pub identity_mode: SiloIdentityMode,
+        pub mapped_fleet_roles: std::collections::HashMap<String, Vec<FleetRole>>,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// timestamp when this resource was created
@@ -4698,6 +4699,8 @@ pub mod types {
         pub description: String,
         pub discoverable: bool,
         pub identity_mode: SiloIdentityMode,
+        #[serde(default, skip_serializing_if = "std::collections::HashMap::is_empty")]
+        pub mapped_fleet_roles: std::collections::HashMap<String, Vec<FleetRole>>,
         pub name: Name,
         /// Initial TLS certificates to be used for the new Silo's console and
         /// API endpoints.  These should be valid for the Silo's DNS name(s).
@@ -14340,6 +14343,8 @@ pub mod types {
             discoverable: Result<bool, String>,
             id: Result<uuid::Uuid, String>,
             identity_mode: Result<super::SiloIdentityMode, String>,
+            mapped_fleet_roles:
+                Result<std::collections::HashMap<String, Vec<super::FleetRole>>, String>,
             name: Result<super::Name, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -14352,6 +14357,7 @@ pub mod types {
                     discoverable: Err("no value supplied for discoverable".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     identity_mode: Err("no value supplied for identity_mode".to_string()),
+                    mapped_fleet_roles: Err("no value supplied for mapped_fleet_roles".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
@@ -14400,6 +14406,19 @@ pub mod types {
                 });
                 self
             }
+            pub fn mapped_fleet_roles<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::collections::HashMap<String, Vec<super::FleetRole>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.mapped_fleet_roles = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for mapped_fleet_roles: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::Name>,
@@ -14440,6 +14459,7 @@ pub mod types {
                     discoverable: value.discoverable?,
                     id: value.id?,
                     identity_mode: value.identity_mode?,
+                    mapped_fleet_roles: value.mapped_fleet_roles?,
                     name: value.name?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
@@ -14454,6 +14474,7 @@ pub mod types {
                     discoverable: Ok(value.discoverable),
                     id: Ok(value.id),
                     identity_mode: Ok(value.identity_mode),
+                    mapped_fleet_roles: Ok(value.mapped_fleet_roles),
                     name: Ok(value.name),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
@@ -14467,6 +14488,8 @@ pub mod types {
             description: Result<String, String>,
             discoverable: Result<bool, String>,
             identity_mode: Result<super::SiloIdentityMode, String>,
+            mapped_fleet_roles:
+                Result<std::collections::HashMap<String, Vec<super::FleetRole>>, String>,
             name: Result<super::Name, String>,
             tls_certificates: Result<Vec<super::CertificateCreate>, String>,
         }
@@ -14478,6 +14501,7 @@ pub mod types {
                     description: Err("no value supplied for description".to_string()),
                     discoverable: Err("no value supplied for discoverable".to_string()),
                     identity_mode: Err("no value supplied for identity_mode".to_string()),
+                    mapped_fleet_roles: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     tls_certificates: Err("no value supplied for tls_certificates".to_string()),
                 }
@@ -14528,6 +14552,19 @@ pub mod types {
                 });
                 self
             }
+            pub fn mapped_fleet_roles<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::collections::HashMap<String, Vec<super::FleetRole>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.mapped_fleet_roles = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for mapped_fleet_roles: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::Name>,
@@ -14561,6 +14598,7 @@ pub mod types {
                     description: value.description?,
                     discoverable: value.discoverable?,
                     identity_mode: value.identity_mode?,
+                    mapped_fleet_roles: value.mapped_fleet_roles?,
                     name: value.name?,
                     tls_certificates: value.tls_certificates?,
                 })
@@ -14574,6 +14612,7 @@ pub mod types {
                     description: Ok(value.description),
                     discoverable: Ok(value.discoverable),
                     identity_mode: Ok(value.identity_mode),
+                    mapped_fleet_roles: Ok(value.mapped_fleet_roles),
                     name: Ok(value.name),
                     tls_certificates: Ok(value.tls_certificates),
                 }
