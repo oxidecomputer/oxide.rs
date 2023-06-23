@@ -4121,6 +4121,9 @@ pub mod types {
         pub dst: IpNet,
         /// The route gateway.
         pub gw: std::net::IpAddr,
+        /// VLAN id the gateway is reachable over.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub vid: Option<u16>,
     }
 
     impl From<&Route> for Route {
@@ -5593,6 +5596,10 @@ pub mod types {
         pub interface_name: String,
         /// The port settings object this route configuration belongs to.
         pub port_settings_id: uuid::Uuid,
+        /// The VLAN identifier for the route. Use this if the gateway is
+        /// reachable over an 802.1Q tagged L2 segment.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub vlan_id: Option<u16>,
     }
 
     impl From<&SwitchPortRouteConfig> for SwitchPortRouteConfig {
@@ -5779,10 +5786,10 @@ pub mod types {
         /// The switch interface configuration this VLAN interface configuration
         /// belongs to.
         pub interface_config_id: uuid::Uuid,
-        /// The virtual network id (VID) that distinguishes this interface and
-        /// is used for producing and consuming 802.1Q Ethernet tags. This field
-        /// has a maximum value of 4095 as 802.1Q tags are twelve bits.
-        pub vid: u16,
+        /// The virtual network id for this interface that is used for producing
+        /// and consuming 802.1Q Ethernet tags. This field has a maximum value
+        /// of 4095 as 802.1Q tags are twelve bits.
+        pub vlan_id: u16,
     }
 
     impl From<&SwitchVlanInterfaceConfig> for SwitchVlanInterfaceConfig {
@@ -13472,6 +13479,7 @@ pub mod types {
         pub struct Route {
             dst: Result<super::IpNet, String>,
             gw: Result<std::net::IpAddr, String>,
+            vid: Result<Option<u16>, String>,
         }
 
         impl Default for Route {
@@ -13479,6 +13487,7 @@ pub mod types {
                 Self {
                     dst: Err("no value supplied for dst".to_string()),
                     gw: Err("no value supplied for gw".to_string()),
+                    vid: Ok(Default::default()),
                 }
             }
         }
@@ -13504,6 +13513,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for gw: {}", e));
                 self
             }
+            pub fn vid<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u16>>,
+                T::Error: std::fmt::Display,
+            {
+                self.vid = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vid: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<Route> for super::Route {
@@ -13512,6 +13531,7 @@ pub mod types {
                 Ok(Self {
                     dst: value.dst?,
                     gw: value.gw?,
+                    vid: value.vid?,
                 })
             }
         }
@@ -13521,6 +13541,7 @@ pub mod types {
                 Self {
                     dst: Ok(value.dst),
                     gw: Ok(value.gw),
+                    vid: Ok(value.vid),
                 }
             }
         }
@@ -16465,6 +16486,7 @@ pub mod types {
             gw: Result<super::IpNet, String>,
             interface_name: Result<String, String>,
             port_settings_id: Result<uuid::Uuid, String>,
+            vlan_id: Result<Option<u16>, String>,
         }
 
         impl Default for SwitchPortRouteConfig {
@@ -16474,6 +16496,7 @@ pub mod types {
                     gw: Err("no value supplied for gw".to_string()),
                     interface_name: Err("no value supplied for interface_name".to_string()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                    vlan_id: Ok(Default::default()),
                 }
             }
         }
@@ -16522,6 +16545,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn vlan_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u16>>,
+                T::Error: std::fmt::Display,
+            {
+                self.vlan_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<SwitchPortRouteConfig> for super::SwitchPortRouteConfig {
@@ -16532,6 +16565,7 @@ pub mod types {
                     gw: value.gw?,
                     interface_name: value.interface_name?,
                     port_settings_id: value.port_settings_id?,
+                    vlan_id: value.vlan_id?,
                 })
             }
         }
@@ -16543,6 +16577,7 @@ pub mod types {
                     gw: Ok(value.gw),
                     interface_name: Ok(value.interface_name),
                     port_settings_id: Ok(value.port_settings_id),
+                    vlan_id: Ok(value.vlan_id),
                 }
             }
         }
@@ -17155,7 +17190,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchVlanInterfaceConfig {
             interface_config_id: Result<uuid::Uuid, String>,
-            vid: Result<u16, String>,
+            vlan_id: Result<u16, String>,
         }
 
         impl Default for SwitchVlanInterfaceConfig {
@@ -17164,7 +17199,7 @@ pub mod types {
                     interface_config_id: Err(
                         "no value supplied for interface_config_id".to_string()
                     ),
-                    vid: Err("no value supplied for vid".to_string()),
+                    vlan_id: Err("no value supplied for vlan_id".to_string()),
                 }
             }
         }
@@ -17183,14 +17218,14 @@ pub mod types {
                 });
                 self
             }
-            pub fn vid<T>(mut self, value: T) -> Self
+            pub fn vlan_id<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u16>,
                 T::Error: std::fmt::Display,
             {
-                self.vid = value
+                self.vlan_id = value
                     .try_into()
-                    .map_err(|e| format!("error converting supplied value for vid: {}", e));
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
                 self
             }
         }
@@ -17200,7 +17235,7 @@ pub mod types {
             fn try_from(value: SwitchVlanInterfaceConfig) -> Result<Self, String> {
                 Ok(Self {
                     interface_config_id: value.interface_config_id?,
-                    vid: value.vid?,
+                    vlan_id: value.vlan_id?,
                 })
             }
         }
@@ -17209,7 +17244,7 @@ pub mod types {
             fn from(value: super::SwitchVlanInterfaceConfig) -> Self {
                 Self {
                     interface_config_id: Ok(value.interface_config_id),
-                    vid: Ok(value.vid),
+                    vlan_id: Ok(value.vlan_id),
                 }
             }
         }
