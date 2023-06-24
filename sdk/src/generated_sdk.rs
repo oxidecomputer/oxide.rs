@@ -567,11 +567,11 @@ pub mod types {
     /// Create-time parameters for a `Certificate`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct CertificateCreate {
-        /// PEM file containing public certificate chain
-        pub cert: Vec<u8>,
+        /// PEM-formatted string containing public certificate chain
+        pub cert: String,
         pub description: String,
-        /// PEM file containing private key
-        pub key: Vec<u8>,
+        /// PEM-formatted string containing private key
+        pub key: String,
         pub name: Name,
         /// The service using this certificate
         pub service: ServiceUsingCertificate,
@@ -8338,9 +8338,9 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct CertificateCreate {
-            cert: Result<Vec<u8>, String>,
+            cert: Result<String, String>,
             description: Result<String, String>,
-            key: Result<Vec<u8>, String>,
+            key: Result<String, String>,
             name: Result<super::Name, String>,
             service: Result<super::ServiceUsingCertificate, String>,
         }
@@ -8360,7 +8360,7 @@ pub mod types {
         impl CertificateCreate {
             pub fn cert<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<u8>>,
+                T: std::convert::TryInto<String>,
                 T::Error: std::fmt::Display,
             {
                 self.cert = value
@@ -8380,7 +8380,7 @@ pub mod types {
             }
             pub fn key<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<u8>>,
+                T: std::convert::TryInto<String>,
                 T::Error: std::fmt::Display,
             {
                 self.key = value

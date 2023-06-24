@@ -1,4 +1,3 @@
-oxide certificate create
 oxide image create
 oxide policy update
 oxide project policy update
