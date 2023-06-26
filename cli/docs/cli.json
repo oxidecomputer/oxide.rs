@@ -147,6 +147,10 @@
           "long_about": "This certificate is automatically used by the Oxide Control plane to serve external connections.",
           "args": [
             {
+              "long": "cert",
+              "help": "PEM-formatted string containing public certificate chain"
+            },
+            {
               "long": "description"
             },
             {
@@ -156,6 +160,10 @@
             {
               "long": "json-body-template",
               "help": "XXX"
+            },
+            {
+              "long": "key",
+              "help": "PEM-formatted string containing private key"
             },
             {
               "long": "name"

@@ -354,10 +354,24 @@ impl Cli {
     pub fn cli_certificate_create() -> clap::Command {
         clap::Command::new("")
             .arg(
+                clap::Arg::new("cert")
+                    .long("cert")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
+                    .help("PEM-formatted string containing public certificate chain"),
+            )
+            .arg(
                 clap::Arg::new("description")
                     .long("description")
                     .value_parser(clap::value_parser!(String))
                     .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("key")
+                    .long("key")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body")
+                    .help("PEM-formatted string containing private key"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -381,7 +395,7 @@ impl Cli {
                 clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
-                    .required(true)
+                    .required(false)
                     .value_parser(clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
@@ -5411,8 +5425,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
+        if let Some(value) = matches.get_one::<String>("cert") {
+            request = request.body_map(|body| body.cert(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("key") {
+            request = request.body_map(|body| body.key(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
