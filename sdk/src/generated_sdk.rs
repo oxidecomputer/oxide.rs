@@ -20809,6 +20809,41 @@ impl ClientLoginExt for Client {
     }
 }
 
+pub trait ClientMetricsExt {
+    /// Access metrics data
+    ///
+    /// Sends a `GET` request to `/v1/metrics/{metric_name}`
+    ///
+    /// Arguments:
+    /// - `metric_name`
+    /// - `end_time`: An exclusive end time of metrics.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `order`: Query result order
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `start_time`: An inclusive start time of metrics.
+    /// ```ignore
+    /// let response = client.silo_metric()
+    ///    .metric_name(metric_name)
+    ///    .end_time(end_time)
+    ///    .limit(limit)
+    ///    .order(order)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .start_time(start_time)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_metric(&self) -> builder::SiloMetric;
+}
+
+impl ClientMetricsExt for Client {
+    fn silo_metric(&self) -> builder::SiloMetric {
+        builder::SiloMetric::new(self)
+    }
+}
+
 pub trait ClientPolicyExt {
     /// Fetch the top-level IAM policy
     ///
@@ -21717,20 +21752,20 @@ pub trait ClientSystemMetricsExt {
     /// Arguments:
     /// - `metric_name`
     /// - `end_time`: An exclusive end time of metrics.
-    /// - `id`: The UUID of the container being queried
     /// - `limit`: Maximum number of items returned by a single call
     /// - `order`: Query result order
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
+    /// - `silo`: Name or ID of the silo
     /// - `start_time`: An inclusive start time of metrics.
     /// ```ignore
     /// let response = client.system_metric()
     ///    .metric_name(metric_name)
     ///    .end_time(end_time)
-    ///    .id(id)
     ///    .limit(limit)
     ///    .order(order)
     ///    .page_token(page_token)
+    ///    .silo(silo)
     ///    .start_time(start_time)
     ///    .send()
     ///    .await;
@@ -28308,6 +28343,239 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientMetricsExt::silo_metric`]
+    ///
+    /// [`ClientMetricsExt::silo_metric`]: super::ClientMetricsExt::silo_metric
+    #[derive(Debug, Clone)]
+    pub struct SiloMetric<'a> {
+        client: &'a super::Client,
+        metric_name: Result<types::SystemMetricName, String>,
+        end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        order: Result<Option<types::PaginationOrder>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+    }
+
+    impl<'a> SiloMetric<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                metric_name: Err("metric_name was not initialized".to_string()),
+                end_time: Ok(None),
+                limit: Ok(None),
+                order: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                start_time: Ok(None),
+            }
+        }
+
+        pub fn metric_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SystemMetricName>,
+        {
+            self.metric_name = value
+                .try_into()
+                .map_err(|_| "conversion to `SystemMetricName` for metric_name failed".to_string());
+            self
+        }
+
+        pub fn end_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+        {
+            self.end_time = value.try_into().map(Some).map_err(|_| {
+                "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed"
+                    .to_string()
+            });
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn order<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::PaginationOrder>,
+        {
+            self.order = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `PaginationOrder` for order failed".to_string());
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn start_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+        {
+            self.start_time = value.try_into().map(Some).map_err(|_| {
+                "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for start_time \
+                 failed"
+                    .to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/metrics/{metric_name}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                metric_name,
+                end_time,
+                limit,
+                order,
+                page_token,
+                project,
+                start_time,
+            } = self;
+            let metric_name = metric_name.map_err(Error::InvalidRequest)?;
+            let end_time = end_time.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let order = order.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let start_time = start_time.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/metrics/{}",
+                client.baseurl,
+                encode_path(&metric_name.to_string()),
+            );
+            let mut query = Vec::with_capacity(6usize);
+            if let Some(v) = &end_time {
+                query.push(("end_time", v.to_string()));
+            }
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &order {
+                query.push(("order", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &start_time {
+                query.push(("start_time", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/metrics/{metric_name}`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Measurement, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                end_time: Ok(None),
+                limit: Ok(None),
+                order: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                start_time: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientInstancesExt::instance_network_interface_list`]
     ///
     /// [`ClientInstancesExt::instance_network_interface_list`]: super::ClientInstancesExt::instance_network_interface_list
@@ -33256,10 +33524,10 @@ pub mod builder {
         client: &'a super::Client,
         metric_name: Result<types::SystemMetricName, String>,
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-        id: Result<uuid::Uuid, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         order: Result<Option<types::PaginationOrder>, String>,
         page_token: Result<Option<String>, String>,
+        silo: Result<Option<types::NameOrId>, String>,
         start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
     }
 
@@ -33269,10 +33537,10 @@ pub mod builder {
                 client,
                 metric_name: Err("metric_name was not initialized".to_string()),
                 end_time: Ok(None),
-                id: Err("id was not initialized".to_string()),
                 limit: Ok(None),
                 order: Ok(None),
                 page_token: Ok(None),
+                silo: Ok(None),
                 start_time: Ok(None),
             }
         }
@@ -33295,16 +33563,6 @@ pub mod builder {
                 "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed"
                     .to_string()
             });
-            self
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
             self
         }
 
@@ -33340,6 +33598,17 @@ pub mod builder {
             self
         }
 
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
         pub fn start_time<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
@@ -33360,18 +33629,18 @@ pub mod builder {
                 client,
                 metric_name,
                 end_time,
-                id,
                 limit,
                 order,
                 page_token,
+                silo,
                 start_time,
             } = self;
             let metric_name = metric_name.map_err(Error::InvalidRequest)?;
             let end_time = end_time.map_err(Error::InvalidRequest)?;
-            let id = id.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let order = order.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/metrics/{}",
@@ -33382,7 +33651,6 @@ pub mod builder {
             if let Some(v) = &end_time {
                 query.push(("end_time", v.to_string()));
             }
-            query.push(("id", id.to_string()));
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
             }
@@ -33391,6 +33659,9 @@ pub mod builder {
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &silo {
+                query.push(("silo", v.to_string()));
             }
             if let Some(v) = &start_time {
                 query.push(("start_time", v.to_string()));
@@ -33416,6 +33687,65 @@ pub mod builder {
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
+        }
+
+        /// Streams `GET` requests to `/v1/system/metrics/{metric_name}`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Measurement, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                end_time: Ok(None),
+                limit: Ok(None),
+                order: Ok(None),
+                page_token: Ok(None),
+                silo: Ok(None),
+                start_time: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
         }
     }
 
@@ -39831,6 +40161,7 @@ pub mod prelude {
     pub use super::ClientImagesExt;
     pub use super::ClientInstancesExt;
     pub use super::ClientLoginExt;
+    pub use super::ClientMetricsExt;
     pub use super::ClientPolicyExt;
     pub use super::ClientProjectsExt;
     pub use super::ClientRolesExt;

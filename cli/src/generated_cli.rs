@@ -64,6 +64,7 @@ impl Cli {
             CliCommand::CurrentUserSshKeyCreate => Self::cli_current_user_ssh_key_create(),
             CliCommand::CurrentUserSshKeyView => Self::cli_current_user_ssh_key_view(),
             CliCommand::CurrentUserSshKeyDelete => Self::cli_current_user_ssh_key_delete(),
+            CliCommand::SiloMetric => Self::cli_silo_metric(),
             CliCommand::InstanceNetworkInterfaceList => Self::cli_instance_network_interface_list(),
             CliCommand::InstanceNetworkInterfaceCreate => {
                 Self::cli_instance_network_interface_create()
@@ -1687,6 +1688,65 @@ impl Cli {
             )
     }
 
+    pub fn cli_silo_metric() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("metric-name")
+                    .long("metric-name")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SystemMetricName::VirtualDiskSpaceProvisioned.to_string(),
+                            types::SystemMetricName::CpusProvisioned.to_string(),
+                            types::SystemMetricName::RamProvisioned.to_string(),
+                        ]),
+                        |s| types::SystemMetricName::try_from(s).unwrap(),
+                    ))
+                    .required(true),
+            )
+            .arg(
+                clap::Arg::new("end-time")
+                    .long("end-time")
+                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .required(true)
+                    .help("An exclusive end time of metrics."),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("order")
+                    .long("order")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::PaginationOrder::Ascending.to_string(),
+                            types::PaginationOrder::Descending.to_string(),
+                        ]),
+                        |s| types::PaginationOrder::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help("Query result order"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("start-time")
+                    .long("start-time")
+                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .required(true)
+                    .help("An inclusive start time of metrics."),
+            )
+            .about("Access metrics data")
+    }
+
     pub fn cli_instance_network_interface_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -3016,15 +3076,8 @@ impl Cli {
                 clap::Arg::new("end-time")
                     .long("end-time")
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
-                    .required(false)
-                    .help("An exclusive end time of metrics."),
-            )
-            .arg(
-                clap::Arg::new("id")
-                    .long("id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The UUID of the container being queried"),
+                    .help("An exclusive end time of metrics."),
             )
             .arg(
                 clap::Arg::new("limit")
@@ -3047,17 +3100,17 @@ impl Cli {
                     .help("Query result order"),
             )
             .arg(
-                clap::Arg::new("page-token")
-                    .long("page-token")
-                    .value_parser(clap::value_parser!(String))
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
-                    .help("Token returned by previous call to retrieve the subsequent page"),
+                    .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("start-time")
                     .long("start-time")
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
-                    .required(false)
+                    .required(true)
                     .help("An inclusive start time of metrics."),
             )
             .about("Access metrics data")
@@ -4938,6 +4991,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::CurrentUserSshKeyDelete => {
                 self.execute_current_user_ssh_key_delete(matches).await;
             }
+            CliCommand::SiloMetric => {
+                self.execute_silo_metric(matches).await;
+            }
             CliCommand::InstanceNetworkInterfaceList => {
                 self.execute_instance_network_interface_list(matches).await;
             }
@@ -6732,6 +6788,53 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_silo_metric(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_metric();
+        if let Some(value) = matches.get_one::<types::SystemMetricName>("metric-name") {
+            request = request.metric_name(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
+            request = request.end_time(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::PaginationOrder>("order") {
+            request = request.order(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start-time")
+        {
+            request = request.start_time(value.clone());
+        }
+
+        self.over
+            .execute_silo_metric(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_instance_network_interface_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.instance_network_interface_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -8116,10 +8219,6 @@ impl<T: CliOverride> Cli<T> {
             request = request.end_time(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("id") {
-            request = request.id(value.clone());
-        }
-
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -8128,8 +8227,8 @@ impl<T: CliOverride> Cli<T> {
             request = request.order(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<String>("page-token") {
-            request = request.page_token(value.clone());
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
         }
 
         if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start-time")
@@ -8140,13 +8239,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_system_metric(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -10282,6 +10387,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_silo_metric(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SiloMetric,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_instance_network_interface_list(
         &self,
         matches: &clap::ArgMatches,
@@ -11201,6 +11314,7 @@ pub enum CliCommand {
     CurrentUserSshKeyCreate,
     CurrentUserSshKeyView,
     CurrentUserSshKeyDelete,
+    SiloMetric,
     InstanceNetworkInterfaceList,
     InstanceNetworkInterfaceCreate,
     InstanceNetworkInterfaceView,
@@ -11364,6 +11478,7 @@ impl CliCommand {
             CliCommand::CurrentUserSshKeyCreate,
             CliCommand::CurrentUserSshKeyView,
             CliCommand::CurrentUserSshKeyDelete,
+            CliCommand::SiloMetric,
             CliCommand::InstanceNetworkInterfaceList,
             CliCommand::InstanceNetworkInterfaceCreate,
             CliCommand::InstanceNetworkInterfaceView,

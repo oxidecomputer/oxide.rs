@@ -3980,6 +3980,162 @@ pub mod operations {
         }
     }
 
+    pub struct SiloMetricWhen(httpmock::When);
+    impl SiloMetricWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/metrics/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn metric_name(self, value: types::SystemMetricName) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/metrics/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn end_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a chrono::DateTime<chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("end_time", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "end_time"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn order<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::PaginationOrder>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("order", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "order"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn start_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a chrono::DateTime<chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("start_time", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "start_time"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct SiloMetricThen(httpmock::Then);
+    impl SiloMetricThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct InstanceNetworkInterfaceListWhen(httpmock::When);
     impl InstanceNetworkInterfaceListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -7755,10 +7911,6 @@ pub mod operations {
             }
         }
 
-        pub fn id(self, value: &uuid::Uuid) -> Self {
-            Self(self.0.query_param("id", value.to_string()))
-        }
-
         pub fn limit<T>(self, value: T) -> Self
         where
             T: Into<Option<std::num::NonZeroU32>>,
@@ -7802,6 +7954,22 @@ pub mod operations {
                     req.query_params
                         .as_ref()
                         .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn silo<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("silo", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "silo"))
                         .is_none()
                 }))
             }
@@ -12998,6 +13166,9 @@ pub trait MockServerExt {
     fn current_user_ssh_key_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::CurrentUserSshKeyDeleteWhen, operations::CurrentUserSshKeyDeleteThen);
+    fn silo_metric<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloMetricWhen, operations::SiloMetricThen);
     fn instance_network_interface_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
@@ -14005,6 +14176,18 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::CurrentUserSshKeyDeleteWhen::new(when),
                 operations::CurrentUserSshKeyDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn silo_metric<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloMetricWhen, operations::SiloMetricThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloMetricWhen::new(when),
+                operations::SiloMetricThen::new(then),
             )
         })
     }
