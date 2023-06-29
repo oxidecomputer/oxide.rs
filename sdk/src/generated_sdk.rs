@@ -2587,6 +2587,7 @@ pub mod types {
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPoolRange {
         pub id: uuid::Uuid,
+        pub ip_pool_id: uuid::Uuid,
         pub range: IpRange,
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
     }
@@ -11807,6 +11808,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct IpPoolRange {
             id: Result<uuid::Uuid, String>,
+            ip_pool_id: Result<uuid::Uuid, String>,
             range: Result<super::IpRange, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
         }
@@ -11815,6 +11817,7 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     id: Err("no value supplied for id".to_string()),
+                    ip_pool_id: Err("no value supplied for ip_pool_id".to_string()),
                     range: Err("no value supplied for range".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                 }
@@ -11830,6 +11833,16 @@ pub mod types {
                 self.id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn ip_pool_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip_pool_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {}", e));
                 self
             }
             pub fn range<T>(mut self, value: T) -> Self
@@ -11859,6 +11872,7 @@ pub mod types {
             fn try_from(value: IpPoolRange) -> Result<Self, String> {
                 Ok(Self {
                     id: value.id?,
+                    ip_pool_id: value.ip_pool_id?,
                     range: value.range?,
                     time_created: value.time_created?,
                 })
@@ -11869,6 +11883,7 @@ pub mod types {
             fn from(value: super::IpPoolRange) -> Self {
                 Self {
                     id: Ok(value.id),
+                    ip_pool_id: Ok(value.ip_pool_id),
                     range: Ok(value.range),
                     time_created: Ok(value.time_created),
                 }
