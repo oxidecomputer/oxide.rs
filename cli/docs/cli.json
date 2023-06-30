@@ -362,7 +362,7 @@
         {
           "name": "import",
           "about": "Create a disk from a file upload",
-          "long_about": "Create a disk from a file upload\n\nCreate a new disk and upload the contents of a file to that disk. Use\n`--snapshot` to optionally create a snapshot of the disk after the upload is\ncomplete. If creating a snapshot, optionally use the `--image` options to\ncreate an image from that snapshot.",
+          "long_about": "Create a disk from a file upload\n\nCreate a new disk and upload the contents of a file to that disk. Use\n`--snapshot` to optionally create a snapshot of the disk after the upload is\ncomplete. If creating a snapshot, optionally use the `--image` options to\ncreate an image from that snapshot.\n\nThe start, write, stop, and finalize subcommands can be used for lower-\nlevel operations.",
           "args": [
             {
               "long": "description"
@@ -411,6 +411,92 @@
             {
               "long": "snapshot",
               "help": "If supplied, create a snapshot with the given name"
+            }
+          ],
+          "subcommands": [
+            {
+              "name": "finalize",
+              "about": "Confirm disk block import completion",
+              "args": [
+                {
+                  "long": "disk",
+                  "help": "Name or ID of the disk"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "snapshot-name",
+                  "help": "If specified a snapshot of the disk will be created with the given name during finalization. If not specified, a snapshot for the disk will _not_ be created. A snapshot can be manually created once the disk transitions into the `Detached` state."
+                }
+              ]
+            },
+            {
+              "name": "start",
+              "about": "Start importing blocks into a disk",
+              "long_about": "Start the process of importing blocks into a disk",
+              "args": [
+                {
+                  "long": "disk",
+                  "help": "Name or ID of the disk"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
+            },
+            {
+              "name": "stop",
+              "about": "Stop importing blocks into a disk",
+              "long_about": "Stop the process of importing blocks into a disk",
+              "args": [
+                {
+                  "long": "disk",
+                  "help": "Name or ID of the disk"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
+            },
+            {
+              "name": "write",
+              "about": "Import blocks into a disk",
+              "args": [
+                {
+                  "long": "base64-encoded-data"
+                },
+                {
+                  "long": "disk",
+                  "help": "Name or ID of the disk"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "offset"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
             }
           ]
         },

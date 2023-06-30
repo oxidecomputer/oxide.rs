@@ -416,11 +416,12 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::DiskDelete => Some("disk delete"),
         CliCommand::DiskMetricsList => Some("disk metrics list"),
 
-        CliCommand::DiskBulkWriteImport
-        | CliCommand::DiskBulkWriteImportStart
-        | CliCommand::DiskBulkWriteImportStop
-        | CliCommand::DiskFinalizeImport
-        | CliCommand::DiskImportBlocksFromUrl => None,
+        CliCommand::DiskImportBlocksFromUrl => None, // TODO remove
+
+        CliCommand::DiskBulkWriteImportStart => Some("disk import start"),
+        CliCommand::DiskBulkWriteImport => Some("disk import write"),
+        CliCommand::DiskBulkWriteImportStop => Some("disk import stop"),
+        CliCommand::DiskFinalizeImport => Some("disk import finalize"),
 
         CliCommand::GroupList => Some("group list"),
         CliCommand::InstanceDiskList => Some("instance disk list"),

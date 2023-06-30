@@ -17,8 +17,8 @@ pub mod built_info {
 
 /// Prints version information about the CLI.
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
-#[clap(name = "version")]
+#[command(verbatim_doc_comment)]
+#[command(name = "version")]
 pub struct CmdVersion;
 
 #[async_trait]
