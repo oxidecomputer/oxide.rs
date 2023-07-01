@@ -45,8 +45,8 @@ use crate::RunnableCmd;
 /// In `--paginate` mode, all pages of results will sequentially be requested
 /// until there are no more pages of results.
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
-#[clap(name = "api")]
+#[command(verbatim_doc_comment)]
+#[command(name = "api")]
 pub struct CmdApi {
     /// The endpoint to request.
     #[clap(name = "endpoint", required = true)]

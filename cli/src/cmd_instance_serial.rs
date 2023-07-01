@@ -14,8 +14,8 @@ use std::path::PathBuf;
 
 /// Connect to or retrieve data from the instance's serial console.
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
-#[clap(name = "serial")]
+#[command(verbatim_doc_comment)]
+#[command(name = "serial")]
 pub struct CmdInstanceSerial {
     #[clap(subcommand)]
     subcmd: SubCommand,
@@ -39,8 +39,8 @@ enum SubCommand {
 
 /// Connect to an instance's serial console interactively.
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
-#[clap(name = "console")]
+#[command(verbatim_doc_comment)]
+#[command(name = "console")]
 pub struct CmdInstanceSerialConsole {
     /// Name or ID of the instance
     #[clap(long, short)]
@@ -127,8 +127,8 @@ impl RunnableCmd for CmdInstanceSerialConsole {
 
 /// Fetch an instance's serial console output.
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
-#[clap(name = "history")]
+#[command(verbatim_doc_comment)]
+#[command(name = "history")]
 pub struct CmdInstanceSerialHistory {
     /// Name or ID of the instance
     #[clap(long, short)]

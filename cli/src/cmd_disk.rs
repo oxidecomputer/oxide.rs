@@ -39,9 +39,12 @@ use tokio::sync::mpsc;
 /// `--snapshot` to optionally create a snapshot of the disk after the upload is
 /// complete. If creating a snapshot, optionally use the `--image` options to
 /// create an image from that snapshot.
+///
+/// The start, write, stop, and finalize subcommands can be used for lower-
+/// level operations.
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
-#[clap(name = "import")]
+#[command(verbatim_doc_comment)]
+#[command(args_conflicts_with_subcommands(true))]
 pub struct CmdDiskImport {
     /// Name or ID of the project
     #[clap(long)]

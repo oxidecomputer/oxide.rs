@@ -14,8 +14,8 @@ use serde::Serialize;
 
 /// Generate CLI docs in JSON format
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
-#[clap(name = "docs")]
+#[command(verbatim_doc_comment)]
+#[command(name = "docs")]
 pub struct CmdDocs;
 
 /// Arg to CLI command for the JSON doc
