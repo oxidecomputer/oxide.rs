@@ -26,8 +26,8 @@ use crate::{
 ///
 /// Manage `oxide`'s authentication state.
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
-#[clap(name = "auth")]
+#[command(verbatim_doc_comment)]
+#[command(name = "auth")]
 pub struct CmdAuth {
     #[clap(subcommand)]
     subcmd: SubCommand,
@@ -129,7 +129,7 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
 ///     # authenticate with an insecure Oxide instance (not recommended)
 ///     $ oxide auth login --host http://oxide.internal
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
+#[command(verbatim_doc_comment)]
 pub struct CmdAuthLogin {
     /// Read token from standard input.
     #[clap(long)]
@@ -303,7 +303,7 @@ impl CmdAuthLogin {
 ///
 /// This command does not invalidate any tokens from the hosts.
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
+#[command(verbatim_doc_comment)]
 pub struct CmdAuthLogout {
     /// Remove authentication information for a single host.
     #[clap(
@@ -375,7 +375,7 @@ impl CmdAuthLogout {
 /// in the current configuration. These hosts may be from your hosts.toml file
 /// and/or $OXIDE_HOST environment variable.
 #[derive(Parser, Debug, Clone)]
-#[clap(verbatim_doc_comment)]
+#[command(verbatim_doc_comment)]
 pub struct CmdAuthStatus {
     /// Display the auth token.
     #[clap(short = 't', long)]
