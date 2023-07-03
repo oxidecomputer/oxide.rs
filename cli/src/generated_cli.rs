@@ -2224,9 +2224,9 @@ impl Cli {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
-                    .help("The name of the disk to be snapshotted"),
+                    .help("The disk to be snapshotted"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -7295,7 +7295,7 @@ impl<T: CliOverride> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.body_map(|body| body.disk(value.clone()))
         }
 

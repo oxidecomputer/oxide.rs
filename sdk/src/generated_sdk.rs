@@ -469,7 +469,7 @@ pub mod types {
         where
             D: serde::Deserializer<'de>,
         {
-            Self::try_from(i64::deserialize(deserializer)?)
+            Self::try_from(<i64>::deserialize(deserializer)?)
                 .map_err(|e| <D::Error as serde::de::Error>::custom(e.to_string()))
         }
     }
@@ -5080,8 +5080,8 @@ pub mod types {
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SnapshotCreate {
         pub description: String,
-        /// The name of the disk to be snapshotted
-        pub disk: Name,
+        /// The disk to be snapshotted
+        pub disk: NameOrId,
         pub name: Name,
     }
 
@@ -15421,7 +15421,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SnapshotCreate {
             description: Result<String, String>,
-            disk: Result<super::Name, String>,
+            disk: Result<super::NameOrId, String>,
             name: Result<super::Name, String>,
         }
 
@@ -15448,7 +15448,7 @@ pub mod types {
             }
             pub fn disk<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::Name>,
+                T: std::convert::TryInto<super::NameOrId>,
                 T::Error: std::fmt::Display,
             {
                 self.disk = value
