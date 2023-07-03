@@ -10,7 +10,7 @@ members = [
 [workspace.dependencies]
 anyhow = "1.0.71"
 assert_cmd = "2.0.11"
-async-trait = "0.1.68"
+async-trait = "0.1.69"
 base64 = "0.21.2"
 built = { version = "0.6.1", features = ["git2"] }
 chrono = { version = "0.4.26", features = ["serde"] }
@@ -43,7 +43,7 @@ regress = "0.6.0"
 reqwest = "0.11.18"
 rustfmt-wrapper = "0.2.0"
 schemars = { version = "0.8.12", features = ["chrono", "uuid1"] }
-serde = { version = "1.0.164", features = ["derive"] }
+serde = { version = "1.0.166", features = ["derive"] }
 serde_json = "1.0.99"
 serial_test = "1.0.0"
 similar = "2.2.1"
@@ -52,7 +52,7 @@ tabwriter = "1.2.1"
 tempfile = "3.6.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
-tokio = { version = "1.28.2", features = ["full"] }
+tokio = { version = "1.29.1", features = ["full"] }
 tokio-tungstenite = "0.19.0"
 toml = "0.7.5"
 toml_edit = "0.19.11"
