@@ -611,54 +611,6 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in "asset" public API objects
-    /// (which generally have no name or description)
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct ComponentUpdate {
-        pub component_type: UpdateableComponentType,
-        /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
-        /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        pub version: SemverVersion,
-    }
-
-    impl From<&ComponentUpdate> for ComponentUpdate {
-        fn from(value: &ComponentUpdate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ComponentUpdate {
-        pub fn builder() -> builder::ComponentUpdate {
-            builder::ComponentUpdate::default()
-        }
-    }
-
-    /// A single page of results
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct ComponentUpdateResultsPage {
-        /// list of items on this page of results
-        pub items: Vec<ComponentUpdate>,
-        /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
-    }
-
-    impl From<&ComponentUpdateResultsPage> for ComponentUpdateResultsPage {
-        fn from(value: &ComponentUpdateResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ComponentUpdateResultsPage {
-        pub fn builder() -> builder::ComponentUpdateResultsPage {
-            builder::ComponentUpdateResultsPage::default()
-        }
-    }
-
     /// A cumulative or counter data type.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Cumulativedouble {
@@ -1788,8 +1740,6 @@ pub mod types {
     /// Create-time parameters for an `Image`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ImageCreate {
-        /// block size in bytes
-        pub block_size: BlockSize,
         pub description: String,
         pub name: Name,
         /// The family of the operating system (e.g. Debian, Ubuntu, etc.)
@@ -1839,7 +1789,11 @@ pub mod types {
     #[serde(tag = "type")]
     pub enum ImageSource {
         #[serde(rename = "url")]
-        Url { url: String },
+        Url {
+            /// The block size in bytes
+            block_size: BlockSize,
+            url: String,
+        },
         #[serde(rename = "snapshot")]
         Snapshot { id: uuid::Uuid },
         #[serde(rename = "you_can_boot_anything_as_long_as_its_alpine")]
@@ -4510,83 +4464,6 @@ pub mod types {
         }
     }
 
-    #[derive(
-        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
-    )]
-    pub struct SemverVersion(String);
-    impl std::ops::Deref for SemverVersion {
-        type Target = String;
-        fn deref(&self) -> &String {
-            &self.0
-        }
-    }
-
-    impl From<SemverVersion> for String {
-        fn from(value: SemverVersion) -> Self {
-            value.0
-        }
-    }
-
-    impl From<&SemverVersion> for SemverVersion {
-        fn from(value: &SemverVersion) -> Self {
-            value.clone()
-        }
-    }
-
-    impl std::str::FromStr for SemverVersion {
-        type Err = &'static str;
-        fn from_str(value: &str) -> Result<Self, &'static str> {
-            if regress::Regex::new(
-                "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*\
-                 [a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\\
-                 +([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
-            )
-            .unwrap()
-            .find(value)
-            .is_none()
-            {
-                return Err("doesn't match pattern \
-                            \"^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*\
-                            |\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*\
-                            [a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.\
-                            [0-9a-zA-Z-]+)*))?$\"");
-            }
-            Ok(Self(value.to_string()))
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for SemverVersion {
-        type Error = &'static str;
-        fn try_from(value: &str) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for SemverVersion {
-        type Error = &'static str;
-        fn try_from(value: &String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for SemverVersion {
-        type Error = &'static str;
-        fn try_from(value: String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl<'de> serde::Deserialize<'de> for SemverVersion {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: serde::Deserializer<'de>,
-        {
-            String::deserialize(deserializer)?
-                .parse()
-                .map_err(|e: &'static str| <D::Error as serde::de::Error>::custom(e.to_string()))
-        }
-    }
-
     /// The service intended to use this certificate.
     #[derive(
         Clone,
@@ -5080,8 +4957,8 @@ pub mod types {
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SnapshotCreate {
         pub description: String,
-        /// The name of the disk to be snapshotted
-        pub disk: Name,
+        /// The disk to be snapshotted
+        pub disk: NameOrId,
         pub name: Name,
     }
 
@@ -5876,362 +5753,6 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in "asset" public API objects
-    /// (which generally have no name or description)
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SystemUpdate {
-        /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
-        /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        pub version: SemverVersion,
-    }
-
-    impl From<&SystemUpdate> for SystemUpdate {
-        fn from(value: &SystemUpdate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl SystemUpdate {
-        pub fn builder() -> builder::SystemUpdate {
-            builder::SystemUpdate::default()
-        }
-    }
-
-    /// A single page of results
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SystemUpdateResultsPage {
-        /// list of items on this page of results
-        pub items: Vec<SystemUpdate>,
-        /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
-    }
-
-    impl From<&SystemUpdateResultsPage> for SystemUpdateResultsPage {
-        fn from(value: &SystemUpdateResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl SystemUpdateResultsPage {
-        pub fn builder() -> builder::SystemUpdateResultsPage {
-            builder::SystemUpdateResultsPage::default()
-        }
-    }
-
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SystemUpdateStart {
-        pub version: SemverVersion,
-    }
-
-    impl From<&SystemUpdateStart> for SystemUpdateStart {
-        fn from(value: &SystemUpdateStart) -> Self {
-            value.clone()
-        }
-    }
-
-    impl SystemUpdateStart {
-        pub fn builder() -> builder::SystemUpdateStart {
-            builder::SystemUpdateStart::default()
-        }
-    }
-
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SystemVersion {
-        pub status: UpdateStatus,
-        pub version_range: VersionRange,
-    }
-
-    impl From<&SystemVersion> for SystemVersion {
-        fn from(value: &SystemVersion) -> Self {
-            value.clone()
-        }
-    }
-
-    impl SystemVersion {
-        pub fn builder() -> builder::SystemVersion {
-            builder::SystemVersion::default()
-        }
-    }
-
-    /// Identity-related metadata that's included in "asset" public API objects
-    /// (which generally have no name or description)
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct UpdateDeployment {
-        /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
-        pub status: UpdateStatus,
-        /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        pub version: SemverVersion,
-    }
-
-    impl From<&UpdateDeployment> for UpdateDeployment {
-        fn from(value: &UpdateDeployment) -> Self {
-            value.clone()
-        }
-    }
-
-    impl UpdateDeployment {
-        pub fn builder() -> builder::UpdateDeployment {
-            builder::UpdateDeployment::default()
-        }
-    }
-
-    /// A single page of results
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct UpdateDeploymentResultsPage {
-        /// list of items on this page of results
-        pub items: Vec<UpdateDeployment>,
-        /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
-    }
-
-    impl From<&UpdateDeploymentResultsPage> for UpdateDeploymentResultsPage {
-        fn from(value: &UpdateDeploymentResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl UpdateDeploymentResultsPage {
-        pub fn builder() -> builder::UpdateDeploymentResultsPage {
-            builder::UpdateDeploymentResultsPage::default()
-        }
-    }
-
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        Deserialize,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        Serialize,
-        schemars :: JsonSchema,
-    )]
-    #[serde(tag = "status")]
-    pub enum UpdateStatus {
-        #[serde(rename = "updating")]
-        Updating,
-        #[serde(rename = "steady")]
-        Steady,
-    }
-
-    impl From<&UpdateStatus> for UpdateStatus {
-        fn from(value: &UpdateStatus) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ToString for UpdateStatus {
-        fn to_string(&self) -> String {
-            match *self {
-                Self::Updating => "updating".to_string(),
-                Self::Steady => "steady".to_string(),
-            }
-        }
-    }
-
-    impl std::str::FromStr for UpdateStatus {
-        type Err = &'static str;
-        fn from_str(value: &str) -> Result<Self, &'static str> {
-            match value {
-                "updating" => Ok(Self::Updating),
-                "steady" => Ok(Self::Steady),
-                _ => Err("invalid value"),
-            }
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for UpdateStatus {
-        type Error = &'static str;
-        fn try_from(value: &str) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for UpdateStatus {
-        type Error = &'static str;
-        fn try_from(value: &String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for UpdateStatus {
-        type Error = &'static str;
-        fn try_from(value: String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    /// Identity-related metadata that's included in "asset" public API objects
-    /// (which generally have no name or description)
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct UpdateableComponent {
-        pub component_type: UpdateableComponentType,
-        pub device_id: String,
-        /// unique, immutable, system-controlled identifier for each resource
-        pub id: uuid::Uuid,
-        pub status: UpdateStatus,
-        pub system_version: SemverVersion,
-        /// timestamp when this resource was created
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        /// timestamp when this resource was last modified
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        pub version: SemverVersion,
-    }
-
-    impl From<&UpdateableComponent> for UpdateableComponent {
-        fn from(value: &UpdateableComponent) -> Self {
-            value.clone()
-        }
-    }
-
-    impl UpdateableComponent {
-        pub fn builder() -> builder::UpdateableComponent {
-            builder::UpdateableComponent::default()
-        }
-    }
-
-    /// A single page of results
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct UpdateableComponentResultsPage {
-        /// list of items on this page of results
-        pub items: Vec<UpdateableComponent>,
-        /// token used to fetch the next page of results (if any)
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub next_page: Option<String>,
-    }
-
-    impl From<&UpdateableComponentResultsPage> for UpdateableComponentResultsPage {
-        fn from(value: &UpdateableComponentResultsPage) -> Self {
-            value.clone()
-        }
-    }
-
-    impl UpdateableComponentResultsPage {
-        pub fn builder() -> builder::UpdateableComponentResultsPage {
-            builder::UpdateableComponentResultsPage::default()
-        }
-    }
-
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        Deserialize,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        Serialize,
-        schemars :: JsonSchema,
-    )]
-    pub enum UpdateableComponentType {
-        #[serde(rename = "bootloader_for_rot")]
-        BootloaderForRot,
-        #[serde(rename = "bootloader_for_sp")]
-        BootloaderForSp,
-        #[serde(rename = "bootloader_for_host_proc")]
-        BootloaderForHostProc,
-        #[serde(rename = "hubris_for_psc_rot")]
-        HubrisForPscRot,
-        #[serde(rename = "hubris_for_psc_sp")]
-        HubrisForPscSp,
-        #[serde(rename = "hubris_for_sidecar_rot")]
-        HubrisForSidecarRot,
-        #[serde(rename = "hubris_for_sidecar_sp")]
-        HubrisForSidecarSp,
-        #[serde(rename = "hubris_for_gimlet_rot")]
-        HubrisForGimletRot,
-        #[serde(rename = "hubris_for_gimlet_sp")]
-        HubrisForGimletSp,
-        #[serde(rename = "helios_host_phase1")]
-        HeliosHostPhase1,
-        #[serde(rename = "helios_host_phase2")]
-        HeliosHostPhase2,
-        #[serde(rename = "host_omicron")]
-        HostOmicron,
-    }
-
-    impl From<&UpdateableComponentType> for UpdateableComponentType {
-        fn from(value: &UpdateableComponentType) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ToString for UpdateableComponentType {
-        fn to_string(&self) -> String {
-            match *self {
-                Self::BootloaderForRot => "bootloader_for_rot".to_string(),
-                Self::BootloaderForSp => "bootloader_for_sp".to_string(),
-                Self::BootloaderForHostProc => "bootloader_for_host_proc".to_string(),
-                Self::HubrisForPscRot => "hubris_for_psc_rot".to_string(),
-                Self::HubrisForPscSp => "hubris_for_psc_sp".to_string(),
-                Self::HubrisForSidecarRot => "hubris_for_sidecar_rot".to_string(),
-                Self::HubrisForSidecarSp => "hubris_for_sidecar_sp".to_string(),
-                Self::HubrisForGimletRot => "hubris_for_gimlet_rot".to_string(),
-                Self::HubrisForGimletSp => "hubris_for_gimlet_sp".to_string(),
-                Self::HeliosHostPhase1 => "helios_host_phase1".to_string(),
-                Self::HeliosHostPhase2 => "helios_host_phase2".to_string(),
-                Self::HostOmicron => "host_omicron".to_string(),
-            }
-        }
-    }
-
-    impl std::str::FromStr for UpdateableComponentType {
-        type Err = &'static str;
-        fn from_str(value: &str) -> Result<Self, &'static str> {
-            match value {
-                "bootloader_for_rot" => Ok(Self::BootloaderForRot),
-                "bootloader_for_sp" => Ok(Self::BootloaderForSp),
-                "bootloader_for_host_proc" => Ok(Self::BootloaderForHostProc),
-                "hubris_for_psc_rot" => Ok(Self::HubrisForPscRot),
-                "hubris_for_psc_sp" => Ok(Self::HubrisForPscSp),
-                "hubris_for_sidecar_rot" => Ok(Self::HubrisForSidecarRot),
-                "hubris_for_sidecar_sp" => Ok(Self::HubrisForSidecarSp),
-                "hubris_for_gimlet_rot" => Ok(Self::HubrisForGimletRot),
-                "hubris_for_gimlet_sp" => Ok(Self::HubrisForGimletSp),
-                "helios_host_phase1" => Ok(Self::HeliosHostPhase1),
-                "helios_host_phase2" => Ok(Self::HeliosHostPhase2),
-                "host_omicron" => Ok(Self::HostOmicron),
-                _ => Err("invalid value"),
-            }
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for UpdateableComponentType {
-        type Error = &'static str;
-        fn try_from(value: &str) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for UpdateableComponentType {
-        type Error = &'static str;
-        fn try_from(value: &String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for UpdateableComponentType {
-        type Error = &'static str;
-        fn try_from(value: String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
     /// View of a User
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct User {
@@ -6460,24 +5981,6 @@ pub mod types {
     impl UsernamePasswordCredentials {
         pub fn builder() -> builder::UsernamePasswordCredentials {
             builder::UsernamePasswordCredentials::default()
-        }
-    }
-
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct VersionRange {
-        pub high: SemverVersion,
-        pub low: SemverVersion,
-    }
-
-    impl From<&VersionRange> for VersionRange {
-        fn from(value: &VersionRange) -> Self {
-            value.clone()
-        }
-    }
-
-    impl VersionRange {
-        pub fn builder() -> builder::VersionRange {
-            builder::VersionRange::default()
         }
     }
 
@@ -8494,162 +7997,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct ComponentUpdate {
-            component_type: Result<super::UpdateableComponentType, String>,
-            id: Result<uuid::Uuid, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            version: Result<super::SemverVersion, String>,
-        }
-
-        impl Default for ComponentUpdate {
-            fn default() -> Self {
-                Self {
-                    component_type: Err("no value supplied for component_type".to_string()),
-                    id: Err("no value supplied for id".to_string()),
-                    time_created: Err("no value supplied for time_created".to_string()),
-                    time_modified: Err("no value supplied for time_modified".to_string()),
-                    version: Err("no value supplied for version".to_string()),
-                }
-            }
-        }
-
-        impl ComponentUpdate {
-            pub fn component_type<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::UpdateableComponentType>,
-                T::Error: std::fmt::Display,
-            {
-                self.component_type = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for component_type: {}", e)
-                });
-                self
-            }
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-            pub fn time_created<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_created = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_created: {}", e)
-                });
-                self
-            }
-            pub fn time_modified<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_modified = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_modified: {}", e)
-                });
-                self
-            }
-            pub fn version<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::SemverVersion>,
-                T::Error: std::fmt::Display,
-            {
-                self.version = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<ComponentUpdate> for super::ComponentUpdate {
-            type Error = String;
-            fn try_from(value: ComponentUpdate) -> Result<Self, String> {
-                Ok(Self {
-                    component_type: value.component_type?,
-                    id: value.id?,
-                    time_created: value.time_created?,
-                    time_modified: value.time_modified?,
-                    version: value.version?,
-                })
-            }
-        }
-
-        impl From<super::ComponentUpdate> for ComponentUpdate {
-            fn from(value: super::ComponentUpdate) -> Self {
-                Self {
-                    component_type: Ok(value.component_type),
-                    id: Ok(value.id),
-                    time_created: Ok(value.time_created),
-                    time_modified: Ok(value.time_modified),
-                    version: Ok(value.version),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct ComponentUpdateResultsPage {
-            items: Result<Vec<super::ComponentUpdate>, String>,
-            next_page: Result<Option<String>, String>,
-        }
-
-        impl Default for ComponentUpdateResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl ComponentUpdateResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::ComponentUpdate>>,
-                T::Error: std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<ComponentUpdateResultsPage> for super::ComponentUpdateResultsPage {
-            type Error = String;
-            fn try_from(value: ComponentUpdateResultsPage) -> Result<Self, String> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
-                })
-            }
-        }
-
-        impl From<super::ComponentUpdateResultsPage> for ComponentUpdateResultsPage {
-            fn from(value: super::ComponentUpdateResultsPage) -> Self {
-                Self {
-                    items: Ok(value.items),
-                    next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct Cumulativedouble {
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             value: Result<f64, String>,
@@ -10426,7 +9773,6 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ImageCreate {
-            block_size: Result<super::BlockSize, String>,
             description: Result<String, String>,
             name: Result<super::Name, String>,
             os: Result<String, String>,
@@ -10437,7 +9783,6 @@ pub mod types {
         impl Default for ImageCreate {
             fn default() -> Self {
                 Self {
-                    block_size: Err("no value supplied for block_size".to_string()),
                     description: Err("no value supplied for description".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     os: Err("no value supplied for os".to_string()),
@@ -10448,16 +9793,6 @@ pub mod types {
         }
 
         impl ImageCreate {
-            pub fn block_size<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::BlockSize>,
-                T::Error: std::fmt::Display,
-            {
-                self.block_size = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for block_size: {}", e));
-                self
-            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -10514,7 +9849,6 @@ pub mod types {
             type Error = String;
             fn try_from(value: ImageCreate) -> Result<Self, String> {
                 Ok(Self {
-                    block_size: value.block_size?,
                     description: value.description?,
                     name: value.name?,
                     os: value.os?,
@@ -10527,7 +9861,6 @@ pub mod types {
         impl From<super::ImageCreate> for ImageCreate {
             fn from(value: super::ImageCreate) -> Self {
                 Self {
-                    block_size: Ok(value.block_size),
                     description: Ok(value.description),
                     name: Ok(value.name),
                     os: Ok(value.os),
@@ -15421,7 +14754,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SnapshotCreate {
             description: Result<String, String>,
-            disk: Result<super::Name, String>,
+            disk: Result<super::NameOrId, String>,
             name: Result<super::Name, String>,
         }
 
@@ -15448,7 +14781,7 @@ pub mod types {
             }
             pub fn disk<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::Name>,
+                T: std::convert::TryInto<super::NameOrId>,
                 T::Error: std::fmt::Display,
             {
                 self.disk = value
@@ -17265,604 +16598,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SystemUpdate {
-            id: Result<uuid::Uuid, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            version: Result<super::SemverVersion, String>,
-        }
-
-        impl Default for SystemUpdate {
-            fn default() -> Self {
-                Self {
-                    id: Err("no value supplied for id".to_string()),
-                    time_created: Err("no value supplied for time_created".to_string()),
-                    time_modified: Err("no value supplied for time_modified".to_string()),
-                    version: Err("no value supplied for version".to_string()),
-                }
-            }
-        }
-
-        impl SystemUpdate {
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-            pub fn time_created<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_created = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_created: {}", e)
-                });
-                self
-            }
-            pub fn time_modified<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_modified = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_modified: {}", e)
-                });
-                self
-            }
-            pub fn version<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::SemverVersion>,
-                T::Error: std::fmt::Display,
-            {
-                self.version = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<SystemUpdate> for super::SystemUpdate {
-            type Error = String;
-            fn try_from(value: SystemUpdate) -> Result<Self, String> {
-                Ok(Self {
-                    id: value.id?,
-                    time_created: value.time_created?,
-                    time_modified: value.time_modified?,
-                    version: value.version?,
-                })
-            }
-        }
-
-        impl From<super::SystemUpdate> for SystemUpdate {
-            fn from(value: super::SystemUpdate) -> Self {
-                Self {
-                    id: Ok(value.id),
-                    time_created: Ok(value.time_created),
-                    time_modified: Ok(value.time_modified),
-                    version: Ok(value.version),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct SystemUpdateResultsPage {
-            items: Result<Vec<super::SystemUpdate>, String>,
-            next_page: Result<Option<String>, String>,
-        }
-
-        impl Default for SystemUpdateResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl SystemUpdateResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::SystemUpdate>>,
-                T::Error: std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<SystemUpdateResultsPage> for super::SystemUpdateResultsPage {
-            type Error = String;
-            fn try_from(value: SystemUpdateResultsPage) -> Result<Self, String> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
-                })
-            }
-        }
-
-        impl From<super::SystemUpdateResultsPage> for SystemUpdateResultsPage {
-            fn from(value: super::SystemUpdateResultsPage) -> Self {
-                Self {
-                    items: Ok(value.items),
-                    next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct SystemUpdateStart {
-            version: Result<super::SemverVersion, String>,
-        }
-
-        impl Default for SystemUpdateStart {
-            fn default() -> Self {
-                Self {
-                    version: Err("no value supplied for version".to_string()),
-                }
-            }
-        }
-
-        impl SystemUpdateStart {
-            pub fn version<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::SemverVersion>,
-                T::Error: std::fmt::Display,
-            {
-                self.version = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<SystemUpdateStart> for super::SystemUpdateStart {
-            type Error = String;
-            fn try_from(value: SystemUpdateStart) -> Result<Self, String> {
-                Ok(Self {
-                    version: value.version?,
-                })
-            }
-        }
-
-        impl From<super::SystemUpdateStart> for SystemUpdateStart {
-            fn from(value: super::SystemUpdateStart) -> Self {
-                Self {
-                    version: Ok(value.version),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct SystemVersion {
-            status: Result<super::UpdateStatus, String>,
-            version_range: Result<super::VersionRange, String>,
-        }
-
-        impl Default for SystemVersion {
-            fn default() -> Self {
-                Self {
-                    status: Err("no value supplied for status".to_string()),
-                    version_range: Err("no value supplied for version_range".to_string()),
-                }
-            }
-        }
-
-        impl SystemVersion {
-            pub fn status<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::UpdateStatus>,
-                T::Error: std::fmt::Display,
-            {
-                self.status = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for status: {}", e));
-                self
-            }
-            pub fn version_range<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::VersionRange>,
-                T::Error: std::fmt::Display,
-            {
-                self.version_range = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for version_range: {}", e)
-                });
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<SystemVersion> for super::SystemVersion {
-            type Error = String;
-            fn try_from(value: SystemVersion) -> Result<Self, String> {
-                Ok(Self {
-                    status: value.status?,
-                    version_range: value.version_range?,
-                })
-            }
-        }
-
-        impl From<super::SystemVersion> for SystemVersion {
-            fn from(value: super::SystemVersion) -> Self {
-                Self {
-                    status: Ok(value.status),
-                    version_range: Ok(value.version_range),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct UpdateDeployment {
-            id: Result<uuid::Uuid, String>,
-            status: Result<super::UpdateStatus, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            version: Result<super::SemverVersion, String>,
-        }
-
-        impl Default for UpdateDeployment {
-            fn default() -> Self {
-                Self {
-                    id: Err("no value supplied for id".to_string()),
-                    status: Err("no value supplied for status".to_string()),
-                    time_created: Err("no value supplied for time_created".to_string()),
-                    time_modified: Err("no value supplied for time_modified".to_string()),
-                    version: Err("no value supplied for version".to_string()),
-                }
-            }
-        }
-
-        impl UpdateDeployment {
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-            pub fn status<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::UpdateStatus>,
-                T::Error: std::fmt::Display,
-            {
-                self.status = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for status: {}", e));
-                self
-            }
-            pub fn time_created<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_created = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_created: {}", e)
-                });
-                self
-            }
-            pub fn time_modified<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_modified = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_modified: {}", e)
-                });
-                self
-            }
-            pub fn version<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::SemverVersion>,
-                T::Error: std::fmt::Display,
-            {
-                self.version = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<UpdateDeployment> for super::UpdateDeployment {
-            type Error = String;
-            fn try_from(value: UpdateDeployment) -> Result<Self, String> {
-                Ok(Self {
-                    id: value.id?,
-                    status: value.status?,
-                    time_created: value.time_created?,
-                    time_modified: value.time_modified?,
-                    version: value.version?,
-                })
-            }
-        }
-
-        impl From<super::UpdateDeployment> for UpdateDeployment {
-            fn from(value: super::UpdateDeployment) -> Self {
-                Self {
-                    id: Ok(value.id),
-                    status: Ok(value.status),
-                    time_created: Ok(value.time_created),
-                    time_modified: Ok(value.time_modified),
-                    version: Ok(value.version),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct UpdateDeploymentResultsPage {
-            items: Result<Vec<super::UpdateDeployment>, String>,
-            next_page: Result<Option<String>, String>,
-        }
-
-        impl Default for UpdateDeploymentResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl UpdateDeploymentResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::UpdateDeployment>>,
-                T::Error: std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<UpdateDeploymentResultsPage> for super::UpdateDeploymentResultsPage {
-            type Error = String;
-            fn try_from(value: UpdateDeploymentResultsPage) -> Result<Self, String> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
-                })
-            }
-        }
-
-        impl From<super::UpdateDeploymentResultsPage> for UpdateDeploymentResultsPage {
-            fn from(value: super::UpdateDeploymentResultsPage) -> Self {
-                Self {
-                    items: Ok(value.items),
-                    next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct UpdateableComponent {
-            component_type: Result<super::UpdateableComponentType, String>,
-            device_id: Result<String, String>,
-            id: Result<uuid::Uuid, String>,
-            status: Result<super::UpdateStatus, String>,
-            system_version: Result<super::SemverVersion, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            version: Result<super::SemverVersion, String>,
-        }
-
-        impl Default for UpdateableComponent {
-            fn default() -> Self {
-                Self {
-                    component_type: Err("no value supplied for component_type".to_string()),
-                    device_id: Err("no value supplied for device_id".to_string()),
-                    id: Err("no value supplied for id".to_string()),
-                    status: Err("no value supplied for status".to_string()),
-                    system_version: Err("no value supplied for system_version".to_string()),
-                    time_created: Err("no value supplied for time_created".to_string()),
-                    time_modified: Err("no value supplied for time_modified".to_string()),
-                    version: Err("no value supplied for version".to_string()),
-                }
-            }
-        }
-
-        impl UpdateableComponent {
-            pub fn component_type<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::UpdateableComponentType>,
-                T::Error: std::fmt::Display,
-            {
-                self.component_type = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for component_type: {}", e)
-                });
-                self
-            }
-            pub fn device_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<String>,
-                T::Error: std::fmt::Display,
-            {
-                self.device_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for device_id: {}", e));
-                self
-            }
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {}", e));
-                self
-            }
-            pub fn status<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::UpdateStatus>,
-                T::Error: std::fmt::Display,
-            {
-                self.status = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for status: {}", e));
-                self
-            }
-            pub fn system_version<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::SemverVersion>,
-                T::Error: std::fmt::Display,
-            {
-                self.system_version = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for system_version: {}", e)
-                });
-                self
-            }
-            pub fn time_created<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_created = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_created: {}", e)
-                });
-                self
-            }
-            pub fn time_modified<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_modified = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_modified: {}", e)
-                });
-                self
-            }
-            pub fn version<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::SemverVersion>,
-                T::Error: std::fmt::Display,
-            {
-                self.version = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<UpdateableComponent> for super::UpdateableComponent {
-            type Error = String;
-            fn try_from(value: UpdateableComponent) -> Result<Self, String> {
-                Ok(Self {
-                    component_type: value.component_type?,
-                    device_id: value.device_id?,
-                    id: value.id?,
-                    status: value.status?,
-                    system_version: value.system_version?,
-                    time_created: value.time_created?,
-                    time_modified: value.time_modified?,
-                    version: value.version?,
-                })
-            }
-        }
-
-        impl From<super::UpdateableComponent> for UpdateableComponent {
-            fn from(value: super::UpdateableComponent) -> Self {
-                Self {
-                    component_type: Ok(value.component_type),
-                    device_id: Ok(value.device_id),
-                    id: Ok(value.id),
-                    status: Ok(value.status),
-                    system_version: Ok(value.system_version),
-                    time_created: Ok(value.time_created),
-                    time_modified: Ok(value.time_modified),
-                    version: Ok(value.version),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct UpdateableComponentResultsPage {
-            items: Result<Vec<super::UpdateableComponent>, String>,
-            next_page: Result<Option<String>, String>,
-        }
-
-        impl Default for UpdateableComponentResultsPage {
-            fn default() -> Self {
-                Self {
-                    items: Err("no value supplied for items".to_string()),
-                    next_page: Ok(Default::default()),
-                }
-            }
-        }
-
-        impl UpdateableComponentResultsPage {
-            pub fn items<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Vec<super::UpdateableComponent>>,
-                T::Error: std::fmt::Display,
-            {
-                self.items = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for items: {}", e));
-                self
-            }
-            pub fn next_page<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.next_page = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<UpdateableComponentResultsPage>
-            for super::UpdateableComponentResultsPage
-        {
-            type Error = String;
-            fn try_from(value: UpdateableComponentResultsPage) -> Result<Self, String> {
-                Ok(Self {
-                    items: value.items?,
-                    next_page: value.next_page?,
-                })
-            }
-        }
-
-        impl From<super::UpdateableComponentResultsPage> for UpdateableComponentResultsPage {
-            fn from(value: super::UpdateableComponentResultsPage) -> Self {
-                Self {
-                    items: Ok(value.items),
-                    next_page: Ok(value.next_page),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct User {
             display_name: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -18256,63 +16991,6 @@ pub mod types {
                 Self {
                     password: Ok(value.password),
                     username: Ok(value.username),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct VersionRange {
-            high: Result<super::SemverVersion, String>,
-            low: Result<super::SemverVersion, String>,
-        }
-
-        impl Default for VersionRange {
-            fn default() -> Self {
-                Self {
-                    high: Err("no value supplied for high".to_string()),
-                    low: Err("no value supplied for low".to_string()),
-                }
-            }
-        }
-
-        impl VersionRange {
-            pub fn high<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::SemverVersion>,
-                T::Error: std::fmt::Display,
-            {
-                self.high = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for high: {}", e));
-                self
-            }
-            pub fn low<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::SemverVersion>,
-                T::Error: std::fmt::Display,
-            {
-                self.low = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for low: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<VersionRange> for super::VersionRange {
-            type Error = String;
-            fn try_from(value: VersionRange) -> Result<Self, String> {
-                Ok(Self {
-                    high: value.high?,
-                    low: value.low?,
-                })
-            }
-        }
-
-        impl From<super::VersionRange> for VersionRange {
-            fn from(value: super::VersionRange) -> Self {
-                Self {
-                    high: Ok(value.high),
-                    low: Ok(value.low),
                 }
             }
         }
@@ -20809,6 +19487,41 @@ impl ClientLoginExt for Client {
     }
 }
 
+pub trait ClientMetricsExt {
+    /// Access metrics data
+    ///
+    /// Sends a `GET` request to `/v1/metrics/{metric_name}`
+    ///
+    /// Arguments:
+    /// - `metric_name`
+    /// - `end_time`: An exclusive end time of metrics.
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `order`: Query result order
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `start_time`: An inclusive start time of metrics.
+    /// ```ignore
+    /// let response = client.silo_metric()
+    ///    .metric_name(metric_name)
+    ///    .end_time(end_time)
+    ///    .limit(limit)
+    ///    .order(order)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .start_time(start_time)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_metric(&self) -> builder::SiloMetric;
+}
+
+impl ClientMetricsExt for Client {
+    fn silo_metric(&self) -> builder::SiloMetric {
+        builder::SiloMetric::new(self)
+    }
+}
+
 pub trait ClientPolicyExt {
     /// Fetch the top-level IAM policy
     ///
@@ -21070,7 +19783,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_view(&self) -> builder::CurrentUserView;
-    /// Fetch the silo groups the current user belongs to
+    /// Fetch the silo groups the current user belongs to
     ///
     /// Sends a `GET` request to `/v1/me/groups`
     ///
@@ -21717,20 +20430,20 @@ pub trait ClientSystemMetricsExt {
     /// Arguments:
     /// - `metric_name`
     /// - `end_time`: An exclusive end time of metrics.
-    /// - `id`: The UUID of the container being queried
     /// - `limit`: Maximum number of items returned by a single call
     /// - `order`: Query result order
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
+    /// - `silo`: Name or ID of the silo
     /// - `start_time`: An inclusive start time of metrics.
     /// ```ignore
     /// let response = client.system_metric()
     ///    .metric_name(metric_name)
     ///    .end_time(end_time)
-    ///    .id(id)
     ///    .limit(limit)
     ///    .order(order)
     ///    .page_token(page_token)
+    ///    .silo(silo)
     ///    .start_time(start_time)
     ///    .send()
     ///    .await;
@@ -22521,182 +21234,6 @@ impl ClientSystemSilosExt for Client {
 
     fn user_builtin_view(&self) -> builder::UserBuiltinView {
         builder::UserBuiltinView::new(self)
-    }
-}
-
-pub trait ClientSystemUpdateExt {
-    /// View version and update status of component tree
-    ///
-    /// Sends a `GET` request to `/v1/system/update/components`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.system_component_version_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_component_version_list(&self) -> builder::SystemComponentVersionList;
-    /// List all update deployments
-    ///
-    /// Sends a `GET` request to `/v1/system/update/deployments`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.update_deployments_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn update_deployments_list(&self) -> builder::UpdateDeploymentsList;
-    /// Fetch a system update deployment
-    ///
-    /// Sends a `GET` request to `/v1/system/update/deployments/{id}`
-    ///
-    /// ```ignore
-    /// let response = client.update_deployment_view()
-    ///    .id(id)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn update_deployment_view(&self) -> builder::UpdateDeploymentView;
-    /// Refresh update data
-    ///
-    /// Sends a `POST` request to `/v1/system/update/refresh`
-    ///
-    /// ```ignore
-    /// let response = client.system_update_refresh()
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_refresh(&self) -> builder::SystemUpdateRefresh;
-    /// Start system update
-    ///
-    /// Sends a `POST` request to `/v1/system/update/start`
-    ///
-    /// ```ignore
-    /// let response = client.system_update_start()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_start(&self) -> builder::SystemUpdateStart;
-    /// Stop system update
-    ///
-    /// If there is no update in progress, do nothing.
-    ///
-    /// Sends a `POST` request to `/v1/system/update/stop`
-    ///
-    /// ```ignore
-    /// let response = client.system_update_stop()
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_stop(&self) -> builder::SystemUpdateStop;
-    /// List all updates
-    ///
-    /// Sends a `GET` request to `/v1/system/update/updates`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// - `sort_by`
-    /// ```ignore
-    /// let response = client.system_update_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .sort_by(sort_by)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_list(&self) -> builder::SystemUpdateList;
-    /// View system update
-    ///
-    /// Sends a `GET` request to `/v1/system/update/updates/{version}`
-    ///
-    /// ```ignore
-    /// let response = client.system_update_view()
-    ///    .version(version)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_view(&self) -> builder::SystemUpdateView;
-    /// View system update component tree
-    ///
-    /// Sends a `GET` request to
-    /// `/v1/system/update/updates/{version}/components`
-    ///
-    /// ```ignore
-    /// let response = client.system_update_components_list()
-    ///    .version(version)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_update_components_list(&self) -> builder::SystemUpdateComponentsList;
-    /// View system version and update status
-    ///
-    /// Sends a `GET` request to `/v1/system/update/version`
-    ///
-    /// ```ignore
-    /// let response = client.system_version()
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn system_version(&self) -> builder::SystemVersion;
-}
-
-impl ClientSystemUpdateExt for Client {
-    fn system_component_version_list(&self) -> builder::SystemComponentVersionList {
-        builder::SystemComponentVersionList::new(self)
-    }
-
-    fn update_deployments_list(&self) -> builder::UpdateDeploymentsList {
-        builder::UpdateDeploymentsList::new(self)
-    }
-
-    fn update_deployment_view(&self) -> builder::UpdateDeploymentView {
-        builder::UpdateDeploymentView::new(self)
-    }
-
-    fn system_update_refresh(&self) -> builder::SystemUpdateRefresh {
-        builder::SystemUpdateRefresh::new(self)
-    }
-
-    fn system_update_start(&self) -> builder::SystemUpdateStart {
-        builder::SystemUpdateStart::new(self)
-    }
-
-    fn system_update_stop(&self) -> builder::SystemUpdateStop {
-        builder::SystemUpdateStop::new(self)
-    }
-
-    fn system_update_list(&self) -> builder::SystemUpdateList {
-        builder::SystemUpdateList::new(self)
-    }
-
-    fn system_update_view(&self) -> builder::SystemUpdateView {
-        builder::SystemUpdateView::new(self)
-    }
-
-    fn system_update_components_list(&self) -> builder::SystemUpdateComponentsList {
-        builder::SystemUpdateComponentsList::new(self)
-    }
-
-    fn system_version(&self) -> builder::SystemVersion {
-        builder::SystemVersion::new(self)
     }
 }
 
@@ -28308,6 +26845,239 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientMetricsExt::silo_metric`]
+    ///
+    /// [`ClientMetricsExt::silo_metric`]: super::ClientMetricsExt::silo_metric
+    #[derive(Debug, Clone)]
+    pub struct SiloMetric<'a> {
+        client: &'a super::Client,
+        metric_name: Result<types::SystemMetricName, String>,
+        end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        order: Result<Option<types::PaginationOrder>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+    }
+
+    impl<'a> SiloMetric<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client,
+                metric_name: Err("metric_name was not initialized".to_string()),
+                end_time: Ok(None),
+                limit: Ok(None),
+                order: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                start_time: Ok(None),
+            }
+        }
+
+        pub fn metric_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SystemMetricName>,
+        {
+            self.metric_name = value
+                .try_into()
+                .map_err(|_| "conversion to `SystemMetricName` for metric_name failed".to_string());
+            self
+        }
+
+        pub fn end_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+        {
+            self.end_time = value.try_into().map(Some).map_err(|_| {
+                "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed"
+                    .to_string()
+            });
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn order<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::PaginationOrder>,
+        {
+            self.order = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `PaginationOrder` for order failed".to_string());
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn start_time<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+        {
+            self.start_time = value.try_into().map(Some).map_err(|_| {
+                "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for start_time \
+                 failed"
+                    .to_string()
+            });
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/metrics/{metric_name}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                metric_name,
+                end_time,
+                limit,
+                order,
+                page_token,
+                project,
+                start_time,
+            } = self;
+            let metric_name = metric_name.map_err(Error::InvalidRequest)?;
+            let end_time = end_time.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let order = order.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let start_time = start_time.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/metrics/{}",
+                client.baseurl,
+                encode_path(&metric_name.to_string()),
+            );
+            let mut query = Vec::with_capacity(6usize);
+            if let Some(v) = &end_time {
+                query.push(("end_time", v.to_string()));
+            }
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &order {
+                query.push(("order", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &start_time {
+                query.push(("start_time", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/metrics/{metric_name}`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Measurement, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                end_time: Ok(None),
+                limit: Ok(None),
+                order: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                start_time: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientInstancesExt::instance_network_interface_list`]
     ///
     /// [`ClientInstancesExt::instance_network_interface_list`]: super::ClientInstancesExt::instance_network_interface_list
@@ -33256,10 +32026,10 @@ pub mod builder {
         client: &'a super::Client,
         metric_name: Result<types::SystemMetricName, String>,
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
-        id: Result<uuid::Uuid, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         order: Result<Option<types::PaginationOrder>, String>,
         page_token: Result<Option<String>, String>,
+        silo: Result<Option<types::NameOrId>, String>,
         start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
     }
 
@@ -33269,10 +32039,10 @@ pub mod builder {
                 client,
                 metric_name: Err("metric_name was not initialized".to_string()),
                 end_time: Ok(None),
-                id: Err("id was not initialized".to_string()),
                 limit: Ok(None),
                 order: Ok(None),
                 page_token: Ok(None),
+                silo: Ok(None),
                 start_time: Ok(None),
             }
         }
@@ -33295,16 +32065,6 @@ pub mod builder {
                 "conversion to `chrono :: DateTime < chrono :: offset :: Utc >` for end_time failed"
                     .to_string()
             });
-            self
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
             self
         }
 
@@ -33340,6 +32100,17 @@ pub mod builder {
             self
         }
 
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
         pub fn start_time<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
@@ -33360,18 +32131,18 @@ pub mod builder {
                 client,
                 metric_name,
                 end_time,
-                id,
                 limit,
                 order,
                 page_token,
+                silo,
                 start_time,
             } = self;
             let metric_name = metric_name.map_err(Error::InvalidRequest)?;
             let end_time = end_time.map_err(Error::InvalidRequest)?;
-            let id = id.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let order = order.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/metrics/{}",
@@ -33382,7 +32153,6 @@ pub mod builder {
             if let Some(v) = &end_time {
                 query.push(("end_time", v.to_string()));
             }
-            query.push(("id", id.to_string()));
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
             }
@@ -33391,6 +32161,9 @@ pub mod builder {
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &silo {
+                query.push(("silo", v.to_string()));
             }
             if let Some(v) = &start_time {
                 query.push(("start_time", v.to_string()));
@@ -33416,6 +32189,65 @@ pub mod builder {
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
+        }
+
+        /// Streams `GET` requests to `/v1/system/metrics/{metric_name}`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::Measurement, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                end_time: Ok(None),
+                limit: Ok(None),
+                order: Ok(None),
+                page_token: Ok(None),
+                silo: Ok(None),
+                start_time: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
         }
     }
 
@@ -35400,855 +34232,6 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemUpdateExt::system_component_version_list`]
-    ///
-    /// [`ClientSystemUpdateExt::system_component_version_list`]: super::ClientSystemUpdateExt::system_component_version_list
-    #[derive(Debug, Clone)]
-    pub struct SystemComponentVersionList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
-    }
-
-    impl<'a> SystemComponentVersionList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/update/components`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::UpdateableComponentResultsPage>, Error<types::Error>>
-        {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/update/components", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/system/update/components`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::UpdateableComponent, Error<types::Error>>>
-               + Unpin
-               + 'a {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let limit = self
-                .limit
-                .clone()
-                .ok()
-                .flatten()
-                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
-                .map(std::num::NonZeroUsize::get)
-                .unwrap_or(usize::MAX);
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .take(limit)
-                .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemUpdateExt::update_deployments_list`]
-    ///
-    /// [`ClientSystemUpdateExt::update_deployments_list`]: super::ClientSystemUpdateExt::update_deployments_list
-    #[derive(Debug, Clone)]
-    pub struct UpdateDeploymentsList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
-    }
-
-    impl<'a> UpdateDeploymentsList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/update/deployments`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::UpdateDeploymentResultsPage>, Error<types::Error>>
-        {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/update/deployments", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/system/update/deployments`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::UpdateDeployment, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let limit = self
-                .limit
-                .clone()
-                .ok()
-                .flatten()
-                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
-                .map(std::num::NonZeroUsize::get)
-                .unwrap_or(usize::MAX);
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .take(limit)
-                .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemUpdateExt::update_deployment_view`]
-    ///
-    /// [`ClientSystemUpdateExt::update_deployment_view`]: super::ClientSystemUpdateExt::update_deployment_view
-    #[derive(Debug, Clone)]
-    pub struct UpdateDeploymentView<'a> {
-        client: &'a super::Client,
-        id: Result<uuid::Uuid, String>,
-    }
-
-    impl<'a> UpdateDeploymentView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                id: Err("id was not initialized".to_string()),
-            }
-        }
-
-        pub fn id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for id failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/update/deployments/{id}`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::UpdateDeployment>, Error<types::Error>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/update/deployments/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemUpdateExt::system_update_refresh`]
-    ///
-    /// [`ClientSystemUpdateExt::system_update_refresh`]: super::ClientSystemUpdateExt::system_update_refresh
-    #[derive(Debug, Clone)]
-    pub struct SystemUpdateRefresh<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> SystemUpdateRefresh<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
-        }
-
-        /// Sends a `POST` request to `/v1/system/update/refresh`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/system/update/refresh", client.baseurl,);
-            let request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemUpdateExt::system_update_start`]
-    ///
-    /// [`ClientSystemUpdateExt::system_update_start`]: super::ClientSystemUpdateExt::system_update_start
-    #[derive(Debug, Clone)]
-    pub struct SystemUpdateStart<'a> {
-        client: &'a super::Client,
-        body: Result<types::builder::SystemUpdateStart, String>,
-    }
-
-    impl<'a> SystemUpdateStart<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                body: Ok(types::builder::SystemUpdateStart::default()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SystemUpdateStart>,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|_| "conversion to `SystemUpdateStart` for body failed".to_string());
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::SystemUpdateStart,
-            ) -> types::builder::SystemUpdateStart,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/system/update/start`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::UpdateDeployment>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body
-                .and_then(std::convert::TryInto::<types::SystemUpdateStart>::try_into)
-                .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/update/start", client.baseurl,);
-            let request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemUpdateExt::system_update_stop`]
-    ///
-    /// [`ClientSystemUpdateExt::system_update_stop`]: super::ClientSystemUpdateExt::system_update_stop
-    #[derive(Debug, Clone)]
-    pub struct SystemUpdateStop<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> SystemUpdateStop<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
-        }
-
-        /// Sends a `POST` request to `/v1/system/update/stop`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/system/update/stop", client.baseurl,);
-            let request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemUpdateExt::system_update_list`]
-    ///
-    /// [`ClientSystemUpdateExt::system_update_list`]: super::ClientSystemUpdateExt::system_update_list
-    #[derive(Debug, Clone)]
-    pub struct SystemUpdateList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-        sort_by: Result<Option<types::IdSortMode>, String>,
-    }
-
-    impl<'a> SystemUpdateList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        pub fn sort_by<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IdSortMode>,
-        {
-            self.sort_by = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/update/updates`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SystemUpdateResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-                sort_by,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/update/updates", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
-            }
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/system/update/updates`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::SystemUpdate, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let limit = self
-                .limit
-                .clone()
-                .ok()
-                .flatten()
-                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
-                .map(std::num::NonZeroUsize::get)
-                .unwrap_or(usize::MAX);
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                sort_by: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .take(limit)
-                .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemUpdateExt::system_update_view`]
-    ///
-    /// [`ClientSystemUpdateExt::system_update_view`]: super::ClientSystemUpdateExt::system_update_view
-    #[derive(Debug, Clone)]
-    pub struct SystemUpdateView<'a> {
-        client: &'a super::Client,
-        version: Result<types::SemverVersion, String>,
-    }
-
-    impl<'a> SystemUpdateView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                version: Err("version was not initialized".to_string()),
-            }
-        }
-
-        pub fn version<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SemverVersion>,
-        {
-            self.version = value
-                .try_into()
-                .map_err(|_| "conversion to `SemverVersion` for version failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/update/updates/{version}`
-        pub async fn send(self) -> Result<ResponseValue<types::SystemUpdate>, Error<types::Error>> {
-            let Self { client, version } = self;
-            let version = version.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/update/updates/{}",
-                client.baseurl,
-                encode_path(&version.to_string()),
-            );
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemUpdateExt::system_update_components_list`]
-    ///
-    /// [`ClientSystemUpdateExt::system_update_components_list`]: super::ClientSystemUpdateExt::system_update_components_list
-    #[derive(Debug, Clone)]
-    pub struct SystemUpdateComponentsList<'a> {
-        client: &'a super::Client,
-        version: Result<types::SemverVersion, String>,
-    }
-
-    impl<'a> SystemUpdateComponentsList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client,
-                version: Err("version was not initialized".to_string()),
-            }
-        }
-
-        pub fn version<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::SemverVersion>,
-        {
-            self.version = value
-                .try_into()
-                .map_err(|_| "conversion to `SemverVersion` for version failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to
-        /// `/v1/system/update/updates/{version}/components`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::ComponentUpdateResultsPage>, Error<types::Error>> {
-            let Self { client, version } = self;
-            let version = version.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/update/updates/{}/components",
-                client.baseurl,
-                encode_path(&version.to_string()),
-            );
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemUpdateExt::system_version`]
-    ///
-    /// [`ClientSystemUpdateExt::system_version`]: super::ClientSystemUpdateExt::system_version
-    #[derive(Debug, Clone)]
-    pub struct SystemVersion<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> SystemVersion<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
-        }
-
-        /// Sends a `GET` request to `/v1/system/update/version`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::SystemVersion>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/system/update/version", client.baseurl,);
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -39831,6 +37814,7 @@ pub mod prelude {
     pub use super::ClientImagesExt;
     pub use super::ClientInstancesExt;
     pub use super::ClientLoginExt;
+    pub use super::ClientMetricsExt;
     pub use super::ClientPolicyExt;
     pub use super::ClientProjectsExt;
     pub use super::ClientRolesExt;
@@ -39841,6 +37825,5 @@ pub mod prelude {
     pub use super::ClientSystemMetricsExt;
     pub use super::ClientSystemNetworkingExt;
     pub use super::ClientSystemSilosExt;
-    pub use super::ClientSystemUpdateExt;
     pub use super::ClientVpcsExt;
 }
