@@ -536,7 +536,6 @@ impl RunnableCmd for CmdDiskImport {
                     os: image_os.clone(),
                     version: image_version.clone(),
                     source: ImageSource::Snapshot { id: snapshot.id },
-                    block_size: disk_block_size,
                 })
                 .send()
                 .await?;

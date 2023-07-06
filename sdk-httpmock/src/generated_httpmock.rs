@@ -3980,6 +3980,162 @@ pub mod operations {
         }
     }
 
+    pub struct SiloMetricWhen(httpmock::When);
+    impl SiloMetricWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/metrics/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn metric_name(self, value: types::SystemMetricName) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/metrics/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn end_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a chrono::DateTime<chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("end_time", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "end_time"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn order<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::PaginationOrder>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("order", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "order"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn start_time<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a chrono::DateTime<chrono::offset::Utc>>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("start_time", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "start_time"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct SiloMetricThen(httpmock::Then);
+    impl SiloMetricThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::MeasurementResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct InstanceNetworkInterfaceListWhen(httpmock::When);
     impl InstanceNetworkInterfaceListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -7755,10 +7911,6 @@ pub mod operations {
             }
         }
 
-        pub fn id(self, value: &uuid::Uuid) -> Self {
-            Self(self.0.query_param("id", value.to_string()))
-        }
-
         pub fn limit<T>(self, value: T) -> Self
         where
             T: Into<Option<std::num::NonZeroU32>>,
@@ -7802,6 +7954,22 @@ pub mod operations {
                     req.query_params
                         .as_ref()
                         .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn silo<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("silo", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "silo"))
                         .is_none()
                 }))
             }
@@ -9378,719 +9546,6 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct SystemComponentVersionListWhen(httpmock::When);
-    impl SystemComponentVersionListWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/update/components$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn sort_by<T>(self, value: T) -> Self
-        where
-            T: Into<Option<types::IdSortMode>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("sort_by", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct SystemComponentVersionListThen(httpmock::Then);
-    impl SystemComponentVersionListThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::UpdateableComponentResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct UpdateDeploymentsListWhen(httpmock::When);
-    impl UpdateDeploymentsListWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/update/deployments$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn sort_by<T>(self, value: T) -> Self
-        where
-            T: Into<Option<types::IdSortMode>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("sort_by", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct UpdateDeploymentsListThen(httpmock::Then);
-    impl UpdateDeploymentsListThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::UpdateDeploymentResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct UpdateDeploymentViewWhen(httpmock::When);
-    impl UpdateDeploymentViewWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner.method(httpmock::Method::GET).path_matches(
-                    regex::Regex::new("^/v1/system/update/deployments/[^/]*$").unwrap(),
-                ),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn id(self, value: &uuid::Uuid) -> Self {
-            let re = regex::Regex::new(&format!(
-                "^/v1/system/update/deployments/{}$",
-                value.to_string()
-            ))
-            .unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct UpdateDeploymentViewThen(httpmock::Then);
-    impl UpdateDeploymentViewThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::UpdateDeployment) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct SystemUpdateRefreshWhen(httpmock::When);
-    impl SystemUpdateRefreshWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/system/update/refresh$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-    }
-
-    pub struct SystemUpdateRefreshThen(httpmock::Then);
-    impl SystemUpdateRefreshThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn no_content(self) -> Self {
-            Self(self.0.status(204u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct SystemUpdateStartWhen(httpmock::When);
-    impl SystemUpdateStartWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/system/update/start$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn body(self, value: &types::SystemUpdateStart) -> Self {
-            Self(self.0.json_body_obj(value))
-        }
-    }
-
-    pub struct SystemUpdateStartThen(httpmock::Then);
-    impl SystemUpdateStartThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn accepted(self, value: &types::UpdateDeployment) -> Self {
-            Self(
-                self.0
-                    .status(202u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct SystemUpdateStopWhen(httpmock::When);
-    impl SystemUpdateStopWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::POST)
-                    .path_matches(regex::Regex::new("^/v1/system/update/stop$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-    }
-
-    pub struct SystemUpdateStopThen(httpmock::Then);
-    impl SystemUpdateStopThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn no_content(self) -> Self {
-            Self(self.0.status(204u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct SystemUpdateListWhen(httpmock::When);
-    impl SystemUpdateListWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/update/updates$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn sort_by<T>(self, value: T) -> Self
-        where
-            T: Into<Option<types::IdSortMode>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("sort_by", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct SystemUpdateListThen(httpmock::Then);
-    impl SystemUpdateListThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::SystemUpdateResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct SystemUpdateViewWhen(httpmock::When);
-    impl SystemUpdateViewWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/update/updates/[^/]*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn version(self, value: &types::SemverVersion) -> Self {
-            let re = regex::Regex::new(&format!(
-                "^/v1/system/update/updates/{}$",
-                value.to_string()
-            ))
-            .unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct SystemUpdateViewThen(httpmock::Then);
-    impl SystemUpdateViewThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::SystemUpdate) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct SystemUpdateComponentsListWhen(httpmock::When);
-    impl SystemUpdateComponentsListWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(inner.method(httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/system/update/updates/[^/]*/components$").unwrap(),
-            ))
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn version(self, value: &types::SemverVersion) -> Self {
-            let re = regex::Regex::new(&format!(
-                "^/v1/system/update/updates/{}/components$",
-                value.to_string()
-            ))
-            .unwrap();
-            Self(self.0.path_matches(re))
-        }
-    }
-
-    pub struct SystemUpdateComponentsListThen(httpmock::Then);
-    impl SystemUpdateComponentsListThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::ComponentUpdateResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct SystemVersionWhen(httpmock::When);
-    impl SystemVersionWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/update/version$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-    }
-
-    pub struct SystemVersionThen(httpmock::Then);
-    impl SystemVersionThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::SystemVersion) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12998,6 +12453,9 @@ pub trait MockServerExt {
     fn current_user_ssh_key_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::CurrentUserSshKeyDeleteWhen, operations::CurrentUserSshKeyDeleteThen);
+    fn silo_metric<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloMetricWhen, operations::SiloMetricThen);
     fn instance_network_interface_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
@@ -13277,42 +12735,6 @@ pub trait MockServerExt {
     fn silo_policy_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SiloPolicyUpdateWhen, operations::SiloPolicyUpdateThen);
-    fn system_component_version_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(
-            operations::SystemComponentVersionListWhen,
-            operations::SystemComponentVersionListThen,
-        );
-    fn update_deployments_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::UpdateDeploymentsListWhen, operations::UpdateDeploymentsListThen);
-    fn update_deployment_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::UpdateDeploymentViewWhen, operations::UpdateDeploymentViewThen);
-    fn system_update_refresh<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemUpdateRefreshWhen, operations::SystemUpdateRefreshThen);
-    fn system_update_start<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemUpdateStartWhen, operations::SystemUpdateStartThen);
-    fn system_update_stop<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemUpdateStopWhen, operations::SystemUpdateStopThen);
-    fn system_update_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemUpdateListWhen, operations::SystemUpdateListThen);
-    fn system_update_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemUpdateViewWhen, operations::SystemUpdateViewThen);
-    fn system_update_components_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(
-            operations::SystemUpdateComponentsListWhen,
-            operations::SystemUpdateComponentsListThen,
-        );
-    fn system_version<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemVersionWhen, operations::SystemVersionThen);
     fn silo_user_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SiloUserListWhen, operations::SiloUserListThen);
@@ -14005,6 +13427,18 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::CurrentUserSshKeyDeleteWhen::new(when),
                 operations::CurrentUserSshKeyDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn silo_metric<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloMetricWhen, operations::SiloMetricThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloMetricWhen::new(when),
+                operations::SiloMetricThen::new(then),
             )
         })
     }
@@ -14914,132 +14348,6 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::SiloPolicyUpdateWhen::new(when),
                 operations::SiloPolicyUpdateThen::new(then),
-            )
-        })
-    }
-
-    fn system_component_version_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(
-            operations::SystemComponentVersionListWhen,
-            operations::SystemComponentVersionListThen,
-        ),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SystemComponentVersionListWhen::new(when),
-                operations::SystemComponentVersionListThen::new(then),
-            )
-        })
-    }
-
-    fn update_deployments_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::UpdateDeploymentsListWhen, operations::UpdateDeploymentsListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::UpdateDeploymentsListWhen::new(when),
-                operations::UpdateDeploymentsListThen::new(then),
-            )
-        })
-    }
-
-    fn update_deployment_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::UpdateDeploymentViewWhen, operations::UpdateDeploymentViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::UpdateDeploymentViewWhen::new(when),
-                operations::UpdateDeploymentViewThen::new(then),
-            )
-        })
-    }
-
-    fn system_update_refresh<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemUpdateRefreshWhen, operations::SystemUpdateRefreshThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SystemUpdateRefreshWhen::new(when),
-                operations::SystemUpdateRefreshThen::new(then),
-            )
-        })
-    }
-
-    fn system_update_start<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemUpdateStartWhen, operations::SystemUpdateStartThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SystemUpdateStartWhen::new(when),
-                operations::SystemUpdateStartThen::new(then),
-            )
-        })
-    }
-
-    fn system_update_stop<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemUpdateStopWhen, operations::SystemUpdateStopThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SystemUpdateStopWhen::new(when),
-                operations::SystemUpdateStopThen::new(then),
-            )
-        })
-    }
-
-    fn system_update_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemUpdateListWhen, operations::SystemUpdateListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SystemUpdateListWhen::new(when),
-                operations::SystemUpdateListThen::new(then),
-            )
-        })
-    }
-
-    fn system_update_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemUpdateViewWhen, operations::SystemUpdateViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SystemUpdateViewWhen::new(when),
-                operations::SystemUpdateViewThen::new(then),
-            )
-        })
-    }
-
-    fn system_update_components_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(
-            operations::SystemUpdateComponentsListWhen,
-            operations::SystemUpdateComponentsListThen,
-        ),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SystemUpdateComponentsListWhen::new(when),
-                operations::SystemUpdateComponentsListThen::new(then),
-            )
-        })
-    }
-
-    fn system_version<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SystemVersionWhen, operations::SystemVersionThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SystemVersionWhen::new(when),
-                operations::SystemVersionThen::new(then),
             )
         })
     }

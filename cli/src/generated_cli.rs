@@ -64,6 +64,7 @@ impl Cli {
             CliCommand::CurrentUserSshKeyCreate => Self::cli_current_user_ssh_key_create(),
             CliCommand::CurrentUserSshKeyView => Self::cli_current_user_ssh_key_view(),
             CliCommand::CurrentUserSshKeyDelete => Self::cli_current_user_ssh_key_delete(),
+            CliCommand::SiloMetric => Self::cli_silo_metric(),
             CliCommand::InstanceNetworkInterfaceList => Self::cli_instance_network_interface_list(),
             CliCommand::InstanceNetworkInterfaceCreate => {
                 Self::cli_instance_network_interface_create()
@@ -160,16 +161,6 @@ impl Cli {
             CliCommand::SiloDelete => Self::cli_silo_delete(),
             CliCommand::SiloPolicyView => Self::cli_silo_policy_view(),
             CliCommand::SiloPolicyUpdate => Self::cli_silo_policy_update(),
-            CliCommand::SystemComponentVersionList => Self::cli_system_component_version_list(),
-            CliCommand::UpdateDeploymentsList => Self::cli_update_deployments_list(),
-            CliCommand::UpdateDeploymentView => Self::cli_update_deployment_view(),
-            CliCommand::SystemUpdateRefresh => Self::cli_system_update_refresh(),
-            CliCommand::SystemUpdateStart => Self::cli_system_update_start(),
-            CliCommand::SystemUpdateStop => Self::cli_system_update_stop(),
-            CliCommand::SystemUpdateList => Self::cli_system_update_list(),
-            CliCommand::SystemUpdateView => Self::cli_system_update_view(),
-            CliCommand::SystemUpdateComponentsList => Self::cli_system_update_components_list(),
-            CliCommand::SystemVersion => Self::cli_system_version(),
             CliCommand::SiloUserList => Self::cli_silo_user_list(),
             CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::UserBuiltinList => Self::cli_user_builtin_list(),
@@ -1591,7 +1582,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("Fetch the silo\u{a0}groups the current user belongs to")
+            .about("Fetch the silo groups the current user belongs to")
     }
 
     pub fn cli_current_user_ssh_key_list() -> clap::Command {
@@ -1685,6 +1676,65 @@ impl Cli {
             .long_about(
                 "Delete an SSH public key associated with the currently authenticated user.",
             )
+    }
+
+    pub fn cli_silo_metric() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("metric-name")
+                    .long("metric-name")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SystemMetricName::VirtualDiskSpaceProvisioned.to_string(),
+                            types::SystemMetricName::CpusProvisioned.to_string(),
+                            types::SystemMetricName::RamProvisioned.to_string(),
+                        ]),
+                        |s| types::SystemMetricName::try_from(s).unwrap(),
+                    ))
+                    .required(true),
+            )
+            .arg(
+                clap::Arg::new("end-time")
+                    .long("end-time")
+                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .required(true)
+                    .help("An exclusive end time of metrics."),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("order")
+                    .long("order")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::PaginationOrder::Ascending.to_string(),
+                            types::PaginationOrder::Descending.to_string(),
+                        ]),
+                        |s| types::PaginationOrder::try_from(s).unwrap(),
+                    ))
+                    .required(false)
+                    .help("Query result order"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("start-time")
+                    .long("start-time")
+                    .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
+                    .required(true)
+                    .help("An inclusive start time of metrics."),
+            )
+            .about("Access metrics data")
     }
 
     pub fn cli_instance_network_interface_list() -> clap::Command {
@@ -2164,9 +2214,9 @@ impl Cli {
             .arg(
                 clap::Arg::new("disk")
                     .long("disk")
-                    .value_parser(clap::value_parser!(types::Name))
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required_unless_present("json-body")
-                    .help("The name of the disk to be snapshotted"),
+                    .help("The disk to be snapshotted"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -3016,15 +3066,8 @@ impl Cli {
                 clap::Arg::new("end-time")
                     .long("end-time")
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
-                    .required(false)
-                    .help("An exclusive end time of metrics."),
-            )
-            .arg(
-                clap::Arg::new("id")
-                    .long("id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
                     .required(true)
-                    .help("The UUID of the container being queried"),
+                    .help("An exclusive end time of metrics."),
             )
             .arg(
                 clap::Arg::new("limit")
@@ -3047,17 +3090,17 @@ impl Cli {
                     .help("Query result order"),
             )
             .arg(
-                clap::Arg::new("page-token")
-                    .long("page-token")
-                    .value_parser(clap::value_parser!(String))
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
-                    .help("Token returned by previous call to retrieve the subsequent page"),
+                    .help("Name or ID of the silo"),
             )
             .arg(
                 clap::Arg::new("start-time")
                     .long("start-time")
                     .value_parser(clap::value_parser!(chrono::DateTime<chrono::offset::Utc>))
-                    .required(false)
+                    .required(true)
                     .help("An inclusive start time of metrics."),
             )
             .about("Access metrics data")
@@ -3581,147 +3624,6 @@ impl Cli {
                     .help("XXX"),
             )
             .about("Update a silo's IAM policy")
-    }
-
-    pub fn cli_system_component_version_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
-                        ]),
-                        |s| types::IdSortMode::try_from(s).unwrap(),
-                    ))
-                    .required(false),
-            )
-            .about("View version and update status of component tree")
-    }
-
-    pub fn cli_update_deployments_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
-                        ]),
-                        |s| types::IdSortMode::try_from(s).unwrap(),
-                    ))
-                    .required(false),
-            )
-            .about("List all update deployments")
-    }
-
-    pub fn cli_update_deployment_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("id")
-                    .long("id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
-                    .required(true),
-            )
-            .about("Fetch a system update deployment")
-    }
-
-    pub fn cli_system_update_refresh() -> clap::Command {
-        clap::Command::new("").about("Refresh update data")
-    }
-
-    pub fn cli_system_update_start() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("version")
-                    .long("version")
-                    .value_parser(clap::value_parser!(types::SemverVersion))
-                    .required_unless_present("json-body"),
-            )
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Start system update")
-    }
-
-    pub fn cli_system_update_stop() -> clap::Command {
-        clap::Command::new("")
-            .about("Stop system update")
-            .long_about("If there is no update in progress, do nothing.")
-    }
-
-    pub fn cli_system_update_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .arg(
-                clap::Arg::new("sort-by")
-                    .long("sort-by")
-                    .value_parser(clap::builder::TypedValueParser::map(
-                        clap::builder::PossibleValuesParser::new([
-                            types::IdSortMode::IdAscending.to_string()
-                        ]),
-                        |s| types::IdSortMode::try_from(s).unwrap(),
-                    ))
-                    .required(false),
-            )
-            .about("List all updates")
-    }
-
-    pub fn cli_system_update_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("version")
-                    .long("version")
-                    .value_parser(clap::value_parser!(types::SemverVersion))
-                    .required(true),
-            )
-            .about("View system update")
-    }
-
-    pub fn cli_system_update_components_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("version")
-                    .long("version")
-                    .value_parser(clap::value_parser!(types::SemverVersion))
-                    .required(true),
-            )
-            .about("View system update component tree")
-    }
-
-    pub fn cli_system_version() -> clap::Command {
-        clap::Command::new("").about("View system version and update status")
     }
 
     pub fn cli_silo_user_list() -> clap::Command {
@@ -4938,6 +4840,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::CurrentUserSshKeyDelete => {
                 self.execute_current_user_ssh_key_delete(matches).await;
             }
+            CliCommand::SiloMetric => {
+                self.execute_silo_metric(matches).await;
+            }
             CliCommand::InstanceNetworkInterfaceList => {
                 self.execute_instance_network_interface_list(matches).await;
             }
@@ -5159,36 +5064,6 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SiloPolicyUpdate => {
                 self.execute_silo_policy_update(matches).await;
-            }
-            CliCommand::SystemComponentVersionList => {
-                self.execute_system_component_version_list(matches).await;
-            }
-            CliCommand::UpdateDeploymentsList => {
-                self.execute_update_deployments_list(matches).await;
-            }
-            CliCommand::UpdateDeploymentView => {
-                self.execute_update_deployment_view(matches).await;
-            }
-            CliCommand::SystemUpdateRefresh => {
-                self.execute_system_update_refresh(matches).await;
-            }
-            CliCommand::SystemUpdateStart => {
-                self.execute_system_update_start(matches).await;
-            }
-            CliCommand::SystemUpdateStop => {
-                self.execute_system_update_stop(matches).await;
-            }
-            CliCommand::SystemUpdateList => {
-                self.execute_system_update_list(matches).await;
-            }
-            CliCommand::SystemUpdateView => {
-                self.execute_system_update_view(matches).await;
-            }
-            CliCommand::SystemUpdateComponentsList => {
-                self.execute_system_update_components_list(matches).await;
-            }
-            CliCommand::SystemVersion => {
-                self.execute_system_version(matches).await;
             }
             CliCommand::SiloUserList => {
                 self.execute_silo_user_list(matches).await;
@@ -6732,6 +6607,53 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_silo_metric(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_metric();
+        if let Some(value) = matches.get_one::<types::SystemMetricName>("metric-name") {
+            request = request.metric_name(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
+            request = request.end_time(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::PaginationOrder>("order") {
+            request = request.order(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start-time")
+        {
+            request = request.start_time(value.clone());
+        }
+
+        self.over
+            .execute_silo_metric(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_instance_network_interface_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.instance_network_interface_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
@@ -7192,7 +7114,7 @@ impl<T: CliOverride> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<types::Name>("disk") {
+        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.body_map(|body| body.disk(value.clone()))
         }
 
@@ -8116,10 +8038,6 @@ impl<T: CliOverride> Cli<T> {
             request = request.end_time(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("id") {
-            request = request.id(value.clone());
-        }
-
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
@@ -8128,8 +8046,8 @@ impl<T: CliOverride> Cli<T> {
             request = request.order(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<String>("page-token") {
-            request = request.page_token(value.clone());
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
         }
 
         if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("start-time")
@@ -8140,13 +8058,19 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_system_metric(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -8701,230 +8625,6 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_silo_policy_update(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_component_version_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_component_version_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
-        self.over
-            .execute_system_component_version_list(matches, &mut request)
-            .unwrap();
-        let mut stream = request.stream();
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    println!("error\n{:#?}", r);
-                    break;
-                }
-                Ok(None) => {
-                    break;
-                }
-                Ok(Some(value)) => {
-                    println!("{:#?}", value);
-                }
-            }
-        }
-    }
-
-    pub async fn execute_update_deployments_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.update_deployments_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
-        self.over
-            .execute_update_deployments_list(matches, &mut request)
-            .unwrap();
-        let mut stream = request.stream();
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    println!("error\n{:#?}", r);
-                    break;
-                }
-                Ok(None) => {
-                    break;
-                }
-                Ok(Some(value)) => {
-                    println!("{:#?}", value);
-                }
-            }
-        }
-    }
-
-    pub async fn execute_update_deployment_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.update_deployment_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("id") {
-            request = request.id(value.clone());
-        }
-
-        self.over
-            .execute_update_deployment_view(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_update_refresh(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_update_refresh();
-        self.over
-            .execute_system_update_refresh(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_update_start(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_update_start();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::SystemUpdateStart>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        if let Some(value) = matches.get_one::<types::SemverVersion>("version") {
-            request = request.body_map(|body| body.version(value.clone()))
-        }
-
-        self.over
-            .execute_system_update_start(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_update_stop(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_update_stop();
-        self.over
-            .execute_system_update_stop(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_update_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_update_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
-            request = request.sort_by(value.clone());
-        }
-
-        self.over
-            .execute_system_update_list(matches, &mut request)
-            .unwrap();
-        let mut stream = request.stream();
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    println!("error\n{:#?}", r);
-                    break;
-                }
-                Ok(None) => {
-                    break;
-                }
-                Ok(Some(value)) => {
-                    println!("{:#?}", value);
-                }
-            }
-        }
-    }
-
-    pub async fn execute_system_update_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_update_view();
-        if let Some(value) = matches.get_one::<types::SemverVersion>("version") {
-            request = request.version(value.clone());
-        }
-
-        self.over
-            .execute_system_update_view(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_update_components_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_update_components_list();
-        if let Some(value) = matches.get_one::<types::SemverVersion>("version") {
-            request = request.version(value.clone());
-        }
-
-        self.over
-            .execute_system_update_components_list(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_system_version(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.system_version();
-        self.over
-            .execute_system_version(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -10282,6 +9982,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_silo_metric(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SiloMetric,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_instance_network_interface_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10842,86 +10550,6 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_system_component_version_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemComponentVersionList,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_update_deployments_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::UpdateDeploymentsList,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_update_deployment_view(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::UpdateDeploymentView,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_update_refresh(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemUpdateRefresh,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_update_start(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemUpdateStart,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_update_stop(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemUpdateStop,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_update_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemUpdateList,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_update_view(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemUpdateView,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_update_components_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemUpdateComponentsList,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_system_version(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SystemVersion,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
     fn execute_silo_user_list(
         &self,
         matches: &clap::ArgMatches,
@@ -11201,6 +10829,7 @@ pub enum CliCommand {
     CurrentUserSshKeyCreate,
     CurrentUserSshKeyView,
     CurrentUserSshKeyDelete,
+    SiloMetric,
     InstanceNetworkInterfaceList,
     InstanceNetworkInterfaceCreate,
     InstanceNetworkInterfaceView,
@@ -11271,16 +10900,6 @@ pub enum CliCommand {
     SiloDelete,
     SiloPolicyView,
     SiloPolicyUpdate,
-    SystemComponentVersionList,
-    UpdateDeploymentsList,
-    UpdateDeploymentView,
-    SystemUpdateRefresh,
-    SystemUpdateStart,
-    SystemUpdateStop,
-    SystemUpdateList,
-    SystemUpdateView,
-    SystemUpdateComponentsList,
-    SystemVersion,
     SiloUserList,
     SiloUserView,
     UserBuiltinList,
@@ -11364,6 +10983,7 @@ impl CliCommand {
             CliCommand::CurrentUserSshKeyCreate,
             CliCommand::CurrentUserSshKeyView,
             CliCommand::CurrentUserSshKeyDelete,
+            CliCommand::SiloMetric,
             CliCommand::InstanceNetworkInterfaceList,
             CliCommand::InstanceNetworkInterfaceCreate,
             CliCommand::InstanceNetworkInterfaceView,
@@ -11434,16 +11054,6 @@ impl CliCommand {
             CliCommand::SiloDelete,
             CliCommand::SiloPolicyView,
             CliCommand::SiloPolicyUpdate,
-            CliCommand::SystemComponentVersionList,
-            CliCommand::UpdateDeploymentsList,
-            CliCommand::UpdateDeploymentView,
-            CliCommand::SystemUpdateRefresh,
-            CliCommand::SystemUpdateStart,
-            CliCommand::SystemUpdateStop,
-            CliCommand::SystemUpdateList,
-            CliCommand::SystemUpdateView,
-            CliCommand::SystemUpdateComponentsList,
-            CliCommand::SystemVersion,
             CliCommand::SiloUserList,
             CliCommand::SiloUserView,
             CliCommand::UserBuiltinList,
