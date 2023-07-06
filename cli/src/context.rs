@@ -83,3 +83,29 @@ pub fn make_client(host: &str, token: String, config: &Config) -> Client {
 
     Client::new_with_client(host, rclient)
 }
+
+pub fn make_rclient(token: Option<String>, config: &Config) -> reqwest::ClientBuilder {
+    let mut client_builder = ClientBuilder::new().connect_timeout(Duration::from_secs(15));
+
+    if let Some(token) = token {
+        let mut bearer = HeaderValue::from_str(format!("Bearer {}", token).as_str()).unwrap();
+        bearer.set_sensitive(true);
+        client_builder = client_builder.default_headers(
+            [(http::header::AUTHORIZATION, bearer)]
+                .into_iter()
+                .collect(),
+        );
+    }
+
+    if let Some(ResolveValue { host, port, addr }) = &config.resolve {
+        client_builder = client_builder.resolve(host, SocketAddr::new(*addr, *port));
+    }
+    if let Some(cert) = &config.cert {
+        client_builder = client_builder.add_root_certificate(cert.clone());
+    }
+    if let Some(timeout) = &config.timeout {
+        client_builder = client_builder.timeout(Duration::from_secs(*timeout));
+    }
+
+    client_builder
+}

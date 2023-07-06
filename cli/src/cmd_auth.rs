@@ -18,7 +18,7 @@ use oxide_api::ClientSessionExt;
 
 use crate::{
     config::{Config, Host},
-    context::{make_client, Context},
+    context::{make_client, make_rclient, Context},
     RunnableCmd,
 };
 
@@ -193,6 +193,42 @@ impl CmdAuthLogin {
                 }
             }
 
+            let config = ctx.config();
+            let xxx = |request: oauth2::HttpRequest| async move {
+                // let client = {
+                //     let builder = reqwest::Client::builder();
+
+                //     // Following redirects opens the client up to SSRF vulnerabilities.
+                //     // but this is not possible to prevent on wasm targets
+                //     #[cfg(not(target_arch = "wasm32"))]
+                //     let builder = builder.redirect(reqwest::redirect::Policy::none());
+
+                //     builder.build()?
+                // };
+                let client = make_rclient(None, config)
+                    .redirect(reqwest::redirect::Policy::none())
+                    .build()?;
+
+                let mut request_builder = client
+                    .request(request.method, request.url.as_str())
+                    .body(request.body);
+                for (name, value) in &request.headers {
+                    request_builder = request_builder.header(name.as_str(), value.as_bytes());
+                }
+                let request = request_builder.build().unwrap(); //.map_err(Error::Reqwest)?;
+
+                let response = client.execute(request).await.unwrap(); //.map_err(Error::Reqwest)?;
+
+                let status_code = response.status();
+                let headers = response.headers().to_owned();
+                let chunks = response.bytes().await.unwrap(); //.map_err(Error::Reqwest)?;
+                std::result::Result::<_, reqwest::Error>::Ok(oauth2::HttpResponse {
+                    status_code,
+                    headers,
+                    body: chunks.to_vec(),
+                })
+            };
+
             // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
             let device_auth_url =
                 DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
@@ -208,7 +244,8 @@ impl CmdAuthLogin {
 
             let details: StandardDeviceAuthorizationResponse = auth_client
                 .exchange_device_code()?
-                .request_async(async_http_client)
+                // .request_async(async_http_client)
+                .request_async(xxx)
                 .await?;
 
             let uri = details.verification_uri().to_string();
