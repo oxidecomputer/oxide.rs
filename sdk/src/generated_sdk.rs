@@ -1740,8 +1740,6 @@ pub mod types {
     /// Create-time parameters for an `Image`
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ImageCreate {
-        /// block size in bytes
-        pub block_size: BlockSize,
         pub description: String,
         pub name: Name,
         /// The family of the operating system (e.g. Debian, Ubuntu, etc.)
@@ -1791,7 +1789,11 @@ pub mod types {
     #[serde(tag = "type")]
     pub enum ImageSource {
         #[serde(rename = "url")]
-        Url { url: String },
+        Url {
+            /// The block size in bytes
+            block_size: BlockSize,
+            url: String,
+        },
         #[serde(rename = "snapshot")]
         Snapshot { id: uuid::Uuid },
         #[serde(rename = "you_can_boot_anything_as_long_as_its_alpine")]
@@ -9771,7 +9773,6 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct ImageCreate {
-            block_size: Result<super::BlockSize, String>,
             description: Result<String, String>,
             name: Result<super::Name, String>,
             os: Result<String, String>,
@@ -9782,7 +9783,6 @@ pub mod types {
         impl Default for ImageCreate {
             fn default() -> Self {
                 Self {
-                    block_size: Err("no value supplied for block_size".to_string()),
                     description: Err("no value supplied for description".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     os: Err("no value supplied for os".to_string()),
@@ -9793,16 +9793,6 @@ pub mod types {
         }
 
         impl ImageCreate {
-            pub fn block_size<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::BlockSize>,
-                T::Error: std::fmt::Display,
-            {
-                self.block_size = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for block_size: {}", e));
-                self
-            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -9859,7 +9849,6 @@ pub mod types {
             type Error = String;
             fn try_from(value: ImageCreate) -> Result<Self, String> {
                 Ok(Self {
-                    block_size: value.block_size?,
                     description: value.description?,
                     name: value.name?,
                     os: value.os?,
@@ -9872,7 +9861,6 @@ pub mod types {
         impl From<super::ImageCreate> for ImageCreate {
             fn from(value: super::ImageCreate) -> Self {
                 Self {
-                    block_size: Ok(value.block_size),
                     description: Ok(value.description),
                     name: Ok(value.name),
                     os: Ok(value.os),
