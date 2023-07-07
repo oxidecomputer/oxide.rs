@@ -223,7 +223,7 @@
       "subcommands": [
         {
           "name": "groups",
-          "about": "Fetch the silo groups the current user belongs to",
+          "about": "Fetch the silo groups the current user belongs to",
           "args": [
             {
               "long": "limit",
@@ -683,14 +683,6 @@
           "about": "List images",
           "long_about": "List images which are global or scoped to the specified project. The images are returned sorted by creation date, with the most recent images appearing first.",
           "args": [
-            {
-              "long": "include-silo-images",
-              "values": [
-                "true",
-                "false"
-              ],
-              "help": "Flag used to indicate if silo scoped images should be included when listing project images. Only valid when `project` is provided."
-            },
             {
               "long": "limit",
               "help": "Maximum number of items returned by a single call"

@@ -1538,22 +1538,6 @@ pub mod operations {
             self.0
         }
 
-        pub fn include_silo_images<T>(self, value: T) -> Self
-        where
-            T: Into<Option<bool>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("include_silo_images", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "include_silo_images"))
-                        .is_none()
-                }))
-            }
-        }
-
         pub fn limit<T>(self, value: T) -> Self
         where
             T: Into<Option<std::num::NonZeroU32>>,
