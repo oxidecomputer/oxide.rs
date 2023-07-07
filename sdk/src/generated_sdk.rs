@@ -19783,7 +19783,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_view(&self) -> builder::CurrentUserView;
-    /// Fetch the silo groups the current user belongs to
+    /// Fetch the silo groups the current user belongs to
     ///
     /// Sends a `GET` request to `/v1/me/groups`
     ///

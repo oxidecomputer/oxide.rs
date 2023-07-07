@@ -223,7 +223,7 @@
       "subcommands": [
         {
           "name": "groups",
-          "about": "Fetch the silo groups the current user belongs to",
+          "about": "Fetch the silo groups the current user belongs to",
           "args": [
             {
               "long": "limit",
@@ -1948,7 +1948,7 @@
             },
             {
               "long": "disk",
-              "help": "The name of the disk to be snapshotted"
+              "help": "The disk to be snapshotted"
             },
             {
               "long": "json-body",

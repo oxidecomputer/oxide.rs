@@ -473,19 +473,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::Logout
         | CliCommand::RoleList
         | CliCommand::RoleView
-        | CliCommand::SystemComponentVersionList
+        | CliCommand::SiloMetric
         | CliCommand::SystemMetric
-        | CliCommand::SystemUpdateComponentsList
-        | CliCommand::SystemUpdateList
-        | CliCommand::SystemUpdateRefresh
-        | CliCommand::SystemUpdateStart
-        | CliCommand::SystemUpdateStop
-        | CliCommand::SystemUpdateView
-        | CliCommand::UpdateDeploymentsList
-        | CliCommand::UpdateDeploymentView
         | CliCommand::UserBuiltinList
-        | CliCommand::UserBuiltinView
-        | CliCommand::SystemVersion => None,
+        | CliCommand::UserBuiltinView => None,
     }
 }
 

@@ -1582,7 +1582,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("Fetch the silo\u{a0}groups the current user belongs to")
+            .about("Fetch the silo groups the current user belongs to")
     }
 
     pub fn cli_current_user_ssh_key_list() -> clap::Command {
