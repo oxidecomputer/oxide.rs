@@ -818,16 +818,6 @@ impl Cli {
     pub fn cli_image_list() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("include-silo-images")
-                    .long("include-silo-images")
-                    .value_parser(clap::value_parser!(bool))
-                    .required(false)
-                    .help(
-                        "Flag used to indicate if silo scoped images should be included when \
-                         listing project images. Only valid when `project` is provided.",
-                    ),
-            )
-            .arg(
                 clap::Arg::new("limit")
                     .long("limit")
                     .value_parser(clap::value_parser!(std::num::NonZeroU32))
@@ -1582,7 +1572,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("Fetch the silo groups the current user belongs to")
+            .about("Fetch the silo\u{a0}groups the current user belongs to")
     }
 
     pub fn cli_current_user_ssh_key_list() -> clap::Command {
@@ -5744,10 +5734,6 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_image_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.image_list();
-        if let Some(value) = matches.get_one::<bool>("include-silo-images") {
-            request = request.include_silo_images(value.clone());
-        }
-
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }

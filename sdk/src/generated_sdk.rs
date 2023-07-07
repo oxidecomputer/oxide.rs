@@ -3586,7 +3586,6 @@ pub mod types {
     /// Instance Disk data as well as internal metadata.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct PhysicalDisk {
-        pub disk_type: PhysicalDiskType,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         pub model: String,
@@ -3632,73 +3631,6 @@ pub mod types {
     impl PhysicalDiskResultsPage {
         pub fn builder() -> builder::PhysicalDiskResultsPage {
             builder::PhysicalDiskResultsPage::default()
-        }
-    }
-
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        Deserialize,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        Serialize,
-        schemars :: JsonSchema,
-    )]
-    pub enum PhysicalDiskType {
-        #[serde(rename = "internal")]
-        Internal,
-        #[serde(rename = "external")]
-        External,
-    }
-
-    impl From<&PhysicalDiskType> for PhysicalDiskType {
-        fn from(value: &PhysicalDiskType) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ToString for PhysicalDiskType {
-        fn to_string(&self) -> String {
-            match *self {
-                Self::Internal => "internal".to_string(),
-                Self::External => "external".to_string(),
-            }
-        }
-    }
-
-    impl std::str::FromStr for PhysicalDiskType {
-        type Err = &'static str;
-        fn from_str(value: &str) -> Result<Self, &'static str> {
-            match value {
-                "internal" => Ok(Self::Internal),
-                "external" => Ok(Self::External),
-                _ => Err("invalid value"),
-            }
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for PhysicalDiskType {
-        type Error = &'static str;
-        fn try_from(value: &str) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for PhysicalDiskType {
-        type Error = &'static str;
-        fn try_from(value: &String) -> Result<Self, &'static str> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for PhysicalDiskType {
-        type Error = &'static str;
-        fn try_from(value: String) -> Result<Self, &'static str> {
-            value.parse()
         }
     }
 
@@ -11998,7 +11930,6 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct PhysicalDisk {
-            disk_type: Result<super::PhysicalDiskType, String>,
             id: Result<uuid::Uuid, String>,
             model: Result<String, String>,
             serial: Result<String, String>,
@@ -12011,7 +11942,6 @@ pub mod types {
         impl Default for PhysicalDisk {
             fn default() -> Self {
                 Self {
-                    disk_type: Err("no value supplied for disk_type".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     model: Err("no value supplied for model".to_string()),
                     serial: Err("no value supplied for serial".to_string()),
@@ -12024,16 +11954,6 @@ pub mod types {
         }
 
         impl PhysicalDisk {
-            pub fn disk_type<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::PhysicalDiskType>,
-                T::Error: std::fmt::Display,
-            {
-                self.disk_type = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for disk_type: {}", e));
-                self
-            }
             pub fn id<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<uuid::Uuid>,
@@ -12110,7 +12030,6 @@ pub mod types {
             type Error = String;
             fn try_from(value: PhysicalDisk) -> Result<Self, String> {
                 Ok(Self {
-                    disk_type: value.disk_type?,
                     id: value.id?,
                     model: value.model?,
                     serial: value.serial?,
@@ -12125,7 +12044,6 @@ pub mod types {
         impl From<super::PhysicalDisk> for PhysicalDisk {
             fn from(value: super::PhysicalDisk) -> Self {
                 Self {
-                    disk_type: Ok(value.disk_type),
                     id: Ok(value.id),
                     model: Ok(value.model),
                     serial: Ok(value.serial),
@@ -18883,9 +18801,6 @@ pub trait ClientImagesExt {
     /// Sends a `GET` request to `/v1/images`
     ///
     /// Arguments:
-    /// - `include_silo_images`: Flag used to indicate if silo scoped images
-    ///   should be included when listing project images. Only valid when
-    ///   `project` is provided.
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
@@ -18893,7 +18808,6 @@ pub trait ClientImagesExt {
     /// - `sort_by`
     /// ```ignore
     /// let response = client.image_list()
-    ///    .include_silo_images(include_silo_images)
     ///    .limit(limit)
     ///    .page_token(page_token)
     ///    .project(project)
@@ -19783,7 +19697,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_view(&self) -> builder::CurrentUserView;
-    /// Fetch the silo groups the current user belongs to
+    /// Fetch the silo groups the current user belongs to
     ///
     /// Sends a `GET` request to `/v1/me/groups`
     ///
@@ -23798,7 +23712,6 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct ImageList<'a> {
         client: &'a super::Client,
-        include_silo_images: Result<Option<bool>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -23809,23 +23722,11 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client,
-                include_silo_images: Ok(None),
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
                 sort_by: Ok(None),
             }
-        }
-
-        pub fn include_silo_images<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<bool>,
-        {
-            self.include_silo_images = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `bool` for include_silo_images failed".to_string());
-            self
         }
 
         pub fn limit<V>(mut self, value: V) -> Self
@@ -23877,22 +23778,17 @@ pub mod builder {
         ) -> Result<ResponseValue<types::ImageResultsPage>, Error<types::Error>> {
             let Self {
                 client,
-                include_silo_images,
                 limit,
                 page_token,
                 project,
                 sort_by,
             } = self;
-            let include_silo_images = include_silo_images.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/images", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
-            if let Some(v) = &include_silo_images {
-                query.push(("include_silo_images", v.to_string()));
-            }
+            let mut query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
             }
@@ -23945,7 +23841,6 @@ pub mod builder {
                 .map(std::num::NonZeroUsize::get)
                 .unwrap_or(usize::MAX);
             let next = Self {
-                include_silo_images: Ok(None),
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
