@@ -10,15 +10,14 @@ use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
 use clap::Parser;
 use oauth2::{
-    basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse,
-    reqwest::async_http_client, AuthType, AuthUrl, ClientId, DeviceAuthorizationUrl, TokenResponse,
-    TokenUrl,
+    basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse, AuthType, AuthUrl,
+    ClientId, DeviceAuthorizationUrl, TokenResponse, TokenUrl,
 };
 use oxide_api::ClientSessionExt;
 
 use crate::{
     config::{Config, Host},
-    context::{make_client, Context},
+    context::{make_client, make_rclient, Context},
     RunnableCmd,
 };
 
@@ -193,6 +192,37 @@ impl CmdAuthLogin {
                 }
             }
 
+            let config = ctx.config();
+
+            // Copied from oauth2::async_http_client to customize the
+            // reqwest::Client with the top-level command-line options.
+            let async_http_client_custom = |request: oauth2::HttpRequest| async move {
+                let client = make_rclient(None, config)
+                    // Following redirects opens the client up to SSRF
+                    // vulnerabilities.
+                    .redirect(reqwest::redirect::Policy::none())
+                    .build()?;
+
+                let mut request_builder = client
+                    .request(request.method, request.url.as_str())
+                    .body(request.body);
+                for (name, value) in &request.headers {
+                    request_builder = request_builder.header(name.as_str(), value.as_bytes());
+                }
+                let request = request_builder.build()?;
+
+                let response = client.execute(request).await?;
+
+                let status_code = response.status();
+                let headers = response.headers().to_owned();
+                let chunks = response.bytes().await?;
+                std::result::Result::<_, reqwest::Error>::Ok(oauth2::HttpResponse {
+                    status_code,
+                    headers,
+                    body: chunks.to_vec(),
+                })
+            };
+
             // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
             let device_auth_url =
                 DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
@@ -208,7 +238,7 @@ impl CmdAuthLogin {
 
             let details: StandardDeviceAuthorizationResponse = auth_client
                 .exchange_device_code()?
-                .request_async(async_http_client)
+                .request_async(async_http_client_custom)
                 .await?;
 
             let uri = details.verification_uri().to_string();
@@ -230,7 +260,7 @@ impl CmdAuthLogin {
 
             auth_client
                 .exchange_device_access_token(&details)
-                .request_async(async_http_client, tokio::time::sleep, None)
+                .request_async(async_http_client_custom, tokio::time::sleep, None)
                 .await?
                 .access_token()
                 .secret()
