@@ -5764,7 +5764,7 @@ pub mod types {
     pub struct UserCreate {
         /// username used to log in
         pub external_id: UserId,
-        /// password used to log in
+        /// how to set the user's login password
         pub password: UserPassword,
     }
 
@@ -5854,13 +5854,13 @@ pub mod types {
 
     /// Parameters for setting a user's password
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    #[serde(tag = "user_password_value", content = "details")]
+    #[serde(tag = "mode", content = "value")]
     pub enum UserPassword {
         /// Sets the user's password to the provided value
         #[serde(rename = "password")]
         Password(Password),
-        #[serde(rename = "invalid_password")]
-        InvalidPassword,
+        #[serde(rename = "login_disallowed")]
+        LoginDisallowed,
     }
 
     impl From<&UserPassword> for UserPassword {
