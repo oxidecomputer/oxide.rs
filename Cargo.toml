@@ -55,7 +55,7 @@ thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
 tokio = { version = "1.29.1", features = ["full"] }
 tokio-tungstenite = "0.19.0"
 toml = "0.7.5"
-toml_edit = "0.19.11"
+toml_edit = "0.19.12"
 url = "2.4.0"
 uuid = { version = "1.4.0", features = ["serde", "v4"] }
 
