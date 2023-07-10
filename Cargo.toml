@@ -24,7 +24,7 @@ env_logger = "0.10.0"
 expectorate = { git = "https://github.com/oxidecomputer/expectorate", features = ["predicates"] }
 futures = "0.3.28"
 http = "0.2.9"
-httpmock = "0.6.7"
+httpmock = "0.6.8"
 indicatif = "0.17"
 log = "0.4.19"
 newline-converter = "0.3.0"
