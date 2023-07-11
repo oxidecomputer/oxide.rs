@@ -3586,6 +3586,7 @@ pub mod types {
     /// Instance Disk data as well as internal metadata.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct PhysicalDisk {
+        pub form_factor: PhysicalDiskKind,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         pub model: String,
@@ -3609,6 +3610,75 @@ pub mod types {
     impl PhysicalDisk {
         pub fn builder() -> builder::PhysicalDisk {
             builder::PhysicalDisk::default()
+        }
+    }
+
+    /// Describes the form factor of physical disks.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    #[serde(tag = "type")]
+    pub enum PhysicalDiskKind {
+        #[serde(rename = "m2")]
+        M2,
+        #[serde(rename = "u2")]
+        U2,
+    }
+
+    impl From<&PhysicalDiskKind> for PhysicalDiskKind {
+        fn from(value: &PhysicalDiskKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for PhysicalDiskKind {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::M2 => "m2".to_string(),
+                Self::U2 => "u2".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for PhysicalDiskKind {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "m2" => Ok(Self::M2),
+                "u2" => Ok(Self::U2),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for PhysicalDiskKind {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for PhysicalDiskKind {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for PhysicalDiskKind {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
         }
     }
 
@@ -11930,6 +12000,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct PhysicalDisk {
+            form_factor: Result<super::PhysicalDiskKind, String>,
             id: Result<uuid::Uuid, String>,
             model: Result<String, String>,
             serial: Result<String, String>,
@@ -11942,6 +12013,7 @@ pub mod types {
         impl Default for PhysicalDisk {
             fn default() -> Self {
                 Self {
+                    form_factor: Err("no value supplied for form_factor".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     model: Err("no value supplied for model".to_string()),
                     serial: Err("no value supplied for serial".to_string()),
@@ -11954,6 +12026,16 @@ pub mod types {
         }
 
         impl PhysicalDisk {
+            pub fn form_factor<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::PhysicalDiskKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.form_factor = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for form_factor: {}", e));
+                self
+            }
             pub fn id<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<uuid::Uuid>,
@@ -12030,6 +12112,7 @@ pub mod types {
             type Error = String;
             fn try_from(value: PhysicalDisk) -> Result<Self, String> {
                 Ok(Self {
+                    form_factor: value.form_factor?,
                     id: value.id?,
                     model: value.model?,
                     serial: value.serial?,
@@ -12044,6 +12127,7 @@ pub mod types {
         impl From<super::PhysicalDisk> for PhysicalDisk {
             fn from(value: super::PhysicalDisk) -> Self {
                 Self {
+                    form_factor: Ok(value.form_factor),
                     id: Ok(value.id),
                     model: Ok(value.model),
                     serial: Ok(value.serial),
