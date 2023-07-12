@@ -3627,7 +3627,6 @@ pub mod types {
         Serialize,
         schemars :: JsonSchema,
     )]
-    #[serde(tag = "type")]
     pub enum PhysicalDiskKind {
         #[serde(rename = "m2")]
         M2,
