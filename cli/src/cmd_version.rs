@@ -24,7 +24,10 @@ pub struct CmdVersion;
 #[async_trait]
 impl RunnableCmd for CmdVersion {
     async fn run(&self, _ctx: &Context) -> Result<()> {
-        println!("Oxide CLI {}", built_info::PKG_VERSION);
+        let cli_version = built_info::PKG_VERSION;
+        let api_version = Client::new("").api_version();
+
+        println!("Oxide CLI {}", cli_version);
 
         println!(
             "Built from commit: {} {}",
@@ -36,8 +39,7 @@ impl RunnableCmd for CmdVersion {
             }
         );
 
-        let client = Client::new("");
-        println!("Oxide API: {}", client.api_version());
+        println!("Oxide API: {}", api_version);
 
         Ok(())
     }
@@ -48,15 +50,19 @@ fn version_success() {
     use assert_cmd::Command;
 
     let mut cmd = Command::cargo_bin("oxide").unwrap();
+    let cli_version = built_info::PKG_VERSION;
+    let api_version = Client::new("").api_version();
 
     cmd.arg("version");
     cmd.assert().success().stdout(format!(
-        "Oxide CLI 0.1.0\nBuilt from commit: {} {}\nOxide API: 0.0.1\n",
+        "Oxide CLI {}\nBuilt from commit: {} {}\nOxide API: {}\n",
+        cli_version,
         built_info::GIT_COMMIT_HASH.unwrap(),
         if matches!(built_info::GIT_DIRTY, Some(true)) {
             "(dirty)"
         } else {
             ""
-        }
+        },
+        api_version,
     ));
 }

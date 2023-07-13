@@ -1,13 +1,17 @@
 [package]
 name = "oxide"
 description = "CLI for the Oxide rack"
-version = "0.1.0"
+version = "0.1.0-beta.1"
 edition = "2021"
 license = "MPL-2.0"
 repository = "https://github.com/oxidecomputer/oxide.rs"
 readme = "README.md"
+publish = false
 
 default-run = "oxide"
+
+[package.metadata.dist]
+dist = true
 
 [dependencies]
 anyhow = { workspace = true }
