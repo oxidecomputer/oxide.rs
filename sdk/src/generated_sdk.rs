@@ -3002,6 +3002,9 @@ pub mod types {
         /// The name or id of the address lot this loopback address will pull an
         /// address from.
         pub address_lot: NameOrId,
+        /// Address is an anycast address. This allows the address to be
+        /// assigned to multiple locations simultaneously.
+        pub anycast: bool,
         /// The subnet mask to use for the address.
         pub mask: u8,
         /// The containing the switch this loopback address will be configured
@@ -11731,6 +11734,7 @@ pub mod types {
         pub struct LoopbackAddressCreate {
             address: Result<std::net::IpAddr, String>,
             address_lot: Result<super::NameOrId, String>,
+            anycast: Result<bool, String>,
             mask: Result<u8, String>,
             rack_id: Result<uuid::Uuid, String>,
             switch_location: Result<super::Name, String>,
@@ -11741,6 +11745,7 @@ pub mod types {
                 Self {
                     address: Err("no value supplied for address".to_string()),
                     address_lot: Err("no value supplied for address_lot".to_string()),
+                    anycast: Err("no value supplied for anycast".to_string()),
                     mask: Err("no value supplied for mask".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
                     switch_location: Err("no value supplied for switch_location".to_string()),
@@ -11767,6 +11772,16 @@ pub mod types {
                 self.address_lot = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for address_lot: {}", e));
+                self
+            }
+            pub fn anycast<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.anycast = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for anycast: {}", e));
                 self
             }
             pub fn mask<T>(mut self, value: T) -> Self
@@ -11807,6 +11822,7 @@ pub mod types {
                 Ok(Self {
                     address: value.address?,
                     address_lot: value.address_lot?,
+                    anycast: value.anycast?,
                     mask: value.mask?,
                     rack_id: value.rack_id?,
                     switch_location: value.switch_location?,
@@ -11819,6 +11835,7 @@ pub mod types {
                 Self {
                     address: Ok(value.address),
                     address_lot: Ok(value.address_lot),
+                    anycast: Ok(value.anycast),
                     mask: Ok(value.mask),
                     rack_id: Ok(value.rack_id),
                     switch_location: Ok(value.switch_location),

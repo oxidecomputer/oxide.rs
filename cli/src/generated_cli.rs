@@ -3250,6 +3250,16 @@ impl Cli {
                     ),
             )
             .arg(
+                clap::Arg::new("anycast")
+                    .long("anycast")
+                    .value_parser(clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help(
+                        "Address is an anycast address. This allows the address to be assigned to \
+                         multiple locations simultaneously.",
+                    ),
+            )
+            .arg(
                 clap::Arg::new("mask")
                     .long("mask")
                     .value_parser(clap::value_parser!(u8))
@@ -8224,6 +8234,10 @@ impl<T: CliOverride> Cli<T> {
 
         if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
             request = request.body_map(|body| body.address_lot(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<bool>("anycast") {
+            request = request.body_map(|body| body.anycast(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<u8>("mask") {
