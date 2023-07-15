@@ -736,7 +736,7 @@ fn test_disk_import_required_parameters() {
     bad_path.push("does.not.exist");
 
     let output = format!(
-        "error: path {} does not exist",
+        "path {} does not exist",
         bad_path.clone().into_os_string().to_str().unwrap()
     );
 
@@ -767,5 +767,5 @@ fn test_disk_import_required_parameters() {
         .arg("value")
         .assert()
         .failure()
-        .stdout(predicate::str::starts_with(output));
+        .stderr(predicate::str::starts_with(output));
 }
