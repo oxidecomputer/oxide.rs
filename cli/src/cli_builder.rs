@@ -229,7 +229,7 @@ impl<'a> NewCli<'a> {
         if let Some(timeout) = timeout {
             config = config.with_timeout(timeout);
         }
-        let ctx = Context::new(config).unwrap();
+        let ctx = Context::new(config)?;
 
         let mut node = &runner;
         let mut sm = &matches;

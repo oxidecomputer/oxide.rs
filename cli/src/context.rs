@@ -38,8 +38,12 @@ fn get_client(config: &Config) -> Result<Option<Client>> {
         (Ok(host), Ok(token)) => (host, token),
         (Ok(host), Err(_)) => {
             let Some(host_entry) = config.hosts.get(&host) else {
-                    return Err(anyhow!("host {} not found", host));
-                };
+                return Err(anyhow!(
+                    "$OXIDE_HOST is set, but {} has no corresponding token.\n{}",
+                    host,
+                    "Login without $OXIDE_HOST set or set $OXIDE_TOKEN."
+                ));
+            };
             (host, host_entry.token.clone())
         }
         (Err(_), Ok(token)) => {
