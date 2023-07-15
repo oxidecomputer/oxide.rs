@@ -5,6 +5,7 @@ oxide system networking address-lot create
 oxide system networking switch-port-settings create
 oxide system policy update
 oxide silo idp local user create
+oxide silo idp local user set-password
 oxide silo create
 oxide silo policy update
 oxide vpc firewall-rules update
