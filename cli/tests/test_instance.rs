@@ -113,11 +113,11 @@ fn test_instance_serial_console() {
     // depending on the OS.
     #[cfg(target_family = "unix")]
     let pred = predicate::str::starts_with(
-        "error: Failed to set raw mode: tcgetattr(stdout, termios) call failed:",
+        "Failed to set raw mode: tcgetattr(stdout, termios) call failed:",
     );
     #[cfg(target_family = "windows")]
     let pred = predicate::str::starts_with(
-        "error: Failed to set raw mode: GetConsoleMode(hConsoleHandle, lpMode) call failed:",
+        "Failed to set raw mode: GetConsoleMode(hConsoleHandle, lpMode) call failed:",
     );
 
     Command::cargo_bin("oxide")
@@ -134,7 +134,7 @@ fn test_instance_serial_console() {
         .arg("--most-recent=3")
         .assert()
         .failure()
-        .stdout(pred);
+        .stderr(pred);
 
     mock.assert();
 }
