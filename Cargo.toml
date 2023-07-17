@@ -57,7 +57,7 @@ tokio-tungstenite = "0.19.0"
 toml = "0.7.6"
 toml_edit = "0.19.11"
 url = "2.4.0"
-uuid = { version = "1.4.0", features = ["serde", "v4"] }
+uuid = { version = "1.4.1", features = ["serde", "v4"] }
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]
