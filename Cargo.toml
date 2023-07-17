@@ -9,7 +9,7 @@ members = [
 
 [workspace.dependencies]
 anyhow = "1.0.72"
-assert_cmd = "2.0.11"
+assert_cmd = "2.0.12"
 async-trait = "0.1.71"
 base64 = "0.21.2"
 built = { version = "0.6.1", features = ["git2"] }
