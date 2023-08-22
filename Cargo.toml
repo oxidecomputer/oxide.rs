@@ -40,7 +40,7 @@ rand = "0.8.5"
 rcgen = "0.10.0"
 regex = "1.9.3"
 regress = "0.6.0"
-reqwest = { version = "0.11.18", features = ["native-tls-vendored"] }
+reqwest = { version = "0.11.19", features = ["native-tls-vendored"] }
 rustfmt-wrapper = "0.2.0"
 schemars = { version = "0.8.12", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.168", features = ["derive"] }
