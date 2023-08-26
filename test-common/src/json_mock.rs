@@ -67,14 +67,13 @@ where
         let value = mock_schema_object(&root.schema, &root.definitions, src)?;
 
         let Ok(instance) = serde_json::from_value(value.clone()) else {
-            panic!("{}\nvalue:\n{}\nschema:\n{}",
+            panic!(
+                "{}\nvalue:\n{}\nschema:\n{}",
                 "the generated value could not be serialized; \
                 likely, the generated value omitted some constraint, but it's \
                 possible that the JsonSchema and Serialize impls diverge.",
-                serde_json::to_string_pretty(&value)
-                    .unwrap_or("<error>".to_string()),
-                serde_json::to_string_pretty(&root)
-                    .unwrap_or("<error>".to_string()),
+                serde_json::to_string_pretty(&value).unwrap_or("<error>".to_string()),
+                serde_json::to_string_pretty(&root).unwrap_or("<error>".to_string()),
             )
         };
 
@@ -247,7 +246,7 @@ fn mock_schema_object(
                 panic!("invalid reference name {}", ref_name);
             };
 
-            let Some(schema) = definitions.get(&ref_name[ii+1..]) else {
+            let Some(schema) = definitions.get(&ref_name[ii + 1..]) else {
                 panic!();
             };
 

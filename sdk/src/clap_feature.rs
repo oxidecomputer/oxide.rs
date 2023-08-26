@@ -144,8 +144,9 @@ mod tests {
         let cmd = clap::Command::new("cmd");
         let arg = None;
         let value = std::ffi::OsStr::new("1.21jiggabytes");
-        let Err(err) = parser.parse_ref(&cmd, arg, value)
-        else { panic!() };
+        let Err(err) = parser.parse_ref(&cmd, arg, value) else {
+            panic!()
+        };
         assert!(err.to_string().contains("unknown suffix"), "{err}",);
     }
 
@@ -155,8 +156,9 @@ mod tests {
         let cmd = clap::Command::new("cmd");
         let arg = None;
         let value = std::ffi::OsStr::new("123");
-        let Err(err) = parser.parse_ref(&cmd, arg, value)
-        else { panic!() };
+        let Err(err) = parser.parse_ref(&cmd, arg, value) else {
+            panic!()
+        };
         assert!(
             err.to_string()
                 .contains("block size must be 512, 2048, or 4096"),
@@ -170,8 +172,9 @@ mod tests {
         let cmd = clap::Command::new("cmd");
         let arg = None;
         let value = std::ffi::OsStr::new("123");
-        let Err(err) = parser.parse_ref(&cmd, arg, value)
-        else { panic!() };
+        let Err(err) = parser.parse_ref(&cmd, arg, value) else {
+            panic!()
+        };
         assert!(
             err.to_string().contains("value must be a UUID or name"),
             "{err}",
