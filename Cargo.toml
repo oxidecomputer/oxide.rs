@@ -12,7 +12,7 @@ resolver = "2"
 anyhow = "1.0.75"
 assert_cmd = "2.0.12"
 async-trait = "0.1.73"
-base64 = "0.21.2"
+base64 = "0.21.3"
 built = { version = "0.6.1", features = ["git2"] }
 chrono = { version = "0.4.26", features = ["serde"] }
 clap = { version = "4.4", features = ["derive", "string", "env"] }
