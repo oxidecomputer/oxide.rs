@@ -223,8 +223,7 @@ impl RunnableCmd for CmdApi {
             let PaginatedResponse { items, next_page } = resp.json::<PaginatedResponse>().await?;
             let first = futures::stream::once(futures::future::ready(Ok(items)));
             let rest = futures::stream::try_unfold(next_page, |maybe_page_token| async {
-                let Some(page_token) = maybe_page_token
-                else {
+                let Some(page_token) = maybe_page_token else {
                     return Result::<Option<(Vec<serde_json::Value>, Option<String>)>>::Ok(None);
                 };
                 let uri = format!(

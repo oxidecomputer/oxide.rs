@@ -93,9 +93,7 @@ impl<'a> Default for NewCli<'a> {
         let mut parser = OxideCli::command().name("oxide").subcommand_required(true);
         let mut runner = CommandBuilder::default();
         for op in CliCommand::iter() {
-            let Some(path) = xxx(op) else {
-                continue
-            };
+            let Some(path) = xxx(op) else { continue };
             runner.add_cmd(path, GeneratedCmd(op));
 
             let cmd = Cli::get_command(op);
