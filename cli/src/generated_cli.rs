@@ -2823,10 +2823,32 @@ impl Cli {
                     .required_unless_present("json-body"),
             )
             .arg(
+                clap::Arg::new("is-default")
+                    .long("is-default")
+                    .value_parser(clap::value_parser!(bool))
+                    .required(false)
+                    .help(
+                        "Whether the IP pool is considered a default pool for its scope (fleet or \
+                         silo). If a pool is marked default and is associated with a silo, \
+                         instances created in that silo will draw IPs from that pool unless \
+                         another pool is specified at instance create time.",
+                    ),
+            )
+            .arg(
                 clap::Arg::new("name")
                     .long("name")
                     .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "If an IP pool is associated with a silo, instance IP allocations in that \
+                         silo can draw from that pool.",
+                    ),
             )
             .arg(
                 clap::Arg::new("json-body")
@@ -7758,8 +7780,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
+        if let Some(value) = matches.get_one::<bool>("is-default") {
+            request = request.body_map(|body| body.is_default(value.clone()))
+        }
+
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.body_map(|body| body.silo(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
