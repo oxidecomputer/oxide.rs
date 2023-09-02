@@ -2499,8 +2499,11 @@ pub mod types {
         pub description: String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
+        pub is_default: bool,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub silo_id: Option<uuid::Uuid>,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -2523,7 +2526,17 @@ pub mod types {
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPoolCreate {
         pub description: String,
+        /// Whether the IP pool is considered a default pool for its scope
+        /// (fleet or silo). If a pool is marked default and is associated with
+        /// a silo, instances created in that silo will draw IPs from that pool
+        /// unless another pool is specified at instance create time.
+        #[serde(default)]
+        pub is_default: bool,
         pub name: Name,
+        /// If an IP pool is associated with a silo, instance IP allocations in
+        /// that silo can draw from that pool.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub silo: Option<NameOrId>,
     }
 
     impl From<&IpPoolCreate> for IpPoolCreate {
@@ -10990,7 +11003,9 @@ pub mod types {
         pub struct IpPool {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
+            is_default: Result<bool, String>,
             name: Result<super::Name, String>,
+            silo_id: Result<Option<uuid::Uuid>, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
         }
@@ -11000,7 +11015,9 @@ pub mod types {
                 Self {
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    is_default: Err("no value supplied for is_default".to_string()),
                     name: Err("no value supplied for name".to_string()),
+                    silo_id: Ok(Default::default()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                 }
@@ -11028,6 +11045,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
+                self
+            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::Name>,
@@ -11036,6 +11063,16 @@ pub mod types {
                 self.name = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn silo_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -11066,7 +11103,9 @@ pub mod types {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
+                    is_default: value.is_default?,
                     name: value.name?,
+                    silo_id: value.silo_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                 })
@@ -11078,7 +11117,9 @@ pub mod types {
                 Self {
                     description: Ok(value.description),
                     id: Ok(value.id),
+                    is_default: Ok(value.is_default),
                     name: Ok(value.name),
+                    silo_id: Ok(value.silo_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                 }
@@ -11088,14 +11129,18 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct IpPoolCreate {
             description: Result<String, String>,
+            is_default: Result<bool, String>,
             name: Result<super::Name, String>,
+            silo: Result<Option<super::NameOrId>, String>,
         }
 
         impl Default for IpPoolCreate {
             fn default() -> Self {
                 Self {
                     description: Err("no value supplied for description".to_string()),
+                    is_default: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
+                    silo: Ok(Default::default()),
                 }
             }
         }
@@ -11111,6 +11156,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
+                self
+            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::Name>,
@@ -11121,6 +11176,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
+            pub fn silo<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<IpPoolCreate> for super::IpPoolCreate {
@@ -11128,7 +11193,9 @@ pub mod types {
             fn try_from(value: IpPoolCreate) -> Result<Self, String> {
                 Ok(Self {
                     description: value.description?,
+                    is_default: value.is_default?,
                     name: value.name?,
+                    silo: value.silo?,
                 })
             }
         }
@@ -11137,7 +11204,9 @@ pub mod types {
             fn from(value: super::IpPoolCreate) -> Self {
                 Self {
                     description: Ok(value.description),
+                    is_default: Ok(value.is_default),
                     name: Ok(value.name),
+                    silo: Ok(value.silo),
                 }
             }
         }

@@ -18,7 +18,7 @@ chrono = { version = "0.4.26", features = ["serde"] }
 clap = { version = "4.4", features = ["derive", "string", "env"] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
-dropshot = "0.9.0"
+dropshot = { git = "https://github.com/oxidecomputer/dropshot" }
 env_logger = "0.10.0"
 # TODO need a new expectorate release after we're happy with it
 #expectorate = { version = "1.0.8", features = ["predicates"] }
