@@ -8400,6 +8400,522 @@ pub mod operations {
         }
     }
 
+    pub struct NetworkingBgpConfigListWhen(httpmock::When);
+    impl NetworkingBgpConfigListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/networking/bgp$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn name_or_id<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("name_or_id", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "name_or_id"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct NetworkingBgpConfigListThen(httpmock::Then);
+    impl NetworkingBgpConfigListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::BgpConfigResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingBgpConfigCreateWhen(httpmock::When);
+    impl NetworkingBgpConfigCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/networking/bgp$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::BgpConfigCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingBgpConfigCreateThen(httpmock::Then);
+    impl NetworkingBgpConfigCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::BgpConfig) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingBgpConfigDeleteWhen(httpmock::When);
+    impl NetworkingBgpConfigDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/system/networking/bgp$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn name_or_id(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("name_or_id", value.to_string()))
+        }
+    }
+
+    pub struct NetworkingBgpConfigDeleteThen(httpmock::Then);
+    impl NetworkingBgpConfigDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingBgpAnnounceSetListWhen(httpmock::When);
+    impl NetworkingBgpAnnounceSetListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/networking/bgp-announce$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn name_or_id(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("name_or_id", value.to_string()))
+        }
+    }
+
+    pub struct NetworkingBgpAnnounceSetListThen(httpmock::Then);
+    impl NetworkingBgpAnnounceSetListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::BgpAnnouncement>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingBgpAnnounceSetCreateWhen(httpmock::When);
+    impl NetworkingBgpAnnounceSetCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/system/networking/bgp-announce$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::BgpAnnounceSetCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingBgpAnnounceSetCreateThen(httpmock::Then);
+    impl NetworkingBgpAnnounceSetCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::BgpAnnounceSet) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingBgpAnnounceSetDeleteWhen(httpmock::When);
+    impl NetworkingBgpAnnounceSetDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::DELETE).path_matches(
+                    regex::Regex::new("^/v1/system/networking/bgp-announce$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn name_or_id(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("name_or_id", value.to_string()))
+        }
+    }
+
+    pub struct NetworkingBgpAnnounceSetDeleteThen(httpmock::Then);
+    impl NetworkingBgpAnnounceSetDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingBgpImportedRoutesIpv4When(httpmock::When);
+    impl NetworkingBgpImportedRoutesIpv4When {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/networking/bgp-routes-ipv4$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn asn(self, value: u32) -> Self {
+            Self(self.0.query_param("asn", value.to_string()))
+        }
+    }
+
+    pub struct NetworkingBgpImportedRoutesIpv4Then(httpmock::Then);
+    impl NetworkingBgpImportedRoutesIpv4Then {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::BgpImportedRouteIpv4>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingBgpStatusWhen(httpmock::When);
+    impl NetworkingBgpStatusWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/networking/bgp-status$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct NetworkingBgpStatusThen(httpmock::Then);
+    impl NetworkingBgpStatusThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::BgpPeerStatus>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct NetworkingLoopbackAddressListWhen(httpmock::When);
     impl NetworkingLoopbackAddressListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -12705,6 +13221,48 @@ pub trait MockServerExt {
             operations::NetworkingAddressLotBlockListWhen,
             operations::NetworkingAddressLotBlockListThen,
         );
+    fn networking_bgp_config_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingBgpConfigListWhen, operations::NetworkingBgpConfigListThen);
+    fn networking_bgp_config_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpConfigCreateWhen,
+            operations::NetworkingBgpConfigCreateThen,
+        );
+    fn networking_bgp_config_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpConfigDeleteWhen,
+            operations::NetworkingBgpConfigDeleteThen,
+        );
+    fn networking_bgp_announce_set_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpAnnounceSetListWhen,
+            operations::NetworkingBgpAnnounceSetListThen,
+        );
+    fn networking_bgp_announce_set_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpAnnounceSetCreateWhen,
+            operations::NetworkingBgpAnnounceSetCreateThen,
+        );
+    fn networking_bgp_announce_set_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpAnnounceSetDeleteWhen,
+            operations::NetworkingBgpAnnounceSetDeleteThen,
+        );
+    fn networking_bgp_imported_routes_ipv4<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpImportedRoutesIpv4When,
+            operations::NetworkingBgpImportedRoutesIpv4Then,
+        );
+    fn networking_bgp_status<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingBgpStatusWhen, operations::NetworkingBgpStatusThen);
     fn networking_loopback_address_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
@@ -14177,6 +14735,120 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::NetworkingAddressLotBlockListWhen::new(when),
                 operations::NetworkingAddressLotBlockListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bgp_config_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingBgpConfigListWhen, operations::NetworkingBgpConfigListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBgpConfigListWhen::new(when),
+                operations::NetworkingBgpConfigListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bgp_config_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpConfigCreateWhen,
+            operations::NetworkingBgpConfigCreateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBgpConfigCreateWhen::new(when),
+                operations::NetworkingBgpConfigCreateThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bgp_config_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpConfigDeleteWhen,
+            operations::NetworkingBgpConfigDeleteThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBgpConfigDeleteWhen::new(when),
+                operations::NetworkingBgpConfigDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bgp_announce_set_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpAnnounceSetListWhen,
+            operations::NetworkingBgpAnnounceSetListThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBgpAnnounceSetListWhen::new(when),
+                operations::NetworkingBgpAnnounceSetListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bgp_announce_set_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpAnnounceSetCreateWhen,
+            operations::NetworkingBgpAnnounceSetCreateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBgpAnnounceSetCreateWhen::new(when),
+                operations::NetworkingBgpAnnounceSetCreateThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bgp_announce_set_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpAnnounceSetDeleteWhen,
+            operations::NetworkingBgpAnnounceSetDeleteThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBgpAnnounceSetDeleteWhen::new(when),
+                operations::NetworkingBgpAnnounceSetDeleteThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bgp_imported_routes_ipv4<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingBgpImportedRoutesIpv4When,
+            operations::NetworkingBgpImportedRoutesIpv4Then,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBgpImportedRoutesIpv4When::new(when),
+                operations::NetworkingBgpImportedRoutesIpv4Then::new(then),
+            )
+        })
+    }
+
+    fn networking_bgp_status<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingBgpStatusWhen, operations::NetworkingBgpStatusThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBgpStatusWhen::new(when),
+                operations::NetworkingBgpStatusThen::new(then),
             )
         })
     }

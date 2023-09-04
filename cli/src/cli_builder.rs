@@ -419,6 +419,22 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingSwitchPortSettingsView => {
             Some("system networking switch-port-settings view")
         }
+        CliCommand::NetworkingBgpConfigCreate => Some("system networking bgp-config create"),
+        CliCommand::NetworkingBgpConfigList => Some("system networking bgp-config list"),
+        CliCommand::NetworkingBgpConfigDelete => Some("system networking bgp-config delete"),
+
+        CliCommand::NetworkingBgpAnnounceSetList => Some("system networking bgp-announce-set list"),
+        CliCommand::NetworkingBgpAnnounceSetCreate => {
+            Some("system networking bgp-announce-set create")
+        }
+        CliCommand::NetworkingBgpAnnounceSetDelete => {
+            Some("system networking bgp-announce-set delete")
+        }
+        CliCommand::NetworkingBgpImportedRoutesIpv4 => {
+            Some("system networking bgp-imported-routes-ipv4 get")
+        }
+
+        CliCommand::NetworkingBgpStatus => Some("system networking bgp-status get"),
 
         // Subcommand: disk
         CliCommand::DiskList => Some("disk list"),
