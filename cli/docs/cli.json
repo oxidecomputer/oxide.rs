@@ -898,6 +898,48 @@
           ]
         },
         {
+          "name": "from-image",
+          "about": "Launch an instance from a disk image.",
+          "args": [
+            {
+              "long": "cpus",
+              "help": "Number of CPUs"
+            },
+            {
+              "long": "description",
+              "help": "Description of the instance to create"
+            },
+            {
+              "long": "disk-size",
+              "help": "Boot disk size e.g. 512G. Suffix can be k,m,g,t"
+            },
+            {
+              "long": "hostname",
+              "help": "Hostname of the instance to create"
+            },
+            {
+              "long": "image",
+              "help": "Image name"
+            },
+            {
+              "long": "memory",
+              "help": "Ammount of memory e.g 32M. Suffix can be k,m,g,t"
+            },
+            {
+              "long": "name",
+              "help": "Name of the instance to create"
+            },
+            {
+              "long": "project",
+              "help": "Project to create the instance in"
+            },
+            {
+              "long": "start",
+              "help": "Start the instance immediately"
+            }
+          ]
+        },
+        {
           "name": "list",
           "about": "List instances",
           "args": [
