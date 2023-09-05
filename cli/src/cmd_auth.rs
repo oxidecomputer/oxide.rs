@@ -689,10 +689,9 @@ mod tests {
         ));
 
         // Nonsense scheme
-        assert!(matches!(
-            parse_host("ftp://localhost").map(|host| host.to_string()),
-            Err(_)
-        ));
+        assert!(parse_host("ftp://localhost")
+            .map(|host| host.to_string())
+            .is_err());
 
         // Strip out any extraneous pieces we don't need
         assert!(matches!(

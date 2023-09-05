@@ -8,7 +8,12 @@ use crate::RunnableCmd;
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
-use oxide_api::types::NameOrId;
+use oxide_api::types::{
+    ByteCount, DiskSource, ExternalIpCreate, InstanceCpuCount, InstanceCreate,
+    InstanceDiskAttachment, InstanceNetworkInterfaceAttachment, NameOrId,
+};
+
+use oxide_api::ClientImagesExt;
 use oxide_api::ClientInstancesExt;
 use std::path::PathBuf;
 
@@ -18,21 +23,21 @@ use std::path::PathBuf;
 #[command(name = "serial")]
 pub struct CmdInstanceSerial {
     #[clap(subcommand)]
-    subcmd: SubCommand,
+    subcmd: SerialSubCommand,
 }
 
 #[async_trait]
 impl RunnableCmd for CmdInstanceSerial {
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         match &self.subcmd {
-            SubCommand::Console(cmd) => cmd.run(ctx).await,
-            SubCommand::History(cmd) => cmd.run(ctx).await,
+            SerialSubCommand::Console(cmd) => cmd.run(ctx).await,
+            SerialSubCommand::History(cmd) => cmd.run(ctx).await,
         }
     }
 }
 
 #[derive(Parser, Debug, Clone)]
-enum SubCommand {
+enum SerialSubCommand {
     Console(CmdInstanceSerialConsole),
     History(CmdInstanceSerialHistory),
 }
@@ -189,6 +194,92 @@ impl RunnableCmd for CmdInstanceSerialHistory {
             let mut tty = thouart::Console::new_stdio(None).await?;
             tty.write_stdout(&data.data).await?;
         }
+        Ok(())
+    }
+}
+
+/// Launch an instance from a disk image.
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "from-image")]
+pub struct CmdInstanceFromImage {
+    /// Name of the instance to create
+    #[clap(long)]
+    name: String,
+
+    /// Project to create the instance in.
+    #[clap(long)]
+    project: String,
+
+    /// Description of the instance to create
+    #[clap(long)]
+    description: String,
+
+    /// Hostname of the instance to create
+    #[clap(long)]
+    hostname: String,
+
+    /// Ammount of memory e.g 32M. Suffix can be k,m,g,t
+    #[clap(long)]
+    memory: ByteCount,
+
+    /// Number of CPUs
+    #[clap(long)]
+    cpus: usize,
+
+    /// Image name
+    #[clap(long)]
+    image: String,
+
+    /// Boot disk size e.g. 512G. Suffix can be k,m,g,t
+    #[clap(long)]
+    disk_size: ByteCount,
+
+    /// Start the instance immediately
+    #[clap(long)]
+    start: bool,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdInstanceFromImage {
+    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
+        let image_view = ctx
+            .client()
+            .image_view()
+            .image(&self.image)
+            .project(&self.project)
+            .send()
+            .await?;
+
+        let body = InstanceCreate {
+            name: self.name.parse().expect("valid instance name"),
+            description: self.description.clone(),
+            disks: vec![InstanceDiskAttachment::Create {
+                description: format!("{} disk", self.name),
+                disk_source: DiskSource::Image {
+                    image_id: image_view.id,
+                },
+                name: format!("{}-disk", self.name)
+                    .parse()
+                    .expect("valid disk name"),
+                size: self.disk_size.clone(),
+            }],
+            external_ips: vec![ExternalIpCreate::Ephemeral { pool_name: None }],
+            hostname: self.name.clone(),
+            memory: self.memory.clone(),
+            ncpus: InstanceCpuCount(self.cpus.try_into().expect("valid number of cpus")),
+            network_interfaces: InstanceNetworkInterfaceAttachment::Default,
+            start: self.start,
+            user_data: String::new(),
+        };
+
+        ctx.client()
+            .instance_create()
+            .project(&self.project)
+            .body(body)
+            .send()
+            .await?;
+
         Ok(())
     }
 }
