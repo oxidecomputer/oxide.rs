@@ -15,6 +15,10 @@
       "help": "Enable debug output"
     },
     {
+      "long": "insecure",
+      "help": "Disable certificate validation and hostname verification"
+    },
+    {
       "long": "resolve",
       "help": "Modify name resolution"
     },

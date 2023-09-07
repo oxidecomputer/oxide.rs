@@ -19,6 +19,7 @@ pub struct Config {
     pub hosts: Hosts,
     pub resolve: Option<ResolveValue>,
     pub cert: Option<reqwest::Certificate>,
+    pub insecure: bool,
     pub timeout: Option<u64>,
 }
 
@@ -70,6 +71,7 @@ impl Config {
             hosts,
             resolve: None,
             cert: None,
+            insecure: false,
             timeout: None,
         }
     }
@@ -118,6 +120,11 @@ impl Config {
 
     pub fn with_cert(mut self, cert: reqwest::Certificate) -> Self {
         self.cert = Some(cert);
+        self
+    }
+
+    pub fn with_insecure(mut self, insecure: bool) -> Self {
+        self.insecure = insecure;
         self
     }
 
