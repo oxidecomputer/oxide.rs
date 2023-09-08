@@ -37,6 +37,10 @@ struct OxideCli {
     #[clap(long, value_name = "FILE")]
     pub cacert: Option<PathBuf>,
 
+    /// Disable certificate validation and hostname verification
+    #[clap(long)]
+    pub insecure: bool,
+
     /// Timeout value for individual API invocations
     #[clap(long, value_name = "SECONDS")]
     pub timeout: Option<u64>,
@@ -186,6 +190,7 @@ impl<'a> NewCli<'a> {
             config_dir,
             resolve,
             cacert,
+            insecure,
             timeout,
         } = OxideCli::from_arg_matches(&matches).unwrap();
 
@@ -224,6 +229,7 @@ impl<'a> NewCli<'a> {
             }?;
             config = config.with_cert(cert);
         }
+        config = config.with_insecure(insecure);
         if let Some(timeout) = timeout {
             config = config.with_timeout(timeout);
         }

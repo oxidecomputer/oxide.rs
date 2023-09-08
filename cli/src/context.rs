@@ -90,5 +90,11 @@ pub fn make_rclient(token: Option<String>, config: &Config) -> reqwest::ClientBu
         client_builder = client_builder.timeout(Duration::from_secs(*timeout));
     }
 
+    if config.insecure {
+        client_builder = client_builder
+            .danger_accept_invalid_hostnames(true)
+            .danger_accept_invalid_certs(true);
+    }
+
     client_builder
 }
