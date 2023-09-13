@@ -470,7 +470,7 @@ checksum = "e11c675378efb449ed3ce8de78d75d0d80542fc98487c26aba28eb3b82feac72"
 dependencies = [
  "semver 1.0.18",
  "serde",
- "toml 0.7.6",
+ "toml 0.7.8",
  "url",
 ]
 
@@ -786,7 +786,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.9.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#674642ed6fff7db222a97a73cfc6e6d4d67ecf88"
+source = "git+https://github.com/oxidecomputer/dropshot#ae1cc3bf4598a7ff3e3bab16932359bc4e8c1d76"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -821,7 +821,7 @@ dependencies = [
  "slog-term",
  "tokio",
  "tokio-rustls",
- "toml 0.7.6",
+ "toml 0.7.8",
  "uuid",
  "version_check",
  "waitgroup",
@@ -830,7 +830,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.9.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#674642ed6fff7db222a97a73cfc6e6d4d67ecf88"
+source = "git+https://github.com/oxidecomputer/dropshot#ae1cc3bf4598a7ff3e3bab16932359bc4e8c1d76"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1927,7 +1927,7 @@ dependencies = [
  "thouart",
  "tokio",
  "tokio-tungstenite",
- "toml 0.7.6",
+ "toml 0.7.8",
  "toml_edit",
  "url",
  "uuid",
@@ -2466,9 +2466,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.21.6"
+version = "0.21.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d1feddffcfcc0b33f5c6ce9a29e341e4cd59c3f78e7ee45f4a40c038b1d6cbb"
+checksum = "cd8d6c9f025a446bc4d18ad9632e69aec8f287aa84499ee335599fabd20c3fd8"
 dependencies = [
  "log",
  "ring",
@@ -2650,9 +2650,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.105"
+version = "1.0.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "693151e1ac27563d6dbcec9dee9fbd5da8539b20fa14ad3752b2e6d363ace360"
+checksum = "2cc66a619ed80bf7a0f6b17dd063a84b88f6dea1813737cf469aef1d081142c2"
 dependencies = [
  "itoa",
  "ryu",
@@ -3219,9 +3219,9 @@ dependencies = [
 
 [[package]]
 name = "toml"
-version = "0.7.6"
+version = "0.7.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c17e963a819c331dcacd7ab957d80bc2b9a9c1e71c804826d2f283dd65306542"
+checksum = "dd79e69d3b627db300ff956027cc6c3798cef26d22526befdfcd12feeb6d2257"
 dependencies = [
  "serde",
  "serde_spanned",
