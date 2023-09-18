@@ -785,7 +785,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.9.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#ae1cc3bf4598a7ff3e3bab16932359bc4e8c1d76"
+source = "git+https://github.com/oxidecomputer/dropshot#c7a5e43d694cbf37b8e7ce9f04710d46b157233e"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -801,6 +801,7 @@ dependencies = [
  "http",
  "hyper",
  "indexmap 2.0.0",
+ "multer",
  "openapiv3",
  "paste",
  "percent-encoding",
@@ -829,7 +830,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.9.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#ae1cc3bf4598a7ff3e3bab16932359bc4e8c1d76"
+source = "git+https://github.com/oxidecomputer/dropshot#c7a5e43d694cbf37b8e7ce9f04710d46b157233e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1703,6 +1704,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "multer"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "01acbdc23469fd8fe07ab135923371d5f5a422fbf9c522158677c8eb15bc51c2"
+dependencies = [
+ "bytes",
+ "encoding_rs",
+ "futures-util",
+ "http",
+ "httparse",
+ "log",
+ "memchr",
+ "mime",
+ "spin 0.9.8",
+ "version_check",
+]
+
+[[package]]
 name = "native-tls"
 version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2411,7 +2430,7 @@ dependencies = [
  "cc",
  "libc",
  "once_cell",
- "spin",
+ "spin 0.5.2",
  "untrusted",
  "web-sys",
  "winapi",
@@ -2914,6 +2933,12 @@ name = "spin"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
+
+[[package]]
+name = "spin"
+version = "0.9.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6980e8d7511241f8acf4aebddbb1ff938df5eebe98691418c4468d0b72a96a67"
 
 [[package]]
 name = "string_cache"
