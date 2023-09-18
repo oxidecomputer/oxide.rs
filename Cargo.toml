@@ -33,7 +33,7 @@ oauth2 = "4.4.2"
 open = "4.2.0"
 oxide-api = { path = "sdk" }
 oxide-httpmock = { path = "sdk-httpmock" }
-predicates = "3.0.3"
+predicates = "3.0.4"
 pretty_assertions = "1.4.0"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor" }
 progenitor-client = { git = "https://github.com/oxidecomputer/progenitor" }
