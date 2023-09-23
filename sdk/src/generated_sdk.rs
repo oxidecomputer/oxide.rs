@@ -371,6 +371,84 @@ pub mod types {
     /// `(start..end)`, and `(start..)` respectively.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "type")]
+    pub enum BinRangefloat {
+        /// A range unbounded below and exclusively above, `..end`.
+        #[serde(rename = "range_to")]
+        RangeTo { end: f64 },
+        /// A range bounded inclusively below and exclusively above,
+        /// `start..end`.
+        #[serde(rename = "range")]
+        Range { end: f64, start: f64 },
+        /// A range bounded inclusively below and unbounded above, `start..`.
+        #[serde(rename = "range_from")]
+        RangeFrom { start: f64 },
+    }
+
+    impl From<&BinRangefloat> for BinRangefloat {
+        fn from(value: &BinRangefloat) -> Self {
+            value.clone()
+        }
+    }
+
+    /// A type storing a range over `T`.
+    ///
+    /// This type supports ranges similar to the `RangeTo`, `Range` and
+    /// `RangeFrom` types in the standard library. Those cover `(..end)`,
+    /// `(start..end)`, and `(start..)` respectively.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type")]
+    pub enum BinRangeint16 {
+        /// A range unbounded below and exclusively above, `..end`.
+        #[serde(rename = "range_to")]
+        RangeTo { end: i16 },
+        /// A range bounded inclusively below and exclusively above,
+        /// `start..end`.
+        #[serde(rename = "range")]
+        Range { end: i16, start: i16 },
+        /// A range bounded inclusively below and unbounded above, `start..`.
+        #[serde(rename = "range_from")]
+        RangeFrom { start: i16 },
+    }
+
+    impl From<&BinRangeint16> for BinRangeint16 {
+        fn from(value: &BinRangeint16) -> Self {
+            value.clone()
+        }
+    }
+
+    /// A type storing a range over `T`.
+    ///
+    /// This type supports ranges similar to the `RangeTo`, `Range` and
+    /// `RangeFrom` types in the standard library. Those cover `(..end)`,
+    /// `(start..end)`, and `(start..)` respectively.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type")]
+    pub enum BinRangeint32 {
+        /// A range unbounded below and exclusively above, `..end`.
+        #[serde(rename = "range_to")]
+        RangeTo { end: i32 },
+        /// A range bounded inclusively below and exclusively above,
+        /// `start..end`.
+        #[serde(rename = "range")]
+        Range { end: i32, start: i32 },
+        /// A range bounded inclusively below and unbounded above, `start..`.
+        #[serde(rename = "range_from")]
+        RangeFrom { start: i32 },
+    }
+
+    impl From<&BinRangeint32> for BinRangeint32 {
+        fn from(value: &BinRangeint32) -> Self {
+            value.clone()
+        }
+    }
+
+    /// A type storing a range over `T`.
+    ///
+    /// This type supports ranges similar to the `RangeTo`, `Range` and
+    /// `RangeFrom` types in the standard library. Those cover `(..end)`,
+    /// `(start..end)`, and `(start..)` respectively.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type")]
     pub enum BinRangeint64 {
         /// A range unbounded below and exclusively above, `..end`.
         #[serde(rename = "range_to")]
@@ -386,6 +464,136 @@ pub mod types {
 
     impl From<&BinRangeint64> for BinRangeint64 {
         fn from(value: &BinRangeint64) -> Self {
+            value.clone()
+        }
+    }
+
+    /// A type storing a range over `T`.
+    ///
+    /// This type supports ranges similar to the `RangeTo`, `Range` and
+    /// `RangeFrom` types in the standard library. Those cover `(..end)`,
+    /// `(start..end)`, and `(start..)` respectively.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type")]
+    pub enum BinRangeint8 {
+        /// A range unbounded below and exclusively above, `..end`.
+        #[serde(rename = "range_to")]
+        RangeTo { end: i8 },
+        /// A range bounded inclusively below and exclusively above,
+        /// `start..end`.
+        #[serde(rename = "range")]
+        Range { end: i8, start: i8 },
+        /// A range bounded inclusively below and unbounded above, `start..`.
+        #[serde(rename = "range_from")]
+        RangeFrom { start: i8 },
+    }
+
+    impl From<&BinRangeint8> for BinRangeint8 {
+        fn from(value: &BinRangeint8) -> Self {
+            value.clone()
+        }
+    }
+
+    /// A type storing a range over `T`.
+    ///
+    /// This type supports ranges similar to the `RangeTo`, `Range` and
+    /// `RangeFrom` types in the standard library. Those cover `(..end)`,
+    /// `(start..end)`, and `(start..)` respectively.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type")]
+    pub enum BinRangeuint16 {
+        /// A range unbounded below and exclusively above, `..end`.
+        #[serde(rename = "range_to")]
+        RangeTo { end: u16 },
+        /// A range bounded inclusively below and exclusively above,
+        /// `start..end`.
+        #[serde(rename = "range")]
+        Range { end: u16, start: u16 },
+        /// A range bounded inclusively below and unbounded above, `start..`.
+        #[serde(rename = "range_from")]
+        RangeFrom { start: u16 },
+    }
+
+    impl From<&BinRangeuint16> for BinRangeuint16 {
+        fn from(value: &BinRangeuint16) -> Self {
+            value.clone()
+        }
+    }
+
+    /// A type storing a range over `T`.
+    ///
+    /// This type supports ranges similar to the `RangeTo`, `Range` and
+    /// `RangeFrom` types in the standard library. Those cover `(..end)`,
+    /// `(start..end)`, and `(start..)` respectively.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type")]
+    pub enum BinRangeuint32 {
+        /// A range unbounded below and exclusively above, `..end`.
+        #[serde(rename = "range_to")]
+        RangeTo { end: u32 },
+        /// A range bounded inclusively below and exclusively above,
+        /// `start..end`.
+        #[serde(rename = "range")]
+        Range { end: u32, start: u32 },
+        /// A range bounded inclusively below and unbounded above, `start..`.
+        #[serde(rename = "range_from")]
+        RangeFrom { start: u32 },
+    }
+
+    impl From<&BinRangeuint32> for BinRangeuint32 {
+        fn from(value: &BinRangeuint32) -> Self {
+            value.clone()
+        }
+    }
+
+    /// A type storing a range over `T`.
+    ///
+    /// This type supports ranges similar to the `RangeTo`, `Range` and
+    /// `RangeFrom` types in the standard library. Those cover `(..end)`,
+    /// `(start..end)`, and `(start..)` respectively.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type")]
+    pub enum BinRangeuint64 {
+        /// A range unbounded below and exclusively above, `..end`.
+        #[serde(rename = "range_to")]
+        RangeTo { end: u64 },
+        /// A range bounded inclusively below and exclusively above,
+        /// `start..end`.
+        #[serde(rename = "range")]
+        Range { end: u64, start: u64 },
+        /// A range bounded inclusively below and unbounded above, `start..`.
+        #[serde(rename = "range_from")]
+        RangeFrom { start: u64 },
+    }
+
+    impl From<&BinRangeuint64> for BinRangeuint64 {
+        fn from(value: &BinRangeuint64) -> Self {
+            value.clone()
+        }
+    }
+
+    /// A type storing a range over `T`.
+    ///
+    /// This type supports ranges similar to the `RangeTo`, `Range` and
+    /// `RangeFrom` types in the standard library. Those cover `(..end)`,
+    /// `(start..end)`, and `(start..)` respectively.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type")]
+    pub enum BinRangeuint8 {
+        /// A range unbounded below and exclusively above, `..end`.
+        #[serde(rename = "range_to")]
+        RangeTo { end: u8 },
+        /// A range bounded inclusively below and exclusively above,
+        /// `start..end`.
+        #[serde(rename = "range")]
+        Range { end: u8, start: u8 },
+        /// A range bounded inclusively below and unbounded above, `start..`.
+        #[serde(rename = "range_from")]
+        RangeFrom { start: u8 },
+    }
+
+    impl From<&BinRangeuint8> for BinRangeuint8 {
+        fn from(value: &BinRangeuint8) -> Self {
             value.clone()
         }
     }
@@ -413,6 +621,69 @@ pub mod types {
 
     /// Type storing bin edges and a count of samples within it.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Binfloat {
+        /// The total count of samples in this bin.
+        pub count: u64,
+        /// The range of the support covered by this bin.
+        pub range: BinRangefloat,
+    }
+
+    impl From<&Binfloat> for Binfloat {
+        fn from(value: &Binfloat) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Binfloat {
+        pub fn builder() -> builder::Binfloat {
+            builder::Binfloat::default()
+        }
+    }
+
+    /// Type storing bin edges and a count of samples within it.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Binint16 {
+        /// The total count of samples in this bin.
+        pub count: u64,
+        /// The range of the support covered by this bin.
+        pub range: BinRangeint16,
+    }
+
+    impl From<&Binint16> for Binint16 {
+        fn from(value: &Binint16) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Binint16 {
+        pub fn builder() -> builder::Binint16 {
+            builder::Binint16::default()
+        }
+    }
+
+    /// Type storing bin edges and a count of samples within it.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Binint32 {
+        /// The total count of samples in this bin.
+        pub count: u64,
+        /// The range of the support covered by this bin.
+        pub range: BinRangeint32,
+    }
+
+    impl From<&Binint32> for Binint32 {
+        fn from(value: &Binint32) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Binint32 {
+        pub fn builder() -> builder::Binint32 {
+            builder::Binint32::default()
+        }
+    }
+
+    /// Type storing bin edges and a count of samples within it.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Binint64 {
         /// The total count of samples in this bin.
         pub count: u64,
@@ -429,6 +700,111 @@ pub mod types {
     impl Binint64 {
         pub fn builder() -> builder::Binint64 {
             builder::Binint64::default()
+        }
+    }
+
+    /// Type storing bin edges and a count of samples within it.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Binint8 {
+        /// The total count of samples in this bin.
+        pub count: u64,
+        /// The range of the support covered by this bin.
+        pub range: BinRangeint8,
+    }
+
+    impl From<&Binint8> for Binint8 {
+        fn from(value: &Binint8) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Binint8 {
+        pub fn builder() -> builder::Binint8 {
+            builder::Binint8::default()
+        }
+    }
+
+    /// Type storing bin edges and a count of samples within it.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Binuint16 {
+        /// The total count of samples in this bin.
+        pub count: u64,
+        /// The range of the support covered by this bin.
+        pub range: BinRangeuint16,
+    }
+
+    impl From<&Binuint16> for Binuint16 {
+        fn from(value: &Binuint16) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Binuint16 {
+        pub fn builder() -> builder::Binuint16 {
+            builder::Binuint16::default()
+        }
+    }
+
+    /// Type storing bin edges and a count of samples within it.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Binuint32 {
+        /// The total count of samples in this bin.
+        pub count: u64,
+        /// The range of the support covered by this bin.
+        pub range: BinRangeuint32,
+    }
+
+    impl From<&Binuint32> for Binuint32 {
+        fn from(value: &Binuint32) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Binuint32 {
+        pub fn builder() -> builder::Binuint32 {
+            builder::Binuint32::default()
+        }
+    }
+
+    /// Type storing bin edges and a count of samples within it.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Binuint64 {
+        /// The total count of samples in this bin.
+        pub count: u64,
+        /// The range of the support covered by this bin.
+        pub range: BinRangeuint64,
+    }
+
+    impl From<&Binuint64> for Binuint64 {
+        fn from(value: &Binuint64) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Binuint64 {
+        pub fn builder() -> builder::Binuint64 {
+            builder::Binuint64::default()
+        }
+    }
+
+    /// Type storing bin edges and a count of samples within it.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Binuint8 {
+        /// The total count of samples in this bin.
+        pub count: u64,
+        /// The range of the support covered by this bin.
+        pub range: BinRangeuint8,
+    }
+
+    impl From<&Binuint8> for Binuint8 {
+        fn from(value: &Binuint8) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Binuint8 {
+        pub fn builder() -> builder::Binuint8 {
+            builder::Binuint8::default()
         }
     }
 
@@ -632,6 +1008,25 @@ pub mod types {
 
     /// A cumulative or counter data type.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Cumulativefloat {
+        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub value: f64,
+    }
+
+    impl From<&Cumulativefloat> for Cumulativefloat {
+        fn from(value: &Cumulativefloat) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Cumulativefloat {
+        pub fn builder() -> builder::Cumulativefloat {
+            builder::Cumulativefloat::default()
+        }
+    }
+
+    /// A cumulative or counter data type.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Cumulativeint64 {
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
         pub value: i64,
@@ -646,6 +1041,25 @@ pub mod types {
     impl Cumulativeint64 {
         pub fn builder() -> builder::Cumulativeint64 {
             builder::Cumulativeint64::default()
+        }
+    }
+
+    /// A cumulative or counter data type.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Cumulativeuint64 {
+        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub value: u64,
+    }
+
+    impl From<&Cumulativeuint64> for Cumulativeuint64 {
+        fn from(value: &Cumulativeuint64) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Cumulativeuint64 {
+        pub fn builder() -> builder::Cumulativeuint64 {
+            builder::Cumulativeuint64::default()
         }
     }
 
@@ -679,8 +1093,24 @@ pub mod types {
     pub enum Datum {
         #[serde(rename = "bool")]
         Bool(bool),
+        #[serde(rename = "i8")]
+        I8(i8),
+        #[serde(rename = "u8")]
+        U8(u8),
+        #[serde(rename = "i16")]
+        I16(i16),
+        #[serde(rename = "u16")]
+        U16(u16),
+        #[serde(rename = "i32")]
+        I32(i32),
+        #[serde(rename = "u32")]
+        U32(u32),
         #[serde(rename = "i64")]
         I64(i64),
+        #[serde(rename = "u64")]
+        U64(u64),
+        #[serde(rename = "f32")]
+        F32(f64),
         #[serde(rename = "f64")]
         F64(f64),
         #[serde(rename = "string")]
@@ -689,10 +1119,30 @@ pub mod types {
         Bytes(Vec<u8>),
         #[serde(rename = "cumulative_i64")]
         CumulativeI64(Cumulativeint64),
+        #[serde(rename = "cumulative_u64")]
+        CumulativeU64(Cumulativeuint64),
+        #[serde(rename = "cumulative_f32")]
+        CumulativeF32(Cumulativefloat),
         #[serde(rename = "cumulative_f64")]
         CumulativeF64(Cumulativedouble),
+        #[serde(rename = "histogram_i8")]
+        HistogramI8(Histogramint8),
+        #[serde(rename = "histogram_u8")]
+        HistogramU8(Histogramuint8),
+        #[serde(rename = "histogram_i16")]
+        HistogramI16(Histogramint16),
+        #[serde(rename = "histogram_u16")]
+        HistogramU16(Histogramuint16),
+        #[serde(rename = "histogram_i32")]
+        HistogramI32(Histogramint32),
+        #[serde(rename = "histogram_u32")]
+        HistogramU32(Histogramuint32),
         #[serde(rename = "histogram_i64")]
         HistogramI64(Histogramint64),
+        #[serde(rename = "histogram_u64")]
+        HistogramU64(Histogramuint64),
+        #[serde(rename = "histogram_f32")]
+        HistogramF32(Histogramfloat),
         #[serde(rename = "histogram_f64")]
         HistogramF64(Histogramdouble),
     }
@@ -709,15 +1159,51 @@ pub mod types {
         }
     }
 
+    impl From<i8> for Datum {
+        fn from(value: i8) -> Self {
+            Self::I8(value)
+        }
+    }
+
+    impl From<u8> for Datum {
+        fn from(value: u8) -> Self {
+            Self::U8(value)
+        }
+    }
+
+    impl From<i16> for Datum {
+        fn from(value: i16) -> Self {
+            Self::I16(value)
+        }
+    }
+
+    impl From<u16> for Datum {
+        fn from(value: u16) -> Self {
+            Self::U16(value)
+        }
+    }
+
+    impl From<i32> for Datum {
+        fn from(value: i32) -> Self {
+            Self::I32(value)
+        }
+    }
+
+    impl From<u32> for Datum {
+        fn from(value: u32) -> Self {
+            Self::U32(value)
+        }
+    }
+
     impl From<i64> for Datum {
         fn from(value: i64) -> Self {
             Self::I64(value)
         }
     }
 
-    impl From<f64> for Datum {
-        fn from(value: f64) -> Self {
-            Self::F64(value)
+    impl From<u64> for Datum {
+        fn from(value: u64) -> Self {
+            Self::U64(value)
         }
     }
 
@@ -733,15 +1219,75 @@ pub mod types {
         }
     }
 
+    impl From<Cumulativeuint64> for Datum {
+        fn from(value: Cumulativeuint64) -> Self {
+            Self::CumulativeU64(value)
+        }
+    }
+
+    impl From<Cumulativefloat> for Datum {
+        fn from(value: Cumulativefloat) -> Self {
+            Self::CumulativeF32(value)
+        }
+    }
+
     impl From<Cumulativedouble> for Datum {
         fn from(value: Cumulativedouble) -> Self {
             Self::CumulativeF64(value)
         }
     }
 
+    impl From<Histogramint8> for Datum {
+        fn from(value: Histogramint8) -> Self {
+            Self::HistogramI8(value)
+        }
+    }
+
+    impl From<Histogramuint8> for Datum {
+        fn from(value: Histogramuint8) -> Self {
+            Self::HistogramU8(value)
+        }
+    }
+
+    impl From<Histogramint16> for Datum {
+        fn from(value: Histogramint16) -> Self {
+            Self::HistogramI16(value)
+        }
+    }
+
+    impl From<Histogramuint16> for Datum {
+        fn from(value: Histogramuint16) -> Self {
+            Self::HistogramU16(value)
+        }
+    }
+
+    impl From<Histogramint32> for Datum {
+        fn from(value: Histogramint32) -> Self {
+            Self::HistogramI32(value)
+        }
+    }
+
+    impl From<Histogramuint32> for Datum {
+        fn from(value: Histogramuint32) -> Self {
+            Self::HistogramU32(value)
+        }
+    }
+
     impl From<Histogramint64> for Datum {
         fn from(value: Histogramint64) -> Self {
             Self::HistogramI64(value)
+        }
+    }
+
+    impl From<Histogramuint64> for Datum {
+        fn from(value: Histogramuint64) -> Self {
+            Self::HistogramU64(value)
+        }
+    }
+
+    impl From<Histogramfloat> for Datum {
+        fn from(value: Histogramfloat) -> Self {
+            Self::HistogramF32(value)
         }
     }
 
@@ -1406,6 +1952,93 @@ pub mod types {
     /// Note that any gaps, unsorted bins, or non-finite values will result in
     /// an error.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Histogramfloat {
+        pub bins: Vec<Binfloat>,
+        pub n_samples: u64,
+        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Histogramfloat> for Histogramfloat {
+        fn from(value: &Histogramfloat) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Histogramfloat {
+        pub fn builder() -> builder::Histogramfloat {
+            builder::Histogramfloat::default()
+        }
+    }
+
+    /// Histogram metric
+    ///
+    /// A histogram maintains the count of any number of samples, over a set of
+    /// bins. Bins are specified on construction via their _left_ edges,
+    /// inclusive. There can't be any "gaps" in the bins, and an additional bin
+    /// may be added to the left, right, or both so that the bins extend to the
+    /// entire range of the support.
+    ///
+    /// Note that any gaps, unsorted bins, or non-finite values will result in
+    /// an error.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Histogramint16 {
+        pub bins: Vec<Binint16>,
+        pub n_samples: u64,
+        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Histogramint16> for Histogramint16 {
+        fn from(value: &Histogramint16) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Histogramint16 {
+        pub fn builder() -> builder::Histogramint16 {
+            builder::Histogramint16::default()
+        }
+    }
+
+    /// Histogram metric
+    ///
+    /// A histogram maintains the count of any number of samples, over a set of
+    /// bins. Bins are specified on construction via their _left_ edges,
+    /// inclusive. There can't be any "gaps" in the bins, and an additional bin
+    /// may be added to the left, right, or both so that the bins extend to the
+    /// entire range of the support.
+    ///
+    /// Note that any gaps, unsorted bins, or non-finite values will result in
+    /// an error.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Histogramint32 {
+        pub bins: Vec<Binint32>,
+        pub n_samples: u64,
+        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Histogramint32> for Histogramint32 {
+        fn from(value: &Histogramint32) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Histogramint32 {
+        pub fn builder() -> builder::Histogramint32 {
+            builder::Histogramint32::default()
+        }
+    }
+
+    /// Histogram metric
+    ///
+    /// A histogram maintains the count of any number of samples, over a set of
+    /// bins. Bins are specified on construction via their _left_ edges,
+    /// inclusive. There can't be any "gaps" in the bins, and an additional bin
+    /// may be added to the left, right, or both so that the bins extend to the
+    /// entire range of the support.
+    ///
+    /// Note that any gaps, unsorted bins, or non-finite values will result in
+    /// an error.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramint64 {
         pub bins: Vec<Binint64>,
         pub n_samples: u64,
@@ -1421,6 +2054,151 @@ pub mod types {
     impl Histogramint64 {
         pub fn builder() -> builder::Histogramint64 {
             builder::Histogramint64::default()
+        }
+    }
+
+    /// Histogram metric
+    ///
+    /// A histogram maintains the count of any number of samples, over a set of
+    /// bins. Bins are specified on construction via their _left_ edges,
+    /// inclusive. There can't be any "gaps" in the bins, and an additional bin
+    /// may be added to the left, right, or both so that the bins extend to the
+    /// entire range of the support.
+    ///
+    /// Note that any gaps, unsorted bins, or non-finite values will result in
+    /// an error.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Histogramint8 {
+        pub bins: Vec<Binint8>,
+        pub n_samples: u64,
+        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Histogramint8> for Histogramint8 {
+        fn from(value: &Histogramint8) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Histogramint8 {
+        pub fn builder() -> builder::Histogramint8 {
+            builder::Histogramint8::default()
+        }
+    }
+
+    /// Histogram metric
+    ///
+    /// A histogram maintains the count of any number of samples, over a set of
+    /// bins. Bins are specified on construction via their _left_ edges,
+    /// inclusive. There can't be any "gaps" in the bins, and an additional bin
+    /// may be added to the left, right, or both so that the bins extend to the
+    /// entire range of the support.
+    ///
+    /// Note that any gaps, unsorted bins, or non-finite values will result in
+    /// an error.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Histogramuint16 {
+        pub bins: Vec<Binuint16>,
+        pub n_samples: u64,
+        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Histogramuint16> for Histogramuint16 {
+        fn from(value: &Histogramuint16) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Histogramuint16 {
+        pub fn builder() -> builder::Histogramuint16 {
+            builder::Histogramuint16::default()
+        }
+    }
+
+    /// Histogram metric
+    ///
+    /// A histogram maintains the count of any number of samples, over a set of
+    /// bins. Bins are specified on construction via their _left_ edges,
+    /// inclusive. There can't be any "gaps" in the bins, and an additional bin
+    /// may be added to the left, right, or both so that the bins extend to the
+    /// entire range of the support.
+    ///
+    /// Note that any gaps, unsorted bins, or non-finite values will result in
+    /// an error.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Histogramuint32 {
+        pub bins: Vec<Binuint32>,
+        pub n_samples: u64,
+        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Histogramuint32> for Histogramuint32 {
+        fn from(value: &Histogramuint32) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Histogramuint32 {
+        pub fn builder() -> builder::Histogramuint32 {
+            builder::Histogramuint32::default()
+        }
+    }
+
+    /// Histogram metric
+    ///
+    /// A histogram maintains the count of any number of samples, over a set of
+    /// bins. Bins are specified on construction via their _left_ edges,
+    /// inclusive. There can't be any "gaps" in the bins, and an additional bin
+    /// may be added to the left, right, or both so that the bins extend to the
+    /// entire range of the support.
+    ///
+    /// Note that any gaps, unsorted bins, or non-finite values will result in
+    /// an error.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Histogramuint64 {
+        pub bins: Vec<Binuint64>,
+        pub n_samples: u64,
+        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Histogramuint64> for Histogramuint64 {
+        fn from(value: &Histogramuint64) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Histogramuint64 {
+        pub fn builder() -> builder::Histogramuint64 {
+            builder::Histogramuint64::default()
+        }
+    }
+
+    /// Histogram metric
+    ///
+    /// A histogram maintains the count of any number of samples, over a set of
+    /// bins. Bins are specified on construction via their _left_ edges,
+    /// inclusive. There can't be any "gaps" in the bins, and an additional bin
+    /// may be added to the left, right, or both so that the bins extend to the
+    /// entire range of the support.
+    ///
+    /// Note that any gaps, unsorted bins, or non-finite values will result in
+    /// an error.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Histogramuint8 {
+        pub bins: Vec<Binuint8>,
+        pub n_samples: u64,
+        pub start_time: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Histogramuint8> for Histogramuint8 {
+        fn from(value: &Histogramuint8) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Histogramuint8 {
+        pub fn builder() -> builder::Histogramuint8 {
+            builder::Histogramuint8::default()
         }
     }
 
@@ -7688,6 +8466,177 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Binfloat {
+            count: Result<u64, String>,
+            range: Result<super::BinRangefloat, String>,
+        }
+
+        impl Default for Binfloat {
+            fn default() -> Self {
+                Self {
+                    count: Err("no value supplied for count".to_string()),
+                    range: Err("no value supplied for range".to_string()),
+                }
+            }
+        }
+
+        impl Binfloat {
+            pub fn count<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
+                self
+            }
+            pub fn range<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BinRangefloat>,
+                T::Error: std::fmt::Display,
+            {
+                self.range = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Binfloat> for super::Binfloat {
+            type Error = String;
+            fn try_from(value: Binfloat) -> Result<Self, String> {
+                Ok(Self {
+                    count: value.count?,
+                    range: value.range?,
+                })
+            }
+        }
+
+        impl From<super::Binfloat> for Binfloat {
+            fn from(value: super::Binfloat) -> Self {
+                Self {
+                    count: Ok(value.count),
+                    range: Ok(value.range),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Binint16 {
+            count: Result<u64, String>,
+            range: Result<super::BinRangeint16, String>,
+        }
+
+        impl Default for Binint16 {
+            fn default() -> Self {
+                Self {
+                    count: Err("no value supplied for count".to_string()),
+                    range: Err("no value supplied for range".to_string()),
+                }
+            }
+        }
+
+        impl Binint16 {
+            pub fn count<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
+                self
+            }
+            pub fn range<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BinRangeint16>,
+                T::Error: std::fmt::Display,
+            {
+                self.range = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Binint16> for super::Binint16 {
+            type Error = String;
+            fn try_from(value: Binint16) -> Result<Self, String> {
+                Ok(Self {
+                    count: value.count?,
+                    range: value.range?,
+                })
+            }
+        }
+
+        impl From<super::Binint16> for Binint16 {
+            fn from(value: super::Binint16) -> Self {
+                Self {
+                    count: Ok(value.count),
+                    range: Ok(value.range),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Binint32 {
+            count: Result<u64, String>,
+            range: Result<super::BinRangeint32, String>,
+        }
+
+        impl Default for Binint32 {
+            fn default() -> Self {
+                Self {
+                    count: Err("no value supplied for count".to_string()),
+                    range: Err("no value supplied for range".to_string()),
+                }
+            }
+        }
+
+        impl Binint32 {
+            pub fn count<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
+                self
+            }
+            pub fn range<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BinRangeint32>,
+                T::Error: std::fmt::Display,
+            {
+                self.range = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Binint32> for super::Binint32 {
+            type Error = String;
+            fn try_from(value: Binint32) -> Result<Self, String> {
+                Ok(Self {
+                    count: value.count?,
+                    range: value.range?,
+                })
+            }
+        }
+
+        impl From<super::Binint32> for Binint32 {
+            fn from(value: super::Binint32) -> Self {
+                Self {
+                    count: Ok(value.count),
+                    range: Ok(value.range),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Binint64 {
             count: Result<u64, String>,
             range: Result<super::BinRangeint64, String>,
@@ -7737,6 +8686,291 @@ pub mod types {
 
         impl From<super::Binint64> for Binint64 {
             fn from(value: super::Binint64) -> Self {
+                Self {
+                    count: Ok(value.count),
+                    range: Ok(value.range),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Binint8 {
+            count: Result<u64, String>,
+            range: Result<super::BinRangeint8, String>,
+        }
+
+        impl Default for Binint8 {
+            fn default() -> Self {
+                Self {
+                    count: Err("no value supplied for count".to_string()),
+                    range: Err("no value supplied for range".to_string()),
+                }
+            }
+        }
+
+        impl Binint8 {
+            pub fn count<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
+                self
+            }
+            pub fn range<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BinRangeint8>,
+                T::Error: std::fmt::Display,
+            {
+                self.range = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Binint8> for super::Binint8 {
+            type Error = String;
+            fn try_from(value: Binint8) -> Result<Self, String> {
+                Ok(Self {
+                    count: value.count?,
+                    range: value.range?,
+                })
+            }
+        }
+
+        impl From<super::Binint8> for Binint8 {
+            fn from(value: super::Binint8) -> Self {
+                Self {
+                    count: Ok(value.count),
+                    range: Ok(value.range),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Binuint16 {
+            count: Result<u64, String>,
+            range: Result<super::BinRangeuint16, String>,
+        }
+
+        impl Default for Binuint16 {
+            fn default() -> Self {
+                Self {
+                    count: Err("no value supplied for count".to_string()),
+                    range: Err("no value supplied for range".to_string()),
+                }
+            }
+        }
+
+        impl Binuint16 {
+            pub fn count<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
+                self
+            }
+            pub fn range<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BinRangeuint16>,
+                T::Error: std::fmt::Display,
+            {
+                self.range = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Binuint16> for super::Binuint16 {
+            type Error = String;
+            fn try_from(value: Binuint16) -> Result<Self, String> {
+                Ok(Self {
+                    count: value.count?,
+                    range: value.range?,
+                })
+            }
+        }
+
+        impl From<super::Binuint16> for Binuint16 {
+            fn from(value: super::Binuint16) -> Self {
+                Self {
+                    count: Ok(value.count),
+                    range: Ok(value.range),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Binuint32 {
+            count: Result<u64, String>,
+            range: Result<super::BinRangeuint32, String>,
+        }
+
+        impl Default for Binuint32 {
+            fn default() -> Self {
+                Self {
+                    count: Err("no value supplied for count".to_string()),
+                    range: Err("no value supplied for range".to_string()),
+                }
+            }
+        }
+
+        impl Binuint32 {
+            pub fn count<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
+                self
+            }
+            pub fn range<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BinRangeuint32>,
+                T::Error: std::fmt::Display,
+            {
+                self.range = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Binuint32> for super::Binuint32 {
+            type Error = String;
+            fn try_from(value: Binuint32) -> Result<Self, String> {
+                Ok(Self {
+                    count: value.count?,
+                    range: value.range?,
+                })
+            }
+        }
+
+        impl From<super::Binuint32> for Binuint32 {
+            fn from(value: super::Binuint32) -> Self {
+                Self {
+                    count: Ok(value.count),
+                    range: Ok(value.range),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Binuint64 {
+            count: Result<u64, String>,
+            range: Result<super::BinRangeuint64, String>,
+        }
+
+        impl Default for Binuint64 {
+            fn default() -> Self {
+                Self {
+                    count: Err("no value supplied for count".to_string()),
+                    range: Err("no value supplied for range".to_string()),
+                }
+            }
+        }
+
+        impl Binuint64 {
+            pub fn count<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
+                self
+            }
+            pub fn range<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BinRangeuint64>,
+                T::Error: std::fmt::Display,
+            {
+                self.range = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Binuint64> for super::Binuint64 {
+            type Error = String;
+            fn try_from(value: Binuint64) -> Result<Self, String> {
+                Ok(Self {
+                    count: value.count?,
+                    range: value.range?,
+                })
+            }
+        }
+
+        impl From<super::Binuint64> for Binuint64 {
+            fn from(value: super::Binuint64) -> Self {
+                Self {
+                    count: Ok(value.count),
+                    range: Ok(value.range),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Binuint8 {
+            count: Result<u64, String>,
+            range: Result<super::BinRangeuint8, String>,
+        }
+
+        impl Default for Binuint8 {
+            fn default() -> Self {
+                Self {
+                    count: Err("no value supplied for count".to_string()),
+                    range: Err("no value supplied for range".to_string()),
+                }
+            }
+        }
+
+        impl Binuint8 {
+            pub fn count<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for count: {}", e));
+                self
+            }
+            pub fn range<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BinRangeuint8>,
+                T::Error: std::fmt::Display,
+            {
+                self.range = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for range: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Binuint8> for super::Binuint8 {
+            type Error = String;
+            fn try_from(value: Binuint8) -> Result<Self, String> {
+                Ok(Self {
+                    count: value.count?,
+                    range: value.range?,
+                })
+            }
+        }
+
+        impl From<super::Binuint8> for Binuint8 {
+            fn from(value: super::Binuint8) -> Self {
                 Self {
                     count: Ok(value.count),
                     range: Ok(value.range),
@@ -8071,6 +9305,63 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Cumulativefloat {
+            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            value: Result<f64, String>,
+        }
+
+        impl Default for Cumulativefloat {
+            fn default() -> Self {
+                Self {
+                    start_time: Err("no value supplied for start_time".to_string()),
+                    value: Err("no value supplied for value".to_string()),
+                }
+            }
+        }
+
+        impl Cumulativefloat {
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+            pub fn value<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.value = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for value: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Cumulativefloat> for super::Cumulativefloat {
+            type Error = String;
+            fn try_from(value: Cumulativefloat) -> Result<Self, String> {
+                Ok(Self {
+                    start_time: value.start_time?,
+                    value: value.value?,
+                })
+            }
+        }
+
+        impl From<super::Cumulativefloat> for Cumulativefloat {
+            fn from(value: super::Cumulativefloat) -> Self {
+                Self {
+                    start_time: Ok(value.start_time),
+                    value: Ok(value.value),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Cumulativeint64 {
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             value: Result<i64, String>,
@@ -8120,6 +9411,63 @@ pub mod types {
 
         impl From<super::Cumulativeint64> for Cumulativeint64 {
             fn from(value: super::Cumulativeint64) -> Self {
+                Self {
+                    start_time: Ok(value.start_time),
+                    value: Ok(value.value),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Cumulativeuint64 {
+            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            value: Result<u64, String>,
+        }
+
+        impl Default for Cumulativeuint64 {
+            fn default() -> Self {
+                Self {
+                    start_time: Err("no value supplied for start_time".to_string()),
+                    value: Err("no value supplied for value".to_string()),
+                }
+            }
+        }
+
+        impl Cumulativeuint64 {
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+            pub fn value<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.value = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for value: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Cumulativeuint64> for super::Cumulativeuint64 {
+            type Error = String;
+            fn try_from(value: Cumulativeuint64) -> Result<Self, String> {
+                Ok(Self {
+                    start_time: value.start_time?,
+                    value: value.value?,
+                })
+            }
+        }
+
+        impl From<super::Cumulativeuint64> for Cumulativeuint64 {
+            fn from(value: super::Cumulativeuint64) -> Self {
                 Self {
                     start_time: Ok(value.start_time),
                     value: Ok(value.value),
@@ -9351,6 +10699,219 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Histogramfloat {
+            bins: Result<Vec<super::Binfloat>, String>,
+            n_samples: Result<u64, String>,
+            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Histogramfloat {
+            fn default() -> Self {
+                Self {
+                    bins: Err("no value supplied for bins".to_string()),
+                    n_samples: Err("no value supplied for n_samples".to_string()),
+                    start_time: Err("no value supplied for start_time".to_string()),
+                }
+            }
+        }
+
+        impl Histogramfloat {
+            pub fn bins<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Binfloat>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bins = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
+                self
+            }
+            pub fn n_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.n_samples = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Histogramfloat> for super::Histogramfloat {
+            type Error = String;
+            fn try_from(value: Histogramfloat) -> Result<Self, String> {
+                Ok(Self {
+                    bins: value.bins?,
+                    n_samples: value.n_samples?,
+                    start_time: value.start_time?,
+                })
+            }
+        }
+
+        impl From<super::Histogramfloat> for Histogramfloat {
+            fn from(value: super::Histogramfloat) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    n_samples: Ok(value.n_samples),
+                    start_time: Ok(value.start_time),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Histogramint16 {
+            bins: Result<Vec<super::Binint16>, String>,
+            n_samples: Result<u64, String>,
+            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Histogramint16 {
+            fn default() -> Self {
+                Self {
+                    bins: Err("no value supplied for bins".to_string()),
+                    n_samples: Err("no value supplied for n_samples".to_string()),
+                    start_time: Err("no value supplied for start_time".to_string()),
+                }
+            }
+        }
+
+        impl Histogramint16 {
+            pub fn bins<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Binint16>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bins = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
+                self
+            }
+            pub fn n_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.n_samples = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Histogramint16> for super::Histogramint16 {
+            type Error = String;
+            fn try_from(value: Histogramint16) -> Result<Self, String> {
+                Ok(Self {
+                    bins: value.bins?,
+                    n_samples: value.n_samples?,
+                    start_time: value.start_time?,
+                })
+            }
+        }
+
+        impl From<super::Histogramint16> for Histogramint16 {
+            fn from(value: super::Histogramint16) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    n_samples: Ok(value.n_samples),
+                    start_time: Ok(value.start_time),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Histogramint32 {
+            bins: Result<Vec<super::Binint32>, String>,
+            n_samples: Result<u64, String>,
+            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Histogramint32 {
+            fn default() -> Self {
+                Self {
+                    bins: Err("no value supplied for bins".to_string()),
+                    n_samples: Err("no value supplied for n_samples".to_string()),
+                    start_time: Err("no value supplied for start_time".to_string()),
+                }
+            }
+        }
+
+        impl Histogramint32 {
+            pub fn bins<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Binint32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bins = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
+                self
+            }
+            pub fn n_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.n_samples = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Histogramint32> for super::Histogramint32 {
+            type Error = String;
+            fn try_from(value: Histogramint32) -> Result<Self, String> {
+                Ok(Self {
+                    bins: value.bins?,
+                    n_samples: value.n_samples?,
+                    start_time: value.start_time?,
+                })
+            }
+        }
+
+        impl From<super::Histogramint32> for Histogramint32 {
+            fn from(value: super::Histogramint32) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    n_samples: Ok(value.n_samples),
+                    start_time: Ok(value.start_time),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Histogramint64 {
             bins: Result<Vec<super::Binint64>, String>,
             n_samples: Result<u64, String>,
@@ -9413,6 +10974,361 @@ pub mod types {
 
         impl From<super::Histogramint64> for Histogramint64 {
             fn from(value: super::Histogramint64) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    n_samples: Ok(value.n_samples),
+                    start_time: Ok(value.start_time),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Histogramint8 {
+            bins: Result<Vec<super::Binint8>, String>,
+            n_samples: Result<u64, String>,
+            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Histogramint8 {
+            fn default() -> Self {
+                Self {
+                    bins: Err("no value supplied for bins".to_string()),
+                    n_samples: Err("no value supplied for n_samples".to_string()),
+                    start_time: Err("no value supplied for start_time".to_string()),
+                }
+            }
+        }
+
+        impl Histogramint8 {
+            pub fn bins<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Binint8>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bins = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
+                self
+            }
+            pub fn n_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.n_samples = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Histogramint8> for super::Histogramint8 {
+            type Error = String;
+            fn try_from(value: Histogramint8) -> Result<Self, String> {
+                Ok(Self {
+                    bins: value.bins?,
+                    n_samples: value.n_samples?,
+                    start_time: value.start_time?,
+                })
+            }
+        }
+
+        impl From<super::Histogramint8> for Histogramint8 {
+            fn from(value: super::Histogramint8) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    n_samples: Ok(value.n_samples),
+                    start_time: Ok(value.start_time),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Histogramuint16 {
+            bins: Result<Vec<super::Binuint16>, String>,
+            n_samples: Result<u64, String>,
+            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Histogramuint16 {
+            fn default() -> Self {
+                Self {
+                    bins: Err("no value supplied for bins".to_string()),
+                    n_samples: Err("no value supplied for n_samples".to_string()),
+                    start_time: Err("no value supplied for start_time".to_string()),
+                }
+            }
+        }
+
+        impl Histogramuint16 {
+            pub fn bins<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Binuint16>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bins = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
+                self
+            }
+            pub fn n_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.n_samples = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Histogramuint16> for super::Histogramuint16 {
+            type Error = String;
+            fn try_from(value: Histogramuint16) -> Result<Self, String> {
+                Ok(Self {
+                    bins: value.bins?,
+                    n_samples: value.n_samples?,
+                    start_time: value.start_time?,
+                })
+            }
+        }
+
+        impl From<super::Histogramuint16> for Histogramuint16 {
+            fn from(value: super::Histogramuint16) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    n_samples: Ok(value.n_samples),
+                    start_time: Ok(value.start_time),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Histogramuint32 {
+            bins: Result<Vec<super::Binuint32>, String>,
+            n_samples: Result<u64, String>,
+            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Histogramuint32 {
+            fn default() -> Self {
+                Self {
+                    bins: Err("no value supplied for bins".to_string()),
+                    n_samples: Err("no value supplied for n_samples".to_string()),
+                    start_time: Err("no value supplied for start_time".to_string()),
+                }
+            }
+        }
+
+        impl Histogramuint32 {
+            pub fn bins<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Binuint32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bins = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
+                self
+            }
+            pub fn n_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.n_samples = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Histogramuint32> for super::Histogramuint32 {
+            type Error = String;
+            fn try_from(value: Histogramuint32) -> Result<Self, String> {
+                Ok(Self {
+                    bins: value.bins?,
+                    n_samples: value.n_samples?,
+                    start_time: value.start_time?,
+                })
+            }
+        }
+
+        impl From<super::Histogramuint32> for Histogramuint32 {
+            fn from(value: super::Histogramuint32) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    n_samples: Ok(value.n_samples),
+                    start_time: Ok(value.start_time),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Histogramuint64 {
+            bins: Result<Vec<super::Binuint64>, String>,
+            n_samples: Result<u64, String>,
+            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Histogramuint64 {
+            fn default() -> Self {
+                Self {
+                    bins: Err("no value supplied for bins".to_string()),
+                    n_samples: Err("no value supplied for n_samples".to_string()),
+                    start_time: Err("no value supplied for start_time".to_string()),
+                }
+            }
+        }
+
+        impl Histogramuint64 {
+            pub fn bins<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Binuint64>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bins = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
+                self
+            }
+            pub fn n_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.n_samples = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Histogramuint64> for super::Histogramuint64 {
+            type Error = String;
+            fn try_from(value: Histogramuint64) -> Result<Self, String> {
+                Ok(Self {
+                    bins: value.bins?,
+                    n_samples: value.n_samples?,
+                    start_time: value.start_time?,
+                })
+            }
+        }
+
+        impl From<super::Histogramuint64> for Histogramuint64 {
+            fn from(value: super::Histogramuint64) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    n_samples: Ok(value.n_samples),
+                    start_time: Ok(value.start_time),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Histogramuint8 {
+            bins: Result<Vec<super::Binuint8>, String>,
+            n_samples: Result<u64, String>,
+            start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Histogramuint8 {
+            fn default() -> Self {
+                Self {
+                    bins: Err("no value supplied for bins".to_string()),
+                    n_samples: Err("no value supplied for n_samples".to_string()),
+                    start_time: Err("no value supplied for start_time".to_string()),
+                }
+            }
+        }
+
+        impl Histogramuint8 {
+            pub fn bins<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Binuint8>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bins = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
+                self
+            }
+            pub fn n_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.n_samples = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Histogramuint8> for super::Histogramuint8 {
+            type Error = String;
+            fn try_from(value: Histogramuint8) -> Result<Self, String> {
+                Ok(Self {
+                    bins: value.bins?,
+                    n_samples: value.n_samples?,
+                    start_time: value.start_time?,
+                })
+            }
+        }
+
+        impl From<super::Histogramuint8> for Histogramuint8 {
+            fn from(value: super::Histogramuint8) -> Self {
                 Self {
                     bins: Ok(value.bins),
                     n_samples: Ok(value.n_samples),
