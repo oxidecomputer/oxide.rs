@@ -5338,6 +5338,10 @@ pub mod types {
         pub id: uuid::Uuid,
         /// How users and groups are managed in this Silo
         pub identity_mode: SiloIdentityMode,
+        /// Mapping of which Fleet roles are conferred by each Silo role
+        ///
+        /// The default is that no Fleet roles are conferred by any Silo roles
+        /// unless there's a corresponding entry in this map.
         pub mapped_fleet_roles: std::collections::HashMap<String, Vec<FleetRole>>,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
@@ -5375,6 +5379,10 @@ pub mod types {
         pub description: String,
         pub discoverable: bool,
         pub identity_mode: SiloIdentityMode,
+        /// Mapping of which Fleet roles are conferred by each Silo role
+        ///
+        /// The default is that no Fleet roles are conferred by any Silo roles
+        /// unless there's a corresponding entry in this map.
         #[serde(default, skip_serializing_if = "std::collections::HashMap::is_empty")]
         pub mapped_fleet_roles: std::collections::HashMap<String, Vec<FleetRole>>,
         pub name: Name,
@@ -6321,14 +6329,21 @@ pub mod types {
     /// network protocol configuration.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SwitchPortSettingsCreate {
+        /// Addresses indexed by interface name.
         pub addresses: std::collections::HashMap<String, AddressConfig>,
+        /// BGP peers indexed by interface name.
         pub bgp_peers: std::collections::HashMap<String, BgpPeerConfig>,
         pub description: String,
         pub groups: Vec<NameOrId>,
+        /// Interfaces indexed by link name.
         pub interfaces: std::collections::HashMap<String, SwitchInterfaceConfig>,
+        /// Links indexed by phy name. On ports that are not broken out, this is
+        /// always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
+        /// phy0-phy3, etc.
         pub links: std::collections::HashMap<String, LinkConfig>,
         pub name: Name,
         pub port_config: SwitchPortConfig,
+        /// Routes indexed by interface name.
         pub routes: std::collections::HashMap<String, RouteConfig>,
     }
 
