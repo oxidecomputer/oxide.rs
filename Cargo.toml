@@ -20,9 +20,7 @@ dialoguer = "0.10.4"
 dirs = "4.0.0"
 dropshot = { git = "https://github.com/oxidecomputer/dropshot" }
 env_logger = "0.10.0"
-# TODO need a new expectorate release after we're happy with it
-#expectorate = { version = "1.0.8", features = ["predicates"] }
-expectorate = { git = "https://github.com/oxidecomputer/expectorate", features = ["predicates"] }
+expectorate = { version = "1.1.0", features = ["predicates"] }
 futures = "0.3.28"
 http = "0.2.9"
 httpmock = "0.6.8"
