@@ -906,10 +906,6 @@
           "about": "Launch an instance from a disk image.",
           "args": [
             {
-              "long": "cpus",
-              "help": "Number of CPUs"
-            },
-            {
               "long": "description",
               "help": "Description of the instance to create"
             },
@@ -923,19 +919,23 @@
             },
             {
               "long": "image",
-              "help": "Image name"
+              "help": "Source image"
             },
             {
               "long": "memory",
-              "help": "Ammount of memory e.g 32M. Suffix can be k,m,g,t"
+              "help": "Instance memory e.g 32M. Suffix can be k,m,g,t"
             },
             {
               "long": "name",
               "help": "Name of the instance to create"
             },
             {
+              "long": "ncpus",
+              "help": "Instance CPU count"
+            },
+            {
               "long": "project",
-              "help": "Project to create the instance in"
+              "help": "Project for image and instance"
             },
             {
               "long": "start",
