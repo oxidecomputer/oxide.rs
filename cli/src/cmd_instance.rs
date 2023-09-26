@@ -9,8 +9,8 @@ use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
 use oxide_api::types::{
-    ByteCount, DiskSource, ExternalIpCreate, InstanceCpuCount, InstanceCreate,
-    InstanceDiskAttachment, InstanceNetworkInterfaceAttachment, NameOrId,
+    ByteCount, DiskSource, ExternalIpCreate, InstanceCpuCount, InstanceDiskAttachment, Name,
+    NameOrId,
 };
 
 use oxide_api::ClientImagesExt;
@@ -205,11 +205,11 @@ impl RunnableCmd for CmdInstanceSerialHistory {
 pub struct CmdInstanceFromImage {
     /// Name of the instance to create
     #[clap(long)]
-    name: String,
+    name: Name,
 
-    /// Project to create the instance in.
+    /// Project for image and instance
     #[clap(long)]
-    project: String,
+    project: NameOrId,
 
     /// Description of the instance to create
     #[clap(long)]
@@ -219,17 +219,17 @@ pub struct CmdInstanceFromImage {
     #[clap(long)]
     hostname: String,
 
-    /// Ammount of memory e.g 32M. Suffix can be k,m,g,t
+    /// Instance memory e.g 32M. Suffix can be k,m,g,t
     #[clap(long)]
     memory: ByteCount,
 
-    /// Number of CPUs
+    /// Instance CPU count
     #[clap(long)]
-    cpus: usize,
+    ncpus: InstanceCpuCount,
 
-    /// Image name
+    /// Source image
     #[clap(long)]
-    image: String,
+    image: NameOrId,
 
     /// Boot disk size e.g. 512G. Suffix can be k,m,g,t
     #[clap(long)]
@@ -243,42 +243,41 @@ pub struct CmdInstanceFromImage {
 #[async_trait]
 impl RunnableCmd for CmdInstanceFromImage {
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
-        let image_view = ctx
-            .client()
-            .image_view()
-            .image(&self.image)
-            .project(&self.project)
-            .send()
-            .await?;
-
-        let body = InstanceCreate {
-            name: self.name.parse().expect("valid instance name"),
-            description: self.description.clone(),
-            disks: vec![InstanceDiskAttachment::Create {
-                description: format!("{} disk", self.name),
-                disk_source: DiskSource::Image {
-                    image_id: image_view.id,
-                },
-                name: format!("{}-disk", self.name)
-                    .parse()
-                    .expect("valid disk name"),
-                size: self.disk_size.clone(),
-            }],
-            external_ips: vec![ExternalIpCreate::Ephemeral { pool_name: None }],
-            hostname: self.name.clone(),
-            memory: self.memory.clone(),
-            ncpus: InstanceCpuCount(self.cpus.try_into().expect("valid number of cpus")),
-            network_interfaces: InstanceNetworkInterfaceAttachment::Default,
-            start: self.start,
-            user_data: String::new(),
+        // Validate the image and get its ID (if specified by name).
+        let mut image_request = ctx.client().image_view().image(&self.image);
+        // We only need the project if the image is specified by name.
+        if let NameOrId::Name(_) = &self.image {
+            image_request = image_request.project(&self.project);
         };
+        let image_view = image_request.send().await?;
 
-        ctx.client()
+        let instance = ctx
+            .client()
             .instance_create()
             .project(&self.project)
-            .body(body)
+            .body_map(|body| {
+                body.name(self.name.clone())
+                    .description(self.description.clone())
+                    .disks(vec![InstanceDiskAttachment::Create {
+                        description: format!("{} disk", *self.name),
+                        disk_source: DiskSource::Image {
+                            image_id: image_view.id,
+                        },
+                        name: format!("{}-disk", *self.name)
+                            .parse()
+                            .expect("valid disk name"),
+                        size: self.disk_size.clone(),
+                    }])
+                    .external_ips(vec![ExternalIpCreate::Ephemeral { pool_name: None }])
+                    .hostname(self.hostname.clone())
+                    .memory(self.memory.clone())
+                    .ncpus(self.ncpus.clone())
+                    .start(self.start)
+            })
             .send()
             .await?;
+
+        println!("instance {} created", instance.id);
 
         Ok(())
     }
