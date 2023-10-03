@@ -53,7 +53,7 @@ test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
 tokio = { version = "1.32.0", features = ["full"] }
 tokio-tungstenite = "0.19.0"
-toml = "0.7.6"
+toml = "0.8.0"
 toml_edit = "0.19.15"
 url = "2.4.1"
 uuid = { version = "1.4.1", features = ["serde", "v4"] }
