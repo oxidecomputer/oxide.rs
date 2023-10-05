@@ -1392,12 +1392,14 @@ pub mod types {
         pub device_path: String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
+        /// ID of image from which disk was created, if any
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub image_id: Option<uuid::Uuid>,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub project_id: uuid::Uuid,
         pub size: ByteCount,
+        /// ID of snapshot from which disk was created, if any
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub snapshot_id: Option<uuid::Uuid>,
         pub state: DiskState,
