@@ -46,7 +46,7 @@ struct OxideCli {
     pub timeout: Option<u64>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ResolveValue {
     pub host: String,
     pub port: u16,
@@ -524,5 +524,46 @@ impl CommandExt for Command {
                 self.subcommand(new_subcmd)
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn resolve_value_parses_ipv4_addr() {
+        let addr = "192.168.1.1";
+        let host = "oxide.computer";
+        let port = 12345;
+
+        let parsed: ResolveValue = format!("{host}:{port}:{addr}").parse().unwrap();
+
+        assert_eq!(
+            parsed,
+            ResolveValue {
+                host: host.to_string(),
+                port,
+                addr: addr.parse().unwrap(),
+            }
+        );
+    }
+
+    #[test]
+    fn resolve_value_parses_ipv6_addr() {
+        let addr = "fdb2:a840:2504:355::1";
+        let host = "oxide.computer";
+        let port = 12345;
+
+        let parsed: ResolveValue = format!("{host}:{port}:[{addr}]").parse().unwrap();
+
+        assert_eq!(
+            parsed,
+            ResolveValue {
+                host: host.to_string(),
+                port,
+                addr: addr.parse().unwrap(),
+            }
+        );
     }
 }
