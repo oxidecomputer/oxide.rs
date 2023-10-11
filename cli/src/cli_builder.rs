@@ -46,7 +46,7 @@ struct OxideCli {
     pub timeout: Option<u64>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ResolveValue {
     pub host: String,
     pub port: u16,
@@ -57,7 +57,7 @@ impl FromStr for ResolveValue {
     type Err = String;
 
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        let values = s.split(':').collect::<Vec<_>>();
+        let values = s.splitn(3, ':').collect::<Vec<_>>();
         let [host, port, addr] = values.as_slice() else {
             return Err(r#"value must be "host:port:addr"#.to_string());
         };
@@ -66,6 +66,13 @@ impl FromStr for ResolveValue {
         let port = port
             .parse()
             .map_err(|_| format!("error parsing port '{}'", port))?;
+
+        // `IpAddr::parse()` does not accept enclosing brackets on IPv6
+        // addresses; strip them off if they exist.
+        let addr = addr
+            .strip_prefix('[')
+            .and_then(|s| s.strip_suffix(']'))
+            .unwrap_or(addr);
         let addr = addr
             .parse()
             .map_err(|_| format!("error parsing address '{}'", addr))?;
@@ -517,5 +524,46 @@ impl CommandExt for Command {
                 self.subcommand(new_subcmd)
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn resolve_value_parses_ipv4_addr() {
+        let addr = "192.168.1.1";
+        let host = "oxide.computer";
+        let port = 12345;
+
+        let parsed: ResolveValue = format!("{host}:{port}:{addr}").parse().unwrap();
+
+        assert_eq!(
+            parsed,
+            ResolveValue {
+                host: host.to_string(),
+                port,
+                addr: addr.parse().unwrap(),
+            }
+        );
+    }
+
+    #[test]
+    fn resolve_value_parses_ipv6_addr() {
+        let addr = "fdb2:a840:2504:355::1";
+        let host = "oxide.computer";
+        let port = 12345;
+
+        let parsed: ResolveValue = format!("{host}:{port}:[{addr}]").parse().unwrap();
+
+        assert_eq!(
+            parsed,
+            ResolveValue {
+                host: host.to_string(),
+                port,
+                addr: addr.parse().unwrap(),
+            }
+        );
     }
 }
