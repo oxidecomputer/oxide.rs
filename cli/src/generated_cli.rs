@@ -76,6 +76,7 @@ impl Cli {
             CliCommand::InstanceNetworkInterfaceDelete => {
                 Self::cli_instance_network_interface_delete()
             }
+            CliCommand::Ping => Self::cli_ping(),
             CliCommand::PolicyView => Self::cli_policy_view(),
             CliCommand::PolicyUpdate => Self::cli_policy_update(),
             CliCommand::ProjectList => Self::cli_project_list(),
@@ -1973,6 +1974,12 @@ impl Cli {
                  any secondary interfaces. A new primary interface must be designated first. The \
                  primary interface can be deleted if there are no secondary interfaces.",
             )
+    }
+
+    pub fn cli_ping() -> clap::Command {
+        clap::Command::new("")
+            .about("Ping API")
+            .long_about("Always responds with Ok if it responds at all.")
     }
 
     pub fn cli_policy_view() -> clap::Command {
@@ -4883,6 +4890,9 @@ impl<T: CliOverride> Cli<T> {
                 self.execute_instance_network_interface_delete(matches)
                     .await;
             }
+            CliCommand::Ping => {
+                self.execute_ping(matches).await;
+            }
             CliCommand::PolicyView => {
                 self.execute_policy_view(matches).await;
             }
@@ -6853,6 +6863,20 @@ impl<T: CliOverride> Cli<T> {
         self.over
             .execute_instance_network_interface_delete(matches, &mut request)
             .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_ping(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ping();
+        self.over.execute_ping(matches, &mut request).unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -10060,6 +10084,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_ping(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::Ping,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_policy_view(
         &self,
         matches: &clap::ArgMatches,
@@ -10865,6 +10897,7 @@ pub enum CliCommand {
     InstanceNetworkInterfaceView,
     InstanceNetworkInterfaceUpdate,
     InstanceNetworkInterfaceDelete,
+    Ping,
     PolicyView,
     PolicyUpdate,
     ProjectList,
@@ -11019,6 +11052,7 @@ impl CliCommand {
             CliCommand::InstanceNetworkInterfaceView,
             CliCommand::InstanceNetworkInterfaceUpdate,
             CliCommand::InstanceNetworkInterfaceDelete,
+            CliCommand::Ping,
             CliCommand::PolicyView,
             CliCommand::PolicyUpdate,
             CliCommand::ProjectList,

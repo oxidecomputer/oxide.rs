@@ -474,6 +474,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CurrentUserSshKeyView => Some("current-user ssh-key view"),
         CliCommand::CurrentUserSshKeyDelete => Some("current-user ssh-key delete"),
 
+        CliCommand::Ping => Some("ping"),
+
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
         | CliCommand::DeviceAuthConfirm

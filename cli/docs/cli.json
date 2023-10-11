@@ -1476,6 +1476,11 @@
       ]
     },
     {
+      "name": "ping",
+      "about": "Ping API",
+      "long_about": "Always responds with Ok if it responds at all."
+    },
+    {
       "name": "policy",
       "subcommands": [
         {

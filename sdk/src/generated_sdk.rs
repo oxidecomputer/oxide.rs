@@ -1392,12 +1392,14 @@ pub mod types {
         pub device_path: String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
+        /// ID of image from which disk was created, if any
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub image_id: Option<uuid::Uuid>,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         pub project_id: uuid::Uuid,
         pub size: ByteCount,
+        /// ID of snapshot from which disk was created, if any
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub snapshot_id: Option<uuid::Uuid>,
         pub state: DiskState,
@@ -4494,6 +4496,88 @@ pub mod types {
     impl PhysicalDiskResultsPage {
         pub fn builder() -> builder::PhysicalDiskResultsPage {
             builder::PhysicalDiskResultsPage::default()
+        }
+    }
+
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Ping {
+        /// Whether the external API is reachable. Will always be Ok if the
+        /// endpoint returns anything at all.
+        pub status: PingStatus,
+    }
+
+    impl From<&Ping> for Ping {
+        fn from(value: &Ping) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Ping {
+        pub fn builder() -> builder::Ping {
+            builder::Ping::default()
+        }
+    }
+
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum PingStatus {
+        #[serde(rename = "ok")]
+        Ok,
+    }
+
+    impl From<&PingStatus> for PingStatus {
+        fn from(value: &PingStatus) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for PingStatus {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Ok => "ok".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for PingStatus {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "ok" => Ok(Self::Ok),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for PingStatus {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for PingStatus {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for PingStatus {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
         }
     }
 
@@ -14213,6 +14297,49 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Ping {
+            status: Result<super::PingStatus, String>,
+        }
+
+        impl Default for Ping {
+            fn default() -> Self {
+                Self {
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+
+        impl Ping {
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::PingStatus>,
+                T::Error: std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Ping> for super::Ping {
+            type Error = String;
+            fn try_from(value: Ping) -> Result<Self, String> {
+                Ok(Self {
+                    status: value.status?,
+                })
+            }
+        }
+
+        impl From<super::Ping> for Ping {
+            fn from(value: super::Ping) -> Self {
+                Self {
+                    status: Ok(value.status),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Project {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -23251,6 +23378,27 @@ impl ClientSystemSilosExt for Client {
     }
 }
 
+pub trait ClientSystemStatusExt {
+    /// Ping API
+    ///
+    /// Always responds with Ok if it responds at all.
+    ///
+    /// Sends a `GET` request to `/v1/ping`
+    ///
+    /// ```ignore
+    /// let response = client.ping()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ping(&self) -> builder::Ping;
+}
+
+impl ClientSystemStatusExt for Client {
+    fn ping(&self) -> builder::Ping {
+        builder::Ping::new(self)
+    }
+}
+
 pub trait ClientVpcsExt {
     /// List firewall rules
     ///
@@ -29698,6 +29846,46 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemStatusExt::ping`]
+    ///
+    /// [`ClientSystemStatusExt::ping`]: super::ClientSystemStatusExt::ping
+    #[derive(Debug, Clone)]
+    pub struct Ping<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> Ping<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client }
+        }
+
+        /// Sends a `GET` request to `/v1/ping`
+        pub async fn send(self) -> Result<ResponseValue<types::Ping>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/ping", client.baseurl,);
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -39820,5 +40008,6 @@ pub mod prelude {
     pub use super::ClientSystemMetricsExt;
     pub use super::ClientSystemNetworkingExt;
     pub use super::ClientSystemSilosExt;
+    pub use super::ClientSystemStatusExt;
     pub use super::ClientVpcsExt;
 }
