@@ -23995,13 +23995,19 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::DeviceAuthRequest>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/device/auth", client.baseurl,);
-            let request = client.client.post(url).form_urlencoded(&body)?.build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            let __progenitor_url = format!("{}/device/auth", client.baseurl,);
+            let __progenitor_request = client
+                .client
+                .post(__progenitor_url)
+                .form_urlencoded(&body)?
+                .build()?;
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(__progenitor_response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(
+                    __progenitor_response,
+                ))),
             }
         }
     }
@@ -24050,27 +24056,27 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::DeviceAuthVerify>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/device/confirm", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/device/confirm", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24118,13 +24124,19 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::DeviceAccessTokenRequest>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/device/token", client.baseurl,);
-            let request = client.client.post(url).form_urlencoded(&body)?.build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            let __progenitor_url = format!("{}/device/token", client.baseurl,);
+            let __progenitor_request = client
+                .client
+                .post(__progenitor_url)
+                .form_urlencoded(&body)?
+                .build()?;
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(__progenitor_response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(
+                    __progenitor_response,
+                ))),
             }
         }
     }
@@ -24191,32 +24203,32 @@ pub mod builder {
             let silo_name = silo_name.map_err(Error::InvalidRequest)?;
             let provider_name = provider_name.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/login/{}/saml/{}",
                 client.baseurl,
                 encode_path(&silo_name.to_string()),
                 encode_path(&provider_name.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::CONTENT_TYPE,
                     reqwest::header::HeaderValue::from_static("application/octet-stream"),
                 )
                 .body(body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24287,37 +24299,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/certificates", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/certificates", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -24422,27 +24434,27 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::CertificateCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/certificates", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/certificates", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24481,30 +24493,30 @@ pub mod builder {
                 certificate,
             } = self;
             let certificate = certificate.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/certificates/{}",
                 client.baseurl,
                 encode_path(&certificate.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24543,30 +24555,30 @@ pub mod builder {
                 certificate,
             } = self;
             let certificate = certificate.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/certificates/{}",
                 client.baseurl,
                 encode_path(&certificate.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24652,40 +24664,40 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/disks", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -24806,30 +24818,30 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::DiskCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
-            let request = client
+            let __progenitor_url = format!("{}/v1/disks", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("project", project.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24883,35 +24895,35 @@ pub mod builder {
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24965,35 +24977,35 @@ pub mod builder {
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25074,36 +25086,36 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ImportBlocksBulkWrite>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/bulk-write",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25157,35 +25169,35 @@ pub mod builder {
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/bulk-write-start",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25239,35 +25251,35 @@ pub mod builder {
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/bulk-write-stop",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25346,36 +25358,36 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::FinalizeDisk>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/finalize",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25456,36 +25468,36 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ImportBlocksFromUrl>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/import",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25630,51 +25642,51 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/metrics/{}",
                 client.baseurl,
                 encode_path(&disk.to_string()),
                 encode_path(&metric.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
+            let mut __progenitor_query = Vec::with_capacity(6usize);
             if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
+                __progenitor_query.push(("end_time", v.to_string()));
             }
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &order {
-                query.push(("order", v.to_string()));
+                __progenitor_query.push(("order", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
+                __progenitor_query.push(("start_time", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -25804,37 +25816,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/groups", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/groups", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -25926,30 +25938,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Group>, Error<types::Error>> {
             let Self { client, group_id } = self;
             let group_id = group_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/groups/{}",
                 client.baseurl,
                 encode_path(&group_id.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26035,40 +26047,40 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/images", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/images", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -26190,32 +26202,32 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ImageCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/images", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
+            let __progenitor_url = format!("{}/v1/images", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26269,35 +26281,35 @@ pub mod builder {
             } = self;
             let image = image.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/images/{}",
                 client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26351,35 +26363,35 @@ pub mod builder {
             } = self;
             let image = image.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/images/{}",
                 client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26432,33 +26444,33 @@ pub mod builder {
             } = self;
             let image = image.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/images/{}/demote",
                 client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("project", project.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26512,35 +26524,35 @@ pub mod builder {
             } = self;
             let image = image.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/images/{}/promote",
                 client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26626,40 +26638,40 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/instances", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/instances", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -26780,30 +26792,30 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::InstanceCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/instances", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
-            let request = client
+            let __progenitor_url = format!("{}/v1/instances", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("project", project.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26857,35 +26869,35 @@ pub mod builder {
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26939,35 +26951,35 @@ pub mod builder {
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27067,44 +27079,44 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/disks",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -27240,36 +27252,36 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::DiskPath>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/disks/attach",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27348,36 +27360,36 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::DiskPath>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/disks/detach",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27433,35 +27445,35 @@ pub mod builder {
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/external-ips",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27540,36 +27552,36 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::InstanceMigrate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/migrate",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27623,35 +27635,35 @@ pub mod builder {
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/reboot",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27752,44 +27764,44 @@ pub mod builder {
             let max_bytes = max_bytes.map_err(Error::InvalidRequest)?;
             let most_recent = most_recent.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/serial-console",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &from_start {
-                query.push(("from_start", v.to_string()));
+                __progenitor_query.push(("from_start", v.to_string()));
             }
             if let Some(v) = &max_bytes {
-                query.push(("max_bytes", v.to_string()));
+                __progenitor_query.push(("max_bytes", v.to_string()));
             }
             if let Some(v) = &most_recent {
-                query.push(("most_recent", v.to_string()));
+                __progenitor_query.push(("most_recent", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27861,22 +27873,22 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let most_recent = most_recent.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/serial-console/stream",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &most_recent {
-                query.push(("most_recent", v.to_string()));
+                __progenitor_query.push(("most_recent", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
-                .query(&query)
+                .get(__progenitor_url)
+                .query(&__progenitor_query)
                 .header(reqwest::header::CONNECTION, "Upgrade")
                 .header(reqwest::header::UPGRADE, "websocket")
                 .header(reqwest::header::SEC_WEBSOCKET_VERSION, "13")
@@ -27888,12 +27900,12 @@ pub mod builder {
                     ),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                101u16 => ResponseValue::upgrade(response).await,
-                200..=299 => ResponseValue::upgrade(response).await,
-                _ => Err(Error::UnexpectedResponse(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                101u16 => ResponseValue::upgrade(__progenitor_response).await,
+                200..=299 => ResponseValue::upgrade(__progenitor_response).await,
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27947,35 +27959,35 @@ pub mod builder {
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/start",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28029,35 +28041,35 @@ pub mod builder {
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/stop",
                 client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28143,40 +28155,40 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/ip-pools", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/ip-pools", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -28287,35 +28299,35 @@ pub mod builder {
             } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/ip-pools/{}",
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28380,31 +28392,31 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::UsernamePasswordCredentials>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/login/{}/local",
                 client.baseurl,
                 encode_path(&silo_name.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28425,26 +28437,26 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/logout`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client } = self;
-            let url = format!("{}/v1/logout", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/logout", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28465,26 +28477,26 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/me`
         pub async fn send(self) -> Result<ResponseValue<types::CurrentUser>, Error<types::Error>> {
             let Self { client } = self;
-            let url = format!("{}/v1/me", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/me", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28555,37 +28567,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/me/groups", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/me/groups", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -28712,37 +28724,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/me/ssh-keys", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/me/ssh-keys", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -28845,27 +28857,27 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::SshKeyCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/me/ssh-keys", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/me/ssh-keys", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28901,30 +28913,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
             let Self { client, ssh_key } = self;
             let ssh_key = ssh_key.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/me/ssh-keys/{}",
                 client.baseurl,
                 encode_path(&ssh_key.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28960,30 +28972,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, ssh_key } = self;
             let ssh_key = ssh_key.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/me/ssh-keys/{}",
                 client.baseurl,
                 encode_path(&ssh_key.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29114,50 +29126,50 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/metrics/{}",
                 client.baseurl,
                 encode_path(&metric_name.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
+            let mut __progenitor_query = Vec::with_capacity(6usize);
             if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
+                __progenitor_query.push(("end_time", v.to_string()));
             }
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &order {
-                query.push(("order", v.to_string()));
+                __progenitor_query.push(("order", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
+                __progenitor_query.push(("start_time", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -29318,43 +29330,43 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/network-interfaces", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let __progenitor_url = format!("{}/v1/network-interfaces", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(5usize);
             if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
+                __progenitor_query.push(("instance", v.to_string()));
             }
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -29495,33 +29507,33 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::InstanceNetworkInterfaceCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/network-interfaces", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            query.push(("instance", instance.to_string()));
+            let __progenitor_url = format!("{}/v1/network-interfaces", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
+            __progenitor_query.push(("instance", instance.to_string()));
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29592,38 +29604,38 @@ pub mod builder {
             let interface = interface.map_err(Error::InvalidRequest)?;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/network-interfaces/{}",
                 client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
+                __progenitor_query.push(("instance", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29720,39 +29732,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::InstanceNetworkInterfaceUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/network-interfaces/{}",
                 client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
+                __progenitor_query.push(("instance", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29821,38 +29833,38 @@ pub mod builder {
             let interface = interface.map_err(Error::InvalidRequest)?;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/network-interfaces/{}",
                 client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
+                __progenitor_query.push(("instance", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29873,26 +29885,26 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/ping`
         pub async fn send(self) -> Result<ResponseValue<types::Ping>, Error<types::Error>> {
             let Self { client } = self;
-            let url = format!("{}/v1/ping", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/ping", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29915,26 +29927,26 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
             let Self { client } = self;
-            let url = format!("{}/v1/policy", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/policy", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29983,27 +29995,27 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::SiloRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/policy", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/policy", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30074,37 +30086,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/projects", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/projects", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -30207,27 +30219,27 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ProjectCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/projects", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/projects", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30263,30 +30275,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
             let Self { client, project } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/projects/{}",
                 client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30350,31 +30362,31 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ProjectUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/projects/{}",
                 client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30410,30 +30422,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, project } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/projects/{}",
                 client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30471,30 +30483,30 @@ pub mod builder {
         ) -> Result<ResponseValue<types::ProjectRolePolicy>, Error<types::Error>> {
             let Self { client, project } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/projects/{}/policy",
                 client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30562,31 +30574,31 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ProjectRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/projects/{}/policy",
                 client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30672,40 +30684,40 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/snapshots", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/snapshots", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -30826,30 +30838,30 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::SnapshotCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/snapshots", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
-            let request = client
+            let __progenitor_url = format!("{}/v1/snapshots", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("project", project.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30903,35 +30915,35 @@ pub mod builder {
             } = self;
             let snapshot = snapshot.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/snapshots/{}",
                 client.baseurl,
                 encode_path(&snapshot.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30985,35 +30997,35 @@ pub mod builder {
             } = self;
             let snapshot = snapshot.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/snapshots/{}",
                 client.baseurl,
                 encode_path(&snapshot.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -31084,37 +31096,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/system/hardware/disks", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -31241,37 +31253,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/racks", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/system/hardware/racks", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -31363,30 +31375,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Rack>, Error<types::Error>> {
             let Self { client, rack_id } = self;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/racks/{}",
                 client.baseurl,
                 encode_path(&rack_id.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -31457,37 +31469,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/sleds", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/system/hardware/sleds", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -31579,30 +31591,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Sled>, Error<types::Error>> {
             let Self { client, sled_id } = self;
             let sled_id = sled_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/sleds/{}",
                 client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -31687,41 +31699,41 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/sleds/{}/disks",
                 client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -31864,41 +31876,41 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/sleds/{}/instances",
                 client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -32041,40 +32053,40 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let switch_port_id = switch_port_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/switch-port", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/system/hardware/switch-port", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
             if let Some(v) = &switch_port_id {
-                query.push(("switch_port_id", v.to_string()));
+                __progenitor_query.push(("switch_port_id", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -32227,35 +32239,35 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::SwitchPortApplySettings>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/switch-port/{}/settings",
                 client.baseurl,
                 encode_path(&port.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            query.push(("rack_id", rack_id.to_string()));
-            query.push(("switch_location", switch_location.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(2usize);
+            __progenitor_query.push(("rack_id", rack_id.to_string()));
+            __progenitor_query.push(("switch_location", switch_location.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -32324,34 +32336,34 @@ pub mod builder {
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
             let switch_location = switch_location.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/switch-port/{}/settings",
                 client.baseurl,
                 encode_path(&port.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            query.push(("rack_id", rack_id.to_string()));
-            query.push(("switch_location", switch_location.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(2usize);
+            __progenitor_query.push(("rack_id", rack_id.to_string()));
+            __progenitor_query.push(("switch_location", switch_location.to_string()));
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -32422,37 +32434,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/switches", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/system/hardware/switches", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -32544,30 +32556,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Switch>, Error<types::Error>> {
             let Self { client, switch_id } = self;
             let switch_id = switch_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/switches/{}",
                 client.baseurl,
                 encode_path(&switch_id.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -32654,40 +32666,40 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/identity-providers", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/system/identity-providers", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &silo {
-                query.push(("silo", v.to_string()));
+                __progenitor_query.push(("silo", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -32805,33 +32817,33 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::UserCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/identity-providers/local/users",
                 client.baseurl,
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -32885,33 +32897,33 @@ pub mod builder {
             } = self;
             let user_id = user_id.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/identity-providers/local/users/{}",
                 client.baseurl,
                 encode_path(&user_id.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -32979,34 +32991,34 @@ pub mod builder {
             let user_id = user_id.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/identity-providers/local/users/{}/set-password",
                 client.baseurl,
                 encode_path(&user_id.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33069,30 +33081,30 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::SamlIdentityProviderCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/identity-providers/saml", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let __progenitor_url = format!("{}/v1/system/identity-providers/saml", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33148,33 +33160,33 @@ pub mod builder {
             } = self;
             let provider = provider.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/identity-providers/saml/{}",
                 client.baseurl,
                 encode_path(&provider.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33245,37 +33257,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/system/ip-pools", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -33378,27 +33390,27 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::IpPoolCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/system/ip-pools", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33434,30 +33446,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self { client, pool } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}",
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33517,31 +33529,31 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::IpPoolUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}",
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33577,30 +33589,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, pool } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}",
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33670,38 +33682,38 @@ pub mod builder {
             let pool = pool.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}/ranges",
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -33805,31 +33817,31 @@ pub mod builder {
             let Self { client, pool, body } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}/ranges/add",
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33878,31 +33890,31 @@ pub mod builder {
             let Self { client, pool, body } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}/ranges/remove",
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33923,26 +33935,26 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/system/ip-pools-service`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self { client } = self;
-            let url = format!("{}/v1/system/ip-pools-service", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/system/ip-pools-service", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33998,34 +34010,34 @@ pub mod builder {
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools-service/ranges", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url = format!("{}/v1/system/ip-pools-service/ranges", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -34116,27 +34128,28 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools-service/ranges/add", client.baseurl,);
-            let request = client
+            let __progenitor_url =
+                format!("{}/v1/system/ip-pools-service/ranges/add", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -34173,30 +34186,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools-service/ranges/remove",
                 client.baseurl,
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -34327,50 +34340,50 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/metrics/{}",
                 client.baseurl,
                 encode_path(&metric_name.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
+            let mut __progenitor_query = Vec::with_capacity(6usize);
             if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
+                __progenitor_query.push(("end_time", v.to_string()));
             }
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &order {
-                query.push(("order", v.to_string()));
+                __progenitor_query.push(("order", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &silo {
-                query.push(("silo", v.to_string()));
+                __progenitor_query.push(("silo", v.to_string()));
             }
             if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
+                __progenitor_query.push(("start_time", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -34500,37 +34513,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/address-lot", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/system/networking/address-lot", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -34637,27 +34650,27 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::AddressLotCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/address-lot", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/system/networking/address-lot", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -34697,30 +34710,30 @@ pub mod builder {
                 address_lot,
             } = self;
             let address_lot = address_lot.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/address-lot/{}",
                 client.baseurl,
                 encode_path(&address_lot.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -34807,41 +34820,41 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/address-lot/{}/blocks",
                 client.baseurl,
                 encode_path(&address_lot.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -34970,37 +34983,38 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/loopback-address", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url =
+                format!("{}/v1/system/networking/loopback-address", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -35108,27 +35122,28 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::LoopbackAddressCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/loopback-address", client.baseurl,);
-            let request = client
+            let __progenitor_url =
+                format!("{}/v1/system/networking/loopback-address", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35212,7 +35227,7 @@ pub mod builder {
             let switch_location = switch_location.map_err(Error::InvalidRequest)?;
             let address = address.map_err(Error::InvalidRequest)?;
             let subnet_mask = subnet_mask.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/loopback-address/{}/{}/{}/{}",
                 client.baseurl,
                 encode_path(&rack_id.to_string()),
@@ -35220,25 +35235,25 @@ pub mod builder {
                 encode_path(&address.to_string()),
                 encode_path(&subnet_mask.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35327,43 +35342,43 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let port_settings = port_settings.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/switch-port-settings",
                 client.baseurl,
             );
-            let mut query = Vec::with_capacity(4usize);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &port_settings {
-                query.push(("port_settings", v.to_string()));
+                __progenitor_query.push(("port_settings", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -35474,30 +35489,30 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::SwitchPortSettingsCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/switch-port-settings",
                 client.baseurl,
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35539,34 +35554,34 @@ pub mod builder {
                 port_settings,
             } = self;
             let port_settings = port_settings.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/switch-port-settings",
                 client.baseurl,
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &port_settings {
-                query.push(("port_settings", v.to_string()));
+                __progenitor_query.push(("port_settings", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35606,30 +35621,30 @@ pub mod builder {
         ) -> Result<ResponseValue<types::SwitchPortSettingsView>, Error<types::Error>> {
             let Self { client, port } = self;
             let port = port.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/switch-port-settings/{}",
                 client.baseurl,
                 encode_path(&port.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35652,26 +35667,26 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::FleetRolePolicy>, Error<types::Error>> {
             let Self { client } = self;
-            let url = format!("{}/v1/system/policy", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/system/policy", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35720,27 +35735,27 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::FleetRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/policy", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/system/policy", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35796,34 +35811,34 @@ pub mod builder {
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/roles", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url = format!("{}/v1/system/roles", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -35914,30 +35929,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Role>, Error<types::Error>> {
             let Self { client, role_name } = self;
             let role_name = role_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/roles/{}",
                 client.baseurl,
                 encode_path(&role_name.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36008,37 +36023,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/silos", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/system/silos", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -36141,27 +36156,27 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::SiloCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/silos", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/system/silos", client.baseurl,);
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36197,30 +36212,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Silo>, Error<types::Error>> {
             let Self { client, silo } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/silos/{}",
                 client.baseurl,
                 encode_path(&silo.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36256,30 +36271,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, silo } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/silos/{}",
                 client.baseurl,
                 encode_path(&silo.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36317,30 +36332,30 @@ pub mod builder {
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
             let Self { client, silo } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/silos/{}/policy",
                 client.baseurl,
                 encode_path(&silo.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36402,31 +36417,31 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::SiloRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/silos/{}/policy",
                 client.baseurl,
                 encode_path(&silo.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36512,40 +36527,40 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/users", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/system/users", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &silo {
-                query.push(("silo", v.to_string()));
+                __progenitor_query.push(("silo", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -36655,33 +36670,33 @@ pub mod builder {
             } = self;
             let user_id = user_id.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/users/{}",
                 client.baseurl,
                 encode_path(&user_id.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36752,37 +36767,37 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/users-builtin", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/system/users-builtin", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -36874,30 +36889,30 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::UserBuiltin>, Error<types::Error>> {
             let Self { client, user } = self;
             let user = user.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/users-builtin/{}",
                 client.baseurl,
                 encode_path(&user.to_string()),
             );
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36983,40 +36998,40 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/users", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/users", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &group {
-                query.push(("group", v.to_string()));
+                __progenitor_query.push(("group", v.to_string()));
             }
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -37129,32 +37144,32 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("vpc", vpc.to_string()));
-            let request = client
+            __progenitor_query.push(("vpc", vpc.to_string()));
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37236,33 +37251,33 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcFirewallRuleUpdateParams>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("vpc", vpc.to_string()));
-            let request = client
+            __progenitor_query.push(("vpc", vpc.to_string()));
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37378,46 +37393,46 @@ pub mod builder {
             let router = router.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
-            let mut query = Vec::with_capacity(6usize);
+            let __progenitor_url = format!("{}/v1/vpc-router-routes", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(6usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &router {
-                query.push(("router", v.to_string()));
+                __progenitor_query.push(("router", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -37572,36 +37587,36 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::RouterRouteCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/vpc-router-routes", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("router", router.to_string()));
+            __progenitor_query.push(("router", router.to_string()));
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37684,39 +37699,39 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-router-routes/{}",
                 client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("router", router.to_string()));
+            __progenitor_query.push(("router", router.to_string()));
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37827,42 +37842,42 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::RouterRouteUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-router-routes/{}",
                 client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &router {
-                query.push(("router", v.to_string()));
+                __progenitor_query.push(("router", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37946,41 +37961,41 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-router-routes/{}",
                 client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &router {
-                query.push(("router", v.to_string()));
+                __progenitor_query.push(("router", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38081,43 +38096,43 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-routers", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let __progenitor_url = format!("{}/v1/vpc-routers", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(5usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -38254,33 +38269,33 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcRouterCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-routers", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url = format!("{}/v1/vpc-routers", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("vpc", vpc.to_string()));
-            let request = client
+            __progenitor_query.push(("vpc", vpc.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38349,38 +38364,38 @@ pub mod builder {
             let router = router.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-routers/{}",
                 client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38474,39 +38489,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcRouterUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-routers/{}",
                 client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38575,38 +38590,38 @@ pub mod builder {
             let router = router.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-routers/{}",
                 client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38707,43 +38722,43 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-subnets", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let __progenitor_url = format!("{}/v1/vpc-subnets", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(5usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -38880,33 +38895,33 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcSubnetCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-subnets", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url = format!("{}/v1/vpc-subnets", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("vpc", vpc.to_string()));
-            let request = client
+            __progenitor_query.push(("vpc", vpc.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38975,38 +38990,38 @@ pub mod builder {
             let subnet = subnet.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-subnets/{}",
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39100,39 +39115,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcSubnetUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-subnets/{}",
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39201,38 +39216,38 @@ pub mod builder {
             let subnet = subnet.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-subnets/{}",
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39349,47 +39364,47 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-subnets/{}/network-interfaces",
                 client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(5usize);
+            let mut __progenitor_query = Vec::with_capacity(5usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -39535,40 +39550,40 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpcs", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/vpcs", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -39689,30 +39704,30 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpcs", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
-            let request = client
+            let __progenitor_url = format!("{}/v1/vpcs", client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("project", project.to_string()));
+            let __progenitor_request = client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39766,35 +39781,35 @@ pub mod builder {
             } = self;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpcs/{}",
                 client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39873,36 +39888,36 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpcs/{}",
                 client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39956,35 +39971,35 @@ pub mod builder {
             } = self;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpcs/{}",
                 client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = client.client.execute(__progenitor_request).await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
