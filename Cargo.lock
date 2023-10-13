@@ -1956,7 +1956,7 @@ dependencies = [
  "tokio",
  "tokio-tungstenite",
  "toml 0.8.2",
- "toml_edit 0.19.15",
+ "toml_edit 0.20.2",
  "url",
  "uuid",
 ]
