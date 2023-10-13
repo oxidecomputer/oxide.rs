@@ -1955,7 +1955,7 @@ dependencies = [
  "thouart",
  "tokio",
  "tokio-tungstenite",
- "toml 0.7.8",
+ "toml 0.8.2",
  "toml_edit 0.19.15",
  "url",
  "uuid",
