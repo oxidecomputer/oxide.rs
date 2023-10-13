@@ -23956,14 +23956,14 @@ pub mod builder {
     /// [`ClientHiddenExt::device_auth_request`]: super::ClientHiddenExt::device_auth_request
     #[derive(Debug, Clone)]
     pub struct DeviceAuthRequest<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::DeviceAuthRequest, String>,
     }
 
     impl<'a> DeviceAuthRequest<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::DeviceAuthRequest::default()),
             }
         }
@@ -23991,17 +23991,29 @@ pub mod builder {
 
         /// Sends a `POST` request to `/device/auth`
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::DeviceAuthRequest>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/device/auth", client.baseurl,);
-            let request = client.client.post(url).form_urlencoded(&body)?.build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            let __progenitor_url = format!("{}/device/auth", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
+                .client
+                .post(__progenitor_url)
+                .form_urlencoded(&body)?
+                .build()?;
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(__progenitor_response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(
+                    __progenitor_response,
+                ))),
             }
         }
     }
@@ -24011,14 +24023,14 @@ pub mod builder {
     /// [`ClientHiddenExt::device_auth_confirm`]: super::ClientHiddenExt::device_auth_confirm
     #[derive(Debug, Clone)]
     pub struct DeviceAuthConfirm<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::DeviceAuthVerify, String>,
     }
 
     impl<'a> DeviceAuthConfirm<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::DeviceAuthVerify::default()),
             }
         }
@@ -24046,31 +24058,37 @@ pub mod builder {
 
         /// Sends a `POST` request to `/device/confirm`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::DeviceAuthVerify>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/device/confirm", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/device/confirm", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24080,14 +24098,14 @@ pub mod builder {
     /// [`ClientHiddenExt::device_access_token`]: super::ClientHiddenExt::device_access_token
     #[derive(Debug, Clone)]
     pub struct DeviceAccessToken<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::DeviceAccessTokenRequest, String>,
     }
 
     impl<'a> DeviceAccessToken<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::DeviceAccessTokenRequest::default()),
             }
         }
@@ -24114,17 +24132,29 @@ pub mod builder {
 
         /// Sends a `POST` request to `/device/token`
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::DeviceAccessTokenRequest>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/device/token", client.baseurl,);
-            let request = client.client.post(url).form_urlencoded(&body)?.build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
-                _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            let __progenitor_url = format!("{}/device/token", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
+                .client
+                .post(__progenitor_url)
+                .form_urlencoded(&body)?
+                .build()?;
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(__progenitor_response)),
+                _ => Err(Error::ErrorResponse(ResponseValue::stream(
+                    __progenitor_response,
+                ))),
             }
         }
     }
@@ -24134,7 +24164,7 @@ pub mod builder {
     /// [`ClientLoginExt::login_saml`]: super::ClientLoginExt::login_saml
     #[derive(Debug)]
     pub struct LoginSaml<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         silo_name: Result<types::Name, String>,
         provider_name: Result<types::Name, String>,
         body: Result<reqwest::Body, String>,
@@ -24143,7 +24173,7 @@ pub mod builder {
     impl<'a> LoginSaml<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 silo_name: Err("silo_name was not initialized".to_string()),
                 provider_name: Err("provider_name was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
@@ -24183,7 +24213,7 @@ pub mod builder {
         /// Sends a `POST` request to `/login/{silo_name}/saml/{provider_name}`
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 silo_name,
                 provider_name,
                 body,
@@ -24191,32 +24221,35 @@ pub mod builder {
             let silo_name = silo_name.map_err(Error::InvalidRequest)?;
             let provider_name = provider_name.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/login/{}/saml/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&silo_name.to_string()),
                 encode_path(&provider_name.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::CONTENT_TYPE,
                     reqwest::header::HeaderValue::from_static("application/octet-stream"),
                 )
                 .body(body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200..=299 => Ok(ResponseValue::stream(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200..=299 => Ok(ResponseValue::stream(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24226,7 +24259,7 @@ pub mod builder {
     /// [`ClientSilosExt::certificate_list`]: super::ClientSilosExt::certificate_list
     #[derive(Debug, Clone)]
     pub struct CertificateList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -24235,7 +24268,7 @@ pub mod builder {
     impl<'a> CertificateList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -24279,7 +24312,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::CertificateResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -24287,37 +24320,40 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/certificates", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/certificates", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -24383,14 +24419,14 @@ pub mod builder {
     /// [`ClientSilosExt::certificate_create`]: super::ClientSilosExt::certificate_create
     #[derive(Debug, Clone)]
     pub struct CertificateCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::CertificateCreate, String>,
     }
 
     impl<'a> CertificateCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::CertificateCreate::default()),
             }
         }
@@ -24418,31 +24454,37 @@ pub mod builder {
 
         /// Sends a `POST` request to `/v1/certificates`
         pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::CertificateCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/certificates", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/certificates", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24452,14 +24494,14 @@ pub mod builder {
     /// [`ClientSilosExt::certificate_view`]: super::ClientSilosExt::certificate_view
     #[derive(Debug, Clone)]
     pub struct CertificateView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         certificate: Result<types::NameOrId, String>,
     }
 
     impl<'a> CertificateView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 certificate: Err("certificate was not initialized".to_string()),
             }
         }
@@ -24477,34 +24519,37 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/certificates/{certificate}`
         pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 certificate,
             } = self;
             let certificate = certificate.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/certificates/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&certificate.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24514,14 +24559,14 @@ pub mod builder {
     /// [`ClientSilosExt::certificate_delete`]: super::ClientSilosExt::certificate_delete
     #[derive(Debug, Clone)]
     pub struct CertificateDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         certificate: Result<types::NameOrId, String>,
     }
 
     impl<'a> CertificateDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 certificate: Err("certificate was not initialized".to_string()),
             }
         }
@@ -24539,34 +24584,37 @@ pub mod builder {
         /// Sends a `DELETE` request to `/v1/certificates/{certificate}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 certificate,
             } = self;
             let certificate = certificate.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/certificates/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&certificate.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24576,7 +24624,7 @@ pub mod builder {
     /// [`ClientDisksExt::disk_list`]: super::ClientDisksExt::disk_list
     #[derive(Debug, Clone)]
     pub struct DiskList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -24586,7 +24634,7 @@ pub mod builder {
     impl<'a> DiskList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
@@ -24642,7 +24690,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::DiskResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 project,
@@ -24652,40 +24700,43 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/disks", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -24752,7 +24803,7 @@ pub mod builder {
     /// [`ClientDisksExt::disk_create`]: super::ClientDisksExt::disk_create
     #[derive(Debug, Clone)]
     pub struct DiskCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<types::NameOrId, String>,
         body: Result<types::builder::DiskCreate, String>,
     }
@@ -24760,7 +24811,7 @@ pub mod builder {
     impl<'a> DiskCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Err("project was not initialized".to_string()),
                 body: Ok(types::builder::DiskCreate::default()),
             }
@@ -24798,7 +24849,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/disks`
         pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 body,
             } = self;
@@ -24806,30 +24857,33 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::DiskCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
-            let request = client
+            let __progenitor_url = format!("{}/v1/disks", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("project", project.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24839,7 +24893,7 @@ pub mod builder {
     /// [`ClientDisksExt::disk_view`]: super::ClientDisksExt::disk_view
     #[derive(Debug, Clone)]
     pub struct DiskView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -24847,7 +24901,7 @@ pub mod builder {
     impl<'a> DiskView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 disk: Err("disk was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -24877,41 +24931,44 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/disks/{disk}`
         pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 disk,
                 project,
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -24921,7 +24978,7 @@ pub mod builder {
     /// [`ClientDisksExt::disk_delete`]: super::ClientDisksExt::disk_delete
     #[derive(Debug, Clone)]
     pub struct DiskDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -24929,7 +24986,7 @@ pub mod builder {
     impl<'a> DiskDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 disk: Err("disk was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -24959,41 +25016,44 @@ pub mod builder {
         /// Sends a `DELETE` request to `/v1/disks/{disk}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 disk,
                 project,
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25003,7 +25063,7 @@ pub mod builder {
     /// [`ClientDisksExt::disk_bulk_write_import`]: super::ClientDisksExt::disk_bulk_write_import
     #[derive(Debug, Clone)]
     pub struct DiskBulkWriteImport<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::builder::ImportBlocksBulkWrite, String>,
@@ -25012,7 +25072,7 @@ pub mod builder {
     impl<'a> DiskBulkWriteImport<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 disk: Err("disk was not initialized".to_string()),
                 project: Ok(None),
                 body: Ok(types::builder::ImportBlocksBulkWrite::default()),
@@ -25064,7 +25124,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 disk,
                 project,
                 body,
@@ -25074,36 +25134,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ImportBlocksBulkWrite>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/bulk-write",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25113,7 +25176,7 @@ pub mod builder {
     /// [`ClientDisksExt::disk_bulk_write_import_start`]: super::ClientDisksExt::disk_bulk_write_import_start
     #[derive(Debug, Clone)]
     pub struct DiskBulkWriteImportStart<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -25121,7 +25184,7 @@ pub mod builder {
     impl<'a> DiskBulkWriteImportStart<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 disk: Err("disk was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -25151,41 +25214,44 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write-start`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 disk,
                 project,
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/bulk-write-start",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25195,7 +25261,7 @@ pub mod builder {
     /// [`ClientDisksExt::disk_bulk_write_import_stop`]: super::ClientDisksExt::disk_bulk_write_import_stop
     #[derive(Debug, Clone)]
     pub struct DiskBulkWriteImportStop<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -25203,7 +25269,7 @@ pub mod builder {
     impl<'a> DiskBulkWriteImportStop<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 disk: Err("disk was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -25233,41 +25299,44 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write-stop`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 disk,
                 project,
             } = self;
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/bulk-write-stop",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25277,7 +25346,7 @@ pub mod builder {
     /// [`ClientDisksExt::disk_finalize_import`]: super::ClientDisksExt::disk_finalize_import
     #[derive(Debug, Clone)]
     pub struct DiskFinalizeImport<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::builder::FinalizeDisk, String>,
@@ -25286,7 +25355,7 @@ pub mod builder {
     impl<'a> DiskFinalizeImport<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 disk: Err("disk was not initialized".to_string()),
                 project: Ok(None),
                 body: Ok(types::builder::FinalizeDisk::default()),
@@ -25336,7 +25405,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/disks/{disk}/finalize`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 disk,
                 project,
                 body,
@@ -25346,36 +25415,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::FinalizeDisk>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/finalize",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25385,7 +25457,7 @@ pub mod builder {
     /// [`ClientDisksExt::disk_import_blocks_from_url`]: super::ClientDisksExt::disk_import_blocks_from_url
     #[derive(Debug, Clone)]
     pub struct DiskImportBlocksFromUrl<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::builder::ImportBlocksFromUrl, String>,
@@ -25394,7 +25466,7 @@ pub mod builder {
     impl<'a> DiskImportBlocksFromUrl<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 disk: Err("disk was not initialized".to_string()),
                 project: Ok(None),
                 body: Ok(types::builder::ImportBlocksFromUrl::default()),
@@ -25446,7 +25518,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/disks/{disk}/import`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 disk,
                 project,
                 body,
@@ -25456,36 +25528,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ImportBlocksFromUrl>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/import",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&disk.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25495,7 +25570,7 @@ pub mod builder {
     /// [`ClientDisksExt::disk_metrics_list`]: super::ClientDisksExt::disk_metrics_list
     #[derive(Debug, Clone)]
     pub struct DiskMetricsList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         disk: Result<types::NameOrId, String>,
         metric: Result<types::DiskMetricName, String>,
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
@@ -25509,7 +25584,7 @@ pub mod builder {
     impl<'a> DiskMetricsList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 disk: Err("disk was not initialized".to_string()),
                 metric: Err("metric was not initialized".to_string()),
                 end_time: Ok(None),
@@ -25612,7 +25687,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 disk,
                 metric,
                 end_time,
@@ -25630,51 +25705,54 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/disks/{}/metrics/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&disk.to_string()),
                 encode_path(&metric.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
+            let mut __progenitor_query = Vec::with_capacity(6usize);
             if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
+                __progenitor_query.push(("end_time", v.to_string()));
             }
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &order {
-                query.push(("order", v.to_string()));
+                __progenitor_query.push(("order", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
+                __progenitor_query.push(("start_time", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -25743,7 +25821,7 @@ pub mod builder {
     /// [`ClientSilosExt::group_list`]: super::ClientSilosExt::group_list
     #[derive(Debug, Clone)]
     pub struct GroupList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
@@ -25752,7 +25830,7 @@ pub mod builder {
     impl<'a> GroupList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -25796,7 +25874,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::GroupResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -25804,37 +25882,40 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/groups", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/groups", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -25900,14 +25981,14 @@ pub mod builder {
     /// [`ClientSilosExt::group_view`]: super::ClientSilosExt::group_view
     #[derive(Debug, Clone)]
     pub struct GroupView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         group_id: Result<uuid::Uuid, String>,
     }
 
     impl<'a> GroupView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 group_id: Err("group_id was not initialized".to_string()),
             }
         }
@@ -25924,32 +26005,38 @@ pub mod builder {
 
         /// Sends a `GET` request to `/v1/groups/{group_id}`
         pub async fn send(self) -> Result<ResponseValue<types::Group>, Error<types::Error>> {
-            let Self { client, group_id } = self;
+            let Self {
+                __progenitor_client,
+                group_id,
+            } = self;
             let group_id = group_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/groups/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&group_id.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -25959,7 +26046,7 @@ pub mod builder {
     /// [`ClientImagesExt::image_list`]: super::ClientImagesExt::image_list
     #[derive(Debug, Clone)]
     pub struct ImageList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -25969,7 +26056,7 @@ pub mod builder {
     impl<'a> ImageList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
@@ -26025,7 +26112,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::ImageResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 project,
@@ -26035,40 +26122,43 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/images", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/images", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -26135,7 +26225,7 @@ pub mod builder {
     /// [`ClientImagesExt::image_create`]: super::ClientImagesExt::image_create
     #[derive(Debug, Clone)]
     pub struct ImageCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::builder::ImageCreate, String>,
     }
@@ -26143,7 +26233,7 @@ pub mod builder {
     impl<'a> ImageCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Ok(None),
                 body: Ok(types::builder::ImageCreate::default()),
             }
@@ -26182,7 +26272,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/images`
         pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 body,
             } = self;
@@ -26190,32 +26280,35 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ImageCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/images", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
+            let __progenitor_url = format!("{}/v1/images", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26225,7 +26318,7 @@ pub mod builder {
     /// [`ClientImagesExt::image_view`]: super::ClientImagesExt::image_view
     #[derive(Debug, Clone)]
     pub struct ImageView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         image: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -26233,7 +26326,7 @@ pub mod builder {
     impl<'a> ImageView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 image: Err("image was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -26263,41 +26356,44 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/images/{image}`
         pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 image,
                 project,
             } = self;
             let image = image.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/images/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26307,7 +26403,7 @@ pub mod builder {
     /// [`ClientImagesExt::image_delete`]: super::ClientImagesExt::image_delete
     #[derive(Debug, Clone)]
     pub struct ImageDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         image: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -26315,7 +26411,7 @@ pub mod builder {
     impl<'a> ImageDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 image: Err("image was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -26345,41 +26441,44 @@ pub mod builder {
         /// Sends a `DELETE` request to `/v1/images/{image}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 image,
                 project,
             } = self;
             let image = image.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/images/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26389,7 +26488,7 @@ pub mod builder {
     /// [`ClientImagesExt::image_demote`]: super::ClientImagesExt::image_demote
     #[derive(Debug, Clone)]
     pub struct ImageDemote<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         image: Result<types::NameOrId, String>,
         project: Result<types::NameOrId, String>,
     }
@@ -26397,7 +26496,7 @@ pub mod builder {
     impl<'a> ImageDemote<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 image: Err("image was not initialized".to_string()),
                 project: Err("project was not initialized".to_string()),
             }
@@ -26426,39 +26525,42 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/images/{image}/demote`
         pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 image,
                 project,
             } = self;
             let image = image.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/images/{}/demote",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("project", project.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26468,7 +26570,7 @@ pub mod builder {
     /// [`ClientImagesExt::image_promote`]: super::ClientImagesExt::image_promote
     #[derive(Debug, Clone)]
     pub struct ImagePromote<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         image: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -26476,7 +26578,7 @@ pub mod builder {
     impl<'a> ImagePromote<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 image: Err("image was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -26506,41 +26608,44 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/images/{image}/promote`
         pub async fn send(self) -> Result<ResponseValue<types::Image>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 image,
                 project,
             } = self;
             let image = image.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/images/{}/promote",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&image.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26550,7 +26655,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_list`]: super::ClientInstancesExt::instance_list
     #[derive(Debug, Clone)]
     pub struct InstanceList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -26560,7 +26665,7 @@ pub mod builder {
     impl<'a> InstanceList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
@@ -26616,7 +26721,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::InstanceResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 project,
@@ -26626,40 +26731,43 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/instances", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/instances", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -26726,7 +26834,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_create`]: super::ClientInstancesExt::instance_create
     #[derive(Debug, Clone)]
     pub struct InstanceCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<types::NameOrId, String>,
         body: Result<types::builder::InstanceCreate, String>,
     }
@@ -26734,7 +26842,7 @@ pub mod builder {
     impl<'a> InstanceCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Err("project was not initialized".to_string()),
                 body: Ok(types::builder::InstanceCreate::default()),
             }
@@ -26772,7 +26880,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/instances`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 body,
             } = self;
@@ -26780,30 +26888,33 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::InstanceCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/instances", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
-            let request = client
+            let __progenitor_url = format!("{}/v1/instances", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("project", project.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26813,7 +26924,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_view`]: super::ClientInstancesExt::instance_view
     #[derive(Debug, Clone)]
     pub struct InstanceView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -26821,7 +26932,7 @@ pub mod builder {
     impl<'a> InstanceView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -26851,41 +26962,44 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/instances/{instance}`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26895,7 +27009,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_delete`]: super::ClientInstancesExt::instance_delete
     #[derive(Debug, Clone)]
     pub struct InstanceDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -26903,7 +27017,7 @@ pub mod builder {
     impl<'a> InstanceDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -26933,41 +27047,44 @@ pub mod builder {
         /// Sends a `DELETE` request to `/v1/instances/{instance}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -26977,7 +27094,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_disk_list`]: super::ClientInstancesExt::instance_disk_list
     #[derive(Debug, Clone)]
     pub struct InstanceDiskList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
@@ -26988,7 +27105,7 @@ pub mod builder {
     impl<'a> InstanceDiskList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -27055,7 +27172,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::DiskResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 limit,
                 page_token,
@@ -27067,44 +27184,47 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/disks",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -27171,7 +27291,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_disk_attach`]: super::ClientInstancesExt::instance_disk_attach
     #[derive(Debug, Clone)]
     pub struct InstanceDiskAttach<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::builder::DiskPath, String>,
@@ -27180,7 +27300,7 @@ pub mod builder {
     impl<'a> InstanceDiskAttach<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
                 body: Ok(types::builder::DiskPath::default()),
@@ -27230,7 +27350,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/instances/{instance}/disks/attach`
         pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 project,
                 body,
@@ -27240,36 +27360,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::DiskPath>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/disks/attach",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27279,7 +27402,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_disk_detach`]: super::ClientInstancesExt::instance_disk_detach
     #[derive(Debug, Clone)]
     pub struct InstanceDiskDetach<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::builder::DiskPath, String>,
@@ -27288,7 +27411,7 @@ pub mod builder {
     impl<'a> InstanceDiskDetach<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
                 body: Ok(types::builder::DiskPath::default()),
@@ -27338,7 +27461,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/instances/{instance}/disks/detach`
         pub async fn send(self) -> Result<ResponseValue<types::Disk>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 project,
                 body,
@@ -27348,36 +27471,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::DiskPath>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/disks/detach",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27387,7 +27513,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_external_ip_list`]: super::ClientInstancesExt::instance_external_ip_list
     #[derive(Debug, Clone)]
     pub struct InstanceExternalIpList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -27395,7 +27521,7 @@ pub mod builder {
     impl<'a> InstanceExternalIpList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -27427,41 +27553,44 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::ExternalIpResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/external-ips",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27471,7 +27600,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_migrate`]: super::ClientInstancesExt::instance_migrate
     #[derive(Debug, Clone)]
     pub struct InstanceMigrate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::builder::InstanceMigrate, String>,
@@ -27480,7 +27609,7 @@ pub mod builder {
     impl<'a> InstanceMigrate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
                 body: Ok(types::builder::InstanceMigrate::default()),
@@ -27530,7 +27659,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/instances/{instance}/migrate`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 project,
                 body,
@@ -27540,36 +27669,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::InstanceMigrate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/migrate",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27579,7 +27711,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_reboot`]: super::ClientInstancesExt::instance_reboot
     #[derive(Debug, Clone)]
     pub struct InstanceReboot<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -27587,7 +27719,7 @@ pub mod builder {
     impl<'a> InstanceReboot<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -27617,41 +27749,44 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/instances/{instance}/reboot`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/reboot",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27661,7 +27796,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_serial_console`]: super::ClientInstancesExt::instance_serial_console
     #[derive(Debug, Clone)]
     pub struct InstanceSerialConsole<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         from_start: Result<Option<u64>, String>,
         max_bytes: Result<Option<u64>, String>,
@@ -27672,7 +27807,7 @@ pub mod builder {
     impl<'a> InstanceSerialConsole<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 from_start: Ok(None),
                 max_bytes: Ok(None),
@@ -27740,7 +27875,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::InstanceSerialConsoleData>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 from_start,
                 max_bytes,
@@ -27752,44 +27887,47 @@ pub mod builder {
             let max_bytes = max_bytes.map_err(Error::InvalidRequest)?;
             let most_recent = most_recent.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/serial-console",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(4usize);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &from_start {
-                query.push(("from_start", v.to_string()));
+                __progenitor_query.push(("from_start", v.to_string()));
             }
             if let Some(v) = &max_bytes {
-                query.push(("max_bytes", v.to_string()));
+                __progenitor_query.push(("max_bytes", v.to_string()));
             }
             if let Some(v) = &most_recent {
-                query.push(("most_recent", v.to_string()));
+                __progenitor_query.push(("most_recent", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27799,7 +27937,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_serial_console_stream`]: super::ClientInstancesExt::instance_serial_console_stream
     #[derive(Debug, Clone)]
     pub struct InstanceSerialConsoleStream<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         most_recent: Result<Option<u64>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -27808,7 +27946,7 @@ pub mod builder {
     impl<'a> InstanceSerialConsoleStream<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 most_recent: Ok(None),
                 project: Ok(None),
@@ -27853,7 +27991,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<reqwest::Upgraded>, Error<reqwest::Upgraded>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 most_recent,
                 project,
@@ -27861,22 +27999,22 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let most_recent = most_recent.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/serial-console/stream",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &most_recent {
-                query.push(("most_recent", v.to_string()));
+                __progenitor_query.push(("most_recent", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
-                .query(&query)
+                .get(__progenitor_url)
+                .query(&__progenitor_query)
                 .header(reqwest::header::CONNECTION, "Upgrade")
                 .header(reqwest::header::UPGRADE, "websocket")
                 .header(reqwest::header::SEC_WEBSOCKET_VERSION, "13")
@@ -27888,12 +28026,15 @@ pub mod builder {
                     ),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                101u16 => ResponseValue::upgrade(response).await,
-                200..=299 => ResponseValue::upgrade(response).await,
-                _ => Err(Error::UnexpectedResponse(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                101u16 => ResponseValue::upgrade(__progenitor_response).await,
+                200..=299 => ResponseValue::upgrade(__progenitor_response).await,
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27903,7 +28044,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_start`]: super::ClientInstancesExt::instance_start
     #[derive(Debug, Clone)]
     pub struct InstanceStart<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -27911,7 +28052,7 @@ pub mod builder {
     impl<'a> InstanceStart<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -27941,41 +28082,44 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/instances/{instance}/start`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/start",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -27985,7 +28129,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_stop`]: super::ClientInstancesExt::instance_stop
     #[derive(Debug, Clone)]
     pub struct InstanceStop<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -27993,7 +28137,7 @@ pub mod builder {
     impl<'a> InstanceStop<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -28023,41 +28167,44 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/instances/{instance}/stop`
         pub async fn send(self) -> Result<ResponseValue<types::Instance>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 project,
             } = self;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/instances/{}/stop",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&instance.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                202u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                202u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28067,7 +28214,7 @@ pub mod builder {
     /// [`ClientProjectsExt::project_ip_pool_list`]: super::ClientProjectsExt::project_ip_pool_list
     #[derive(Debug, Clone)]
     pub struct ProjectIpPoolList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -28077,7 +28224,7 @@ pub mod builder {
     impl<'a> ProjectIpPoolList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
@@ -28133,7 +28280,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::IpPoolResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 project,
@@ -28143,40 +28290,43 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/ip-pools", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/ip-pools", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -28243,7 +28393,7 @@ pub mod builder {
     /// [`ClientProjectsExt::project_ip_pool_view`]: super::ClientProjectsExt::project_ip_pool_view
     #[derive(Debug, Clone)]
     pub struct ProjectIpPoolView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -28251,7 +28401,7 @@ pub mod builder {
     impl<'a> ProjectIpPoolView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 pool: Err("pool was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -28281,41 +28431,44 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/ip-pools/{pool}`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 pool,
                 project,
             } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/ip-pools/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28325,7 +28478,7 @@ pub mod builder {
     /// [`ClientLoginExt::login_local`]: super::ClientLoginExt::login_local
     #[derive(Debug, Clone)]
     pub struct LoginLocal<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         silo_name: Result<types::Name, String>,
         body: Result<types::builder::UsernamePasswordCredentials, String>,
     }
@@ -28333,7 +28486,7 @@ pub mod builder {
     impl<'a> LoginLocal<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 silo_name: Err("silo_name was not initialized".to_string()),
                 body: Ok(types::builder::UsernamePasswordCredentials::default()),
             }
@@ -28372,7 +28525,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/login/{silo_name}/local`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 silo_name,
                 body,
             } = self;
@@ -28380,31 +28533,34 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::UsernamePasswordCredentials>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/login/{}/local",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&silo_name.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28414,37 +28570,44 @@ pub mod builder {
     /// [`ClientHiddenExt::logout`]: super::ClientHiddenExt::logout
     #[derive(Debug, Clone)]
     pub struct Logout<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
     }
 
     impl<'a> Logout<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
+            Self {
+                __progenitor_client: client,
+            }
         }
 
         /// Sends a `POST` request to `/v1/logout`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/logout", client.baseurl,);
-            let request = client
+            let Self {
+                __progenitor_client,
+            } = self;
+            let __progenitor_url = format!("{}/v1/logout", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28454,37 +28617,44 @@ pub mod builder {
     /// [`ClientSessionExt::current_user_view`]: super::ClientSessionExt::current_user_view
     #[derive(Debug, Clone)]
     pub struct CurrentUserView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
     }
 
     impl<'a> CurrentUserView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
+            Self {
+                __progenitor_client: client,
+            }
         }
 
         /// Sends a `GET` request to `/v1/me`
         pub async fn send(self) -> Result<ResponseValue<types::CurrentUser>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/me", client.baseurl,);
-            let request = client
+            let Self {
+                __progenitor_client,
+            } = self;
+            let __progenitor_url = format!("{}/v1/me", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28494,7 +28664,7 @@ pub mod builder {
     /// [`ClientSessionExt::current_user_groups`]: super::ClientSessionExt::current_user_groups
     #[derive(Debug, Clone)]
     pub struct CurrentUserGroups<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
@@ -28503,7 +28673,7 @@ pub mod builder {
     impl<'a> CurrentUserGroups<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -28547,7 +28717,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::GroupResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -28555,37 +28725,40 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/me/groups", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/me/groups", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -28651,7 +28824,7 @@ pub mod builder {
     /// [`ClientSessionExt::current_user_ssh_key_list`]: super::ClientSessionExt::current_user_ssh_key_list
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -28660,7 +28833,7 @@ pub mod builder {
     impl<'a> CurrentUserSshKeyList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -28704,7 +28877,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::SshKeyResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -28712,37 +28885,40 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/me/ssh-keys", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/me/ssh-keys", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -28808,14 +28984,14 @@ pub mod builder {
     /// [`ClientSessionExt::current_user_ssh_key_create`]: super::ClientSessionExt::current_user_ssh_key_create
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::SshKeyCreate, String>,
     }
 
     impl<'a> CurrentUserSshKeyCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::SshKeyCreate::default()),
             }
         }
@@ -28841,31 +29017,37 @@ pub mod builder {
 
         /// Sends a `POST` request to `/v1/me/ssh-keys`
         pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::SshKeyCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/me/ssh-keys", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/me/ssh-keys", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28875,14 +29057,14 @@ pub mod builder {
     /// [`ClientSessionExt::current_user_ssh_key_view`]: super::ClientSessionExt::current_user_ssh_key_view
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         ssh_key: Result<types::NameOrId, String>,
     }
 
     impl<'a> CurrentUserSshKeyView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 ssh_key: Err("ssh_key was not initialized".to_string()),
             }
         }
@@ -28899,32 +29081,38 @@ pub mod builder {
 
         /// Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`
         pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
-            let Self { client, ssh_key } = self;
+            let Self {
+                __progenitor_client,
+                ssh_key,
+            } = self;
             let ssh_key = ssh_key.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/me/ssh-keys/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&ssh_key.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28934,14 +29122,14 @@ pub mod builder {
     /// [`ClientSessionExt::current_user_ssh_key_delete`]: super::ClientSessionExt::current_user_ssh_key_delete
     #[derive(Debug, Clone)]
     pub struct CurrentUserSshKeyDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         ssh_key: Result<types::NameOrId, String>,
     }
 
     impl<'a> CurrentUserSshKeyDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 ssh_key: Err("ssh_key was not initialized".to_string()),
             }
         }
@@ -28958,32 +29146,38 @@ pub mod builder {
 
         /// Sends a `DELETE` request to `/v1/me/ssh-keys/{ssh_key}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, ssh_key } = self;
+            let Self {
+                __progenitor_client,
+                ssh_key,
+            } = self;
             let ssh_key = ssh_key.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/me/ssh-keys/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&ssh_key.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -28993,7 +29187,7 @@ pub mod builder {
     /// [`ClientMetricsExt::silo_metric`]: super::ClientMetricsExt::silo_metric
     #[derive(Debug, Clone)]
     pub struct SiloMetric<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         metric_name: Result<types::SystemMetricName, String>,
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
@@ -29006,7 +29200,7 @@ pub mod builder {
     impl<'a> SiloMetric<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 metric_name: Err("metric_name was not initialized".to_string()),
                 end_time: Ok(None),
                 limit: Ok(None),
@@ -29098,7 +29292,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 metric_name,
                 end_time,
                 limit,
@@ -29114,50 +29308,53 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/metrics/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&metric_name.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
+            let mut __progenitor_query = Vec::with_capacity(6usize);
             if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
+                __progenitor_query.push(("end_time", v.to_string()));
             }
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &order {
-                query.push(("order", v.to_string()));
+                __progenitor_query.push(("order", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
+                __progenitor_query.push(("start_time", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -29226,7 +29423,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_network_interface_list`]: super::ClientInstancesExt::instance_network_interface_list
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<Option<types::NameOrId>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
@@ -29237,7 +29434,7 @@ pub mod builder {
     impl<'a> InstanceNetworkInterfaceList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Ok(None),
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -29306,7 +29503,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::InstanceNetworkInterfaceResultsPage>, Error<types::Error>>
         {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 limit,
                 page_token,
@@ -29318,43 +29515,47 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/network-interfaces", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let __progenitor_url =
+                format!("{}/v1/network-interfaces", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(5usize);
             if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
+                __progenitor_query.push(("instance", v.to_string()));
             }
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -29423,7 +29624,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_network_interface_create`]: super::ClientInstancesExt::instance_network_interface_create
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         instance: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::builder::InstanceNetworkInterfaceCreate, String>,
@@ -29432,7 +29633,7 @@ pub mod builder {
     impl<'a> InstanceNetworkInterfaceCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 instance: Err("instance was not initialized".to_string()),
                 project: Ok(None),
                 body: Ok(types::builder::InstanceNetworkInterfaceCreate::default()),
@@ -29485,7 +29686,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::InstanceNetworkInterface>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 instance,
                 project,
                 body,
@@ -29495,33 +29696,37 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::InstanceNetworkInterfaceCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/network-interfaces", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            query.push(("instance", instance.to_string()));
+            let __progenitor_url =
+                format!("{}/v1/network-interfaces", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
+            __progenitor_query.push(("instance", instance.to_string()));
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29531,7 +29736,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_network_interface_view`]: super::ClientInstancesExt::instance_network_interface_view
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         interface: Result<types::NameOrId, String>,
         instance: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -29540,7 +29745,7 @@ pub mod builder {
     impl<'a> InstanceNetworkInterfaceView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 interface: Err("interface was not initialized".to_string()),
                 instance: Ok(None),
                 project: Ok(None),
@@ -29584,7 +29789,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::InstanceNetworkInterface>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 interface,
                 instance,
                 project,
@@ -29592,38 +29797,41 @@ pub mod builder {
             let interface = interface.map_err(Error::InvalidRequest)?;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/network-interfaces/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
+                __progenitor_query.push(("instance", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29633,7 +29841,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_network_interface_update`]: super::ClientInstancesExt::instance_network_interface_update
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         interface: Result<types::NameOrId, String>,
         instance: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -29643,7 +29851,7 @@ pub mod builder {
     impl<'a> InstanceNetworkInterfaceUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 interface: Err("interface was not initialized".to_string()),
                 instance: Ok(None),
                 project: Ok(None),
@@ -29708,7 +29916,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::InstanceNetworkInterface>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 interface,
                 instance,
                 project,
@@ -29720,39 +29928,42 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::InstanceNetworkInterfaceUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/network-interfaces/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
+                __progenitor_query.push(("instance", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29762,7 +29973,7 @@ pub mod builder {
     /// [`ClientInstancesExt::instance_network_interface_delete`]: super::ClientInstancesExt::instance_network_interface_delete
     #[derive(Debug, Clone)]
     pub struct InstanceNetworkInterfaceDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         interface: Result<types::NameOrId, String>,
         instance: Result<Option<types::NameOrId>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -29771,7 +29982,7 @@ pub mod builder {
     impl<'a> InstanceNetworkInterfaceDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 interface: Err("interface was not initialized".to_string()),
                 instance: Ok(None),
                 project: Ok(None),
@@ -29813,7 +30024,7 @@ pub mod builder {
         /// Sends a `DELETE` request to `/v1/network-interfaces/{interface}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 interface,
                 instance,
                 project,
@@ -29821,38 +30032,41 @@ pub mod builder {
             let interface = interface.map_err(Error::InvalidRequest)?;
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/network-interfaces/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&interface.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &instance {
-                query.push(("instance", v.to_string()));
+                __progenitor_query.push(("instance", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29862,37 +30076,44 @@ pub mod builder {
     /// [`ClientSystemStatusExt::ping`]: super::ClientSystemStatusExt::ping
     #[derive(Debug, Clone)]
     pub struct Ping<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
     }
 
     impl<'a> Ping<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
+            Self {
+                __progenitor_client: client,
+            }
         }
 
         /// Sends a `GET` request to `/v1/ping`
         pub async fn send(self) -> Result<ResponseValue<types::Ping>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/ping", client.baseurl,);
-            let request = client
+            let Self {
+                __progenitor_client,
+            } = self;
+            let __progenitor_url = format!("{}/v1/ping", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29902,39 +30123,46 @@ pub mod builder {
     /// [`ClientSilosExt::policy_view`]: super::ClientSilosExt::policy_view
     #[derive(Debug, Clone)]
     pub struct PolicyView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
     }
 
     impl<'a> PolicyView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
+            Self {
+                __progenitor_client: client,
+            }
         }
 
         /// Sends a `GET` request to `/v1/policy`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/policy", client.baseurl,);
-            let request = client
+            let Self {
+                __progenitor_client,
+            } = self;
+            let __progenitor_url = format!("{}/v1/policy", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -29944,14 +30172,14 @@ pub mod builder {
     /// [`ClientSilosExt::policy_update`]: super::ClientSilosExt::policy_update
     #[derive(Debug, Clone)]
     pub struct PolicyUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::SiloRolePolicy, String>,
     }
 
     impl<'a> PolicyUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::SiloRolePolicy::default()),
             }
         }
@@ -29979,31 +30207,37 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::SiloRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/policy", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/policy", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30013,7 +30247,7 @@ pub mod builder {
     /// [`ClientProjectsExt::project_list`]: super::ClientProjectsExt::project_list
     #[derive(Debug, Clone)]
     pub struct ProjectList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -30022,7 +30256,7 @@ pub mod builder {
     impl<'a> ProjectList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -30066,7 +30300,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::ProjectResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -30074,37 +30308,40 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/projects", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/projects", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -30170,14 +30407,14 @@ pub mod builder {
     /// [`ClientProjectsExt::project_create`]: super::ClientProjectsExt::project_create
     #[derive(Debug, Clone)]
     pub struct ProjectCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::ProjectCreate, String>,
     }
 
     impl<'a> ProjectCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::ProjectCreate::default()),
             }
         }
@@ -30203,31 +30440,37 @@ pub mod builder {
 
         /// Sends a `POST` request to `/v1/projects`
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::ProjectCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/projects", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/projects", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30237,14 +30480,14 @@ pub mod builder {
     /// [`ClientProjectsExt::project_view`]: super::ClientProjectsExt::project_view
     #[derive(Debug, Clone)]
     pub struct ProjectView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<types::NameOrId, String>,
     }
 
     impl<'a> ProjectView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Err("project was not initialized".to_string()),
             }
         }
@@ -30261,32 +30504,38 @@ pub mod builder {
 
         /// Sends a `GET` request to `/v1/projects/{project}`
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
-            let Self { client, project } = self;
+            let Self {
+                __progenitor_client,
+                project,
+            } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/projects/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30296,7 +30545,7 @@ pub mod builder {
     /// [`ClientProjectsExt::project_update`]: super::ClientProjectsExt::project_update
     #[derive(Debug, Clone)]
     pub struct ProjectUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<types::NameOrId, String>,
         body: Result<types::builder::ProjectUpdate, String>,
     }
@@ -30304,7 +30553,7 @@ pub mod builder {
     impl<'a> ProjectUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Err("project was not initialized".to_string()),
                 body: Ok(types::builder::ProjectUpdate::default()),
             }
@@ -30342,7 +30591,7 @@ pub mod builder {
         /// Sends a `PUT` request to `/v1/projects/{project}`
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 body,
             } = self;
@@ -30350,31 +30599,34 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ProjectUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/projects/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30384,14 +30636,14 @@ pub mod builder {
     /// [`ClientProjectsExt::project_delete`]: super::ClientProjectsExt::project_delete
     #[derive(Debug, Clone)]
     pub struct ProjectDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<types::NameOrId, String>,
     }
 
     impl<'a> ProjectDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Err("project was not initialized".to_string()),
             }
         }
@@ -30408,32 +30660,38 @@ pub mod builder {
 
         /// Sends a `DELETE` request to `/v1/projects/{project}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, project } = self;
+            let Self {
+                __progenitor_client,
+                project,
+            } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/projects/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30443,14 +30701,14 @@ pub mod builder {
     /// [`ClientProjectsExt::project_policy_view`]: super::ClientProjectsExt::project_policy_view
     #[derive(Debug, Clone)]
     pub struct ProjectPolicyView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<types::NameOrId, String>,
     }
 
     impl<'a> ProjectPolicyView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Err("project was not initialized".to_string()),
             }
         }
@@ -30469,32 +30727,38 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::ProjectRolePolicy>, Error<types::Error>> {
-            let Self { client, project } = self;
+            let Self {
+                __progenitor_client,
+                project,
+            } = self;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/projects/{}/policy",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30504,7 +30768,7 @@ pub mod builder {
     /// [`ClientProjectsExt::project_policy_update`]: super::ClientProjectsExt::project_policy_update
     #[derive(Debug, Clone)]
     pub struct ProjectPolicyUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<types::NameOrId, String>,
         body: Result<types::builder::ProjectRolePolicy, String>,
     }
@@ -30512,7 +30776,7 @@ pub mod builder {
     impl<'a> ProjectPolicyUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Err("project was not initialized".to_string()),
                 body: Ok(types::builder::ProjectRolePolicy::default()),
             }
@@ -30554,7 +30818,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::ProjectRolePolicy>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 body,
             } = self;
@@ -30562,31 +30826,34 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::ProjectRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/projects/{}/policy",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&project.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30596,7 +30863,7 @@ pub mod builder {
     /// [`ClientSnapshotsExt::snapshot_list`]: super::ClientSnapshotsExt::snapshot_list
     #[derive(Debug, Clone)]
     pub struct SnapshotList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -30606,7 +30873,7 @@ pub mod builder {
     impl<'a> SnapshotList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
@@ -30662,7 +30929,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::SnapshotResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 project,
@@ -30672,40 +30939,43 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/snapshots", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/snapshots", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -30772,7 +31042,7 @@ pub mod builder {
     /// [`ClientSnapshotsExt::snapshot_create`]: super::ClientSnapshotsExt::snapshot_create
     #[derive(Debug, Clone)]
     pub struct SnapshotCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<types::NameOrId, String>,
         body: Result<types::builder::SnapshotCreate, String>,
     }
@@ -30780,7 +31050,7 @@ pub mod builder {
     impl<'a> SnapshotCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Err("project was not initialized".to_string()),
                 body: Ok(types::builder::SnapshotCreate::default()),
             }
@@ -30818,7 +31088,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/snapshots`
         pub async fn send(self) -> Result<ResponseValue<types::Snapshot>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 body,
             } = self;
@@ -30826,30 +31096,33 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::SnapshotCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/snapshots", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
-            let request = client
+            let __progenitor_url = format!("{}/v1/snapshots", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("project", project.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30859,7 +31132,7 @@ pub mod builder {
     /// [`ClientSnapshotsExt::snapshot_view`]: super::ClientSnapshotsExt::snapshot_view
     #[derive(Debug, Clone)]
     pub struct SnapshotView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         snapshot: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -30867,7 +31140,7 @@ pub mod builder {
     impl<'a> SnapshotView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 snapshot: Err("snapshot was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -30897,41 +31170,44 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/snapshots/{snapshot}`
         pub async fn send(self) -> Result<ResponseValue<types::Snapshot>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 snapshot,
                 project,
             } = self;
             let snapshot = snapshot.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/snapshots/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&snapshot.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -30941,7 +31217,7 @@ pub mod builder {
     /// [`ClientSnapshotsExt::snapshot_delete`]: super::ClientSnapshotsExt::snapshot_delete
     #[derive(Debug, Clone)]
     pub struct SnapshotDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         snapshot: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -30949,7 +31225,7 @@ pub mod builder {
     impl<'a> SnapshotDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 snapshot: Err("snapshot was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -30979,41 +31255,44 @@ pub mod builder {
         /// Sends a `DELETE` request to `/v1/snapshots/{snapshot}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 snapshot,
                 project,
             } = self;
             let snapshot = snapshot.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/snapshots/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&snapshot.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -31023,7 +31302,7 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::physical_disk_list`]: super::ClientSystemHardwareExt::physical_disk_list
     #[derive(Debug, Clone)]
     pub struct PhysicalDiskList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
@@ -31032,7 +31311,7 @@ pub mod builder {
     impl<'a> PhysicalDiskList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -31076,7 +31355,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::PhysicalDiskResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -31084,37 +31363,41 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/disks", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url =
+                format!("{}/v1/system/hardware/disks", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -31180,7 +31463,7 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::rack_list`]: super::ClientSystemHardwareExt::rack_list
     #[derive(Debug, Clone)]
     pub struct RackList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
@@ -31189,7 +31472,7 @@ pub mod builder {
     impl<'a> RackList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -31233,7 +31516,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::RackResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -31241,37 +31524,41 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/racks", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url =
+                format!("{}/v1/system/hardware/racks", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -31337,14 +31624,14 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::rack_view`]: super::ClientSystemHardwareExt::rack_view
     #[derive(Debug, Clone)]
     pub struct RackView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         rack_id: Result<uuid::Uuid, String>,
     }
 
     impl<'a> RackView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 rack_id: Err("rack_id was not initialized".to_string()),
             }
         }
@@ -31361,32 +31648,38 @@ pub mod builder {
 
         /// Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
         pub async fn send(self) -> Result<ResponseValue<types::Rack>, Error<types::Error>> {
-            let Self { client, rack_id } = self;
+            let Self {
+                __progenitor_client,
+                rack_id,
+            } = self;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/racks/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&rack_id.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -31396,7 +31689,7 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::sled_list`]: super::ClientSystemHardwareExt::sled_list
     #[derive(Debug, Clone)]
     pub struct SledList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
@@ -31405,7 +31698,7 @@ pub mod builder {
     impl<'a> SledList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -31449,7 +31742,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::SledResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -31457,37 +31750,41 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/sleds", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url =
+                format!("{}/v1/system/hardware/sleds", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -31553,14 +31850,14 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::sled_view`]: super::ClientSystemHardwareExt::sled_view
     #[derive(Debug, Clone)]
     pub struct SledView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         sled_id: Result<uuid::Uuid, String>,
     }
 
     impl<'a> SledView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 sled_id: Err("sled_id was not initialized".to_string()),
             }
         }
@@ -31577,32 +31874,38 @@ pub mod builder {
 
         /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
         pub async fn send(self) -> Result<ResponseValue<types::Sled>, Error<types::Error>> {
-            let Self { client, sled_id } = self;
+            let Self {
+                __progenitor_client,
+                sled_id,
+            } = self;
             let sled_id = sled_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/sleds/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -31612,7 +31915,7 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::sled_physical_disk_list`]: super::ClientSystemHardwareExt::sled_physical_disk_list
     #[derive(Debug, Clone)]
     pub struct SledPhysicalDiskList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         sled_id: Result<uuid::Uuid, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
@@ -31622,7 +31925,7 @@ pub mod builder {
     impl<'a> SledPhysicalDiskList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 sled_id: Err("sled_id was not initialized".to_string()),
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -31677,7 +31980,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::PhysicalDiskResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 sled_id,
                 limit,
                 page_token,
@@ -31687,41 +31990,44 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/sleds/{}/disks",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -31788,7 +32094,7 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::sled_instance_list`]: super::ClientSystemHardwareExt::sled_instance_list
     #[derive(Debug, Clone)]
     pub struct SledInstanceList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         sled_id: Result<uuid::Uuid, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
@@ -31798,7 +32104,7 @@ pub mod builder {
     impl<'a> SledInstanceList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 sled_id: Err("sled_id was not initialized".to_string()),
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -31854,7 +32160,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::SledInstanceResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 sled_id,
                 limit,
                 page_token,
@@ -31864,41 +32170,44 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/sleds/{}/instances",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -31965,7 +32274,7 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::networking_switch_port_list`]: super::ClientSystemHardwareExt::networking_switch_port_list
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
@@ -31975,7 +32284,7 @@ pub mod builder {
     impl<'a> NetworkingSwitchPortList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -32031,7 +32340,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::SwitchPortResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -32041,40 +32350,46 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let switch_port_id = switch_port_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/switch-port", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!(
+                "{}/v1/system/hardware/switch-port",
+                __progenitor_client.baseurl,
+            );
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
             if let Some(v) = &switch_port_id {
-                query.push(("switch_port_id", v.to_string()));
+                __progenitor_query.push(("switch_port_id", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -32142,7 +32457,7 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::networking_switch_port_apply_settings`]: super::ClientSystemHardwareExt::networking_switch_port_apply_settings
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortApplySettings<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<uuid::Uuid, String>,
         switch_location: Result<types::Name, String>,
@@ -32152,7 +32467,7 @@ pub mod builder {
     impl<'a> NetworkingSwitchPortApplySettings<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
                 switch_location: Err("switch_location was not initialized".to_string()),
@@ -32215,7 +32530,7 @@ pub mod builder {
         /// `/v1/system/hardware/switch-port/{port}/settings`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 port,
                 rack_id,
                 switch_location,
@@ -32227,35 +32542,38 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::SwitchPortApplySettings>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/switch-port/{}/settings",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&port.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            query.push(("rack_id", rack_id.to_string()));
-            query.push(("switch_location", switch_location.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(2usize);
+            __progenitor_query.push(("rack_id", rack_id.to_string()));
+            __progenitor_query.push(("switch_location", switch_location.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -32266,7 +32584,7 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::networking_switch_port_clear_settings`]: super::ClientSystemHardwareExt::networking_switch_port_clear_settings
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortClearSettings<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         port: Result<types::Name, String>,
         rack_id: Result<uuid::Uuid, String>,
         switch_location: Result<types::Name, String>,
@@ -32275,7 +32593,7 @@ pub mod builder {
     impl<'a> NetworkingSwitchPortClearSettings<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 port: Err("port was not initialized".to_string()),
                 rack_id: Err("rack_id was not initialized".to_string()),
                 switch_location: Err("switch_location was not initialized".to_string()),
@@ -32316,7 +32634,7 @@ pub mod builder {
         /// `/v1/system/hardware/switch-port/{port}/settings`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 port,
                 rack_id,
                 switch_location,
@@ -32324,34 +32642,37 @@ pub mod builder {
             let port = port.map_err(Error::InvalidRequest)?;
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
             let switch_location = switch_location.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/switch-port/{}/settings",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&port.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
-            query.push(("rack_id", rack_id.to_string()));
-            query.push(("switch_location", switch_location.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(2usize);
+            __progenitor_query.push(("rack_id", rack_id.to_string()));
+            __progenitor_query.push(("switch_location", switch_location.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -32361,7 +32682,7 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::switch_list`]: super::ClientSystemHardwareExt::switch_list
     #[derive(Debug, Clone)]
     pub struct SwitchList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
@@ -32370,7 +32691,7 @@ pub mod builder {
     impl<'a> SwitchList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -32414,7 +32735,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::SwitchResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -32422,37 +32743,43 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/switches", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!(
+                "{}/v1/system/hardware/switches",
+                __progenitor_client.baseurl,
+            );
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -32518,14 +32845,14 @@ pub mod builder {
     /// [`ClientSystemHardwareExt::switch_view`]: super::ClientSystemHardwareExt::switch_view
     #[derive(Debug, Clone)]
     pub struct SwitchView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         switch_id: Result<uuid::Uuid, String>,
     }
 
     impl<'a> SwitchView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 switch_id: Err("switch_id was not initialized".to_string()),
             }
         }
@@ -32542,32 +32869,38 @@ pub mod builder {
 
         /// Sends a `GET` request to `/v1/system/hardware/switches/{switch_id}`
         pub async fn send(self) -> Result<ResponseValue<types::Switch>, Error<types::Error>> {
-            let Self { client, switch_id } = self;
+            let Self {
+                __progenitor_client,
+                switch_id,
+            } = self;
             let switch_id = switch_id.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/hardware/switches/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&switch_id.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -32577,7 +32910,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::silo_identity_provider_list`]: super::ClientSystemSilosExt::silo_identity_provider_list
     #[derive(Debug, Clone)]
     pub struct SiloIdentityProviderList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         silo: Result<Option<types::NameOrId>, String>,
@@ -32587,7 +32920,7 @@ pub mod builder {
     impl<'a> SiloIdentityProviderList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 silo: Ok(None),
@@ -32644,7 +32977,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::IdentityProviderResultsPage>, Error<types::Error>>
         {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 silo,
@@ -32654,40 +32987,46 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/identity-providers", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!(
+                "{}/v1/system/identity-providers",
+                __progenitor_client.baseurl,
+            );
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &silo {
-                query.push(("silo", v.to_string()));
+                __progenitor_query.push(("silo", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -32754,7 +33093,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::local_idp_user_create`]: super::ClientSystemSilosExt::local_idp_user_create
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
         body: Result<types::builder::UserCreate, String>,
     }
@@ -32762,7 +33101,7 @@ pub mod builder {
     impl<'a> LocalIdpUserCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 silo: Err("silo was not initialized".to_string()),
                 body: Ok(types::builder::UserCreate::default()),
             }
@@ -32800,38 +33139,45 @@ pub mod builder {
         /// Sends a `POST` request to
         /// `/v1/system/identity-providers/local/users`
         pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
-            let Self { client, silo, body } = self;
+            let Self {
+                __progenitor_client,
+                silo,
+                body,
+            } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(std::convert::TryInto::<types::UserCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/identity-providers/local/users",
-                client.baseurl,
+                __progenitor_client.baseurl,
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -32841,7 +33187,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::local_idp_user_delete`]: super::ClientSystemSilosExt::local_idp_user_delete
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         user_id: Result<uuid::Uuid, String>,
         silo: Result<types::NameOrId, String>,
     }
@@ -32849,7 +33195,7 @@ pub mod builder {
     impl<'a> LocalIdpUserDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 user_id: Err("user_id was not initialized".to_string()),
                 silo: Err("silo was not initialized".to_string()),
             }
@@ -32879,39 +33225,42 @@ pub mod builder {
         /// `/v1/system/identity-providers/local/users/{user_id}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 user_id,
                 silo,
             } = self;
             let user_id = user_id.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/identity-providers/local/users/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&user_id.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -32921,7 +33270,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::local_idp_user_set_password`]: super::ClientSystemSilosExt::local_idp_user_set_password
     #[derive(Debug, Clone)]
     pub struct LocalIdpUserSetPassword<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         user_id: Result<uuid::Uuid, String>,
         silo: Result<types::NameOrId, String>,
         body: Result<types::UserPassword, String>,
@@ -32930,7 +33279,7 @@ pub mod builder {
     impl<'a> LocalIdpUserSetPassword<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 user_id: Err("user_id was not initialized".to_string()),
                 silo: Err("silo was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
@@ -32971,7 +33320,7 @@ pub mod builder {
         /// `/v1/system/identity-providers/local/users/{user_id}/set-password`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 user_id,
                 silo,
                 body,
@@ -32979,34 +33328,37 @@ pub mod builder {
             let user_id = user_id.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/identity-providers/local/users/{}/set-password",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&user_id.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33016,7 +33368,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::saml_identity_provider_create`]: super::ClientSystemSilosExt::saml_identity_provider_create
     #[derive(Debug, Clone)]
     pub struct SamlIdentityProviderCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
         body: Result<types::builder::SamlIdentityProviderCreate, String>,
     }
@@ -33024,7 +33376,7 @@ pub mod builder {
     impl<'a> SamlIdentityProviderCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 silo: Err("silo was not initialized".to_string()),
                 body: Ok(types::builder::SamlIdentityProviderCreate::default()),
             }
@@ -33064,35 +33416,45 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SamlIdentityProvider>, Error<types::Error>> {
-            let Self { client, silo, body } = self;
+            let Self {
+                __progenitor_client,
+                silo,
+                body,
+            } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(std::convert::TryInto::<types::SamlIdentityProviderCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/identity-providers/saml", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let __progenitor_url = format!(
+                "{}/v1/system/identity-providers/saml",
+                __progenitor_client.baseurl,
+            );
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33102,7 +33464,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::saml_identity_provider_view`]: super::ClientSystemSilosExt::saml_identity_provider_view
     #[derive(Debug, Clone)]
     pub struct SamlIdentityProviderView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         provider: Result<types::NameOrId, String>,
         silo: Result<types::NameOrId, String>,
     }
@@ -33110,7 +33472,7 @@ pub mod builder {
     impl<'a> SamlIdentityProviderView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 provider: Err("provider was not initialized".to_string()),
                 silo: Err("silo was not initialized".to_string()),
             }
@@ -33142,39 +33504,42 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::SamlIdentityProvider>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 provider,
                 silo,
             } = self;
             let provider = provider.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/identity-providers/saml/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&provider.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33184,7 +33549,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_list`]: super::ClientSystemNetworkingExt::ip_pool_list
     #[derive(Debug, Clone)]
     pub struct IpPoolList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -33193,7 +33558,7 @@ pub mod builder {
     impl<'a> IpPoolList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -33237,7 +33602,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::IpPoolResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -33245,37 +33610,40 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/system/ip-pools", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -33341,14 +33709,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_create`]: super::ClientSystemNetworkingExt::ip_pool_create
     #[derive(Debug, Clone)]
     pub struct IpPoolCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::IpPoolCreate, String>,
     }
 
     impl<'a> IpPoolCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::IpPoolCreate::default()),
             }
         }
@@ -33374,31 +33742,37 @@ pub mod builder {
 
         /// Sends a `POST` request to `/v1/system/ip-pools`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::IpPoolCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/system/ip-pools", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33408,14 +33782,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_view`]: super::ClientSystemNetworkingExt::ip_pool_view
     #[derive(Debug, Clone)]
     pub struct IpPoolView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
     impl<'a> IpPoolView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 pool: Err("pool was not initialized".to_string()),
             }
         }
@@ -33432,32 +33806,38 @@ pub mod builder {
 
         /// Sends a `GET` request to `/v1/system/ip-pools/{pool}`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self { client, pool } = self;
+            let Self {
+                __progenitor_client,
+                pool,
+            } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33467,7 +33847,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_update`]: super::ClientSystemNetworkingExt::ip_pool_update
     #[derive(Debug, Clone)]
     pub struct IpPoolUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::builder::IpPoolUpdate, String>,
     }
@@ -33475,7 +33855,7 @@ pub mod builder {
     impl<'a> IpPoolUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 pool: Err("pool was not initialized".to_string()),
                 body: Ok(types::builder::IpPoolUpdate::default()),
             }
@@ -33512,36 +33892,43 @@ pub mod builder {
 
         /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self { client, pool, body } = self;
+            let Self {
+                __progenitor_client,
+                pool,
+                body,
+            } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(std::convert::TryInto::<types::IpPoolUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33551,14 +33938,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_delete`]: super::ClientSystemNetworkingExt::ip_pool_delete
     #[derive(Debug, Clone)]
     pub struct IpPoolDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
     }
 
     impl<'a> IpPoolDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 pool: Err("pool was not initialized".to_string()),
             }
         }
@@ -33575,32 +33962,38 @@ pub mod builder {
 
         /// Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, pool } = self;
+            let Self {
+                __progenitor_client,
+                pool,
+            } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33610,7 +34003,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_range_list`]: super::ClientSystemNetworkingExt::ip_pool_range_list
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
@@ -33619,7 +34012,7 @@ pub mod builder {
     impl<'a> IpPoolRangeList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 pool: Err("pool was not initialized".to_string()),
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -33662,7 +34055,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 pool,
                 limit,
                 page_token,
@@ -33670,38 +34063,41 @@ pub mod builder {
             let pool = pool.map_err(Error::InvalidRequest)?;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}/ranges",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -33766,7 +34162,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_range_add`]: super::ClientSystemNetworkingExt::ip_pool_range_add
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeAdd<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::IpRange, String>,
     }
@@ -33774,7 +34170,7 @@ pub mod builder {
     impl<'a> IpPoolRangeAdd<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 pool: Err("pool was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
@@ -33802,34 +34198,41 @@ pub mod builder {
 
         /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
         pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
-            let Self { client, pool, body } = self;
+            let Self {
+                __progenitor_client,
+                pool,
+                body,
+            } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}/ranges/add",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33839,7 +34242,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_range_remove`]: super::ClientSystemNetworkingExt::ip_pool_range_remove
     #[derive(Debug, Clone)]
     pub struct IpPoolRangeRemove<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
         body: Result<types::IpRange, String>,
     }
@@ -33847,7 +34250,7 @@ pub mod builder {
     impl<'a> IpPoolRangeRemove<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 pool: Err("pool was not initialized".to_string()),
                 body: Err("body was not initialized".to_string()),
             }
@@ -33875,34 +34278,41 @@ pub mod builder {
 
         /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, pool, body } = self;
+            let Self {
+                __progenitor_client,
+                pool,
+                body,
+            } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools/{}/ranges/remove",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33912,37 +34322,45 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_service_view`]: super::ClientSystemNetworkingExt::ip_pool_service_view
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
     }
 
     impl<'a> IpPoolServiceView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
+            Self {
+                __progenitor_client: client,
+            }
         }
 
         /// Sends a `GET` request to `/v1/system/ip-pools-service`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/system/ip-pools-service", client.baseurl,);
-            let request = client
+            let Self {
+                __progenitor_client,
+            } = self;
+            let __progenitor_url =
+                format!("{}/v1/system/ip-pools-service", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -33952,7 +34370,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_service_range_list`]: super::ClientSystemNetworkingExt::ip_pool_service_range_list
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
     }
@@ -33960,7 +34378,7 @@ pub mod builder {
     impl<'a> IpPoolServiceRangeList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
             }
@@ -33992,40 +34410,46 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools-service/ranges", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url = format!(
+                "{}/v1/system/ip-pools-service/ranges",
+                __progenitor_client.baseurl,
+            );
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -34090,14 +34514,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_service_range_add`]: super::ClientSystemNetworkingExt::ip_pool_service_range_add
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeAdd<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::IpRange, String>,
     }
 
     impl<'a> IpPoolServiceRangeAdd<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Err("body was not initialized".to_string()),
             }
         }
@@ -34114,29 +34538,38 @@ pub mod builder {
 
         /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
         pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools-service/ranges/add", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!(
+                "{}/v1/system/ip-pools-service/ranges/add",
+                __progenitor_client.baseurl,
+            );
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -34146,14 +34579,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]: super::ClientSystemNetworkingExt::ip_pool_service_range_remove
     #[derive(Debug, Clone)]
     pub struct IpPoolServiceRangeRemove<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::IpRange, String>,
     }
 
     impl<'a> IpPoolServiceRangeRemove<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Err("body was not initialized".to_string()),
             }
         }
@@ -34171,32 +34604,38 @@ pub mod builder {
         /// Sends a `POST` request to
         /// `/v1/system/ip-pools-service/ranges/remove`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/ip-pools-service/ranges/remove",
-                client.baseurl,
+                __progenitor_client.baseurl,
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -34206,7 +34645,7 @@ pub mod builder {
     /// [`ClientSystemMetricsExt::system_metric`]: super::ClientSystemMetricsExt::system_metric
     #[derive(Debug, Clone)]
     pub struct SystemMetric<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         metric_name: Result<types::SystemMetricName, String>,
         end_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
@@ -34219,7 +34658,7 @@ pub mod builder {
     impl<'a> SystemMetric<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 metric_name: Err("metric_name was not initialized".to_string()),
                 end_time: Ok(None),
                 limit: Ok(None),
@@ -34311,7 +34750,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::MeasurementResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 metric_name,
                 end_time,
                 limit,
@@ -34327,50 +34766,53 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let start_time = start_time.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/metrics/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&metric_name.to_string()),
             );
-            let mut query = Vec::with_capacity(6usize);
+            let mut __progenitor_query = Vec::with_capacity(6usize);
             if let Some(v) = &end_time {
-                query.push(("end_time", v.to_string()));
+                __progenitor_query.push(("end_time", v.to_string()));
             }
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &order {
-                query.push(("order", v.to_string()));
+                __progenitor_query.push(("order", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &silo {
-                query.push(("silo", v.to_string()));
+                __progenitor_query.push(("silo", v.to_string()));
             }
             if let Some(v) = &start_time {
-                query.push(("start_time", v.to_string()));
+                __progenitor_query.push(("start_time", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -34439,7 +34881,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_address_lot_list`]: super::ClientSystemNetworkingExt::networking_address_lot_list
     #[derive(Debug, Clone)]
     pub struct NetworkingAddressLotList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -34448,7 +34890,7 @@ pub mod builder {
     impl<'a> NetworkingAddressLotList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -34492,7 +34934,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::AddressLotResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -34500,37 +34942,43 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/address-lot", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!(
+                "{}/v1/system/networking/address-lot",
+                __progenitor_client.baseurl,
+            );
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -34596,14 +35044,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_address_lot_create`]: super::ClientSystemNetworkingExt::networking_address_lot_create
     #[derive(Debug, Clone)]
     pub struct NetworkingAddressLotCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::AddressLotCreate, String>,
     }
 
     impl<'a> NetworkingAddressLotCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::AddressLotCreate::default()),
             }
         }
@@ -34633,31 +35081,40 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::AddressLotCreateResponse>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::AddressLotCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/address-lot", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!(
+                "{}/v1/system/networking/address-lot",
+                __progenitor_client.baseurl,
+            );
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -34667,14 +35124,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_address_lot_delete`]: super::ClientSystemNetworkingExt::networking_address_lot_delete
     #[derive(Debug, Clone)]
     pub struct NetworkingAddressLotDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         address_lot: Result<types::NameOrId, String>,
     }
 
     impl<'a> NetworkingAddressLotDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 address_lot: Err("address_lot was not initialized".to_string()),
             }
         }
@@ -34693,34 +35150,37 @@ pub mod builder {
         /// `/v1/system/networking/address-lot/{address_lot}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 address_lot,
             } = self;
             let address_lot = address_lot.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/address-lot/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&address_lot.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -34731,7 +35191,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_address_lot_block_list`]: super::ClientSystemNetworkingExt::networking_address_lot_block_list
     #[derive(Debug, Clone)]
     pub struct NetworkingAddressLotBlockList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         address_lot: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
@@ -34741,7 +35201,7 @@ pub mod builder {
     impl<'a> NetworkingAddressLotBlockList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 address_lot: Err("address_lot was not initialized".to_string()),
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -34797,7 +35257,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::AddressLotBlockResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 address_lot,
                 limit,
                 page_token,
@@ -34807,41 +35267,44 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/address-lot/{}/blocks",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&address_lot.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -34909,7 +35372,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_loopback_address_list`]: super::ClientSystemNetworkingExt::networking_loopback_address_list
     #[derive(Debug, Clone)]
     pub struct NetworkingLoopbackAddressList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::IdSortMode>, String>,
@@ -34918,7 +35381,7 @@ pub mod builder {
     impl<'a> NetworkingLoopbackAddressList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -34962,7 +35425,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::LoopbackAddressResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -34970,37 +35433,43 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/loopback-address", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!(
+                "{}/v1/system/networking/loopback-address",
+                __progenitor_client.baseurl,
+            );
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -35067,14 +35536,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_loopback_address_create`]: super::ClientSystemNetworkingExt::networking_loopback_address_create
     #[derive(Debug, Clone)]
     pub struct NetworkingLoopbackAddressCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::LoopbackAddressCreate, String>,
     }
 
     impl<'a> NetworkingLoopbackAddressCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::LoopbackAddressCreate::default()),
             }
         }
@@ -35104,31 +35573,40 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::LoopbackAddress>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::LoopbackAddressCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/loopback-address", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!(
+                "{}/v1/system/networking/loopback-address",
+                __progenitor_client.baseurl,
+            );
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35139,7 +35617,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_loopback_address_delete`]: super::ClientSystemNetworkingExt::networking_loopback_address_delete
     #[derive(Debug, Clone)]
     pub struct NetworkingLoopbackAddressDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         rack_id: Result<uuid::Uuid, String>,
         switch_location: Result<types::Name, String>,
         address: Result<std::net::IpAddr, String>,
@@ -35149,7 +35627,7 @@ pub mod builder {
     impl<'a> NetworkingLoopbackAddressDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 rack_id: Err("rack_id was not initialized".to_string()),
                 switch_location: Err("switch_location was not initialized".to_string()),
                 address: Err("address was not initialized".to_string()),
@@ -35202,7 +35680,7 @@ pub mod builder {
         /// {address}/{subnet_mask}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 rack_id,
                 switch_location,
                 address,
@@ -35212,33 +35690,36 @@ pub mod builder {
             let switch_location = switch_location.map_err(Error::InvalidRequest)?;
             let address = address.map_err(Error::InvalidRequest)?;
             let subnet_mask = subnet_mask.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/loopback-address/{}/{}/{}/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&rack_id.to_string()),
                 encode_path(&switch_location.to_string()),
                 encode_path(&address.to_string()),
                 encode_path(&subnet_mask.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35249,7 +35730,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_switch_port_settings_list`]: super::ClientSystemNetworkingExt::networking_switch_port_settings_list
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortSettingsList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         port_settings: Result<Option<types::NameOrId>, String>,
@@ -35259,7 +35740,7 @@ pub mod builder {
     impl<'a> NetworkingSwitchPortSettingsList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 port_settings: Ok(None),
@@ -35317,7 +35798,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::SwitchPortSettingsResultsPage>, Error<types::Error>>
         {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 port_settings,
@@ -35327,43 +35808,46 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let port_settings = port_settings.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/switch-port-settings",
-                client.baseurl,
+                __progenitor_client.baseurl,
             );
-            let mut query = Vec::with_capacity(4usize);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &port_settings {
-                query.push(("port_settings", v.to_string()));
+                __progenitor_query.push(("port_settings", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -35433,14 +35917,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_switch_port_settings_create`]: super::ClientSystemNetworkingExt::networking_switch_port_settings_create
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortSettingsCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::SwitchPortSettingsCreate, String>,
     }
 
     impl<'a> NetworkingSwitchPortSettingsCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::SwitchPortSettingsCreate::default()),
             }
         }
@@ -35470,34 +35954,40 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SwitchPortSettingsView>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::SwitchPortSettingsCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/switch-port-settings",
-                client.baseurl,
+                __progenitor_client.baseurl,
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35508,14 +35998,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_switch_port_settings_delete`]: super::ClientSystemNetworkingExt::networking_switch_port_settings_delete
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortSettingsDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         port_settings: Result<Option<types::NameOrId>, String>,
     }
 
     impl<'a> NetworkingSwitchPortSettingsDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 port_settings: Ok(None),
             }
         }
@@ -35535,38 +36025,41 @@ pub mod builder {
         /// `/v1/system/networking/switch-port-settings`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 port_settings,
             } = self;
             let port_settings = port_settings.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/switch-port-settings",
-                client.baseurl,
+                __progenitor_client.baseurl,
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &port_settings {
-                query.push(("port_settings", v.to_string()));
+                __progenitor_query.push(("port_settings", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35577,14 +36070,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_switch_port_settings_view`]: super::ClientSystemNetworkingExt::networking_switch_port_settings_view
     #[derive(Debug, Clone)]
     pub struct NetworkingSwitchPortSettingsView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         port: Result<types::NameOrId, String>,
     }
 
     impl<'a> NetworkingSwitchPortSettingsView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 port: Err("port was not initialized".to_string()),
             }
         }
@@ -35604,32 +36097,38 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SwitchPortSettingsView>, Error<types::Error>> {
-            let Self { client, port } = self;
+            let Self {
+                __progenitor_client,
+                port,
+            } = self;
             let port = port.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/networking/switch-port-settings/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&port.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35639,39 +36138,46 @@ pub mod builder {
     /// [`ClientPolicyExt::system_policy_view`]: super::ClientPolicyExt::system_policy_view
     #[derive(Debug, Clone)]
     pub struct SystemPolicyView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
     }
 
     impl<'a> SystemPolicyView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client }
+            Self {
+                __progenitor_client: client,
+            }
         }
 
         /// Sends a `GET` request to `/v1/system/policy`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::FleetRolePolicy>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/system/policy", client.baseurl,);
-            let request = client
+            let Self {
+                __progenitor_client,
+            } = self;
+            let __progenitor_url = format!("{}/v1/system/policy", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35681,14 +36187,14 @@ pub mod builder {
     /// [`ClientPolicyExt::system_policy_update`]: super::ClientPolicyExt::system_policy_update
     #[derive(Debug, Clone)]
     pub struct SystemPolicyUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::FleetRolePolicy, String>,
     }
 
     impl<'a> SystemPolicyUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::FleetRolePolicy::default()),
             }
         }
@@ -35716,31 +36222,37 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::FleetRolePolicy>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::FleetRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/policy", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/system/policy", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35750,7 +36262,7 @@ pub mod builder {
     /// [`ClientRolesExt::role_list`]: super::ClientRolesExt::role_list
     #[derive(Debug, Clone)]
     pub struct RoleList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
     }
@@ -35758,7 +36270,7 @@ pub mod builder {
     impl<'a> RoleList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
             }
@@ -35790,40 +36302,43 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::RoleResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/roles", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url = format!("{}/v1/system/roles", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -35888,14 +36403,14 @@ pub mod builder {
     /// [`ClientRolesExt::role_view`]: super::ClientRolesExt::role_view
     #[derive(Debug, Clone)]
     pub struct RoleView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         role_name: Result<String, String>,
     }
 
     impl<'a> RoleView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 role_name: Err("role_name was not initialized".to_string()),
             }
         }
@@ -35912,32 +36427,38 @@ pub mod builder {
 
         /// Sends a `GET` request to `/v1/system/roles/{role_name}`
         pub async fn send(self) -> Result<ResponseValue<types::Role>, Error<types::Error>> {
-            let Self { client, role_name } = self;
+            let Self {
+                __progenitor_client,
+                role_name,
+            } = self;
             let role_name = role_name.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/roles/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&role_name.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -35947,7 +36468,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::silo_list`]: super::ClientSystemSilosExt::silo_list
     #[derive(Debug, Clone)]
     pub struct SiloList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
@@ -35956,7 +36477,7 @@ pub mod builder {
     impl<'a> SiloList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -36000,7 +36521,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::SiloResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -36008,37 +36529,40 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/silos", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/system/silos", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -36104,14 +36628,14 @@ pub mod builder {
     /// [`ClientSystemSilosExt::silo_create`]: super::ClientSystemSilosExt::silo_create
     #[derive(Debug, Clone)]
     pub struct SiloCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         body: Result<types::builder::SiloCreate, String>,
     }
 
     impl<'a> SiloCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 body: Ok(types::builder::SiloCreate::default()),
             }
         }
@@ -36137,31 +36661,37 @@ pub mod builder {
 
         /// Sends a `POST` request to `/v1/system/silos`
         pub async fn send(self) -> Result<ResponseValue<types::Silo>, Error<types::Error>> {
-            let Self { client, body } = self;
+            let Self {
+                __progenitor_client,
+                body,
+            } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::SiloCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/silos", client.baseurl,);
-            let request = client
+            let __progenitor_url = format!("{}/v1/system/silos", __progenitor_client.baseurl,);
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36171,14 +36701,14 @@ pub mod builder {
     /// [`ClientSystemSilosExt::silo_view`]: super::ClientSystemSilosExt::silo_view
     #[derive(Debug, Clone)]
     pub struct SiloView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
     }
 
     impl<'a> SiloView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 silo: Err("silo was not initialized".to_string()),
             }
         }
@@ -36195,32 +36725,38 @@ pub mod builder {
 
         /// Sends a `GET` request to `/v1/system/silos/{silo}`
         pub async fn send(self) -> Result<ResponseValue<types::Silo>, Error<types::Error>> {
-            let Self { client, silo } = self;
+            let Self {
+                __progenitor_client,
+                silo,
+            } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/silos/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&silo.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36230,14 +36766,14 @@ pub mod builder {
     /// [`ClientSystemSilosExt::silo_delete`]: super::ClientSystemSilosExt::silo_delete
     #[derive(Debug, Clone)]
     pub struct SiloDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
     }
 
     impl<'a> SiloDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 silo: Err("silo was not initialized".to_string()),
             }
         }
@@ -36254,32 +36790,38 @@ pub mod builder {
 
         /// Sends a `DELETE` request to `/v1/system/silos/{silo}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, silo } = self;
+            let Self {
+                __progenitor_client,
+                silo,
+            } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/silos/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&silo.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36289,14 +36831,14 @@ pub mod builder {
     /// [`ClientSystemSilosExt::silo_policy_view`]: super::ClientSystemSilosExt::silo_policy_view
     #[derive(Debug, Clone)]
     pub struct SiloPolicyView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
     }
 
     impl<'a> SiloPolicyView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 silo: Err("silo was not initialized".to_string()),
             }
         }
@@ -36315,32 +36857,38 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
-            let Self { client, silo } = self;
+            let Self {
+                __progenitor_client,
+                silo,
+            } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/silos/{}/policy",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&silo.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36350,7 +36898,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::silo_policy_update`]: super::ClientSystemSilosExt::silo_policy_update
     #[derive(Debug, Clone)]
     pub struct SiloPolicyUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         silo: Result<types::NameOrId, String>,
         body: Result<types::builder::SiloRolePolicy, String>,
     }
@@ -36358,7 +36906,7 @@ pub mod builder {
     impl<'a> SiloPolicyUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 silo: Err("silo was not initialized".to_string()),
                 body: Ok(types::builder::SiloRolePolicy::default()),
             }
@@ -36397,36 +36945,43 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
-            let Self { client, silo, body } = self;
+            let Self {
+                __progenitor_client,
+                silo,
+                body,
+            } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(std::convert::TryInto::<types::SiloRolePolicy>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/silos/{}/policy",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&silo.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36436,7 +36991,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::silo_user_list`]: super::ClientSystemSilosExt::silo_user_list
     #[derive(Debug, Clone)]
     pub struct SiloUserList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         silo: Result<Option<types::NameOrId>, String>,
@@ -36446,7 +37001,7 @@ pub mod builder {
     impl<'a> SiloUserList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 silo: Ok(None),
@@ -36502,7 +37057,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::UserResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 silo,
@@ -36512,40 +37067,43 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/users", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/system/users", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &silo {
-                query.push(("silo", v.to_string()));
+                __progenitor_query.push(("silo", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -36612,7 +37170,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::silo_user_view`]: super::ClientSystemSilosExt::silo_user_view
     #[derive(Debug, Clone)]
     pub struct SiloUserView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         user_id: Result<uuid::Uuid, String>,
         silo: Result<types::NameOrId, String>,
     }
@@ -36620,7 +37178,7 @@ pub mod builder {
     impl<'a> SiloUserView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 user_id: Err("user_id was not initialized".to_string()),
                 silo: Err("silo was not initialized".to_string()),
             }
@@ -36649,39 +37207,42 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/system/users/{user_id}`
         pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 user_id,
                 silo,
             } = self;
             let user_id = user_id.map_err(Error::InvalidRequest)?;
             let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/users/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&user_id.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("silo", silo.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36691,7 +37252,7 @@ pub mod builder {
     /// [`ClientSystemSilosExt::user_builtin_list`]: super::ClientSystemSilosExt::user_builtin_list
     #[derive(Debug, Clone)]
     pub struct UserBuiltinList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         sort_by: Result<Option<types::NameSortMode>, String>,
@@ -36700,7 +37261,7 @@ pub mod builder {
     impl<'a> UserBuiltinList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 sort_by: Ok(None),
@@ -36744,7 +37305,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::UserBuiltinResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 sort_by,
@@ -36752,37 +37313,41 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/users-builtin", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url =
+                format!("{}/v1/system/users-builtin", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -36848,14 +37413,14 @@ pub mod builder {
     /// [`ClientSystemSilosExt::user_builtin_view`]: super::ClientSystemSilosExt::user_builtin_view
     #[derive(Debug, Clone)]
     pub struct UserBuiltinView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         user: Result<types::NameOrId, String>,
     }
 
     impl<'a> UserBuiltinView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 user: Err("user was not initialized".to_string()),
             }
         }
@@ -36872,32 +37437,38 @@ pub mod builder {
 
         /// Sends a `GET` request to `/v1/system/users-builtin/{user}`
         pub async fn send(self) -> Result<ResponseValue<types::UserBuiltin>, Error<types::Error>> {
-            let Self { client, user } = self;
+            let Self {
+                __progenitor_client,
+                user,
+            } = self;
             let user = user.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/system/users-builtin/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&user.to_string()),
             );
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -36907,7 +37478,7 @@ pub mod builder {
     /// [`ClientSilosExt::user_list`]: super::ClientSilosExt::user_list
     #[derive(Debug, Clone)]
     pub struct UserList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         group: Result<Option<uuid::Uuid>, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
@@ -36917,7 +37488,7 @@ pub mod builder {
     impl<'a> UserList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 group: Ok(None),
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -36973,7 +37544,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::UserResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 group,
                 limit,
                 page_token,
@@ -36983,40 +37554,43 @@ pub mod builder {
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/users", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/users", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &group {
-                query.push(("group", v.to_string()));
+                __progenitor_query.push(("group", v.to_string()));
             }
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -37083,7 +37657,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_firewall_rules_view`]: super::ClientVpcsExt::vpc_firewall_rules_view
     #[derive(Debug, Clone)]
     pub struct VpcFirewallRulesView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
     }
@@ -37091,7 +37665,7 @@ pub mod builder {
     impl<'a> VpcFirewallRulesView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
             }
@@ -37123,38 +37697,42 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::VpcFirewallRules>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 vpc,
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url =
+                format!("{}/v1/vpc-firewall-rules", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("vpc", vpc.to_string()));
-            let request = client
+            __progenitor_query.push(("vpc", vpc.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37164,7 +37742,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_firewall_rules_update`]: super::ClientVpcsExt::vpc_firewall_rules_update
     #[derive(Debug, Clone)]
     pub struct VpcFirewallRulesUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
         body: Result<types::builder::VpcFirewallRuleUpdateParams, String>,
@@ -37173,7 +37751,7 @@ pub mod builder {
     impl<'a> VpcFirewallRulesUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
                 body: Ok(types::builder::VpcFirewallRuleUpdateParams::default()),
@@ -37226,7 +37804,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::VpcFirewallRules>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 vpc,
                 body,
@@ -37236,33 +37814,37 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcFirewallRuleUpdateParams>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url =
+                format!("{}/v1/vpc-firewall-rules", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("vpc", vpc.to_string()));
-            let request = client
+            __progenitor_query.push(("vpc", vpc.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37272,7 +37854,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_router_route_list`]: super::ClientVpcsExt::vpc_router_route_list
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -37284,7 +37866,7 @@ pub mod builder {
     impl<'a> VpcRouterRouteList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
@@ -37364,7 +37946,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::RouterRouteResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 project,
@@ -37378,46 +37960,49 @@ pub mod builder {
             let router = router.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
-            let mut query = Vec::with_capacity(6usize);
+            let __progenitor_url = format!("{}/v1/vpc-router-routes", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(6usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &router {
-                query.push(("router", v.to_string()));
+                __progenitor_query.push(("router", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -37486,7 +38071,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_router_route_create`]: super::ClientVpcsExt::vpc_router_route_create
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<types::NameOrId, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -37496,7 +38081,7 @@ pub mod builder {
     impl<'a> VpcRouterRouteCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Ok(None),
                 router: Err("router was not initialized".to_string()),
                 vpc: Ok(None),
@@ -37560,7 +38145,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/vpc-router-routes`
         pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 router,
                 vpc,
@@ -37572,36 +38157,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::RouterRouteCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-router-routes", client.baseurl,);
-            let mut query = Vec::with_capacity(3usize);
+            let __progenitor_url = format!("{}/v1/vpc-router-routes", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("router", router.to_string()));
+            __progenitor_query.push(("router", router.to_string()));
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37611,7 +38199,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_router_route_view`]: super::ClientVpcsExt::vpc_router_route_view
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         route: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<types::NameOrId, String>,
@@ -37621,7 +38209,7 @@ pub mod builder {
     impl<'a> VpcRouterRouteView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 route: Err("route was not initialized".to_string()),
                 project: Ok(None),
                 router: Err("router was not initialized".to_string()),
@@ -37674,7 +38262,7 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/vpc-router-routes/{route}`
         pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 route,
                 project,
                 router,
@@ -37684,39 +38272,42 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-router-routes/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("router", router.to_string()));
+            __progenitor_query.push(("router", router.to_string()));
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37726,7 +38317,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_router_route_update`]: super::ClientVpcsExt::vpc_router_route_update
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         route: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<Option<types::NameOrId>, String>,
@@ -37737,7 +38328,7 @@ pub mod builder {
     impl<'a> VpcRouterRouteUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 route: Err("route was not initialized".to_string()),
                 project: Ok(None),
                 router: Ok(None),
@@ -37813,7 +38404,7 @@ pub mod builder {
         /// Sends a `PUT` request to `/v1/vpc-router-routes/{route}`
         pub async fn send(self) -> Result<ResponseValue<types::RouterRoute>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 route,
                 project,
                 router,
@@ -37827,42 +38418,45 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::RouterRouteUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-router-routes/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &router {
-                query.push(("router", v.to_string()));
+                __progenitor_query.push(("router", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37872,7 +38466,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_router_route_delete`]: super::ClientVpcsExt::vpc_router_route_delete
     #[derive(Debug, Clone)]
     pub struct VpcRouterRouteDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         route: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         router: Result<Option<types::NameOrId>, String>,
@@ -37882,7 +38476,7 @@ pub mod builder {
     impl<'a> VpcRouterRouteDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 route: Err("route was not initialized".to_string()),
                 project: Ok(None),
                 router: Ok(None),
@@ -37936,7 +38530,7 @@ pub mod builder {
         /// Sends a `DELETE` request to `/v1/vpc-router-routes/{route}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 route,
                 project,
                 router,
@@ -37946,41 +38540,44 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let router = router.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-router-routes/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&route.to_string()),
             );
-            let mut query = Vec::with_capacity(3usize);
+            let mut __progenitor_query = Vec::with_capacity(3usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &router {
-                query.push(("router", v.to_string()));
+                __progenitor_query.push(("router", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -37990,7 +38587,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_router_list`]: super::ClientVpcsExt::vpc_router_list
     #[derive(Debug, Clone)]
     pub struct VpcRouterList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -38001,7 +38598,7 @@ pub mod builder {
     impl<'a> VpcRouterList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
@@ -38069,7 +38666,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::VpcRouterResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 project,
@@ -38081,43 +38678,46 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-routers", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let __progenitor_url = format!("{}/v1/vpc-routers", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(5usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -38185,7 +38785,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_router_create`]: super::ClientVpcsExt::vpc_router_create
     #[derive(Debug, Clone)]
     pub struct VpcRouterCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
         body: Result<types::builder::VpcRouterCreate, String>,
@@ -38194,7 +38794,7 @@ pub mod builder {
     impl<'a> VpcRouterCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
                 body: Ok(types::builder::VpcRouterCreate::default()),
@@ -38244,7 +38844,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/vpc-routers`
         pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 vpc,
                 body,
@@ -38254,33 +38854,36 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcRouterCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-routers", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url = format!("{}/v1/vpc-routers", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("vpc", vpc.to_string()));
-            let request = client
+            __progenitor_query.push(("vpc", vpc.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38290,7 +38893,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_router_view`]: super::ClientVpcsExt::vpc_router_view
     #[derive(Debug, Clone)]
     pub struct VpcRouterView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         router: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -38299,7 +38902,7 @@ pub mod builder {
     impl<'a> VpcRouterView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 router: Err("router was not initialized".to_string()),
                 project: Ok(None),
                 vpc: Ok(None),
@@ -38341,7 +38944,7 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/vpc-routers/{router}`
         pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 router,
                 project,
                 vpc,
@@ -38349,38 +38952,41 @@ pub mod builder {
             let router = router.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-routers/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38390,7 +38996,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_router_update`]: super::ClientVpcsExt::vpc_router_update
     #[derive(Debug, Clone)]
     pub struct VpcRouterUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         router: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -38400,7 +39006,7 @@ pub mod builder {
     impl<'a> VpcRouterUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 router: Err("router was not initialized".to_string()),
                 project: Ok(None),
                 vpc: Ok(None),
@@ -38462,7 +39068,7 @@ pub mod builder {
         /// Sends a `PUT` request to `/v1/vpc-routers/{router}`
         pub async fn send(self) -> Result<ResponseValue<types::VpcRouter>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 router,
                 project,
                 vpc,
@@ -38474,39 +39080,42 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcRouterUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-routers/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38516,7 +39125,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_router_delete`]: super::ClientVpcsExt::vpc_router_delete
     #[derive(Debug, Clone)]
     pub struct VpcRouterDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         router: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -38525,7 +39134,7 @@ pub mod builder {
     impl<'a> VpcRouterDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 router: Err("router was not initialized".to_string()),
                 project: Ok(None),
                 vpc: Ok(None),
@@ -38567,7 +39176,7 @@ pub mod builder {
         /// Sends a `DELETE` request to `/v1/vpc-routers/{router}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 router,
                 project,
                 vpc,
@@ -38575,38 +39184,41 @@ pub mod builder {
             let router = router.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-routers/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&router.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38616,7 +39228,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_subnet_list`]: super::ClientVpcsExt::vpc_subnet_list
     #[derive(Debug, Clone)]
     pub struct VpcSubnetList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -38627,7 +39239,7 @@ pub mod builder {
     impl<'a> VpcSubnetList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
@@ -38695,7 +39307,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::VpcSubnetResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 project,
@@ -38707,43 +39319,46 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-subnets", client.baseurl,);
-            let mut query = Vec::with_capacity(5usize);
+            let __progenitor_url = format!("{}/v1/vpc-subnets", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(5usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -38811,7 +39426,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_subnet_create`]: super::ClientVpcsExt::vpc_subnet_create
     #[derive(Debug, Clone)]
     pub struct VpcSubnetCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<types::NameOrId, String>,
         body: Result<types::builder::VpcSubnetCreate, String>,
@@ -38820,7 +39435,7 @@ pub mod builder {
     impl<'a> VpcSubnetCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Ok(None),
                 vpc: Err("vpc was not initialized".to_string()),
                 body: Ok(types::builder::VpcSubnetCreate::default()),
@@ -38870,7 +39485,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/vpc-subnets`
         pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 vpc,
                 body,
@@ -38880,33 +39495,36 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcSubnetCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpc-subnets", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
+            let __progenitor_url = format!("{}/v1/vpc-subnets", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            query.push(("vpc", vpc.to_string()));
-            let request = client
+            __progenitor_query.push(("vpc", vpc.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -38916,7 +39534,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_subnet_view`]: super::ClientVpcsExt::vpc_subnet_view
     #[derive(Debug, Clone)]
     pub struct VpcSubnetView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         subnet: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -38925,7 +39543,7 @@ pub mod builder {
     impl<'a> VpcSubnetView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 subnet: Err("subnet was not initialized".to_string()),
                 project: Ok(None),
                 vpc: Ok(None),
@@ -38967,7 +39585,7 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/vpc-subnets/{subnet}`
         pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 subnet,
                 project,
                 vpc,
@@ -38975,38 +39593,41 @@ pub mod builder {
             let subnet = subnet.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-subnets/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39016,7 +39637,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_subnet_update`]: super::ClientVpcsExt::vpc_subnet_update
     #[derive(Debug, Clone)]
     pub struct VpcSubnetUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         subnet: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -39026,7 +39647,7 @@ pub mod builder {
     impl<'a> VpcSubnetUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 subnet: Err("subnet was not initialized".to_string()),
                 project: Ok(None),
                 vpc: Ok(None),
@@ -39088,7 +39709,7 @@ pub mod builder {
         /// Sends a `PUT` request to `/v1/vpc-subnets/{subnet}`
         pub async fn send(self) -> Result<ResponseValue<types::VpcSubnet>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 subnet,
                 project,
                 vpc,
@@ -39100,39 +39721,42 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcSubnetUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-subnets/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39142,7 +39766,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_subnet_delete`]: super::ClientVpcsExt::vpc_subnet_delete
     #[derive(Debug, Clone)]
     pub struct VpcSubnetDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         subnet: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         vpc: Result<Option<types::NameOrId>, String>,
@@ -39151,7 +39775,7 @@ pub mod builder {
     impl<'a> VpcSubnetDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 subnet: Err("subnet was not initialized".to_string()),
                 project: Ok(None),
                 vpc: Ok(None),
@@ -39193,7 +39817,7 @@ pub mod builder {
         /// Sends a `DELETE` request to `/v1/vpc-subnets/{subnet}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 subnet,
                 project,
                 vpc,
@@ -39201,38 +39825,41 @@ pub mod builder {
             let subnet = subnet.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-subnets/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(2usize);
+            let mut __progenitor_query = Vec::with_capacity(2usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39242,7 +39869,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_subnet_list_network_interfaces`]: super::ClientVpcsExt::vpc_subnet_list_network_interfaces
     #[derive(Debug, Clone)]
     pub struct VpcSubnetListNetworkInterfaces<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         subnet: Result<types::NameOrId, String>,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
@@ -39254,7 +39881,7 @@ pub mod builder {
     impl<'a> VpcSubnetListNetworkInterfaces<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 subnet: Err("subnet was not initialized".to_string()),
                 limit: Ok(None),
                 page_token: Ok(None),
@@ -39335,7 +39962,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::InstanceNetworkInterfaceResultsPage>, Error<types::Error>>
         {
             let Self {
-                client,
+                __progenitor_client,
                 subnet,
                 limit,
                 page_token,
@@ -39349,47 +39976,50 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpc-subnets/{}/network-interfaces",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&subnet.to_string()),
             );
-            let mut query = Vec::with_capacity(5usize);
+            let mut __progenitor_query = Vec::with_capacity(5usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
             if let Some(v) = &vpc {
-                query.push(("vpc", v.to_string()));
+                __progenitor_query.push(("vpc", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -39459,7 +40089,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_list`]: super::ClientVpcsExt::vpc_list
     #[derive(Debug, Clone)]
     pub struct VpcList<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
         project: Result<Option<types::NameOrId>, String>,
@@ -39469,7 +40099,7 @@ pub mod builder {
     impl<'a> VpcList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
                 project: Ok(None),
@@ -39525,7 +40155,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::VpcResultsPage>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 limit,
                 page_token,
                 project,
@@ -39535,40 +40165,43 @@ pub mod builder {
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpcs", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let __progenitor_url = format!("{}/v1/vpcs", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
+                __progenitor_query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
+                __progenitor_query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                query.push(("sort_by", v.to_string()));
+                __progenitor_query.push(("sort_by", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
 
@@ -39635,7 +40268,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_create`]: super::ClientVpcsExt::vpc_create
     #[derive(Debug, Clone)]
     pub struct VpcCreate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         project: Result<types::NameOrId, String>,
         body: Result<types::builder::VpcCreate, String>,
     }
@@ -39643,7 +40276,7 @@ pub mod builder {
     impl<'a> VpcCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 project: Err("project was not initialized".to_string()),
                 body: Ok(types::builder::VpcCreate::default()),
             }
@@ -39681,7 +40314,7 @@ pub mod builder {
         /// Sends a `POST` request to `/v1/vpcs`
         pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 project,
                 body,
             } = self;
@@ -39689,30 +40322,33 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/vpcs", client.baseurl,);
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("project", project.to_string()));
-            let request = client
+            let __progenitor_url = format!("{}/v1/vpcs", __progenitor_client.baseurl,);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
+            __progenitor_query.push(("project", project.to_string()));
+            let __progenitor_request = __progenitor_client
                 .client
-                .post(url)
+                .post(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                201u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39722,7 +40358,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_view`]: super::ClientVpcsExt::vpc_view
     #[derive(Debug, Clone)]
     pub struct VpcView<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         vpc: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -39730,7 +40366,7 @@ pub mod builder {
     impl<'a> VpcView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 vpc: Err("vpc was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -39760,41 +40396,44 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/vpcs/{vpc}`
         pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 vpc,
                 project,
             } = self;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpcs/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .get(url)
+                .get(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39804,7 +40443,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_update`]: super::ClientVpcsExt::vpc_update
     #[derive(Debug, Clone)]
     pub struct VpcUpdate<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         vpc: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
         body: Result<types::builder::VpcUpdate, String>,
@@ -39813,7 +40452,7 @@ pub mod builder {
     impl<'a> VpcUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 vpc: Err("vpc was not initialized".to_string()),
                 project: Ok(None),
                 body: Ok(types::builder::VpcUpdate::default()),
@@ -39863,7 +40502,7 @@ pub mod builder {
         /// Sends a `PUT` request to `/v1/vpcs/{vpc}`
         pub async fn send(self) -> Result<ResponseValue<types::Vpc>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 vpc,
                 project,
                 body,
@@ -39873,36 +40512,39 @@ pub mod builder {
             let body = body
                 .and_then(std::convert::TryInto::<types::VpcUpdate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpcs/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .put(url)
+                .put(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                200u16 => ResponseValue::from_response(__progenitor_response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
@@ -39912,7 +40554,7 @@ pub mod builder {
     /// [`ClientVpcsExt::vpc_delete`]: super::ClientVpcsExt::vpc_delete
     #[derive(Debug, Clone)]
     pub struct VpcDelete<'a> {
-        client: &'a super::Client,
+        __progenitor_client: &'a super::Client,
         vpc: Result<types::NameOrId, String>,
         project: Result<Option<types::NameOrId>, String>,
     }
@@ -39920,7 +40562,7 @@ pub mod builder {
     impl<'a> VpcDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                client,
+                __progenitor_client: client,
                 vpc: Err("vpc was not initialized".to_string()),
                 project: Ok(None),
             }
@@ -39950,41 +40592,44 @@ pub mod builder {
         /// Sends a `DELETE` request to `/v1/vpcs/{vpc}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self {
-                client,
+                __progenitor_client,
                 vpc,
                 project,
             } = self;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
-            let url = format!(
+            let __progenitor_url = format!(
                 "{}/v1/vpcs/{}",
-                client.baseurl,
+                __progenitor_client.baseurl,
                 encode_path(&vpc.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
+            let mut __progenitor_query = Vec::with_capacity(1usize);
             if let Some(v) = &project {
-                query.push(("project", v.to_string()));
+                __progenitor_query.push(("project", v.to_string()));
             }
-            let request = client
+            let __progenitor_request = __progenitor_client
                 .client
-                .delete(url)
+                .delete(__progenitor_url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
+                .query(&__progenitor_query)
                 .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+            let __progenitor_result = __progenitor_client
+                .client
+                .execute(__progenitor_request)
+                .await;
+            let __progenitor_response = __progenitor_result?;
+            match __progenitor_response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
+                    ResponseValue::from_response(__progenitor_response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(response)),
+                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
             }
         }
     }
