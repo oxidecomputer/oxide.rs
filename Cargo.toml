@@ -37,7 +37,7 @@ progenitor = { git = "https://github.com/oxidecomputer/progenitor" }
 progenitor-client = { git = "https://github.com/oxidecomputer/progenitor" }
 rand = "0.8.5"
 rcgen = "0.10.0"
-regex = "1.10.0"
+regex = "1.10.2"
 regress = "0.7.1"
 reqwest = { version = "0.11.22", features = ["native-tls-vendored"] }
 rustfmt-wrapper = "0.2.0"
