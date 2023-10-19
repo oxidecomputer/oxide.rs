@@ -785,7 +785,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.9.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#b5645fcd0cc325c0d162edfb02a4251485b2fd55"
+source = "git+https://github.com/oxidecomputer/dropshot#bce91e92733616d6fa4da83c44a61b3eda8cf204"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -830,7 +830,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.9.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#b5645fcd0cc325c0d162edfb02a4251485b2fd55"
+source = "git+https://github.com/oxidecomputer/dropshot#bce91e92733616d6fa4da83c44a61b3eda8cf204"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2787,9 +2787,9 @@ dependencies = [
 
 [[package]]
 name = "sha1"
-version = "0.10.5"
+version = "0.10.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f04293dc80c3993519f2d7f6f511707ee7094fe0c6d3406feb330cdb3540eba3"
+checksum = "e3bf829a2d51ab4a5ddf1352d8470c140cadc8301b2ae1789db023f01cedd6ba"
 dependencies = [
  "cfg-if",
  "cpufeatures",
