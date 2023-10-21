@@ -131,6 +131,22 @@ impl Cli {
             CliCommand::NetworkingAddressLotBlockList => {
                 Self::cli_networking_address_lot_block_list()
             }
+            CliCommand::NetworkingBgpConfigList => Self::cli_networking_bgp_config_list(),
+            CliCommand::NetworkingBgpConfigCreate => Self::cli_networking_bgp_config_create(),
+            CliCommand::NetworkingBgpConfigDelete => Self::cli_networking_bgp_config_delete(),
+            CliCommand::NetworkingBgpAnnounceSetList => {
+                Self::cli_networking_bgp_announce_set_list()
+            }
+            CliCommand::NetworkingBgpAnnounceSetCreate => {
+                Self::cli_networking_bgp_announce_set_create()
+            }
+            CliCommand::NetworkingBgpAnnounceSetDelete => {
+                Self::cli_networking_bgp_announce_set_delete()
+            }
+            CliCommand::NetworkingBgpImportedRoutesIpv4 => {
+                Self::cli_networking_bgp_imported_routes_ipv4()
+            }
+            CliCommand::NetworkingBgpStatus => Self::cli_networking_bgp_status(),
             CliCommand::NetworkingLoopbackAddressList => {
                 Self::cli_networking_loopback_address_list()
             }
@@ -3236,6 +3252,175 @@ impl Cli {
             .about("List the blocks in an address lot")
     }
 
+    pub fn cli_networking_bgp_config_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("name-or-id")
+                    .long("name-or-id")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("A name or id to use when selecting BGP config."),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("Get BGP configurations.")
+    }
+
+    pub fn cli_networking_bgp_config_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("asn")
+                    .long("asn")
+                    .value_parser(clap::value_parser!(u32))
+                    .required_unless_present("json-body")
+                    .help("The autonomous system number of this BGP configuration."),
+            )
+            .arg(
+                clap::Arg::new("bgp-announce-set-id")
+                    .long("bgp-announce-set-id")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("vrf")
+                    .long("vrf")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false)
+                    .help(
+                        "Optional virtual routing and forwarding identifier for this BGP \
+                         configuration.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a new BGP configuration.")
+    }
+
+    pub fn cli_networking_bgp_config_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("name-or-id")
+                    .long("name-or-id")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting BGP config."),
+            )
+            .about("Delete a BGP configuration.")
+    }
+
+    pub fn cli_networking_bgp_announce_set_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("name-or-id")
+                    .long("name-or-id")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting BGP port settings"),
+            )
+            .about("Get originated routes for a given BGP configuration.")
+    }
+
+    pub fn cli_networking_bgp_announce_set_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a new BGP announce set.")
+    }
+
+    pub fn cli_networking_bgp_announce_set_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("name-or-id")
+                    .long("name-or-id")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("A name or id to use when selecting BGP port settings"),
+            )
+            .about("Delete a BGP announce set.")
+    }
+
+    pub fn cli_networking_bgp_imported_routes_ipv4() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("asn")
+                    .long("asn")
+                    .value_parser(clap::value_parser!(u32))
+                    .required(true)
+                    .help("The ASN to filter on. Required."),
+            )
+            .about("Get imported IPv4 BGP routes.")
+    }
+
+    pub fn cli_networking_bgp_status() -> clap::Command {
+        clap::Command::new("").about("Get BGP peer status")
+    }
+
     pub fn cli_networking_loopback_address_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -5039,6 +5224,33 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::NetworkingAddressLotBlockList => {
                 self.execute_networking_address_lot_block_list(matches)
                     .await;
+            }
+            CliCommand::NetworkingBgpConfigList => {
+                self.execute_networking_bgp_config_list(matches).await;
+            }
+            CliCommand::NetworkingBgpConfigCreate => {
+                self.execute_networking_bgp_config_create(matches).await;
+            }
+            CliCommand::NetworkingBgpConfigDelete => {
+                self.execute_networking_bgp_config_delete(matches).await;
+            }
+            CliCommand::NetworkingBgpAnnounceSetList => {
+                self.execute_networking_bgp_announce_set_list(matches).await;
+            }
+            CliCommand::NetworkingBgpAnnounceSetCreate => {
+                self.execute_networking_bgp_announce_set_create(matches)
+                    .await;
+            }
+            CliCommand::NetworkingBgpAnnounceSetDelete => {
+                self.execute_networking_bgp_announce_set_delete(matches)
+                    .await;
+            }
+            CliCommand::NetworkingBgpImportedRoutesIpv4 => {
+                self.execute_networking_bgp_imported_routes_ipv4(matches)
+                    .await;
+            }
+            CliCommand::NetworkingBgpStatus => {
+                self.execute_networking_bgp_status(matches).await;
             }
             CliCommand::NetworkingLoopbackAddressList => {
                 self.execute_networking_loopback_address_list(matches).await;
@@ -8243,6 +8455,209 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_bgp_config_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bgp_config_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
+            request = request.name_or_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_networking_bgp_config_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_networking_bgp_config_create(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bgp_config_create();
+        if let Some(value) = matches.get_one::<u32>("asn") {
+            request = request.body_map(|body| body.asn(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("bgp-announce-set-id") {
+            request = request.body_map(|body| body.bgp_announce_set_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("vrf") {
+            request = request.body_map(|body| body.vrf(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::BgpConfigCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_networking_bgp_config_create(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_bgp_config_delete(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bgp_config_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
+            request = request.name_or_id(value.clone());
+        }
+
+        self.over
+            .execute_networking_bgp_config_delete(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_bgp_announce_set_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bgp_announce_set_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
+            request = request.name_or_id(value.clone());
+        }
+
+        self.over
+            .execute_networking_bgp_announce_set_list(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_bgp_announce_set_create(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bgp_announce_set_create();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::BgpAnnounceSetCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_networking_bgp_announce_set_create(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_bgp_announce_set_delete(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bgp_announce_set_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
+            request = request.name_or_id(value.clone());
+        }
+
+        self.over
+            .execute_networking_bgp_announce_set_delete(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_bgp_imported_routes_ipv4(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bgp_imported_routes_ipv4();
+        if let Some(value) = matches.get_one::<u32>("asn") {
+            request = request.asn(value.clone());
+        }
+
+        self.over
+            .execute_networking_bgp_imported_routes_ipv4(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_bgp_status(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bgp_status();
+        self.over
+            .execute_networking_bgp_status(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_networking_loopback_address_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.networking_loopback_address_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -10476,6 +10891,70 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_networking_bgp_config_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBgpConfigList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bgp_config_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBgpConfigCreate,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bgp_config_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBgpConfigDelete,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bgp_announce_set_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBgpAnnounceSetList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bgp_announce_set_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBgpAnnounceSetCreate,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bgp_announce_set_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBgpAnnounceSetDelete,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bgp_imported_routes_ipv4(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBgpImportedRoutesIpv4,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bgp_status(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBgpStatus,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_networking_loopback_address_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10946,6 +11425,14 @@ pub enum CliCommand {
     NetworkingAddressLotCreate,
     NetworkingAddressLotDelete,
     NetworkingAddressLotBlockList,
+    NetworkingBgpConfigList,
+    NetworkingBgpConfigCreate,
+    NetworkingBgpConfigDelete,
+    NetworkingBgpAnnounceSetList,
+    NetworkingBgpAnnounceSetCreate,
+    NetworkingBgpAnnounceSetDelete,
+    NetworkingBgpImportedRoutesIpv4,
+    NetworkingBgpStatus,
     NetworkingLoopbackAddressList,
     NetworkingLoopbackAddressCreate,
     NetworkingLoopbackAddressDelete,
@@ -11101,6 +11588,14 @@ impl CliCommand {
             CliCommand::NetworkingAddressLotCreate,
             CliCommand::NetworkingAddressLotDelete,
             CliCommand::NetworkingAddressLotBlockList,
+            CliCommand::NetworkingBgpConfigList,
+            CliCommand::NetworkingBgpConfigCreate,
+            CliCommand::NetworkingBgpConfigDelete,
+            CliCommand::NetworkingBgpAnnounceSetList,
+            CliCommand::NetworkingBgpAnnounceSetCreate,
+            CliCommand::NetworkingBgpAnnounceSetDelete,
+            CliCommand::NetworkingBgpImportedRoutesIpv4,
+            CliCommand::NetworkingBgpStatus,
             CliCommand::NetworkingLoopbackAddressList,
             CliCommand::NetworkingLoopbackAddressCreate,
             CliCommand::NetworkingLoopbackAddressDelete,

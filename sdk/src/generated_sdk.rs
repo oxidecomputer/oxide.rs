@@ -305,6 +305,207 @@ pub mod types {
         }
     }
 
+    /// Represents a BGP announce set by id. The id can be used with other API
+    /// calls to view and manage the announce set.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpAnnounceSet {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&BgpAnnounceSet> for BgpAnnounceSet {
+        fn from(value: &BgpAnnounceSet) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpAnnounceSet {
+        pub fn builder() -> builder::BgpAnnounceSet {
+            builder::BgpAnnounceSet::default()
+        }
+    }
+
+    /// Parameters for creating a named set of BGP announcements.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpAnnounceSetCreate {
+        /// The announcements in this set.
+        pub announcement: Vec<BgpAnnouncementCreate>,
+        pub description: String,
+        pub name: Name,
+    }
+
+    impl From<&BgpAnnounceSetCreate> for BgpAnnounceSetCreate {
+        fn from(value: &BgpAnnounceSetCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpAnnounceSetCreate {
+        pub fn builder() -> builder::BgpAnnounceSetCreate {
+            builder::BgpAnnounceSetCreate::default()
+        }
+    }
+
+    /// A BGP announcement tied to an address lot block.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpAnnouncement {
+        /// The address block the IP network being announced is drawn from.
+        pub address_lot_block_id: uuid::Uuid,
+        /// The id of the set this announcement is a part of.
+        pub announce_set_id: uuid::Uuid,
+        /// The IP network being announced.
+        pub network: IpNet,
+    }
+
+    impl From<&BgpAnnouncement> for BgpAnnouncement {
+        fn from(value: &BgpAnnouncement) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpAnnouncement {
+        pub fn builder() -> builder::BgpAnnouncement {
+            builder::BgpAnnouncement::default()
+        }
+    }
+
+    /// A BGP announcement tied to a particular address lot block.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpAnnouncementCreate {
+        /// Address lot this announcement is drawn from.
+        pub address_lot_block: NameOrId,
+        /// The network being announced.
+        pub network: IpNet,
+    }
+
+    impl From<&BgpAnnouncementCreate> for BgpAnnouncementCreate {
+        fn from(value: &BgpAnnouncementCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpAnnouncementCreate {
+        pub fn builder() -> builder::BgpAnnouncementCreate {
+            builder::BgpAnnouncementCreate::default()
+        }
+    }
+
+    /// A base BGP configuration.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpConfig {
+        /// The autonomous system number of this BGP configuration.
+        pub asn: u32,
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+        /// Optional virtual routing and forwarding identifier for this BGP
+        /// configuration.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub vrf: Option<String>,
+    }
+
+    impl From<&BgpConfig> for BgpConfig {
+        fn from(value: &BgpConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpConfig {
+        pub fn builder() -> builder::BgpConfig {
+            builder::BgpConfig::default()
+        }
+    }
+
+    /// Parameters for creating a BGP configuration. This includes and
+    /// autonomous system number (ASN) and a virtual routing and forwarding
+    /// (VRF) identifier.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpConfigCreate {
+        /// The autonomous system number of this BGP configuration.
+        pub asn: u32,
+        pub bgp_announce_set_id: NameOrId,
+        pub description: String,
+        pub name: Name,
+        /// Optional virtual routing and forwarding identifier for this BGP
+        /// configuration.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub vrf: Option<Name>,
+    }
+
+    impl From<&BgpConfigCreate> for BgpConfigCreate {
+        fn from(value: &BgpConfigCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpConfigCreate {
+        pub fn builder() -> builder::BgpConfigCreate {
+            builder::BgpConfigCreate::default()
+        }
+    }
+
+    /// A single page of results
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpConfigResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<BgpConfig>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&BgpConfigResultsPage> for BgpConfigResultsPage {
+        fn from(value: &BgpConfigResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpConfigResultsPage {
+        pub fn builder() -> builder::BgpConfigResultsPage {
+            builder::BgpConfigResultsPage::default()
+        }
+    }
+
+    /// A route imported from a BGP peer.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpImportedRouteIpv4 {
+        /// BGP identifier of the originating router.
+        pub id: u32,
+        /// The nexthop the prefix is reachable through.
+        pub nexthop: std::net::Ipv4Addr,
+        /// The destination network prefix.
+        pub prefix: Ipv4Net,
+        /// Switch the route is imported into.
+        pub switch: SwitchLocation,
+    }
+
+    impl From<&BgpImportedRouteIpv4> for BgpImportedRouteIpv4 {
+        fn from(value: &BgpImportedRouteIpv4) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpImportedRouteIpv4 {
+        pub fn builder() -> builder::BgpImportedRouteIpv4 {
+            builder::BgpImportedRouteIpv4::default()
+        }
+    }
+
     /// A BGP peer configuration for an interface. Includes the set of
     /// announcements that will be advertised to the peer identified by `addr`.
     /// The `bgp_config` parameter is a reference to global BGP parameters. The
@@ -319,11 +520,23 @@ pub mod types {
         /// The global BGP configuration used for establishing a session with
         /// this peer.
         pub bgp_config: NameOrId,
+        /// How long to to wait between TCP connection retries (seconds).
+        pub connect_retry: u32,
+        /// How long to delay sending an open request after establishing a TCP
+        /// session (seconds).
+        pub delay_open: u32,
+        /// How long to hold peer connections between keppalives (seconds).
+        pub hold_time: u32,
+        /// How long to hold a peer in idle before attempting a new session
+        /// (seconds).
+        pub idle_hold_time: u32,
         /// The name of interface to peer on. This is relative to the port
         /// configuration this BGP peer configuration is a part of. For example
         /// this value could be phy0 to refer to a primary physical interface.
         /// Or it could be vlan47 to refer to a VLAN interface.
         pub interface_name: String,
+        /// How often to send keepalive requests (seconds).
+        pub keepalive: u32,
     }
 
     impl From<&BgpPeerConfig> for BgpPeerConfig {
@@ -335,6 +548,133 @@ pub mod types {
     impl BgpPeerConfig {
         pub fn builder() -> builder::BgpPeerConfig {
             builder::BgpPeerConfig::default()
+        }
+    }
+
+    /// The current state of a BGP peer.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum BgpPeerState {
+        /// Initial state. Refuse all incomming BGP connections. No resources
+        /// allocated to peer.
+        #[serde(rename = "idle")]
+        Idle,
+        /// Waiting for the TCP connection to be completed.
+        #[serde(rename = "connect")]
+        Connect,
+        /// Trying to acquire peer by listening for and accepting a TCP
+        /// connection.
+        #[serde(rename = "active")]
+        Active,
+        /// Waiting for open message from peer.
+        #[serde(rename = "open_sent")]
+        OpenSent,
+        /// Waiting for keepaliave or notification from peer.
+        #[serde(rename = "open_confirm")]
+        OpenConfirm,
+        /// Synchronizing with peer.
+        #[serde(rename = "session_setup")]
+        SessionSetup,
+        /// Session established. Able to exchange update, notification and
+        /// keepliave messages with peers.
+        #[serde(rename = "established")]
+        Established,
+    }
+
+    impl From<&BgpPeerState> for BgpPeerState {
+        fn from(value: &BgpPeerState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for BgpPeerState {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Idle => "idle".to_string(),
+                Self::Connect => "connect".to_string(),
+                Self::Active => "active".to_string(),
+                Self::OpenSent => "open_sent".to_string(),
+                Self::OpenConfirm => "open_confirm".to_string(),
+                Self::SessionSetup => "session_setup".to_string(),
+                Self::Established => "established".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for BgpPeerState {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "idle" => Ok(Self::Idle),
+                "connect" => Ok(Self::Connect),
+                "active" => Ok(Self::Active),
+                "open_sent" => Ok(Self::OpenSent),
+                "open_confirm" => Ok(Self::OpenConfirm),
+                "session_setup" => Ok(Self::SessionSetup),
+                "established" => Ok(Self::Established),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for BgpPeerState {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for BgpPeerState {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for BgpPeerState {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    /// The current status of a BGP peer.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpPeerStatus {
+        /// IP address of the peer.
+        pub addr: std::net::IpAddr,
+        /// Local autonomous system number.
+        pub local_asn: u32,
+        /// Remote autonomous system number.
+        pub remote_asn: u32,
+        /// State of the peer.
+        pub state: BgpPeerState,
+        /// Time of last state change.
+        pub state_duration_millis: u64,
+        /// Switch with the peer session.
+        pub switch: SwitchLocation,
+    }
+
+    impl From<&BgpPeerStatus> for BgpPeerStatus {
+        fn from(value: &BgpPeerStatus) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpPeerStatus {
+        pub fn builder() -> builder::BgpPeerStatus {
+            builder::BgpPeerStatus::default()
         }
     }
 
@@ -3716,10 +4056,14 @@ pub mod types {
     /// Switch link configuration.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct LinkConfig {
+        /// The forward error correction mode of the link.
+        pub fec: LinkFec,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
         pub lldp: LldpServiceConfig,
         /// Maximum transmission unit for the link.
         pub mtu: u16,
+        /// The speed of the link.
+        pub speed: LinkSpeed,
     }
 
     impl From<&LinkConfig> for LinkConfig {
@@ -3731,6 +4075,186 @@ pub mod types {
     impl LinkConfig {
         pub fn builder() -> builder::LinkConfig {
             builder::LinkConfig::default()
+        }
+    }
+
+    /// The forward error correction mode of a link.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum LinkFec {
+        /// Firecode foward error correction.
+        #[serde(rename = "firecode")]
+        Firecode,
+        /// No forward error correction.
+        #[serde(rename = "none")]
+        None,
+        /// Reed-Solomon forward error correction.
+        #[serde(rename = "rs")]
+        Rs,
+    }
+
+    impl From<&LinkFec> for LinkFec {
+        fn from(value: &LinkFec) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for LinkFec {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Firecode => "firecode".to_string(),
+                Self::None => "none".to_string(),
+                Self::Rs => "rs".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for LinkFec {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "firecode" => Ok(Self::Firecode),
+                "none" => Ok(Self::None),
+                "rs" => Ok(Self::Rs),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for LinkFec {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for LinkFec {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for LinkFec {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    /// The speed of a link.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum LinkSpeed {
+        /// Zero gigabits per second.
+        #[serde(rename = "speed0_g")]
+        Speed0G,
+        /// 1 gigabit per second.
+        #[serde(rename = "speed1_g")]
+        Speed1G,
+        /// 10 gigabits per second.
+        #[serde(rename = "speed10_g")]
+        Speed10G,
+        /// 25 gigabits per second.
+        #[serde(rename = "speed25_g")]
+        Speed25G,
+        /// 40 gigabits per second.
+        #[serde(rename = "speed40_g")]
+        Speed40G,
+        /// 50 gigabits per second.
+        #[serde(rename = "speed50_g")]
+        Speed50G,
+        /// 100 gigabits per second.
+        #[serde(rename = "speed100_g")]
+        Speed100G,
+        /// 200 gigabits per second.
+        #[serde(rename = "speed200_g")]
+        Speed200G,
+        /// 400 gigabits per second.
+        #[serde(rename = "speed400_g")]
+        Speed400G,
+    }
+
+    impl From<&LinkSpeed> for LinkSpeed {
+        fn from(value: &LinkSpeed) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for LinkSpeed {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Speed0G => "speed0_g".to_string(),
+                Self::Speed1G => "speed1_g".to_string(),
+                Self::Speed10G => "speed10_g".to_string(),
+                Self::Speed25G => "speed25_g".to_string(),
+                Self::Speed40G => "speed40_g".to_string(),
+                Self::Speed50G => "speed50_g".to_string(),
+                Self::Speed100G => "speed100_g".to_string(),
+                Self::Speed200G => "speed200_g".to_string(),
+                Self::Speed400G => "speed400_g".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for LinkSpeed {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "speed0_g" => Ok(Self::Speed0G),
+                "speed1_g" => Ok(Self::Speed1G),
+                "speed10_g" => Ok(Self::Speed10G),
+                "speed25_g" => Ok(Self::Speed25G),
+                "speed40_g" => Ok(Self::Speed40G),
+                "speed50_g" => Ok(Self::Speed50G),
+                "speed100_g" => Ok(Self::Speed100G),
+                "speed200_g" => Ok(Self::Speed200G),
+                "speed400_g" => Ok(Self::Speed400G),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for LinkSpeed {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for LinkSpeed {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for LinkSpeed {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
         }
     }
 
@@ -6107,6 +6631,76 @@ pub mod types {
         }
     }
 
+    /// Identifies switch physical location
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum SwitchLocation {
+        /// Switch in upper slot
+        #[serde(rename = "switch0")]
+        Switch0,
+        /// Switch in lower slot
+        #[serde(rename = "switch1")]
+        Switch1,
+    }
+
+    impl From<&SwitchLocation> for SwitchLocation {
+        fn from(value: &SwitchLocation) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for SwitchLocation {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Switch0 => "switch0".to_string(),
+                Self::Switch1 => "switch1".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for SwitchLocation {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "switch0" => Ok(Self::Switch0),
+                "switch1" => Ok(Self::Switch1),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for SwitchLocation {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for SwitchLocation {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for SwitchLocation {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
     /// A switch port represents a physical external port on a rack switch.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SwitchPort {
@@ -6185,8 +6779,6 @@ pub mod types {
     pub struct SwitchPortBgpPeerConfig {
         /// The address of the peer.
         pub addr: std::net::IpAddr,
-        /// The id for the set of prefixes announced in this peer configuration.
-        pub bgp_announce_set_id: uuid::Uuid,
         /// The id of the global BGP configuration referenced by this peer
         /// configuration.
         pub bgp_config_id: uuid::Uuid,
@@ -8420,11 +9012,695 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct BgpAnnounceSet {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            name: Result<super::Name, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for BgpAnnounceSet {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl BgpAnnounceSet {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpAnnounceSet> for super::BgpAnnounceSet {
+            type Error = String;
+            fn try_from(value: BgpAnnounceSet) -> Result<Self, String> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::BgpAnnounceSet> for BgpAnnounceSet {
+            fn from(value: super::BgpAnnounceSet) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpAnnounceSetCreate {
+            announcement: Result<Vec<super::BgpAnnouncementCreate>, String>,
+            description: Result<String, String>,
+            name: Result<super::Name, String>,
+        }
+
+        impl Default for BgpAnnounceSetCreate {
+            fn default() -> Self {
+                Self {
+                    announcement: Err("no value supplied for announcement".to_string()),
+                    description: Err("no value supplied for description".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                }
+            }
+        }
+
+        impl BgpAnnounceSetCreate {
+            pub fn announcement<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::BgpAnnouncementCreate>>,
+                T::Error: std::fmt::Display,
+            {
+                self.announcement = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for announcement: {}", e)
+                });
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpAnnounceSetCreate> for super::BgpAnnounceSetCreate {
+            type Error = String;
+            fn try_from(value: BgpAnnounceSetCreate) -> Result<Self, String> {
+                Ok(Self {
+                    announcement: value.announcement?,
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl From<super::BgpAnnounceSetCreate> for BgpAnnounceSetCreate {
+            fn from(value: super::BgpAnnounceSetCreate) -> Self {
+                Self {
+                    announcement: Ok(value.announcement),
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpAnnouncement {
+            address_lot_block_id: Result<uuid::Uuid, String>,
+            announce_set_id: Result<uuid::Uuid, String>,
+            network: Result<super::IpNet, String>,
+        }
+
+        impl Default for BgpAnnouncement {
+            fn default() -> Self {
+                Self {
+                    address_lot_block_id: Err(
+                        "no value supplied for address_lot_block_id".to_string()
+                    ),
+                    announce_set_id: Err("no value supplied for announce_set_id".to_string()),
+                    network: Err("no value supplied for network".to_string()),
+                }
+            }
+        }
+
+        impl BgpAnnouncement {
+            pub fn address_lot_block_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.address_lot_block_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for address_lot_block_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn announce_set_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.announce_set_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for announce_set_id: {}", e)
+                });
+                self
+            }
+            pub fn network<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.network = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for network: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpAnnouncement> for super::BgpAnnouncement {
+            type Error = String;
+            fn try_from(value: BgpAnnouncement) -> Result<Self, String> {
+                Ok(Self {
+                    address_lot_block_id: value.address_lot_block_id?,
+                    announce_set_id: value.announce_set_id?,
+                    network: value.network?,
+                })
+            }
+        }
+
+        impl From<super::BgpAnnouncement> for BgpAnnouncement {
+            fn from(value: super::BgpAnnouncement) -> Self {
+                Self {
+                    address_lot_block_id: Ok(value.address_lot_block_id),
+                    announce_set_id: Ok(value.announce_set_id),
+                    network: Ok(value.network),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpAnnouncementCreate {
+            address_lot_block: Result<super::NameOrId, String>,
+            network: Result<super::IpNet, String>,
+        }
+
+        impl Default for BgpAnnouncementCreate {
+            fn default() -> Self {
+                Self {
+                    address_lot_block: Err("no value supplied for address_lot_block".to_string()),
+                    network: Err("no value supplied for network".to_string()),
+                }
+            }
+        }
+
+        impl BgpAnnouncementCreate {
+            pub fn address_lot_block<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.address_lot_block = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for address_lot_block: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn network<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.network = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for network: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpAnnouncementCreate> for super::BgpAnnouncementCreate {
+            type Error = String;
+            fn try_from(value: BgpAnnouncementCreate) -> Result<Self, String> {
+                Ok(Self {
+                    address_lot_block: value.address_lot_block?,
+                    network: value.network?,
+                })
+            }
+        }
+
+        impl From<super::BgpAnnouncementCreate> for BgpAnnouncementCreate {
+            fn from(value: super::BgpAnnouncementCreate) -> Self {
+                Self {
+                    address_lot_block: Ok(value.address_lot_block),
+                    network: Ok(value.network),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpConfig {
+            asn: Result<u32, String>,
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            name: Result<super::Name, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            vrf: Result<Option<String>, String>,
+        }
+
+        impl Default for BgpConfig {
+            fn default() -> Self {
+                Self {
+                    asn: Err("no value supplied for asn".to_string()),
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                    vrf: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl BgpConfig {
+            pub fn asn<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.asn = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for asn: {}", e));
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+            pub fn vrf<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.vrf = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vrf: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpConfig> for super::BgpConfig {
+            type Error = String;
+            fn try_from(value: BgpConfig) -> Result<Self, String> {
+                Ok(Self {
+                    asn: value.asn?,
+                    description: value.description?,
+                    id: value.id?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                    vrf: value.vrf?,
+                })
+            }
+        }
+
+        impl From<super::BgpConfig> for BgpConfig {
+            fn from(value: super::BgpConfig) -> Self {
+                Self {
+                    asn: Ok(value.asn),
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                    vrf: Ok(value.vrf),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpConfigCreate {
+            asn: Result<u32, String>,
+            bgp_announce_set_id: Result<super::NameOrId, String>,
+            description: Result<String, String>,
+            name: Result<super::Name, String>,
+            vrf: Result<Option<super::Name>, String>,
+        }
+
+        impl Default for BgpConfigCreate {
+            fn default() -> Self {
+                Self {
+                    asn: Err("no value supplied for asn".to_string()),
+                    bgp_announce_set_id: Err(
+                        "no value supplied for bgp_announce_set_id".to_string()
+                    ),
+                    description: Err("no value supplied for description".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    vrf: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl BgpConfigCreate {
+            pub fn asn<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.asn = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for asn: {}", e));
+                self
+            }
+            pub fn bgp_announce_set_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.bgp_announce_set_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for bgp_announce_set_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn vrf<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Name>>,
+                T::Error: std::fmt::Display,
+            {
+                self.vrf = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vrf: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpConfigCreate> for super::BgpConfigCreate {
+            type Error = String;
+            fn try_from(value: BgpConfigCreate) -> Result<Self, String> {
+                Ok(Self {
+                    asn: value.asn?,
+                    bgp_announce_set_id: value.bgp_announce_set_id?,
+                    description: value.description?,
+                    name: value.name?,
+                    vrf: value.vrf?,
+                })
+            }
+        }
+
+        impl From<super::BgpConfigCreate> for BgpConfigCreate {
+            fn from(value: super::BgpConfigCreate) -> Self {
+                Self {
+                    asn: Ok(value.asn),
+                    bgp_announce_set_id: Ok(value.bgp_announce_set_id),
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                    vrf: Ok(value.vrf),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpConfigResultsPage {
+            items: Result<Vec<super::BgpConfig>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for BgpConfigResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl BgpConfigResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::BgpConfig>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpConfigResultsPage> for super::BgpConfigResultsPage {
+            type Error = String;
+            fn try_from(value: BgpConfigResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::BgpConfigResultsPage> for BgpConfigResultsPage {
+            fn from(value: super::BgpConfigResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpImportedRouteIpv4 {
+            id: Result<u32, String>,
+            nexthop: Result<std::net::Ipv4Addr, String>,
+            prefix: Result<super::Ipv4Net, String>,
+            switch: Result<super::SwitchLocation, String>,
+        }
+
+        impl Default for BgpImportedRouteIpv4 {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    nexthop: Err("no value supplied for nexthop".to_string()),
+                    prefix: Err("no value supplied for prefix".to_string()),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl BgpImportedRouteIpv4 {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn nexthop<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::Ipv4Addr>,
+                T::Error: std::fmt::Display,
+            {
+                self.nexthop = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nexthop: {}", e));
+                self
+            }
+            pub fn prefix<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Ipv4Net>,
+                T::Error: std::fmt::Display,
+            {
+                self.prefix = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for prefix: {}", e));
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchLocation>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpImportedRouteIpv4> for super::BgpImportedRouteIpv4 {
+            type Error = String;
+            fn try_from(value: BgpImportedRouteIpv4) -> Result<Self, String> {
+                Ok(Self {
+                    id: value.id?,
+                    nexthop: value.nexthop?,
+                    prefix: value.prefix?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl From<super::BgpImportedRouteIpv4> for BgpImportedRouteIpv4 {
+            fn from(value: super::BgpImportedRouteIpv4) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    nexthop: Ok(value.nexthop),
+                    prefix: Ok(value.prefix),
+                    switch: Ok(value.switch),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct BgpPeerConfig {
             addr: Result<std::net::IpAddr, String>,
             bgp_announce_set: Result<super::NameOrId, String>,
             bgp_config: Result<super::NameOrId, String>,
+            connect_retry: Result<u32, String>,
+            delay_open: Result<u32, String>,
+            hold_time: Result<u32, String>,
+            idle_hold_time: Result<u32, String>,
             interface_name: Result<String, String>,
+            keepalive: Result<u32, String>,
         }
 
         impl Default for BgpPeerConfig {
@@ -8433,7 +9709,12 @@ pub mod types {
                     addr: Err("no value supplied for addr".to_string()),
                     bgp_announce_set: Err("no value supplied for bgp_announce_set".to_string()),
                     bgp_config: Err("no value supplied for bgp_config".to_string()),
+                    connect_retry: Err("no value supplied for connect_retry".to_string()),
+                    delay_open: Err("no value supplied for delay_open".to_string()),
+                    hold_time: Err("no value supplied for hold_time".to_string()),
+                    idle_hold_time: Err("no value supplied for idle_hold_time".to_string()),
                     interface_name: Err("no value supplied for interface_name".to_string()),
+                    keepalive: Err("no value supplied for keepalive".to_string()),
                 }
             }
         }
@@ -8472,6 +9753,46 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bgp_config: {}", e));
                 self
             }
+            pub fn connect_retry<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.connect_retry = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for connect_retry: {}", e)
+                });
+                self
+            }
+            pub fn delay_open<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.delay_open = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for delay_open: {}", e));
+                self
+            }
+            pub fn hold_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.hold_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for hold_time: {}", e));
+                self
+            }
+            pub fn idle_hold_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.idle_hold_time = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for idle_hold_time: {}", e)
+                });
+                self
+            }
             pub fn interface_name<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -8480,6 +9801,16 @@ pub mod types {
                 self.interface_name = value.try_into().map_err(|e| {
                     format!("error converting supplied value for interface_name: {}", e)
                 });
+                self
+            }
+            pub fn keepalive<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.keepalive = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for keepalive: {}", e));
                 self
             }
         }
@@ -8491,7 +9822,12 @@ pub mod types {
                     addr: value.addr?,
                     bgp_announce_set: value.bgp_announce_set?,
                     bgp_config: value.bgp_config?,
+                    connect_retry: value.connect_retry?,
+                    delay_open: value.delay_open?,
+                    hold_time: value.hold_time?,
+                    idle_hold_time: value.idle_hold_time?,
                     interface_name: value.interface_name?,
+                    keepalive: value.keepalive?,
                 })
             }
         }
@@ -8502,7 +9838,130 @@ pub mod types {
                     addr: Ok(value.addr),
                     bgp_announce_set: Ok(value.bgp_announce_set),
                     bgp_config: Ok(value.bgp_config),
+                    connect_retry: Ok(value.connect_retry),
+                    delay_open: Ok(value.delay_open),
+                    hold_time: Ok(value.hold_time),
+                    idle_hold_time: Ok(value.idle_hold_time),
                     interface_name: Ok(value.interface_name),
+                    keepalive: Ok(value.keepalive),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpPeerStatus {
+            addr: Result<std::net::IpAddr, String>,
+            local_asn: Result<u32, String>,
+            remote_asn: Result<u32, String>,
+            state: Result<super::BgpPeerState, String>,
+            state_duration_millis: Result<u64, String>,
+            switch: Result<super::SwitchLocation, String>,
+        }
+
+        impl Default for BgpPeerStatus {
+            fn default() -> Self {
+                Self {
+                    addr: Err("no value supplied for addr".to_string()),
+                    local_asn: Err("no value supplied for local_asn".to_string()),
+                    remote_asn: Err("no value supplied for remote_asn".to_string()),
+                    state: Err("no value supplied for state".to_string()),
+                    state_duration_millis: Err(
+                        "no value supplied for state_duration_millis".to_string()
+                    ),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl BgpPeerStatus {
+            pub fn addr<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.addr = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for addr: {}", e));
+                self
+            }
+            pub fn local_asn<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.local_asn = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for local_asn: {}", e));
+                self
+            }
+            pub fn remote_asn<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.remote_asn = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for remote_asn: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BgpPeerState>,
+                T::Error: std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+            pub fn state_duration_millis<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.state_duration_millis = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for state_duration_millis: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchLocation>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpPeerStatus> for super::BgpPeerStatus {
+            type Error = String;
+            fn try_from(value: BgpPeerStatus) -> Result<Self, String> {
+                Ok(Self {
+                    addr: value.addr?,
+                    local_asn: value.local_asn?,
+                    remote_asn: value.remote_asn?,
+                    state: value.state?,
+                    state_duration_millis: value.state_duration_millis?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl From<super::BgpPeerStatus> for BgpPeerStatus {
+            fn from(value: super::BgpPeerStatus) -> Self {
+                Self {
+                    addr: Ok(value.addr),
+                    local_asn: Ok(value.local_asn),
+                    remote_asn: Ok(value.remote_asn),
+                    state: Ok(value.state),
+                    state_duration_millis: Ok(value.state_duration_millis),
+                    switch: Ok(value.switch),
                 }
             }
         }
@@ -13598,20 +15057,34 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct LinkConfig {
+            fec: Result<super::LinkFec, String>,
             lldp: Result<super::LldpServiceConfig, String>,
             mtu: Result<u16, String>,
+            speed: Result<super::LinkSpeed, String>,
         }
 
         impl Default for LinkConfig {
             fn default() -> Self {
                 Self {
+                    fec: Err("no value supplied for fec".to_string()),
                     lldp: Err("no value supplied for lldp".to_string()),
                     mtu: Err("no value supplied for mtu".to_string()),
+                    speed: Err("no value supplied for speed".to_string()),
                 }
             }
         }
 
         impl LinkConfig {
+            pub fn fec<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::LinkFec>,
+                T::Error: std::fmt::Display,
+            {
+                self.fec = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for fec: {}", e));
+                self
+            }
             pub fn lldp<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::LldpServiceConfig>,
@@ -13632,14 +15105,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for mtu: {}", e));
                 self
             }
+            pub fn speed<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::LinkSpeed>,
+                T::Error: std::fmt::Display,
+            {
+                self.speed = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for speed: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<LinkConfig> for super::LinkConfig {
             type Error = String;
             fn try_from(value: LinkConfig) -> Result<Self, String> {
                 Ok(Self {
+                    fec: value.fec?,
                     lldp: value.lldp?,
                     mtu: value.mtu?,
+                    speed: value.speed?,
                 })
             }
         }
@@ -13647,8 +15132,10 @@ pub mod types {
         impl From<super::LinkConfig> for LinkConfig {
             fn from(value: super::LinkConfig) -> Self {
                 Self {
+                    fec: Ok(value.fec),
                     lldp: Ok(value.lldp),
                     mtu: Ok(value.mtu),
+                    speed: Ok(value.speed),
                 }
             }
         }
@@ -17676,7 +19163,6 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchPortBgpPeerConfig {
             addr: Result<std::net::IpAddr, String>,
-            bgp_announce_set_id: Result<uuid::Uuid, String>,
             bgp_config_id: Result<uuid::Uuid, String>,
             interface_name: Result<String, String>,
             port_settings_id: Result<uuid::Uuid, String>,
@@ -17686,9 +19172,6 @@ pub mod types {
             fn default() -> Self {
                 Self {
                     addr: Err("no value supplied for addr".to_string()),
-                    bgp_announce_set_id: Err(
-                        "no value supplied for bgp_announce_set_id".to_string()
-                    ),
                     bgp_config_id: Err("no value supplied for bgp_config_id".to_string()),
                     interface_name: Err("no value supplied for interface_name".to_string()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
@@ -17705,19 +19188,6 @@ pub mod types {
                 self.addr = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for addr: {}", e));
-                self
-            }
-            pub fn bgp_announce_set_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.bgp_announce_set_id = value.try_into().map_err(|e| {
-                    format!(
-                        "error converting supplied value for bgp_announce_set_id: {}",
-                        e
-                    )
-                });
                 self
             }
             pub fn bgp_config_id<T>(mut self, value: T) -> Self
@@ -17760,7 +19230,6 @@ pub mod types {
             fn try_from(value: SwitchPortBgpPeerConfig) -> Result<Self, String> {
                 Ok(Self {
                     addr: value.addr?,
-                    bgp_announce_set_id: value.bgp_announce_set_id?,
                     bgp_config_id: value.bgp_config_id?,
                     interface_name: value.interface_name?,
                     port_settings_id: value.port_settings_id?,
@@ -17772,7 +19241,6 @@ pub mod types {
             fn from(value: super::SwitchPortBgpPeerConfig) -> Self {
                 Self {
                     addr: Ok(value.addr),
-                    bgp_announce_set_id: Ok(value.bgp_announce_set_id),
                     bgp_config_id: Ok(value.bgp_config_id),
                     interface_name: Ok(value.interface_name),
                     port_settings_id: Ok(value.port_settings_id),
@@ -22834,6 +24302,110 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList;
+    /// Get BGP configurations
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/bgp`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `name_or_id`: A name or id to use when selecting BGP config.
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.networking_bgp_config_list()
+    ///    .limit(limit)
+    ///    .name_or_id(name_or_id)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList;
+    /// Create a new BGP configuration
+    ///
+    /// Sends a `POST` request to `/v1/system/networking/bgp`
+    ///
+    /// ```ignore
+    /// let response = client.networking_bgp_config_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_config_create(&self) -> builder::NetworkingBgpConfigCreate;
+    /// Delete a BGP configuration
+    ///
+    /// Sends a `DELETE` request to `/v1/system/networking/bgp`
+    ///
+    /// Arguments:
+    /// - `name_or_id`: A name or id to use when selecting BGP config.
+    /// ```ignore
+    /// let response = client.networking_bgp_config_delete()
+    ///    .name_or_id(name_or_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_config_delete(&self) -> builder::NetworkingBgpConfigDelete;
+    /// Get originated routes for a given BGP configuration
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/bgp-announce`
+    ///
+    /// Arguments:
+    /// - `name_or_id`: A name or id to use when selecting BGP port settings
+    /// ```ignore
+    /// let response = client.networking_bgp_announce_set_list()
+    ///    .name_or_id(name_or_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_announce_set_list(&self) -> builder::NetworkingBgpAnnounceSetList;
+    /// Create a new BGP announce set
+    ///
+    /// Sends a `POST` request to `/v1/system/networking/bgp-announce`
+    ///
+    /// ```ignore
+    /// let response = client.networking_bgp_announce_set_create()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_announce_set_create(&self) -> builder::NetworkingBgpAnnounceSetCreate;
+    /// Delete a BGP announce set
+    ///
+    /// Sends a `DELETE` request to `/v1/system/networking/bgp-announce`
+    ///
+    /// Arguments:
+    /// - `name_or_id`: A name or id to use when selecting BGP port settings
+    /// ```ignore
+    /// let response = client.networking_bgp_announce_set_delete()
+    ///    .name_or_id(name_or_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete;
+    /// Get imported IPv4 BGP routes
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/bgp-routes-ipv4`
+    ///
+    /// Arguments:
+    /// - `asn`: The ASN to filter on. Required.
+    /// ```ignore
+    /// let response = client.networking_bgp_imported_routes_ipv4()
+    ///    .asn(asn)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_imported_routes_ipv4(&self) -> builder::NetworkingBgpImportedRoutesIpv4;
+    /// Get BGP peer status
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/bgp-status`
+    ///
+    /// ```ignore
+    /// let response = client.networking_bgp_status()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_status(&self) -> builder::NetworkingBgpStatus;
     /// Get loopback addresses, optionally filtering by id
     ///
     /// Sends a `GET` request to `/v1/system/networking/loopback-address`
@@ -23015,6 +24587,38 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList {
         builder::NetworkingAddressLotBlockList::new(self)
+    }
+
+    fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList {
+        builder::NetworkingBgpConfigList::new(self)
+    }
+
+    fn networking_bgp_config_create(&self) -> builder::NetworkingBgpConfigCreate {
+        builder::NetworkingBgpConfigCreate::new(self)
+    }
+
+    fn networking_bgp_config_delete(&self) -> builder::NetworkingBgpConfigDelete {
+        builder::NetworkingBgpConfigDelete::new(self)
+    }
+
+    fn networking_bgp_announce_set_list(&self) -> builder::NetworkingBgpAnnounceSetList {
+        builder::NetworkingBgpAnnounceSetList::new(self)
+    }
+
+    fn networking_bgp_announce_set_create(&self) -> builder::NetworkingBgpAnnounceSetCreate {
+        builder::NetworkingBgpAnnounceSetCreate::new(self)
+    }
+
+    fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete {
+        builder::NetworkingBgpAnnounceSetDelete::new(self)
+    }
+
+    fn networking_bgp_imported_routes_ipv4(&self) -> builder::NetworkingBgpImportedRoutesIpv4 {
+        builder::NetworkingBgpImportedRoutesIpv4::new(self)
+    }
+
+    fn networking_bgp_status(&self) -> builder::NetworkingBgpStatus {
+        builder::NetworkingBgpStatus::new(self)
     }
 
     fn networking_loopback_address_list(&self) -> builder::NetworkingLoopbackAddressList {
@@ -34900,6 +36504,602 @@ pub mod builder {
                 .try_flatten_stream()
                 .take(limit)
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bgp_config_list`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_config_list`]: super::ClientSystemNetworkingExt::networking_bgp_config_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpConfigList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        name_or_id: Result<Option<types::NameOrId>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> NetworkingBgpConfigList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                name_or_id: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn name_or_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.name_or_id = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bgp`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::BgpConfigResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                name_or_id,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &name_or_id {
+                query.push(("name_or_id", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/networking/bgp`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::BgpConfig, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                name_or_id: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bgp_config_create`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_config_create`]: super::ClientSystemNetworkingExt::networking_bgp_config_create
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpConfigCreate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BgpConfigCreate, String>,
+    }
+
+    impl<'a> NetworkingBgpConfigCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::BgpConfigCreate::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BgpConfigCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `BgpConfigCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BgpConfigCreate) -> types::builder::BgpConfigCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/networking/bgp`
+        pub async fn send(self) -> Result<ResponseValue<types::BgpConfig>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(std::convert::TryInto::<types::BgpConfigCreate>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bgp_config_delete`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_config_delete`]: super::ClientSystemNetworkingExt::networking_bgp_config_delete
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpConfigDelete<'a> {
+        client: &'a super::Client,
+        name_or_id: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> NetworkingBgpConfigDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                name_or_id: Err("name_or_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn name_or_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.name_or_id = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/system/networking/bgp`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, name_or_id } = self;
+            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("name_or_id", name_or_id.to_string()));
+            let request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_list`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_list`]: super::ClientSystemNetworkingExt::networking_bgp_announce_set_list
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpAnnounceSetList<'a> {
+        client: &'a super::Client,
+        name_or_id: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> NetworkingBgpAnnounceSetList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                name_or_id: Err("name_or_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn name_or_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.name_or_id = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bgp-announce`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<Vec<types::BgpAnnouncement>>, Error<types::Error>> {
+            let Self { client, name_or_id } = self;
+            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("name_or_id", name_or_id.to_string()));
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_create`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_create`]: super::ClientSystemNetworkingExt::networking_bgp_announce_set_create
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpAnnounceSetCreate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BgpAnnounceSetCreate, String>,
+    }
+
+    impl<'a> NetworkingBgpAnnounceSetCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::BgpAnnounceSetCreate::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BgpAnnounceSetCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `BgpAnnounceSetCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::BgpAnnounceSetCreate,
+            ) -> types::builder::BgpAnnounceSetCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/networking/bgp-announce`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::BgpAnnounceSet>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(std::convert::TryInto::<types::BgpAnnounceSetCreate>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_delete`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_delete`]: super::ClientSystemNetworkingExt::networking_bgp_announce_set_delete
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpAnnounceSetDelete<'a> {
+        client: &'a super::Client,
+        name_or_id: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> NetworkingBgpAnnounceSetDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                name_or_id: Err("name_or_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn name_or_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.name_or_id = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for name_or_id failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/system/networking/bgp-announce`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, name_or_id } = self;
+            let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("name_or_id", name_or_id.to_string()));
+            let request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_bgp_imported_routes_ipv4`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_imported_routes_ipv4`]: super::ClientSystemNetworkingExt::networking_bgp_imported_routes_ipv4
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpImportedRoutesIpv4<'a> {
+        client: &'a super::Client,
+        asn: Result<u32, String>,
+    }
+
+    impl<'a> NetworkingBgpImportedRoutesIpv4<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                asn: Err("asn was not initialized".to_string()),
+            }
+        }
+
+        pub fn asn<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<u32>,
+        {
+            self.asn = value
+                .try_into()
+                .map_err(|_| "conversion to `u32` for asn failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bgp-routes-ipv4`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<Vec<types::BgpImportedRouteIpv4>>, Error<types::Error>> {
+            let Self { client, asn } = self;
+            let asn = asn.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bgp-routes-ipv4", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("asn", asn.to_string()));
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bgp_status`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_status`]: super::ClientSystemNetworkingExt::networking_bgp_status
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpStatus<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> NetworkingBgpStatus<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bgp-status`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<Vec<types::BgpPeerStatus>>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/networking/bgp-status", client.baseurl,);
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
