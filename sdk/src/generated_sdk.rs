@@ -36512,7 +36512,7 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_bgp_config_list`]: super::ClientSystemNetworkingExt::networking_bgp_config_list
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpConfigList<'a> {
-        __progenitor_client: &'a super::Client,
+        client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         name_or_id: Result<Option<types::NameOrId>, String>,
         page_token: Result<Option<String>, String>,
@@ -36522,7 +36522,7 @@ pub mod builder {
     impl<'a> NetworkingBgpConfigList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                __progenitor_client: client,
+                client: client,
                 limit: Ok(None),
                 name_or_id: Ok(None),
                 page_token: Ok(None),
@@ -36578,7 +36578,7 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::BgpConfigResultsPage>, Error<types::Error>> {
             let Self {
-                __progenitor_client,
+                client,
                 limit,
                 name_or_id,
                 page_token,
@@ -36588,44 +36588,40 @@ pub mod builder {
             let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
-            let __progenitor_url =
-                format!("{}/v1/system/networking/bgp", __progenitor_client.baseurl,);
-            let mut __progenitor_query = Vec::with_capacity(4usize);
+            let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
+            let mut query = Vec::with_capacity(4usize);
             if let Some(v) = &limit {
-                __progenitor_query.push(("limit", v.to_string()));
+                query.push(("limit", v.to_string()));
             }
             if let Some(v) = &name_or_id {
-                __progenitor_query.push(("name_or_id", v.to_string()));
+                query.push(("name_or_id", v.to_string()));
             }
             if let Some(v) = &page_token {
-                __progenitor_query.push(("page_token", v.to_string()));
+                query.push(("page_token", v.to_string()));
             }
             if let Some(v) = &sort_by {
-                __progenitor_query.push(("sort_by", v.to_string()));
+                query.push(("sort_by", v.to_string()));
             }
-            let __progenitor_request = __progenitor_client
+            let request = client
                 .client
-                .get(__progenitor_url)
+                .get(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&__progenitor_query)
+                .query(&query)
                 .build()?;
-            let __progenitor_result = __progenitor_client
-                .client
-                .execute(__progenitor_request)
-                .await;
-            let __progenitor_response = __progenitor_result?;
-            match __progenitor_response.status().as_u16() {
-                200u16 => ResponseValue::from_response(__progenitor_response).await,
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
+                _ => Err(Error::UnexpectedResponse(response)),
             }
         }
 
@@ -36692,14 +36688,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_bgp_config_create`]: super::ClientSystemNetworkingExt::networking_bgp_config_create
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpConfigCreate<'a> {
-        __progenitor_client: &'a super::Client,
+        client: &'a super::Client,
         body: Result<types::builder::BgpConfigCreate, String>,
     }
 
     impl<'a> NetworkingBgpConfigCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                __progenitor_client: client,
+                client: client,
                 body: Ok(types::builder::BgpConfigCreate::default()),
             }
         }
@@ -36725,38 +36721,31 @@ pub mod builder {
 
         /// Sends a `POST` request to `/v1/system/networking/bgp`
         pub async fn send(self) -> Result<ResponseValue<types::BgpConfig>, Error<types::Error>> {
-            let Self {
-                __progenitor_client,
-                body,
-            } = self;
+            let Self { client, body } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::BgpConfigCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let __progenitor_url =
-                format!("{}/v1/system/networking/bgp", __progenitor_client.baseurl,);
-            let __progenitor_request = __progenitor_client
+            let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
+            let request = client
                 .client
-                .post(__progenitor_url)
+                .post(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let __progenitor_result = __progenitor_client
-                .client
-                .execute(__progenitor_request)
-                .await;
-            let __progenitor_response = __progenitor_result?;
-            match __progenitor_response.status().as_u16() {
-                201u16 => ResponseValue::from_response(__progenitor_response).await,
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
+                _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
@@ -36766,14 +36755,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_bgp_config_delete`]: super::ClientSystemNetworkingExt::networking_bgp_config_delete
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpConfigDelete<'a> {
-        __progenitor_client: &'a super::Client,
+        client: &'a super::Client,
         name_or_id: Result<types::NameOrId, String>,
     }
 
     impl<'a> NetworkingBgpConfigDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                __progenitor_client: client,
+                client: client,
                 name_or_id: Err("name_or_id was not initialized".to_string()),
             }
         }
@@ -36790,38 +36779,31 @@ pub mod builder {
 
         /// Sends a `DELETE` request to `/v1/system/networking/bgp`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                __progenitor_client,
-                name_or_id,
-            } = self;
+            let Self { client, name_or_id } = self;
             let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
-            let __progenitor_url =
-                format!("{}/v1/system/networking/bgp", __progenitor_client.baseurl,);
-            let mut __progenitor_query = Vec::with_capacity(1usize);
-            __progenitor_query.push(("name_or_id", name_or_id.to_string()));
-            let __progenitor_request = __progenitor_client
+            let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("name_or_id", name_or_id.to_string()));
+            let request = client
                 .client
-                .delete(__progenitor_url)
+                .delete(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&__progenitor_query)
+                .query(&query)
                 .build()?;
-            let __progenitor_result = __progenitor_client
-                .client
-                .execute(__progenitor_request)
-                .await;
-            let __progenitor_response = __progenitor_result?;
-            match __progenitor_response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
+                _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
@@ -36832,14 +36814,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_list`]: super::ClientSystemNetworkingExt::networking_bgp_announce_set_list
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpAnnounceSetList<'a> {
-        __progenitor_client: &'a super::Client,
+        client: &'a super::Client,
         name_or_id: Result<types::NameOrId, String>,
     }
 
     impl<'a> NetworkingBgpAnnounceSetList<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                __progenitor_client: client,
+                client: client,
                 name_or_id: Err("name_or_id was not initialized".to_string()),
             }
         }
@@ -36858,40 +36840,31 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<Vec<types::BgpAnnouncement>>, Error<types::Error>> {
-            let Self {
-                __progenitor_client,
-                name_or_id,
-            } = self;
+            let Self { client, name_or_id } = self;
             let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
-            let __progenitor_url = format!(
-                "{}/v1/system/networking/bgp-announce",
-                __progenitor_client.baseurl,
-            );
-            let mut __progenitor_query = Vec::with_capacity(1usize);
-            __progenitor_query.push(("name_or_id", name_or_id.to_string()));
-            let __progenitor_request = __progenitor_client
+            let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("name_or_id", name_or_id.to_string()));
+            let request = client
                 .client
-                .get(__progenitor_url)
+                .get(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&__progenitor_query)
+                .query(&query)
                 .build()?;
-            let __progenitor_result = __progenitor_client
-                .client
-                .execute(__progenitor_request)
-                .await;
-            let __progenitor_response = __progenitor_result?;
-            match __progenitor_response.status().as_u16() {
-                200u16 => ResponseValue::from_response(__progenitor_response).await,
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
+                _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
@@ -36902,14 +36875,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_create`]: super::ClientSystemNetworkingExt::networking_bgp_announce_set_create
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpAnnounceSetCreate<'a> {
-        __progenitor_client: &'a super::Client,
+        client: &'a super::Client,
         body: Result<types::builder::BgpAnnounceSetCreate, String>,
     }
 
     impl<'a> NetworkingBgpAnnounceSetCreate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                __progenitor_client: client,
+                client: client,
                 body: Ok(types::builder::BgpAnnounceSetCreate::default()),
             }
         }
@@ -36939,40 +36912,31 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::BgpAnnounceSet>, Error<types::Error>> {
-            let Self {
-                __progenitor_client,
-                body,
-            } = self;
+            let Self { client, body } = self;
             let body = body
                 .and_then(std::convert::TryInto::<types::BgpAnnounceSetCreate>::try_into)
                 .map_err(Error::InvalidRequest)?;
-            let __progenitor_url = format!(
-                "{}/v1/system/networking/bgp-announce",
-                __progenitor_client.baseurl,
-            );
-            let __progenitor_request = __progenitor_client
+            let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
+            let request = client
                 .client
-                .post(__progenitor_url)
+                .post(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
                 .build()?;
-            let __progenitor_result = __progenitor_client
-                .client
-                .execute(__progenitor_request)
-                .await;
-            let __progenitor_response = __progenitor_result?;
-            match __progenitor_response.status().as_u16() {
-                201u16 => ResponseValue::from_response(__progenitor_response).await,
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
+                _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
@@ -36983,14 +36947,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_bgp_announce_set_delete`]: super::ClientSystemNetworkingExt::networking_bgp_announce_set_delete
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpAnnounceSetDelete<'a> {
-        __progenitor_client: &'a super::Client,
+        client: &'a super::Client,
         name_or_id: Result<types::NameOrId, String>,
     }
 
     impl<'a> NetworkingBgpAnnounceSetDelete<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                __progenitor_client: client,
+                client: client,
                 name_or_id: Err("name_or_id was not initialized".to_string()),
             }
         }
@@ -37007,40 +36971,31 @@ pub mod builder {
 
         /// Sends a `DELETE` request to `/v1/system/networking/bgp-announce`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                __progenitor_client,
-                name_or_id,
-            } = self;
+            let Self { client, name_or_id } = self;
             let name_or_id = name_or_id.map_err(Error::InvalidRequest)?;
-            let __progenitor_url = format!(
-                "{}/v1/system/networking/bgp-announce",
-                __progenitor_client.baseurl,
-            );
-            let mut __progenitor_query = Vec::with_capacity(1usize);
-            __progenitor_query.push(("name_or_id", name_or_id.to_string()));
-            let __progenitor_request = __progenitor_client
+            let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("name_or_id", name_or_id.to_string()));
+            let request = client
                 .client
-                .delete(__progenitor_url)
+                .delete(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&__progenitor_query)
+                .query(&query)
                 .build()?;
-            let __progenitor_result = __progenitor_client
-                .client
-                .execute(__progenitor_request)
-                .await;
-            let __progenitor_response = __progenitor_result?;
-            match __progenitor_response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(__progenitor_response)),
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
+                _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
@@ -37051,14 +37006,14 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_bgp_imported_routes_ipv4`]: super::ClientSystemNetworkingExt::networking_bgp_imported_routes_ipv4
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpImportedRoutesIpv4<'a> {
-        __progenitor_client: &'a super::Client,
+        client: &'a super::Client,
         asn: Result<u32, String>,
     }
 
     impl<'a> NetworkingBgpImportedRoutesIpv4<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
-                __progenitor_client: client,
+                client: client,
                 asn: Err("asn was not initialized".to_string()),
             }
         }
@@ -37077,40 +37032,31 @@ pub mod builder {
         pub async fn send(
             self,
         ) -> Result<ResponseValue<Vec<types::BgpImportedRouteIpv4>>, Error<types::Error>> {
-            let Self {
-                __progenitor_client,
-                asn,
-            } = self;
+            let Self { client, asn } = self;
             let asn = asn.map_err(Error::InvalidRequest)?;
-            let __progenitor_url = format!(
-                "{}/v1/system/networking/bgp-routes-ipv4",
-                __progenitor_client.baseurl,
-            );
-            let mut __progenitor_query = Vec::with_capacity(1usize);
-            __progenitor_query.push(("asn", asn.to_string()));
-            let __progenitor_request = __progenitor_client
+            let url = format!("{}/v1/system/networking/bgp-routes-ipv4", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("asn", asn.to_string()));
+            let request = client
                 .client
-                .get(__progenitor_url)
+                .get(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&__progenitor_query)
+                .query(&query)
                 .build()?;
-            let __progenitor_result = __progenitor_client
-                .client
-                .execute(__progenitor_request)
-                .await;
-            let __progenitor_response = __progenitor_result?;
-            match __progenitor_response.status().as_u16() {
-                200u16 => ResponseValue::from_response(__progenitor_response).await,
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
+                _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
@@ -37120,49 +37066,39 @@ pub mod builder {
     /// [`ClientSystemNetworkingExt::networking_bgp_status`]: super::ClientSystemNetworkingExt::networking_bgp_status
     #[derive(Debug, Clone)]
     pub struct NetworkingBgpStatus<'a> {
-        __progenitor_client: &'a super::Client,
+        client: &'a super::Client,
     }
 
     impl<'a> NetworkingBgpStatus<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                __progenitor_client: client,
-            }
+            Self { client: client }
         }
 
         /// Sends a `GET` request to `/v1/system/networking/bgp-status`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<Vec<types::BgpPeerStatus>>, Error<types::Error>> {
-            let Self {
-                __progenitor_client,
-            } = self;
-            let __progenitor_url = format!(
-                "{}/v1/system/networking/bgp-status",
-                __progenitor_client.baseurl,
-            );
-            let __progenitor_request = __progenitor_client
+            let Self { client } = self;
+            let url = format!("{}/v1/system/networking/bgp-status", client.baseurl,);
+            let request = client
                 .client
-                .get(__progenitor_url)
+                .get(url)
                 .header(
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .build()?;
-            let __progenitor_result = __progenitor_client
-                .client
-                .execute(__progenitor_request)
-                .await;
-            let __progenitor_response = __progenitor_result?;
-            match __progenitor_response.status().as_u16() {
-                200u16 => ResponseValue::from_response(__progenitor_response).await,
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
                 500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(__progenitor_response).await?,
+                    ResponseValue::from_response(response).await?,
                 )),
-                _ => Err(Error::UnexpectedResponse(__progenitor_response)),
+                _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
