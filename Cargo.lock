@@ -802,7 +802,7 @@ dependencies = [
  "hyper",
  "indexmap 2.0.2",
  "multer",
- "openapiv3",
+ "openapiv3 1.0.3",
  "paste",
  "percent-encoding",
  "proc-macro2",
@@ -1862,6 +1862,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "openapiv3"
+version = "2.0.0-rc.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c282a84bd67f641465bd16b1ba041fdf300ebec6f663f1b37d17d3403387eab1"
+dependencies = [
+ "indexmap 2.0.2",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "openssl"
 version = "0.10.56"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2201,7 +2212,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.4.0"
-source = "git+https://github.com/oxidecomputer/progenitor#2708963c5f3394fd2ab28e50b0d3a071dc52dc28"
+source = "git+https://github.com/oxidecomputer/progenitor#54ea87fa408a78fe1e830da38fcba2099108322b"
 dependencies = [
  "progenitor-client",
  "progenitor-impl",
@@ -2212,7 +2223,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.4.0"
-source = "git+https://github.com/oxidecomputer/progenitor#2708963c5f3394fd2ab28e50b0d3a071dc52dc28"
+source = "git+https://github.com/oxidecomputer/progenitor#54ea87fa408a78fe1e830da38fcba2099108322b"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2226,13 +2237,13 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.4.0"
-source = "git+https://github.com/oxidecomputer/progenitor#2708963c5f3394fd2ab28e50b0d3a071dc52dc28"
+source = "git+https://github.com/oxidecomputer/progenitor#54ea87fa408a78fe1e830da38fcba2099108322b"
 dependencies = [
  "getopts",
  "heck",
  "http",
  "indexmap 2.0.2",
- "openapiv3",
+ "openapiv3 2.0.0-rc.0",
  "proc-macro2",
  "quote",
  "regex",
@@ -2248,9 +2259,9 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.4.0"
-source = "git+https://github.com/oxidecomputer/progenitor#2708963c5f3394fd2ab28e50b0d3a071dc52dc28"
+source = "git+https://github.com/oxidecomputer/progenitor#54ea87fa408a78fe1e830da38fcba2099108322b"
 dependencies = [
- "openapiv3",
+ "openapiv3 2.0.0-rc.0",
  "proc-macro2",
  "progenitor-impl",
  "quote",
