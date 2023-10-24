@@ -4,7 +4,11 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use std::{collections::HashMap, fs::File, io::Read};
+use std::{
+    collections::HashMap,
+    fs::File,
+    io::{stdin, stdout, BufRead, Read, Write},
+};
 
 use anyhow::{anyhow, bail, Result};
 use async_trait::async_trait;
@@ -243,20 +247,35 @@ impl CmdAuthLogin {
 
             let uri = details.verification_uri().to_string();
 
+            println!(
+                "Copy your one-time code:\n  {}",
+                details.user_code().secret()
+            );
+
             let opened = match (&self.browser, self.no_browser) {
-                (None, false) => open::that(&uri).is_ok(),
-                (Some(app), false) => open::with(&uri, app).is_ok(),
+                (None, false) => {
+                    proceed(
+                        &format!("Press ENTER to open {} in your browser...", &uri),
+                        &mut stdout(),
+                        &mut stdin().lock(),
+                    )?;
+                    open::that(&uri).is_ok()
+                }
+                (Some(app), false) => {
+                    proceed(
+                        &format!("Press ENTER to open {} in your browser...", &uri),
+                        &mut stdout(),
+                        &mut stdin().lock(),
+                    )?;
+                    open::with(&uri, app).is_ok()
+                }
                 (None, true) => false,
                 (Some(_), true) => unreachable!(),
             };
 
-            if opened {
-                println!("Opened this URL in your browser:\n  {}", uri);
-            } else {
+            if !opened {
                 println!("Open this URL in your browser:\n  {}", uri);
             }
-
-            println!("\nEnter the code: {}\n", details.user_code().secret());
 
             auth_client
                 .exchange_device_access_token(&details)
@@ -327,6 +346,14 @@ impl CmdAuthLogin {
 
         Ok(())
     }
+}
+
+/// Write the prompt to the given writer, then read a single line from the given reader. Used to
+/// wait for the user to press ENTER before proceeding.
+fn proceed<W: Write, R: BufRead>(prompt: &str, writer: &mut W, reader: &mut R) -> Result<usize> {
+    write!(writer, "{}", prompt)?;
+    writer.flush()?;
+    Ok(reader.read_line(&mut String::new())?)
 }
 
 /// Removes saved authentication information.
@@ -638,6 +665,10 @@ mod tests {
     //     }
     // }
 
+    use std::io::{BufReader, BufWriter};
+
+    use crate::cmd_auth::proceed;
+
     #[test]
     fn test_parse_host() {
         use super::parse_host;
@@ -698,6 +729,52 @@ mod tests {
             parse_host("http://user:pass@example.com:8888/random/path/?k=v&t=s#fragment=33").map(|host| host.to_string()),
             Ok(host) if host == "http://example.com:8888/"
         ));
+    }
+
+    #[test]
+    fn test_proceed() {
+        struct TestCase<'a> {
+            prompt: &'a str,
+            input: &'a [u8],
+        }
+
+        let test_cases = vec![
+            TestCase {
+                prompt: "",
+                input: b"",
+            },
+            TestCase {
+                prompt: "Prompt: ",
+                input: b"\n",
+            },
+            TestCase {
+                prompt: "Prompt: ",
+                input: b"foo\n",
+            },
+        ];
+
+        // find_subsequence is a helper function to determine whether needle is within haystack.
+        fn find_subsequence(haystack: &[u8], needle: &[u8]) -> Option<usize> {
+            haystack
+                .windows(needle.len())
+                .position(|window| window == needle)
+        }
+
+        for test_case in test_cases {
+            let mut writer = BufWriter::new(Vec::new());
+            let mut reader = BufReader::new(test_case.input);
+
+            // Assert that proceed succeeded and read a line of input from the reader.
+            assert!(proceed(test_case.prompt, &mut writer, &mut reader).is_ok());
+
+            // Assert that the prompt, if passed, is written to the writer.
+            if !test_case.prompt.is_empty() {
+                assert!(
+                    find_subsequence(writer.get_ref().as_slice(), test_case.prompt.as_bytes())
+                        .is_some()
+                );
+            }
+        }
     }
 }
 
