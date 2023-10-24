@@ -24302,7 +24302,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList;
-    /// Get BGP configurations
+    /// List BGP configurations
     ///
     /// Sends a `GET` request to `/v1/system/networking/bgp`
     ///
@@ -24346,7 +24346,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_config_delete(&self) -> builder::NetworkingBgpConfigDelete;
-    /// Get originated routes for a given BGP configuration
+    /// Get originated routes for a BGP configuration
     ///
     /// Sends a `GET` request to `/v1/system/networking/bgp-announce`
     ///
@@ -24406,7 +24406,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_status(&self) -> builder::NetworkingBgpStatus;
-    /// Get loopback addresses, optionally filtering by id
+    /// List loopback addresses
     ///
     /// Sends a `GET` request to `/v1/system/networking/loopback-address`
     ///
