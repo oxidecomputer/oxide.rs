@@ -2403,7 +2403,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create a new BGP announce set.",
+                  "about": "Create a new BGP announce set",
                   "args": [
                     {
                       "long": "description"
@@ -2423,7 +2423,7 @@
                 },
                 {
                   "name": "delete",
-                  "about": "Delete a BGP announce set.",
+                  "about": "Delete a BGP announce set",
                   "args": [
                     {
                       "long": "name-or-id",
@@ -2433,7 +2433,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "Get originated routes for a given BGP configuration.",
+                  "about": "Get originated routes for a BGP configuration",
                   "args": [
                     {
                       "long": "name-or-id",
@@ -2448,7 +2448,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create a new BGP configuration.",
+                  "about": "Create a new BGP configuration",
                   "args": [
                     {
                       "long": "asn",
@@ -2479,7 +2479,7 @@
                 },
                 {
                   "name": "delete",
-                  "about": "Delete a BGP configuration.",
+                  "about": "Delete a BGP configuration",
                   "args": [
                     {
                       "long": "name-or-id",
@@ -2489,7 +2489,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "Get BGP configurations.",
+                  "about": "List BGP configurations",
                   "args": [
                     {
                       "long": "limit",
@@ -2516,7 +2516,7 @@
               "subcommands": [
                 {
                   "name": "get",
-                  "about": "Get imported IPv4 BGP routes.",
+                  "about": "Get imported IPv4 BGP routes",
                   "args": [
                     {
                       "long": "asn",
@@ -2604,7 +2604,7 @@
                 },
                 {
                   "name": "list",
-                  "about": "Get loopback addresses, optionally filtering by id",
+                  "about": "List loopback addresses",
                   "args": [
                     {
                       "long": "limit",

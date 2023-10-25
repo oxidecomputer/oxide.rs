@@ -3281,7 +3281,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("Get BGP configurations.")
+            .about("List BGP configurations")
     }
 
     pub fn cli_networking_bgp_config_create() -> clap::Command {
@@ -3335,7 +3335,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a new BGP configuration.")
+            .about("Create a new BGP configuration")
     }
 
     pub fn cli_networking_bgp_config_delete() -> clap::Command {
@@ -3347,7 +3347,7 @@ impl Cli {
                     .required(true)
                     .help("A name or id to use when selecting BGP config."),
             )
-            .about("Delete a BGP configuration.")
+            .about("Delete a BGP configuration")
     }
 
     pub fn cli_networking_bgp_announce_set_list() -> clap::Command {
@@ -3359,7 +3359,7 @@ impl Cli {
                     .required(true)
                     .help("A name or id to use when selecting BGP port settings"),
             )
-            .about("Get originated routes for a given BGP configuration.")
+            .about("Get originated routes for a BGP configuration")
     }
 
     pub fn cli_networking_bgp_announce_set_create() -> clap::Command {
@@ -3390,7 +3390,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a new BGP announce set.")
+            .about("Create a new BGP announce set")
     }
 
     pub fn cli_networking_bgp_announce_set_delete() -> clap::Command {
@@ -3402,7 +3402,7 @@ impl Cli {
                     .required(true)
                     .help("A name or id to use when selecting BGP port settings"),
             )
-            .about("Delete a BGP announce set.")
+            .about("Delete a BGP announce set")
     }
 
     pub fn cli_networking_bgp_imported_routes_ipv4() -> clap::Command {
@@ -3414,7 +3414,7 @@ impl Cli {
                     .required(true)
                     .help("The ASN to filter on. Required."),
             )
-            .about("Get imported IPv4 BGP routes.")
+            .about("Get imported IPv4 BGP routes")
     }
 
     pub fn cli_networking_bgp_status() -> clap::Command {
@@ -3441,7 +3441,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("Get loopback addresses, optionally filtering by id")
+            .about("List loopback addresses")
     }
 
     pub fn cli_networking_loopback_address_create() -> clap::Command {
