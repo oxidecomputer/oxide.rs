@@ -365,18 +365,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::VpcFirewallRulesView => Some("vpc firewall-rules view"),
         CliCommand::VpcFirewallRulesUpdate => Some("vpc firewall-rules update"),
 
-        CliCommand::VpcRouterList => Some("vpc router list"),
-        CliCommand::VpcRouterCreate => Some("vpc router create"),
-        CliCommand::VpcRouterView => Some("vpc router view"),
-        CliCommand::VpcRouterUpdate => Some("vpc router update"),
-        CliCommand::VpcRouterDelete => Some("vpc router delete"),
-
-        CliCommand::VpcRouterRouteList => Some("vpc router route list"),
-        CliCommand::VpcRouterRouteCreate => Some("vpc router route create"),
-        CliCommand::VpcRouterRouteView => Some("vpc router route view"),
-        CliCommand::VpcRouterRouteUpdate => Some("vpc router route update"),
-        CliCommand::VpcRouterRouteDelete => Some("vpc router route delete"),
-
         CliCommand::VpcSubnetList => Some("vpc subnet list"),
         CliCommand::VpcSubnetCreate => Some("vpc subnet create"),
         CliCommand::VpcSubnetView => Some("vpc subnet view"),
