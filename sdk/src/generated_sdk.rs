@@ -6984,6 +6984,26 @@ pub mod types {
         }
     }
 
+    /// View of a sled that has not been added to an initialized rack yet
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct UninitializedSled {
+        pub baseboard: Baseboard,
+        pub cubby: u16,
+        pub rack_id: uuid::Uuid,
+    }
+
+    impl From<&UninitializedSled> for UninitializedSled {
+        fn from(value: &UninitializedSled) -> Self {
+            value.clone()
+        }
+    }
+
+    impl UninitializedSled {
+        pub fn builder() -> builder::UninitializedSled {
+            builder::UninitializedSled::default()
+        }
+    }
+
     /// View of a User
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct User {
@@ -19414,6 +19434,77 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct UninitializedSled {
+            baseboard: Result<super::Baseboard, String>,
+            cubby: Result<u16, String>,
+            rack_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for UninitializedSled {
+            fn default() -> Self {
+                Self {
+                    baseboard: Err("no value supplied for baseboard".to_string()),
+                    cubby: Err("no value supplied for cubby".to_string()),
+                    rack_id: Err("no value supplied for rack_id".to_string()),
+                }
+            }
+        }
+
+        impl UninitializedSled {
+            pub fn baseboard<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Baseboard>,
+                T::Error: std::fmt::Display,
+            {
+                self.baseboard = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for baseboard: {}", e));
+                self
+            }
+            pub fn cubby<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.cubby = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cubby: {}", e));
+                self
+            }
+            pub fn rack_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.rack_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<UninitializedSled> for super::UninitializedSled {
+            type Error = String;
+            fn try_from(value: UninitializedSled) -> Result<Self, String> {
+                Ok(Self {
+                    baseboard: value.baseboard?,
+                    cubby: value.cubby?,
+                    rack_id: value.rack_id?,
+                })
+            }
+        }
+
+        impl From<super::UninitializedSled> for UninitializedSled {
+            fn from(value: super::UninitializedSled) -> Self {
+                Self {
+                    baseboard: Ok(value.baseboard),
+                    cubby: Ok(value.cubby),
+                    rack_id: Ok(value.rack_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct User {
             display_name: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -22884,6 +22975,16 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn switch_view(&self) -> builder::SwitchView;
+    /// List uninitialized sleds in a given rack
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/uninitialized-sleds`
+    ///
+    /// ```ignore
+    /// let response = client.uninitialized_sled_list()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn uninitialized_sled_list(&self) -> builder::UninitializedSledList;
 }
 
 impl ClientSystemHardwareExt for Client {
@@ -22933,6 +23034,10 @@ impl ClientSystemHardwareExt for Client {
 
     fn switch_view(&self) -> builder::SwitchView {
         builder::SwitchView::new(self)
+    }
+
+    fn uninitialized_sled_list(&self) -> builder::UninitializedSledList {
+        builder::UninitializedSledList::new(self)
     }
 }
 
@@ -32807,6 +32912,48 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&switch_id.to_string()),
             );
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemHardwareExt::uninitialized_sled_list`]
+    ///
+    /// [`ClientSystemHardwareExt::uninitialized_sled_list`]: super::ClientSystemHardwareExt::uninitialized_sled_list
+    #[derive(Debug, Clone)]
+    pub struct UninitializedSledList<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> UninitializedSledList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/hardware/uninitialized-sleds`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<Vec<types::UninitializedSled>>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/hardware/uninitialized-sleds", client.baseurl,);
             let request = client
                 .client
                 .get(url)

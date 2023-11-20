@@ -106,6 +106,7 @@ impl Cli {
             }
             CliCommand::SwitchList => Self::cli_switch_list(),
             CliCommand::SwitchView => Self::cli_switch_view(),
+            CliCommand::UninitializedSledList => Self::cli_uninitialized_sled_list(),
             CliCommand::SiloIdentityProviderList => Self::cli_silo_identity_provider_list(),
             CliCommand::LocalIdpUserCreate => Self::cli_local_idp_user_create(),
             CliCommand::LocalIdpUserDelete => Self::cli_local_idp_user_delete(),
@@ -2574,6 +2575,10 @@ impl Cli {
             .about("Fetch a switch")
     }
 
+    pub fn cli_uninitialized_sled_list() -> clap::Command {
+        clap::Command::new("").about("List uninitialized sleds in a given rack")
+    }
+
     pub fn cli_silo_identity_provider_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -4702,6 +4707,9 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SwitchView => {
                 self.execute_switch_view(matches).await;
+            }
+            CliCommand::UninitializedSledList => {
+                self.execute_uninitialized_sled_list(matches).await;
             }
             CliCommand::SiloIdentityProviderList => {
                 self.execute_silo_identity_provider_list(matches).await;
@@ -7297,6 +7305,22 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_uninitialized_sled_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.uninitialized_sled_list();
+        self.over
+            .execute_uninitialized_sled_list(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_silo_identity_provider_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.silo_identity_provider_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -9857,6 +9881,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_uninitialized_sled_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::UninitializedSledList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_silo_identity_provider_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10472,6 +10504,7 @@ pub enum CliCommand {
     NetworkingSwitchPortClearSettings,
     SwitchList,
     SwitchView,
+    UninitializedSledList,
     SiloIdentityProviderList,
     LocalIdpUserCreate,
     LocalIdpUserDelete,
@@ -10625,6 +10658,7 @@ impl CliCommand {
             CliCommand::NetworkingSwitchPortClearSettings,
             CliCommand::SwitchList,
             CliCommand::SwitchView,
+            CliCommand::UninitializedSledList,
             CliCommand::SiloIdentityProviderList,
             CliCommand::LocalIdpUserCreate,
             CliCommand::LocalIdpUserDelete,
