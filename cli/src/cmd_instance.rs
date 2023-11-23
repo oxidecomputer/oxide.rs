@@ -233,7 +233,7 @@ pub struct CmdInstanceFromImage {
 
     /// Boot disk size e.g. 512G. Suffix can be k,m,g,t
     #[clap(long)]
-    disk_size: ByteCount,
+    size: ByteCount,
 
     /// Start the instance immediately
     #[clap(long)]
@@ -266,7 +266,7 @@ impl RunnableCmd for CmdInstanceFromImage {
                         name: format!("{}-disk", *self.name)
                             .parse()
                             .expect("valid disk name"),
-                        size: self.disk_size.clone(),
+                        size: self.size.clone(),
                     }])
                     .external_ips(vec![ExternalIpCreate::Ephemeral { pool_name: None }])
                     .hostname(self.hostname.clone())

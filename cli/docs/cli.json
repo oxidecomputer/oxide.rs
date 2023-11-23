@@ -910,10 +910,6 @@
               "help": "Description of the instance to create"
             },
             {
-              "long": "disk-size",
-              "help": "Boot disk size e.g. 512G. Suffix can be k,m,g,t"
-            },
-            {
               "long": "hostname",
               "help": "Hostname of the instance to create"
             },
@@ -936,6 +932,10 @@
             {
               "long": "project",
               "help": "Project for image and instance"
+            },
+            {
+              "long": "size",
+              "help": "Boot disk size e.g. 512G. Suffix can be k,m,g,t"
             },
             {
               "long": "start",
