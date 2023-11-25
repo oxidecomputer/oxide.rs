@@ -6984,7 +6984,7 @@ pub mod types {
         }
     }
 
-    /// View of a sled that has not been added to an initialized rack yet
+    /// A sled that has not been added to an initialized rack yet
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct UninitializedSled {
         pub baseboard: Baseboard,
@@ -22830,6 +22830,17 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_list(&self) -> builder::SledList;
+    /// Add a sled to an initialized rack
+    ///
+    /// Sends a `POST` request to `/v1/system/hardware/sleds`
+    ///
+    /// ```ignore
+    /// let response = client.add_sled_to_initialized_rack()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn add_sled_to_initialized_rack(&self) -> builder::AddSledToInitializedRack;
     /// Fetch a sled
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
@@ -23002,6 +23013,10 @@ impl ClientSystemHardwareExt for Client {
 
     fn sled_list(&self) -> builder::SledList {
         builder::SledList::new(self)
+    }
+
+    fn add_sled_to_initialized_rack(&self) -> builder::AddSledToInitializedRack {
+        builder::AddSledToInitializedRack::new(self)
     }
 
     fn sled_view(&self) -> builder::SledView {
@@ -31908,6 +31923,75 @@ pub mod builder {
                 .try_flatten_stream()
                 .take(limit)
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemHardwareExt::add_sled_to_initialized_rack`]
+    ///
+    /// [`ClientSystemHardwareExt::add_sled_to_initialized_rack`]: super::ClientSystemHardwareExt::add_sled_to_initialized_rack
+    #[derive(Debug, Clone)]
+    pub struct AddSledToInitializedRack<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::UninitializedSled, String>,
+    }
+
+    impl<'a> AddSledToInitializedRack<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::UninitializedSled::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::UninitializedSled>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `UninitializedSled` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::UninitializedSled,
+            ) -> types::builder::UninitializedSled,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/hardware/sleds`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(std::convert::TryInto::<types::UninitializedSled>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/hardware/sleds", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
