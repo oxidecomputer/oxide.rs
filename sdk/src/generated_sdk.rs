@@ -512,7 +512,7 @@ pub mod types {
     /// `interface_name` indicates what interface the peer should be contacted
     /// on.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct BgpPeerConfig {
+    pub struct BgpPeer {
         /// The address of the host to peer with.
         pub addr: std::net::IpAddr,
         /// The set of announcements advertised by the peer.
@@ -537,6 +537,23 @@ pub mod types {
         pub interface_name: String,
         /// How often to send keepalive requests (seconds).
         pub keepalive: u32,
+    }
+
+    impl From<&BgpPeer> for BgpPeer {
+        fn from(value: &BgpPeer) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpPeer {
+        pub fn builder() -> builder::BgpPeer {
+            builder::BgpPeer::default()
+        }
+    }
+
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpPeerConfig {
+        pub peers: Vec<BgpPeer>,
     }
 
     impl From<&BgpPeerConfig> for BgpPeerConfig {
@@ -4068,6 +4085,8 @@ pub mod types {
     /// Switch link configuration.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct LinkConfig {
+        /// Whether or not to set autonegotiation
+        pub autoneg: bool,
         /// The forward error correction mode of the link.
         pub fec: LinkFec,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
@@ -9420,7 +9439,7 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct BgpPeerConfig {
+        pub struct BgpPeer {
             addr: Result<std::net::IpAddr, String>,
             bgp_announce_set: Result<super::NameOrId, String>,
             bgp_config: Result<super::NameOrId, String>,
@@ -9432,7 +9451,7 @@ pub mod types {
             keepalive: Result<u32, String>,
         }
 
-        impl Default for BgpPeerConfig {
+        impl Default for BgpPeer {
             fn default() -> Self {
                 Self {
                     addr: Err("no value supplied for addr".to_string()),
@@ -9448,7 +9467,7 @@ pub mod types {
             }
         }
 
-        impl BgpPeerConfig {
+        impl BgpPeer {
             pub fn addr<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<std::net::IpAddr>,
@@ -9544,9 +9563,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpPeerConfig> for super::BgpPeerConfig {
+        impl std::convert::TryFrom<BgpPeer> for super::BgpPeer {
             type Error = String;
-            fn try_from(value: BgpPeerConfig) -> Result<Self, String> {
+            fn try_from(value: BgpPeer) -> Result<Self, String> {
                 Ok(Self {
                     addr: value.addr?,
                     bgp_announce_set: value.bgp_announce_set?,
@@ -9561,8 +9580,8 @@ pub mod types {
             }
         }
 
-        impl From<super::BgpPeerConfig> for BgpPeerConfig {
-            fn from(value: super::BgpPeerConfig) -> Self {
+        impl From<super::BgpPeer> for BgpPeer {
+            fn from(value: super::BgpPeer) -> Self {
                 Self {
                     addr: Ok(value.addr),
                     bgp_announce_set: Ok(value.bgp_announce_set),
@@ -9573,6 +9592,49 @@ pub mod types {
                     idle_hold_time: Ok(value.idle_hold_time),
                     interface_name: Ok(value.interface_name),
                     keepalive: Ok(value.keepalive),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpPeerConfig {
+            peers: Result<Vec<super::BgpPeer>, String>,
+        }
+
+        impl Default for BgpPeerConfig {
+            fn default() -> Self {
+                Self {
+                    peers: Err("no value supplied for peers".to_string()),
+                }
+            }
+        }
+
+        impl BgpPeerConfig {
+            pub fn peers<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::BgpPeer>>,
+                T::Error: std::fmt::Display,
+            {
+                self.peers = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for peers: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpPeerConfig> for super::BgpPeerConfig {
+            type Error = String;
+            fn try_from(value: BgpPeerConfig) -> Result<Self, String> {
+                Ok(Self {
+                    peers: value.peers?,
+                })
+            }
+        }
+
+        impl From<super::BgpPeerConfig> for BgpPeerConfig {
+            fn from(value: super::BgpPeerConfig) -> Self {
+                Self {
+                    peers: Ok(value.peers),
                 }
             }
         }
@@ -14786,6 +14848,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct LinkConfig {
+            autoneg: Result<bool, String>,
             fec: Result<super::LinkFec, String>,
             lldp: Result<super::LldpServiceConfig, String>,
             mtu: Result<u16, String>,
@@ -14795,6 +14858,7 @@ pub mod types {
         impl Default for LinkConfig {
             fn default() -> Self {
                 Self {
+                    autoneg: Err("no value supplied for autoneg".to_string()),
                     fec: Err("no value supplied for fec".to_string()),
                     lldp: Err("no value supplied for lldp".to_string()),
                     mtu: Err("no value supplied for mtu".to_string()),
@@ -14804,6 +14868,16 @@ pub mod types {
         }
 
         impl LinkConfig {
+            pub fn autoneg<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.autoneg = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for autoneg: {}", e));
+                self
+            }
             pub fn fec<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::LinkFec>,
@@ -14850,6 +14924,7 @@ pub mod types {
             type Error = String;
             fn try_from(value: LinkConfig) -> Result<Self, String> {
                 Ok(Self {
+                    autoneg: value.autoneg?,
                     fec: value.fec?,
                     lldp: value.lldp?,
                     mtu: value.mtu?,
@@ -14861,6 +14936,7 @@ pub mod types {
         impl From<super::LinkConfig> for LinkConfig {
             fn from(value: super::LinkConfig) -> Self {
                 Self {
+                    autoneg: Ok(value.autoneg),
                     fec: Ok(value.fec),
                     lldp: Ok(value.lldp),
                     mtu: Ok(value.mtu),
