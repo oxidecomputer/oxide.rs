@@ -98,6 +98,7 @@ impl Cli {
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
+            CliCommand::SledSetProvisionState => Self::cli_sled_set_provision_state(),
             CliCommand::NetworkingSwitchPortList => Self::cli_networking_switch_port_list(),
             CliCommand::NetworkingSwitchPortApplySettings => {
                 Self::cli_networking_switch_port_apply_settings()
@@ -2469,6 +2470,46 @@ impl Cli {
             .about("List instances running on a given sled")
     }
 
+    pub fn cli_sled_set_provision_state() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("sled-id")
+                    .long("sled-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the sled"),
+            )
+            .arg(
+                clap::Arg::new("state")
+                    .long("state")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SledProvisionState::Provisionable.to_string(),
+                            types::SledProvisionState::NonProvisionable.to_string(),
+                            types::SledProvisionState::Unknown.to_string(),
+                        ]),
+                        |s| types::SledProvisionState::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("The provision state."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Set the sled's provision state.")
+    }
+
     pub fn cli_networking_switch_port_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -4725,6 +4766,9 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SledInstanceList => {
                 self.execute_sled_instance_list(matches).await;
+            }
+            CliCommand::SledSetProvisionState => {
+                self.execute_sled_set_provision_state(matches).await;
             }
             CliCommand::NetworkingSwitchPortList => {
                 self.execute_networking_switch_port_list(matches).await;
@@ -7215,6 +7259,37 @@ impl<T: CliOverride> Cli<T> {
                 Ok(Some(value)) => {
                     println!("{:#?}", value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_sled_set_provision_state(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.sled_set_provision_state();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
+            request = request.sled_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::SledProvisionState>("state") {
+            request = request.body_map(|body| body.state(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SledProvisionStateParams>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_sled_set_provision_state(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
             }
         }
     }
@@ -9914,6 +9989,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_sled_set_provision_state(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SledSetProvisionState,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_networking_switch_port_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10573,6 +10656,7 @@ pub enum CliCommand {
     SledView,
     SledPhysicalDiskList,
     SledInstanceList,
+    SledSetProvisionState,
     NetworkingSwitchPortList,
     NetworkingSwitchPortApplySettings,
     NetworkingSwitchPortClearSettings,
@@ -10728,6 +10812,7 @@ impl CliCommand {
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
             CliCommand::SledInstanceList,
+            CliCommand::SledSetProvisionState,
             CliCommand::NetworkingSwitchPortList,
             CliCommand::NetworkingSwitchPortApplySettings,
             CliCommand::NetworkingSwitchPortClearSettings,

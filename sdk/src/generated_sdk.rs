@@ -5978,6 +5978,8 @@ pub mod types {
         pub baseboard: Baseboard,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
+        /// The provision state of the sled.
+        pub provision_state: SledProvisionState,
         /// The rack to which this Sled is currently attached
         pub rack_id: uuid::Uuid,
         /// timestamp when this resource was created
@@ -6053,6 +6055,128 @@ pub mod types {
     impl SledInstanceResultsPage {
         pub fn builder() -> builder::SledInstanceResultsPage {
             builder::SledInstanceResultsPage::default()
+        }
+    }
+
+    /// The provision state of a sled.
+    ///
+    /// This controls whether new resources are going to be provisioned on this
+    /// sled.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum SledProvisionState {
+        /// New resources will be provisioned on this sled.
+        #[serde(rename = "provisionable")]
+        Provisionable,
+        /// New resources will not be provisioned on this sled. However,
+        /// existing resources will continue to be on this sled unless manually
+        /// migrated off.
+        #[serde(rename = "non_provisionable")]
+        NonProvisionable,
+        /// This is a state that isn't known yet.
+        ///
+        /// This is defined to avoid API breakage.
+        #[serde(rename = "unknown")]
+        Unknown,
+    }
+
+    impl From<&SledProvisionState> for SledProvisionState {
+        fn from(value: &SledProvisionState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for SledProvisionState {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Provisionable => "provisionable".to_string(),
+                Self::NonProvisionable => "non_provisionable".to_string(),
+                Self::Unknown => "unknown".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for SledProvisionState {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "provisionable" => Ok(Self::Provisionable),
+                "non_provisionable" => Ok(Self::NonProvisionable),
+                "unknown" => Ok(Self::Unknown),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for SledProvisionState {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for SledProvisionState {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for SledProvisionState {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    /// Parameters for `sled_set_provision_state`.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SledProvisionStateParams {
+        /// The provision state.
+        pub state: SledProvisionState,
+    }
+
+    impl From<&SledProvisionStateParams> for SledProvisionStateParams {
+        fn from(value: &SledProvisionStateParams) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SledProvisionStateParams {
+        pub fn builder() -> builder::SledProvisionStateParams {
+            builder::SledProvisionStateParams::default()
+        }
+    }
+
+    /// Response to `sled_set_provision_state`.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SledProvisionStateResponse {
+        /// The new provision state.
+        pub new_state: SledProvisionState,
+        /// The old provision state.
+        pub old_state: SledProvisionState,
+    }
+
+    impl From<&SledProvisionStateResponse> for SledProvisionStateResponse {
+        fn from(value: &SledProvisionStateResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SledProvisionStateResponse {
+        pub fn builder() -> builder::SledProvisionStateResponse {
+            builder::SledProvisionStateResponse::default()
         }
     }
 
@@ -17021,6 +17145,7 @@ pub mod types {
         pub struct Sled {
             baseboard: Result<super::Baseboard, String>,
             id: Result<uuid::Uuid, String>,
+            provision_state: Result<super::SledProvisionState, String>,
             rack_id: Result<uuid::Uuid, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -17033,6 +17158,7 @@ pub mod types {
                 Self {
                     baseboard: Err("no value supplied for baseboard".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    provision_state: Err("no value supplied for provision_state".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
@@ -17065,6 +17191,16 @@ pub mod types {
                 self.id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn provision_state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledProvisionState>,
+                T::Error: std::fmt::Display,
+            {
+                self.provision_state = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for provision_state: {}", e)
+                });
                 self
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
@@ -17131,6 +17267,7 @@ pub mod types {
                 Ok(Self {
                     baseboard: value.baseboard?,
                     id: value.id?,
+                    provision_state: value.provision_state?,
                     rack_id: value.rack_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
@@ -17145,6 +17282,7 @@ pub mod types {
                 Self {
                     baseboard: Ok(value.baseboard),
                     id: Ok(value.id),
+                    provision_state: Ok(value.provision_state),
                     rack_id: Ok(value.rack_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
@@ -17390,6 +17528,106 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SledProvisionStateParams {
+            state: Result<super::SledProvisionState, String>,
+        }
+
+        impl Default for SledProvisionStateParams {
+            fn default() -> Self {
+                Self {
+                    state: Err("no value supplied for state".to_string()),
+                }
+            }
+        }
+
+        impl SledProvisionStateParams {
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledProvisionState>,
+                T::Error: std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SledProvisionStateParams> for super::SledProvisionStateParams {
+            type Error = String;
+            fn try_from(value: SledProvisionStateParams) -> Result<Self, String> {
+                Ok(Self {
+                    state: value.state?,
+                })
+            }
+        }
+
+        impl From<super::SledProvisionStateParams> for SledProvisionStateParams {
+            fn from(value: super::SledProvisionStateParams) -> Self {
+                Self {
+                    state: Ok(value.state),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SledProvisionStateResponse {
+            new_state: Result<super::SledProvisionState, String>,
+            old_state: Result<super::SledProvisionState, String>,
+        }
+
+        impl Default for SledProvisionStateResponse {
+            fn default() -> Self {
+                Self {
+                    new_state: Err("no value supplied for new_state".to_string()),
+                    old_state: Err("no value supplied for old_state".to_string()),
+                }
+            }
+        }
+
+        impl SledProvisionStateResponse {
+            pub fn new_state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledProvisionState>,
+                T::Error: std::fmt::Display,
+            {
+                self.new_state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for new_state: {}", e));
+                self
+            }
+            pub fn old_state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledProvisionState>,
+                T::Error: std::fmt::Display,
+            {
+                self.old_state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for old_state: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SledProvisionStateResponse> for super::SledProvisionStateResponse {
+            type Error = String;
+            fn try_from(value: SledProvisionStateResponse) -> Result<Self, String> {
+                Ok(Self {
+                    new_state: value.new_state?,
+                    old_state: value.old_state?,
+                })
+            }
+        }
+
+        impl From<super::SledProvisionStateResponse> for SledProvisionStateResponse {
+            fn from(value: super::SledProvisionStateResponse) -> Self {
+                Self {
+                    new_state: Ok(value.new_state),
+                    old_state: Ok(value.old_state),
                 }
             }
         }
@@ -22894,6 +23132,22 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_instance_list(&self) -> builder::SledInstanceList;
+    /// Set the sled's provision state
+    ///
+    /// Sends a `PUT` request to
+    /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
+    ///
+    /// Arguments:
+    /// - `sled_id`: ID of the sled
+    /// - `body`
+    /// ```ignore
+    /// let response = client.sled_set_provision_state()
+    ///    .sled_id(sled_id)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn sled_set_provision_state(&self) -> builder::SledSetProvisionState;
     /// List switch ports
     ///
     /// Sends a `GET` request to `/v1/system/hardware/switch-port`
@@ -23029,6 +23283,10 @@ impl ClientSystemHardwareExt for Client {
 
     fn sled_instance_list(&self) -> builder::SledInstanceList {
         builder::SledInstanceList::new(self)
+    }
+
+    fn sled_set_provision_state(&self) -> builder::SledSetProvisionState {
+        builder::SledSetProvisionState::new(self)
     }
 
     fn networking_switch_port_list(&self) -> builder::NetworkingSwitchPortList {
@@ -32404,6 +32662,98 @@ pub mod builder {
                 .try_flatten_stream()
                 .take(limit)
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemHardwareExt::sled_set_provision_state`]
+    ///
+    /// [`ClientSystemHardwareExt::sled_set_provision_state`]: super::ClientSystemHardwareExt::sled_set_provision_state
+    #[derive(Debug, Clone)]
+    pub struct SledSetProvisionState<'a> {
+        client: &'a super::Client,
+        sled_id: Result<uuid::Uuid, String>,
+        body: Result<types::builder::SledProvisionStateParams, String>,
+    }
+
+    impl<'a> SledSetProvisionState<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                sled_id: Err("sled_id was not initialized".to_string()),
+                body: Ok(types::builder::SledProvisionStateParams::default()),
+            }
+        }
+
+        pub fn sled_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.sled_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for sled_id failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SledProvisionStateParams>,
+        {
+            self.body = value.try_into().map(From::from).map_err(|_| {
+                "conversion to `SledProvisionStateParams` for body failed".to_string()
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SledProvisionStateParams,
+            ) -> types::builder::SledProvisionStateParams,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to
+        /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SledProvisionStateResponse>, Error<types::Error>> {
+            let Self {
+                client,
+                sled_id,
+                body,
+            } = self;
+            let sled_id = sled_id.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(std::convert::TryInto::<types::SledProvisionStateParams>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/sleds/{}/provision-state",
+                client.baseurl,
+                encode_path(&sled_id.to_string()),
+            );
+            let request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
