@@ -1502,6 +1502,8 @@ pub mod types {
         HistogramF32(Histogramfloat),
         #[serde(rename = "histogram_f64")]
         HistogramF64(Histogramdouble),
+        #[serde(rename = "missing")]
+        Missing(MissingDatum),
     }
 
     impl From<&Datum> for Datum {
@@ -1663,6 +1665,180 @@ pub mod types {
     impl From<Histogramdouble> for Datum {
         fn from(value: Histogramdouble) -> Self {
             Self::HistogramF64(value)
+        }
+    }
+
+    impl From<MissingDatum> for Datum {
+        fn from(value: MissingDatum) -> Self {
+            Self::Missing(value)
+        }
+    }
+
+    /// The type of an individual datum of a metric.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum DatumType {
+        #[serde(rename = "bool")]
+        Bool,
+        #[serde(rename = "i8")]
+        I8,
+        #[serde(rename = "u8")]
+        U8,
+        #[serde(rename = "i16")]
+        I16,
+        #[serde(rename = "u16")]
+        U16,
+        #[serde(rename = "i32")]
+        I32,
+        #[serde(rename = "u32")]
+        U32,
+        #[serde(rename = "i64")]
+        I64,
+        #[serde(rename = "u64")]
+        U64,
+        #[serde(rename = "f32")]
+        F32,
+        #[serde(rename = "f64")]
+        F64,
+        #[serde(rename = "string")]
+        String,
+        #[serde(rename = "bytes")]
+        Bytes,
+        #[serde(rename = "cumulative_i64")]
+        CumulativeI64,
+        #[serde(rename = "cumulative_u64")]
+        CumulativeU64,
+        #[serde(rename = "cumulative_f32")]
+        CumulativeF32,
+        #[serde(rename = "cumulative_f64")]
+        CumulativeF64,
+        #[serde(rename = "histogram_i8")]
+        HistogramI8,
+        #[serde(rename = "histogram_u8")]
+        HistogramU8,
+        #[serde(rename = "histogram_i16")]
+        HistogramI16,
+        #[serde(rename = "histogram_u16")]
+        HistogramU16,
+        #[serde(rename = "histogram_i32")]
+        HistogramI32,
+        #[serde(rename = "histogram_u32")]
+        HistogramU32,
+        #[serde(rename = "histogram_i64")]
+        HistogramI64,
+        #[serde(rename = "histogram_u64")]
+        HistogramU64,
+        #[serde(rename = "histogram_f32")]
+        HistogramF32,
+        #[serde(rename = "histogram_f64")]
+        HistogramF64,
+    }
+
+    impl From<&DatumType> for DatumType {
+        fn from(value: &DatumType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for DatumType {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Bool => "bool".to_string(),
+                Self::I8 => "i8".to_string(),
+                Self::U8 => "u8".to_string(),
+                Self::I16 => "i16".to_string(),
+                Self::U16 => "u16".to_string(),
+                Self::I32 => "i32".to_string(),
+                Self::U32 => "u32".to_string(),
+                Self::I64 => "i64".to_string(),
+                Self::U64 => "u64".to_string(),
+                Self::F32 => "f32".to_string(),
+                Self::F64 => "f64".to_string(),
+                Self::String => "string".to_string(),
+                Self::Bytes => "bytes".to_string(),
+                Self::CumulativeI64 => "cumulative_i64".to_string(),
+                Self::CumulativeU64 => "cumulative_u64".to_string(),
+                Self::CumulativeF32 => "cumulative_f32".to_string(),
+                Self::CumulativeF64 => "cumulative_f64".to_string(),
+                Self::HistogramI8 => "histogram_i8".to_string(),
+                Self::HistogramU8 => "histogram_u8".to_string(),
+                Self::HistogramI16 => "histogram_i16".to_string(),
+                Self::HistogramU16 => "histogram_u16".to_string(),
+                Self::HistogramI32 => "histogram_i32".to_string(),
+                Self::HistogramU32 => "histogram_u32".to_string(),
+                Self::HistogramI64 => "histogram_i64".to_string(),
+                Self::HistogramU64 => "histogram_u64".to_string(),
+                Self::HistogramF32 => "histogram_f32".to_string(),
+                Self::HistogramF64 => "histogram_f64".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for DatumType {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "bool" => Ok(Self::Bool),
+                "i8" => Ok(Self::I8),
+                "u8" => Ok(Self::U8),
+                "i16" => Ok(Self::I16),
+                "u16" => Ok(Self::U16),
+                "i32" => Ok(Self::I32),
+                "u32" => Ok(Self::U32),
+                "i64" => Ok(Self::I64),
+                "u64" => Ok(Self::U64),
+                "f32" => Ok(Self::F32),
+                "f64" => Ok(Self::F64),
+                "string" => Ok(Self::String),
+                "bytes" => Ok(Self::Bytes),
+                "cumulative_i64" => Ok(Self::CumulativeI64),
+                "cumulative_u64" => Ok(Self::CumulativeU64),
+                "cumulative_f32" => Ok(Self::CumulativeF32),
+                "cumulative_f64" => Ok(Self::CumulativeF64),
+                "histogram_i8" => Ok(Self::HistogramI8),
+                "histogram_u8" => Ok(Self::HistogramU8),
+                "histogram_i16" => Ok(Self::HistogramI16),
+                "histogram_u16" => Ok(Self::HistogramU16),
+                "histogram_i32" => Ok(Self::HistogramI32),
+                "histogram_u32" => Ok(Self::HistogramU32),
+                "histogram_i64" => Ok(Self::HistogramI64),
+                "histogram_u64" => Ok(Self::HistogramU64),
+                "histogram_f32" => Ok(Self::HistogramF32),
+                "histogram_f64" => Ok(Self::HistogramF64),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for DatumType {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for DatumType {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for DatumType {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
         }
     }
 
@@ -4511,6 +4687,25 @@ pub mod types {
     impl MeasurementResultsPage {
         pub fn builder() -> builder::MeasurementResultsPage {
             builder::MeasurementResultsPage::default()
+        }
+    }
+
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct MissingDatum {
+        pub datum_type: DatumType,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub start_time: Option<chrono::DateTime<chrono::offset::Utc>>,
+    }
+
+    impl From<&MissingDatum> for MissingDatum {
+        fn from(value: &MissingDatum) -> Self {
+            value.clone()
+        }
+    }
+
+    impl MissingDatum {
+        pub fn builder() -> builder::MissingDatum {
+            builder::MissingDatum::default()
         }
     }
 
@@ -15386,6 +15581,63 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct MissingDatum {
+            datum_type: Result<super::DatumType, String>,
+            start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+        }
+
+        impl Default for MissingDatum {
+            fn default() -> Self {
+                Self {
+                    datum_type: Err("no value supplied for datum_type".to_string()),
+                    start_time: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl MissingDatum {
+            pub fn datum_type<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::DatumType>,
+                T::Error: std::fmt::Display,
+            {
+                self.datum_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for datum_type: {}", e));
+                self
+            }
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<MissingDatum> for super::MissingDatum {
+            type Error = String;
+            fn try_from(value: MissingDatum) -> Result<Self, String> {
+                Ok(Self {
+                    datum_type: value.datum_type?,
+                    start_time: value.start_time?,
+                })
+            }
+        }
+
+        impl From<super::MissingDatum> for MissingDatum {
+            fn from(value: super::MissingDatum) -> Self {
+                Self {
+                    datum_type: Ok(value.datum_type),
+                    start_time: Ok(value.start_time),
                 }
             }
         }
