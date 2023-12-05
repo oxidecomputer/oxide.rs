@@ -2235,8 +2235,7 @@
                       "long": "state",
                       "values": [
                         "provisionable",
-                        "non_provisionable",
-                        "unknown"
+                        "non_provisionable"
                       ],
                       "help": "The provision state."
                     }
