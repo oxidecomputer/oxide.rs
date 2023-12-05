@@ -6298,11 +6298,6 @@ pub mod types {
         /// migrated off.
         #[serde(rename = "non_provisionable")]
         NonProvisionable,
-        /// This is a state that isn't known yet.
-        ///
-        /// This is defined to avoid API breakage.
-        #[serde(rename = "unknown")]
-        Unknown,
     }
 
     impl From<&SledProvisionState> for SledProvisionState {
@@ -6316,7 +6311,6 @@ pub mod types {
             match *self {
                 Self::Provisionable => "provisionable".to_string(),
                 Self::NonProvisionable => "non_provisionable".to_string(),
-                Self::Unknown => "unknown".to_string(),
             }
         }
     }
@@ -6327,7 +6321,6 @@ pub mod types {
             match value {
                 "provisionable" => Ok(Self::Provisionable),
                 "non_provisionable" => Ok(Self::NonProvisionable),
-                "unknown" => Ok(Self::Unknown),
                 _ => Err("invalid value"),
             }
         }

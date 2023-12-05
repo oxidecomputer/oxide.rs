@@ -2486,7 +2486,6 @@ impl Cli {
                         clap::builder::PossibleValuesParser::new([
                             types::SledProvisionState::Provisionable.to_string(),
                             types::SledProvisionState::NonProvisionable.to_string(),
-                            types::SledProvisionState::Unknown.to_string(),
                         ]),
                         |s| types::SledProvisionState::try_from(s).unwrap(),
                     ))
