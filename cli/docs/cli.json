@@ -2136,6 +2136,26 @@
               "name": "sled",
               "subcommands": [
                 {
+                  "name": "add",
+                  "about": "Add a sled to an initialized rack",
+                  "args": [
+                    {
+                      "long": "cubby"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "rack-id"
+                    }
+                  ]
+                },
+                {
                   "name": "disk-led",
                   "about": "List physical disks attached to sleds",
                   "args": [
@@ -2188,6 +2208,37 @@
                       "values": [
                         "id_ascending"
                       ]
+                    }
+                  ]
+                },
+                {
+                  "name": "list-uninitialized",
+                  "about": "List uninitialized sleds in a given rack"
+                },
+                {
+                  "name": "set-provision-state",
+                  "about": "Set the sled's provision state.",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "sled-id",
+                      "help": "ID of the sled"
+                    },
+                    {
+                      "long": "state",
+                      "values": [
+                        "provisionable",
+                        "non_provisionable",
+                        "unknown"
+                      ],
+                      "help": "The provision state."
                     }
                   ]
                 },
