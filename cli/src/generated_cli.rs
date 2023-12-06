@@ -94,9 +94,11 @@ impl Cli {
             CliCommand::RackList => Self::cli_rack_list(),
             CliCommand::RackView => Self::cli_rack_view(),
             CliCommand::SledList => Self::cli_sled_list(),
+            CliCommand::AddSledToInitializedRack => Self::cli_add_sled_to_initialized_rack(),
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
+            CliCommand::SledSetProvisionState => Self::cli_sled_set_provision_state(),
             CliCommand::NetworkingSwitchPortList => Self::cli_networking_switch_port_list(),
             CliCommand::NetworkingSwitchPortApplySettings => {
                 Self::cli_networking_switch_port_apply_settings()
@@ -106,6 +108,7 @@ impl Cli {
             }
             CliCommand::SwitchList => Self::cli_switch_list(),
             CliCommand::SwitchView => Self::cli_switch_view(),
+            CliCommand::UninitializedSledList => Self::cli_uninitialized_sled_list(),
             CliCommand::SiloIdentityProviderList => Self::cli_silo_identity_provider_list(),
             CliCommand::LocalIdpUserCreate => Self::cli_local_idp_user_create(),
             CliCommand::LocalIdpUserDelete => Self::cli_local_idp_user_delete(),
@@ -2364,6 +2367,37 @@ impl Cli {
             .about("List sleds")
     }
 
+    pub fn cli_add_sled_to_initialized_rack() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("cubby")
+                    .long("cubby")
+                    .value_parser(clap::value_parser!(u16))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add a sled to an initialized rack")
+    }
+
     pub fn cli_sled_view() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -2434,6 +2468,45 @@ impl Cli {
                     .required(false),
             )
             .about("List instances running on a given sled")
+    }
+
+    pub fn cli_sled_set_provision_state() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("sled-id")
+                    .long("sled-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the sled"),
+            )
+            .arg(
+                clap::Arg::new("state")
+                    .long("state")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::SledProvisionState::Provisionable.to_string(),
+                            types::SledProvisionState::NonProvisionable.to_string(),
+                        ]),
+                        |s| types::SledProvisionState::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("The provision state."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Set the sled's provision state.")
     }
 
     pub fn cli_networking_switch_port_list() -> clap::Command {
@@ -2572,6 +2645,10 @@ impl Cli {
                     .help("ID of the switch"),
             )
             .about("Fetch a switch")
+    }
+
+    pub fn cli_uninitialized_sled_list() -> clap::Command {
+        clap::Command::new("").about("List uninitialized sleds in a given rack")
     }
 
     pub fn cli_silo_identity_provider_list() -> clap::Command {
@@ -4677,6 +4754,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::SledList => {
                 self.execute_sled_list(matches).await;
             }
+            CliCommand::AddSledToInitializedRack => {
+                self.execute_add_sled_to_initialized_rack(matches).await;
+            }
             CliCommand::SledView => {
                 self.execute_sled_view(matches).await;
             }
@@ -4685,6 +4765,9 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SledInstanceList => {
                 self.execute_sled_instance_list(matches).await;
+            }
+            CliCommand::SledSetProvisionState => {
+                self.execute_sled_set_provision_state(matches).await;
             }
             CliCommand::NetworkingSwitchPortList => {
                 self.execute_networking_switch_port_list(matches).await;
@@ -4702,6 +4785,9 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SwitchView => {
                 self.execute_switch_view(matches).await;
+            }
+            CliCommand::UninitializedSledList => {
+                self.execute_uninitialized_sled_list(matches).await;
             }
             CliCommand::SiloIdentityProviderList => {
                 self.execute_silo_identity_provider_list(matches).await;
@@ -7060,6 +7146,36 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_add_sled_to_initialized_rack(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.add_sled_to_initialized_rack();
+        if let Some(value) = matches.get_one::<u16>("cubby") {
+            request = request.body_map(|body| body.cubby(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.body_map(|body| body.rack_id(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::UninitializedSled>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_add_sled_to_initialized_rack(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_sled_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.sled_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
@@ -7142,6 +7258,37 @@ impl<T: CliOverride> Cli<T> {
                 Ok(Some(value)) => {
                     println!("{:#?}", value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_sled_set_provision_state(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.sled_set_provision_state();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
+            request = request.sled_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::SledProvisionState>("state") {
+            request = request.body_map(|body| body.state(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::SledProvisionStateParams>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_sled_set_provision_state(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
             }
         }
     }
@@ -7285,6 +7432,22 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_switch_view(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_uninitialized_sled_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.uninitialized_sled_list();
+        self.over
+            .execute_uninitialized_sled_list(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -9793,6 +9956,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_add_sled_to_initialized_rack(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::AddSledToInitializedRack,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_sled_view(
         &self,
         matches: &clap::ArgMatches,
@@ -9813,6 +9984,14 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SledInstanceList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_sled_set_provision_state(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SledSetProvisionState,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -9853,6 +10032,14 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SwitchView,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_uninitialized_sled_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::UninitializedSledList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -10464,14 +10651,17 @@ pub enum CliCommand {
     RackList,
     RackView,
     SledList,
+    AddSledToInitializedRack,
     SledView,
     SledPhysicalDiskList,
     SledInstanceList,
+    SledSetProvisionState,
     NetworkingSwitchPortList,
     NetworkingSwitchPortApplySettings,
     NetworkingSwitchPortClearSettings,
     SwitchList,
     SwitchView,
+    UninitializedSledList,
     SiloIdentityProviderList,
     LocalIdpUserCreate,
     LocalIdpUserDelete,
@@ -10617,14 +10807,17 @@ impl CliCommand {
             CliCommand::RackList,
             CliCommand::RackView,
             CliCommand::SledList,
+            CliCommand::AddSledToInitializedRack,
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
             CliCommand::SledInstanceList,
+            CliCommand::SledSetProvisionState,
             CliCommand::NetworkingSwitchPortList,
             CliCommand::NetworkingSwitchPortApplySettings,
             CliCommand::NetworkingSwitchPortClearSettings,
             CliCommand::SwitchList,
             CliCommand::SwitchView,
+            CliCommand::UninitializedSledList,
             CliCommand::SiloIdentityProviderList,
             CliCommand::LocalIdpUserCreate,
             CliCommand::LocalIdpUserDelete,

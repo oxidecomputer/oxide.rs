@@ -512,7 +512,7 @@ pub mod types {
     /// `interface_name` indicates what interface the peer should be contacted
     /// on.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct BgpPeerConfig {
+    pub struct BgpPeer {
         /// The address of the host to peer with.
         pub addr: std::net::IpAddr,
         /// The set of announcements advertised by the peer.
@@ -537,6 +537,23 @@ pub mod types {
         pub interface_name: String,
         /// How often to send keepalive requests (seconds).
         pub keepalive: u32,
+    }
+
+    impl From<&BgpPeer> for BgpPeer {
+        fn from(value: &BgpPeer) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BgpPeer {
+        pub fn builder() -> builder::BgpPeer {
+            builder::BgpPeer::default()
+        }
+    }
+
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpPeerConfig {
+        pub peers: Vec<BgpPeer>,
     }
 
     impl From<&BgpPeerConfig> for BgpPeerConfig {
@@ -1485,6 +1502,8 @@ pub mod types {
         HistogramF32(Histogramfloat),
         #[serde(rename = "histogram_f64")]
         HistogramF64(Histogramdouble),
+        #[serde(rename = "missing")]
+        Missing(MissingDatum),
     }
 
     impl From<&Datum> for Datum {
@@ -1646,6 +1665,180 @@ pub mod types {
     impl From<Histogramdouble> for Datum {
         fn from(value: Histogramdouble) -> Self {
             Self::HistogramF64(value)
+        }
+    }
+
+    impl From<MissingDatum> for Datum {
+        fn from(value: MissingDatum) -> Self {
+            Self::Missing(value)
+        }
+    }
+
+    /// The type of an individual datum of a metric.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum DatumType {
+        #[serde(rename = "bool")]
+        Bool,
+        #[serde(rename = "i8")]
+        I8,
+        #[serde(rename = "u8")]
+        U8,
+        #[serde(rename = "i16")]
+        I16,
+        #[serde(rename = "u16")]
+        U16,
+        #[serde(rename = "i32")]
+        I32,
+        #[serde(rename = "u32")]
+        U32,
+        #[serde(rename = "i64")]
+        I64,
+        #[serde(rename = "u64")]
+        U64,
+        #[serde(rename = "f32")]
+        F32,
+        #[serde(rename = "f64")]
+        F64,
+        #[serde(rename = "string")]
+        String,
+        #[serde(rename = "bytes")]
+        Bytes,
+        #[serde(rename = "cumulative_i64")]
+        CumulativeI64,
+        #[serde(rename = "cumulative_u64")]
+        CumulativeU64,
+        #[serde(rename = "cumulative_f32")]
+        CumulativeF32,
+        #[serde(rename = "cumulative_f64")]
+        CumulativeF64,
+        #[serde(rename = "histogram_i8")]
+        HistogramI8,
+        #[serde(rename = "histogram_u8")]
+        HistogramU8,
+        #[serde(rename = "histogram_i16")]
+        HistogramI16,
+        #[serde(rename = "histogram_u16")]
+        HistogramU16,
+        #[serde(rename = "histogram_i32")]
+        HistogramI32,
+        #[serde(rename = "histogram_u32")]
+        HistogramU32,
+        #[serde(rename = "histogram_i64")]
+        HistogramI64,
+        #[serde(rename = "histogram_u64")]
+        HistogramU64,
+        #[serde(rename = "histogram_f32")]
+        HistogramF32,
+        #[serde(rename = "histogram_f64")]
+        HistogramF64,
+    }
+
+    impl From<&DatumType> for DatumType {
+        fn from(value: &DatumType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for DatumType {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Bool => "bool".to_string(),
+                Self::I8 => "i8".to_string(),
+                Self::U8 => "u8".to_string(),
+                Self::I16 => "i16".to_string(),
+                Self::U16 => "u16".to_string(),
+                Self::I32 => "i32".to_string(),
+                Self::U32 => "u32".to_string(),
+                Self::I64 => "i64".to_string(),
+                Self::U64 => "u64".to_string(),
+                Self::F32 => "f32".to_string(),
+                Self::F64 => "f64".to_string(),
+                Self::String => "string".to_string(),
+                Self::Bytes => "bytes".to_string(),
+                Self::CumulativeI64 => "cumulative_i64".to_string(),
+                Self::CumulativeU64 => "cumulative_u64".to_string(),
+                Self::CumulativeF32 => "cumulative_f32".to_string(),
+                Self::CumulativeF64 => "cumulative_f64".to_string(),
+                Self::HistogramI8 => "histogram_i8".to_string(),
+                Self::HistogramU8 => "histogram_u8".to_string(),
+                Self::HistogramI16 => "histogram_i16".to_string(),
+                Self::HistogramU16 => "histogram_u16".to_string(),
+                Self::HistogramI32 => "histogram_i32".to_string(),
+                Self::HistogramU32 => "histogram_u32".to_string(),
+                Self::HistogramI64 => "histogram_i64".to_string(),
+                Self::HistogramU64 => "histogram_u64".to_string(),
+                Self::HistogramF32 => "histogram_f32".to_string(),
+                Self::HistogramF64 => "histogram_f64".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for DatumType {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "bool" => Ok(Self::Bool),
+                "i8" => Ok(Self::I8),
+                "u8" => Ok(Self::U8),
+                "i16" => Ok(Self::I16),
+                "u16" => Ok(Self::U16),
+                "i32" => Ok(Self::I32),
+                "u32" => Ok(Self::U32),
+                "i64" => Ok(Self::I64),
+                "u64" => Ok(Self::U64),
+                "f32" => Ok(Self::F32),
+                "f64" => Ok(Self::F64),
+                "string" => Ok(Self::String),
+                "bytes" => Ok(Self::Bytes),
+                "cumulative_i64" => Ok(Self::CumulativeI64),
+                "cumulative_u64" => Ok(Self::CumulativeU64),
+                "cumulative_f32" => Ok(Self::CumulativeF32),
+                "cumulative_f64" => Ok(Self::CumulativeF64),
+                "histogram_i8" => Ok(Self::HistogramI8),
+                "histogram_u8" => Ok(Self::HistogramU8),
+                "histogram_i16" => Ok(Self::HistogramI16),
+                "histogram_u16" => Ok(Self::HistogramU16),
+                "histogram_i32" => Ok(Self::HistogramI32),
+                "histogram_u32" => Ok(Self::HistogramU32),
+                "histogram_i64" => Ok(Self::HistogramI64),
+                "histogram_u64" => Ok(Self::HistogramU64),
+                "histogram_f32" => Ok(Self::HistogramF32),
+                "histogram_f64" => Ok(Self::HistogramF64),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for DatumType {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for DatumType {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for DatumType {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
         }
     }
 
@@ -4068,6 +4261,8 @@ pub mod types {
     /// Switch link configuration.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct LinkConfig {
+        /// Whether or not to set autonegotiation
+        pub autoneg: bool,
         /// The forward error correction mode of the link.
         pub fec: LinkFec,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
@@ -4492,6 +4687,25 @@ pub mod types {
     impl MeasurementResultsPage {
         pub fn builder() -> builder::MeasurementResultsPage {
             builder::MeasurementResultsPage::default()
+        }
+    }
+
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct MissingDatum {
+        pub datum_type: DatumType,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub start_time: Option<chrono::DateTime<chrono::offset::Utc>>,
+    }
+
+    impl From<&MissingDatum> for MissingDatum {
+        fn from(value: &MissingDatum) -> Self {
+            value.clone()
+        }
+    }
+
+    impl MissingDatum {
+        pub fn builder() -> builder::MissingDatum {
+            builder::MissingDatum::default()
         }
     }
 
@@ -5978,6 +6192,8 @@ pub mod types {
         pub baseboard: Baseboard,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
+        /// The provision state of the sled.
+        pub provision_state: SledProvisionState,
         /// The rack to which this Sled is currently attached
         pub rack_id: uuid::Uuid,
         /// timestamp when this resource was created
@@ -6053,6 +6269,121 @@ pub mod types {
     impl SledInstanceResultsPage {
         pub fn builder() -> builder::SledInstanceResultsPage {
             builder::SledInstanceResultsPage::default()
+        }
+    }
+
+    /// The provision state of a sled.
+    ///
+    /// This controls whether new resources are going to be provisioned on this
+    /// sled.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum SledProvisionState {
+        /// New resources will be provisioned on this sled.
+        #[serde(rename = "provisionable")]
+        Provisionable,
+        /// New resources will not be provisioned on this sled. However,
+        /// existing resources will continue to be on this sled unless manually
+        /// migrated off.
+        #[serde(rename = "non_provisionable")]
+        NonProvisionable,
+    }
+
+    impl From<&SledProvisionState> for SledProvisionState {
+        fn from(value: &SledProvisionState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for SledProvisionState {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Provisionable => "provisionable".to_string(),
+                Self::NonProvisionable => "non_provisionable".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for SledProvisionState {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "provisionable" => Ok(Self::Provisionable),
+                "non_provisionable" => Ok(Self::NonProvisionable),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for SledProvisionState {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for SledProvisionState {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for SledProvisionState {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    /// Parameters for `sled_set_provision_state`.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SledProvisionStateParams {
+        /// The provision state.
+        pub state: SledProvisionState,
+    }
+
+    impl From<&SledProvisionStateParams> for SledProvisionStateParams {
+        fn from(value: &SledProvisionStateParams) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SledProvisionStateParams {
+        pub fn builder() -> builder::SledProvisionStateParams {
+            builder::SledProvisionStateParams::default()
+        }
+    }
+
+    /// Response to `sled_set_provision_state`.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SledProvisionStateResponse {
+        /// The new provision state.
+        pub new_state: SledProvisionState,
+        /// The old provision state.
+        pub old_state: SledProvisionState,
+    }
+
+    impl From<&SledProvisionStateResponse> for SledProvisionStateResponse {
+        fn from(value: &SledProvisionStateResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SledProvisionStateResponse {
+        pub fn builder() -> builder::SledProvisionStateResponse {
+            builder::SledProvisionStateResponse::default()
         }
     }
 
@@ -6981,6 +7312,26 @@ pub mod types {
         type Error = &'static str;
         fn try_from(value: String) -> Result<Self, &'static str> {
             value.parse()
+        }
+    }
+
+    /// A sled that has not been added to an initialized rack yet
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct UninitializedSled {
+        pub baseboard: Baseboard,
+        pub cubby: u16,
+        pub rack_id: uuid::Uuid,
+    }
+
+    impl From<&UninitializedSled> for UninitializedSled {
+        fn from(value: &UninitializedSled) -> Self {
+            value.clone()
+        }
+    }
+
+    impl UninitializedSled {
+        pub fn builder() -> builder::UninitializedSled {
+            builder::UninitializedSled::default()
         }
     }
 
@@ -9276,7 +9627,7 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct BgpPeerConfig {
+        pub struct BgpPeer {
             addr: Result<std::net::IpAddr, String>,
             bgp_announce_set: Result<super::NameOrId, String>,
             bgp_config: Result<super::NameOrId, String>,
@@ -9288,7 +9639,7 @@ pub mod types {
             keepalive: Result<u32, String>,
         }
 
-        impl Default for BgpPeerConfig {
+        impl Default for BgpPeer {
             fn default() -> Self {
                 Self {
                     addr: Err("no value supplied for addr".to_string()),
@@ -9304,7 +9655,7 @@ pub mod types {
             }
         }
 
-        impl BgpPeerConfig {
+        impl BgpPeer {
             pub fn addr<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<std::net::IpAddr>,
@@ -9400,9 +9751,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<BgpPeerConfig> for super::BgpPeerConfig {
+        impl std::convert::TryFrom<BgpPeer> for super::BgpPeer {
             type Error = String;
-            fn try_from(value: BgpPeerConfig) -> Result<Self, String> {
+            fn try_from(value: BgpPeer) -> Result<Self, String> {
                 Ok(Self {
                     addr: value.addr?,
                     bgp_announce_set: value.bgp_announce_set?,
@@ -9417,8 +9768,8 @@ pub mod types {
             }
         }
 
-        impl From<super::BgpPeerConfig> for BgpPeerConfig {
-            fn from(value: super::BgpPeerConfig) -> Self {
+        impl From<super::BgpPeer> for BgpPeer {
+            fn from(value: super::BgpPeer) -> Self {
                 Self {
                     addr: Ok(value.addr),
                     bgp_announce_set: Ok(value.bgp_announce_set),
@@ -9429,6 +9780,49 @@ pub mod types {
                     idle_hold_time: Ok(value.idle_hold_time),
                     interface_name: Ok(value.interface_name),
                     keepalive: Ok(value.keepalive),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BgpPeerConfig {
+            peers: Result<Vec<super::BgpPeer>, String>,
+        }
+
+        impl Default for BgpPeerConfig {
+            fn default() -> Self {
+                Self {
+                    peers: Err("no value supplied for peers".to_string()),
+                }
+            }
+        }
+
+        impl BgpPeerConfig {
+            pub fn peers<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::BgpPeer>>,
+                T::Error: std::fmt::Display,
+            {
+                self.peers = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for peers: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BgpPeerConfig> for super::BgpPeerConfig {
+            type Error = String;
+            fn try_from(value: BgpPeerConfig) -> Result<Self, String> {
+                Ok(Self {
+                    peers: value.peers?,
+                })
+            }
+        }
+
+        impl From<super::BgpPeerConfig> for BgpPeerConfig {
+            fn from(value: super::BgpPeerConfig) -> Self {
+                Self {
+                    peers: Ok(value.peers),
                 }
             }
         }
@@ -14642,6 +15036,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct LinkConfig {
+            autoneg: Result<bool, String>,
             fec: Result<super::LinkFec, String>,
             lldp: Result<super::LldpServiceConfig, String>,
             mtu: Result<u16, String>,
@@ -14651,6 +15046,7 @@ pub mod types {
         impl Default for LinkConfig {
             fn default() -> Self {
                 Self {
+                    autoneg: Err("no value supplied for autoneg".to_string()),
                     fec: Err("no value supplied for fec".to_string()),
                     lldp: Err("no value supplied for lldp".to_string()),
                     mtu: Err("no value supplied for mtu".to_string()),
@@ -14660,6 +15056,16 @@ pub mod types {
         }
 
         impl LinkConfig {
+            pub fn autoneg<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.autoneg = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for autoneg: {}", e));
+                self
+            }
             pub fn fec<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::LinkFec>,
@@ -14706,6 +15112,7 @@ pub mod types {
             type Error = String;
             fn try_from(value: LinkConfig) -> Result<Self, String> {
                 Ok(Self {
+                    autoneg: value.autoneg?,
                     fec: value.fec?,
                     lldp: value.lldp?,
                     mtu: value.mtu?,
@@ -14717,6 +15124,7 @@ pub mod types {
         impl From<super::LinkConfig> for LinkConfig {
             fn from(value: super::LinkConfig) -> Self {
                 Self {
+                    autoneg: Ok(value.autoneg),
                     fec: Ok(value.fec),
                     lldp: Ok(value.lldp),
                     mtu: Ok(value.mtu),
@@ -15166,6 +15574,63 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct MissingDatum {
+            datum_type: Result<super::DatumType, String>,
+            start_time: Result<Option<chrono::DateTime<chrono::offset::Utc>>, String>,
+        }
+
+        impl Default for MissingDatum {
+            fn default() -> Self {
+                Self {
+                    datum_type: Err("no value supplied for datum_type".to_string()),
+                    start_time: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl MissingDatum {
+            pub fn datum_type<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::DatumType>,
+                T::Error: std::fmt::Display,
+            {
+                self.datum_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for datum_type: {}", e));
+                self
+            }
+            pub fn start_time<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<chrono::DateTime<chrono::offset::Utc>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_time = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_time: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<MissingDatum> for super::MissingDatum {
+            type Error = String;
+            fn try_from(value: MissingDatum) -> Result<Self, String> {
+                Ok(Self {
+                    datum_type: value.datum_type?,
+                    start_time: value.start_time?,
+                })
+            }
+        }
+
+        impl From<super::MissingDatum> for MissingDatum {
+            fn from(value: super::MissingDatum) -> Self {
+                Self {
+                    datum_type: Ok(value.datum_type),
+                    start_time: Ok(value.start_time),
                 }
             }
         }
@@ -17001,6 +17466,7 @@ pub mod types {
         pub struct Sled {
             baseboard: Result<super::Baseboard, String>,
             id: Result<uuid::Uuid, String>,
+            provision_state: Result<super::SledProvisionState, String>,
             rack_id: Result<uuid::Uuid, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -17013,6 +17479,7 @@ pub mod types {
                 Self {
                     baseboard: Err("no value supplied for baseboard".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    provision_state: Err("no value supplied for provision_state".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
@@ -17045,6 +17512,16 @@ pub mod types {
                 self.id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn provision_state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledProvisionState>,
+                T::Error: std::fmt::Display,
+            {
+                self.provision_state = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for provision_state: {}", e)
+                });
                 self
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
@@ -17111,6 +17588,7 @@ pub mod types {
                 Ok(Self {
                     baseboard: value.baseboard?,
                     id: value.id?,
+                    provision_state: value.provision_state?,
                     rack_id: value.rack_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
@@ -17125,6 +17603,7 @@ pub mod types {
                 Self {
                     baseboard: Ok(value.baseboard),
                     id: Ok(value.id),
+                    provision_state: Ok(value.provision_state),
                     rack_id: Ok(value.rack_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
@@ -17370,6 +17849,106 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SledProvisionStateParams {
+            state: Result<super::SledProvisionState, String>,
+        }
+
+        impl Default for SledProvisionStateParams {
+            fn default() -> Self {
+                Self {
+                    state: Err("no value supplied for state".to_string()),
+                }
+            }
+        }
+
+        impl SledProvisionStateParams {
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledProvisionState>,
+                T::Error: std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SledProvisionStateParams> for super::SledProvisionStateParams {
+            type Error = String;
+            fn try_from(value: SledProvisionStateParams) -> Result<Self, String> {
+                Ok(Self {
+                    state: value.state?,
+                })
+            }
+        }
+
+        impl From<super::SledProvisionStateParams> for SledProvisionStateParams {
+            fn from(value: super::SledProvisionStateParams) -> Self {
+                Self {
+                    state: Ok(value.state),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SledProvisionStateResponse {
+            new_state: Result<super::SledProvisionState, String>,
+            old_state: Result<super::SledProvisionState, String>,
+        }
+
+        impl Default for SledProvisionStateResponse {
+            fn default() -> Self {
+                Self {
+                    new_state: Err("no value supplied for new_state".to_string()),
+                    old_state: Err("no value supplied for old_state".to_string()),
+                }
+            }
+        }
+
+        impl SledProvisionStateResponse {
+            pub fn new_state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledProvisionState>,
+                T::Error: std::fmt::Display,
+            {
+                self.new_state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for new_state: {}", e));
+                self
+            }
+            pub fn old_state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledProvisionState>,
+                T::Error: std::fmt::Display,
+            {
+                self.old_state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for old_state: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SledProvisionStateResponse> for super::SledProvisionStateResponse {
+            type Error = String;
+            fn try_from(value: SledProvisionStateResponse) -> Result<Self, String> {
+                Ok(Self {
+                    new_state: value.new_state?,
+                    old_state: value.old_state?,
+                })
+            }
+        }
+
+        impl From<super::SledProvisionStateResponse> for SledProvisionStateResponse {
+            fn from(value: super::SledProvisionStateResponse) -> Self {
+                Self {
+                    new_state: Ok(value.new_state),
+                    old_state: Ok(value.old_state),
                 }
             }
         }
@@ -19409,6 +19988,77 @@ pub mod types {
                 Self {
                     interface_config_id: Ok(value.interface_config_id),
                     vlan_id: Ok(value.vlan_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct UninitializedSled {
+            baseboard: Result<super::Baseboard, String>,
+            cubby: Result<u16, String>,
+            rack_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for UninitializedSled {
+            fn default() -> Self {
+                Self {
+                    baseboard: Err("no value supplied for baseboard".to_string()),
+                    cubby: Err("no value supplied for cubby".to_string()),
+                    rack_id: Err("no value supplied for rack_id".to_string()),
+                }
+            }
+        }
+
+        impl UninitializedSled {
+            pub fn baseboard<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Baseboard>,
+                T::Error: std::fmt::Display,
+            {
+                self.baseboard = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for baseboard: {}", e));
+                self
+            }
+            pub fn cubby<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.cubby = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cubby: {}", e));
+                self
+            }
+            pub fn rack_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.rack_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<UninitializedSled> for super::UninitializedSled {
+            type Error = String;
+            fn try_from(value: UninitializedSled) -> Result<Self, String> {
+                Ok(Self {
+                    baseboard: value.baseboard?,
+                    cubby: value.cubby?,
+                    rack_id: value.rack_id?,
+                })
+            }
+        }
+
+        impl From<super::UninitializedSled> for UninitializedSled {
+            fn from(value: super::UninitializedSled) -> Self {
+                Self {
+                    baseboard: Ok(value.baseboard),
+                    cubby: Ok(value.cubby),
+                    rack_id: Ok(value.rack_id),
                 }
             }
         }
@@ -22739,6 +23389,17 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_list(&self) -> builder::SledList;
+    /// Add a sled to an initialized rack
+    ///
+    /// Sends a `POST` request to `/v1/system/hardware/sleds`
+    ///
+    /// ```ignore
+    /// let response = client.add_sled_to_initialized_rack()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn add_sled_to_initialized_rack(&self) -> builder::AddSledToInitializedRack;
     /// Fetch a sled
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
@@ -22792,6 +23453,22 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_instance_list(&self) -> builder::SledInstanceList;
+    /// Set the sled's provision state
+    ///
+    /// Sends a `PUT` request to
+    /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
+    ///
+    /// Arguments:
+    /// - `sled_id`: ID of the sled
+    /// - `body`
+    /// ```ignore
+    /// let response = client.sled_set_provision_state()
+    ///    .sled_id(sled_id)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn sled_set_provision_state(&self) -> builder::SledSetProvisionState;
     /// List switch ports
     ///
     /// Sends a `GET` request to `/v1/system/hardware/switch-port`
@@ -22884,6 +23561,16 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn switch_view(&self) -> builder::SwitchView;
+    /// List uninitialized sleds in a given rack
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/uninitialized-sleds`
+    ///
+    /// ```ignore
+    /// let response = client.uninitialized_sled_list()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn uninitialized_sled_list(&self) -> builder::UninitializedSledList;
 }
 
 impl ClientSystemHardwareExt for Client {
@@ -22903,6 +23590,10 @@ impl ClientSystemHardwareExt for Client {
         builder::SledList::new(self)
     }
 
+    fn add_sled_to_initialized_rack(&self) -> builder::AddSledToInitializedRack {
+        builder::AddSledToInitializedRack::new(self)
+    }
+
     fn sled_view(&self) -> builder::SledView {
         builder::SledView::new(self)
     }
@@ -22913,6 +23604,10 @@ impl ClientSystemHardwareExt for Client {
 
     fn sled_instance_list(&self) -> builder::SledInstanceList {
         builder::SledInstanceList::new(self)
+    }
+
+    fn sled_set_provision_state(&self) -> builder::SledSetProvisionState {
+        builder::SledSetProvisionState::new(self)
     }
 
     fn networking_switch_port_list(&self) -> builder::NetworkingSwitchPortList {
@@ -22933,6 +23628,10 @@ impl ClientSystemHardwareExt for Client {
 
     fn switch_view(&self) -> builder::SwitchView {
         builder::SwitchView::new(self)
+    }
+
+    fn uninitialized_sled_list(&self) -> builder::UninitializedSledList {
+        builder::UninitializedSledList::new(self)
     }
 }
 
@@ -31806,6 +32505,75 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemHardwareExt::add_sled_to_initialized_rack`]
+    ///
+    /// [`ClientSystemHardwareExt::add_sled_to_initialized_rack`]: super::ClientSystemHardwareExt::add_sled_to_initialized_rack
+    #[derive(Debug, Clone)]
+    pub struct AddSledToInitializedRack<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::UninitializedSled, String>,
+    }
+
+    impl<'a> AddSledToInitializedRack<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::UninitializedSled::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::UninitializedSled>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `UninitializedSled` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::UninitializedSled,
+            ) -> types::builder::UninitializedSled,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/hardware/sleds`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(std::convert::TryInto::<types::UninitializedSled>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/hardware/sleds", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientSystemHardwareExt::sled_view`]
     ///
     /// [`ClientSystemHardwareExt::sled_view`]: super::ClientSystemHardwareExt::sled_view
@@ -32215,6 +32983,98 @@ pub mod builder {
                 .try_flatten_stream()
                 .take(limit)
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemHardwareExt::sled_set_provision_state`]
+    ///
+    /// [`ClientSystemHardwareExt::sled_set_provision_state`]: super::ClientSystemHardwareExt::sled_set_provision_state
+    #[derive(Debug, Clone)]
+    pub struct SledSetProvisionState<'a> {
+        client: &'a super::Client,
+        sled_id: Result<uuid::Uuid, String>,
+        body: Result<types::builder::SledProvisionStateParams, String>,
+    }
+
+    impl<'a> SledSetProvisionState<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                sled_id: Err("sled_id was not initialized".to_string()),
+                body: Ok(types::builder::SledProvisionStateParams::default()),
+            }
+        }
+
+        pub fn sled_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.sled_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for sled_id failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SledProvisionStateParams>,
+        {
+            self.body = value.try_into().map(From::from).map_err(|_| {
+                "conversion to `SledProvisionStateParams` for body failed".to_string()
+            });
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SledProvisionStateParams,
+            ) -> types::builder::SledProvisionStateParams,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to
+        /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SledProvisionStateResponse>, Error<types::Error>> {
+            let Self {
+                client,
+                sled_id,
+                body,
+            } = self;
+            let sled_id = sled_id.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(std::convert::TryInto::<types::SledProvisionStateParams>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/sleds/{}/provision-state",
+                client.baseurl,
+                encode_path(&sled_id.to_string()),
+            );
+            let request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
@@ -32807,6 +33667,48 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&switch_id.to_string()),
             );
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemHardwareExt::uninitialized_sled_list`]
+    ///
+    /// [`ClientSystemHardwareExt::uninitialized_sled_list`]: super::ClientSystemHardwareExt::uninitialized_sled_list
+    #[derive(Debug, Clone)]
+    pub struct UninitializedSledList<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> UninitializedSledList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/hardware/uninitialized-sleds`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<Vec<types::UninitializedSled>>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/hardware/uninitialized-sleds", client.baseurl,);
             let request = client
                 .client
                 .get(url)

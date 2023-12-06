@@ -463,7 +463,12 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::RackList => Some("system hardware rack list"),
         CliCommand::RackView => Some("system hardware rack view"),
         CliCommand::SledList => Some("system hardware sled list"),
+        // TODO not sure we want to treat uninitialized sleds quite so differently
+        CliCommand::UninitializedSledList => Some("system hardware sled list-uninitialized"),
         CliCommand::SledView => Some("system hardware sled view"),
+        // TODO this operation name needs to change
+        CliCommand::AddSledToInitializedRack => Some("system hardware sled add"),
+        CliCommand::SledSetProvisionState => Some("system hardware sled set-provision-state"),
         CliCommand::SledInstanceList => Some("system hardware sled instance-list"),
         CliCommand::PhysicalDiskList => Some("system hardware disk list"),
         CliCommand::SledPhysicalDiskList => Some("system hardware sled disk-led"),
