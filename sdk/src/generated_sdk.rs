@@ -2243,6 +2243,13 @@ pub mod types {
             #[serde(default, skip_serializing_if = "Option::is_none")]
             pool_name: Option<Name>,
         },
+        /// An IP address providing both inbound and outbound access. The
+        /// address is an existing Floating IP object assigned to the current
+        /// project.
+        ///
+        /// The floating IP must not be in use by another instance or service.
+        #[serde(rename = "floating")]
+        Floating { floating_ip_name: Name },
     }
 
     impl From<&ExternalIpCreate> for ExternalIpCreate {
@@ -2412,6 +2419,93 @@ pub mod types {
     impl FleetRoleRoleAssignment {
         pub fn builder() -> builder::FleetRoleRoleAssignment {
             builder::FleetRoleRoleAssignment::default()
+        }
+    }
+
+    /// A Floating IP is a well-known IP address which can be attached and
+    /// detached from instances.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct FloatingIp {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// The ID of the instance that this Floating IP is attached to, if it
+        /// is presently in use.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub instance_id: Option<uuid::Uuid>,
+        /// The IP address held by this resource.
+        pub ip: std::net::IpAddr,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// The project this resource exists within.
+        pub project_id: uuid::Uuid,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&FloatingIp> for FloatingIp {
+        fn from(value: &FloatingIp) -> Self {
+            value.clone()
+        }
+    }
+
+    impl FloatingIp {
+        pub fn builder() -> builder::FloatingIp {
+            builder::FloatingIp::default()
+        }
+    }
+
+    /// Parameters for creating a new floating IP address for instances.
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct FloatingIpCreate {
+        /// An IP address to reserve for use as a floating IP. This field is
+        /// optional: when not set, an address will be automatically chosen from
+        /// `pool`. If set, then the IP must be available in the resolved
+        /// `pool`.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub address: Option<std::net::IpAddr>,
+        pub description: String,
+        pub name: Name,
+        /// The parent IP pool that a floating IP is pulled from. If unset, the
+        /// default pool is selected.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub pool: Option<NameOrId>,
+    }
+
+    impl From<&FloatingIpCreate> for FloatingIpCreate {
+        fn from(value: &FloatingIpCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl FloatingIpCreate {
+        pub fn builder() -> builder::FloatingIpCreate {
+            builder::FloatingIpCreate::default()
+        }
+    }
+
+    /// A single page of results
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct FloatingIpResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<FloatingIp>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&FloatingIpResultsPage> for FloatingIpResultsPage {
+        fn from(value: &FloatingIpResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl FloatingIpResultsPage {
+        pub fn builder() -> builder::FloatingIpResultsPage {
+            builder::FloatingIpResultsPage::default()
         }
     }
 
@@ -12032,6 +12126,289 @@ pub mod types {
                     identity_id: Ok(value.identity_id),
                     identity_type: Ok(value.identity_type),
                     role_name: Ok(value.role_name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct FloatingIp {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            instance_id: Result<Option<uuid::Uuid>, String>,
+            ip: Result<std::net::IpAddr, String>,
+            name: Result<super::Name, String>,
+            project_id: Result<uuid::Uuid, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for FloatingIp {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    instance_id: Ok(Default::default()),
+                    ip: Err("no value supplied for ip".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    project_id: Err("no value supplied for project_id".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl FloatingIp {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn instance_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.instance_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for instance_id: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn project_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.project_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for project_id: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<FloatingIp> for super::FloatingIp {
+            type Error = String;
+            fn try_from(value: FloatingIp) -> Result<Self, String> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    instance_id: value.instance_id?,
+                    ip: value.ip?,
+                    name: value.name?,
+                    project_id: value.project_id?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::FloatingIp> for FloatingIp {
+            fn from(value: super::FloatingIp) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    instance_id: Ok(value.instance_id),
+                    ip: Ok(value.ip),
+                    name: Ok(value.name),
+                    project_id: Ok(value.project_id),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct FloatingIpCreate {
+            address: Result<Option<std::net::IpAddr>, String>,
+            description: Result<String, String>,
+            name: Result<super::Name, String>,
+            pool: Result<Option<super::NameOrId>, String>,
+        }
+
+        impl Default for FloatingIpCreate {
+            fn default() -> Self {
+                Self {
+                    address: Ok(Default::default()),
+                    description: Err("no value supplied for description".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    pool: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl FloatingIpCreate {
+            pub fn address<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.address = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for address: {}", e));
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn pool<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.pool = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pool: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<FloatingIpCreate> for super::FloatingIpCreate {
+            type Error = String;
+            fn try_from(value: FloatingIpCreate) -> Result<Self, String> {
+                Ok(Self {
+                    address: value.address?,
+                    description: value.description?,
+                    name: value.name?,
+                    pool: value.pool?,
+                })
+            }
+        }
+
+        impl From<super::FloatingIpCreate> for FloatingIpCreate {
+            fn from(value: super::FloatingIpCreate) -> Self {
+                Self {
+                    address: Ok(value.address),
+                    description: Ok(value.description),
+                    name: Ok(value.name),
+                    pool: Ok(value.pool),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct FloatingIpResultsPage {
+            items: Result<Vec<super::FloatingIp>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for FloatingIpResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl FloatingIpResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::FloatingIp>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<FloatingIpResultsPage> for super::FloatingIpResultsPage {
+            type Error = String;
+            fn try_from(value: FloatingIpResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::FloatingIpResultsPage> for FloatingIpResultsPage {
+            fn from(value: super::FloatingIpResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
                 }
             }
         }
@@ -21965,6 +22342,92 @@ impl ClientDisksExt for Client {
     }
 }
 
+pub trait ClientFloatingIpsExt {
+    /// List all Floating IPs
+    ///
+    /// Sends a `GET` request to `/v1/floating-ips`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.floating_ip_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_list(&self) -> builder::FloatingIpList;
+    /// Create a Floating IP
+    ///
+    /// Sends a `POST` request to `/v1/floating-ips`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.floating_ip_create()
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_create(&self) -> builder::FloatingIpCreate;
+    /// Fetch a floating IP
+    ///
+    /// Sends a `GET` request to `/v1/floating-ips/{floating_ip}`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the Floating IP
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.floating_ip_view()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_view(&self) -> builder::FloatingIpView;
+    /// Delete a Floating IP
+    ///
+    /// Sends a `DELETE` request to `/v1/floating-ips/{floating_ip}`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the Floating IP
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.floating_ip_delete()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_delete(&self) -> builder::FloatingIpDelete;
+}
+
+impl ClientFloatingIpsExt for Client {
+    fn floating_ip_list(&self) -> builder::FloatingIpList {
+        builder::FloatingIpList::new(self)
+    }
+
+    fn floating_ip_create(&self) -> builder::FloatingIpCreate {
+        builder::FloatingIpCreate::new(self)
+    }
+
+    fn floating_ip_view(&self) -> builder::FloatingIpView {
+        builder::FloatingIpView::new(self)
+    }
+
+    fn floating_ip_delete(&self) -> builder::FloatingIpDelete {
+        builder::FloatingIpDelete::new(self)
+    }
+}
+
 pub trait ClientHiddenExt {
     /// Start an OAuth 2.0 Device Authorization Grant
     ///
@@ -26692,6 +27155,435 @@ pub mod builder {
                 .try_flatten_stream()
                 .take(limit)
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientFloatingIpsExt::floating_ip_list`]
+    ///
+    /// [`ClientFloatingIpsExt::floating_ip_list`]: super::ClientFloatingIpsExt::floating_ip_list
+    #[derive(Debug, Clone)]
+    pub struct FloatingIpList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> FloatingIpList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/floating-ips`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::FloatingIpResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/floating-ips", client.baseurl,);
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/floating-ips`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::FloatingIp, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientFloatingIpsExt::floating_ip_create`]
+    ///
+    /// [`ClientFloatingIpsExt::floating_ip_create`]: super::ClientFloatingIpsExt::floating_ip_create
+    #[derive(Debug, Clone)]
+    pub struct FloatingIpCreate<'a> {
+        client: &'a super::Client,
+        project: Result<types::NameOrId, String>,
+        body: Result<types::builder::FloatingIpCreate, String>,
+    }
+
+    impl<'a> FloatingIpCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                project: Err("project was not initialized".to_string()),
+                body: Ok(types::builder::FloatingIpCreate::default()),
+            }
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::FloatingIpCreate>,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|_| "conversion to `FloatingIpCreate` for body failed".to_string());
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::FloatingIpCreate,
+            ) -> types::builder::FloatingIpCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/floating-ips`
+        pub async fn send(self) -> Result<ResponseValue<types::FloatingIp>, Error<types::Error>> {
+            let Self {
+                client,
+                project,
+                body,
+            } = self;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(std::convert::TryInto::<types::FloatingIpCreate>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/floating-ips", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("project", project.to_string()));
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientFloatingIpsExt::floating_ip_view`]
+    ///
+    /// [`ClientFloatingIpsExt::floating_ip_view`]: super::ClientFloatingIpsExt::floating_ip_view
+    #[derive(Debug, Clone)]
+    pub struct FloatingIpView<'a> {
+        client: &'a super::Client,
+        floating_ip: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> FloatingIpView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                floating_ip: Err("floating_ip was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn floating_ip<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.floating_ip = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for floating_ip failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/floating-ips/{floating_ip}`
+        pub async fn send(self) -> Result<ResponseValue<types::FloatingIp>, Error<types::Error>> {
+            let Self {
+                client,
+                floating_ip,
+                project,
+            } = self;
+            let floating_ip = floating_ip.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/floating-ips/{}",
+                client.baseurl,
+                encode_path(&floating_ip.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientFloatingIpsExt::floating_ip_delete`]
+    ///
+    /// [`ClientFloatingIpsExt::floating_ip_delete`]: super::ClientFloatingIpsExt::floating_ip_delete
+    #[derive(Debug, Clone)]
+    pub struct FloatingIpDelete<'a> {
+        client: &'a super::Client,
+        floating_ip: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> FloatingIpDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                floating_ip: Err("floating_ip was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn floating_ip<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.floating_ip = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for floating_ip failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/floating-ips/{floating_ip}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                floating_ip,
+                project,
+            } = self;
+            let floating_ip = floating_ip.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/floating-ips/{}",
+                client.baseurl,
+                encode_path(&floating_ip.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
@@ -40405,6 +41297,7 @@ pub mod builder {
 pub mod prelude {
     pub use super::Client;
     pub use super::ClientDisksExt;
+    pub use super::ClientFloatingIpsExt;
     pub use super::ClientHiddenExt;
     pub use super::ClientImagesExt;
     pub use super::ClientInstancesExt;

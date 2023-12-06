@@ -1361,6 +1361,337 @@ pub mod operations {
         }
     }
 
+    pub struct FloatingIpListWhen(httpmock::When);
+    impl FloatingIpListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/floating-ips$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct FloatingIpListThen(httpmock::Then);
+    impl FloatingIpListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::FloatingIpResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct FloatingIpCreateWhen(httpmock::When);
+    impl FloatingIpCreateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/floating-ips$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+
+        pub fn body(self, value: &types::FloatingIpCreate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct FloatingIpCreateThen(httpmock::Then);
+    impl FloatingIpCreateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::FloatingIp) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct FloatingIpViewWhen(httpmock::When);
+    impl FloatingIpViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/floating-ips/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn floating_ip(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/floating-ips/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct FloatingIpViewThen(httpmock::Then);
+    impl FloatingIpViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::FloatingIp) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct FloatingIpDeleteWhen(httpmock::When);
+    impl FloatingIpDeleteWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::DELETE)
+                    .path_matches(regex::Regex::new("^/v1/floating-ips/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn floating_ip(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/floating-ips/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct FloatingIpDeleteThen(httpmock::Then);
+    impl FloatingIpDeleteThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct GroupListWhen(httpmock::When);
     impl GroupListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -12030,6 +12361,18 @@ pub trait MockServerExt {
     fn disk_metrics_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::DiskMetricsListWhen, operations::DiskMetricsListThen);
+    fn floating_ip_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::FloatingIpListWhen, operations::FloatingIpListThen);
+    fn floating_ip_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::FloatingIpCreateWhen, operations::FloatingIpCreateThen);
+    fn floating_ip_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::FloatingIpViewWhen, operations::FloatingIpViewThen);
+    fn floating_ip_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::FloatingIpDeleteWhen, operations::FloatingIpDeleteThen);
     fn group_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::GroupListWhen, operations::GroupListThen);
@@ -12743,6 +13086,54 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::DiskMetricsListWhen::new(when),
                 operations::DiskMetricsListThen::new(then),
+            )
+        })
+    }
+
+    fn floating_ip_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::FloatingIpListWhen, operations::FloatingIpListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::FloatingIpListWhen::new(when),
+                operations::FloatingIpListThen::new(then),
+            )
+        })
+    }
+
+    fn floating_ip_create<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::FloatingIpCreateWhen, operations::FloatingIpCreateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::FloatingIpCreateWhen::new(when),
+                operations::FloatingIpCreateThen::new(then),
+            )
+        })
+    }
+
+    fn floating_ip_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::FloatingIpViewWhen, operations::FloatingIpViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::FloatingIpViewWhen::new(when),
+                operations::FloatingIpViewThen::new(then),
+            )
+        })
+    }
+
+    fn floating_ip_delete<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::FloatingIpDeleteWhen, operations::FloatingIpDeleteThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::FloatingIpDeleteWhen::new(when),
+                operations::FloatingIpDeleteThen::new(then),
             )
         })
     }
