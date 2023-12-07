@@ -30,7 +30,6 @@ impl Cli {
             CliCommand::DiskBulkWriteImportStart => Self::cli_disk_bulk_write_import_start(),
             CliCommand::DiskBulkWriteImportStop => Self::cli_disk_bulk_write_import_stop(),
             CliCommand::DiskFinalizeImport => Self::cli_disk_finalize_import(),
-            CliCommand::DiskImportBlocksFromUrl => Self::cli_disk_import_blocks_from_url(),
             CliCommand::DiskMetricsList => Self::cli_disk_metrics_list(),
             CliCommand::FloatingIpList => Self::cli_floating_ip_list(),
             CliCommand::FloatingIpCreate => Self::cli_floating_ip_create(),
@@ -684,46 +683,6 @@ impl Cli {
                     .help("XXX"),
             )
             .about("Confirm disk block import completion")
-    }
-
-    pub fn cli_disk_import_blocks_from_url() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("disk")
-                    .long("disk")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the disk"),
-            )
-            .arg(
-                clap::Arg::new("project")
-                    .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("Name or ID of the project"),
-            )
-            .arg(
-                clap::Arg::new("url")
-                    .long("url")
-                    .value_parser(clap::value_parser!(String))
-                    .required_unless_present("json-body")
-                    .help("the source to pull blocks from"),
-            )
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Request to import blocks from URL")
     }
 
     pub fn cli_disk_metrics_list() -> clap::Command {
@@ -4710,9 +4669,6 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::DiskFinalizeImport => {
                 self.execute_disk_finalize_import(matches).await;
             }
-            CliCommand::DiskImportBlocksFromUrl => {
-                self.execute_disk_import_blocks_from_url(matches).await;
-            }
             CliCommand::DiskMetricsList => {
                 self.execute_disk_metrics_list(matches).await;
             }
@@ -5592,40 +5548,6 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_disk_finalize_import(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_disk_import_blocks_from_url(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.disk_import_blocks_from_url();
-        if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
-            request = request.disk(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
-            request = request.project(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<String>("url") {
-            request = request.body_map(|body| body.url(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::ImportBlocksFromUrl>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        self.over
-            .execute_disk_import_blocks_from_url(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -9761,14 +9683,6 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_disk_import_blocks_from_url(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::DiskImportBlocksFromUrl,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
     fn execute_disk_metrics_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10894,7 +10808,6 @@ pub enum CliCommand {
     DiskBulkWriteImportStart,
     DiskBulkWriteImportStop,
     DiskFinalizeImport,
-    DiskImportBlocksFromUrl,
     DiskMetricsList,
     FloatingIpList,
     FloatingIpCreate,
@@ -11054,7 +10967,6 @@ impl CliCommand {
             CliCommand::DiskBulkWriteImportStart,
             CliCommand::DiskBulkWriteImportStop,
             CliCommand::DiskFinalizeImport,
-            CliCommand::DiskImportBlocksFromUrl,
             CliCommand::DiskMetricsList,
             CliCommand::FloatingIpList,
             CliCommand::FloatingIpCreate,

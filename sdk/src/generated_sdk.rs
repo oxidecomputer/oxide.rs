@@ -2202,18 +2202,6 @@ pub mod types {
     }
 
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub enum ExpectedDigest {
-        #[serde(rename = "sha256")]
-        Sha256(String),
-    }
-
-    impl From<&ExpectedDigest> for ExpectedDigest {
-        fn from(value: &ExpectedDigest) -> Self {
-            value.clone()
-        }
-    }
-
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct ExternalIp {
         pub ip: std::net::IpAddr,
         pub kind: IpKind,
@@ -3137,9 +3125,6 @@ pub mod types {
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-        /// URL source of this image, if any
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub url: Option<String>,
         /// Version of the operating system
         pub version: String,
     }
@@ -3205,16 +3190,10 @@ pub mod types {
 
     /// The source of the underlying image.
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    #[serde(tag = "type")]
+    #[serde(tag = "type", content = "id")]
     pub enum ImageSource {
-        #[serde(rename = "url")]
-        Url {
-            /// The block size in bytes
-            block_size: BlockSize,
-            url: String,
-        },
         #[serde(rename = "snapshot")]
-        Snapshot { id: uuid::Uuid },
+        Snapshot(uuid::Uuid),
         #[serde(rename = "you_can_boot_anything_as_long_as_its_alpine")]
         YouCanBootAnythingAsLongAsItsAlpine,
     }
@@ -3222,6 +3201,12 @@ pub mod types {
     impl From<&ImageSource> for ImageSource {
         fn from(value: &ImageSource) -> Self {
             value.clone()
+        }
+    }
+
+    impl From<uuid::Uuid> for ImageSource {
+        fn from(value: uuid::Uuid) -> Self {
+            Self::Snapshot(value)
         }
     }
 
@@ -3241,28 +3226,6 @@ pub mod types {
     impl ImportBlocksBulkWrite {
         pub fn builder() -> builder::ImportBlocksBulkWrite {
             builder::ImportBlocksBulkWrite::default()
-        }
-    }
-
-    /// Parameters for importing blocks from a URL to a disk
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct ImportBlocksFromUrl {
-        /// Expected digest of all blocks when importing from a URL
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub expected_digest: Option<ExpectedDigest>,
-        /// the source to pull blocks from
-        pub url: String,
-    }
-
-    impl From<&ImportBlocksFromUrl> for ImportBlocksFromUrl {
-        fn from(value: &ImportBlocksFromUrl) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ImportBlocksFromUrl {
-        pub fn builder() -> builder::ImportBlocksFromUrl {
-            builder::ImportBlocksFromUrl::default()
         }
     }
 
@@ -13433,7 +13396,6 @@ pub mod types {
             size: Result<super::ByteCount, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            url: Result<Option<String>, String>,
             version: Result<String, String>,
         }
 
@@ -13450,7 +13412,6 @@ pub mod types {
                     size: Err("no value supplied for size".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
-                    url: Ok(Default::default()),
                     version: Err("no value supplied for version".to_string()),
                 }
             }
@@ -13557,16 +13518,6 @@ pub mod types {
                 });
                 self
             }
-            pub fn url<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<String>>,
-                T::Error: std::fmt::Display,
-            {
-                self.url = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for url: {}", e));
-                self
-            }
             pub fn version<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -13593,7 +13544,6 @@ pub mod types {
                     size: value.size?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
-                    url: value.url?,
                     version: value.version?,
                 })
             }
@@ -13612,7 +13562,6 @@ pub mod types {
                     size: Ok(value.size),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
-                    url: Ok(value.url),
                     version: Ok(value.version),
                 }
             }
@@ -13832,63 +13781,6 @@ pub mod types {
                 Self {
                     base64_encoded_data: Ok(value.base64_encoded_data),
                     offset: Ok(value.offset),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct ImportBlocksFromUrl {
-            expected_digest: Result<Option<super::ExpectedDigest>, String>,
-            url: Result<String, String>,
-        }
-
-        impl Default for ImportBlocksFromUrl {
-            fn default() -> Self {
-                Self {
-                    expected_digest: Ok(Default::default()),
-                    url: Err("no value supplied for url".to_string()),
-                }
-            }
-        }
-
-        impl ImportBlocksFromUrl {
-            pub fn expected_digest<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<super::ExpectedDigest>>,
-                T::Error: std::fmt::Display,
-            {
-                self.expected_digest = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for expected_digest: {}", e)
-                });
-                self
-            }
-            pub fn url<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<String>,
-                T::Error: std::fmt::Display,
-            {
-                self.url = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for url: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<ImportBlocksFromUrl> for super::ImportBlocksFromUrl {
-            type Error = String;
-            fn try_from(value: ImportBlocksFromUrl) -> Result<Self, String> {
-                Ok(Self {
-                    expected_digest: value.expected_digest?,
-                    url: value.url?,
-                })
-            }
-        }
-
-        impl From<super::ImportBlocksFromUrl> for ImportBlocksFromUrl {
-            fn from(value: super::ImportBlocksFromUrl) -> Self {
-                Self {
-                    expected_digest: Ok(value.expected_digest),
-                    url: Ok(value.url),
                 }
             }
         }
@@ -22253,23 +22145,6 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_finalize_import(&self) -> builder::DiskFinalizeImport;
-    /// Request to import blocks from URL
-    ///
-    /// Sends a `POST` request to `/v1/disks/{disk}/import`
-    ///
-    /// Arguments:
-    /// - `disk`: Name or ID of the disk
-    /// - `project`: Name or ID of the project
-    /// - `body`
-    /// ```ignore
-    /// let response = client.disk_import_blocks_from_url()
-    ///    .disk(disk)
-    ///    .project(project)
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn disk_import_blocks_from_url(&self) -> builder::DiskImportBlocksFromUrl;
     /// Fetch disk metrics
     ///
     /// Sends a `GET` request to `/v1/disks/{disk}/metrics/{metric}`
@@ -22331,10 +22206,6 @@ impl ClientDisksExt for Client {
 
     fn disk_finalize_import(&self) -> builder::DiskFinalizeImport {
         builder::DiskFinalizeImport::new(self)
-    }
-
-    fn disk_import_blocks_from_url(&self) -> builder::DiskImportBlocksFromUrl {
-        builder::DiskImportBlocksFromUrl::new(self)
     }
 
     fn disk_metrics_list(&self) -> builder::DiskMetricsList {
@@ -26768,116 +26639,6 @@ pub mod builder {
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/disks/{}/finalize",
-                client.baseurl,
-                encode_path(&disk.to_string()),
-            );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
-            let request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientDisksExt::disk_import_blocks_from_url`]
-    ///
-    /// [`ClientDisksExt::disk_import_blocks_from_url`]: super::ClientDisksExt::disk_import_blocks_from_url
-    #[derive(Debug, Clone)]
-    pub struct DiskImportBlocksFromUrl<'a> {
-        client: &'a super::Client,
-        disk: Result<types::NameOrId, String>,
-        project: Result<Option<types::NameOrId>, String>,
-        body: Result<types::builder::ImportBlocksFromUrl, String>,
-    }
-
-    impl<'a> DiskImportBlocksFromUrl<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                disk: Err("disk was not initialized".to_string()),
-                project: Ok(None),
-                body: Ok(types::builder::ImportBlocksFromUrl::default()),
-            }
-        }
-
-        pub fn disk<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.disk = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for disk failed".to_string());
-            self
-        }
-
-        pub fn project<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.project = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
-            self
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::ImportBlocksFromUrl>,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|_| "conversion to `ImportBlocksFromUrl` for body failed".to_string());
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(
-                types::builder::ImportBlocksFromUrl,
-            ) -> types::builder::ImportBlocksFromUrl,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/disks/{disk}/import`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self {
-                client,
-                disk,
-                project,
-                body,
-            } = self;
-            let disk = disk.map_err(Error::InvalidRequest)?;
-            let project = project.map_err(Error::InvalidRequest)?;
-            let body = body
-                .and_then(std::convert::TryInto::<types::ImportBlocksFromUrl>::try_into)
-                .map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/disks/{}/import",
                 client.baseurl,
                 encode_path(&disk.to_string()),
             );
