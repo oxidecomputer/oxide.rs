@@ -483,6 +483,11 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CurrentUserSshKeyView => Some("current-user ssh-key view"),
         CliCommand::CurrentUserSshKeyDelete => Some("current-user ssh-key delete"),
 
+        CliCommand::FloatingIpView => Some("floating-ip view"),
+        CliCommand::FloatingIpList => Some("floating-ip list"),
+        CliCommand::FloatingIpCreate => Some("floating-ip create"),
+        CliCommand::FloatingIpDelete => Some("floating-ip delete"),
+
         CliCommand::Ping => Some("ping"),
 
         // Commands not yet implemented

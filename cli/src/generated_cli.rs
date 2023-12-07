@@ -32,6 +32,10 @@ impl Cli {
             CliCommand::DiskFinalizeImport => Self::cli_disk_finalize_import(),
             CliCommand::DiskImportBlocksFromUrl => Self::cli_disk_import_blocks_from_url(),
             CliCommand::DiskMetricsList => Self::cli_disk_metrics_list(),
+            CliCommand::FloatingIpList => Self::cli_floating_ip_list(),
+            CliCommand::FloatingIpCreate => Self::cli_floating_ip_create(),
+            CliCommand::FloatingIpView => Self::cli_floating_ip_view(),
+            CliCommand::FloatingIpDelete => Self::cli_floating_ip_delete(),
             CliCommand::GroupList => Self::cli_group_list(),
             CliCommand::GroupView => Self::cli_group_view(),
             CliCommand::ImageList => Self::cli_image_list(),
@@ -788,6 +792,135 @@ impl Cli {
                     .help("An inclusive start time of metrics."),
             )
             .about("Fetch disk metrics")
+    }
+
+    pub fn cli_floating_ip_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List all Floating IPs")
+    }
+
+    pub fn cli_floating_ip_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("address")
+                    .long("address")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required(false)
+                    .help(
+                        "An IP address to reserve for use as a floating IP. This field is \
+                         optional: when not set, an address will be automatically chosen from \
+                         `pool`. If set, then the IP must be available in the resolved `pool`.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help(
+                        "The parent IP pool that a floating IP is pulled from. If unset, the \
+                         default pool is selected.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create a Floating IP")
+    }
+
+    pub fn cli_floating_ip_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("floating-ip")
+                    .long("floating-ip")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the Floating IP"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Fetch a floating IP")
+    }
+
+    pub fn cli_floating_ip_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("floating-ip")
+                    .long("floating-ip")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the Floating IP"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Delete a Floating IP")
     }
 
     pub fn cli_group_list() -> clap::Command {
@@ -4583,6 +4716,18 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::DiskMetricsList => {
                 self.execute_disk_metrics_list(matches).await;
             }
+            CliCommand::FloatingIpList => {
+                self.execute_floating_ip_list(matches).await;
+            }
+            CliCommand::FloatingIpCreate => {
+                self.execute_floating_ip_create(matches).await;
+            }
+            CliCommand::FloatingIpView => {
+                self.execute_floating_ip_view(matches).await;
+            }
+            CliCommand::FloatingIpDelete => {
+                self.execute_floating_ip_delete(matches).await;
+            }
             CliCommand::GroupList => {
                 self.execute_group_list(matches).await;
             }
@@ -5540,6 +5685,130 @@ impl<T: CliOverride> Cli<T> {
                 Ok(Some(value)) => {
                     println!("{:#?}", value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_floating_ip_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.floating_ip_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_floating_ip_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_floating_ip_create(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.floating_ip_create();
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
+            request = request.body_map(|body| body.address(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.body_map(|body| body.pool(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::FloatingIpCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_floating_ip_create(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_floating_ip_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.floating_ip_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
+            request = request.floating_ip(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_floating_ip_view(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_floating_ip_delete(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.floating_ip_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
+            request = request.floating_ip(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_floating_ip_delete(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
             }
         }
     }
@@ -9508,6 +9777,38 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_floating_ip_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::FloatingIpList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_floating_ip_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::FloatingIpCreate,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_floating_ip_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::FloatingIpView,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_floating_ip_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::FloatingIpDelete,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_group_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10595,6 +10896,10 @@ pub enum CliCommand {
     DiskFinalizeImport,
     DiskImportBlocksFromUrl,
     DiskMetricsList,
+    FloatingIpList,
+    FloatingIpCreate,
+    FloatingIpView,
+    FloatingIpDelete,
     GroupList,
     GroupView,
     ImageList,
@@ -10751,6 +11056,10 @@ impl CliCommand {
             CliCommand::DiskFinalizeImport,
             CliCommand::DiskImportBlocksFromUrl,
             CliCommand::DiskMetricsList,
+            CliCommand::FloatingIpList,
+            CliCommand::FloatingIpCreate,
+            CliCommand::FloatingIpView,
+            CliCommand::FloatingIpDelete,
             CliCommand::GroupList,
             CliCommand::GroupView,
             CliCommand::ImageList,
