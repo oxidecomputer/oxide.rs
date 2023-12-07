@@ -596,6 +596,93 @@
       "about": "Generate CLI docs in JSON format"
     },
     {
+      "name": "floating-ip",
+      "subcommands": [
+        {
+          "name": "create",
+          "about": "Create a Floating IP",
+          "args": [
+            {
+              "long": "address",
+              "help": "An IP address to reserve for use as a floating IP. This field is optional: when not set, an address will be automatically chosen from `pool`. If set, then the IP must be available in the resolved `pool`."
+            },
+            {
+              "long": "description"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "pool",
+              "help": "The parent IP pool that a floating IP is pulled from. If unset, the default pool is selected."
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "about": "Delete a Floating IP",
+          "args": [
+            {
+              "long": "floating-ip",
+              "help": "Name or ID of the Floating IP"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "list",
+          "about": "List all Floating IPs",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "Fetch a floating IP",
+          "args": [
+            {
+              "long": "floating-ip",
+              "help": "Name or ID of the Floating IP"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "group",
       "subcommands": [
         {
