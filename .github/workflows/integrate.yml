@@ -156,6 +156,7 @@ jobs:
           GH_TOKEN: ${{ inputs.reflector_access_token }}
         run: |
           # Compare the integration branch with the target branch
+          CHANGED_FILES=$(git diff integration..main --name-only | wc -l)
           TARGET_TO_INT="$(git rev-list --count $TARGET_BRANCH..$INT_BRANCH)"
           INT_TO_TARGET="$(git rev-list --count $INT_BRANCH..$TARGET_BRANCH)"
 
@@ -164,7 +165,9 @@ jobs:
           HASPR=0
           [ "$NUMBER" != "" ] && [ "$BASEREFNAME" == "$TARGET_BRANCH" ] || HASPR=$?
 
-          if [ "$TARGET_TO_INT" -eq 0 -a "$INT_TO_TARGET" -eq 0 ]
+          # When detecting if a PR is needed (or can be closed) we do not actually care about the
+          # distance between the branches. We care about if there are meaningful changes
+          if [ "$CHANGED_FILES" -gt 0 ]
           then
             echo "$TARGET_BRANCH is up to date with $INT_BRANCH. No pull request needed"
 
