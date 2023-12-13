@@ -167,7 +167,7 @@ jobs:
 
           # When detecting if a PR is needed (or can be closed) we do not actually care about the
           # distance between the branches. We care about if there are meaningful changes
-          if [ "$CHANGED_FILES" -gt 0 ]
+          if [ "$CHANGED_FILES" -eq 0 ]
           then
             echo "$TARGET_BRANCH is up to date with $INT_BRANCH. No pull request needed"
 
