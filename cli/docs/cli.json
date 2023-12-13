@@ -2026,6 +2026,68 @@
           ]
         },
         {
+          "name": "quotas",
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "Lists resource quotas for all silos",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "update",
+              "about": "Update the resource quotas of a given silo",
+              "long_about": "If a quota value is not specified, it will remain unchanged.",
+              "args": [
+                {
+                  "long": "cpus",
+                  "help": "The amount of virtual CPUs available for running instances in the Silo"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "memory",
+                  "help": "The amount of RAM (in bytes) available for running instances in the Silo"
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                },
+                {
+                  "long": "storage",
+                  "help": "The amount of storage (in bytes) available for disks or snapshots"
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "View the resource quotas of a given silo",
+              "args": [
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "user",
           "subcommands": [
             {

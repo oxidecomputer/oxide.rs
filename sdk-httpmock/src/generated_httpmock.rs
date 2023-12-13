@@ -10153,6 +10153,109 @@ pub mod operations {
         }
     }
 
+    pub struct SystemQuotasListWhen(httpmock::When);
+    impl SystemQuotasListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/silo-quotas$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::IdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct SystemQuotasListThen(httpmock::Then);
+    impl SystemQuotasListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloQuotasResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct SiloListWhen(httpmock::When);
     impl SiloListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -10529,6 +10632,132 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SiloRolePolicy) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SiloQuotasViewWhen(httpmock::When);
+    impl SiloQuotasViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/silos/[^/]*/quotas$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/silos/{}/quotas$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SiloQuotasViewThen(httpmock::Then);
+    impl SiloQuotasViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloQuotas) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SiloQuotasUpdateWhen(httpmock::When);
+    impl SiloQuotasUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/system/silos/[^/]*/quotas$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!("^/v1/system/silos/{}/quotas$", value.to_string()))
+                .unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn body(self, value: &types::SiloQuotasUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct SiloQuotasUpdateThen(httpmock::Then);
+    impl SiloQuotasUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloQuotas) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12714,6 +12943,9 @@ pub trait MockServerExt {
     fn role_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::RoleViewWhen, operations::RoleViewThen);
+    fn system_quotas_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemQuotasListWhen, operations::SystemQuotasListThen);
     fn silo_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SiloListWhen, operations::SiloListThen);
@@ -12732,6 +12964,12 @@ pub trait MockServerExt {
     fn silo_policy_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SiloPolicyUpdateWhen, operations::SiloPolicyUpdateThen);
+    fn silo_quotas_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloQuotasViewWhen, operations::SiloQuotasViewThen);
+    fn silo_quotas_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloQuotasUpdateWhen, operations::SiloQuotasUpdateThen);
     fn silo_user_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SiloUserListWhen, operations::SiloUserListThen);
@@ -14448,6 +14686,18 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
+    fn system_quotas_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SystemQuotasListWhen, operations::SystemQuotasListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SystemQuotasListWhen::new(when),
+                operations::SystemQuotasListThen::new(then),
+            )
+        })
+    }
+
     fn silo_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SiloListWhen, operations::SiloListThen),
@@ -14516,6 +14766,30 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::SiloPolicyUpdateWhen::new(when),
                 operations::SiloPolicyUpdateThen::new(then),
+            )
+        })
+    }
+
+    fn silo_quotas_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloQuotasViewWhen, operations::SiloQuotasViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloQuotasViewWhen::new(when),
+                operations::SiloQuotasViewThen::new(then),
+            )
+        })
+    }
+
+    fn silo_quotas_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloQuotasUpdateWhen, operations::SiloQuotasUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloQuotasUpdateWhen::new(when),
+                operations::SiloQuotasUpdateThen::new(then),
             )
         })
     }
