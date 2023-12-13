@@ -28,7 +28,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-
     ///      ]
     ///    },
     ///    "address_lot": {
@@ -37,14 +36,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -85,13 +80,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Address"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -145,7 +136,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/AddressLotKind"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
@@ -154,7 +144,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "time_created": {
@@ -167,11 +156,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -233,11 +219,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "ip"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -286,11 +269,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "ip"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -331,7 +311,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/AddressLotBlock"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -340,11 +319,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -389,7 +365,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/AddressLotBlockCreate"
     ///      }
-
     ///    },
     ///    "description": {
     ///      "type": "string"
@@ -400,17 +375,13 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/AddressLotKind"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -455,7 +426,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/AddressLotBlock"
     ///      }
-
     ///    },
     ///    "lot": {
     ///      "description": "The address lot that was created.",
@@ -463,14 +433,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/AddressLot"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -516,10 +482,8 @@ pub mod types {
     ///        "pool"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -610,7 +574,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/AddressLot"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -619,11 +582,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -671,11 +631,8 @@ pub mod types {
     ///    "serial": {
     ///      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -729,7 +686,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "time_created": {
@@ -742,11 +698,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -795,7 +748,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/BgpAnnouncementCreate"
     ///      }
-
     ///    },
     ///    "description": {
     ///      "type": "string"
@@ -803,11 +755,8 @@ pub mod types {
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -860,14 +809,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -911,7 +856,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    },
     ///    "network": {
@@ -920,14 +864,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -988,7 +928,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "time_created": {
@@ -1008,11 +947,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1086,14 +1022,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1139,7 +1071,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/BgpConfig"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -1148,11 +1079,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1208,7 +1136,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv4Net"
     ///        }
-
     ///      ]
     ///    },
     ///    "switch": {
@@ -1217,14 +1144,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SwitchLocation"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1289,7 +1212,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    },
     ///    "bgp_config": {
@@ -1298,7 +1220,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    },
     ///    "connect_retry": {
@@ -1338,11 +1259,8 @@ pub mod types {
     ///      "format": "uint32",
     ///      "minimum": 0.0
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1401,13 +1319,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/BgpPeer"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1484,10 +1398,8 @@ pub mod types {
     ///        "established"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -1627,7 +1539,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BgpPeerState"
     ///        }
-
     ///      ]
     ///    },
     ///    "state_duration_millis": {
@@ -1642,14 +1553,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SwitchLocation"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1712,9 +1619,7 @@ pub mod types {
     ///            "range_to"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
@@ -1739,9 +1644,7 @@ pub mod types {
     ///            "range"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
@@ -1761,14 +1664,10 @@ pub mod types {
     ///            "range_from"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1824,9 +1723,7 @@ pub mod types {
     ///            "range_to"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
@@ -1851,9 +1748,7 @@ pub mod types {
     ///            "range"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
@@ -1873,14 +1768,10 @@ pub mod types {
     ///            "range_from"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -1936,9 +1827,7 @@ pub mod types {
     ///            "range_to"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
@@ -1963,9 +1852,7 @@ pub mod types {
     ///            "range"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
@@ -1985,14 +1872,10 @@ pub mod types {
     ///            "range_from"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2048,9 +1931,7 @@ pub mod types {
     ///            "range_to"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
@@ -2075,9 +1956,7 @@ pub mod types {
     ///            "range"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
@@ -2097,14 +1976,10 @@ pub mod types {
     ///            "range_from"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2160,9 +2035,7 @@ pub mod types {
     ///            "range_to"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
@@ -2187,9 +2060,7 @@ pub mod types {
     ///            "range"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
@@ -2209,14 +2080,10 @@ pub mod types {
     ///            "range_from"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2272,9 +2139,7 @@ pub mod types {
     ///            "range_to"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
@@ -2299,9 +2164,7 @@ pub mod types {
     ///            "range"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
@@ -2321,14 +2184,10 @@ pub mod types {
     ///            "range_from"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2385,9 +2244,7 @@ pub mod types {
     ///            "range_to"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
@@ -2414,9 +2271,7 @@ pub mod types {
     ///            "range"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
@@ -2437,14 +2292,10 @@ pub mod types {
     ///            "range_from"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2501,9 +2352,7 @@ pub mod types {
     ///            "range_to"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
@@ -2530,9 +2379,7 @@ pub mod types {
     ///            "range"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
@@ -2553,14 +2400,10 @@ pub mod types {
     ///            "range_from"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2617,9 +2460,7 @@ pub mod types {
     ///            "range_to"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
@@ -2646,9 +2487,7 @@ pub mod types {
     ///            "range"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
@@ -2669,14 +2508,10 @@ pub mod types {
     ///            "range_from"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2733,9 +2568,7 @@ pub mod types {
     ///            "range_to"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
@@ -2762,9 +2595,7 @@ pub mod types {
     ///            "range"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
@@ -2785,14 +2616,10 @@ pub mod types {
     ///            "range_from"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2841,14 +2668,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BinRangedouble"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2896,14 +2719,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BinRangefloat"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -2951,14 +2770,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BinRangeint16"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3006,14 +2821,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BinRangeint32"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3061,14 +2872,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BinRangeint64"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3116,14 +2923,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BinRangeint8"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3171,14 +2974,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BinRangeuint16"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3226,14 +3025,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BinRangeuint32"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3281,14 +3076,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BinRangeuint64"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3336,14 +3127,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/BinRangeuint8"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3380,7 +3167,6 @@ pub mod types {
     ///    4096
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Serialize, schemars :: JsonSchema)]
@@ -3436,7 +3222,6 @@ pub mod types {
     ///  "format": "uint64",
     ///  "minimum": 0.0
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3532,7 +3317,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "service": {
@@ -3548,11 +3332,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3618,14 +3399,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ServiceUsingCertificate"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3670,7 +3447,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Certificate"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -3679,11 +3455,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3728,11 +3501,8 @@ pub mod types {
     ///      "type": "number",
     ///      "format": "double"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3774,11 +3544,8 @@ pub mod types {
     ///      "type": "number",
     ///      "format": "float"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3820,11 +3587,8 @@ pub mod types {
     ///      "type": "integer",
     ///      "format": "int64"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3867,11 +3631,8 @@ pub mod types {
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3926,14 +3687,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -3983,9 +3740,7 @@ pub mod types {
     ///            "bool"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4004,9 +3759,7 @@ pub mod types {
     ///            "i8"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4026,9 +3779,7 @@ pub mod types {
     ///            "u8"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4047,9 +3798,7 @@ pub mod types {
     ///            "i16"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4069,9 +3818,7 @@ pub mod types {
     ///            "u16"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4090,9 +3837,7 @@ pub mod types {
     ///            "i32"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4112,9 +3857,7 @@ pub mod types {
     ///            "u32"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4133,9 +3876,7 @@ pub mod types {
     ///            "i64"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4155,9 +3896,7 @@ pub mod types {
     ///            "u64"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4176,9 +3915,7 @@ pub mod types {
     ///            "f32"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4197,9 +3934,7 @@ pub mod types {
     ///            "f64"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4217,9 +3952,7 @@ pub mod types {
     ///            "string"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4235,7 +3968,6 @@ pub mod types {
     ///            "format": "uint8",
     ///            "minimum": 0.0
     ///          }
-
     ///        },
     ///        "type": {
     ///          "type": "string",
@@ -4243,9 +3975,7 @@ pub mod types {
     ///            "bytes"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4263,9 +3993,7 @@ pub mod types {
     ///            "cumulative_i64"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4283,9 +4011,7 @@ pub mod types {
     ///            "cumulative_u64"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4303,9 +4029,7 @@ pub mod types {
     ///            "cumulative_f32"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4323,9 +4047,7 @@ pub mod types {
     ///            "cumulative_f64"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4343,9 +4065,7 @@ pub mod types {
     ///            "histogram_i8"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4363,9 +4083,7 @@ pub mod types {
     ///            "histogram_u8"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4383,9 +4101,7 @@ pub mod types {
     ///            "histogram_i16"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4403,9 +4119,7 @@ pub mod types {
     ///            "histogram_u16"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4423,9 +4137,7 @@ pub mod types {
     ///            "histogram_i32"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4443,9 +4155,7 @@ pub mod types {
     ///            "histogram_u32"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4463,9 +4173,7 @@ pub mod types {
     ///            "histogram_i64"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4483,9 +4191,7 @@ pub mod types {
     ///            "histogram_u64"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4503,9 +4209,7 @@ pub mod types {
     ///            "histogram_f32"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4523,9 +4227,7 @@ pub mod types {
     ///            "histogram_f64"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -4543,14 +4245,10 @@ pub mod types {
     ///            "missing"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -4820,7 +4518,6 @@ pub mod types {
     ///    "histogram_f64"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -5010,11 +4707,8 @@ pub mod types {
     ///      "description": "request signing public certificate (base64 encoded
     /// der file)",      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5060,11 +4754,8 @@ pub mod types {
     ///    "grant_type": {
     ///      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5101,11 +4792,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5139,11 +4827,8 @@ pub mod types {
     ///    "user_code": {
     ///      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5186,14 +4871,10 @@ pub mod types {
     ///        "value": {
     ///          "type": "string"
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5259,7 +4940,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "project_id": {
@@ -5290,11 +4970,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5358,7 +5035,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/DiskSource"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
@@ -5370,14 +5046,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5418,7 +5090,6 @@ pub mod types {
     ///    "write_bytes"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -5521,14 +5192,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5567,7 +5234,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Disk"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -5576,11 +5242,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5626,7 +5289,6 @@ pub mod types {
     ///            {
     ///              "$ref": "#/components/schemas/BlockSize"
     ///            }
-
     ///          ]
     ///        },
     ///        "type": {
@@ -5635,9 +5297,7 @@ pub mod types {
     ///            "blank"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Create a disk from a disk snapshot",
@@ -5657,9 +5317,7 @@ pub mod types {
     ///            "snapshot"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Create a disk from an image",
@@ -5679,9 +5337,7 @@ pub mod types {
     ///            "image"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Create a blank disk that will accept bulk writes or
@@ -5700,14 +5356,10 @@ pub mod types {
     ///            "importing_blocks"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -5759,9 +5411,7 @@ pub mod types {
     ///            "creating"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk is ready but detached from any Instance",
@@ -5776,9 +5426,7 @@ pub mod types {
     ///            "detached"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk is ready to receive blocks from an external
@@ -5793,9 +5441,7 @@ pub mod types {
     ///            "import_ready"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk is importing blocks from a URL",
@@ -5810,9 +5456,7 @@ pub mod types {
     ///            "importing_from_url"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk is importing blocks from bulk writes",
@@ -5827,9 +5471,7 @@ pub mod types {
     ///            "importing_from_bulk_writes"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk is being finalized to state Detached",
@@ -5844,9 +5486,7 @@ pub mod types {
     ///            "finalizing"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk is undergoing maintenance",
@@ -5861,9 +5501,7 @@ pub mod types {
     ///            "maintenance"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk is being attached to the given Instance",
@@ -5883,9 +5521,7 @@ pub mod types {
     ///            "attaching"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk is attached to the given Instance",
@@ -5905,9 +5541,7 @@ pub mod types {
     ///            "attached"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk is being detached from the given Instance",
@@ -5927,9 +5561,7 @@ pub mod types {
     ///            "detaching"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk has been destroyed",
@@ -5944,9 +5576,7 @@ pub mod types {
     ///            "destroyed"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Disk is unavailable",
@@ -5961,14 +5591,10 @@ pub mod types {
     ///            "faulted"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6031,11 +5657,8 @@ pub mod types {
     ///    "request_id": {
     ///      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6077,11 +5700,8 @@ pub mod types {
     ///    "kind": {
     ///      "$ref": "#/components/schemas/IpKind"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6123,7 +5743,6 @@ pub mod types {
     ///            {
     ///              "$ref": "#/components/schemas/Name"
     ///            }
-
     ///          ]
     ///        },
     ///        "type": {
@@ -6132,9 +5751,7 @@ pub mod types {
     ///            "ephemeral"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "An IP address providing both inbound and outbound
@@ -6155,14 +5772,10 @@ pub mod types {
     ///            "floating"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6209,7 +5822,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/ExternalIp"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -6218,11 +5830,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6263,14 +5872,10 @@ pub mod types {
     /// [        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6308,7 +5913,6 @@ pub mod types {
     ///    "viewer"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -6406,13 +6010,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/FleetRoleRoleAssignment"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6465,11 +6065,8 @@ pub mod types {
     ///    "role_name": {
     ///      "$ref": "#/components/schemas/FleetRole"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6538,7 +6135,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "project_id": {
@@ -6556,11 +6152,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6632,14 +6225,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6688,7 +6277,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/FloatingIp"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -6697,11 +6285,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6752,11 +6337,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6798,7 +6380,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Group"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -6807,11 +6388,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6868,7 +6446,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Bindouble"
     ///      }
-
     ///    },
     ///    "n_samples": {
     ///      "type": "integer",
@@ -6879,11 +6456,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -6938,7 +6512,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binfloat"
     ///      }
-
     ///    },
     ///    "n_samples": {
     ///      "type": "integer",
@@ -6949,11 +6522,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7008,7 +6578,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binint16"
     ///      }
-
     ///    },
     ///    "n_samples": {
     ///      "type": "integer",
@@ -7019,11 +6588,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7078,7 +6644,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binint32"
     ///      }
-
     ///    },
     ///    "n_samples": {
     ///      "type": "integer",
@@ -7089,11 +6654,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7148,7 +6710,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binint64"
     ///      }
-
     ///    },
     ///    "n_samples": {
     ///      "type": "integer",
@@ -7159,11 +6720,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7218,7 +6776,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binint8"
     ///      }
-
     ///    },
     ///    "n_samples": {
     ///      "type": "integer",
@@ -7229,11 +6786,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7288,7 +6842,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binuint16"
     ///      }
-
     ///    },
     ///    "n_samples": {
     ///      "type": "integer",
@@ -7299,11 +6852,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7358,7 +6908,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binuint32"
     ///      }
-
     ///    },
     ///    "n_samples": {
     ///      "type": "integer",
@@ -7369,11 +6918,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7428,7 +6974,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binuint64"
     ///      }
-
     ///    },
     ///    "n_samples": {
     ///      "type": "integer",
@@ -7439,11 +6984,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7498,7 +7040,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binuint8"
     ///      }
-
     ///    },
     ///    "n_samples": {
     ///      "type": "integer",
@@ -7509,11 +7050,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7553,10 +7091,8 @@ pub mod types {
     ///        "id_ascending"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -7655,7 +7191,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "provider_type": {
@@ -7664,7 +7199,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/IdentityProviderType"
     ///        }
-
     ///      ]
     ///    },
     ///    "time_created": {
@@ -7677,11 +7211,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7730,7 +7261,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/IdentityProvider"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -7739,11 +7269,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -7781,10 +7308,8 @@ pub mod types {
     ///        "saml"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -7864,7 +7389,6 @@ pub mod types {
     ///    "silo_group"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -7957,9 +7481,7 @@ pub mod types {
     ///        "url": {
     ///          "type": "string"
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "type": "object",
@@ -7977,14 +7499,10 @@ pub mod types {
     ///            "base64_encoded_xml"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8033,7 +7551,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
-
     ///      ]
     ///    },
     ///    "description": {
@@ -8046,7 +7563,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Digest"
     ///        }
-
     ///      ]
     ///    },
     ///    "id": {
@@ -8060,7 +7576,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "os": {
@@ -8081,7 +7596,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
-
     ///      ]
     ///    },
     ///    "time_created": {
@@ -8098,11 +7612,8 @@ pub mod types {
     ///      "description": "Version of the operating system",
     ///      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8177,18 +7688,14 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ImageSource"
     ///        }
-
     ///      ]
     ///    },
     ///    "version": {
     ///      "description": "The version of the operating system (e.g. 18.04,
     /// 20.04, etc.)",      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8233,7 +7740,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Image"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -8242,11 +7748,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8295,9 +7798,7 @@ pub mod types {
     ///            "snapshot"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Boot the Alpine ISO that ships with the Propolis
@@ -8312,14 +7813,10 @@ pub mod types {
     ///            "you_can_boot_anything_as_long_as_its_alpine"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8364,11 +7861,8 @@ pub mod types {
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8430,7 +7924,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
@@ -8439,7 +7932,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "ncpus": {
@@ -8448,7 +7940,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/InstanceCpuCount"
     ///        }
-
     ///      ]
     ///    },
     ///    "project_id": {
@@ -8473,11 +7964,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8527,7 +8015,6 @@ pub mod types {
     ///  "format": "uint16",
     ///  "minimum": 0.0
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8617,7 +8104,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/InstanceDiskAttachment"
     ///      }
-
     ///    },
     ///    "external_ips": {
     ///      "description": "The external IP addresses provided to this
@@ -8629,7 +8115,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/ExternalIpCreate"
     ///      }
-
     ///    },
     ///    "hostname": {
     ///      "type": "string"
@@ -8652,7 +8137,6 @@ pub mod types {
     ///        {
     ///          "$ref":
     /// "#/components/schemas/InstanceNetworkInterfaceAttachment"        }
-
     ///      ]
     ///    },
     ///    "start": {
@@ -8668,11 +8152,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "byte"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8746,7 +8227,6 @@ pub mod types {
     ///            {
     ///              "$ref": "#/components/schemas/DiskSource"
     ///            }
-
     ///          ]
     ///        },
     ///        "name": {
@@ -8758,7 +8238,6 @@ pub mod types {
     ///            {
     ///              "$ref": "#/components/schemas/ByteCount"
     ///            }
-
     ///          ]
     ///        },
     ///        "type": {
@@ -8767,9 +8246,7 @@ pub mod types {
     ///            "create"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "During instance creation, attach this disk",
@@ -8785,7 +8262,6 @@ pub mod types {
     ///            {
     ///              "$ref": "#/components/schemas/Name"
     ///            }
-
     ///          ]
     ///        },
     ///        "type": {
@@ -8794,14 +8270,10 @@ pub mod types {
     ///            "attach"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8847,11 +8319,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -8920,7 +8389,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/MacAddr"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
@@ -8929,7 +8397,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "primary": {
@@ -8956,11 +8423,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -9027,7 +8491,6 @@ pub mod types {
     ///          "items": {
     ///            "$ref": "#/components/schemas/InstanceNetworkInterfaceCreate"
     ///          }
-
     ///        },
     ///        "type": {
     ///          "type": "string",
@@ -9035,9 +8498,7 @@ pub mod types {
     ///            "create"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "The default networking configuration for an
@@ -9054,9 +8515,7 @@ pub mod types {
     ///            "default"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "No network interfaces at all will be created for
@@ -9071,14 +8530,10 @@ pub mod types {
     ///            "none"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -9143,7 +8598,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "vpc_name": {
@@ -9152,14 +8606,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -9206,7 +8656,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/InstanceNetworkInterface"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -9215,11 +8664,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -9268,7 +8714,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "primary": {
@@ -9282,11 +8727,8 @@ pub mod types {
     /// a secondary will return an error.",      "default": false,
     ///      "type": "boolean"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -9340,7 +8782,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Instance"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -9349,11 +8790,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -9399,7 +8837,6 @@ pub mod types {
     ///        "format": "uint8",
     ///        "minimum": 0.0
     ///      }
-
     ///    },
     ///    "last_byte_offset": {
     ///      "description": "The absolute offset since boot (suitable for use as
@@ -9408,11 +8845,8 @@ pub mod types {
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -9522,10 +8956,8 @@ pub mod types {
     ///        "destroyed"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -9654,7 +9086,6 @@ pub mod types {
     ///    "floating"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -9737,7 +9168,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv4Net"
     ///        }
-
     ///      ]
     ///    },
     ///    {
@@ -9746,13 +9176,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv6Net"
     ///        }
-
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -9859,7 +9286,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "silo_id": {
@@ -9879,11 +9305,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -9948,14 +9371,10 @@ pub mod types {
     /// [        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -10015,11 +9434,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -10060,7 +9476,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/IpPoolRange"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -10069,11 +9484,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -10115,7 +9527,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/IpPool"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -10124,11 +9535,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -10172,14 +9580,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -10215,7 +9619,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv4Range"
     ///        }
-
     ///      ]
     ///    },
     ///    {
@@ -10224,13 +9627,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv6Range"
     ///        }
-
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -10274,7 +9674,6 @@ pub mod types {
     /// "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.
     /// ){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/
     /// ([0-9]|1[0-9]|2[0-9]|3[0-2])$" }
-
     /// ```
     /// </details>
     #[derive(
@@ -10377,11 +9776,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "ipv4"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -10418,7 +9814,6 @@ pub mod types {
     /// "^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,
     /// 4}|([0-9a-fA-F]{1,4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/
     /// ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$" }
-
     /// ```
     /// </details>
     #[derive(
@@ -10520,11 +9915,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "ipv6"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -10562,7 +9954,6 @@ pub mod types {
     ///  "minLength": 1,
     ///  "pattern": "^[0-9]{1,5}(-[0-9]{1,5})?$"
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -10666,7 +10057,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/LinkFec"
     ///        }
-
     ///      ]
     ///    },
     ///    "lldp": {
@@ -10675,7 +10065,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/LldpServiceConfig"
     ///        }
-
     ///      ]
     ///    },
     ///    "mtu": {
@@ -10690,14 +10079,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/LinkSpeed"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -10755,10 +10140,8 @@ pub mod types {
     ///        "rs"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -10906,10 +10289,8 @@ pub mod types {
     ///        "speed400_g"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -11041,14 +10422,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -11097,7 +10474,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-
     ///      ]
     ///    },
     ///    "address_lot_block_id": {
@@ -11119,11 +10495,8 @@ pub mod types {
     ///      "description": "Switch location where this loopback address is
     /// assigned.",      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -11180,7 +10553,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    },
     ///    "anycast": {
@@ -11205,14 +10577,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -11265,7 +10633,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/LoopbackAddress"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -11274,11 +10641,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -11318,7 +10682,6 @@ pub mod types {
     ///  "minLength": 5,
     ///  "pattern": "^([0-9a-fA-F]{0,2}:){5}[0-9a-fA-F]{0,2}$"
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -11416,11 +10779,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -11459,7 +10819,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Measurement"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -11468,11 +10827,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -11517,11 +10873,8 @@ pub mod types {
     ///      ],
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -11561,7 +10914,6 @@ pub mod types {
     ///  "pattern":
     /// "^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z][a-z0-9-]*
     /// [a-zA-Z0-9]*$" }
-
     /// ```
     /// </details>
     #[derive(
@@ -11647,7 +10999,6 @@ pub mod types {
     ///          "type": "string",
     ///          "format": "uuid"
     ///        }
-
     ///      ]
     ///    },
     ///    {
@@ -11656,13 +11007,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -11762,10 +11110,8 @@ pub mod types {
     ///        "id_ascending"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -11860,10 +11206,8 @@ pub mod types {
     ///        "name_ascending"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -11944,7 +11288,6 @@ pub mod types {
     ///    "descending"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -12025,7 +11368,6 @@ pub mod types {
     ///  "type": "string",
     ///  "maxLength": 512
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -12150,11 +11492,8 @@ pub mod types {
     ///    "vendor": {
     ///      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -12199,7 +11538,6 @@ pub mod types {
     ///    "u2"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -12287,7 +11625,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/PhysicalDisk"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -12296,11 +11633,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -12341,14 +11675,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/PingStatus"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -12381,7 +11711,6 @@ pub mod types {
     ///    "ok"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -12478,7 +11807,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "time_created": {
@@ -12491,11 +11819,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -12543,11 +11868,8 @@ pub mod types {
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -12586,7 +11908,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Project"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -12595,11 +11916,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -12636,7 +11954,6 @@ pub mod types {
     ///    "viewer"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -12734,13 +12051,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/ProjectRoleRoleAssignment"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -12793,11 +12106,8 @@ pub mod types {
     ///    "role_name": {
     ///      "$ref": "#/components/schemas/ProjectRole"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -12839,14 +12149,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -12898,11 +12204,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -12945,7 +12248,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Rack"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -12954,11 +12256,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -13001,11 +12300,8 @@ pub mod types {
     ///    "name": {
     ///      "$ref": "#/components/schemas/RoleName"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -13038,7 +12334,6 @@ pub mod types {
     ///  "maxLength": 63,
     ///  "pattern": "[a-z-]+\\.[a-z-]+"
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -13131,7 +12426,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Role"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -13140,11 +12434,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -13187,7 +12478,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-
     ///      ]
     ///    },
     ///    "gw": {
@@ -13204,11 +12494,8 @@ pub mod types {
     ///      "format": "uint16",
     ///      "minimum": 0.0
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -13252,13 +12539,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Route"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -13332,7 +12615,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "public_cert": {
@@ -13364,11 +12646,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -13460,7 +12739,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/IdpMetadataSource"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
@@ -13472,7 +12750,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/DerEncodedKeyPair"
     ///        }
-
     ///      ]
     ///    },
     ///    "slo_url": {
@@ -13487,11 +12764,8 @@ pub mod types {
     ///      "description": "customer's technical contact for saml
     /// configuration",      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -13547,10 +12821,8 @@ pub mod types {
     ///        "external_api"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -13657,7 +12929,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SiloIdentityMode"
     ///        }
-
     ///      ]
     ///    },
     ///    "mapped_fleet_roles": {
@@ -13672,7 +12943,6 @@ pub mod types {
     ///        },
     ///        "uniqueItems": true
     ///      }
-
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
@@ -13680,7 +12950,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "time_created": {
@@ -13693,11 +12962,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -13787,7 +13053,6 @@ pub mod types {
     ///        },
     ///        "uniqueItems": true
     ///      }
-
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
@@ -13800,7 +13065,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SiloQuotasCreate"
     ///        }
-
     ///      ]
     ///    },
     ///    "tls_certificates": {
@@ -13810,13 +13074,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/CertificateCreate"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -13889,10 +13149,8 @@ pub mod types {
     ///        "local_only"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -13996,11 +13254,8 @@ pub mod types {
     ///    "storage": {
     ///      "$ref": "#/components/schemas/ByteCount"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14048,7 +13303,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
-
     ///      ]
     ///    },
     ///    "storage": {
@@ -14057,14 +13311,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14109,7 +13359,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SiloQuotas"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -14118,11 +13367,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14170,7 +13416,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
-
     ///      ]
     ///    },
     ///    "storage": {
@@ -14179,14 +13424,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14234,7 +13475,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Silo"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -14243,11 +13483,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14284,7 +13521,6 @@ pub mod types {
     ///    "viewer"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -14382,13 +13618,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SiloRoleRoleAssignment"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14441,11 +13673,8 @@ pub mod types {
     ///    "role_name": {
     ///      "$ref": "#/components/schemas/SiloRole"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14500,7 +13729,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SledProvisionState"
     ///        }
-
     ///      ]
     ///    },
     ///    "rack_id": {
@@ -14530,14 +13758,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14638,11 +13862,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14694,7 +13915,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SledInstance"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -14703,11 +13923,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14758,10 +13975,8 @@ pub mod types {
     ///        "non_provisionable"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -14853,14 +14068,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SledProvisionState"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14900,7 +14111,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SledProvisionState"
     ///        }
-
     ///      ]
     ///    },
     ///    "old_state": {
@@ -14909,14 +14119,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SledProvisionState"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -14957,7 +14163,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Sled"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -14966,11 +14171,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15033,7 +14235,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "project_id": {
@@ -15056,11 +14257,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15116,17 +14314,13 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15167,7 +14361,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Snapshot"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -15176,11 +14369,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15218,7 +14408,6 @@ pub mod types {
     ///    "destroyed"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -15329,7 +14518,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "public_key": {
@@ -15351,11 +14539,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15412,11 +14597,8 @@ pub mod types {
     ///      "description": "SSH public key, e.g., `\"ssh-ed25519
     /// AAAAC3NzaC...\"`",      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15457,7 +14639,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SshKey"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -15466,11 +14647,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15533,11 +14711,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15586,18 +14761,14 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SwitchInterfaceKind"
     ///        }
-
     ///      ]
     ///    },
     ///    "v6_enabled": {
     ///      "description": "Whether or not IPv6 is enabled.",
     ///      "type": "boolean"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15642,9 +14813,7 @@ pub mod types {
     ///            "primary"
     ///          ]
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "VLAN interfaces allow physical interfaces to be
@@ -15669,9 +14838,7 @@ pub mod types {
     ///          "format": "uint16",
     ///          "minimum": 0.0
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Loopback interfaces are anchors for IP addresses
@@ -15686,14 +14853,10 @@ pub mod types {
     ///            "loopback"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15744,10 +14907,8 @@ pub mod types {
     ///        "switch1"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -15860,11 +15021,8 @@ pub mod types {
     ///      "description": "The switch location of this switch port.",
     ///      "type": "string"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15916,7 +15074,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-
     ///      ]
     ///    },
     ///    "address_lot_block_id": {
@@ -15933,11 +15090,8 @@ pub mod types {
     /// belongs to.",      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -15982,14 +15136,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16044,11 +15194,8 @@ pub mod types {
     /// belongs to.",      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16094,14 +15241,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SwitchPortGeometry"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16151,10 +15294,8 @@ pub mod types {
     ///        "sfp28x4"
     ///      ]
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -16266,11 +15407,8 @@ pub mod types {
     /// to.",      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16316,7 +15454,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchPort"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -16325,11 +15462,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16374,7 +15508,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-
     ///      ]
     ///    },
     ///    "gw": {
@@ -16383,7 +15516,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-
     ///      ]
     ///    },
     ///    "interface_name": {
@@ -16404,11 +15536,8 @@ pub mod types {
     ///      "format": "uint16",
     ///      "minimum": 0.0
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16471,7 +15600,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "time_created": {
@@ -16484,11 +15612,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16548,7 +15673,6 @@ pub mod types {
     ///      "additionalProperties": {
     ///        "$ref": "#/components/schemas/AddressConfig"
     ///      }
-
     ///    },
     ///    "bgp_peers": {
     ///      "description": "BGP peers indexed by interface name.",
@@ -16556,7 +15680,6 @@ pub mod types {
     ///      "additionalProperties": {
     ///        "$ref": "#/components/schemas/BgpPeerConfig"
     ///      }
-
     ///    },
     ///    "description": {
     ///      "type": "string"
@@ -16566,7 +15689,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/NameOrId"
     ///      }
-
     ///    },
     ///    "interfaces": {
     ///      "description": "Interfaces indexed by link name.",
@@ -16574,7 +15696,6 @@ pub mod types {
     ///      "additionalProperties": {
     ///        "$ref": "#/components/schemas/SwitchInterfaceConfig"
     ///      }
-
     ///    },
     ///    "links": {
     ///      "description": "Links indexed by phy name. On ports that are not
@@ -16583,7 +15704,6 @@ pub mod types {
     ///      "additionalProperties": {
     ///        "$ref": "#/components/schemas/LinkConfig"
     ///      }
-
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
@@ -16597,13 +15717,9 @@ pub mod types {
     ///      "additionalProperties": {
     ///        "$ref": "#/components/schemas/RouteConfig"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16666,11 +15782,8 @@ pub mod types {
     /// settings group.",      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16712,7 +15825,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchPortSettings"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -16721,11 +15833,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16779,7 +15888,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchPortAddressConfig"
     ///      }
-
     ///    },
     ///    "bgp_peers": {
     ///      "description": "BGP peer settings.",
@@ -16787,7 +15895,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchPortBgpPeerConfig"
     ///      }
-
     ///    },
     ///    "groups": {
     ///      "description": "Switch port settings included from other switch
@@ -16795,7 +15902,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchPortSettingsGroups"
     ///      }
-
     ///    },
     ///    "interfaces": {
     ///      "description": "Layer 3 interface settings.",
@@ -16803,7 +15909,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchInterfaceConfig"
     ///      }
-
     ///    },
     ///    "link_lldp": {
     ///      "description": "Link-layer discovery protocol (LLDP) settings.",
@@ -16811,7 +15916,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/LldpServiceConfig"
     ///      }
-
     ///    },
     ///    "links": {
     ///      "description": "Layer 2 link settings.",
@@ -16819,7 +15923,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchPortLinkConfig"
     ///      }
-
     ///    },
     ///    "port": {
     ///      "description": "Layer 1 physical port settings.",
@@ -16827,7 +15930,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SwitchPortConfig"
     ///        }
-
     ///      ]
     ///    },
     ///    "routes": {
@@ -16836,7 +15938,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchPortRouteConfig"
     ///      }
-
     ///    },
     ///    "settings": {
     ///      "description": "The primary switch port settings handle.",
@@ -16844,7 +15945,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/SwitchPortSettings"
     ///        }
-
     ///      ]
     ///    },
     ///    "vlan_interfaces": {
@@ -16853,13 +15953,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchVlanInterfaceConfig"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16917,7 +16013,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Switch"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -16926,11 +16021,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -16979,11 +16071,8 @@ pub mod types {
     /// "integer",      "format": "uint16",
     ///      "minimum": 0.0
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17022,7 +16111,6 @@ pub mod types {
     ///    "ram_provisioned"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -17122,11 +16210,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17175,11 +16260,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17238,7 +16320,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "time_created": {
@@ -17251,11 +16332,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17302,7 +16380,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/UserBuiltin"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -17311,11 +16388,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17358,7 +16432,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/UserId"
     ///        }
-
     ///      ]
     ///    },
     ///    "password": {
@@ -17367,14 +16440,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/UserPassword"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17415,7 +16484,6 @@ pub mod types {
     ///  "pattern":
     /// "^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z][a-z0-9-]*
     /// [a-zA-Z0-9]*$" }
-
     /// ```
     /// </details>
     #[derive(
@@ -17512,9 +16580,7 @@ pub mod types {
     ///        "value": {
     ///          "$ref": "#/components/schemas/Password"
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "Invalidates any current password (disabling
@@ -17529,14 +16595,10 @@ pub mod types {
     ///            "login_disallowed"
     ///          ]
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17579,7 +16641,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/User"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -17588,11 +16649,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17635,11 +16693,8 @@ pub mod types {
     ///    "username": {
     ///      "$ref": "#/components/schemas/UserId"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17690,7 +16745,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "id": {
@@ -17704,7 +16758,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv6Net"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
@@ -17713,7 +16766,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "project_id": {
@@ -17736,11 +16788,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17805,17 +16854,13 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv6Net"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -17874,7 +16919,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleAction"
     ///        }
-
     ///      ]
     ///    },
     ///    "description": {
@@ -17887,7 +16931,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleDirection"
     ///        }
-
     ///      ]
     ///    },
     ///    "filters": {
@@ -17896,7 +16939,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleFilter"
     ///        }
-
     ///      ]
     ///    },
     ///    "id": {
@@ -17910,7 +16952,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "priority": {
@@ -17925,7 +16966,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleStatus"
     ///        }
-
     ///      ]
     ///    },
     ///    "targets": {
@@ -17934,7 +16974,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleTarget"
     ///      }
-
     ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
@@ -17951,11 +16990,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -18010,7 +17046,6 @@ pub mod types {
     ///    "deny"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -18092,7 +17127,6 @@ pub mod types {
     ///    "outbound"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -18184,7 +17218,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleHostFilter"
     ///      }
-
     ///    },
     ///    "ports": {
     ///      "description": "If present, the destination ports this rule applies
@@ -18195,7 +17228,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/L4PortRange"
     ///      }
-
     ///    },
     ///    "protocols": {
     ///      "description": "If present, the networking protocols this rule
@@ -18206,13 +17238,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleProtocol"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -18268,9 +17296,7 @@ pub mod types {
     ///        "value": {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "The rule applies to traffic from/to all instances
@@ -18289,9 +17315,7 @@ pub mod types {
     ///        "value": {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "The rule applies to traffic from/to this specific
@@ -18310,9 +17334,7 @@ pub mod types {
     ///        "value": {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "The rule applies to traffic from/to a specific IP
@@ -18332,9 +17354,7 @@ pub mod types {
     ///          "type": "string",
     ///          "format": "ip"
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "The rule applies to traffic from/to a specific IP
@@ -18353,14 +17373,10 @@ pub mod types {
     ///        "value": {
     ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -18415,7 +17431,6 @@ pub mod types {
     ///    "ICMP"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -18501,7 +17516,6 @@ pub mod types {
     ///    "enabled"
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(
@@ -18597,9 +17611,7 @@ pub mod types {
     ///        "value": {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "The rule applies to all instances in the VPC
@@ -18618,9 +17630,7 @@ pub mod types {
     ///        "value": {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "The rule applies to this specific instance",
@@ -18639,9 +17649,7 @@ pub mod types {
     ///        "value": {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "The rule applies to a specific IP address",
@@ -18661,9 +17669,7 @@ pub mod types {
     ///          "type": "string",
     ///          "format": "ip"
     ///        }
-
     ///      }
-
     ///    },
     ///    {
     ///      "description": "The rule applies to a specific IP subnet",
@@ -18682,14 +17688,10 @@ pub mod types {
     ///        "value": {
     ///          "$ref": "#/components/schemas/IpNet"
     ///        }
-
     ///      }
-
     ///    }
-
     ///  ]
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -18755,7 +17757,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleAction"
     ///        }
-
     ///      ]
     ///    },
     ///    "description": {
@@ -18768,7 +17769,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleDirection"
     ///        }
-
     ///      ]
     ///    },
     ///    "filters": {
@@ -18777,7 +17777,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleFilter"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
@@ -18786,7 +17785,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "priority": {
@@ -18801,7 +17799,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleStatus"
     ///        }
-
     ///      ]
     ///    },
     ///    "targets": {
@@ -18810,13 +17807,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleTarget"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -18871,13 +17864,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleUpdate"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -18914,13 +17903,9 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRule"
     ///      }
-
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -18958,7 +17943,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/Vpc"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -18967,11 +17951,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -19032,7 +18013,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv4Net"
     ///        }
-
     ///      ]
     ///    },
     ///    "ipv6_block": {
@@ -19041,7 +18021,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv6Net"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
@@ -19050,7 +18029,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "time_created": {
@@ -19068,11 +18046,8 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -19131,7 +18106,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv4Net"
     ///        }
-
     ///      ]
     ///    },
     ///    "ipv6_block": {
@@ -19143,17 +18117,13 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Ipv6Net"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -19205,7 +18175,6 @@ pub mod types {
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcSubnet"
     ///      }
-
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
@@ -19214,11 +18183,8 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -19262,14 +18228,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
@@ -19312,7 +18274,6 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    },
     ///    "name": {
@@ -19320,14 +18281,10 @@ pub mod types {
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
-
     ///      ]
     ///    }
-
     ///  }
-
     /// }
-
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]

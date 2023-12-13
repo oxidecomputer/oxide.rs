@@ -325,13 +325,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ImagePromote => Some("image promote"),
         CliCommand::ImageDemote => Some("image demote"),
 
-        CliCommand::SiloIdentityProviderList => Some("silo idp list"),
-        CliCommand::LocalIdpUserCreate => Some("silo idp local user create"),
-        CliCommand::LocalIdpUserDelete => Some("silo idp local user delete"),
-        CliCommand::LocalIdpUserSetPassword => Some("silo idp local user set-password"),
-        CliCommand::SamlIdentityProviderCreate => Some("silo idp saml create"),
-        CliCommand::SamlIdentityProviderView => Some("silo idp saml view"),
-
         CliCommand::IpPoolList => Some("ip-pool list"),
         CliCommand::IpPoolCreate => Some("ip-pool create"),
         CliCommand::IpPoolView => Some("ip-pool view"),
@@ -344,14 +337,27 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::IpPoolServiceRangeList => Some("ip-pool service range list"),
         CliCommand::IpPoolServiceRangeAdd => Some("ip-pool service range add"),
         CliCommand::IpPoolServiceRangeRemove => Some("ip-pool service remove"),
+
         CliCommand::SiloList => Some("silo list"),
         CliCommand::SiloCreate => Some("silo create"),
         CliCommand::SiloView => Some("silo view"),
         CliCommand::SiloDelete => Some("silo delete"),
+
         CliCommand::SiloPolicyView => Some("silo policy view"),
         CliCommand::SiloPolicyUpdate => Some("silo policy update"),
         CliCommand::SiloUserList => Some("silo user list"),
         CliCommand::SiloUserView => Some("silo user view"),
+
+        CliCommand::SiloIdentityProviderList => Some("silo idp list"),
+        CliCommand::LocalIdpUserCreate => Some("silo idp local user create"),
+        CliCommand::LocalIdpUserDelete => Some("silo idp local user delete"),
+        CliCommand::LocalIdpUserSetPassword => Some("silo idp local user set-password"),
+        CliCommand::SamlIdentityProviderCreate => Some("silo idp saml create"),
+        CliCommand::SamlIdentityProviderView => Some("silo idp saml view"),
+
+        CliCommand::SystemQuotasList => Some("silo quotas list"),
+        CliCommand::SiloQuotasView => Some("silo quotas view"),
+        CliCommand::SiloQuotasUpdate => Some("silo quotas update"),
 
         CliCommand::UserList => Some("user list"),
 

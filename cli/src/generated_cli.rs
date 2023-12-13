@@ -10998,7 +10998,6 @@ pub trait CliOverride {
 }
 
 impl CliOverride for () {}
-
 #[derive(Copy, Clone, Debug)]
 pub enum CliCommand {
     DeviceAuthRequest,
