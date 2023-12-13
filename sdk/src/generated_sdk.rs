@@ -13749,6 +13749,7 @@ pub mod types {
     ///    "discoverable",
     ///    "identity_mode",
     ///    "name",
+    ///    "quotas",
     ///    "tls_certificates"
     ///  ],
     ///  "properties": {
@@ -13791,6 +13792,17 @@ pub mod types {
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
+    ///    "quotas": {
+    ///      "description": "Limits the amount of provisionable CPU, memory, and
+    /// storage in the Silo. CPU and memory are only consumed by running
+    /// instances, while storage is consumed by any disk or snapshot. A value of
+    /// 0 means that resource is *not* provisionable.",      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SiloQuotasCreate"
+    ///        }
+
+    ///      ]
+    ///    },
     ///    "tls_certificates": {
     ///      "description": "Initial TLS certificates to be used for the new
     /// Silo's console and API endpoints.  These should be valid for the Silo's
@@ -13829,6 +13841,11 @@ pub mod types {
         #[serde(default, skip_serializing_if = "std::collections::HashMap::is_empty")]
         pub mapped_fleet_roles: std::collections::HashMap<String, Vec<FleetRole>>,
         pub name: Name,
+        /// Limits the amount of provisionable CPU, memory, and storage in the
+        /// Silo. CPU and memory are only consumed by running instances, while
+        /// storage is consumed by any disk or snapshot. A value of 0 means that
+        /// resource is *not* provisionable.
+        pub quotas: SiloQuotasCreate,
         /// Initial TLS certificates to be used for the new Silo's console and
         /// API endpoints.  These should be valid for the Silo's DNS name(s).
         pub tls_certificates: Vec<CertificateCreate>,
@@ -13948,6 +13965,254 @@ pub mod types {
         type Error = &'static str;
         fn try_from(value: String) -> Result<Self, &'static str> {
             value.parse()
+        }
+    }
+
+    /// SiloQuotas
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "cpus",
+    ///    "memory",
+    ///    "silo_id",
+    ///    "storage"
+    ///  ],
+    ///  "properties": {
+    ///    "cpus": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "memory": {
+    ///      "$ref": "#/components/schemas/ByteCount"
+    ///    },
+    ///    "silo_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "storage": {
+    ///      "$ref": "#/components/schemas/ByteCount"
+    ///    }
+
+    ///  }
+
+    /// }
+
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SiloQuotas {
+        pub cpus: i64,
+        pub memory: ByteCount,
+        pub silo_id: uuid::Uuid,
+        pub storage: ByteCount,
+    }
+
+    impl From<&SiloQuotas> for SiloQuotas {
+        fn from(value: &SiloQuotas) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SiloQuotas {
+        pub fn builder() -> builder::SiloQuotas {
+            builder::SiloQuotas::default()
+        }
+    }
+
+    /// The amount of provisionable resources for a Silo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The amount of provisionable resources for a Silo",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "cpus",
+    ///    "memory",
+    ///    "storage"
+    ///  ],
+    ///  "properties": {
+    ///    "cpus": {
+    ///      "description": "The amount of virtual CPUs available for running
+    /// instances in the Silo",      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "memory": {
+    ///      "description": "The amount of RAM (in bytes) available for running
+    /// instances in the Silo",      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+
+    ///      ]
+    ///    },
+    ///    "storage": {
+    ///      "description": "The amount of storage (in bytes) available for
+    /// disks or snapshots",      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+
+    ///      ]
+    ///    }
+
+    ///  }
+
+    /// }
+
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SiloQuotasCreate {
+        /// The amount of virtual CPUs available for running instances in the
+        /// Silo
+        pub cpus: i64,
+        /// The amount of RAM (in bytes) available for running instances in the
+        /// Silo
+        pub memory: ByteCount,
+        /// The amount of storage (in bytes) available for disks or snapshots
+        pub storage: ByteCount,
+    }
+
+    impl From<&SiloQuotasCreate> for SiloQuotasCreate {
+        fn from(value: &SiloQuotasCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SiloQuotasCreate {
+        pub fn builder() -> builder::SiloQuotasCreate {
+            builder::SiloQuotasCreate::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SiloQuotas"
+    ///      }
+
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+
+    ///  }
+
+    /// }
+
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SiloQuotasResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<SiloQuotas>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&SiloQuotasResultsPage> for SiloQuotasResultsPage {
+        fn from(value: &SiloQuotasResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SiloQuotasResultsPage {
+        pub fn builder() -> builder::SiloQuotasResultsPage {
+            builder::SiloQuotasResultsPage::default()
+        }
+    }
+
+    /// Updateable properties of a Silo's resource limits. If a value is omitted
+    /// it will not be updated.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Updateable properties of a Silo's resource limits. If a
+    /// value is omitted it will not be updated.",  "type": "object",
+    ///  "properties": {
+    ///    "cpus": {
+    ///      "description": "The amount of virtual CPUs available for running
+    /// instances in the Silo",      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "memory": {
+    ///      "description": "The amount of RAM (in bytes) available for running
+    /// instances in the Silo",      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+
+    ///      ]
+    ///    },
+    ///    "storage": {
+    ///      "description": "The amount of storage (in bytes) available for
+    /// disks or snapshots",      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+
+    ///      ]
+    ///    }
+
+    ///  }
+
+    /// }
+
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SiloQuotasUpdate {
+        /// The amount of virtual CPUs available for running instances in the
+        /// Silo
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub cpus: Option<i64>,
+        /// The amount of RAM (in bytes) available for running instances in the
+        /// Silo
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub memory: Option<ByteCount>,
+        /// The amount of storage (in bytes) available for disks or snapshots
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub storage: Option<ByteCount>,
+    }
+
+    impl From<&SiloQuotasUpdate> for SiloQuotasUpdate {
+        fn from(value: &SiloQuotasUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SiloQuotasUpdate {
+        pub fn builder() -> builder::SiloQuotasUpdate {
+            builder::SiloQuotasUpdate::default()
         }
     }
 
@@ -28181,6 +28446,7 @@ pub mod types {
             mapped_fleet_roles:
                 Result<std::collections::HashMap<String, Vec<super::FleetRole>>, String>,
             name: Result<super::Name, String>,
+            quotas: Result<super::SiloQuotasCreate, String>,
             tls_certificates: Result<Vec<super::CertificateCreate>, String>,
         }
 
@@ -28193,6 +28459,7 @@ pub mod types {
                     identity_mode: Err("no value supplied for identity_mode".to_string()),
                     mapped_fleet_roles: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
+                    quotas: Err("no value supplied for quotas".to_string()),
                     tls_certificates: Err("no value supplied for tls_certificates".to_string()),
                 }
             }
@@ -28265,6 +28532,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
+            pub fn quotas<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SiloQuotasCreate>,
+                T::Error: std::fmt::Display,
+            {
+                self.quotas = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for quotas: {}", e));
+                self
+            }
             pub fn tls_certificates<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<Vec<super::CertificateCreate>>,
@@ -28290,6 +28567,7 @@ pub mod types {
                     identity_mode: value.identity_mode?,
                     mapped_fleet_roles: value.mapped_fleet_roles?,
                     name: value.name?,
+                    quotas: value.quotas?,
                     tls_certificates: value.tls_certificates?,
                 })
             }
@@ -28304,7 +28582,292 @@ pub mod types {
                     identity_mode: Ok(value.identity_mode),
                     mapped_fleet_roles: Ok(value.mapped_fleet_roles),
                     name: Ok(value.name),
+                    quotas: Ok(value.quotas),
                     tls_certificates: Ok(value.tls_certificates),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SiloQuotas {
+            cpus: Result<i64, String>,
+            memory: Result<super::ByteCount, String>,
+            silo_id: Result<uuid::Uuid, String>,
+            storage: Result<super::ByteCount, String>,
+        }
+
+        impl Default for SiloQuotas {
+            fn default() -> Self {
+                Self {
+                    cpus: Err("no value supplied for cpus".to_string()),
+                    memory: Err("no value supplied for memory".to_string()),
+                    silo_id: Err("no value supplied for silo_id".to_string()),
+                    storage: Err("no value supplied for storage".to_string()),
+                }
+            }
+        }
+
+        impl SiloQuotas {
+            pub fn cpus<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.cpus = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cpus: {}", e));
+                self
+            }
+            pub fn memory<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ByteCount>,
+                T::Error: std::fmt::Display,
+            {
+                self.memory = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
+                self
+            }
+            pub fn silo_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
+                self
+            }
+            pub fn storage<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ByteCount>,
+                T::Error: std::fmt::Display,
+            {
+                self.storage = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for storage: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SiloQuotas> for super::SiloQuotas {
+            type Error = String;
+            fn try_from(value: SiloQuotas) -> Result<Self, String> {
+                Ok(Self {
+                    cpus: value.cpus?,
+                    memory: value.memory?,
+                    silo_id: value.silo_id?,
+                    storage: value.storage?,
+                })
+            }
+        }
+
+        impl From<super::SiloQuotas> for SiloQuotas {
+            fn from(value: super::SiloQuotas) -> Self {
+                Self {
+                    cpus: Ok(value.cpus),
+                    memory: Ok(value.memory),
+                    silo_id: Ok(value.silo_id),
+                    storage: Ok(value.storage),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SiloQuotasCreate {
+            cpus: Result<i64, String>,
+            memory: Result<super::ByteCount, String>,
+            storage: Result<super::ByteCount, String>,
+        }
+
+        impl Default for SiloQuotasCreate {
+            fn default() -> Self {
+                Self {
+                    cpus: Err("no value supplied for cpus".to_string()),
+                    memory: Err("no value supplied for memory".to_string()),
+                    storage: Err("no value supplied for storage".to_string()),
+                }
+            }
+        }
+
+        impl SiloQuotasCreate {
+            pub fn cpus<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.cpus = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cpus: {}", e));
+                self
+            }
+            pub fn memory<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ByteCount>,
+                T::Error: std::fmt::Display,
+            {
+                self.memory = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
+                self
+            }
+            pub fn storage<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ByteCount>,
+                T::Error: std::fmt::Display,
+            {
+                self.storage = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for storage: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SiloQuotasCreate> for super::SiloQuotasCreate {
+            type Error = String;
+            fn try_from(value: SiloQuotasCreate) -> Result<Self, String> {
+                Ok(Self {
+                    cpus: value.cpus?,
+                    memory: value.memory?,
+                    storage: value.storage?,
+                })
+            }
+        }
+
+        impl From<super::SiloQuotasCreate> for SiloQuotasCreate {
+            fn from(value: super::SiloQuotasCreate) -> Self {
+                Self {
+                    cpus: Ok(value.cpus),
+                    memory: Ok(value.memory),
+                    storage: Ok(value.storage),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SiloQuotasResultsPage {
+            items: Result<Vec<super::SiloQuotas>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for SiloQuotasResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SiloQuotasResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SiloQuotas>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SiloQuotasResultsPage> for super::SiloQuotasResultsPage {
+            type Error = String;
+            fn try_from(value: SiloQuotasResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::SiloQuotasResultsPage> for SiloQuotasResultsPage {
+            fn from(value: super::SiloQuotasResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SiloQuotasUpdate {
+            cpus: Result<Option<i64>, String>,
+            memory: Result<Option<super::ByteCount>, String>,
+            storage: Result<Option<super::ByteCount>, String>,
+        }
+
+        impl Default for SiloQuotasUpdate {
+            fn default() -> Self {
+                Self {
+                    cpus: Ok(Default::default()),
+                    memory: Ok(Default::default()),
+                    storage: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SiloQuotasUpdate {
+            pub fn cpus<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<i64>>,
+                T::Error: std::fmt::Display,
+            {
+                self.cpus = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cpus: {}", e));
+                self
+            }
+            pub fn memory<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::ByteCount>>,
+                T::Error: std::fmt::Display,
+            {
+                self.memory = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
+                self
+            }
+            pub fn storage<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::ByteCount>>,
+                T::Error: std::fmt::Display,
+            {
+                self.storage = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for storage: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SiloQuotasUpdate> for super::SiloQuotasUpdate {
+            type Error = String;
+            fn try_from(value: SiloQuotasUpdate) -> Result<Self, String> {
+                Ok(Self {
+                    cpus: value.cpus?,
+                    memory: value.memory?,
+                    storage: value.storage?,
+                })
+            }
+        }
+
+        impl From<super::SiloQuotasUpdate> for SiloQuotasUpdate {
+            fn from(value: super::SiloQuotasUpdate) -> Self {
+                Self {
+                    cpus: Ok(value.cpus),
+                    memory: Ok(value.memory),
+                    storage: Ok(value.storage),
                 }
             }
         }
@@ -35451,6 +36014,24 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn saml_identity_provider_view(&self) -> builder::SamlIdentityProviderView;
+    /// Lists resource quotas for all silos
+    ///
+    /// Sends a `GET` request to `/v1/system/silo-quotas`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.system_quotas_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn system_quotas_list(&self) -> builder::SystemQuotasList;
     /// List silos
     ///
     /// Lists silos that are discoverable based on the current permissions.
@@ -35540,6 +36121,36 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate;
+    /// View the resource quotas of a given silo
+    ///
+    /// Sends a `GET` request to `/v1/system/silos/{silo}/quotas`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.silo_quotas_view()
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_quotas_view(&self) -> builder::SiloQuotasView;
+    /// Update the resource quotas of a given silo
+    ///
+    /// If a quota value is not specified, it will remain unchanged.
+    ///
+    /// Sends a `PUT` request to `/v1/system/silos/{silo}/quotas`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// - `body`
+    /// ```ignore
+    /// let response = client.silo_quotas_update()
+    ///    .silo(silo)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_quotas_update(&self) -> builder::SiloQuotasUpdate;
     /// List built-in (system) users in a silo
     ///
     /// Sends a `GET` request to `/v1/system/users`
@@ -35631,6 +36242,10 @@ impl ClientSystemSilosExt for Client {
         builder::SamlIdentityProviderView::new(self)
     }
 
+    fn system_quotas_list(&self) -> builder::SystemQuotasList {
+        builder::SystemQuotasList::new(self)
+    }
+
     fn silo_list(&self) -> builder::SiloList {
         builder::SiloList::new(self)
     }
@@ -35653,6 +36268,14 @@ impl ClientSystemSilosExt for Client {
 
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate {
         builder::SiloPolicyUpdate::new(self)
+    }
+
+    fn silo_quotas_view(&self) -> builder::SiloQuotasView {
+        builder::SiloQuotasView::new(self)
+    }
+
+    fn silo_quotas_update(&self) -> builder::SiloQuotasUpdate {
+        builder::SiloQuotasUpdate::new(self)
     }
 
     fn silo_user_list(&self) -> builder::SiloUserList {
@@ -49171,6 +49794,163 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemSilosExt::system_quotas_list`]
+    ///
+    /// [`ClientSystemSilosExt::system_quotas_list`]: super::ClientSystemSilosExt::system_quotas_list
+    #[derive(Debug, Clone)]
+    pub struct SystemQuotasList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> SystemQuotasList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/silo-quotas`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloQuotasResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/silo-quotas", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/silo-quotas`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SiloQuotas, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientSystemSilosExt::silo_list`]
     ///
     /// [`ClientSystemSilosExt::silo_list`]: super::ClientSystemSilosExt::silo_list
@@ -49635,6 +50415,152 @@ pub mod builder {
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/silos/{}/policy",
+                client.baseurl,
+                encode_path(&silo.to_string()),
+            );
+            let request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::silo_quotas_view`]
+    ///
+    /// [`ClientSystemSilosExt::silo_quotas_view`]: super::ClientSystemSilosExt::silo_quotas_view
+    #[derive(Debug, Clone)]
+    pub struct SiloQuotasView<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SiloQuotasView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/silos/{silo}/quotas`
+        pub async fn send(self) -> Result<ResponseValue<types::SiloQuotas>, Error<types::Error>> {
+            let Self { client, silo } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/silos/{}/quotas",
+                client.baseurl,
+                encode_path(&silo.to_string()),
+            );
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::silo_quotas_update`]
+    ///
+    /// [`ClientSystemSilosExt::silo_quotas_update`]: super::ClientSystemSilosExt::silo_quotas_update
+    #[derive(Debug, Clone)]
+    pub struct SiloQuotasUpdate<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+        body: Result<types::builder::SiloQuotasUpdate, String>,
+    }
+
+    impl<'a> SiloQuotasUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                silo: Err("silo was not initialized".to_string()),
+                body: Ok(types::builder::SiloQuotasUpdate::default()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SiloQuotasUpdate>,
+            <V as std::convert::TryInto<types::SiloQuotasUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `SiloQuotasUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::SiloQuotasUpdate,
+            ) -> types::builder::SiloQuotasUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/silos/{silo}/quotas`
+        pub async fn send(self) -> Result<ResponseValue<types::SiloQuotas>, Error<types::Error>> {
+            let Self { client, silo, body } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(std::convert::TryInto::<types::SiloQuotasUpdate>::try_into)
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/silos/{}/quotas",
                 client.baseurl,
                 encode_path(&silo.to_string()),
             );

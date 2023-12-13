@@ -178,12 +178,15 @@ impl Cli {
             CliCommand::SystemPolicyUpdate => Self::cli_system_policy_update(),
             CliCommand::RoleList => Self::cli_role_list(),
             CliCommand::RoleView => Self::cli_role_view(),
+            CliCommand::SystemQuotasList => Self::cli_system_quotas_list(),
             CliCommand::SiloList => Self::cli_silo_list(),
             CliCommand::SiloCreate => Self::cli_silo_create(),
             CliCommand::SiloView => Self::cli_silo_view(),
             CliCommand::SiloDelete => Self::cli_silo_delete(),
             CliCommand::SiloPolicyView => Self::cli_silo_policy_view(),
             CliCommand::SiloPolicyUpdate => Self::cli_silo_policy_update(),
+            CliCommand::SiloQuotasView => Self::cli_silo_quotas_view(),
+            CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
             CliCommand::SiloUserList => Self::cli_silo_user_list(),
             CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::UserBuiltinList => Self::cli_user_builtin_list(),
@@ -3846,6 +3849,29 @@ impl Cli {
             .about("Fetch a built-in role")
     }
 
+    pub fn cli_system_quotas_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("Lists resource quotas for all silos")
+    }
+
     pub fn cli_silo_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -3997,6 +4023,68 @@ impl Cli {
                     .help("XXX"),
             )
             .about("Update a silo's IAM policy")
+    }
+
+    pub fn cli_silo_quotas_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .about("View the resource quotas of a given silo")
+    }
+
+    pub fn cli_silo_quotas_update() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("cpus")
+                    .long("cpus")
+                    .value_parser(clap::value_parser!(i64))
+                    .required(false)
+                    .help("The amount of virtual CPUs available for running instances in the Silo"),
+            )
+            .arg(
+                clap::Arg::new("memory")
+                    .long("memory")
+                    .value_parser(clap::value_parser!(types::ByteCount))
+                    .required(false)
+                    .help(
+                        "The amount of RAM (in bytes) available for running instances in the Silo",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .arg(
+                clap::Arg::new("storage")
+                    .long("storage")
+                    .value_parser(clap::value_parser!(types::ByteCount))
+                    .required(false)
+                    .help("The amount of storage (in bytes) available for disks or snapshots"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update the resource quotas of a given silo")
+            .long_about("If a quota value is not specified, it will remain unchanged.")
     }
 
     pub fn cli_silo_user_list() -> clap::Command {
@@ -5026,6 +5114,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::RoleView => {
                 self.execute_role_view(matches).await;
             }
+            CliCommand::SystemQuotasList => {
+                self.execute_system_quotas_list(matches).await;
+            }
             CliCommand::SiloList => {
                 self.execute_silo_list(matches).await;
             }
@@ -5043,6 +5134,12 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SiloPolicyUpdate => {
                 self.execute_silo_policy_update(matches).await;
+            }
+            CliCommand::SiloQuotasView => {
+                self.execute_silo_quotas_view(matches).await;
+            }
+            CliCommand::SiloQuotasUpdate => {
+                self.execute_silo_quotas_update(matches).await;
             }
             CliCommand::SiloUserList => {
                 self.execute_silo_user_list(matches).await;
@@ -8824,6 +8921,36 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_system_quotas_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.system_quotas_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_system_quotas_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_silo_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.silo_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -8966,6 +9093,64 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_silo_policy_update(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_silo_quotas_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_quotas_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        self.over
+            .execute_silo_quotas_view(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_silo_quotas_update(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_quotas_update();
+        if let Some(value) = matches.get_one::<i64>("cpus") {
+            request = request.body_map(|body| body.cpus(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::ByteCount>("memory") {
+            request = request.body_map(|body| body.memory(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::ByteCount>("storage") {
+            request = request.body_map(|body| body.storage(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::SiloQuotasUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_silo_quotas_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -10595,6 +10780,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_system_quotas_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SystemQuotasList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_silo_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10639,6 +10832,22 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloPolicyUpdate,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_silo_quotas_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SiloQuotasView,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_silo_quotas_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SiloQuotasUpdate,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -10922,12 +11131,15 @@ pub enum CliCommand {
     SystemPolicyUpdate,
     RoleList,
     RoleView,
+    SystemQuotasList,
     SiloList,
     SiloCreate,
     SiloView,
     SiloDelete,
     SiloPolicyView,
     SiloPolicyUpdate,
+    SiloQuotasView,
+    SiloQuotasUpdate,
     SiloUserList,
     SiloUserView,
     UserBuiltinList,
@@ -11081,12 +11293,15 @@ impl CliCommand {
             CliCommand::SystemPolicyUpdate,
             CliCommand::RoleList,
             CliCommand::RoleView,
+            CliCommand::SystemQuotasList,
             CliCommand::SiloList,
             CliCommand::SiloCreate,
             CliCommand::SiloView,
             CliCommand::SiloDelete,
             CliCommand::SiloPolicyView,
             CliCommand::SiloPolicyUpdate,
+            CliCommand::SiloQuotasView,
+            CliCommand::SiloQuotasUpdate,
             CliCommand::SiloUserList,
             CliCommand::SiloUserView,
             CliCommand::UserBuiltinList,
