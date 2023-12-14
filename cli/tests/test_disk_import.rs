@@ -769,3 +769,107 @@ fn test_disk_import_required_parameters() {
         .failure()
         .stderr(predicate::str::starts_with(output));
 }
+
+#[test]
+fn test_disk_import_start() {
+    let server = MockServer::start();
+
+    let mock = server.disk_bulk_write_import_start(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("start")
+        .arg("--disk")
+        .arg("xyz")
+        .assert()
+        .success();
+
+    mock.assert();
+}
+
+#[test]
+fn test_disk_import_stop() {
+    let server = MockServer::start();
+
+    let mock = server.disk_bulk_write_import_stop(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("stop")
+        .arg("--disk")
+        .arg("xyz")
+        .assert()
+        .success();
+
+    mock.assert();
+}
+
+#[test]
+fn test_disk_import_write() {
+    let server = MockServer::start();
+
+    let mock = server.disk_bulk_write_import(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("write")
+        .arg("--disk")
+        .arg("xyz")
+        .arg("--offset")
+        .arg("0")
+        .arg("--base64-encoded-data")
+        .arg("abc")
+        .assert()
+        .success();
+
+    mock.assert();
+}
+
+#[test]
+fn test_disk_import_finalize() {
+    let server = MockServer::start();
+
+    let mock = server.disk_finalize_import(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("disk")
+        .arg("import")
+        .arg("finalize")
+        .arg("--disk")
+        .arg("xyz")
+        .assert()
+        .success();
+
+    mock.assert();
+}
