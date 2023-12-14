@@ -34,6 +34,9 @@ mod generated_cli;
 #[async_trait]
 pub trait RunnableCmd: Send + Sync {
     async fn run(&self, ctx: &Context) -> Result<()>;
+    fn is_subtree() -> bool {
+        true
+    }
 }
 
 pub fn make_cli() -> NewCli<'static> {
