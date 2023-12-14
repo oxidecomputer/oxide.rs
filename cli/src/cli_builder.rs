@@ -173,7 +173,7 @@ where
     }
 
     fn is_subtree(&self) -> bool {
-        true
+        <C as RunnableCmd>::is_subtree()
     }
 }
 

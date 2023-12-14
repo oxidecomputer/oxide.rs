@@ -245,6 +245,9 @@ impl CmdDiskImport {
 
 #[async_trait]
 impl RunnableCmd for CmdDiskImport {
+    fn is_subtree() -> bool {
+        false
+    }
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         let client = ctx.client();
 
