@@ -358,7 +358,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SystemQuotasList => Some("silo quotas list"),
         CliCommand::SiloQuotasView => Some("silo quotas view"),
         CliCommand::SiloQuotasUpdate => Some("silo quotas update"),
+        CliCommand::SiloUtilizationList => Some("silo utilization list"),
+        CliCommand::SiloUtilizationView => Some("silo utilization view"),
 
+        CliCommand::UtilizationView => Some("utilization"),
         CliCommand::UserList => Some("user list"),
 
         // VPCs
