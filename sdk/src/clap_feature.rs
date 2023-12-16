@@ -156,7 +156,7 @@ impl clap::builder::TypedValueParser for NameParser {
             types::Name::from_str(value)
                 .map_err(|e| {
                     if value.len() > 63 {
-                        return "names must be at most 63-characters in length";
+                        return "names must be at most 63 characters in length";
                     }
 
                     match value.chars().next() {
@@ -275,6 +275,6 @@ mod tests {
         };
         assert!(err
             .to_string()
-            .contains("names must be at most 63-characters in length"));
+            .contains("names must be at most 63 characters in length"));
     }
 }
