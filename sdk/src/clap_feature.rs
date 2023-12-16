@@ -132,19 +132,74 @@ impl clap::builder::TypedValueParser for NameOrIdParser {
     }
 }
 
+// It would be nice if progenitor were able to give a nice, specific error
+// message, but since it can't we'll craft one for the CLI.
+impl clap::builder::ValueParserFactory for types::Name {
+    type Parser = NameParser;
+    fn value_parser() -> Self::Parser {
+        NameParser
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct NameParser;
+impl clap::builder::TypedValueParser for NameParser {
+    type Value = types::Name;
+
+    fn parse_ref(
+        &self,
+        cmd: &clap::Command,
+        arg: Option<&clap::Arg>,
+        value: &std::ffi::OsStr,
+    ) -> Result<Self::Value, clap::Error> {
+        fn parse(value: &str) -> Result<types::Name, String> {
+            types::Name::from_str(value)
+                .map_err(|e| {
+                    if value.len() > 63 {
+                        return "names must be at most 63-characters in length";
+                    }
+
+                    match value.chars().next() {
+                        None => return "names may not be empty",
+                        Some('a'..='z') => (),
+                        _ => return "names must start with a lowercase ascii letter",
+                    }
+
+                    if !value.chars().all(|c| c.is_ascii_alphanumeric() || c == '-') {
+                        return "names must be composed of letters, numbers, and dashes";
+                    }
+
+                    if value.ends_with('-') {
+                        return "names cannot end with a '-'";
+                    }
+
+                    if uuid::Uuid::from_str(value).is_ok() {
+                        return "names must not be interpretable as a uuids";
+                    }
+
+                    e
+                })
+                .map_err(str::to_string)
+        }
+
+        parse.parse_ref(cmd, arg, value)
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use clap::{builder::TypedValueParser, value_parser};
+    use clap::Parser;
 
-    use crate::types::{BlockSize, ByteCount, NameOrId};
+    use crate::types::{BlockSize, ByteCount, Name, NameOrId};
 
     #[test]
     fn test_byte_count() {
-        let parser = value_parser!(ByteCount);
-        let cmd = clap::Command::new("cmd");
-        let arg = None;
-        let value = std::ffi::OsStr::new("1.21jiggabytes");
-        let Err(err) = parser.parse_ref(&cmd, arg, value) else {
+        #[derive(Parser)]
+        struct Cmd {
+            x: ByteCount,
+        }
+
+        let Err(err) = Cmd::try_parse_from(vec!["", "1.21jiggabytes"]) else {
             panic!()
         };
         assert!(err.to_string().contains("unknown suffix"), "{err}",);
@@ -152,11 +207,12 @@ mod tests {
 
     #[test]
     fn test_block_size() {
-        let parser = value_parser!(BlockSize);
-        let cmd = clap::Command::new("cmd");
-        let arg = None;
-        let value = std::ffi::OsStr::new("123");
-        let Err(err) = parser.parse_ref(&cmd, arg, value) else {
+        #[derive(Parser)]
+        struct Cmd {
+            x: BlockSize,
+        }
+
+        let Err(err) = Cmd::try_parse_from(vec!["", "123"]) else {
             panic!()
         };
         assert!(
@@ -168,16 +224,57 @@ mod tests {
 
     #[test]
     fn test_name_or_id() {
-        let parser = value_parser!(NameOrId);
-        let cmd = clap::Command::new("cmd");
-        let arg = None;
-        let value = std::ffi::OsStr::new("123");
-        let Err(err) = parser.parse_ref(&cmd, arg, value) else {
+        #[derive(Parser)]
+        struct Cmd {
+            x: NameOrId,
+        }
+
+        let Err(err) = Cmd::try_parse_from(vec!["", "123"]) else {
             panic!()
         };
         assert!(
             err.to_string().contains("value must be a UUID or name"),
             "{err}",
         );
+    }
+
+    #[test]
+    fn test_name() {
+        #[derive(Parser)]
+        struct Cmd {
+            x: Name,
+        }
+
+        let Err(err) = Cmd::try_parse_from(vec!["", "123"]) else {
+            panic!()
+        };
+        assert!(
+            err.to_string()
+                .contains("names must start with a lowercase ascii letter"),
+            "{err}"
+        );
+
+        // TODO https://github.com/oxidecomputer/omicron/issues/4689
+        // let Err(err) = Cmd::try_parse_from(vec!["", "c-"]) else {
+        //     panic!()
+        // };
+        // assert!(err.to_string().contains("names cannot end with a '-'"));
+
+        let Err(err) = Cmd::try_parse_from(vec!["", "a*"]) else {
+            panic!()
+        };
+        assert!(err
+            .to_string()
+            .contains("names must be composed of letters, numbers, and dashes"));
+
+        let Err(err) = Cmd::try_parse_from(vec![
+            "",
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+        ]) else {
+            panic!()
+        };
+        assert!(err
+            .to_string()
+            .contains("names must be at most 63-characters in length"));
     }
 }
