@@ -58,7 +58,7 @@ pub mod types {
 
     impl Address {
         pub fn builder() -> builder::Address {
-            builder::Address::default()
+            Default::default()
         }
     }
 
@@ -99,7 +99,7 @@ pub mod types {
 
     impl AddressConfig {
         pub fn builder() -> builder::AddressConfig {
-            builder::AddressConfig::default()
+            Default::default()
         }
     }
 
@@ -184,7 +184,7 @@ pub mod types {
 
     impl AddressLot {
         pub fn builder() -> builder::AddressLot {
-            builder::AddressLot::default()
+            Default::default()
         }
     }
 
@@ -241,7 +241,7 @@ pub mod types {
 
     impl AddressLotBlock {
         pub fn builder() -> builder::AddressLotBlock {
-            builder::AddressLotBlock::default()
+            Default::default()
         }
     }
 
@@ -289,7 +289,7 @@ pub mod types {
 
     impl AddressLotBlockCreate {
         pub fn builder() -> builder::AddressLotBlockCreate {
-            builder::AddressLotBlockCreate::default()
+            Default::default()
         }
     }
 
@@ -340,7 +340,7 @@ pub mod types {
 
     impl AddressLotBlockResultsPage {
         pub fn builder() -> builder::AddressLotBlockResultsPage {
-            builder::AddressLotBlockResultsPage::default()
+            Default::default()
         }
     }
 
@@ -402,7 +402,7 @@ pub mod types {
 
     impl AddressLotCreate {
         pub fn builder() -> builder::AddressLotCreate {
-            builder::AddressLotCreate::default()
+            Default::default()
         }
     }
 
@@ -455,7 +455,7 @@ pub mod types {
 
     impl AddressLotCreateResponse {
         pub fn builder() -> builder::AddressLotCreateResponse {
-            builder::AddressLotCreateResponse::default()
+            Default::default()
         }
     }
 
@@ -603,7 +603,7 @@ pub mod types {
 
     impl AddressLotResultsPage {
         pub fn builder() -> builder::AddressLotResultsPage {
-            builder::AddressLotResultsPage::default()
+            Default::default()
         }
     }
 
@@ -650,7 +650,7 @@ pub mod types {
 
     impl Baseboard {
         pub fn builder() -> builder::Baseboard {
-            builder::Baseboard::default()
+            Default::default()
         }
     }
 
@@ -724,7 +724,7 @@ pub mod types {
 
     impl BgpAnnounceSet {
         pub fn builder() -> builder::BgpAnnounceSet {
-            builder::BgpAnnounceSet::default()
+            Default::default()
         }
     }
 
@@ -775,7 +775,7 @@ pub mod types {
 
     impl BgpAnnounceSetCreate {
         pub fn builder() -> builder::BgpAnnounceSetCreate {
-            builder::BgpAnnounceSetCreate::default()
+            Default::default()
         }
     }
 
@@ -833,7 +833,7 @@ pub mod types {
 
     impl BgpAnnouncement {
         pub fn builder() -> builder::BgpAnnouncement {
-            builder::BgpAnnouncement::default()
+            Default::default()
         }
     }
 
@@ -886,7 +886,7 @@ pub mod types {
 
     impl BgpAnnouncementCreate {
         pub fn builder() -> builder::BgpAnnouncementCreate {
-            builder::BgpAnnouncementCreate::default()
+            Default::default()
         }
     }
 
@@ -979,7 +979,7 @@ pub mod types {
 
     impl BgpConfig {
         pub fn builder() -> builder::BgpConfig {
-            builder::BgpConfig::default()
+            Default::default()
         }
     }
 
@@ -1049,7 +1049,7 @@ pub mod types {
 
     impl BgpConfigCreate {
         pub fn builder() -> builder::BgpConfigCreate {
-            builder::BgpConfigCreate::default()
+            Default::default()
         }
     }
 
@@ -1100,7 +1100,7 @@ pub mod types {
 
     impl BgpConfigResultsPage {
         pub fn builder() -> builder::BgpConfigResultsPage {
-            builder::BgpConfigResultsPage::default()
+            Default::default()
         }
     }
 
@@ -1170,7 +1170,7 @@ pub mod types {
 
     impl BgpImportedRouteIpv4 {
         pub fn builder() -> builder::BgpImportedRouteIpv4 {
-            builder::BgpImportedRouteIpv4::default()
+            Default::default()
         }
     }
 
@@ -1299,7 +1299,7 @@ pub mod types {
 
     impl BgpPeer {
         pub fn builder() -> builder::BgpPeer {
-            builder::BgpPeer::default()
+            Default::default()
         }
     }
 
@@ -1337,7 +1337,7 @@ pub mod types {
 
     impl BgpPeerConfig {
         pub fn builder() -> builder::BgpPeerConfig {
-            builder::BgpPeerConfig::default()
+            Default::default()
         }
     }
 
@@ -1583,7 +1583,7 @@ pub mod types {
 
     impl BgpPeerStatus {
         pub fn builder() -> builder::BgpPeerStatus {
-            builder::BgpPeerStatus::default()
+            Default::default()
         }
     }
 
@@ -2690,7 +2690,7 @@ pub mod types {
 
     impl Bindouble {
         pub fn builder() -> builder::Bindouble {
-            builder::Bindouble::default()
+            Default::default()
         }
     }
 
@@ -2741,7 +2741,7 @@ pub mod types {
 
     impl Binfloat {
         pub fn builder() -> builder::Binfloat {
-            builder::Binfloat::default()
+            Default::default()
         }
     }
 
@@ -2792,7 +2792,7 @@ pub mod types {
 
     impl Binint16 {
         pub fn builder() -> builder::Binint16 {
-            builder::Binint16::default()
+            Default::default()
         }
     }
 
@@ -2843,7 +2843,7 @@ pub mod types {
 
     impl Binint32 {
         pub fn builder() -> builder::Binint32 {
-            builder::Binint32::default()
+            Default::default()
         }
     }
 
@@ -2894,7 +2894,7 @@ pub mod types {
 
     impl Binint64 {
         pub fn builder() -> builder::Binint64 {
-            builder::Binint64::default()
+            Default::default()
         }
     }
 
@@ -2945,7 +2945,7 @@ pub mod types {
 
     impl Binint8 {
         pub fn builder() -> builder::Binint8 {
-            builder::Binint8::default()
+            Default::default()
         }
     }
 
@@ -2996,7 +2996,7 @@ pub mod types {
 
     impl Binuint16 {
         pub fn builder() -> builder::Binuint16 {
-            builder::Binuint16::default()
+            Default::default()
         }
     }
 
@@ -3047,7 +3047,7 @@ pub mod types {
 
     impl Binuint32 {
         pub fn builder() -> builder::Binuint32 {
-            builder::Binuint32::default()
+            Default::default()
         }
     }
 
@@ -3098,7 +3098,7 @@ pub mod types {
 
     impl Binuint64 {
         pub fn builder() -> builder::Binuint64 {
-            builder::Binuint64::default()
+            Default::default()
         }
     }
 
@@ -3149,7 +3149,7 @@ pub mod types {
 
     impl Binuint8 {
         pub fn builder() -> builder::Binuint8 {
-            builder::Binuint8::default()
+            Default::default()
         }
     }
 
@@ -3359,7 +3359,7 @@ pub mod types {
 
     impl Certificate {
         pub fn builder() -> builder::Certificate {
-            builder::Certificate::default()
+            Default::default()
         }
     }
 
@@ -3425,7 +3425,7 @@ pub mod types {
 
     impl CertificateCreate {
         pub fn builder() -> builder::CertificateCreate {
-            builder::CertificateCreate::default()
+            Default::default()
         }
     }
 
@@ -3476,7 +3476,7 @@ pub mod types {
 
     impl CertificateResultsPage {
         pub fn builder() -> builder::CertificateResultsPage {
-            builder::CertificateResultsPage::default()
+            Default::default()
         }
     }
 
@@ -3519,7 +3519,7 @@ pub mod types {
 
     impl Cumulativedouble {
         pub fn builder() -> builder::Cumulativedouble {
-            builder::Cumulativedouble::default()
+            Default::default()
         }
     }
 
@@ -3562,7 +3562,7 @@ pub mod types {
 
     impl Cumulativefloat {
         pub fn builder() -> builder::Cumulativefloat {
-            builder::Cumulativefloat::default()
+            Default::default()
         }
     }
 
@@ -3605,7 +3605,7 @@ pub mod types {
 
     impl Cumulativeint64 {
         pub fn builder() -> builder::Cumulativeint64 {
-            builder::Cumulativeint64::default()
+            Default::default()
         }
     }
 
@@ -3649,7 +3649,7 @@ pub mod types {
 
     impl Cumulativeuint64 {
         pub fn builder() -> builder::Cumulativeuint64 {
-            builder::Cumulativeuint64::default()
+            Default::default()
         }
     }
 
@@ -3712,7 +3712,7 @@ pub mod types {
 
     impl CurrentUser {
         pub fn builder() -> builder::CurrentUser {
-            builder::CurrentUser::default()
+            Default::default()
         }
     }
 
@@ -4727,7 +4727,7 @@ pub mod types {
 
     impl DerEncodedKeyPair {
         pub fn builder() -> builder::DerEncodedKeyPair {
-            builder::DerEncodedKeyPair::default()
+            Default::default()
         }
     }
 
@@ -4773,7 +4773,7 @@ pub mod types {
 
     impl DeviceAccessTokenRequest {
         pub fn builder() -> builder::DeviceAccessTokenRequest {
-            builder::DeviceAccessTokenRequest::default()
+            Default::default()
         }
     }
 
@@ -4809,7 +4809,7 @@ pub mod types {
 
     impl DeviceAuthRequest {
         pub fn builder() -> builder::DeviceAuthRequest {
-            builder::DeviceAuthRequest::default()
+            Default::default()
         }
     }
 
@@ -4844,7 +4844,7 @@ pub mod types {
 
     impl DeviceAuthVerify {
         pub fn builder() -> builder::DeviceAuthVerify {
-            builder::DeviceAuthVerify::default()
+            Default::default()
         }
     }
 
@@ -5007,7 +5007,7 @@ pub mod types {
 
     impl Disk {
         pub fn builder() -> builder::Disk {
-            builder::Disk::default()
+            Default::default()
         }
     }
 
@@ -5070,7 +5070,7 @@ pub mod types {
 
     impl DiskCreate {
         pub fn builder() -> builder::DiskCreate {
-            builder::DiskCreate::default()
+            Default::default()
         }
     }
 
@@ -5212,7 +5212,7 @@ pub mod types {
 
     impl DiskPath {
         pub fn builder() -> builder::DiskPath {
-            builder::DiskPath::default()
+            Default::default()
         }
     }
 
@@ -5263,7 +5263,7 @@ pub mod types {
 
     impl DiskResultsPage {
         pub fn builder() -> builder::DiskResultsPage {
-            builder::DiskResultsPage::default()
+            Default::default()
         }
     }
 
@@ -5677,7 +5677,7 @@ pub mod types {
 
     impl Error {
         pub fn builder() -> builder::Error {
-            builder::Error::default()
+            Default::default()
         }
     }
 
@@ -5718,7 +5718,7 @@ pub mod types {
 
     impl ExternalIp {
         pub fn builder() -> builder::ExternalIp {
-            builder::ExternalIp::default()
+            Default::default()
         }
     }
 
@@ -5851,7 +5851,7 @@ pub mod types {
 
     impl ExternalIpResultsPage {
         pub fn builder() -> builder::ExternalIpResultsPage {
-            builder::ExternalIpResultsPage::default()
+            Default::default()
         }
     }
 
@@ -5896,7 +5896,7 @@ pub mod types {
 
     impl FinalizeDisk {
         pub fn builder() -> builder::FinalizeDisk {
-            builder::FinalizeDisk::default()
+            Default::default()
         }
     }
 
@@ -6029,7 +6029,7 @@ pub mod types {
 
     impl FleetRolePolicy {
         pub fn builder() -> builder::FleetRolePolicy {
-            builder::FleetRolePolicy::default()
+            Default::default()
         }
     }
 
@@ -6084,7 +6084,7 @@ pub mod types {
 
     impl FleetRoleRoleAssignment {
         pub fn builder() -> builder::FleetRoleRoleAssignment {
-            builder::FleetRoleRoleAssignment::default()
+            Default::default()
         }
     }
 
@@ -6186,7 +6186,7 @@ pub mod types {
 
     impl FloatingIp {
         pub fn builder() -> builder::FloatingIp {
-            builder::FloatingIp::default()
+            Default::default()
         }
     }
 
@@ -6255,7 +6255,7 @@ pub mod types {
 
     impl FloatingIpCreate {
         pub fn builder() -> builder::FloatingIpCreate {
-            builder::FloatingIpCreate::default()
+            Default::default()
         }
     }
 
@@ -6306,7 +6306,7 @@ pub mod types {
 
     impl FloatingIpResultsPage {
         pub fn builder() -> builder::FloatingIpResultsPage {
-            builder::FloatingIpResultsPage::default()
+            Default::default()
         }
     }
 
@@ -6358,7 +6358,7 @@ pub mod types {
 
     impl Group {
         pub fn builder() -> builder::Group {
-            builder::Group::default()
+            Default::default()
         }
     }
 
@@ -6409,7 +6409,7 @@ pub mod types {
 
     impl GroupResultsPage {
         pub fn builder() -> builder::GroupResultsPage {
-            builder::GroupResultsPage::default()
+            Default::default()
         }
     }
 
@@ -6475,7 +6475,7 @@ pub mod types {
 
     impl Histogramdouble {
         pub fn builder() -> builder::Histogramdouble {
-            builder::Histogramdouble::default()
+            Default::default()
         }
     }
 
@@ -6541,7 +6541,7 @@ pub mod types {
 
     impl Histogramfloat {
         pub fn builder() -> builder::Histogramfloat {
-            builder::Histogramfloat::default()
+            Default::default()
         }
     }
 
@@ -6607,7 +6607,7 @@ pub mod types {
 
     impl Histogramint16 {
         pub fn builder() -> builder::Histogramint16 {
-            builder::Histogramint16::default()
+            Default::default()
         }
     }
 
@@ -6673,7 +6673,7 @@ pub mod types {
 
     impl Histogramint32 {
         pub fn builder() -> builder::Histogramint32 {
-            builder::Histogramint32::default()
+            Default::default()
         }
     }
 
@@ -6739,7 +6739,7 @@ pub mod types {
 
     impl Histogramint64 {
         pub fn builder() -> builder::Histogramint64 {
-            builder::Histogramint64::default()
+            Default::default()
         }
     }
 
@@ -6805,7 +6805,7 @@ pub mod types {
 
     impl Histogramint8 {
         pub fn builder() -> builder::Histogramint8 {
-            builder::Histogramint8::default()
+            Default::default()
         }
     }
 
@@ -6871,7 +6871,7 @@ pub mod types {
 
     impl Histogramuint16 {
         pub fn builder() -> builder::Histogramuint16 {
-            builder::Histogramuint16::default()
+            Default::default()
         }
     }
 
@@ -6937,7 +6937,7 @@ pub mod types {
 
     impl Histogramuint32 {
         pub fn builder() -> builder::Histogramuint32 {
-            builder::Histogramuint32::default()
+            Default::default()
         }
     }
 
@@ -7003,7 +7003,7 @@ pub mod types {
 
     impl Histogramuint64 {
         pub fn builder() -> builder::Histogramuint64 {
-            builder::Histogramuint64::default()
+            Default::default()
         }
     }
 
@@ -7069,7 +7069,7 @@ pub mod types {
 
     impl Histogramuint8 {
         pub fn builder() -> builder::Histogramuint8 {
-            builder::Histogramuint8::default()
+            Default::default()
         }
     }
 
@@ -7239,7 +7239,7 @@ pub mod types {
 
     impl IdentityProvider {
         pub fn builder() -> builder::IdentityProvider {
-            builder::IdentityProvider::default()
+            Default::default()
         }
     }
 
@@ -7290,7 +7290,7 @@ pub mod types {
 
     impl IdentityProviderResultsPage {
         pub fn builder() -> builder::IdentityProviderResultsPage {
-            builder::IdentityProviderResultsPage::default()
+            Default::default()
         }
     }
 
@@ -7652,7 +7652,7 @@ pub mod types {
 
     impl Image {
         pub fn builder() -> builder::Image {
-            builder::Image::default()
+            Default::default()
         }
     }
 
@@ -7718,7 +7718,7 @@ pub mod types {
 
     impl ImageCreate {
         pub fn builder() -> builder::ImageCreate {
-            builder::ImageCreate::default()
+            Default::default()
         }
     }
 
@@ -7769,7 +7769,7 @@ pub mod types {
 
     impl ImageResultsPage {
         pub fn builder() -> builder::ImageResultsPage {
-            builder::ImageResultsPage::default()
+            Default::default()
         }
     }
 
@@ -7879,7 +7879,7 @@ pub mod types {
 
     impl ImportBlocksBulkWrite {
         pub fn builder() -> builder::ImportBlocksBulkWrite {
-            builder::ImportBlocksBulkWrite::default()
+            Default::default()
         }
     }
 
@@ -8000,7 +8000,7 @@ pub mod types {
 
     impl Instance {
         pub fn builder() -> builder::Instance {
-            builder::Instance::default()
+            Default::default()
         }
     }
 
@@ -8195,7 +8195,7 @@ pub mod types {
 
     impl InstanceCreate {
         pub fn builder() -> builder::InstanceCreate {
-            builder::InstanceCreate::default()
+            Default::default()
         }
     }
 
@@ -8336,7 +8336,7 @@ pub mod types {
 
     impl InstanceMigrate {
         pub fn builder() -> builder::InstanceMigrate {
-            builder::InstanceMigrate::default()
+            Default::default()
         }
     }
 
@@ -8462,7 +8462,7 @@ pub mod types {
 
     impl InstanceNetworkInterface {
         pub fn builder() -> builder::InstanceNetworkInterface {
-            builder::InstanceNetworkInterface::default()
+            Default::default()
         }
     }
 
@@ -8634,7 +8634,7 @@ pub mod types {
 
     impl InstanceNetworkInterfaceCreate {
         pub fn builder() -> builder::InstanceNetworkInterfaceCreate {
-            builder::InstanceNetworkInterfaceCreate::default()
+            Default::default()
         }
     }
 
@@ -8685,7 +8685,7 @@ pub mod types {
 
     impl InstanceNetworkInterfaceResultsPage {
         pub fn builder() -> builder::InstanceNetworkInterfaceResultsPage {
-            builder::InstanceNetworkInterfaceResultsPage::default()
+            Default::default()
         }
     }
 
@@ -8760,7 +8760,7 @@ pub mod types {
 
     impl InstanceNetworkInterfaceUpdate {
         pub fn builder() -> builder::InstanceNetworkInterfaceUpdate {
-            builder::InstanceNetworkInterfaceUpdate::default()
+            Default::default()
         }
     }
 
@@ -8811,7 +8811,7 @@ pub mod types {
 
     impl InstanceResultsPage {
         pub fn builder() -> builder::InstanceResultsPage {
-            builder::InstanceResultsPage::default()
+            Default::default()
         }
     }
 
@@ -8868,7 +8868,7 @@ pub mod types {
 
     impl InstanceSerialConsoleData {
         pub fn builder() -> builder::InstanceSerialConsoleData {
-            builder::InstanceSerialConsoleData::default()
+            Default::default()
         }
     }
 
@@ -9334,7 +9334,7 @@ pub mod types {
 
     impl IpPool {
         pub fn builder() -> builder::IpPool {
-            builder::IpPool::default()
+            Default::default()
         }
     }
 
@@ -9401,7 +9401,7 @@ pub mod types {
 
     impl IpPoolCreate {
         pub fn builder() -> builder::IpPoolCreate {
-            builder::IpPoolCreate::default()
+            Default::default()
         }
     }
 
@@ -9454,7 +9454,7 @@ pub mod types {
 
     impl IpPoolRange {
         pub fn builder() -> builder::IpPoolRange {
-            builder::IpPoolRange::default()
+            Default::default()
         }
     }
 
@@ -9505,7 +9505,7 @@ pub mod types {
 
     impl IpPoolRangeResultsPage {
         pub fn builder() -> builder::IpPoolRangeResultsPage {
-            builder::IpPoolRangeResultsPage::default()
+            Default::default()
         }
     }
 
@@ -9556,7 +9556,7 @@ pub mod types {
 
     impl IpPoolResultsPage {
         pub fn builder() -> builder::IpPoolResultsPage {
-            builder::IpPoolResultsPage::default()
+            Default::default()
         }
     }
 
@@ -9602,7 +9602,7 @@ pub mod types {
 
     impl IpPoolUpdate {
         pub fn builder() -> builder::IpPoolUpdate {
-            builder::IpPoolUpdate::default()
+            Default::default()
         }
     }
 
@@ -9794,7 +9794,7 @@ pub mod types {
 
     impl Ipv4Range {
         pub fn builder() -> builder::Ipv4Range {
-            builder::Ipv4Range::default()
+            Default::default()
         }
     }
 
@@ -9933,7 +9933,7 @@ pub mod types {
 
     impl Ipv6Range {
         pub fn builder() -> builder::Ipv6Range {
-            builder::Ipv6Range::default()
+            Default::default()
         }
     }
 
@@ -10107,7 +10107,7 @@ pub mod types {
 
     impl LinkConfig {
         pub fn builder() -> builder::LinkConfig {
-            builder::LinkConfig::default()
+            Default::default()
         }
     }
 
@@ -10446,7 +10446,7 @@ pub mod types {
 
     impl LldpServiceConfig {
         pub fn builder() -> builder::LldpServiceConfig {
-            builder::LldpServiceConfig::default()
+            Default::default()
         }
     }
 
@@ -10521,7 +10521,7 @@ pub mod types {
 
     impl LoopbackAddress {
         pub fn builder() -> builder::LoopbackAddress {
-            builder::LoopbackAddress::default()
+            Default::default()
         }
     }
 
@@ -10611,7 +10611,7 @@ pub mod types {
 
     impl LoopbackAddressCreate {
         pub fn builder() -> builder::LoopbackAddressCreate {
-            builder::LoopbackAddressCreate::default()
+            Default::default()
         }
     }
 
@@ -10662,7 +10662,7 @@ pub mod types {
 
     impl LoopbackAddressResultsPage {
         pub fn builder() -> builder::LoopbackAddressResultsPage {
-            builder::LoopbackAddressResultsPage::default()
+            Default::default()
         }
     }
 
@@ -10797,7 +10797,7 @@ pub mod types {
 
     impl Measurement {
         pub fn builder() -> builder::Measurement {
-            builder::Measurement::default()
+            Default::default()
         }
     }
 
@@ -10848,7 +10848,7 @@ pub mod types {
 
     impl MeasurementResultsPage {
         pub fn builder() -> builder::MeasurementResultsPage {
-            builder::MeasurementResultsPage::default()
+            Default::default()
         }
     }
 
@@ -10892,7 +10892,7 @@ pub mod types {
 
     impl MissingDatum {
         pub fn builder() -> builder::MissingDatum {
-            builder::MissingDatum::default()
+            Default::default()
         }
     }
 
@@ -11521,7 +11521,7 @@ pub mod types {
 
     impl PhysicalDisk {
         pub fn builder() -> builder::PhysicalDisk {
-            builder::PhysicalDisk::default()
+            Default::default()
         }
     }
 
@@ -11654,7 +11654,7 @@ pub mod types {
 
     impl PhysicalDiskResultsPage {
         pub fn builder() -> builder::PhysicalDiskResultsPage {
-            builder::PhysicalDiskResultsPage::default()
+            Default::default()
         }
     }
 
@@ -11696,7 +11696,7 @@ pub mod types {
 
     impl Ping {
         pub fn builder() -> builder::Ping {
-            builder::Ping::default()
+            Default::default()
         }
     }
 
@@ -11845,7 +11845,7 @@ pub mod types {
 
     impl Project {
         pub fn builder() -> builder::Project {
-            builder::Project::default()
+            Default::default()
         }
     }
 
@@ -11886,7 +11886,7 @@ pub mod types {
 
     impl ProjectCreate {
         pub fn builder() -> builder::ProjectCreate {
-            builder::ProjectCreate::default()
+            Default::default()
         }
     }
 
@@ -11937,7 +11937,7 @@ pub mod types {
 
     impl ProjectResultsPage {
         pub fn builder() -> builder::ProjectResultsPage {
-            builder::ProjectResultsPage::default()
+            Default::default()
         }
     }
 
@@ -12070,7 +12070,7 @@ pub mod types {
 
     impl ProjectRolePolicy {
         pub fn builder() -> builder::ProjectRolePolicy {
-            builder::ProjectRolePolicy::default()
+            Default::default()
         }
     }
 
@@ -12125,7 +12125,7 @@ pub mod types {
 
     impl ProjectRoleRoleAssignment {
         pub fn builder() -> builder::ProjectRoleRoleAssignment {
-            builder::ProjectRoleRoleAssignment::default()
+            Default::default()
         }
     }
 
@@ -12171,7 +12171,7 @@ pub mod types {
 
     impl ProjectUpdate {
         pub fn builder() -> builder::ProjectUpdate {
-            builder::ProjectUpdate::default()
+            Default::default()
         }
     }
 
@@ -12226,7 +12226,7 @@ pub mod types {
 
     impl Rack {
         pub fn builder() -> builder::Rack {
-            builder::Rack::default()
+            Default::default()
         }
     }
 
@@ -12277,7 +12277,7 @@ pub mod types {
 
     impl RackResultsPage {
         pub fn builder() -> builder::RackResultsPage {
-            builder::RackResultsPage::default()
+            Default::default()
         }
     }
 
@@ -12318,7 +12318,7 @@ pub mod types {
 
     impl Role {
         pub fn builder() -> builder::Role {
-            builder::Role::default()
+            Default::default()
         }
     }
 
@@ -12455,7 +12455,7 @@ pub mod types {
 
     impl RoleResultsPage {
         pub fn builder() -> builder::RoleResultsPage {
-            builder::RoleResultsPage::default()
+            Default::default()
         }
     }
 
@@ -12517,7 +12517,7 @@ pub mod types {
 
     impl Route {
         pub fn builder() -> builder::Route {
-            builder::Route::default()
+            Default::default()
         }
     }
 
@@ -12558,7 +12558,7 @@ pub mod types {
 
     impl RouteConfig {
         pub fn builder() -> builder::RouteConfig {
-            builder::RouteConfig::default()
+            Default::default()
         }
     }
 
@@ -12690,7 +12690,7 @@ pub mod types {
 
     impl SamlIdentityProvider {
         pub fn builder() -> builder::SamlIdentityProvider {
-            builder::SamlIdentityProvider::default()
+            Default::default()
         }
     }
 
@@ -12802,7 +12802,7 @@ pub mod types {
 
     impl SamlIdentityProviderCreate {
         pub fn builder() -> builder::SamlIdentityProviderCreate {
-            builder::SamlIdentityProviderCreate::default()
+            Default::default()
         }
     }
 
@@ -12998,7 +12998,7 @@ pub mod types {
 
     impl Silo {
         pub fn builder() -> builder::Silo {
-            builder::Silo::default()
+            Default::default()
         }
     }
 
@@ -13119,7 +13119,7 @@ pub mod types {
 
     impl SiloCreate {
         pub fn builder() -> builder::SiloCreate {
-            builder::SiloCreate::default()
+            Default::default()
         }
     }
 
@@ -13226,13 +13226,15 @@ pub mod types {
         }
     }
 
-    /// SiloQuotas
+    /// A collection of resource counts used to set the virtual capacity of a
+    /// silo
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "type": "object",
+    ///  "description": "A collection of resource counts used to set the virtual
+    /// capacity of a silo",  "type": "object",
     ///  "required": [
     ///    "cpus",
     ///    "memory",
@@ -13241,18 +13243,29 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "cpus": {
+    ///      "description": "Number of virtual CPUs",
     ///      "type": "integer",
     ///      "format": "int64"
     ///    },
     ///    "memory": {
-    ///      "$ref": "#/components/schemas/ByteCount"
+    ///      "description": "Amount of memory in bytes",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+    ///      ]
     ///    },
     ///    "silo_id": {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "storage": {
-    ///      "$ref": "#/components/schemas/ByteCount"
+    ///      "description": "Amount of disk storage in bytes",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -13260,9 +13273,12 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SiloQuotas {
+        /// Number of virtual CPUs
         pub cpus: i64,
+        /// Amount of memory in bytes
         pub memory: ByteCount,
         pub silo_id: uuid::Uuid,
+        /// Amount of disk storage in bytes
         pub storage: ByteCount,
     }
 
@@ -13274,7 +13290,7 @@ pub mod types {
 
     impl SiloQuotas {
         pub fn builder() -> builder::SiloQuotas {
-            builder::SiloQuotas::default()
+            Default::default()
         }
     }
 
@@ -13337,7 +13353,7 @@ pub mod types {
 
     impl SiloQuotasCreate {
         pub fn builder() -> builder::SiloQuotasCreate {
-            builder::SiloQuotasCreate::default()
+            Default::default()
         }
     }
 
@@ -13388,7 +13404,7 @@ pub mod types {
 
     impl SiloQuotasResultsPage {
         pub fn builder() -> builder::SiloQuotasResultsPage {
-            builder::SiloQuotasResultsPage::default()
+            Default::default()
         }
     }
 
@@ -13453,7 +13469,7 @@ pub mod types {
 
     impl SiloQuotasUpdate {
         pub fn builder() -> builder::SiloQuotasUpdate {
-            builder::SiloQuotasUpdate::default()
+            Default::default()
         }
     }
 
@@ -13504,7 +13520,7 @@ pub mod types {
 
     impl SiloResultsPage {
         pub fn builder() -> builder::SiloResultsPage {
-            builder::SiloResultsPage::default()
+            Default::default()
         }
     }
 
@@ -13637,7 +13653,7 @@ pub mod types {
 
     impl SiloRolePolicy {
         pub fn builder() -> builder::SiloRolePolicy {
-            builder::SiloRolePolicy::default()
+            Default::default()
         }
     }
 
@@ -13692,7 +13708,128 @@ pub mod types {
 
     impl SiloRoleRoleAssignment {
         pub fn builder() -> builder::SiloRoleRoleAssignment {
-            builder::SiloRoleRoleAssignment::default()
+            Default::default()
+        }
+    }
+
+    /// View of a silo's resource utilization and capacity
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "View of a silo's resource utilization and capacity",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allocated",
+    ///    "provisioned",
+    ///    "silo_id",
+    ///    "silo_name"
+    ///  ],
+    ///  "properties": {
+    ///    "allocated": {
+    ///      "description": "Accounts for the total amount of resources reserved
+    /// for silos via their quotas",      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/VirtualResourceCounts"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "provisioned": {
+    ///      "description": "Accounts for resources allocated by in silos like
+    /// CPU or memory for running instances and storage for disks and snapshots
+    /// Note that CPU and memory resources associated with a stopped instances
+    /// are not counted here",      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/VirtualResourceCounts"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "silo_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "silo_name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SiloUtilization {
+        /// Accounts for the total amount of resources reserved for silos via
+        /// their quotas
+        pub allocated: VirtualResourceCounts,
+        /// Accounts for resources allocated by in silos like CPU or memory for
+        /// running instances and storage for disks and snapshots Note that CPU
+        /// and memory resources associated with a stopped instances are not
+        /// counted here
+        pub provisioned: VirtualResourceCounts,
+        pub silo_id: uuid::Uuid,
+        pub silo_name: Name,
+    }
+
+    impl From<&SiloUtilization> for SiloUtilization {
+        fn from(value: &SiloUtilization) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SiloUtilization {
+        pub fn builder() -> builder::SiloUtilization {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SiloUtilization"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SiloUtilizationResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<SiloUtilization>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&SiloUtilizationResultsPage> for SiloUtilizationResultsPage {
+        fn from(value: &SiloUtilizationResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SiloUtilizationResultsPage {
+        pub fn builder() -> builder::SiloUtilizationResultsPage {
+            Default::default()
         }
     }
 
@@ -13791,7 +13928,7 @@ pub mod types {
 
     impl Sled {
         pub fn builder() -> builder::Sled {
-            builder::Sled::default()
+            Default::default()
         }
     }
 
@@ -13893,7 +14030,7 @@ pub mod types {
 
     impl SledInstance {
         pub fn builder() -> builder::SledInstance {
-            builder::SledInstance::default()
+            Default::default()
         }
     }
 
@@ -13944,7 +14081,7 @@ pub mod types {
 
     impl SledInstanceResultsPage {
         pub fn builder() -> builder::SledInstanceResultsPage {
-            builder::SledInstanceResultsPage::default()
+            Default::default()
         }
     }
 
@@ -14088,7 +14225,7 @@ pub mod types {
 
     impl SledProvisionStateParams {
         pub fn builder() -> builder::SledProvisionStateParams {
-            builder::SledProvisionStateParams::default()
+            Default::default()
         }
     }
 
@@ -14141,7 +14278,7 @@ pub mod types {
 
     impl SledProvisionStateResponse {
         pub fn builder() -> builder::SledProvisionStateResponse {
-            builder::SledProvisionStateResponse::default()
+            Default::default()
         }
     }
 
@@ -14192,7 +14329,7 @@ pub mod types {
 
     impl SledResultsPage {
         pub fn builder() -> builder::SledResultsPage {
-            builder::SledResultsPage::default()
+            Default::default()
         }
     }
 
@@ -14287,7 +14424,7 @@ pub mod types {
 
     impl Snapshot {
         pub fn builder() -> builder::Snapshot {
-            builder::Snapshot::default()
+            Default::default()
         }
     }
 
@@ -14339,7 +14476,7 @@ pub mod types {
 
     impl SnapshotCreate {
         pub fn builder() -> builder::SnapshotCreate {
-            builder::SnapshotCreate::default()
+            Default::default()
         }
     }
 
@@ -14390,7 +14527,7 @@ pub mod types {
 
     impl SnapshotResultsPage {
         pub fn builder() -> builder::SnapshotResultsPage {
-            builder::SnapshotResultsPage::default()
+            Default::default()
         }
     }
 
@@ -14569,7 +14706,7 @@ pub mod types {
 
     impl SshKey {
         pub fn builder() -> builder::SshKey {
-            builder::SshKey::default()
+            Default::default()
         }
     }
 
@@ -14617,7 +14754,7 @@ pub mod types {
 
     impl SshKeyCreate {
         pub fn builder() -> builder::SshKeyCreate {
-            builder::SshKeyCreate::default()
+            Default::default()
         }
     }
 
@@ -14668,7 +14805,7 @@ pub mod types {
 
     impl SshKeyResultsPage {
         pub fn builder() -> builder::SshKeyResultsPage {
-            builder::SshKeyResultsPage::default()
+            Default::default()
         }
     }
 
@@ -14736,7 +14873,7 @@ pub mod types {
 
     impl Switch {
         pub fn builder() -> builder::Switch {
-            builder::Switch::default()
+            Default::default()
         }
     }
 
@@ -14787,7 +14924,7 @@ pub mod types {
 
     impl SwitchInterfaceConfig {
         pub fn builder() -> builder::SwitchInterfaceConfig {
-            builder::SwitchInterfaceConfig::default()
+            Default::default()
         }
     }
 
@@ -15049,7 +15186,7 @@ pub mod types {
 
     impl SwitchPort {
         pub fn builder() -> builder::SwitchPort {
-            builder::SwitchPort::default()
+            Default::default()
         }
     }
 
@@ -15114,7 +15251,7 @@ pub mod types {
 
     impl SwitchPortAddressConfig {
         pub fn builder() -> builder::SwitchPortAddressConfig {
-            builder::SwitchPortAddressConfig::default()
+            Default::default()
         }
     }
 
@@ -15156,7 +15293,7 @@ pub mod types {
 
     impl SwitchPortApplySettings {
         pub fn builder() -> builder::SwitchPortApplySettings {
-            builder::SwitchPortApplySettings::default()
+            Default::default()
         }
     }
 
@@ -15219,7 +15356,7 @@ pub mod types {
 
     impl SwitchPortBgpPeerConfig {
         pub fn builder() -> builder::SwitchPortBgpPeerConfig {
-            builder::SwitchPortBgpPeerConfig::default()
+            Default::default()
         }
     }
 
@@ -15261,7 +15398,7 @@ pub mod types {
 
     impl SwitchPortConfig {
         pub fn builder() -> builder::SwitchPortConfig {
-            builder::SwitchPortConfig::default()
+            Default::default()
         }
     }
 
@@ -15432,7 +15569,7 @@ pub mod types {
 
     impl SwitchPortLinkConfig {
         pub fn builder() -> builder::SwitchPortLinkConfig {
-            builder::SwitchPortLinkConfig::default()
+            Default::default()
         }
     }
 
@@ -15483,7 +15620,7 @@ pub mod types {
 
     impl SwitchPortResultsPage {
         pub fn builder() -> builder::SwitchPortResultsPage {
-            builder::SwitchPortResultsPage::default()
+            Default::default()
         }
     }
 
@@ -15564,7 +15701,7 @@ pub mod types {
 
     impl SwitchPortRouteConfig {
         pub fn builder() -> builder::SwitchPortRouteConfig {
-            builder::SwitchPortRouteConfig::default()
+            Default::default()
         }
     }
 
@@ -15638,7 +15775,7 @@ pub mod types {
 
     impl SwitchPortSettings {
         pub fn builder() -> builder::SwitchPortSettings {
-            builder::SwitchPortSettings::default()
+            Default::default()
         }
     }
 
@@ -15750,7 +15887,7 @@ pub mod types {
 
     impl SwitchPortSettingsCreate {
         pub fn builder() -> builder::SwitchPortSettingsCreate {
-            builder::SwitchPortSettingsCreate::default()
+            Default::default()
         }
     }
 
@@ -15803,7 +15940,7 @@ pub mod types {
 
     impl SwitchPortSettingsGroups {
         pub fn builder() -> builder::SwitchPortSettingsGroups {
-            builder::SwitchPortSettingsGroups::default()
+            Default::default()
         }
     }
 
@@ -15854,7 +15991,7 @@ pub mod types {
 
     impl SwitchPortSettingsResultsPage {
         pub fn builder() -> builder::SwitchPortSettingsResultsPage {
-            builder::SwitchPortSettingsResultsPage::default()
+            Default::default()
         }
     }
 
@@ -15991,7 +16128,7 @@ pub mod types {
 
     impl SwitchPortSettingsView {
         pub fn builder() -> builder::SwitchPortSettingsView {
-            builder::SwitchPortSettingsView::default()
+            Default::default()
         }
     }
 
@@ -16042,7 +16179,7 @@ pub mod types {
 
     impl SwitchResultsPage {
         pub fn builder() -> builder::SwitchResultsPage {
-            builder::SwitchResultsPage::default()
+            Default::default()
         }
     }
 
@@ -16094,7 +16231,7 @@ pub mod types {
 
     impl SwitchVlanInterfaceConfig {
         pub fn builder() -> builder::SwitchVlanInterfaceConfig {
-            builder::SwitchVlanInterfaceConfig::default()
+            Default::default()
         }
     }
 
@@ -16229,7 +16366,7 @@ pub mod types {
 
     impl UninitializedSled {
         pub fn builder() -> builder::UninitializedSled {
-            builder::UninitializedSled::default()
+            Default::default()
         }
     }
 
@@ -16281,7 +16418,7 @@ pub mod types {
 
     impl User {
         pub fn builder() -> builder::User {
-            builder::User::default()
+            Default::default()
         }
     }
 
@@ -16358,7 +16495,7 @@ pub mod types {
 
     impl UserBuiltin {
         pub fn builder() -> builder::UserBuiltin {
-            builder::UserBuiltin::default()
+            Default::default()
         }
     }
 
@@ -16409,7 +16546,7 @@ pub mod types {
 
     impl UserBuiltinResultsPage {
         pub fn builder() -> builder::UserBuiltinResultsPage {
-            builder::UserBuiltinResultsPage::default()
+            Default::default()
         }
     }
 
@@ -16462,7 +16599,7 @@ pub mod types {
 
     impl UserCreate {
         pub fn builder() -> builder::UserCreate {
-            builder::UserCreate::default()
+            Default::default()
         }
     }
 
@@ -16670,7 +16807,7 @@ pub mod types {
 
     impl UserResultsPage {
         pub fn builder() -> builder::UserResultsPage {
-            builder::UserResultsPage::default()
+            Default::default()
         }
     }
 
@@ -16711,7 +16848,129 @@ pub mod types {
 
     impl UsernamePasswordCredentials {
         pub fn builder() -> builder::UsernamePasswordCredentials {
-            builder::UsernamePasswordCredentials::default()
+            Default::default()
+        }
+    }
+
+    /// View of the current silo's resource utilization and capacity
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "View of the current silo's resource utilization and
+    /// capacity",  "type": "object",
+    ///  "required": [
+    ///    "capacity",
+    ///    "provisioned"
+    ///  ],
+    ///  "properties": {
+    ///    "capacity": {
+    ///      "description": "The total amount of resources that can be
+    /// provisioned in this silo Actions that would exceed this limit will
+    /// fail",      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/VirtualResourceCounts"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "provisioned": {
+    ///      "description": "Accounts for resources allocated to running
+    /// instances or storage allocated via disks or snapshots Note that CPU and
+    /// memory resources associated with a stopped instances are not counted
+    /// here whereas associated disks will still be counted",      "allOf":
+    /// [        {
+    ///          "$ref": "#/components/schemas/VirtualResourceCounts"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Utilization {
+        /// The total amount of resources that can be provisioned in this silo
+        /// Actions that would exceed this limit will fail
+        pub capacity: VirtualResourceCounts,
+        /// Accounts for resources allocated to running instances or storage
+        /// allocated via disks or snapshots Note that CPU and memory resources
+        /// associated with a stopped instances are not counted here whereas
+        /// associated disks will still be counted
+        pub provisioned: VirtualResourceCounts,
+    }
+
+    impl From<&Utilization> for Utilization {
+        fn from(value: &Utilization) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Utilization {
+        pub fn builder() -> builder::Utilization {
+            Default::default()
+        }
+    }
+
+    /// A collection of resource counts used to describe capacity and
+    /// utilization
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A collection of resource counts used to describe
+    /// capacity and utilization",  "type": "object",
+    ///  "required": [
+    ///    "cpus",
+    ///    "memory",
+    ///    "storage"
+    ///  ],
+    ///  "properties": {
+    ///    "cpus": {
+    ///      "description": "Number of virtual CPUs",
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "memory": {
+    ///      "description": "Amount of memory in bytes",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "storage": {
+    ///      "description": "Amount of disk storage in bytes",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ByteCount"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct VirtualResourceCounts {
+        /// Number of virtual CPUs
+        pub cpus: i64,
+        /// Amount of memory in bytes
+        pub memory: ByteCount,
+        /// Amount of disk storage in bytes
+        pub storage: ByteCount,
+    }
+
+    impl From<&VirtualResourceCounts> for VirtualResourceCounts {
+        fn from(value: &VirtualResourceCounts) -> Self {
+            value.clone()
+        }
+    }
+
+    impl VirtualResourceCounts {
+        pub fn builder() -> builder::VirtualResourceCounts {
+            Default::default()
         }
     }
 
@@ -16822,7 +17081,7 @@ pub mod types {
 
     impl Vpc {
         pub fn builder() -> builder::Vpc {
-            builder::Vpc::default()
+            Default::default()
         }
     }
 
@@ -16886,7 +17145,7 @@ pub mod types {
 
     impl VpcCreate {
         pub fn builder() -> builder::VpcCreate {
-            builder::VpcCreate::default()
+            Default::default()
         }
     }
 
@@ -17030,7 +17289,7 @@ pub mod types {
 
     impl VpcFirewallRule {
         pub fn builder() -> builder::VpcFirewallRule {
-            builder::VpcFirewallRule::default()
+            Default::default()
         }
     }
 
@@ -17265,7 +17524,7 @@ pub mod types {
 
     impl VpcFirewallRuleFilter {
         pub fn builder() -> builder::VpcFirewallRuleFilter {
-            builder::VpcFirewallRuleFilter::default()
+            Default::default()
         }
     }
 
@@ -17840,7 +18099,7 @@ pub mod types {
 
     impl VpcFirewallRuleUpdate {
         pub fn builder() -> builder::VpcFirewallRuleUpdate {
-            builder::VpcFirewallRuleUpdate::default()
+            Default::default()
         }
     }
 
@@ -17882,7 +18141,7 @@ pub mod types {
 
     impl VpcFirewallRuleUpdateParams {
         pub fn builder() -> builder::VpcFirewallRuleUpdateParams {
-            builder::VpcFirewallRuleUpdateParams::default()
+            Default::default()
         }
     }
 
@@ -17921,7 +18180,7 @@ pub mod types {
 
     impl VpcFirewallRules {
         pub fn builder() -> builder::VpcFirewallRules {
-            builder::VpcFirewallRules::default()
+            Default::default()
         }
     }
 
@@ -17972,7 +18231,7 @@ pub mod types {
 
     impl VpcResultsPage {
         pub fn builder() -> builder::VpcResultsPage {
-            builder::VpcResultsPage::default()
+            Default::default()
         }
     }
 
@@ -18078,7 +18337,7 @@ pub mod types {
 
     impl VpcSubnet {
         pub fn builder() -> builder::VpcSubnet {
-            builder::VpcSubnet::default()
+            Default::default()
         }
     }
 
@@ -18153,7 +18412,7 @@ pub mod types {
 
     impl VpcSubnetCreate {
         pub fn builder() -> builder::VpcSubnetCreate {
-            builder::VpcSubnetCreate::default()
+            Default::default()
         }
     }
 
@@ -18204,7 +18463,7 @@ pub mod types {
 
     impl VpcSubnetResultsPage {
         pub fn builder() -> builder::VpcSubnetResultsPage {
-            builder::VpcSubnetResultsPage::default()
+            Default::default()
         }
     }
 
@@ -18250,7 +18509,7 @@ pub mod types {
 
     impl VpcSubnetUpdate {
         pub fn builder() -> builder::VpcSubnetUpdate {
-            builder::VpcSubnetUpdate::default()
+            Default::default()
         }
     }
 
@@ -18305,7 +18564,7 @@ pub mod types {
 
     impl VpcUpdate {
         pub fn builder() -> builder::VpcUpdate {
-            builder::VpcUpdate::default()
+            Default::default()
         }
     }
 
@@ -28004,6 +28263,148 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SiloUtilization {
+            allocated: Result<super::VirtualResourceCounts, String>,
+            provisioned: Result<super::VirtualResourceCounts, String>,
+            silo_id: Result<uuid::Uuid, String>,
+            silo_name: Result<super::Name, String>,
+        }
+
+        impl Default for SiloUtilization {
+            fn default() -> Self {
+                Self {
+                    allocated: Err("no value supplied for allocated".to_string()),
+                    provisioned: Err("no value supplied for provisioned".to_string()),
+                    silo_id: Err("no value supplied for silo_id".to_string()),
+                    silo_name: Err("no value supplied for silo_name".to_string()),
+                }
+            }
+        }
+
+        impl SiloUtilization {
+            pub fn allocated<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::VirtualResourceCounts>,
+                T::Error: std::fmt::Display,
+            {
+                self.allocated = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for allocated: {}", e));
+                self
+            }
+            pub fn provisioned<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::VirtualResourceCounts>,
+                T::Error: std::fmt::Display,
+            {
+                self.provisioned = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for provisioned: {}", e));
+                self
+            }
+            pub fn silo_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
+                self
+            }
+            pub fn silo_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SiloUtilization> for super::SiloUtilization {
+            type Error = String;
+            fn try_from(value: SiloUtilization) -> Result<Self, String> {
+                Ok(Self {
+                    allocated: value.allocated?,
+                    provisioned: value.provisioned?,
+                    silo_id: value.silo_id?,
+                    silo_name: value.silo_name?,
+                })
+            }
+        }
+
+        impl From<super::SiloUtilization> for SiloUtilization {
+            fn from(value: super::SiloUtilization) -> Self {
+                Self {
+                    allocated: Ok(value.allocated),
+                    provisioned: Ok(value.provisioned),
+                    silo_id: Ok(value.silo_id),
+                    silo_name: Ok(value.silo_name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SiloUtilizationResultsPage {
+            items: Result<Vec<super::SiloUtilization>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for SiloUtilizationResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SiloUtilizationResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SiloUtilization>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SiloUtilizationResultsPage> for super::SiloUtilizationResultsPage {
+            type Error = String;
+            fn try_from(value: SiloUtilizationResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::SiloUtilizationResultsPage> for SiloUtilizationResultsPage {
+            fn from(value: super::SiloUtilizationResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Sled {
             baseboard: Result<super::Baseboard, String>,
             id: Result<uuid::Uuid, String>,
@@ -31003,6 +31404,134 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Utilization {
+            capacity: Result<super::VirtualResourceCounts, String>,
+            provisioned: Result<super::VirtualResourceCounts, String>,
+        }
+
+        impl Default for Utilization {
+            fn default() -> Self {
+                Self {
+                    capacity: Err("no value supplied for capacity".to_string()),
+                    provisioned: Err("no value supplied for provisioned".to_string()),
+                }
+            }
+        }
+
+        impl Utilization {
+            pub fn capacity<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::VirtualResourceCounts>,
+                T::Error: std::fmt::Display,
+            {
+                self.capacity = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
+                self
+            }
+            pub fn provisioned<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::VirtualResourceCounts>,
+                T::Error: std::fmt::Display,
+            {
+                self.provisioned = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for provisioned: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Utilization> for super::Utilization {
+            type Error = String;
+            fn try_from(value: Utilization) -> Result<Self, String> {
+                Ok(Self {
+                    capacity: value.capacity?,
+                    provisioned: value.provisioned?,
+                })
+            }
+        }
+
+        impl From<super::Utilization> for Utilization {
+            fn from(value: super::Utilization) -> Self {
+                Self {
+                    capacity: Ok(value.capacity),
+                    provisioned: Ok(value.provisioned),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct VirtualResourceCounts {
+            cpus: Result<i64, String>,
+            memory: Result<super::ByteCount, String>,
+            storage: Result<super::ByteCount, String>,
+        }
+
+        impl Default for VirtualResourceCounts {
+            fn default() -> Self {
+                Self {
+                    cpus: Err("no value supplied for cpus".to_string()),
+                    memory: Err("no value supplied for memory".to_string()),
+                    storage: Err("no value supplied for storage".to_string()),
+                }
+            }
+        }
+
+        impl VirtualResourceCounts {
+            pub fn cpus<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.cpus = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cpus: {}", e));
+                self
+            }
+            pub fn memory<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ByteCount>,
+                T::Error: std::fmt::Display,
+            {
+                self.memory = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for memory: {}", e));
+                self
+            }
+            pub fn storage<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ByteCount>,
+                T::Error: std::fmt::Display,
+            {
+                self.storage = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for storage: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<VirtualResourceCounts> for super::VirtualResourceCounts {
+            type Error = String;
+            fn try_from(value: VirtualResourceCounts) -> Result<Self, String> {
+                Ok(Self {
+                    cpus: value.cpus?,
+                    memory: value.memory?,
+                    storage: value.storage?,
+                })
+            }
+        }
+
+        impl From<super::VirtualResourceCounts> for VirtualResourceCounts {
+            fn from(value: super::VirtualResourceCounts) -> Self {
+                Self {
+                    cpus: Ok(value.cpus),
+                    memory: Ok(value.memory),
+                    storage: Ok(value.storage),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Vpc {
             description: Result<String, String>,
             dns_name: Result<super::Name, String>,
@@ -33799,6 +34328,16 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn user_list(&self) -> builder::UserList;
+    /// View the resource utilization of the user's current silo
+    ///
+    /// Sends a `GET` request to `/v1/utilization`
+    ///
+    /// ```ignore
+    /// let response = client.utilization_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn utilization_view(&self) -> builder::UtilizationView;
 }
 
 impl ClientSilosExt for Client {
@@ -33836,6 +34375,10 @@ impl ClientSilosExt for Client {
 
     fn user_list(&self) -> builder::UserList {
         builder::UserList::new(self)
+    }
+
+    fn utilization_view(&self) -> builder::UtilizationView {
+        builder::UtilizationView::new(self)
     }
 }
 
@@ -35172,6 +35715,37 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn user_builtin_view(&self) -> builder::UserBuiltinView;
+    /// List current utilization state for all silos
+    ///
+    /// Sends a `GET` request to `/v1/system/utilization/silos`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.silo_utilization_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_utilization_list(&self) -> builder::SiloUtilizationList;
+    /// View the current utilization of a given silo
+    ///
+    /// Sends a `GET` request to `/v1/system/utilization/silos/{silo}`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.silo_utilization_view()
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_utilization_view(&self) -> builder::SiloUtilizationView;
 }
 
 impl ClientSystemSilosExt for Client {
@@ -35249,6 +35823,14 @@ impl ClientSystemSilosExt for Client {
 
     fn user_builtin_view(&self) -> builder::UserBuiltinView {
         builder::UserBuiltinView::new(self)
+    }
+
+    fn silo_utilization_list(&self) -> builder::SiloUtilizationList {
+        builder::SiloUtilizationList::new(self)
+    }
+
+    fn silo_utilization_view(&self) -> builder::SiloUtilizationView {
+        builder::SiloUtilizationView::new(self)
     }
 }
 
@@ -50016,6 +50598,224 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemSilosExt::silo_utilization_list`]
+    ///
+    /// [`ClientSystemSilosExt::silo_utilization_list`]: super::ClientSystemSilosExt::silo_utilization_list
+    #[derive(Debug, Clone)]
+    pub struct SiloUtilizationList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> SiloUtilizationList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/utilization/silos`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloUtilizationResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/utilization/silos", client.baseurl,);
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/utilization/silos`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SiloUtilization, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::silo_utilization_view`]
+    ///
+    /// [`ClientSystemSilosExt::silo_utilization_view`]: super::ClientSystemSilosExt::silo_utilization_view
+    #[derive(Debug, Clone)]
+    pub struct SiloUtilizationView<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SiloUtilizationView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/utilization/silos/{silo}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloUtilization>, Error<types::Error>> {
+            let Self { client, silo } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/utilization/silos/{}",
+                client.baseurl,
+                encode_path(&silo.to_string()),
+            );
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientSilosExt::user_list`]
     ///
     /// [`ClientSilosExt::user_list`]: super::ClientSilosExt::user_list
@@ -50189,6 +50989,46 @@ pub mod builder {
                 .try_flatten_stream()
                 .take(limit)
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSilosExt::utilization_view`]
+    ///
+    /// [`ClientSilosExt::utilization_view`]: super::ClientSilosExt::utilization_view
+    #[derive(Debug, Clone)]
+    pub struct UtilizationView<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> UtilizationView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/utilization`
+        pub async fn send(self) -> Result<ResponseValue<types::Utilization>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/utilization", client.baseurl,);
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 

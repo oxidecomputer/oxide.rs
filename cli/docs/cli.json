@@ -2127,6 +2127,39 @@
           ]
         },
         {
+          "name": "utilization",
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List current utilization state for all silos",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "View the current utilization of a given silo",
+              "args": [
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "view",
           "about": "Fetch a silo",
           "long_about": "Fetch a silo by name.",
@@ -2936,6 +2969,10 @@
           ]
         }
       ]
+    },
+    {
+      "name": "utilization",
+      "about": "View the resource utilization of the user's current silo"
     },
     {
       "name": "version",

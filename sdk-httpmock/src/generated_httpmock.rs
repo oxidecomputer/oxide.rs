@@ -11136,6 +11136,173 @@ pub mod operations {
         }
     }
 
+    pub struct SiloUtilizationListWhen(httpmock::When);
+    impl SiloUtilizationListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/utilization/silos$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn sort_by<T>(self, value: T) -> Self
+        where
+            T: Into<Option<types::NameOrIdSortMode>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("sort_by", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "sort_by"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct SiloUtilizationListThen(httpmock::Then);
+    impl SiloUtilizationListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloUtilizationResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SiloUtilizationViewWhen(httpmock::When);
+    impl SiloUtilizationViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/utilization/silos/[^/]*$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            let re = regex::Regex::new(&format!(
+                "^/v1/system/utilization/silos/{}$",
+                value.to_string()
+            ))
+            .unwrap();
+            Self(self.0.path_matches(re))
+        }
+    }
+
+    pub struct SiloUtilizationViewThen(httpmock::Then);
+    impl SiloUtilizationViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::SiloUtilization) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct UserListWhen(httpmock::When);
     impl UserListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -11226,6 +11393,61 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::UserResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct UtilizationViewWhen(httpmock::When);
+    impl UtilizationViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/utilization$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct UtilizationViewThen(httpmock::Then);
+    impl UtilizationViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::Utilization) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12982,9 +13204,18 @@ pub trait MockServerExt {
     fn user_builtin_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::UserBuiltinViewWhen, operations::UserBuiltinViewThen);
+    fn silo_utilization_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloUtilizationListWhen, operations::SiloUtilizationListThen);
+    fn silo_utilization_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloUtilizationViewWhen, operations::SiloUtilizationViewThen);
     fn user_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::UserListWhen, operations::UserListThen);
+    fn utilization_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::UtilizationViewWhen, operations::UtilizationViewThen);
     fn vpc_firewall_rules_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::VpcFirewallRulesViewWhen, operations::VpcFirewallRulesViewThen);
@@ -14842,6 +15073,30 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
+    fn silo_utilization_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloUtilizationListWhen, operations::SiloUtilizationListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloUtilizationListWhen::new(when),
+                operations::SiloUtilizationListThen::new(then),
+            )
+        })
+    }
+
+    fn silo_utilization_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloUtilizationViewWhen, operations::SiloUtilizationViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloUtilizationViewWhen::new(when),
+                operations::SiloUtilizationViewThen::new(then),
+            )
+        })
+    }
+
     fn user_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::UserListWhen, operations::UserListThen),
@@ -14850,6 +15105,18 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::UserListWhen::new(when),
                 operations::UserListThen::new(then),
+            )
+        })
+    }
+
+    fn utilization_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::UtilizationViewWhen, operations::UtilizationViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::UtilizationViewWhen::new(when),
+                operations::UtilizationViewThen::new(then),
             )
         })
     }

@@ -191,7 +191,10 @@ impl Cli {
             CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::UserBuiltinList => Self::cli_user_builtin_list(),
             CliCommand::UserBuiltinView => Self::cli_user_builtin_view(),
+            CliCommand::SiloUtilizationList => Self::cli_silo_utilization_list(),
+            CliCommand::SiloUtilizationView => Self::cli_silo_utilization_view(),
             CliCommand::UserList => Self::cli_user_list(),
+            CliCommand::UtilizationView => Self::cli_utilization_view(),
             CliCommand::VpcFirewallRulesView => Self::cli_vpc_firewall_rules_view(),
             CliCommand::VpcFirewallRulesUpdate => Self::cli_vpc_firewall_rules_update(),
             CliCommand::VpcSubnetList => Self::cli_vpc_subnet_list(),
@@ -4170,6 +4173,43 @@ impl Cli {
             .about("Fetch a built-in user")
     }
 
+    pub fn cli_silo_utilization_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List current utilization state for all silos")
+    }
+
+    pub fn cli_silo_utilization_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .about("View the current utilization of a given silo")
+    }
+
     pub fn cli_user_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -4197,6 +4237,10 @@ impl Cli {
                     .required(false),
             )
             .about("List users")
+    }
+
+    pub fn cli_utilization_view() -> clap::Command {
+        clap::Command::new("").about("View the resource utilization of the user's current silo")
     }
 
     pub fn cli_vpc_firewall_rules_view() -> clap::Command {
@@ -5153,8 +5197,17 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::UserBuiltinView => {
                 self.execute_user_builtin_view(matches).await;
             }
+            CliCommand::SiloUtilizationList => {
+                self.execute_silo_utilization_list(matches).await;
+            }
+            CliCommand::SiloUtilizationView => {
+                self.execute_silo_utilization_view(matches).await;
+            }
             CliCommand::UserList => {
                 self.execute_user_list(matches).await;
+            }
+            CliCommand::UtilizationView => {
+                self.execute_utilization_view(matches).await;
             }
             CliCommand::VpcFirewallRulesView => {
                 self.execute_vpc_firewall_rules_view(matches).await;
@@ -9271,6 +9324,56 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_silo_utilization_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_utilization_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_silo_utilization_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_silo_utilization_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_utilization_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        self.over
+            .execute_silo_utilization_view(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_user_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.user_list();
         if let Some(value) = matches.get_one::<uuid::Uuid>("group") {
@@ -9299,6 +9402,22 @@ impl<T: CliOverride> Cli<T> {
                 Ok(Some(value)) => {
                     println!("{:#?}", value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_utilization_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.utilization_view();
+        self.over
+            .execute_utilization_view(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
             }
         }
     }
@@ -10884,10 +11003,34 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_silo_utilization_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SiloUtilizationList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_silo_utilization_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SiloUtilizationView,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_user_list(
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::UserList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_utilization_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::UtilizationView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -11143,7 +11286,10 @@ pub enum CliCommand {
     SiloUserView,
     UserBuiltinList,
     UserBuiltinView,
+    SiloUtilizationList,
+    SiloUtilizationView,
     UserList,
+    UtilizationView,
     VpcFirewallRulesView,
     VpcFirewallRulesUpdate,
     VpcSubnetList,
@@ -11305,7 +11451,10 @@ impl CliCommand {
             CliCommand::SiloUserView,
             CliCommand::UserBuiltinList,
             CliCommand::UserBuiltinView,
+            CliCommand::SiloUtilizationList,
+            CliCommand::SiloUtilizationView,
             CliCommand::UserList,
+            CliCommand::UtilizationView,
             CliCommand::VpcFirewallRulesView,
             CliCommand::VpcFirewallRulesUpdate,
             CliCommand::VpcSubnetList,
