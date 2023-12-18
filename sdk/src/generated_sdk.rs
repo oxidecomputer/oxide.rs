@@ -69,14 +69,16 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A set of addresses associated with a port
-    /// configuration.",  "type": "object",
+    /// configuration.",
+    ///  "type": "object",
     ///  "required": [
     ///    "addresses"
     ///  ],
     ///  "properties": {
     ///    "addresses": {
     ///      "description": "The set of addresses assigned to the port
-    /// configuration.",      "type": "array",
+    /// configuration.",
+    ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Address"
     ///      }
@@ -111,7 +113,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Represents an address lot object, containing the id of
-    /// the lot that can be used in other API calls.",  "type": "object",
+    /// the lot that can be used in other API calls.",
+    ///  "type": "object",
     ///  "required": [
     ///    "description",
     ///    "id",
@@ -127,7 +130,8 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "kind": {
@@ -140,7 +144,8 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -253,7 +258,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Parameters for creating an address lot block. Fist and
-    /// last addresses are inclusive.",  "type": "object",
+    /// last addresses are inclusive.",
+    ///  "type": "object",
     ///  "required": [
     ///    "first_address",
     ///    "last_address"
@@ -314,7 +320,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -414,7 +421,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "An address lot and associated blocks resulting from
-    /// creating an address lot.",  "type": "object",
+    /// creating an address lot.",
+    ///  "type": "object",
     ///  "required": [
     ///    "blocks",
     ///    "lot"
@@ -577,7 +585,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -614,7 +623,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Properties that uniquely identify an Oxide hardware
-    /// component",  "type": "object",
+    /// component",
+    ///  "type": "object",
     ///  "required": [
     ///    "part",
     ///    "revision",
@@ -662,8 +672,9 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Represents a BGP announce set by id. The id can be used
-    /// with other API calls to view and manage the announce set.",  "type":
-    /// "object",  "required": [
+    /// with other API calls to view and manage the announce set.",
+    ///  "type": "object",
+    ///  "required": [
     ///    "description",
     ///    "id",
     ///    "name",
@@ -677,12 +688,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -735,7 +748,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Parameters for creating a named set of BGP
-    /// announcements.",  "type": "object",
+    /// announcements.",
+    ///  "type": "object",
     ///  "required": [
     ///    "announcement",
     ///    "description",
@@ -795,7 +809,8 @@ pub mod types {
     ///  "properties": {
     ///    "address_lot_block_id": {
     ///      "description": "The address block the IP network being announced is
-    /// drawn from.",      "type": "string",
+    /// drawn from.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "announce_set_id": {
@@ -844,7 +859,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A BGP announcement tied to a particular address lot
-    /// block.",  "type": "object",
+    /// block.",
+    ///  "type": "object",
     ///  "required": [
     ///    "address_lot_block",
     ///    "network"
@@ -909,7 +925,8 @@ pub mod types {
     ///  "properties": {
     ///    "asn": {
     ///      "description": "The autonomous system number of this BGP
-    /// configuration.",      "type": "integer",
+    /// configuration.",
+    ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
     ///    },
@@ -919,12 +936,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -942,7 +961,8 @@ pub mod types {
     ///    },
     ///    "vrf": {
     ///      "description": "Optional virtual routing and forwarding identifier
-    /// for this BGP configuration.",      "type": [
+    /// for this BGP configuration.",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -993,7 +1013,8 @@ pub mod types {
     /// {
     ///  "description": "Parameters for creating a BGP configuration. This
     /// includes and autonomous system number (ASN) and a virtual routing and
-    /// forwarding (VRF) identifier.",  "type": "object",
+    /// forwarding (VRF) identifier.",
+    ///  "type": "object",
     ///  "required": [
     ///    "asn",
     ///    "bgp_announce_set_id",
@@ -1003,7 +1024,8 @@ pub mod types {
     ///  "properties": {
     ///    "asn": {
     ///      "description": "The autonomous system number of this BGP
-    /// configuration.",      "type": "integer",
+    /// configuration.",
+    ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
     ///    },
@@ -1018,7 +1040,8 @@ pub mod types {
     ///    },
     ///    "vrf": {
     ///      "description": "Optional virtual routing and forwarding identifier
-    /// for this BGP configuration.",      "allOf": [
+    /// for this BGP configuration.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -1074,7 +1097,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -1188,7 +1212,8 @@ pub mod types {
     /// set of announcements that will be advertised to the peer identified by
     /// `addr`. The `bgp_config` parameter is a reference to global BGP
     /// parameters. The `interface_name` indicates what interface the peer
-    /// should be contacted on.",  "type": "object",
+    /// should be contacted on.",
+    ///  "type": "object",
     ///  "required": [
     ///    "addr",
     ///    "bgp_announce_set",
@@ -1216,7 +1241,8 @@ pub mod types {
     ///    },
     ///    "bgp_config": {
     ///      "description": "The global BGP configuration used for establishing
-    /// a session with this peer.",      "allOf": [
+    /// a session with this peer.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
@@ -1224,25 +1250,29 @@ pub mod types {
     ///    },
     ///    "connect_retry": {
     ///      "description": "How long to to wait between TCP connection retries
-    /// (seconds).",      "type": "integer",
+    /// (seconds).",
+    ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
     ///    },
     ///    "delay_open": {
     ///      "description": "How long to delay sending an open request after
-    /// establishing a TCP session (seconds).",      "type": "integer",
+    /// establishing a TCP session (seconds).",
+    ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
     ///    },
     ///    "hold_time": {
     ///      "description": "How long to hold peer connections between
-    /// keppalives (seconds).",      "type": "integer",
+    /// keppalives (seconds).",
+    ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
     ///    },
     ///    "idle_hold_time": {
     ///      "description": "How long to hold a peer in idle before attempting a
-    /// new session (seconds).",      "type": "integer",
+    /// new session (seconds).",
+    ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
     ///    },
@@ -1351,8 +1381,9 @@ pub mod types {
     ///  "oneOf": [
     ///    {
     ///      "description": "Initial state. Refuse all incomming BGP
-    /// connections. No resources allocated to peer.",      "type":
-    /// "string",      "enum": [
+    /// connections. No resources allocated to peer.",
+    ///      "type": "string",
+    ///      "enum": [
     ///        "idle"
     ///      ]
     ///    },
@@ -1365,7 +1396,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "Trying to acquire peer by listening for and
-    /// accepting a TCP connection.",      "type": "string",
+    /// accepting a TCP connection.",
+    ///      "type": "string",
     ///      "enum": [
     ///        "active"
     ///      ]
@@ -1393,8 +1425,9 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "Session established. Able to exchange update,
-    /// notification and keepliave messages with peers.",      "type":
-    /// "string",      "enum": [
+    /// notification and keepliave messages with peers.",
+    ///      "type": "string",
+    ///      "enum": [
     ///        "established"
     ///      ]
     ///    }
@@ -1600,10 +1633,12 @@ pub mod types {
     ///  "description": "A type storing a range over `T`.\n\nThis type supports
     /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
     /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",  "oneOf": [
+    /// respectively.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",      "type": "object",
+    /// `..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "type"
@@ -1623,7 +1658,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",      "type": "object",
+    /// above, `start..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "start",
@@ -1648,7 +1684,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",      "type": "object",
+    /// above, `start..`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "start",
     ///        "type"
@@ -1704,10 +1741,12 @@ pub mod types {
     ///  "description": "A type storing a range over `T`.\n\nThis type supports
     /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
     /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",  "oneOf": [
+    /// respectively.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",      "type": "object",
+    /// `..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "type"
@@ -1727,7 +1766,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",      "type": "object",
+    /// above, `start..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "start",
@@ -1752,7 +1792,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",      "type": "object",
+    /// above, `start..`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "start",
     ///        "type"
@@ -1808,10 +1849,12 @@ pub mod types {
     ///  "description": "A type storing a range over `T`.\n\nThis type supports
     /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
     /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",  "oneOf": [
+    /// respectively.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",      "type": "object",
+    /// `..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "type"
@@ -1831,7 +1874,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",      "type": "object",
+    /// above, `start..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "start",
@@ -1856,7 +1900,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",      "type": "object",
+    /// above, `start..`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "start",
     ///        "type"
@@ -1912,10 +1957,12 @@ pub mod types {
     ///  "description": "A type storing a range over `T`.\n\nThis type supports
     /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
     /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",  "oneOf": [
+    /// respectively.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",      "type": "object",
+    /// `..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "type"
@@ -1935,7 +1982,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",      "type": "object",
+    /// above, `start..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "start",
@@ -1960,7 +2008,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",      "type": "object",
+    /// above, `start..`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "start",
     ///        "type"
@@ -2016,10 +2065,12 @@ pub mod types {
     ///  "description": "A type storing a range over `T`.\n\nThis type supports
     /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
     /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",  "oneOf": [
+    /// respectively.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",      "type": "object",
+    /// `..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "type"
@@ -2039,7 +2090,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",      "type": "object",
+    /// above, `start..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "start",
@@ -2064,7 +2116,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",      "type": "object",
+    /// above, `start..`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "start",
     ///        "type"
@@ -2120,10 +2173,12 @@ pub mod types {
     ///  "description": "A type storing a range over `T`.\n\nThis type supports
     /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
     /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",  "oneOf": [
+    /// respectively.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",      "type": "object",
+    /// `..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "type"
@@ -2143,7 +2198,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",      "type": "object",
+    /// above, `start..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "start",
@@ -2168,7 +2224,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",      "type": "object",
+    /// above, `start..`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "start",
     ///        "type"
@@ -2224,10 +2281,12 @@ pub mod types {
     ///  "description": "A type storing a range over `T`.\n\nThis type supports
     /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
     /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",  "oneOf": [
+    /// respectively.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",      "type": "object",
+    /// `..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "type"
@@ -2248,7 +2307,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",      "type": "object",
+    /// above, `start..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "start",
@@ -2275,7 +2335,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",      "type": "object",
+    /// above, `start..`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "start",
     ///        "type"
@@ -2332,10 +2393,12 @@ pub mod types {
     ///  "description": "A type storing a range over `T`.\n\nThis type supports
     /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
     /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",  "oneOf": [
+    /// respectively.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",      "type": "object",
+    /// `..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "type"
@@ -2356,7 +2419,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",      "type": "object",
+    /// above, `start..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "start",
@@ -2383,7 +2447,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",      "type": "object",
+    /// above, `start..`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "start",
     ///        "type"
@@ -2440,10 +2505,12 @@ pub mod types {
     ///  "description": "A type storing a range over `T`.\n\nThis type supports
     /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
     /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",  "oneOf": [
+    /// respectively.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",      "type": "object",
+    /// `..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "type"
@@ -2464,7 +2531,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",      "type": "object",
+    /// above, `start..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "start",
@@ -2491,7 +2559,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",      "type": "object",
+    /// above, `start..`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "start",
     ///        "type"
@@ -2548,10 +2617,12 @@ pub mod types {
     ///  "description": "A type storing a range over `T`.\n\nThis type supports
     /// ranges similar to the `RangeTo`, `Range` and `RangeFrom` types in the
     /// standard library. Those cover `(..end)`, `(start..end)`, and `(start..)`
-    /// respectively.",  "oneOf": [
+    /// respectively.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "A range unbounded below and exclusively above,
-    /// `..end`.",      "type": "object",
+    /// `..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "type"
@@ -2572,7 +2643,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and exclusively
-    /// above, `start..end`.",      "type": "object",
+    /// above, `start..end`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "end",
     ///        "start",
@@ -2599,7 +2671,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "A range bounded inclusively below and unbounded
-    /// above, `start..`.",      "type": "object",
+    /// above, `start..`.",
+    ///      "type": "object",
     ///      "required": [
     ///        "start",
     ///        "type"
@@ -2650,7 +2723,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",  "type": "object",
+    /// it.",
+    ///  "type": "object",
     ///  "required": [
     ///    "count",
     ///    "range"
@@ -2701,7 +2775,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",  "type": "object",
+    /// it.",
+    ///  "type": "object",
     ///  "required": [
     ///    "count",
     ///    "range"
@@ -2752,7 +2827,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",  "type": "object",
+    /// it.",
+    ///  "type": "object",
     ///  "required": [
     ///    "count",
     ///    "range"
@@ -2803,7 +2879,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",  "type": "object",
+    /// it.",
+    ///  "type": "object",
     ///  "required": [
     ///    "count",
     ///    "range"
@@ -2854,7 +2931,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",  "type": "object",
+    /// it.",
+    ///  "type": "object",
     ///  "required": [
     ///    "count",
     ///    "range"
@@ -2905,7 +2983,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",  "type": "object",
+    /// it.",
+    ///  "type": "object",
     ///  "required": [
     ///    "count",
     ///    "range"
@@ -2956,7 +3035,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",  "type": "object",
+    /// it.",
+    ///  "type": "object",
     ///  "required": [
     ///    "count",
     ///    "range"
@@ -3007,7 +3087,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",  "type": "object",
+    /// it.",
+    ///  "type": "object",
     ///  "required": [
     ///    "count",
     ///    "range"
@@ -3058,7 +3139,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",  "type": "object",
+    /// it.",
+    ///  "type": "object",
     ///  "required": [
     ///    "count",
     ///    "range"
@@ -3109,7 +3191,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Type storing bin edges and a count of samples within
-    /// it.",  "type": "object",
+    /// it.",
+    ///  "type": "object",
     ///  "required": [
     ///    "count",
     ///    "range"
@@ -3308,12 +3391,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -3381,7 +3466,8 @@ pub mod types {
     ///  "properties": {
     ///    "cert": {
     ///      "description": "PEM-formatted string containing public certificate
-    /// chain",      "type": "string"
+    /// chain",
+    ///      "type": "string"
     ///    },
     ///    "description": {
     ///      "type": "string"
@@ -3450,7 +3536,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -3723,7 +3810,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A `Datum` is a single sampled data point from a
-    /// metric.",  "oneOf": [
+    /// metric.",
+    ///  "oneOf": [
     ///    {
     ///      "type": "object",
     ///      "required": [
@@ -4701,11 +4789,13 @@ pub mod types {
     ///  "properties": {
     ///    "private_key": {
     ///      "description": "request signing private key (base64 encoded der
-    /// file)",      "type": "string"
+    /// file)",
+    ///      "type": "string"
     ///    },
     ///    "public_cert": {
     ///      "description": "request signing public certificate (base64 encoded
-    /// der file)",      "type": "string"
+    /// der file)",
+    ///      "type": "string"
     ///    }
     ///  }
     /// }
@@ -4923,7 +5013,8 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "image_id": {
@@ -4936,7 +5027,8 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -4951,7 +5043,8 @@ pub mod types {
     ///    },
     ///    "snapshot_id": {
     ///      "description": "ID of snapshot from which disk was created, if
-    /// any",      "type": [
+    /// any",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ],
@@ -5237,7 +5330,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -5285,7 +5379,8 @@ pub mod types {
     ///      "properties": {
     ///        "block_size": {
     ///          "description": "size of blocks for this Disk. valid values are:
-    /// 512, 2048, or 4096",          "allOf": [
+    /// 512, 2048, or 4096",
+    ///          "allOf": [
     ///            {
     ///              "$ref": "#/components/schemas/BlockSize"
     ///            }
@@ -5341,7 +5436,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "Create a blank disk that will accept bulk writes or
-    /// pull blocks from an external source.",      "type": "object",
+    /// pull blocks from an external source.",
+    ///      "type": "object",
     ///      "required": [
     ///        "block_size",
     ///        "type"
@@ -5430,7 +5526,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "Disk is ready to receive blocks from an external
-    /// source",      "type": "object",
+    /// source",
+    ///      "type": "object",
     ///      "required": [
     ///        "state"
     ///      ],
@@ -5729,11 +5826,13 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Parameters for creating an external IP address for
-    /// instances.",  "oneOf": [
+    /// instances.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "An IP address providing both inbound and outbound
     /// access. The address is automatically-assigned from the provided IP Pool,
-    /// or all available pools if not specified.",      "type": "object",
+    /// or all available pools if not specified.",
+    ///      "type": "object",
     ///      "required": [
     ///        "type"
     ///      ],
@@ -5757,7 +5856,8 @@ pub mod types {
     ///      "description": "An IP address providing both inbound and outbound
     /// access. The address is an existing Floating IP object assigned to the
     /// current project.\n\nThe floating IP must not be in use by another
-    /// instance or service.",      "type": "object",
+    /// instance or service.",
+    ///      "type": "object",
     ///      "required": [
     ///        "floating_ip_name",
     ///        "type"
@@ -5825,7 +5925,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -5868,8 +5969,9 @@ pub mod types {
     ///      "description": "If specified a snapshot of the disk will be created
     /// with the given name during finalization. If not specified, a snapshot
     /// for the disk will _not_ be created. A snapshot can be manually created
-    /// once the disk transitions into the `Detached` state.",      "allOf":
-    /// [        {
+    /// once the disk transitions into the `Detached` state.",
+    ///      "allOf": [
+    ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
     ///      ]
@@ -5999,7 +6101,8 @@ pub mod types {
     ///  "description": "Policy for a particular resource\n\nNote that the
     /// Policy only describes access granted explicitly for this resource.  The
     /// policies of parent resources can also cause a user to have access to
-    /// this resource.",  "type": "object",
+    /// this resource.",
+    ///  "type": "object",
     ///  "required": [
     ///    "role_assignments"
     ///  ],
@@ -6048,7 +6151,8 @@ pub mod types {
     /// particular resource to a particular identity (user, group, etc.)\n\nThe
     /// resource is not part of this structure.  Rather, `RoleAssignment`s are
     /// put into a `Policy` and that Policy is applied to a particular
-    /// resource.",  "type": "object",
+    /// resource.",
+    ///  "type": "object",
     ///  "required": [
     ///    "identity_id",
     ///    "identity_type",
@@ -6096,7 +6200,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A Floating IP is a well-known IP address which can be
-    /// attached and detached from instances.",  "type": "object",
+    /// attached and detached from instances.",
+    ///  "type": "object",
     ///  "required": [
     ///    "description",
     ///    "id",
@@ -6113,12 +6218,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "instance_id": {
     ///      "description": "The ID of the instance that this Floating IP is
-    /// attached to, if it is presently in use.",      "type": [
+    /// attached to, if it is presently in use.",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ],
@@ -6131,7 +6238,8 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -6197,7 +6305,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Parameters for creating a new floating IP address for
-    /// instances.",  "type": "object",
+    /// instances.",
+    ///  "type": "object",
     ///  "required": [
     ///    "description",
     ///    "name"
@@ -6207,7 +6316,8 @@ pub mod types {
     ///      "description": "An IP address to reserve for use as a floating IP.
     /// This field is optional: when not set, an address will be automatically
     /// chosen from `pool`. If set, then the IP must be available in the
-    /// resolved `pool`.",      "type": [
+    /// resolved `pool`.",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ],
@@ -6221,7 +6331,8 @@ pub mod types {
     ///    },
     ///    "pool": {
     ///      "description": "The parent IP pool that a floating IP is pulled
-    /// from. If unset, the default pool is selected.",      "allOf": [
+    /// from. If unset, the default pool is selected.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
@@ -6280,7 +6391,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -6383,7 +6495,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -6434,7 +6547,8 @@ pub mod types {
     /// \"gaps\" in the bins, and an additional bin may be added to the left,
     /// right, or both so that the bins extend to the entire range of the
     /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",  "type": "object",
+    /// result in an error.",
+    ///  "type": "object",
     ///  "required": [
     ///    "bins",
     ///    "n_samples",
@@ -6500,7 +6614,8 @@ pub mod types {
     /// \"gaps\" in the bins, and an additional bin may be added to the left,
     /// right, or both so that the bins extend to the entire range of the
     /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",  "type": "object",
+    /// result in an error.",
+    ///  "type": "object",
     ///  "required": [
     ///    "bins",
     ///    "n_samples",
@@ -6566,7 +6681,8 @@ pub mod types {
     /// \"gaps\" in the bins, and an additional bin may be added to the left,
     /// right, or both so that the bins extend to the entire range of the
     /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",  "type": "object",
+    /// result in an error.",
+    ///  "type": "object",
     ///  "required": [
     ///    "bins",
     ///    "n_samples",
@@ -6632,7 +6748,8 @@ pub mod types {
     /// \"gaps\" in the bins, and an additional bin may be added to the left,
     /// right, or both so that the bins extend to the entire range of the
     /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",  "type": "object",
+    /// result in an error.",
+    ///  "type": "object",
     ///  "required": [
     ///    "bins",
     ///    "n_samples",
@@ -6698,7 +6815,8 @@ pub mod types {
     /// \"gaps\" in the bins, and an additional bin may be added to the left,
     /// right, or both so that the bins extend to the entire range of the
     /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",  "type": "object",
+    /// result in an error.",
+    ///  "type": "object",
     ///  "required": [
     ///    "bins",
     ///    "n_samples",
@@ -6764,7 +6882,8 @@ pub mod types {
     /// \"gaps\" in the bins, and an additional bin may be added to the left,
     /// right, or both so that the bins extend to the entire range of the
     /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",  "type": "object",
+    /// result in an error.",
+    ///  "type": "object",
     ///  "required": [
     ///    "bins",
     ///    "n_samples",
@@ -6830,7 +6949,8 @@ pub mod types {
     /// \"gaps\" in the bins, and an additional bin may be added to the left,
     /// right, or both so that the bins extend to the entire range of the
     /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",  "type": "object",
+    /// result in an error.",
+    ///  "type": "object",
     ///  "required": [
     ///    "bins",
     ///    "n_samples",
@@ -6896,7 +7016,8 @@ pub mod types {
     /// \"gaps\" in the bins, and an additional bin may be added to the left,
     /// right, or both so that the bins extend to the entire range of the
     /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",  "type": "object",
+    /// result in an error.",
+    ///  "type": "object",
     ///  "required": [
     ///    "bins",
     ///    "n_samples",
@@ -6962,7 +7083,8 @@ pub mod types {
     /// \"gaps\" in the bins, and an additional bin may be added to the left,
     /// right, or both so that the bins extend to the entire range of the
     /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",  "type": "object",
+    /// result in an error.",
+    ///  "type": "object",
     ///  "required": [
     ///    "bins",
     ///    "n_samples",
@@ -7028,7 +7150,8 @@ pub mod types {
     /// \"gaps\" in the bins, and an additional bin may be added to the left,
     /// right, or both so that the bins extend to the entire range of the
     /// support.\n\nNote that any gaps, unsorted bins, or non-finite values will
-    /// result in an error.",  "type": "object",
+    /// result in an error.",
+    ///  "type": "object",
     ///  "required": [
     ///    "bins",
     ///    "n_samples",
@@ -7182,12 +7305,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -7264,7 +7389,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -7532,7 +7658,8 @@ pub mod types {
     /// {
     ///  "description": "View of an image\n\nIf `project_id` is present then the
     /// image is only visible inside that project. If it's not present then the
-    /// image is visible to all projects in the silo.",  "type": "object",
+    /// image is visible to all projects in the silo.",
+    ///  "type": "object",
     ///  "required": [
     ///    "block_size",
     ///    "description",
@@ -7567,12 +7694,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -7580,11 +7709,13 @@ pub mod types {
     ///    },
     ///    "os": {
     ///      "description": "The family of the operating system like Debian,
-    /// Ubuntu, etc.",      "type": "string"
+    /// Ubuntu, etc.",
+    ///      "type": "string"
     ///    },
     ///    "project_id": {
     ///      "description": "ID of the parent project if the image is a project
-    /// image",      "type": [
+    /// image",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ],
@@ -7680,7 +7811,8 @@ pub mod types {
     ///    },
     ///    "os": {
     ///      "description": "The family of the operating system (e.g. Debian,
-    /// Ubuntu, etc.)",      "type": "string"
+    /// Ubuntu, etc.)",
+    ///      "type": "string"
     ///    },
     ///    "source": {
     ///      "description": "The source of the image's contents.",
@@ -7692,7 +7824,8 @@ pub mod types {
     ///    },
     ///    "version": {
     ///      "description": "The version of the operating system (e.g. 18.04,
-    /// 20.04, etc.)",      "type": "string"
+    /// 20.04, etc.)",
+    ///      "type": "string"
     ///    }
     ///  }
     /// }
@@ -7743,7 +7876,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -7802,8 +7936,9 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "Boot the Alpine ISO that ships with the Propolis
-    /// zone. Intended for development purposes only.",      "type":
-    /// "object",      "required": [
+    /// zone. Intended for development purposes only.",
+    ///      "type": "object",
+    ///      "required": [
     ///        "type"
     ///      ],
     ///      "properties": {
@@ -7915,7 +8050,8 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "memory": {
@@ -7928,7 +8064,8 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -8099,7 +8236,8 @@ pub mod types {
     ///    },
     ///    "disks": {
     ///      "description": "The disks to be created or attached for this
-    /// instance.",      "default": [],
+    /// instance.",
+    ///      "default": [],
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/InstanceDiskAttachment"
@@ -8110,7 +8248,8 @@ pub mod types {
     /// instance.\n\nBy default, all instances have outbound connectivity, but
     /// no inbound connectivity. These external addresses can be used to provide
     /// a fixed, known IP address for making inbound connections to the
-    /// instance.",      "default": [],
+    /// instance.",
+    ///      "default": [],
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/ExternalIpCreate"
@@ -8130,25 +8269,29 @@ pub mod types {
     ///    },
     ///    "network_interfaces": {
     ///      "description": "The network interfaces to be created for this
-    /// instance.",      "default": {
+    /// instance.",
+    ///      "default": {
     ///        "type": "default"
     ///      },
     ///      "allOf": [
     ///        {
     ///          "$ref":
-    /// "#/components/schemas/InstanceNetworkInterfaceAttachment"        }
+    /// "#/components/schemas/InstanceNetworkInterfaceAttachment"
+    ///        }
     ///      ]
     ///    },
     ///    "start": {
     ///      "description": "Should this instance be started upon creation; true
-    /// by default.",      "default": true,
+    /// by default.",
+    ///      "default": true,
     ///      "type": "boolean"
     ///    },
     ///    "user_data": {
     ///      "description": "User data for instance initialization systems (such
     /// as cloud-init). Must be a Base64-encoded string, as specified in RFC
     /// 4648 § 4 (+ and / characters with padding). Maximum 32 KiB unencoded
-    /// data.",      "default": "",
+    /// data.",
+    ///      "default": "",
     ///      "type": "string",
     ///      "format": "byte"
     ///    }
@@ -8370,7 +8513,8 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "instance_id": {
@@ -8393,7 +8537,8 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -8401,7 +8546,8 @@ pub mod types {
     ///    },
     ///    "primary": {
     ///      "description": "True if this interface is the primary for the
-    /// instance to which it's attached.",      "type": "boolean"
+    /// instance to which it's attached.",
+    ///      "type": "boolean"
     ///    },
     ///    "subnet_id": {
     ///      "description": "The subnet to which the interface belongs.",
@@ -8475,7 +8621,8 @@ pub mod types {
     /// {
     ///  "description": "Describes an attachment of an
     /// `InstanceNetworkInterface` to an `Instance`, at the time the instance is
-    /// created.",  "oneOf": [
+    /// created.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "Create one or more `InstanceNetworkInterface`s for
     /// the `Instance`.\n\nIf more than one interface is provided, then the
@@ -8504,7 +8651,8 @@ pub mod types {
     ///      "description": "The default networking configuration for an
     /// instance is to create a single primary interface with an
     /// automatically-assigned IP address. The IP will be pulled from the
-    /// Project's default VPC / VPC Subnet.",      "type": "object",
+    /// Project's default VPC / VPC Subnet.",
+    ///      "type": "object",
     ///      "required": [
     ///        "type"
     ///      ],
@@ -8519,7 +8667,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "No network interfaces at all will be created for
-    /// the instance.",      "type": "object",
+    /// the instance.",
+    ///      "type": "object",
     ///      "required": [
     ///        "type"
     ///      ],
@@ -8570,7 +8719,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Create-time parameters for an
-    /// `InstanceNetworkInterface`",  "type": "object",
+    /// `InstanceNetworkInterface`",
+    ///  "type": "object",
     ///  "required": [
     ///    "description",
     ///    "name",
@@ -8583,7 +8733,8 @@ pub mod types {
     ///    },
     ///    "ip": {
     ///      "description": "The IP address for the interface. One will be
-    /// auto-assigned if not provided.",      "type": [
+    /// auto-assigned if not provided.",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ],
@@ -8659,7 +8810,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -8701,7 +8853,8 @@ pub mod types {
     ///  "description": "Parameters for updating an
     /// `InstanceNetworkInterface`\n\nNote that modifying IP addresses for an
     /// interface is not yet supported, a new interface must be created
-    /// instead.",  "type": "object",
+    /// instead.",
+    ///  "type": "object",
     ///  "properties": {
     ///    "description": {
     ///      "type": [
@@ -8724,7 +8877,8 @@ pub mod types {
     /// interface will be on a distinct subnet from the previous primary
     /// interface.\n\nNote that this can only be used to select a new primary
     /// interface for an instance. Requests to change the primary interface into
-    /// a secondary will return an error.",      "default": false,
+    /// a secondary will return an error.",
+    ///      "default": false,
     ///      "type": "boolean"
     ///    }
     ///  }
@@ -8785,7 +8939,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -8831,8 +8986,9 @@ pub mod types {
     ///    "data": {
     ///      "description": "The bytes starting from the requested offset up to
     /// either the end of the buffer or the request's `max_bytes`. Provided as a
-    /// u8 array rather than a string, as it may not be UTF-8.",      "type"
-    /// : "array",      "items": {
+    /// u8 array rather than a string, as it may not be UTF-8.",
+    ///      "type": "array",
+    ///      "items": {
     ///        "type": "integer",
     ///        "format": "uint8",
     ///        "minimum": 0.0
@@ -8841,7 +8997,8 @@ pub mod types {
     ///    "last_byte_offset": {
     ///      "description": "The absolute offset since boot (suitable for use as
     /// `byte_offset` in a subsequent request) of the last byte returned in
-    /// `data`.",      "type": "integer",
+    /// `data`.",
+    ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    }
@@ -8884,7 +9041,8 @@ pub mod types {
     ///  "description": "Running state of an Instance (primarily: booted or
     /// stopped)\n\nThis typically reflects whether it's starting, running,
     /// stopping, or stopped, but also includes states related to the Instance's
-    /// lifecycle",  "oneOf": [
+    /// lifecycle",
+    ///  "oneOf": [
     ///    {
     ///      "description": "The instance is being created.",
     ///      "type": "string",
@@ -8908,7 +9066,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "The instance has been requested to stop and a
-    /// transition to \"Stopped\" is imminent.",      "type": "string",
+    /// transition to \"Stopped\" is imminent.",
+    ///      "type": "string",
     ///      "enum": [
     ///        "stopping"
     ///      ]
@@ -8923,7 +9082,8 @@ pub mod types {
     ///    {
     ///      "description": "The instance is in the process of rebooting - it
     /// will remain in the \"rebooting\" state until the VM is starting once
-    /// more.",      "type": "string",
+    /// more.",
+    ///      "type": "string",
     ///      "enum": [
     ///        "rebooting"
     ///      ]
@@ -8937,7 +9097,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "The instance is attempting to recover from a
-    /// failure.",      "type": "string",
+    /// failure.",
+    ///      "type": "string",
     ///      "enum": [
     ///        "repairing"
     ///      ]
@@ -9258,7 +9419,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",  "type": "object",
+    /// public API objects",
+    ///  "type": "object",
     ///  "required": [
     ///    "description",
     ///    "id",
@@ -9274,7 +9436,8 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "is_default": {
@@ -9282,7 +9445,8 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -9359,7 +9523,8 @@ pub mod types {
     /// for its scope (fleet or silo). If a pool is marked default and is
     /// associated with a silo, instances created in that silo will draw IPs
     /// from that pool unless another pool is specified at instance create
-    /// time.",      "default": false,
+    /// time.",
+    ///      "default": false,
     ///      "type": "boolean"
     ///    },
     ///    "name": {
@@ -9367,8 +9532,9 @@ pub mod types {
     ///    },
     ///    "silo": {
     ///      "description": "If an IP pool is associated with a silo, instance
-    /// IP allocations in that silo can draw from that pool.",      "allOf":
-    /// [        {
+    /// IP allocations in that silo can draw from that pool.",
+    ///      "allOf": [
+    ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
     ///      ]
@@ -9479,7 +9645,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -9530,7 +9697,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -9673,7 +9841,8 @@ pub mod types {
     ///  "pattern":
     /// "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.
     /// ){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/
-    /// ([0-9]|1[0-9]|2[0-9]|3[0-2])$" }
+    /// ([0-9]|1[0-9]|2[0-9]|3[0-2])$"
+    /// }
     /// ```
     /// </details>
     #[derive(
@@ -9762,7 +9931,8 @@ pub mod types {
     /// {
     ///  "description": "A non-decreasing IPv4 address range, inclusive of both
     /// ends.\n\nThe first address must be less than or equal to the last
-    /// address.",  "type": "object",
+    /// address.",
+    ///  "type": "object",
     ///  "required": [
     ///    "first",
     ///    "last"
@@ -9813,7 +9983,8 @@ pub mod types {
     ///  "pattern":
     /// "^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,
     /// 4}|([0-9a-fA-F]{1,4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/
-    /// ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$" }
+    /// ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$"
+    /// }
     /// ```
     /// </details>
     #[derive(
@@ -9901,7 +10072,8 @@ pub mod types {
     /// {
     ///  "description": "A non-decreasing IPv6 address range, inclusive of both
     /// ends.\n\nThe first address must be less than or equal to the last
-    /// address.",  "type": "object",
+    /// address.",
+    ///  "type": "object",
     ///  "required": [
     ///    "first",
     ///    "last"
@@ -9946,7 +10118,8 @@ pub mod types {
     /// {
     ///  "title": "A range of IP ports",
     ///  "description": "An inclusive-inclusive range of IP ports. The second
-    /// port may be omitted to represent a single port",  "examples": [
+    /// port may be omitted to represent a single port",
+    ///  "examples": [
     ///    "22"
     ///  ],
     ///  "type": "string",
@@ -10061,7 +10234,8 @@ pub mod types {
     ///    },
     ///    "lldp": {
     ///      "description": "The link-layer discovery protocol (LLDP)
-    /// configuration for the link.",      "allOf": [
+    /// configuration for the link.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/LldpServiceConfig"
     ///        }
@@ -10407,7 +10581,8 @@ pub mod types {
     /// {
     ///  "description": "The LLDP configuration associated with a port. LLDP may
     /// be either enabled or disabled, if enabled, an LLDP configuration must be
-    /// provided by name or id.",  "type": "object",
+    /// provided by name or id.",
+    ///  "type": "object",
     ///  "required": [
     ///    "enabled"
     ///  ],
@@ -10418,7 +10593,8 @@ pub mod types {
     ///    },
     ///    "lldp_config": {
     ///      "description": "A reference to the LLDP configuration used. Must
-    /// not be `None` when `enabled` is `true`.",      "allOf": [
+    /// not be `None` when `enabled` is `true`.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
@@ -10488,12 +10664,14 @@ pub mod types {
     ///    },
     ///    "rack_id": {
     ///      "description": "The id of the rack where this loopback address is
-    /// assigned.",      "type": "string",
+    /// assigned.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "switch_location": {
     ///      "description": "Switch location where this loopback address is
-    /// assigned.",      "type": "string"
+    /// assigned.",
+    ///      "type": "string"
     ///    }
     ///  }
     /// }
@@ -10532,7 +10710,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Parameters for creating a loopback address on a
-    /// particular rack switch.",  "type": "object",
+    /// particular rack switch.",
+    ///  "type": "object",
     ///  "required": [
     ///    "address",
     ///    "address_lot",
@@ -10549,7 +10728,8 @@ pub mod types {
     ///    },
     ///    "address_lot": {
     ///      "description": "The name or id of the address lot this loopback
-    /// address will pull an address from.",      "allOf": [
+    /// address will pull an address from.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
@@ -10568,12 +10748,14 @@ pub mod types {
     ///    },
     ///    "rack_id": {
     ///      "description": "The containing the switch this loopback address
-    /// will be configured on.",      "type": "string",
+    /// will be configured on.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "switch_location": {
     ///      "description": "The location of the switch within the rack this
-    /// loopback address will be configured on.",      "allOf": [
+    /// loopback address will be configured on.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -10636,7 +10818,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -10766,7 +10949,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A `Measurement` is a timestamped datum from a single
-    /// metric",  "type": "object",
+    /// metric",
+    ///  "type": "object",
     ///  "required": [
     ///    "datum",
     ///    "timestamp"
@@ -10822,7 +11006,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -10908,12 +11093,14 @@ pub mod types {
     ///  "description": "Names must begin with a lower case ASCII letter, be
     /// composed exclusively of lowercase ASCII, uppercase ASCII, numbers, and
     /// '-', and may not end with a '-'. Names cannot be a UUID though they may
-    /// contain a UUID.",  "type": "string",
+    /// contain a UUID.",
+    ///  "type": "string",
     ///  "maxLength": 63,
     ///  "minLength": 1,
     ///  "pattern":
     /// "^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z][a-z0-9-]*
-    /// [a-zA-Z0-9]*$" }
+    /// [a-zA-Z0-9]*$"
+    /// }
     /// ```
     /// </details>
     #[derive(
@@ -11088,7 +11275,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Supported set of sort modes for scanning by name or
-    /// id",  "oneOf": [
+    /// id",
+    ///  "oneOf": [
     ///    {
     ///      "description": "sort in increasing order of \"name\"",
     ///      "type": "string",
@@ -11282,7 +11470,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "The order in which the client wants to page through the
-    /// requested collection",  "type": "string",
+    /// requested collection",
+    ///  "type": "string",
     ///  "enum": [
     ///    "ascending",
     ///    "descending"
@@ -11446,7 +11635,8 @@ pub mod types {
     /// {
     ///  "description": "View of a Physical Disk\n\nPhysical disks reside in a
     /// particular sled and are used to store both Instance Disk data as well as
-    /// internal metadata.",  "type": "object",
+    /// internal metadata.",
+    ///  "type": "object",
     ///  "required": [
     ///    "form_factor",
     ///    "id",
@@ -11462,7 +11652,8 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "model": {
@@ -11628,7 +11819,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -11671,7 +11863,8 @@ pub mod types {
     ///  "properties": {
     ///    "status": {
     ///      "description": "Whether the external API is reachable. Will always
-    /// be Ok if the endpoint returns anything at all.",      "allOf": [
+    /// be Ok if the endpoint returns anything at all.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/PingStatus"
     ///        }
@@ -11798,12 +11991,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -11911,7 +12106,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -12040,7 +12236,8 @@ pub mod types {
     ///  "description": "Policy for a particular resource\n\nNote that the
     /// Policy only describes access granted explicitly for this resource.  The
     /// policies of parent resources can also cause a user to have access to
-    /// this resource.",  "type": "object",
+    /// this resource.",
+    ///  "type": "object",
     ///  "required": [
     ///    "role_assignments"
     ///  ],
@@ -12089,7 +12286,8 @@ pub mod types {
     /// particular resource to a particular identity (user, group, etc.)\n\nThe
     /// resource is not part of this structure.  Rather, `RoleAssignment`s are
     /// put into a `Policy` and that Policy is applied to a particular
-    /// resource.",  "type": "object",
+    /// resource.",
+    ///  "type": "object",
     ///  "required": [
     ///    "identity_id",
     ///    "identity_type",
@@ -12191,7 +12389,8 @@ pub mod types {
     ///  "properties": {
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
@@ -12251,7 +12450,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -12330,7 +12530,8 @@ pub mod types {
     /// {
     ///  "title": "A name for a built-in role",
     ///  "description": "Role names consist of two string components separated
-    /// by dot (\".\").",  "type": "string",
+    /// by dot (\".\").",
+    ///  "type": "string",
     ///  "maxLength": 63,
     ///  "pattern": "[a-z-]+\\.[a-z-]+"
     /// }
@@ -12429,7 +12630,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -12466,7 +12668,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A route to a destination network through a gateway
-    /// address.",  "type": "object",
+    /// address.",
+    ///  "type": "object",
     ///  "required": [
     ///    "dst",
     ///    "gw"
@@ -12528,7 +12731,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Route configuration data associated with a switch port
-    /// configuration.",  "type": "object",
+    /// configuration.",
+    ///  "type": "object",
     ///  "required": [
     ///    "routes"
     ///  ],
@@ -12570,7 +12774,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",  "type": "object",
+    /// public API objects",
+    ///  "type": "object",
     ///  "required": [
     ///    "acs_url",
     ///    "description",
@@ -12586,7 +12791,8 @@ pub mod types {
     ///  "properties": {
     ///    "acs_url": {
     ///      "description": "Service provider endpoint where the response will
-    /// be sent",      "type": "string"
+    /// be sent",
+    ///      "type": "string"
     ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
@@ -12595,14 +12801,16 @@ pub mod types {
     ///    "group_attribute_name": {
     ///      "description": "If set, attributes with this name will be
     /// considered to denote a user's group membership, where the values will be
-    /// the group names.",      "type": [
+    /// the group names.",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "idp_entity_id": {
@@ -12611,7 +12819,8 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -12619,14 +12828,16 @@ pub mod types {
     ///    },
     ///    "public_cert": {
     ///      "description": "Optional request signing public certificate (base64
-    /// encoded der file)",      "type": [
+    /// encoded der file)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
     ///    },
     ///    "slo_url": {
     ///      "description": "Service provider endpoint where the idp should send
-    /// log out requests",      "type": "string"
+    /// log out requests",
+    ///      "type": "string"
     ///    },
     ///    "sp_client_id": {
     ///      "description": "SP's client id",
@@ -12634,7 +12845,8 @@ pub mod types {
     ///    },
     ///    "technical_contact_email": {
     ///      "description": "Customer's technical contact for saml
-    /// configuration",      "type": "string"
+    /// configuration",
+    ///      "type": "string"
     ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
@@ -12715,7 +12927,8 @@ pub mod types {
     ///  "properties": {
     ///    "acs_url": {
     ///      "description": "service provider endpoint where the response will
-    /// be sent",      "type": "string"
+    /// be sent",
+    ///      "type": "string"
     ///    },
     ///    "description": {
     ///      "type": "string"
@@ -12735,7 +12948,8 @@ pub mod types {
     ///    },
     ///    "idp_metadata_source": {
     ///      "description": "the source of an identity provider metadata
-    /// descriptor",      "allOf": [
+    /// descriptor",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/IdpMetadataSource"
     ///        }
@@ -12754,7 +12968,8 @@ pub mod types {
     ///    },
     ///    "slo_url": {
     ///      "description": "service provider endpoint where the idp should send
-    /// log out requests",      "type": "string"
+    /// log out requests",
+    ///      "type": "string"
     ///    },
     ///    "sp_client_id": {
     ///      "description": "sp's client id",
@@ -12762,7 +12977,8 @@ pub mod types {
     ///    },
     ///    "technical_contact_email": {
     ///      "description": "customer's technical contact for saml
-    /// configuration",      "type": "string"
+    /// configuration",
+    ///      "type": "string"
     ///    }
     ///  }
     /// }
@@ -12816,7 +13032,8 @@ pub mod types {
     ///  "oneOf": [
     ///    {
     ///      "description": "This certificate is intended for access to the
-    /// external API.",      "type": "string",
+    /// external API.",
+    ///      "type": "string",
     ///      "enum": [
     ///        "external_api"
     ///      ]
@@ -12898,7 +13115,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "View of a Silo\n\nA Silo is the highest level unit of
-    /// isolation.",  "type": "object",
+    /// isolation.",
+    ///  "type": "object",
     ///  "required": [
     ///    "description",
     ///    "discoverable",
@@ -12920,7 +13138,8 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "identity_mode": {
@@ -12946,7 +13165,8 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -13026,7 +13246,8 @@ pub mod types {
     /// further initialize the Silo.\n\nNote that if configuring a SAML based
     /// identity provider, group_attribute_name must be set for users to be
     /// considered part of a group. See `SamlIdentityProviderCreate` for more
-    /// information.",      "type": [
+    /// information.",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -13061,7 +13282,8 @@ pub mod types {
     ///      "description": "Limits the amount of provisionable CPU, memory, and
     /// storage in the Silo. CPU and memory are only consumed by running
     /// instances, while storage is consumed by any disk or snapshot. A value of
-    /// 0 means that resource is *not* provisionable.",      "allOf": [
+    /// 0 means that resource is *not* provisionable.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/SiloQuotasCreate"
     ///        }
@@ -13070,7 +13292,8 @@ pub mod types {
     ///    "tls_certificates": {
     ///      "description": "Initial TLS certificates to be used for the new
     /// Silo's console and API endpoints.  These should be valid for the Silo's
-    /// DNS name(s).",      "type": "array",
+    /// DNS name(s).",
+    ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/CertificateCreate"
     ///      }
@@ -13131,12 +13354,14 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Describes how identities are managed and users are
-    /// authenticated in this Silo",  "oneOf": [
+    /// authenticated in this Silo",
+    ///  "oneOf": [
     ///    {
     ///      "description": "Users are authenticated with SAML using an external
     /// authentication provider.  The system updates information about users and
     /// groups only during successful authentication (i.e,. \"JIT provisioning\"
-    /// of users and groups).",      "type": "string",
+    /// of users and groups).",
+    ///      "type": "string",
     ///      "enum": [
     ///        "saml_jit"
     ///      ]
@@ -13144,7 +13369,8 @@ pub mod types {
     ///    {
     ///      "description": "The system is the source of truth about users.
     /// There is no linkage to an external authentication provider or identity
-    /// provider.",      "type": "string",
+    /// provider.",
+    ///      "type": "string",
     ///      "enum": [
     ///        "local_only"
     ///      ]
@@ -13234,7 +13460,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A collection of resource counts used to set the virtual
-    /// capacity of a silo",  "type": "object",
+    /// capacity of a silo",
+    ///  "type": "object",
     ///  "required": [
     ///    "cpus",
     ///    "memory",
@@ -13310,12 +13537,14 @@ pub mod types {
     ///  "properties": {
     ///    "cpus": {
     ///      "description": "The amount of virtual CPUs available for running
-    /// instances in the Silo",      "type": "integer",
+    /// instances in the Silo",
+    ///      "type": "integer",
     ///      "format": "int64"
     ///    },
     ///    "memory": {
     ///      "description": "The amount of RAM (in bytes) available for running
-    /// instances in the Silo",      "allOf": [
+    /// instances in the Silo",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
@@ -13323,7 +13552,8 @@ pub mod types {
     ///    },
     ///    "storage": {
     ///      "description": "The amount of storage (in bytes) available for
-    /// disks or snapshots",      "allOf": [
+    /// disks or snapshots",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
@@ -13378,7 +13608,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -13416,11 +13647,13 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "Updateable properties of a Silo's resource limits. If a
-    /// value is omitted it will not be updated.",  "type": "object",
+    /// value is omitted it will not be updated.",
+    ///  "type": "object",
     ///  "properties": {
     ///    "cpus": {
     ///      "description": "The amount of virtual CPUs available for running
-    /// instances in the Silo",      "type": [
+    /// instances in the Silo",
+    ///      "type": [
     ///        "integer",
     ///        "null"
     ///      ],
@@ -13428,7 +13661,8 @@ pub mod types {
     ///    },
     ///    "memory": {
     ///      "description": "The amount of RAM (in bytes) available for running
-    /// instances in the Silo",      "allOf": [
+    /// instances in the Silo",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
@@ -13436,7 +13670,8 @@ pub mod types {
     ///    },
     ///    "storage": {
     ///      "description": "The amount of storage (in bytes) available for
-    /// disks or snapshots",      "allOf": [
+    /// disks or snapshots",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ByteCount"
     ///        }
@@ -13494,7 +13729,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -13623,7 +13859,8 @@ pub mod types {
     ///  "description": "Policy for a particular resource\n\nNote that the
     /// Policy only describes access granted explicitly for this resource.  The
     /// policies of parent resources can also cause a user to have access to
-    /// this resource.",  "type": "object",
+    /// this resource.",
+    ///  "type": "object",
     ///  "required": [
     ///    "role_assignments"
     ///  ],
@@ -13672,7 +13909,8 @@ pub mod types {
     /// particular resource to a particular identity (user, group, etc.)\n\nThe
     /// resource is not part of this structure.  Rather, `RoleAssignment`s are
     /// put into a `Policy` and that Policy is applied to a particular
-    /// resource.",  "type": "object",
+    /// resource.",
+    ///  "type": "object",
     ///  "required": [
     ///    "identity_id",
     ///    "identity_type",
@@ -13729,7 +13967,8 @@ pub mod types {
     ///  "properties": {
     ///    "allocated": {
     ///      "description": "Accounts for the total amount of resources reserved
-    /// for silos via their quotas",      "allOf": [
+    /// for silos via their quotas",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VirtualResourceCounts"
     ///        }
@@ -13739,7 +13978,8 @@ pub mod types {
     ///      "description": "Accounts for resources allocated by in silos like
     /// CPU or memory for running instances and storage for disks and snapshots
     /// Note that CPU and memory resources associated with a stopped instances
-    /// are not counted here",      "allOf": [
+    /// are not counted here",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VirtualResourceCounts"
     ///        }
@@ -13803,7 +14043,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -13857,7 +14098,8 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "provision_state": {
@@ -13885,7 +14127,8 @@ pub mod types {
     ///    },
     ///    "usable_hardware_threads": {
     ///      "description": "The number of hardware threads which can execute on
-    /// this sled",      "type": "integer",
+    /// this sled",
+    ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
     ///    },
@@ -13939,7 +14182,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "An operator's view of an instance running on a given
-    /// sled",  "type": "object",
+    /// sled",
+    ///  "type": "object",
     ///  "required": [
     ///    "active_sled_id",
     ///    "id",
@@ -13959,7 +14203,8 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "memory": {
@@ -14055,7 +14300,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -14107,7 +14353,8 @@ pub mod types {
     ///    {
     ///      "description": "New resources will not be provisioned on this sled.
     /// However, existing resources will continue to be on this sled unless
-    /// manually migrated off.",      "type": "string",
+    /// manually migrated off.",
+    ///      "type": "string",
     ///      "enum": [
     ///        "non_provisionable"
     ///      ]
@@ -14303,7 +14550,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -14363,12 +14611,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -14501,7 +14751,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -14646,12 +14897,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -14659,7 +14912,8 @@ pub mod types {
     ///    },
     ///    "public_key": {
     ///      "description": "SSH public key, e.g., `\"ssh-ed25519
-    /// AAAAC3NzaC...\"`",      "type": "string"
+    /// AAAAC3NzaC...\"`",
+    ///      "type": "string"
     ///    },
     ///    "silo_user_id": {
     ///      "description": "The user to whom this key belongs",
@@ -14732,7 +14986,8 @@ pub mod types {
     ///    },
     ///    "public_key": {
     ///      "description": "SSH public key, e.g., `\"ssh-ed25519
-    /// AAAAC3NzaC...\"`",      "type": "string"
+    /// AAAAC3NzaC...\"`",
+    ///      "type": "string"
     ///    }
     ///  }
     /// }
@@ -14779,7 +15034,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -14830,12 +15086,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "rack_id": {
     ///      "description": "The rack to which this Switch is currently
-    /// attached",      "type": "string",
+    /// attached",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
@@ -14894,7 +15152,8 @@ pub mod types {
     ///  "properties": {
     ///    "kind": {
     ///      "description": "What kind of switch interface this configuration
-    /// represents.",      "allOf": [
+    /// represents.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/SwitchInterfaceKind"
     ///        }
@@ -14955,7 +15214,8 @@ pub mod types {
     ///    {
     ///      "description": "VLAN interfaces allow physical interfaces to be
     /// multiplexed onto multiple logical links, each distinguished by a 12-bit
-    /// 802.1Q Ethernet tag.",      "type": "object",
+    /// 802.1Q Ethernet tag.",
+    ///      "type": "object",
     ///      "required": [
     ///        "type",
     ///        "vid"
@@ -14971,7 +15231,8 @@ pub mod types {
     ///          "description": "The virtual network id (VID) that distinguishes
     /// this interface and is used for producing and consuming 802.1Q Ethernet
     /// tags. This field has a maximum value of 4095 as 802.1Q tags are twelve
-    /// bits.",          "type": "integer",
+    /// bits.",
+    ///          "type": "integer",
     ///          "format": "uint16",
     ///          "minimum": 0.0
     ///        }
@@ -14979,8 +15240,9 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "Loopback interfaces are anchors for IP addresses
-    /// that are not specific to any particular port.",      "type":
-    /// "object",      "required": [
+    /// that are not specific to any particular port.",
+    ///      "type": "object",
+    ///      "required": [
     ///        "type"
     ///      ],
     ///      "properties": {
@@ -15124,7 +15386,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A switch port represents a physical external port on a
-    /// rack switch.",  "type": "object",
+    /// rack switch.",
+    ///  "type": "object",
     ///  "required": [
     ///    "id",
     ///    "port_name",
@@ -15143,8 +15406,9 @@ pub mod types {
     ///    },
     ///    "port_settings_id": {
     ///      "description": "The primary settings group of this switch port.
-    /// Will be `None` until this switch port is configured.",      "type":
-    /// [        "string",
+    /// Will be `None` until this switch port is configured.",
+    ///      "type": [
+    ///        "string",
     ///        "null"
     ///      ],
     ///      "format": "uuid"
@@ -15197,7 +15461,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "An IP address configuration for a port settings
-    /// object.",  "type": "object",
+    /// object.",
+    ///  "type": "object",
     ///  "required": [
     ///    "address",
     ///    "address_lot_block_id",
@@ -15215,7 +15480,8 @@ pub mod types {
     ///    },
     ///    "address_lot_block_id": {
     ///      "description": "The id of the address lot block this address is
-    /// drawn from.",      "type": "string",
+    /// drawn from.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "interface_name": {
@@ -15224,7 +15490,8 @@ pub mod types {
     ///    },
     ///    "port_settings_id": {
     ///      "description": "The port settings object this address configuration
-    /// belongs to.",      "type": "string",
+    /// belongs to.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    }
     ///  }
@@ -15269,7 +15536,8 @@ pub mod types {
     ///  "properties": {
     ///    "port_settings": {
     ///      "description": "A name or id to use when applying switch port
-    /// settings.",      "allOf": [
+    /// settings.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
@@ -15319,16 +15587,19 @@ pub mod types {
     ///    },
     ///    "bgp_config_id": {
     ///      "description": "The id of the global BGP configuration referenced
-    /// by this peer configuration.",      "type": "string",
+    /// by this peer configuration.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "interface_name": {
     ///      "description": "The interface name used to establish a peer
-    /// session.",      "type": "string"
+    /// session.",
+    ///      "type": "string"
     ///    },
     ///    "port_settings_id": {
     ///      "description": "The port settings object this BGP configuration
-    /// belongs to.",      "type": "string",
+    /// belongs to.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    }
     ///  }
@@ -15412,21 +15683,24 @@ pub mod types {
     ///  "oneOf": [
     ///    {
     ///      "description": "The port contains a single QSFP28 link with four
-    /// lanes.",      "type": "string",
+    /// lanes.",
+    ///      "type": "string",
     ///      "enum": [
     ///        "qsfp28x1"
     ///      ]
     ///    },
     ///    {
     ///      "description": "The port contains two QSFP28 links each with two
-    /// lanes.",      "type": "string",
+    /// lanes.",
+    ///      "type": "string",
     ///      "enum": [
     ///        "qsfp28x2"
     ///      ]
     ///    },
     ///    {
     ///      "description": "The port contains four SFP28 links each with one
-    /// lane.",      "type": "string",
+    /// lane.",
+    ///      "type": "string",
     ///      "enum": [
     ///        "sfp28x4"
     ///      ]
@@ -15530,7 +15804,8 @@ pub mod types {
     ///    },
     ///    "lldp_service_config_id": {
     ///      "description": "The link-layer discovery protocol service
-    /// configuration id for this link.",      "type": "string",
+    /// configuration id for this link.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "mtu": {
@@ -15541,7 +15816,8 @@ pub mod types {
     ///    },
     ///    "port_settings_id": {
     ///      "description": "The port settings this link configuration belongs
-    /// to.",      "type": "string",
+    /// to.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    }
     ///  }
@@ -15594,7 +15870,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -15657,17 +15934,20 @@ pub mod types {
     ///    },
     ///    "interface_name": {
     ///      "description": "The interface name this route configuration is
-    /// assigned to.",      "type": "string"
+    /// assigned to.",
+    ///      "type": "string"
     ///    },
     ///    "port_settings_id": {
     ///      "description": "The port settings object this route configuration
-    /// belongs to.",      "type": "string",
+    /// belongs to.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "vlan_id": {
     ///      "description": "The VLAN identifier for the route. Use this if the
-    /// gateway is reachable over an 802.1Q tagged L2 segment.",      "type"
-    /// : [        "integer",
+    /// gateway is reachable over an 802.1Q tagged L2 segment.",
+    ///      "type": [
+    ///        "integer",
     ///        "null"
     ///      ],
     ///      "format": "uint16",
@@ -15713,7 +15993,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A switch port settings identity whose id may be used to
-    /// view additional details.",  "type": "object",
+    /// view additional details.",
+    ///  "type": "object",
     ///  "required": [
     ///    "description",
     ///    "id",
@@ -15728,12 +16009,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -15791,7 +16074,8 @@ pub mod types {
     ///  "description": "Parameters for creating switch port settings. Switch
     /// port settings are the central data structure for setting up external
     /// networking. Switch port settings include link, interface, route, address
-    /// and dynamic network protocol configuration.",  "type": "object",
+    /// and dynamic network protocol configuration.",
+    ///  "type": "object",
     ///  "required": [
     ///    "addresses",
     ///    "bgp_peers",
@@ -15837,7 +16121,8 @@ pub mod types {
     ///    "links": {
     ///      "description": "Links indexed by phy name. On ports that are not
     /// broken out, this is always phy0. On a 2x breakout the options are phy0
-    /// and phy1, on 4x phy0-phy3, etc.",      "type": "object",
+    /// and phy1, on 4x phy0-phy3, etc.",
+    ///      "type": "object",
     ///      "additionalProperties": {
     ///        "$ref": "#/components/schemas/LinkConfig"
     ///      }
@@ -15903,7 +16188,8 @@ pub mod types {
     ///  "description": "This structure maps a port settings object to a port
     /// settings groups. Port settings objects may inherit settings from groups.
     /// This mapping defines the relationship between settings objects and the
-    /// groups they reference.",  "type": "object",
+    /// groups they reference.",
+    ///  "type": "object",
     ///  "required": [
     ///    "port_settings_group_id",
     ///    "port_settings_id"
@@ -15911,12 +16197,14 @@ pub mod types {
     ///  "properties": {
     ///    "port_settings_group_id": {
     ///      "description": "The id of a port settings group being referenced by
-    /// a port settings object.",      "type": "string",
+    /// a port settings object.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "port_settings_id": {
     ///      "description": "The id of a port settings object referencing a port
-    /// settings group.",      "type": "string",
+    /// settings group.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    }
     ///  }
@@ -15965,7 +16253,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -16005,7 +16294,8 @@ pub mod types {
     /// {
     ///  "description": "This structure contains all port settings information
     /// in one place. It's a convenience data structure for getting a complete
-    /// view of a particular port's settings.",  "type": "object",
+    /// view of a particular port's settings.",
+    ///  "type": "object",
     ///  "required": [
     ///    "addresses",
     ///    "bgp_peers",
@@ -16035,7 +16325,8 @@ pub mod types {
     ///    },
     ///    "groups": {
     ///      "description": "Switch port settings included from other switch
-    /// port settings groups.",      "type": "array",
+    /// port settings groups.",
+    ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/SwitchPortSettingsGroups"
     ///      }
@@ -16153,7 +16444,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -16190,7 +16482,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A switch port VLAN interface configuration for a port
-    /// settings object.",  "type": "object",
+    /// settings object.",
+    ///  "type": "object",
     ///  "required": [
     ///    "interface_config_id",
     ///    "vlan_id"
@@ -16198,14 +16491,16 @@ pub mod types {
     ///  "properties": {
     ///    "interface_config_id": {
     ///      "description": "The switch interface configuration this VLAN
-    /// interface configuration belongs to.",      "type": "string",
+    /// interface configuration belongs to.",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "vlan_id": {
     ///      "description": "The virtual network id for this interface that is
     /// used for producing and consuming 802.1Q Ethernet tags. This field has a
-    /// maximum value of 4095 as 802.1Q tags are twelve bits.",      "type":
-    /// "integer",      "format": "uint16",
+    /// maximum value of 4095 as 802.1Q tags are twelve bits.",
+    ///      "type": "integer",
+    ///      "format": "uint16",
     ///      "minimum": 0.0
     ///    }
     ///  }
@@ -16328,7 +16623,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A sled that has not been added to an initialized rack
-    /// yet",  "type": "object",
+    /// yet",
+    ///  "type": "object",
     ///  "required": [
     ///    "baseboard",
     ///    "cubby",
@@ -16433,7 +16729,8 @@ pub mod types {
     /// {
     ///  "description": "View of a Built-in User\n\nA Built-in User is
     /// explicitly created as opposed to being derived from an Identify
-    /// Provider.",  "type": "object",
+    /// Provider.",
+    ///  "type": "object",
     ///  "required": [
     ///    "description",
     ///    "id",
@@ -16448,12 +16745,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -16520,7 +16819,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -16615,12 +16915,14 @@ pub mod types {
     ///  "description": "Names must begin with a lower case ASCII letter, be
     /// composed exclusively of lowercase ASCII, uppercase ASCII, numbers, and
     /// '-', and may not end with a '-'. Names cannot be a UUID though they may
-    /// contain a UUID.",  "type": "string",
+    /// contain a UUID.",
+    ///  "type": "string",
     ///  "maxLength": 63,
     ///  "minLength": 1,
     ///  "pattern":
     /// "^(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)^[a-z][a-z0-9-]*
-    /// [a-zA-Z0-9]*$" }
+    /// [a-zA-Z0-9]*$"
+    /// }
     /// ```
     /// </details>
     #[derive(
@@ -16721,7 +17023,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "Invalidates any current password (disabling
-    /// password authentication)",      "type": "object",
+    /// password authentication)",
+    ///      "type": "object",
     ///      "required": [
     ///        "mode"
     ///      ],
@@ -16781,7 +17084,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -16859,7 +17163,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "View of the current silo's resource utilization and
-    /// capacity",  "type": "object",
+    /// capacity",
+    ///  "type": "object",
     ///  "required": [
     ///    "capacity",
     ///    "provisioned"
@@ -16868,7 +17173,8 @@ pub mod types {
     ///    "capacity": {
     ///      "description": "The total amount of resources that can be
     /// provisioned in this silo Actions that would exceed this limit will
-    /// fail",      "allOf": [
+    /// fail",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VirtualResourceCounts"
     ///        }
@@ -16878,8 +17184,9 @@ pub mod types {
     ///      "description": "Accounts for resources allocated to running
     /// instances or storage allocated via disks or snapshots Note that CPU and
     /// memory resources associated with a stopped instances are not counted
-    /// here whereas associated disks will still be counted",      "allOf":
-    /// [        {
+    /// here whereas associated disks will still be counted",
+    ///      "allOf": [
+    ///        {
     ///          "$ref": "#/components/schemas/VirtualResourceCounts"
     ///        }
     ///      ]
@@ -16920,7 +17227,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A collection of resource counts used to describe
-    /// capacity and utilization",  "type": "object",
+    /// capacity and utilization",
+    ///  "type": "object",
     ///  "required": [
     ///    "cpus",
     ///    "memory",
@@ -17008,12 +17316,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "ipv6_prefix": {
     ///      "description": "The unique local IPv6 address range for subnets in
-    /// this VPC",      "allOf": [
+    /// this VPC",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Ipv6Net"
     ///        }
@@ -17021,7 +17331,8 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -17034,7 +17345,8 @@ pub mod types {
     ///    },
     ///    "system_router_id": {
     ///      "description": "id for the system router where subnet default
-    /// routes are registered",      "type": "string",
+    /// routes are registered",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "time_created": {
@@ -17109,7 +17421,8 @@ pub mod types {
     ///      "description": "The IPv6 prefix for this VPC\n\nAll IPv6 subnets
     /// created from this VPC must be taken from this range, which should be a
     /// Unique Local Address in the range `fd00::/48`. The default VPC Subnet
-    /// will have the first `/64` range from this prefix.",      "allOf": [
+    /// will have the first `/64` range from this prefix.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Ipv6Net"
     ///        }
@@ -17174,7 +17487,8 @@ pub mod types {
     ///  "properties": {
     ///    "action": {
     ///      "description": "whether traffic matching the rule should be allowed
-    /// or dropped",      "allOf": [
+    /// or dropped",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleAction"
     ///        }
@@ -17186,7 +17500,8 @@ pub mod types {
     ///    },
     ///    "direction": {
     ///      "description": "whether this rule is for incoming or outgoing
-    /// traffic",      "allOf": [
+    /// traffic",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleDirection"
     ///        }
@@ -17202,12 +17517,14 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -17229,7 +17546,8 @@ pub mod types {
     ///    },
     ///    "targets": {
     ///      "description": "list of sets of instances that the rule applies
-    /// to",      "type": "array",
+    /// to",
+    ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleTarget"
     ///      }
@@ -17470,7 +17788,8 @@ pub mod types {
     ///  "properties": {
     ///    "hosts": {
     ///      "description": "If present, the sources (if incoming) or
-    /// destinations (if outgoing) this rule applies to.",      "type": [
+    /// destinations (if outgoing) this rule applies to.",
+    ///      "type": [
     ///        "array",
     ///        "null"
     ///      ],
@@ -17480,7 +17799,8 @@ pub mod types {
     ///    },
     ///    "ports": {
     ///      "description": "If present, the destination ports this rule applies
-    /// to.",      "type": [
+    /// to.",
+    ///      "type": [
     ///        "array",
     ///        "null"
     ///      ],
@@ -17490,7 +17810,8 @@ pub mod types {
     ///    },
     ///    "protocols": {
     ///      "description": "If present, the networking protocols this rule
-    /// applies to.",      "type": [
+    /// applies to.",
+    ///      "type": [
     ///        "array",
     ///        "null"
     ///      ],
@@ -17540,7 +17861,8 @@ pub mod types {
     ///  "oneOf": [
     ///    {
     ///      "description": "The rule applies to traffic from/to all instances
-    /// in the VPC",      "type": "object",
+    /// in the VPC",
+    ///      "type": "object",
     ///      "required": [
     ///        "type",
     ///        "value"
@@ -17559,7 +17881,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "The rule applies to traffic from/to all instances
-    /// in the VPC Subnet",      "type": "object",
+    /// in the VPC Subnet",
+    ///      "type": "object",
     ///      "required": [
     ///        "type",
     ///        "value"
@@ -17578,7 +17901,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "The rule applies to traffic from/to this specific
-    /// instance",      "type": "object",
+    /// instance",
+    ///      "type": "object",
     ///      "required": [
     ///        "type",
     ///        "value"
@@ -17597,7 +17921,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "The rule applies to traffic from/to a specific IP
-    /// address",      "type": "object",
+    /// address",
+    ///      "type": "object",
     ///      "required": [
     ///        "type",
     ///        "value"
@@ -17617,7 +17942,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "The rule applies to traffic from/to a specific IP
-    /// subnet",      "type": "object",
+    /// subnet",
+    ///      "type": "object",
     ///      "required": [
     ///        "type",
     ///        "value"
@@ -17683,7 +18009,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "The protocols that may be specified in a firewall
-    /// rule's filter",  "type": "string",
+    /// rule's filter",
+    ///  "type": "string",
     ///  "enum": [
     ///    "TCP",
     ///    "UDP",
@@ -17852,7 +18179,8 @@ pub mod types {
     /// ```json
     /// {
     ///  "description": "A `VpcFirewallRuleTarget` is used to specify the set of
-    /// `Instance`s to which a firewall rule applies.",  "oneOf": [
+    /// `Instance`s to which a firewall rule applies.",
+    ///  "oneOf": [
     ///    {
     ///      "description": "The rule applies to all instances in the VPC",
     ///      "type": "object",
@@ -17874,7 +18202,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "The rule applies to all instances in the VPC
-    /// Subnet",      "type": "object",
+    /// Subnet",
+    ///      "type": "object",
     ///      "required": [
     ///        "type",
     ///        "value"
@@ -18012,7 +18341,8 @@ pub mod types {
     ///  "properties": {
     ///    "action": {
     ///      "description": "whether traffic matching the rule should be allowed
-    /// or dropped",      "allOf": [
+    /// or dropped",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleAction"
     ///        }
@@ -18024,7 +18354,8 @@ pub mod types {
     ///    },
     ///    "direction": {
     ///      "description": "whether this rule is for incoming or outgoing
-    /// traffic",      "allOf": [
+    /// traffic",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/VpcFirewallRuleDirection"
     ///        }
@@ -18062,7 +18393,8 @@ pub mod types {
     ///    },
     ///    "targets": {
     ///      "description": "list of sets of instances that the rule applies
-    /// to",      "type": "array",
+    /// to",
+    ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/VpcFirewallRuleTarget"
     ///      }
@@ -18113,7 +18445,8 @@ pub mod types {
     /// {
     ///  "description": "Updateable properties of a `Vpc`'s firewall Note that
     /// VpcFirewallRules are implicitly created along with a Vpc, so there is no
-    /// explicit creation.",  "type": "object",
+    /// explicit creation.",
+    ///  "type": "object",
     ///  "required": [
     ///    "rules"
     ///  ],
@@ -18205,7 +18538,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
@@ -18245,7 +18579,8 @@ pub mod types {
     /// {
     ///  "description": "A VPC subnet represents a logical grouping for
     /// instances that allows network traffic between them, within a IPv4
-    /// subnetwork or optionall an IPv6 subnetwork.",  "type": "object",
+    /// subnetwork or optionall an IPv6 subnetwork.",
+    ///  "type": "object",
     ///  "required": [
     ///    "description",
     ///    "id",
@@ -18263,7 +18598,8 @@ pub mod types {
     ///    },
     ///    "id": {
     ///      "description": "unique, immutable, system-controlled identifier for
-    /// each resource",      "type": "string",
+    /// each resource",
+    ///      "type": "string",
     ///      "format": "uuid"
     ///    },
     ///    "ipv4_block": {
@@ -18284,7 +18620,8 @@ pub mod types {
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
-    /// each resource",      "allOf": [
+    /// each resource",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
@@ -18361,7 +18698,8 @@ pub mod types {
     ///    "ipv4_block": {
     ///      "description": "The IPv4 address range for this subnet.\n\nIt must
     /// be allocated from an RFC 1918 private address range, and must not
-    /// overlap with any other existing subnet in the VPC.",      "allOf": [
+    /// overlap with any other existing subnet in the VPC.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Ipv4Net"
     ///        }
@@ -18372,7 +18710,8 @@ pub mod types {
     /// be allocated from the RFC 4193 Unique Local Address range, with the
     /// prefix equal to the parent VPC's prefix. A random `/64` block will be
     /// assigned if one is not provided. It must not overlap with any existing
-    /// subnet in the VPC.",      "allOf": [
+    /// subnet in the VPC.",
+    ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/Ipv6Net"
     ///        }
@@ -18437,7 +18776,8 @@ pub mod types {
     ///    },
     ///    "next_page": {
     ///      "description": "token used to fetch the next page of results (if
-    /// any)",      "type": [
+    /// any)",
+    ///      "type": [
     ///        "string",
     ///        "null"
     ///      ]
