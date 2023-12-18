@@ -16666,6 +16666,58 @@ pub mod types {
         }
     }
 
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/UninitializedSled"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct UninitializedSledResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<UninitializedSled>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&UninitializedSledResultsPage> for UninitializedSledResultsPage {
+        fn from(value: &UninitializedSledResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl UninitializedSledResultsPage {
+        pub fn builder() -> builder::UninitializedSledResultsPage {
+            Default::default()
+        }
+    }
+
     /// View of a User
     ///
     /// <details><summary>JSON schema</summary>
@@ -31346,6 +31398,63 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct UninitializedSledResultsPage {
+            items: Result<Vec<super::UninitializedSled>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for UninitializedSledResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl UninitializedSledResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::UninitializedSled>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<UninitializedSledResultsPage> for super::UninitializedSledResultsPage {
+            type Error = String;
+            fn try_from(value: UninitializedSledResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::UninitializedSledResultsPage> for UninitializedSledResultsPage {
+            fn from(value: super::UninitializedSledResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct User {
             display_name: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -34958,6 +35067,16 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_set_provision_state(&self) -> builder::SledSetProvisionState;
+    /// List uninitialized sleds in a given rack
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
+    ///
+    /// ```ignore
+    /// let response = client.sled_list_uninitialized()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn sled_list_uninitialized(&self) -> builder::SledListUninitialized;
     /// List switch ports
     ///
     /// Sends a `GET` request to `/v1/system/hardware/switch-port`
@@ -35050,16 +35169,6 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn switch_view(&self) -> builder::SwitchView;
-    /// List uninitialized sleds in a given rack
-    ///
-    /// Sends a `GET` request to `/v1/system/hardware/uninitialized-sleds`
-    ///
-    /// ```ignore
-    /// let response = client.uninitialized_sled_list()
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn uninitialized_sled_list(&self) -> builder::UninitializedSledList;
 }
 
 impl ClientSystemHardwareExt for Client {
@@ -35099,6 +35208,10 @@ impl ClientSystemHardwareExt for Client {
         builder::SledSetProvisionState::new(self)
     }
 
+    fn sled_list_uninitialized(&self) -> builder::SledListUninitialized {
+        builder::SledListUninitialized::new(self)
+    }
+
     fn networking_switch_port_list(&self) -> builder::NetworkingSwitchPortList {
         builder::NetworkingSwitchPortList::new(self)
     }
@@ -35117,10 +35230,6 @@ impl ClientSystemHardwareExt for Client {
 
     fn switch_view(&self) -> builder::SwitchView {
         builder::SwitchView::new(self)
-    }
-
-    fn uninitialized_sled_list(&self) -> builder::UninitializedSledList {
-        builder::UninitializedSledList::new(self)
     }
 }
 
@@ -45029,6 +45138,49 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemHardwareExt::sled_list_uninitialized`]
+    ///
+    /// [`ClientSystemHardwareExt::sled_list_uninitialized`]: super::ClientSystemHardwareExt::sled_list_uninitialized
+    #[derive(Debug, Clone)]
+    pub struct SledListUninitialized<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> SledListUninitialized<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::UninitializedSledResultsPage>, Error<types::Error>>
+        {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/hardware/sleds-uninitialized", client.baseurl,);
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientSystemHardwareExt::networking_switch_port_list`]
     ///
     /// [`ClientSystemHardwareExt::networking_switch_port_list`]: super::ClientSystemHardwareExt::networking_switch_port_list
@@ -45621,48 +45773,6 @@ pub mod builder {
                 client.baseurl,
                 encode_path(&switch_id.to_string()),
             );
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemHardwareExt::uninitialized_sled_list`]
-    ///
-    /// [`ClientSystemHardwareExt::uninitialized_sled_list`]: super::ClientSystemHardwareExt::uninitialized_sled_list
-    #[derive(Debug, Clone)]
-    pub struct UninitializedSledList<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> UninitializedSledList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client: client }
-        }
-
-        /// Sends a `GET` request to `/v1/system/hardware/uninitialized-sleds`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<Vec<types::UninitializedSled>>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/system/hardware/uninitialized-sleds", client.baseurl,);
             let request = client
                 .client
                 .get(url)
