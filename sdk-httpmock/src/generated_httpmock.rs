@@ -6609,6 +6609,59 @@ pub mod operations {
         }
     }
 
+    pub struct SledListUninitializedWhen(httpmock::When);
+    impl SledListUninitializedWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/hardware/sleds-uninitialized$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct SledListUninitializedThen(httpmock::Then);
+    impl SledListUninitializedThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UninitializedSledResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct NetworkingSwitchPortListWhen(httpmock::When);
     impl NetworkingSwitchPortListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -7000,59 +7053,6 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::Switch) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct UninitializedSledListWhen(httpmock::When);
-    impl UninitializedSledListWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(inner.method(httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/system/hardware/uninitialized-sleds$").unwrap(),
-            ))
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-    }
-
-    pub struct UninitializedSledListThen(httpmock::Then);
-    impl UninitializedSledListThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &Vec<types::UninitializedSled>) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -12949,6 +12949,9 @@ pub trait MockServerExt {
     fn sled_set_provision_state<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledSetProvisionStateWhen, operations::SledSetProvisionStateThen);
+    fn sled_list_uninitialized<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SledListUninitializedWhen, operations::SledListUninitializedThen);
     fn networking_switch_port_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
@@ -12973,9 +12976,6 @@ pub trait MockServerExt {
     fn switch_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SwitchViewWhen, operations::SwitchViewThen);
-    fn uninitialized_sled_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::UninitializedSledListWhen, operations::UninitializedSledListThen);
     fn silo_identity_provider_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
@@ -14269,6 +14269,18 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
+    fn sled_list_uninitialized<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SledListUninitializedWhen, operations::SledListUninitializedThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SledListUninitializedWhen::new(when),
+                operations::SledListUninitializedThen::new(then),
+            )
+        })
+    }
+
     fn networking_switch_port_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
@@ -14334,18 +14346,6 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::SwitchViewWhen::new(when),
                 operations::SwitchViewThen::new(then),
-            )
-        })
-    }
-
-    fn uninitialized_sled_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::UninitializedSledListWhen, operations::UninitializedSledListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::UninitializedSledListWhen::new(when),
-                operations::UninitializedSledListThen::new(then),
             )
         })
     }

@@ -102,6 +102,7 @@ impl Cli {
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
             CliCommand::SledSetProvisionState => Self::cli_sled_set_provision_state(),
+            CliCommand::SledListUninitialized => Self::cli_sled_list_uninitialized(),
             CliCommand::NetworkingSwitchPortList => Self::cli_networking_switch_port_list(),
             CliCommand::NetworkingSwitchPortApplySettings => {
                 Self::cli_networking_switch_port_apply_settings()
@@ -111,7 +112,6 @@ impl Cli {
             }
             CliCommand::SwitchList => Self::cli_switch_list(),
             CliCommand::SwitchView => Self::cli_switch_view(),
-            CliCommand::UninitializedSledList => Self::cli_uninitialized_sled_list(),
             CliCommand::SiloIdentityProviderList => Self::cli_silo_identity_provider_list(),
             CliCommand::LocalIdpUserCreate => Self::cli_local_idp_user_create(),
             CliCommand::LocalIdpUserDelete => Self::cli_local_idp_user_delete(),
@@ -2607,6 +2607,10 @@ impl Cli {
             .about("Set the sled's provision state.")
     }
 
+    pub fn cli_sled_list_uninitialized() -> clap::Command {
+        clap::Command::new("").about("List uninitialized sleds in a given rack")
+    }
+
     pub fn cli_networking_switch_port_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -2743,10 +2747,6 @@ impl Cli {
                     .help("ID of the switch"),
             )
             .about("Fetch a switch")
-    }
-
-    pub fn cli_uninitialized_sled_list() -> clap::Command {
-        clap::Command::new("").about("List uninitialized sleds in a given rack")
     }
 
     pub fn cli_silo_identity_provider_list() -> clap::Command {
@@ -5002,6 +5002,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::SledSetProvisionState => {
                 self.execute_sled_set_provision_state(matches).await;
             }
+            CliCommand::SledListUninitialized => {
+                self.execute_sled_list_uninitialized(matches).await;
+            }
             CliCommand::NetworkingSwitchPortList => {
                 self.execute_networking_switch_port_list(matches).await;
             }
@@ -5018,9 +5021,6 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SwitchView => {
                 self.execute_switch_view(matches).await;
-            }
-            CliCommand::UninitializedSledList => {
-                self.execute_uninitialized_sled_list(matches).await;
             }
             CliCommand::SiloIdentityProviderList => {
                 self.execute_silo_identity_provider_list(matches).await;
@@ -7634,6 +7634,22 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_sled_list_uninitialized(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.sled_list_uninitialized();
+        self.over
+            .execute_sled_list_uninitialized(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_networking_switch_port_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.networking_switch_port_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -7773,22 +7789,6 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_switch_view(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_uninitialized_sled_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.uninitialized_sled_list();
-        self.over
-            .execute_uninitialized_sled_list(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -10515,6 +10515,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_sled_list_uninitialized(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SledListUninitialized,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_networking_switch_port_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10551,14 +10559,6 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SwitchView,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_uninitialized_sled_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::UninitializedSledList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -11225,12 +11225,12 @@ pub enum CliCommand {
     SledPhysicalDiskList,
     SledInstanceList,
     SledSetProvisionState,
+    SledListUninitialized,
     NetworkingSwitchPortList,
     NetworkingSwitchPortApplySettings,
     NetworkingSwitchPortClearSettings,
     SwitchList,
     SwitchView,
-    UninitializedSledList,
     SiloIdentityProviderList,
     LocalIdpUserCreate,
     LocalIdpUserDelete,
@@ -11390,12 +11390,12 @@ impl CliCommand {
             CliCommand::SledPhysicalDiskList,
             CliCommand::SledInstanceList,
             CliCommand::SledSetProvisionState,
+            CliCommand::SledListUninitialized,
             CliCommand::NetworkingSwitchPortList,
             CliCommand::NetworkingSwitchPortApplySettings,
             CliCommand::NetworkingSwitchPortClearSettings,
             CliCommand::SwitchList,
             CliCommand::SwitchView,
-            CliCommand::UninitializedSledList,
             CliCommand::SiloIdentityProviderList,
             CliCommand::LocalIdpUserCreate,
             CliCommand::LocalIdpUserDelete,
