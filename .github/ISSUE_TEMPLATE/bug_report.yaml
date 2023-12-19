@@ -1,5 +1,5 @@
 name: Bug report
-description: Let us know about unexpected behaviour when using the CLI or Oxide Rust SDK
+description: Report unexpected behaviour when using the Oxide CLI or Rust SDK
 body:
   - type: checkboxes
     id: preliminary
