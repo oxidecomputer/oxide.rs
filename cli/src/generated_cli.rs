@@ -2608,7 +2608,15 @@ impl Cli {
     }
 
     pub fn cli_sled_list_uninitialized() -> clap::Command {
-        clap::Command::new("").about("List uninitialized sleds in a given rack")
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about("List uninitialized sleds in a given rack")
     }
 
     pub fn cli_networking_switch_port_list() -> clap::Command {
@@ -7636,16 +7644,26 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_sled_list_uninitialized(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.sled_list_uninitialized();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
         self.over
             .execute_sled_list_uninitialized(matches, &mut request)
             .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
