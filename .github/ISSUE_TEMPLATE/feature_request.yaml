@@ -6,10 +6,12 @@ body:
     id: component
     attributes:
       label: Target component
-      description: Which component is this feature request for?
+      description: Is this a feature request for the CLI or SDK (including their documentation)?
       options:
         - label: CLI
         - label: SDK
+        - label: Something else
+        - label: Not sure
     validations:
       required: true
 

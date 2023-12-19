@@ -1,16 +1,12 @@
 name: Bug report
 description: Report unexpected behaviour when using the Oxide CLI or Rust SDK
 body:
-  - type: checkboxes
-    id: preliminary
+  - type: markdown
     attributes:
-      label: Preliminary checks
-      description: Please verify the following.
-      options:
-        - label: I am using the latest version, or the latest version that corresponds to my Oxide installation.
-        - label: There is no open issue that reports the same problem.
-    validations:
-      required: true
+      value: |
+        Thanks for taking the time to fill out this bug report. Please verify the following:
+        - Check that the version of the CLI or SDK matches that of the Oxide installation.
+        - See if there's already an issue filed for the behavior you're experiencing--there may already be a fix or work-around.
 
   - type: checkboxes
     id: component
@@ -44,7 +40,9 @@ body:
     id: oxide-version
     attributes:
       label: CLI or SDK version
-      description: The version of the component that is exhibiting the problem.
+      description: |
+        The version of the component that is exhibiting the problem. For the CLI, copy
+        the output of `oxide version`. For the SDK, copy the crate version or git commit hash.
     validations:
       required: true
 
