@@ -52,7 +52,7 @@ body:
     id: os
     attributes:
       label: Operating system
-      description: What operating system are you using.
+      description: Under what operating system are you using the CLI or SDK?
     validations:
       required: true
 
