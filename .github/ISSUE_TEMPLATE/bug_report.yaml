@@ -13,13 +13,14 @@ body:
       required: true
 
   - type: checkboxes
-    id: source
+    id: component
     attributes:
-      label: Source of issue
-      description: Is this a problem with the CLI or SDK?
+      label: Component
+      description: Is this a problem with the CLI or SDK (including their documentation)?
       options:
         - label: CLI
         - label: SDK
+        - label: Something else
         - label: Not sure
     validations:
       required: true
