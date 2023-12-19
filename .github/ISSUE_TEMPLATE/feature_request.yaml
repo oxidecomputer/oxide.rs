@@ -1,0 +1,35 @@
+name: Feature request
+description: Let us know about something you'd like to see as part of the CLI or Oxide Rust SDK
+labels: ["feature"]
+body:
+  - type: checkboxes
+    id: component
+    attributes:
+      label: Target component
+      description: Is this a feature request for the CLI or SDK (including their documentation)?
+      options:
+        - label: CLI
+        - label: SDK
+        - label: Something else
+        - label: Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: overview
+    attributes:
+      label: Overview
+      description: What is it that you would like to be able to do with this feature?
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation details
+      description: Optionally provide an idea of how you'd like this feature to be implemented.
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Anything else you would like to add?
