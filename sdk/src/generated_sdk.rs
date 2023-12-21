@@ -35071,8 +35071,14 @@ pub trait ClientSystemHardwareExt {
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
     ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
     /// ```ignore
     /// let response = client.sled_list_uninitialized()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
     ///    .send()
     ///    .await;
     /// ```
@@ -45144,11 +45150,38 @@ pub mod builder {
     #[derive(Debug, Clone)]
     pub struct SledListUninitialized<'a> {
         client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
     }
 
     impl<'a> SledListUninitialized<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client: client }
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
         }
 
         /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
@@ -45156,8 +45189,21 @@ pub mod builder {
             self,
         ) -> Result<ResponseValue<types::UninitializedSledResultsPage>, Error<types::Error>>
         {
-            let Self { client } = self;
+            let Self {
+                client,
+                limit,
+                page_token,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/hardware/sleds-uninitialized", client.baseurl,);
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
             let request = client
                 .client
                 .get(url)
@@ -45165,6 +45211,7 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&query)
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -45178,6 +45225,62 @@ pub mod builder {
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
+        }
+
+        /// Streams `GET` requests to `/v1/system/hardware/sleds-uninitialized`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::UninitializedSled, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
         }
     }
 

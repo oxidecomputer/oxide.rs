@@ -2395,7 +2395,13 @@
                 },
                 {
                   "name": "list-uninitialized",
-                  "about": "List uninitialized sleds in a given rack"
+                  "about": "List uninitialized sleds in a given rack",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    }
+                  ]
                 },
                 {
                   "name": "set-provision-state",
