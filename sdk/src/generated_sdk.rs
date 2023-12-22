@@ -16666,6 +16666,47 @@ pub mod types {
         }
     }
 
+    /// The unique hardware ID for a sled
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The unique hardware ID for a sled",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "part",
+    ///    "serial"
+    ///  ],
+    ///  "properties": {
+    ///    "part": {
+    ///      "type": "string"
+    ///    },
+    ///    "serial": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct UninitializedSledId {
+        pub part: String,
+        pub serial: String,
+    }
+
+    impl From<&UninitializedSledId> for UninitializedSledId {
+        fn from(value: &UninitializedSledId) -> Self {
+            value.clone()
+        }
+    }
+
+    impl UninitializedSledId {
+        pub fn builder() -> builder::UninitializedSledId {
+            Default::default()
+        }
+    }
+
     /// A single page of results
     ///
     /// <details><summary>JSON schema</summary>
@@ -31398,6 +31439,63 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct UninitializedSledId {
+            part: Result<String, String>,
+            serial: Result<String, String>,
+        }
+
+        impl Default for UninitializedSledId {
+            fn default() -> Self {
+                Self {
+                    part: Err("no value supplied for part".to_string()),
+                    serial: Err("no value supplied for serial".to_string()),
+                }
+            }
+        }
+
+        impl UninitializedSledId {
+            pub fn part<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.part = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for part: {}", e));
+                self
+            }
+            pub fn serial<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.serial = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for serial: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<UninitializedSledId> for super::UninitializedSledId {
+            type Error = String;
+            fn try_from(value: UninitializedSledId) -> Result<Self, String> {
+                Ok(Self {
+                    part: value.part?,
+                    serial: value.serial?,
+                })
+            }
+        }
+
+        impl From<super::UninitializedSledId> for UninitializedSledId {
+            fn from(value: super::UninitializedSledId) -> Self {
+                Self {
+                    part: Ok(value.part),
+                    serial: Ok(value.serial),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct UninitializedSledResultsPage {
             items: Result<Vec<super::UninitializedSled>, String>,
             next_page: Result<Option<String>, String>,
@@ -34992,12 +35090,12 @@ pub trait ClientSystemHardwareExt {
     /// Sends a `POST` request to `/v1/system/hardware/sleds`
     ///
     /// ```ignore
-    /// let response = client.add_sled_to_initialized_rack()
+    /// let response = client.sled_add()
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn add_sled_to_initialized_rack(&self) -> builder::AddSledToInitializedRack;
+    fn sled_add(&self) -> builder::SledAdd;
     /// Fetch a sled
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
@@ -35194,8 +35292,8 @@ impl ClientSystemHardwareExt for Client {
         builder::SledList::new(self)
     }
 
-    fn add_sled_to_initialized_rack(&self) -> builder::AddSledToInitializedRack {
-        builder::AddSledToInitializedRack::new(self)
+    fn sled_add(&self) -> builder::SledAdd {
+        builder::SledAdd::new(self)
     }
 
     fn sled_view(&self) -> builder::SledView {
@@ -44566,40 +44664,40 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemHardwareExt::add_sled_to_initialized_rack`]
+    /// Builder for [`ClientSystemHardwareExt::sled_add`]
     ///
-    /// [`ClientSystemHardwareExt::add_sled_to_initialized_rack`]: super::ClientSystemHardwareExt::add_sled_to_initialized_rack
+    /// [`ClientSystemHardwareExt::sled_add`]: super::ClientSystemHardwareExt::sled_add
     #[derive(Debug, Clone)]
-    pub struct AddSledToInitializedRack<'a> {
+    pub struct SledAdd<'a> {
         client: &'a super::Client,
-        body: Result<types::builder::UninitializedSled, String>,
+        body: Result<types::builder::UninitializedSledId, String>,
     }
 
-    impl<'a> AddSledToInitializedRack<'a> {
+    impl<'a> SledAdd<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
-                body: Ok(types::builder::UninitializedSled::default()),
+                body: Ok(types::builder::UninitializedSledId::default()),
             }
         }
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::UninitializedSled>,
-            <V as std::convert::TryInto<types::UninitializedSled>>::Error: std::fmt::Display,
+            V: std::convert::TryInto<types::UninitializedSledId>,
+            <V as std::convert::TryInto<types::UninitializedSledId>>::Error: std::fmt::Display,
         {
             self.body = value
                 .try_into()
                 .map(From::from)
-                .map_err(|s| format!("conversion to `UninitializedSled` for body failed: {}", s));
+                .map_err(|s| format!("conversion to `UninitializedSledId` for body failed: {}", s));
             self
         }
 
         pub fn body_map<F>(mut self, f: F) -> Self
         where
             F: std::ops::FnOnce(
-                types::builder::UninitializedSled,
-            ) -> types::builder::UninitializedSled,
+                types::builder::UninitializedSledId,
+            ) -> types::builder::UninitializedSledId,
         {
             self.body = self.body.map(f);
             self
@@ -44609,7 +44707,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::UninitializedSled>::try_into)
+                .and_then(std::convert::TryInto::<types::UninitializedSledId>::try_into)
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/hardware/sleds", client.baseurl,);
             let request = client

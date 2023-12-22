@@ -97,7 +97,7 @@ impl Cli {
             CliCommand::RackList => Self::cli_rack_list(),
             CliCommand::RackView => Self::cli_rack_view(),
             CliCommand::SledList => Self::cli_sled_list(),
-            CliCommand::AddSledToInitializedRack => Self::cli_add_sled_to_initialized_rack(),
+            CliCommand::SledAdd => Self::cli_sled_add(),
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
@@ -2465,25 +2465,25 @@ impl Cli {
             .about("List sleds")
     }
 
-    pub fn cli_add_sled_to_initialized_rack() -> clap::Command {
+    pub fn cli_sled_add() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("cubby")
-                    .long("cubby")
-                    .value_parser(clap::value_parser!(u16))
+                clap::Arg::new("part")
+                    .long("part")
+                    .value_parser(clap::value_parser!(String))
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("rack-id")
-                    .long("rack-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
+                clap::Arg::new("serial")
+                    .long("serial")
+                    .value_parser(clap::value_parser!(String))
                     .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("json-body")
                     .long("json-body")
                     .value_name("JSON-FILE")
-                    .required(true)
+                    .required(false)
                     .value_parser(clap::value_parser!(std::path::PathBuf))
                     .help("Path to a file that contains the full json body."),
             )
@@ -4995,8 +4995,8 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::SledList => {
                 self.execute_sled_list(matches).await;
             }
-            CliCommand::AddSledToInitializedRack => {
-                self.execute_add_sled_to_initialized_rack(matches).await;
+            CliCommand::SledAdd => {
+                self.execute_sled_add(matches).await;
             }
             CliCommand::SledView => {
                 self.execute_sled_view(matches).await;
@@ -7495,25 +7495,23 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
-    pub async fn execute_add_sled_to_initialized_rack(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.add_sled_to_initialized_rack();
-        if let Some(value) = matches.get_one::<u16>("cubby") {
-            request = request.body_map(|body| body.cubby(value.clone()))
+    pub async fn execute_sled_add(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.sled_add();
+        if let Some(value) = matches.get_one::<String>("part") {
+            request = request.body_map(|body| body.part(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
-            request = request.body_map(|body| body.rack_id(value.clone()))
+        if let Some(value) = matches.get_one::<String>("serial") {
+            request = request.body_map(|body| body.serial(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::UninitializedSled>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::UninitializedSledId>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
-        self.over
-            .execute_add_sled_to_initialized_rack(matches, &mut request)
-            .unwrap();
+        self.over.execute_sled_add(matches, &mut request).unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -10493,10 +10491,10 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_add_sled_to_initialized_rack(
+    fn execute_sled_add(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::AddSledToInitializedRack,
+        request: &mut builder::SledAdd,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -11238,7 +11236,7 @@ pub enum CliCommand {
     RackList,
     RackView,
     SledList,
-    AddSledToInitializedRack,
+    SledAdd,
     SledView,
     SledPhysicalDiskList,
     SledInstanceList,
@@ -11403,7 +11401,7 @@ impl CliCommand {
             CliCommand::RackList,
             CliCommand::RackView,
             CliCommand::SledList,
-            CliCommand::AddSledToInitializedRack,
+            CliCommand::SledAdd,
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
             CliCommand::SledInstanceList,
