@@ -6426,6 +6426,61 @@ pub mod types {
         }
     }
 
+    /// ExternalIp2
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "first_port",
+    ///    "ip",
+    ///    "kind",
+    ///    "last_port"
+    ///  ],
+    ///  "properties": {
+    ///    "first_port": {
+    ///      "type": "integer",
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "ip": {
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "kind": {
+    ///      "$ref": "#/components/schemas/IpKind"
+    ///    },
+    ///    "last_port": {
+    ///      "type": "integer",
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct ExternalIp2 {
+        pub first_port: u16,
+        pub ip: std::net::IpAddr,
+        pub kind: IpKind,
+        pub last_port: u16,
+    }
+
+    impl From<&ExternalIp2> for ExternalIp2 {
+        fn from(value: &ExternalIp2) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ExternalIp2 {
+        pub fn builder() -> builder::ExternalIp2 {
+            Default::default()
+        }
+    }
+
     /// Parameters for creating an external IP address for instances.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6975,7 +7030,10 @@ pub mod types {
     ///    "name"
     ///  ],
     ///  "properties": {
-    ///    "address": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "ip": {
     ///      "description": "An IP address to reserve for use as a floating IP.
     /// This field is optional: when not set, an address will be automatically
     /// chosen from `pool`. If set, then the IP must be available in the
@@ -6985,9 +7043,6 @@ pub mod types {
     ///        "null"
     ///      ],
     ///      "format": "ip"
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
@@ -7007,13 +7062,13 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FloatingIpCreate {
+        pub description: String,
         /// An IP address to reserve for use as a floating IP. This field is
         /// optional: when not set, an address will be automatically chosen from
         /// `pool`. If set, then the IP must be available in the resolved
         /// `pool`.
         #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub address: Option<std::net::IpAddr>,
-        pub description: String,
+        pub ip: Option<std::net::IpAddr>,
         pub name: Name,
         /// The parent IP pool that a floating IP is pulled from. If unset, the
         /// default pool is selected.
@@ -10101,6 +10156,92 @@ pub mod types {
         }
     }
 
+    /// IpKind
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "snat",
+    ///    "floating",
+    ///    "ephemeral"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum IpKind {
+        #[serde(rename = "snat")]
+        Snat,
+        #[serde(rename = "floating")]
+        Floating,
+        #[serde(rename = "ephemeral")]
+        Ephemeral,
+    }
+
+    impl From<&IpKind> for IpKind {
+        fn from(value: &IpKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for IpKind {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Snat => "snat".to_string(),
+                Self::Floating => "floating".to_string(),
+                Self::Ephemeral => "ephemeral".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for IpKind {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "snat" => Ok(Self::Snat),
+                "floating" => Ok(Self::Floating),
+                "ephemeral" => Ok(Self::Ephemeral),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for IpKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for IpKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for IpKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     /// IpNet
     ///
     /// <details><summary>JSON schema</summary>
@@ -12477,6 +12618,179 @@ pub mod types {
         }
     }
 
+    /// Information required to construct a virtual network interface
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Information required to construct a virtual network
+    /// interface",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "ip",
+    ///    "kind",
+    ///    "mac",
+    ///    "name",
+    ///    "primary",
+    ///    "slot",
+    ///    "subnet",
+    ///    "vni"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "ip": {
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "kind": {
+    ///      "$ref": "#/components/schemas/NetworkInterfaceKind"
+    ///    },
+    ///    "mac": {
+    ///      "$ref": "#/components/schemas/MacAddr"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "primary": {
+    ///      "type": "boolean"
+    ///    },
+    ///    "slot": {
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "subnet": {
+    ///      "$ref": "#/components/schemas/IpNet"
+    ///    },
+    ///    "vni": {
+    ///      "$ref": "#/components/schemas/Vni"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct NetworkInterface {
+        pub id: uuid::Uuid,
+        pub ip: std::net::IpAddr,
+        pub kind: NetworkInterfaceKind,
+        pub mac: MacAddr,
+        pub name: Name,
+        pub primary: bool,
+        pub slot: u8,
+        pub subnet: IpNet,
+        pub vni: Vni,
+    }
+
+    impl From<&NetworkInterface> for NetworkInterface {
+        fn from(value: &NetworkInterface) -> Self {
+            value.clone()
+        }
+    }
+
+    impl NetworkInterface {
+        pub fn builder() -> builder::NetworkInterface {
+            Default::default()
+        }
+    }
+
+    /// The type of network interface
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The type of network interface",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "A vNIC attached to a guest instance",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "id",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "instance"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "A vNIC associated with an internal service",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "id",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "service"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "A vNIC associated with a probe",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "id",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "probe"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type", content = "id")]
+    pub enum NetworkInterfaceKind {
+        /// A vNIC attached to a guest instance
+        #[serde(rename = "instance")]
+        Instance(uuid::Uuid),
+        /// A vNIC associated with an internal service
+        #[serde(rename = "service")]
+        Service(uuid::Uuid),
+        /// A vNIC associated with a probe
+        #[serde(rename = "probe")]
+        Probe(uuid::Uuid),
+    }
+
+    impl From<&NetworkInterfaceKind> for NetworkInterfaceKind {
+        fn from(value: &NetworkInterfaceKind) -> Self {
+            value.clone()
+        }
+    }
+
     /// The order in which the client wants to page through the requested
     /// collection
     ///
@@ -12983,6 +13297,257 @@ pub mod types {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// Identity-related metadata that's included in nearly all public API
+    /// objects
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Identity-related metadata that's included in nearly all
+    /// public API objects",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "name",
+    ///    "sled",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "sled": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Probe {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        pub sled: uuid::Uuid,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Probe> for Probe {
+        fn from(value: &Probe) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Probe {
+        pub fn builder() -> builder::Probe {
+            Default::default()
+        }
+    }
+
+    /// Create-time identity-related parameters
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create-time identity-related parameters",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "name",
+    ///    "sled"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "ip_pool": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "sled": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct ProbeCreate {
+        pub description: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub ip_pool: Option<Name>,
+        pub name: Name,
+        pub sled: uuid::Uuid,
+    }
+
+    impl From<&ProbeCreate> for ProbeCreate {
+        fn from(value: &ProbeCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ProbeCreate {
+        pub fn builder() -> builder::ProbeCreate {
+            Default::default()
+        }
+    }
+
+    /// ProbeInfo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "external_ips",
+    ///    "id",
+    ///    "interface",
+    ///    "name",
+    ///    "sled"
+    ///  ],
+    ///  "properties": {
+    ///    "external_ips": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ExternalIp2"
+    ///      }
+    ///    },
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "interface": {
+    ///      "$ref": "#/components/schemas/NetworkInterface"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "sled": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct ProbeInfo {
+        pub external_ips: Vec<ExternalIp2>,
+        pub id: uuid::Uuid,
+        pub interface: NetworkInterface,
+        pub name: Name,
+        pub sled: uuid::Uuid,
+    }
+
+    impl From<&ProbeInfo> for ProbeInfo {
+        fn from(value: &ProbeInfo) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ProbeInfo {
+        pub fn builder() -> builder::ProbeInfo {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ProbeInfo"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct ProbeInfoResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<ProbeInfo>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&ProbeInfoResultsPage> for ProbeInfoResultsPage {
+        fn from(value: &ProbeInfoResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ProbeInfoResultsPage {
+        pub fn builder() -> builder::ProbeInfoResultsPage {
+            Default::default()
         }
     }
 
@@ -15242,8 +15807,9 @@ pub mod types {
     ///  "required": [
     ///    "baseboard",
     ///    "id",
-    ///    "provision_state",
+    ///    "policy",
     ///    "rack_id",
+    ///    "state",
     ///    "time_created",
     ///    "time_modified",
     ///    "usable_hardware_threads",
@@ -15259,11 +15825,11 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "provision_state": {
-    ///      "description": "The provision state of the sled.",
+    ///    "policy": {
+    ///      "description": "The operator-defined policy of a sled.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledPolicy"
     ///        }
     ///      ]
     ///    },
@@ -15271,6 +15837,15 @@ pub mod types {
     ///      "description": "The rack to which this Sled is currently attached",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "state": {
+    ///      "description": "The current state Nexus believes the sled to be
+    /// in.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SledState"
+    ///        }
+    ///      ]
     ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
@@ -15306,10 +15881,12 @@ pub mod types {
         pub baseboard: Baseboard,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        /// The provision state of the sled.
-        pub provision_state: SledProvisionState,
+        /// The operator-defined policy of a sled.
+        pub policy: SledPolicy,
         /// The rack to which this Sled is currently attached
         pub rack_id: uuid::Uuid,
+        /// The current state Nexus believes the sled to be in.
+        pub state: SledState,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -15488,7 +16065,86 @@ pub mod types {
         }
     }
 
-    /// The provision state of a sled.
+    /// The operator-defined policy of a sled.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The operator-defined policy of a sled.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The operator has indicated that the sled is
+    /// in-service.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind",
+    ///        "provision_policy"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "in_service"
+    ///          ]
+    ///        },
+    ///        "provision_policy": {
+    ///          "description": "Determines whether new resources can be
+    /// provisioned onto the sled.",
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SledProvisionPolicy"
+    ///            }
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The operator has indicated that the sled has been
+    /// permanently removed from service.\n\nThis is a terminal state: once a
+    /// particular sled ID is expunged, it will never return to service. (The
+    /// actual hardware may be reused, but it will be treated as a brand-new
+    /// sled.)\n\nAn expunged sled is always non-provisionable.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "expunged"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "kind", content = "provision_policy")]
+    pub enum SledPolicy {
+        /// The operator has indicated that the sled is in-service.
+        #[serde(rename = "in_service")]
+        InService(SledProvisionPolicy),
+        #[serde(rename = "expunged")]
+        Expunged,
+    }
+
+    impl From<&SledPolicy> for SledPolicy {
+        fn from(value: &SledPolicy) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<SledProvisionPolicy> for SledPolicy {
+        fn from(value: SledProvisionPolicy) -> Self {
+            Self::InService(value)
+        }
+    }
+
+    /// The operator-defined provision policy of a sled.
     ///
     /// This controls whether new resources are going to be provisioned on this
     /// sled.
@@ -15497,8 +16153,9 @@ pub mod types {
     ///
     /// ```json
     /// {
-    ///  "description": "The provision state of a sled.\n\nThis controls whether
-    /// new resources are going to be provisioned on this sled.",
+    ///  "description": "The operator-defined provision policy of a
+    /// sled.\n\nThis controls whether new resources are going to be provisioned
+    /// on this sled.",
     ///  "oneOf": [
     ///    {
     ///      "description": "New resources will be provisioned on this sled.",
@@ -15509,8 +16166,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "New resources will not be provisioned on this sled.
-    /// However, existing resources will continue to be on this sled unless
-    /// manually migrated off.",
+    /// However, if the sled is currently in service, existing resources will
+    /// continue to be on this sled unless manually migrated off.",
     ///      "type": "string",
     ///      "enum": [
     ///        "non_provisionable"
@@ -15533,24 +16190,24 @@ pub mod types {
         Serialize,
         schemars :: JsonSchema,
     )]
-    pub enum SledProvisionState {
+    pub enum SledProvisionPolicy {
         /// New resources will be provisioned on this sled.
         #[serde(rename = "provisionable")]
         Provisionable,
-        /// New resources will not be provisioned on this sled. However,
-        /// existing resources will continue to be on this sled unless manually
-        /// migrated off.
+        /// New resources will not be provisioned on this sled. However, if the
+        /// sled is currently in service, existing resources will continue to be
+        /// on this sled unless manually migrated off.
         #[serde(rename = "non_provisionable")]
         NonProvisionable,
     }
 
-    impl From<&SledProvisionState> for SledProvisionState {
-        fn from(value: &SledProvisionState) -> Self {
+    impl From<&SledProvisionPolicy> for SledProvisionPolicy {
+        fn from(value: &SledProvisionPolicy) -> Self {
             value.clone()
         }
     }
 
-    impl ToString for SledProvisionState {
+    impl ToString for SledProvisionPolicy {
         fn to_string(&self) -> String {
             match *self {
                 Self::Provisionable => "provisionable".to_string(),
@@ -15559,7 +16216,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for SledProvisionState {
+    impl std::str::FromStr for SledProvisionPolicy {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             match value {
@@ -15570,34 +16227,34 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for SledProvisionState {
+    impl std::convert::TryFrom<&str> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SledProvisionState {
+    impl std::convert::TryFrom<&String> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SledProvisionState {
+    impl std::convert::TryFrom<String> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    /// Parameters for `sled_set_provision_state`.
+    /// Parameters for `sled_set_provision_policy`.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Parameters for `sled_set_provision_state`.",
+    ///  "description": "Parameters for `sled_set_provision_policy`.",
     ///  "type": "object",
     ///  "required": [
     ///    "state"
@@ -15607,7 +16264,7 @@ pub mod types {
     ///      "description": "The provision state.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
     ///        }
     ///      ]
     ///    }
@@ -15616,30 +16273,30 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SledProvisionStateParams {
+    pub struct SledProvisionPolicyParams {
         /// The provision state.
-        pub state: SledProvisionState,
+        pub state: SledProvisionPolicy,
     }
 
-    impl From<&SledProvisionStateParams> for SledProvisionStateParams {
-        fn from(value: &SledProvisionStateParams) -> Self {
+    impl From<&SledProvisionPolicyParams> for SledProvisionPolicyParams {
+        fn from(value: &SledProvisionPolicyParams) -> Self {
             value.clone()
         }
     }
 
-    impl SledProvisionStateParams {
-        pub fn builder() -> builder::SledProvisionStateParams {
+    impl SledProvisionPolicyParams {
+        pub fn builder() -> builder::SledProvisionPolicyParams {
             Default::default()
         }
     }
 
-    /// Response to `sled_set_provision_state`.
+    /// Response to `sled_set_provision_policy`.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Response to `sled_set_provision_state`.",
+    ///  "description": "Response to `sled_set_provision_policy`.",
     ///  "type": "object",
     ///  "required": [
     ///    "new_state",
@@ -15650,7 +16307,7 @@ pub mod types {
     ///      "description": "The new provision state.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
     ///        }
     ///      ]
     ///    },
@@ -15658,7 +16315,7 @@ pub mod types {
     ///      "description": "The old provision state.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
     ///        }
     ///      ]
     ///    }
@@ -15667,21 +16324,21 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SledProvisionStateResponse {
+    pub struct SledProvisionPolicyResponse {
         /// The new provision state.
-        pub new_state: SledProvisionState,
+        pub new_state: SledProvisionPolicy,
         /// The old provision state.
-        pub old_state: SledProvisionState,
+        pub old_state: SledProvisionPolicy,
     }
 
-    impl From<&SledProvisionStateResponse> for SledProvisionStateResponse {
-        fn from(value: &SledProvisionStateResponse) -> Self {
+    impl From<&SledProvisionPolicyResponse> for SledProvisionPolicyResponse {
+        fn from(value: &SledProvisionPolicyResponse) -> Self {
             value.clone()
         }
     }
 
-    impl SledProvisionStateResponse {
-        pub fn builder() -> builder::SledProvisionStateResponse {
+    impl SledProvisionPolicyResponse {
+        pub fn builder() -> builder::SledProvisionPolicyResponse {
             Default::default()
         }
     }
@@ -15735,6 +16392,110 @@ pub mod types {
     impl SledResultsPage {
         pub fn builder() -> builder::SledResultsPage {
             Default::default()
+        }
+    }
+
+    /// The current state of the sled, as determined by Nexus.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The current state of the sled, as determined by
+    /// Nexus.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The sled is currently active, and has resources
+    /// allocated on it.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "active"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The sled has been permanently removed from
+    /// service.\n\nThis is a terminal state: once a particular sled ID is
+    /// decommissioned, it will never return to service. (The actual hardware
+    /// may be reused, but it will be treated as a brand-new sled.)",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "decommissioned"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum SledState {
+        /// The sled is currently active, and has resources allocated on it.
+        #[serde(rename = "active")]
+        Active,
+        /// The sled has been permanently removed from service.
+        ///
+        /// This is a terminal state: once a particular sled ID is
+        /// decommissioned, it will never return to service. (The actual
+        /// hardware may be reused, but it will be treated as a brand-new sled.)
+        #[serde(rename = "decommissioned")]
+        Decommissioned,
+    }
+
+    impl From<&SledState> for SledState {
+        fn from(value: &SledState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for SledState {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Active => "active".to_string(),
+                Self::Decommissioned => "decommissioned".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for SledState {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "active" => Ok(Self::Active),
+                "decommissioned" => Ok(Self::Decommissioned),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for SledState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for SledState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for SledState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -18883,6 +19644,80 @@ pub mod types {
     impl VirtualResourceCounts {
         pub fn builder() -> builder::VirtualResourceCounts {
             Default::default()
+        }
+    }
+
+    /// A Geneve Virtual Network Identifier
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A Geneve Virtual Network Identifier",
+    ///  "type": "integer",
+    ///  "format": "uint32",
+    ///  "minimum": 0.0
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Vni(pub u32);
+    impl std::ops::Deref for Vni {
+        type Target = u32;
+        fn deref(&self) -> &u32 {
+            &self.0
+        }
+    }
+
+    impl From<Vni> for u32 {
+        fn from(value: Vni) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&Vni> for Vni {
+        fn from(value: &Vni) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<u32> for Vni {
+        fn from(value: u32) -> Self {
+            Self(value)
+        }
+    }
+
+    impl std::str::FromStr for Vni {
+        type Err = <u32 as std::str::FromStr>::Err;
+        fn from_str(value: &str) -> Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for Vni {
+        type Error = <u32 as std::str::FromStr>::Err;
+        fn try_from(value: &str) -> Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for Vni {
+        type Error = <u32 as std::str::FromStr>::Err;
+        fn try_from(value: &String) -> Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for Vni {
+        type Error = <u32 as std::str::FromStr>::Err;
+        fn try_from(value: String) -> Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ToString for Vni {
+        fn to_string(&self) -> String {
+            self.0.to_string()
         }
     }
 
@@ -24366,6 +25201,91 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct ExternalIp2 {
+            first_port: Result<u16, String>,
+            ip: Result<std::net::IpAddr, String>,
+            kind: Result<super::IpKind, String>,
+            last_port: Result<u16, String>,
+        }
+
+        impl Default for ExternalIp2 {
+            fn default() -> Self {
+                Self {
+                    first_port: Err("no value supplied for first_port".to_string()),
+                    ip: Err("no value supplied for ip".to_string()),
+                    kind: Err("no value supplied for kind".to_string()),
+                    last_port: Err("no value supplied for last_port".to_string()),
+                }
+            }
+        }
+
+        impl ExternalIp2 {
+            pub fn first_port<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.first_port = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for first_port: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn last_port<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.last_port = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for last_port: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<ExternalIp2> for super::ExternalIp2 {
+            type Error = super::error::ConversionError;
+            fn try_from(value: ExternalIp2) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    first_port: value.first_port?,
+                    ip: value.ip?,
+                    kind: value.kind?,
+                    last_port: value.last_port?,
+                })
+            }
+        }
+
+        impl From<super::ExternalIp2> for ExternalIp2 {
+            fn from(value: super::ExternalIp2) -> Self {
+                Self {
+                    first_port: Ok(value.first_port),
+                    ip: Ok(value.ip),
+                    kind: Ok(value.kind),
+                    last_port: Ok(value.last_port),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct ExternalIpResultsPage {
             items: Result<Vec<super::ExternalIp>, String>,
             next_page: Result<Option<String>, String>,
@@ -24786,8 +25706,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FloatingIpCreate {
-            address: Result<Option<std::net::IpAddr>, String>,
             description: Result<String, String>,
+            ip: Result<Option<std::net::IpAddr>, String>,
             name: Result<super::Name, String>,
             pool: Result<Option<super::NameOrId>, String>,
         }
@@ -24795,8 +25715,8 @@ pub mod types {
         impl Default for FloatingIpCreate {
             fn default() -> Self {
                 Self {
-                    address: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
+                    ip: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     pool: Ok(Default::default()),
                 }
@@ -24804,16 +25724,6 @@ pub mod types {
         }
 
         impl FloatingIpCreate {
-            pub fn address<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<std::net::IpAddr>>,
-                T::Error: std::fmt::Display,
-            {
-                self.address = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for address: {}", e));
-                self
-            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -24822,6 +25732,16 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -24850,8 +25770,8 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: FloatingIpCreate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    address: value.address?,
                     description: value.description?,
+                    ip: value.ip?,
                     name: value.name?,
                     pool: value.pool?,
                 })
@@ -24861,8 +25781,8 @@ pub mod types {
         impl From<super::FloatingIpCreate> for FloatingIpCreate {
             fn from(value: super::FloatingIpCreate) -> Self {
                 Self {
-                    address: Ok(value.address),
                     description: Ok(value.description),
+                    ip: Ok(value.ip),
                     name: Ok(value.name),
                     pool: Ok(value.pool),
                 }
@@ -28740,6 +29660,161 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct NetworkInterface {
+            id: Result<uuid::Uuid, String>,
+            ip: Result<std::net::IpAddr, String>,
+            kind: Result<super::NetworkInterfaceKind, String>,
+            mac: Result<super::MacAddr, String>,
+            name: Result<super::Name, String>,
+            primary: Result<bool, String>,
+            slot: Result<u8, String>,
+            subnet: Result<super::IpNet, String>,
+            vni: Result<super::Vni, String>,
+        }
+
+        impl Default for NetworkInterface {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    ip: Err("no value supplied for ip".to_string()),
+                    kind: Err("no value supplied for kind".to_string()),
+                    mac: Err("no value supplied for mac".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    primary: Err("no value supplied for primary".to_string()),
+                    slot: Err("no value supplied for slot".to_string()),
+                    subnet: Err("no value supplied for subnet".to_string()),
+                    vni: Err("no value supplied for vni".to_string()),
+                }
+            }
+        }
+
+        impl NetworkInterface {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NetworkInterfaceKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn mac<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::MacAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.mac = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mac: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn primary<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.primary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for primary: {}", e));
+                self
+            }
+            pub fn slot<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u8>,
+                T::Error: std::fmt::Display,
+            {
+                self.slot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for slot: {}", e));
+                self
+            }
+            pub fn subnet<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.subnet = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet: {}", e));
+                self
+            }
+            pub fn vni<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Vni>,
+                T::Error: std::fmt::Display,
+            {
+                self.vni = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vni: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<NetworkInterface> for super::NetworkInterface {
+            type Error = super::error::ConversionError;
+            fn try_from(value: NetworkInterface) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    ip: value.ip?,
+                    kind: value.kind?,
+                    mac: value.mac?,
+                    name: value.name?,
+                    primary: value.primary?,
+                    slot: value.slot?,
+                    subnet: value.subnet?,
+                    vni: value.vni?,
+                })
+            }
+        }
+
+        impl From<super::NetworkInterface> for NetworkInterface {
+            fn from(value: super::NetworkInterface) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    ip: Ok(value.ip),
+                    kind: Ok(value.kind),
+                    mac: Ok(value.mac),
+                    name: Ok(value.name),
+                    primary: Ok(value.primary),
+                    slot: Ok(value.slot),
+                    subnet: Ok(value.subnet),
+                    vni: Ok(value.vni),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct PhysicalDisk {
             form_factor: Result<super::PhysicalDiskKind, String>,
             id: Result<uuid::Uuid, String>,
@@ -28978,6 +30053,362 @@ pub mod types {
             fn from(value: super::Ping) -> Self {
                 Self {
                     status: Ok(value.status),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Probe {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            name: Result<super::Name, String>,
+            sled: Result<uuid::Uuid, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Probe {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    sled: Err("no value supplied for sled".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl Probe {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn sled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.sled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sled: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Probe> for super::Probe {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Probe) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    name: value.name?,
+                    sled: value.sled?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::Probe> for Probe {
+            fn from(value: super::Probe) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    sled: Ok(value.sled),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ProbeCreate {
+            description: Result<String, String>,
+            ip_pool: Result<Option<super::Name>, String>,
+            name: Result<super::Name, String>,
+            sled: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for ProbeCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    ip_pool: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    sled: Err("no value supplied for sled".to_string()),
+                }
+            }
+        }
+
+        impl ProbeCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn ip_pool<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Name>>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip_pool = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_pool: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn sled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.sled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sled: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<ProbeCreate> for super::ProbeCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: ProbeCreate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    ip_pool: value.ip_pool?,
+                    name: value.name?,
+                    sled: value.sled?,
+                })
+            }
+        }
+
+        impl From<super::ProbeCreate> for ProbeCreate {
+            fn from(value: super::ProbeCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    ip_pool: Ok(value.ip_pool),
+                    name: Ok(value.name),
+                    sled: Ok(value.sled),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ProbeInfo {
+            external_ips: Result<Vec<super::ExternalIp2>, String>,
+            id: Result<uuid::Uuid, String>,
+            interface: Result<super::NetworkInterface, String>,
+            name: Result<super::Name, String>,
+            sled: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for ProbeInfo {
+            fn default() -> Self {
+                Self {
+                    external_ips: Err("no value supplied for external_ips".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    interface: Err("no value supplied for interface".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    sled: Err("no value supplied for sled".to_string()),
+                }
+            }
+        }
+
+        impl ProbeInfo {
+            pub fn external_ips<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::ExternalIp2>>,
+                T::Error: std::fmt::Display,
+            {
+                self.external_ips = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for external_ips: {}", e)
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn interface<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NetworkInterface>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for interface: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn sled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.sled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sled: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<ProbeInfo> for super::ProbeInfo {
+            type Error = super::error::ConversionError;
+            fn try_from(value: ProbeInfo) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    external_ips: value.external_ips?,
+                    id: value.id?,
+                    interface: value.interface?,
+                    name: value.name?,
+                    sled: value.sled?,
+                })
+            }
+        }
+
+        impl From<super::ProbeInfo> for ProbeInfo {
+            fn from(value: super::ProbeInfo) -> Self {
+                Self {
+                    external_ips: Ok(value.external_ips),
+                    id: Ok(value.id),
+                    interface: Ok(value.interface),
+                    name: Ok(value.name),
+                    sled: Ok(value.sled),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ProbeInfoResultsPage {
+            items: Result<Vec<super::ProbeInfo>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for ProbeInfoResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl ProbeInfoResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::ProbeInfo>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<ProbeInfoResultsPage> for super::ProbeInfoResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ProbeInfoResultsPage,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::ProbeInfoResultsPage> for ProbeInfoResultsPage {
+            fn from(value: super::ProbeInfoResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
                 }
             }
         }
@@ -31196,8 +32627,9 @@ pub mod types {
         pub struct Sled {
             baseboard: Result<super::Baseboard, String>,
             id: Result<uuid::Uuid, String>,
-            provision_state: Result<super::SledProvisionState, String>,
+            policy: Result<super::SledPolicy, String>,
             rack_id: Result<uuid::Uuid, String>,
+            state: Result<super::SledState, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             usable_hardware_threads: Result<u32, String>,
@@ -31209,8 +32641,9 @@ pub mod types {
                 Self {
                     baseboard: Err("no value supplied for baseboard".to_string()),
                     id: Err("no value supplied for id".to_string()),
-                    provision_state: Err("no value supplied for provision_state".to_string()),
+                    policy: Err("no value supplied for policy".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
+                    state: Err("no value supplied for state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                     usable_hardware_threads: Err(
@@ -31244,14 +32677,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
-            pub fn provision_state<T>(mut self, value: T) -> Self
+            pub fn policy<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledPolicy>,
                 T::Error: std::fmt::Display,
             {
-                self.provision_state = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for provision_state: {}", e)
-                });
+                self.policy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
@@ -31262,6 +32695,16 @@ pub mod types {
                 self.rack_id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledState>,
+                T::Error: std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -31318,8 +32761,9 @@ pub mod types {
                 Ok(Self {
                     baseboard: value.baseboard?,
                     id: value.id?,
-                    provision_state: value.provision_state?,
+                    policy: value.policy?,
                     rack_id: value.rack_id?,
+                    state: value.state?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                     usable_hardware_threads: value.usable_hardware_threads?,
@@ -31333,8 +32777,9 @@ pub mod types {
                 Self {
                     baseboard: Ok(value.baseboard),
                     id: Ok(value.id),
-                    provision_state: Ok(value.provision_state),
+                    policy: Ok(value.policy),
                     rack_id: Ok(value.rack_id),
+                    state: Ok(value.state),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                     usable_hardware_threads: Ok(value.usable_hardware_threads),
@@ -31586,11 +33031,11 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SledProvisionStateParams {
-            state: Result<super::SledProvisionState, String>,
+        pub struct SledProvisionPolicyParams {
+            state: Result<super::SledProvisionPolicy, String>,
         }
 
-        impl Default for SledProvisionStateParams {
+        impl Default for SledProvisionPolicyParams {
             fn default() -> Self {
                 Self {
                     state: Err("no value supplied for state".to_string()),
@@ -31598,10 +33043,10 @@ pub mod types {
             }
         }
 
-        impl SledProvisionStateParams {
+        impl SledProvisionPolicyParams {
             pub fn state<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledProvisionPolicy>,
                 T::Error: std::fmt::Display,
             {
                 self.state = value
@@ -31611,10 +33056,10 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledProvisionStateParams> for super::SledProvisionStateParams {
+        impl std::convert::TryFrom<SledProvisionPolicyParams> for super::SledProvisionPolicyParams {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: SledProvisionStateParams,
+                value: SledProvisionPolicyParams,
             ) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     state: value.state?,
@@ -31622,8 +33067,8 @@ pub mod types {
             }
         }
 
-        impl From<super::SledProvisionStateParams> for SledProvisionStateParams {
-            fn from(value: super::SledProvisionStateParams) -> Self {
+        impl From<super::SledProvisionPolicyParams> for SledProvisionPolicyParams {
+            fn from(value: super::SledProvisionPolicyParams) -> Self {
                 Self {
                     state: Ok(value.state),
                 }
@@ -31631,12 +33076,12 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SledProvisionStateResponse {
-            new_state: Result<super::SledProvisionState, String>,
-            old_state: Result<super::SledProvisionState, String>,
+        pub struct SledProvisionPolicyResponse {
+            new_state: Result<super::SledProvisionPolicy, String>,
+            old_state: Result<super::SledProvisionPolicy, String>,
         }
 
-        impl Default for SledProvisionStateResponse {
+        impl Default for SledProvisionPolicyResponse {
             fn default() -> Self {
                 Self {
                     new_state: Err("no value supplied for new_state".to_string()),
@@ -31645,10 +33090,10 @@ pub mod types {
             }
         }
 
-        impl SledProvisionStateResponse {
+        impl SledProvisionPolicyResponse {
             pub fn new_state<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledProvisionPolicy>,
                 T::Error: std::fmt::Display,
             {
                 self.new_state = value
@@ -31658,7 +33103,7 @@ pub mod types {
             }
             pub fn old_state<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledProvisionPolicy>,
                 T::Error: std::fmt::Display,
             {
                 self.old_state = value
@@ -31668,10 +33113,10 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledProvisionStateResponse> for super::SledProvisionStateResponse {
+        impl std::convert::TryFrom<SledProvisionPolicyResponse> for super::SledProvisionPolicyResponse {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: SledProvisionStateResponse,
+                value: SledProvisionPolicyResponse,
             ) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     new_state: value.new_state?,
@@ -31680,8 +33125,8 @@ pub mod types {
             }
         }
 
-        impl From<super::SledProvisionStateResponse> for SledProvisionStateResponse {
-            fn from(value: super::SledProvisionStateResponse) -> Self {
+        impl From<super::SledProvisionPolicyResponse> for SledProvisionPolicyResponse {
+            fn from(value: super::SledProvisionPolicyResponse) -> Self {
                 Self {
                     new_state: Ok(value.new_state),
                     old_state: Ok(value.old_state),
@@ -37851,22 +39296,22 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_instance_list(&self) -> builder::SledInstanceList;
-    /// Set sled provision state
+    /// Set sled provision policy
     ///
     /// Sends a `PUT` request to
-    /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
+    /// `/v1/system/hardware/sleds/{sled_id}/provision-policy`
     ///
     /// Arguments:
     /// - `sled_id`: ID of the sled
     /// - `body`
     /// ```ignore
-    /// let response = client.sled_set_provision_state()
+    /// let response = client.sled_set_provision_policy()
     ///    .sled_id(sled_id)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn sled_set_provision_state(&self) -> builder::SledSetProvisionState;
+    fn sled_set_provision_policy(&self) -> builder::SledSetProvisionPolicy;
     /// List uninitialized sleds
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
@@ -38010,8 +39455,8 @@ impl ClientSystemHardwareExt for Client {
         builder::SledInstanceList::new(self)
     }
 
-    fn sled_set_provision_state(&self) -> builder::SledSetProvisionState {
-        builder::SledSetProvisionState::new(self)
+    fn sled_set_provision_policy(&self) -> builder::SledSetProvisionPolicy {
+        builder::SledSetProvisionPolicy::new(self)
     }
 
     fn sled_list_uninitialized(&self) -> builder::SledListUninitialized {
@@ -38794,6 +40239,93 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_switch_port_settings_view(&self) -> builder::NetworkingSwitchPortSettingsView {
         builder::NetworkingSwitchPortSettingsView::new(self)
+    }
+}
+
+/// Probes for testing network connectivity
+pub trait ClientSystemProbesExt {
+    /// List instrumentation probes
+    ///
+    /// Sends a `GET` request to `/v1/probes`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.probe_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn probe_list(&self) -> builder::ProbeList;
+    /// Create instrumentation probe
+    ///
+    /// Sends a `POST` request to `/v1/probes`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.probe_create()
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn probe_create(&self) -> builder::ProbeCreate;
+    /// View instrumentation probe
+    ///
+    /// Sends a `GET` request to `/v1/probes/{probe}`
+    ///
+    /// Arguments:
+    /// - `probe`: Name or ID of the probe
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.probe_view()
+    ///    .probe(probe)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn probe_view(&self) -> builder::ProbeView;
+    /// Delete instrumentation probe
+    ///
+    /// Sends a `DELETE` request to `/v1/probes/{probe}`
+    ///
+    /// Arguments:
+    /// - `probe`: Name or ID of the probe
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.probe_delete()
+    ///    .probe(probe)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn probe_delete(&self) -> builder::ProbeDelete;
+}
+
+impl ClientSystemProbesExt for Client {
+    fn probe_list(&self) -> builder::ProbeList {
+        builder::ProbeList::new(self)
+    }
+
+    fn probe_create(&self) -> builder::ProbeCreate {
+        builder::ProbeCreate::new(self)
+    }
+
+    fn probe_view(&self) -> builder::ProbeView {
+        builder::ProbeView::new(self)
+    }
+
+    fn probe_delete(&self) -> builder::ProbeDelete {
+        builder::ProbeDelete::new(self)
     }
 }
 
@@ -46606,6 +48138,432 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemProbesExt::probe_list`]
+    ///
+    /// [`ClientSystemProbesExt::probe_list`]: super::ClientSystemProbesExt::probe_list
+    #[derive(Debug, Clone)]
+    pub struct ProbeList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> ProbeList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/probes`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ProbeInfoResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/probes", client.baseurl,);
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/probes`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::ProbeInfo, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemProbesExt::probe_create`]
+    ///
+    /// [`ClientSystemProbesExt::probe_create`]: super::ClientSystemProbesExt::probe_create
+    #[derive(Debug, Clone)]
+    pub struct ProbeCreate<'a> {
+        client: &'a super::Client,
+        project: Result<types::NameOrId, String>,
+        body: Result<types::builder::ProbeCreate, String>,
+    }
+
+    impl<'a> ProbeCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                project: Err("project was not initialized".to_string()),
+                body: Ok(types::builder::ProbeCreate::default()),
+            }
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ProbeCreate>,
+            <V as std::convert::TryInto<types::ProbeCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `ProbeCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::ProbeCreate) -> types::builder::ProbeCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/probes`
+        pub async fn send(self) -> Result<ResponseValue<types::Probe>, Error<types::Error>> {
+            let Self {
+                client,
+                project,
+                body,
+            } = self;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::ProbeCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/probes", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("project", project.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemProbesExt::probe_view`]
+    ///
+    /// [`ClientSystemProbesExt::probe_view`]: super::ClientSystemProbesExt::probe_view
+    #[derive(Debug, Clone)]
+    pub struct ProbeView<'a> {
+        client: &'a super::Client,
+        probe: Result<types::NameOrId, String>,
+        project: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> ProbeView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                probe: Err("probe was not initialized".to_string()),
+                project: Err("project was not initialized".to_string()),
+            }
+        }
+
+        pub fn probe<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.probe = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for probe failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/probes/{probe}`
+        pub async fn send(self) -> Result<ResponseValue<types::ProbeInfo>, Error<types::Error>> {
+            let Self {
+                client,
+                probe,
+                project,
+            } = self;
+            let probe = probe.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/probes/{}",
+                client.baseurl,
+                encode_path(&probe.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("project", project.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemProbesExt::probe_delete`]
+    ///
+    /// [`ClientSystemProbesExt::probe_delete`]: super::ClientSystemProbesExt::probe_delete
+    #[derive(Debug, Clone)]
+    pub struct ProbeDelete<'a> {
+        client: &'a super::Client,
+        probe: Result<types::NameOrId, String>,
+        project: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> ProbeDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                probe: Err("probe was not initialized".to_string()),
+                project: Err("project was not initialized".to_string()),
+            }
+        }
+
+        pub fn probe<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.probe = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for probe failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/v1/probes/{probe}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                probe,
+                project,
+            } = self;
+            let probe = probe.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/probes/{}",
+                client.baseurl,
+                encode_path(&probe.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("project", project.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientProjectsExt::project_list`]
     ///
     /// [`ClientProjectsExt::project_list`]: super::ClientProjectsExt::project_list
@@ -48651,22 +50609,22 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemHardwareExt::sled_set_provision_state`]
+    /// Builder for [`ClientSystemHardwareExt::sled_set_provision_policy`]
     ///
-    /// [`ClientSystemHardwareExt::sled_set_provision_state`]: super::ClientSystemHardwareExt::sled_set_provision_state
+    /// [`ClientSystemHardwareExt::sled_set_provision_policy`]: super::ClientSystemHardwareExt::sled_set_provision_policy
     #[derive(Debug, Clone)]
-    pub struct SledSetProvisionState<'a> {
+    pub struct SledSetProvisionPolicy<'a> {
         client: &'a super::Client,
         sled_id: Result<uuid::Uuid, String>,
-        body: Result<types::builder::SledProvisionStateParams, String>,
+        body: Result<types::builder::SledProvisionPolicyParams, String>,
     }
 
-    impl<'a> SledSetProvisionState<'a> {
+    impl<'a> SledSetProvisionPolicy<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
                 sled_id: Err("sled_id was not initialized".to_string()),
-                body: Ok(types::builder::SledProvisionStateParams::default()),
+                body: Ok(types::builder::SledProvisionPolicyParams::default()),
             }
         }
 
@@ -48682,12 +50640,13 @@ pub mod builder {
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::SledProvisionStateParams>,
-            <V as std::convert::TryInto<types::SledProvisionStateParams>>::Error: std::fmt::Display,
+            V: std::convert::TryInto<types::SledProvisionPolicyParams>,
+            <V as std::convert::TryInto<types::SledProvisionPolicyParams>>::Error:
+                std::fmt::Display,
         {
             self.body = value.try_into().map(From::from).map_err(|s| {
                 format!(
-                    "conversion to `SledProvisionStateParams` for body failed: {}",
+                    "conversion to `SledProvisionPolicyParams` for body failed: {}",
                     s
                 )
             });
@@ -48697,18 +50656,19 @@ pub mod builder {
         pub fn body_map<F>(mut self, f: F) -> Self
         where
             F: std::ops::FnOnce(
-                types::builder::SledProvisionStateParams,
-            ) -> types::builder::SledProvisionStateParams,
+                types::builder::SledProvisionPolicyParams,
+            ) -> types::builder::SledProvisionPolicyParams,
         {
             self.body = self.body.map(f);
             self
         }
 
         /// Sends a `PUT` request to
-        /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
+        /// `/v1/system/hardware/sleds/{sled_id}/provision-policy`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::SledProvisionStateResponse>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::SledProvisionPolicyResponse>, Error<types::Error>>
+        {
             let Self {
                 client,
                 sled_id,
@@ -48717,11 +50677,11 @@ pub mod builder {
             let sled_id = sled_id.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(|v| {
-                    types::SledProvisionStateParams::try_from(v).map_err(|e| e.to_string())
+                    types::SledProvisionPolicyParams::try_from(v).map_err(|e| e.to_string())
                 })
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/v1/system/hardware/sleds/{}/provision-state",
+                "{}/v1/system/hardware/sleds/{}/provision-policy",
                 client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
@@ -57683,6 +59643,7 @@ pub mod prelude {
     pub use super::ClientSystemHardwareExt;
     pub use super::ClientSystemMetricsExt;
     pub use super::ClientSystemNetworkingExt;
+    pub use super::ClientSystemProbesExt;
     pub use super::ClientSystemSilosExt;
     pub use super::ClientSystemStatusExt;
     pub use super::ClientVpcsExt;

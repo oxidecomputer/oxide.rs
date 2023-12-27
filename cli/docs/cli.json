@@ -637,11 +637,11 @@
           "about": "Create floating IP",
           "args": [
             {
-              "long": "address",
-              "help": "An IP address to reserve for use as a floating IP. This field is optional: when not set, an address will be automatically chosen from `pool`. If set, then the IP must be available in the resolved `pool`."
+              "long": "description"
             },
             {
-              "long": "description"
+              "long": "ip",
+              "help": "An IP address to reserve for use as a floating IP. This field is optional: when not set, an address will be automatically chosen from `pool`. If set, then the IP must be available in the resolved `pool`."
             },
             {
               "long": "json-body",
@@ -1796,6 +1796,91 @@
       ]
     },
     {
+      "name": "probe",
+      "subcommands": [
+        {
+          "name": "create",
+          "about": "Create instrumentation probe",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "ip-pool"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "sled"
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "about": "Delete instrumentation probe",
+          "args": [
+            {
+              "long": "probe",
+              "help": "Name or ID of the probe"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "list",
+          "about": "List instrumentation probes",
+          "args": [
+            {
+              "long": "limit",
+              "help": "Maximum number of items returned by a single call"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            },
+            {
+              "long": "sort-by",
+              "values": [
+                "name_ascending",
+                "name_descending",
+                "id_ascending"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "view",
+          "about": "View instrumentation probe",
+          "args": [
+            {
+              "long": "probe",
+              "help": "Name or ID of the probe"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "project",
       "subcommands": [
         {
@@ -2625,32 +2710,6 @@
                     {
                       "long": "limit",
                       "help": "Maximum number of items returned by a single call"
-                    }
-                  ]
-                },
-                {
-                  "name": "set-provision-state",
-                  "about": "Set sled provision state",
-                  "args": [
-                    {
-                      "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
-                    },
-                    {
-                      "long": "json-body-template",
-                      "help": "XXX"
-                    },
-                    {
-                      "long": "sled-id",
-                      "help": "ID of the sled"
-                    },
-                    {
-                      "long": "state",
-                      "values": [
-                        "provisionable",
-                        "non_provisionable"
-                      ],
-                      "help": "The provision state."
                     }
                   ]
                 },

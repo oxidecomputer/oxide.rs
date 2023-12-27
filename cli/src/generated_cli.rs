@@ -86,6 +86,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::Ping => Self::cli_ping(),
             CliCommand::PolicyView => Self::cli_policy_view(),
             CliCommand::PolicyUpdate => Self::cli_policy_update(),
+            CliCommand::ProbeList => Self::cli_probe_list(),
+            CliCommand::ProbeCreate => Self::cli_probe_create(),
+            CliCommand::ProbeView => Self::cli_probe_view(),
+            CliCommand::ProbeDelete => Self::cli_probe_delete(),
             CliCommand::ProjectList => Self::cli_project_list(),
             CliCommand::ProjectCreate => Self::cli_project_create(),
             CliCommand::ProjectView => Self::cli_project_view(),
@@ -105,7 +109,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
-            CliCommand::SledSetProvisionState => Self::cli_sled_set_provision_state(),
+            CliCommand::SledSetProvisionPolicy => Self::cli_sled_set_provision_policy(),
             CliCommand::SledListUninitialized => Self::cli_sled_list_uninitialized(),
             CliCommand::NetworkingSwitchPortList => Self::cli_networking_switch_port_list(),
             CliCommand::NetworkingSwitchPortApplySettings => {
@@ -806,8 +810,14 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_floating_ip_create() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("address")
-                    .long("address")
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("ip")
+                    .long("ip")
                     .value_parser(clap::value_parser!(std::net::IpAddr))
                     .required(false)
                     .help(
@@ -815,12 +825,6 @@ impl<T: CliConfig> Cli<T> {
                          optional: when not set, an address will be automatically chosen from \
                          `pool`. If set, then the IP must be available in the resolved `pool`.",
                     ),
-            )
-            .arg(
-                clap::Arg::new("description")
-                    .long("description")
-                    .value_parser(clap::value_parser!(String))
-                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -2285,6 +2289,126 @@ impl<T: CliConfig> Cli<T> {
             .about("Update current silo's IAM policy")
     }
 
+    pub fn cli_probe_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List instrumentation probes")
+    }
+
+    pub fn cli_probe_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("ip-pool")
+                    .long("ip-pool")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("sled")
+                    .long("sled")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create instrumentation probe")
+    }
+
+    pub fn cli_probe_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("probe")
+                    .long("probe")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the probe"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .about("View instrumentation probe")
+    }
+
+    pub fn cli_probe_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("probe")
+                    .long("probe")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the probe"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .about("Delete instrumentation probe")
+    }
+
     pub fn cli_project_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -2741,7 +2865,7 @@ impl<T: CliConfig> Cli<T> {
             .about("List instances running on given sled")
     }
 
-    pub fn cli_sled_set_provision_state() -> clap::Command {
+    pub fn cli_sled_set_provision_policy() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("sled-id")
@@ -2755,10 +2879,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("state")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::SledProvisionState::Provisionable.to_string(),
-                            types::SledProvisionState::NonProvisionable.to_string(),
+                            types::SledProvisionPolicy::Provisionable.to_string(),
+                            types::SledProvisionPolicy::NonProvisionable.to_string(),
                         ]),
-                        |s| types::SledProvisionState::try_from(s).unwrap(),
+                        |s| types::SledProvisionPolicy::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body")
                     .help("The provision state."),
@@ -2777,7 +2901,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Set sled provision state")
+            .about("Set sled provision policy")
     }
 
     pub fn cli_sled_list_uninitialized() -> clap::Command {
@@ -5304,6 +5428,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::Ping => self.execute_ping(matches).await,
             CliCommand::PolicyView => self.execute_policy_view(matches).await,
             CliCommand::PolicyUpdate => self.execute_policy_update(matches).await,
+            CliCommand::ProbeList => self.execute_probe_list(matches).await,
+            CliCommand::ProbeCreate => self.execute_probe_create(matches).await,
+            CliCommand::ProbeView => self.execute_probe_view(matches).await,
+            CliCommand::ProbeDelete => self.execute_probe_delete(matches).await,
             CliCommand::ProjectList => self.execute_project_list(matches).await,
             CliCommand::ProjectCreate => self.execute_project_create(matches).await,
             CliCommand::ProjectView => self.execute_project_view(matches).await,
@@ -5323,8 +5451,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SledView => self.execute_sled_view(matches).await,
             CliCommand::SledPhysicalDiskList => self.execute_sled_physical_disk_list(matches).await,
             CliCommand::SledInstanceList => self.execute_sled_instance_list(matches).await,
-            CliCommand::SledSetProvisionState => {
-                self.execute_sled_set_provision_state(matches).await
+            CliCommand::SledSetProvisionPolicy => {
+                self.execute_sled_set_provision_policy(matches).await
             }
             CliCommand::SledListUninitialized => {
                 self.execute_sled_list_uninitialized(matches).await
@@ -6085,12 +6213,12 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_create();
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
-            request = request.body_map(|body| body.address(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("ip") {
+            request = request.body_map(|body| body.ip(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
@@ -7638,6 +7766,131 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_probe_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.probe_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config.execute_probe_list(matches, &mut request)?;
+        self.config.list_start::<types::ProbeInfoResultsPage>();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::ProbeInfoResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_probe_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.probe_create();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("ip-pool") {
+            request = request.body_map(|body| body.ip_pool(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("sled") {
+            request = request.body_map(|body| body.sled(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::ProbeCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config.execute_probe_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_probe_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.probe_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("probe") {
+            request = request.probe(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config.execute_probe_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_probe_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.probe_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("probe") {
+            request = request.probe(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config.execute_probe_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_project_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -8189,28 +8442,28 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_sled_set_provision_state(
+    pub async fn execute_sled_set_provision_policy(
         &self,
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.sled_set_provision_state();
+        let mut request = self.client.sled_set_provision_policy();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::SledProvisionState>("state") {
+        if let Some(value) = matches.get_one::<types::SledProvisionPolicy>("state") {
             request = request.body_map(|body| body.state(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::SledProvisionStateParams>(&body_txt).unwrap();
+                serde_json::from_str::<types::SledProvisionPolicyParams>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
         self.config
-            .execute_sled_set_provision_state(matches, &mut request)?;
+            .execute_sled_set_provision_policy(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -11541,6 +11794,38 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_probe_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ProbeList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_probe_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ProbeCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_probe_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ProbeView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_probe_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ProbeDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_project_list(
         &self,
         matches: &clap::ArgMatches,
@@ -11693,10 +11978,10 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_sled_set_provision_state(
+    fn execute_sled_set_provision_policy(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::SledSetProvisionState,
+        request: &mut builder::SledSetProvisionPolicy,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -12459,6 +12744,10 @@ pub enum CliCommand {
     Ping,
     PolicyView,
     PolicyUpdate,
+    ProbeList,
+    ProbeCreate,
+    ProbeView,
+    ProbeDelete,
     ProjectList,
     ProjectCreate,
     ProjectView,
@@ -12478,7 +12767,7 @@ pub enum CliCommand {
     SledView,
     SledPhysicalDiskList,
     SledInstanceList,
-    SledSetProvisionState,
+    SledSetProvisionPolicy,
     SledListUninitialized,
     NetworkingSwitchPortList,
     NetworkingSwitchPortApplySettings,
@@ -12637,6 +12926,10 @@ impl CliCommand {
             CliCommand::Ping,
             CliCommand::PolicyView,
             CliCommand::PolicyUpdate,
+            CliCommand::ProbeList,
+            CliCommand::ProbeCreate,
+            CliCommand::ProbeView,
+            CliCommand::ProbeDelete,
             CliCommand::ProjectList,
             CliCommand::ProjectCreate,
             CliCommand::ProjectView,
@@ -12656,7 +12949,7 @@ impl CliCommand {
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
             CliCommand::SledInstanceList,
-            CliCommand::SledSetProvisionState,
+            CliCommand::SledSetProvisionPolicy,
             CliCommand::SledListUninitialized,
             CliCommand::NetworkingSwitchPortList,
             CliCommand::NetworkingSwitchPortApplySettings,

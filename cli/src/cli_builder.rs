@@ -455,7 +455,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SledListUninitialized => Some("system hardware sled list-uninitialized"),
         CliCommand::SledView => Some("system hardware sled view"),
         CliCommand::SledAdd => Some("system hardware sled add"),
-        CliCommand::SledSetProvisionState => Some("system hardware sled set-provision-state"),
         CliCommand::SledInstanceList => Some("system hardware sled instance-list"),
         CliCommand::PhysicalDiskList => Some("system hardware disk list"),
         CliCommand::SledPhysicalDiskList => Some("system hardware sled disk-led"),
@@ -479,6 +478,11 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
 
         CliCommand::Ping => Some("ping"),
 
+        CliCommand::ProbeCreate => Some("probe create"),
+        CliCommand::ProbeList => Some("probe list"),
+        CliCommand::ProbeView => Some("probe view"),
+        CliCommand::ProbeDelete => Some("probe delete"),
+
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
         | CliCommand::DeviceAuthConfirm
@@ -492,7 +496,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::SiloMetric
         | CliCommand::SystemMetric
         | CliCommand::UserBuiltinList
-        | CliCommand::UserBuiltinView => None,
+        | CliCommand::UserBuiltinView
+        | CliCommand::SledSetProvisionPolicy => None,
     }
 }
 
