@@ -6205,8 +6205,8 @@ pub mod operations {
         }
     }
 
-    pub struct AddSledToInitializedRackWhen(httpmock::When);
-    impl AddSledToInitializedRackWhen {
+    pub struct SledAddWhen(httpmock::When);
+    impl SledAddWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(
                 inner
@@ -6219,13 +6219,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn body(self, value: &types::UninitializedSled) -> Self {
+        pub fn body(self, value: &types::UninitializedSledId) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
 
-    pub struct AddSledToInitializedRackThen(httpmock::Then);
-    impl AddSledToInitializedRackThen {
+    pub struct SledAddThen(httpmock::Then);
+    impl SledAddThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -12963,12 +12963,9 @@ pub trait MockServerExt {
     fn sled_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledListWhen, operations::SledListThen);
-    fn add_sled_to_initialized_rack<F>(&self, config_fn: F) -> httpmock::Mock
+    fn sled_add<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(
-            operations::AddSledToInitializedRackWhen,
-            operations::AddSledToInitializedRackThen,
-        );
+        F: FnOnce(operations::SledAddWhen, operations::SledAddThen);
     fn sled_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledViewWhen, operations::SledViewThen);
@@ -14238,17 +14235,14 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
-    fn add_sled_to_initialized_rack<F>(&self, config_fn: F) -> httpmock::Mock
+    fn sled_add<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(
-            operations::AddSledToInitializedRackWhen,
-            operations::AddSledToInitializedRackThen,
-        ),
+        F: FnOnce(operations::SledAddWhen, operations::SledAddThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::AddSledToInitializedRackWhen::new(when),
-                operations::AddSledToInitializedRackThen::new(then),
+                operations::SledAddWhen::new(when),
+                operations::SledAddThen::new(then),
             )
         })
     }

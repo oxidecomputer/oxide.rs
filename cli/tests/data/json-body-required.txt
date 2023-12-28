@@ -1,7 +1,6 @@
 oxide image create
 oxide policy update
 oxide project policy update
-oxide system hardware sled add
 oxide system networking address-lot create
 oxide system networking bgp-announce-set create
 oxide system networking switch-port-settings create
