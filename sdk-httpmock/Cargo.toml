@@ -10,7 +10,7 @@ readme = "README.md"
 [dependencies]
 chrono = { workspace = true }
 httpmock = { workspace = true }
-oxide-api = { workspace = true }
+oxide = { workspace = true }
 regex = { workspace = true }
 serde_json = { workspace = true }
 uuid = { workspace = true }

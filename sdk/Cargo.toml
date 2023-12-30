@@ -1,5 +1,5 @@
 [package]
-name = "oxide-api"
+name = "oxide"
 description = "SDK for the Oxide rack"
 version = "0.2.0"
 edition = "2021"

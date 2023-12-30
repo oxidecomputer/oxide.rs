@@ -7,7 +7,7 @@
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
-use oxide_api::Client;
+use oxide::Client;
 
 use crate::{context::Context, RunnableCmd};
 

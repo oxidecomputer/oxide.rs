@@ -13,7 +13,7 @@ use oauth2::{
     basic::BasicClient, devicecode::StandardDeviceAuthorizationResponse, AuthType, AuthUrl,
     ClientId, DeviceAuthorizationUrl, TokenResponse, TokenUrl,
 };
-use oxide_api::ClientSessionExt;
+use oxide::ClientSessionExt;
 
 use crate::{
     config::{Config, Host},
@@ -420,8 +420,8 @@ impl CmdAuthStatus {
     pub async fn run(&self, ctx: &Context) -> Result<()> {
         let mut status_info: HashMap<String, Vec<String>> = HashMap::new();
 
-        // Initialising a new Config here instead of taking ctx (&Context)
-        // because ctx already has an initialised oxide_api::Client. This would
+        // Initializing a new Config here instead of taking ctx (&Context)
+        // because ctx already has an initialized oxide::Client. This would
         // give the CLI a chance to return an error before the status checks
         // have even started.
         //
@@ -712,13 +712,12 @@ fn test_cmd_auth_status() {
         when.method(GET)
             .path("/v1/me")
             .header("authorization", "Bearer oxide-token-1111");
-        then.status(200)
-            .json_body_obj(&oxide_api::types::CurrentUser {
-                display_name: "privileged".to_string(),
-                id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
-                silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
-                silo_name: "funky-town".parse().unwrap(),
-            });
+        then.status(200).json_body_obj(&oxide::types::CurrentUser {
+            display_name: "privileged".to_string(),
+            id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
+            silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
+            silo_name: "funky-town".parse().unwrap(),
+        });
     });
 
     // Validate authenticated credentials.
@@ -765,7 +764,7 @@ fn test_cmd_auth_status() {
 
     let oxide_mock = server.mock(|when, then| {
         when.header("authorization", "Bearer oxide-token-1112");
-        then.status(401).json_body_obj(&oxide_api::types::Error {
+        then.status(401).json_body_obj(&oxide::types::Error {
             error_code: None,
             message: "oops".to_string(),
             request_id: "42".to_string(),

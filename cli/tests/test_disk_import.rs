@@ -7,9 +7,9 @@
 use anyhow::Result;
 use assert_cmd::Command;
 use httpmock::MockServer;
-use oxide_api::types::Disk;
-use oxide_api::types::Image;
-use oxide_api::types::Snapshot;
+use oxide::types::Disk;
+use oxide::types::Image;
+use oxide::types::Snapshot;
 use oxide_httpmock::MockServerExt;
 use predicates::prelude::*;
 use rand::SeedableRng;
@@ -99,7 +99,7 @@ fn test_disk_import() {
         when.into_inner().any_request();
         then.client_error(
             404,
-            &oxide_api::types::Error {
+            &oxide::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
                 request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
@@ -174,7 +174,7 @@ fn test_disk_import_sparse() {
         when.into_inner().any_request();
         then.client_error(
             404,
-            &oxide_api::types::Error {
+            &oxide::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
                 request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
@@ -298,7 +298,7 @@ fn test_disk_import_snapshot_exists_already() {
         when.into_inner().any_request();
         then.client_error(
             404,
-            &oxide_api::types::Error {
+            &oxide::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
                 request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
@@ -360,7 +360,7 @@ fn test_disk_import_image_exists_already() {
         when.into_inner().any_request();
         then.client_error(
             404,
-            &oxide_api::types::Error {
+            &oxide::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
                 request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
@@ -372,7 +372,7 @@ fn test_disk_import_image_exists_already() {
         when.into_inner().any_request();
         then.client_error(
             404,
-            &oxide_api::types::Error {
+            &oxide::types::Error {
                 error_code: None,
                 message: "snapshot not found".into(),
                 request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
@@ -433,7 +433,7 @@ fn test_disk_import_bulk_import_start_fail() {
         when.into_inner().any_request();
         then.client_error(
             404,
-            &oxide_api::types::Error {
+            &oxide::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
                 request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
@@ -453,7 +453,7 @@ fn test_disk_import_bulk_import_start_fail() {
         when.into_inner().any_request();
         then.server_error(
             503,
-            &oxide_api::types::Error {
+            &oxide::types::Error {
                 error_code: None,
                 message: "I can't do that Dave".into(),
                 request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
@@ -508,7 +508,7 @@ fn test_disk_import_bulk_write_import_fail() {
         when.into_inner().any_request();
         then.client_error(
             404,
-            &oxide_api::types::Error {
+            &oxide::types::Error {
                 error_code: None,
                 message: "disk not found".into(),
                 request_id: Uuid::mock_value(&mut src).unwrap().to_string(),
@@ -533,7 +533,7 @@ fn test_disk_import_bulk_write_import_fail() {
         when.into_inner().any_request();
         then.server_error(
             503,
-            &oxide_api::types::Error {
+            &oxide::types::Error {
                 error_code: None,
                 message: "I can't do that Dave".into(),
                 request_id: Uuid::mock_value(&mut src).unwrap().to_string(),

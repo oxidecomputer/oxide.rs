@@ -1,14 +1,14 @@
 // The contents of this file are generated; do not modify them.
 
-use oxide_api::*;
+use oxide::*;
 
 pub struct Cli<T: CliOverride = ()> {
-    client: oxide_api::Client,
+    client: oxide::Client,
     over: T,
 }
 
 impl Cli {
-    pub fn new(client: oxide_api::Client) -> Self {
+    pub fn new(client: oxide::Client) -> Self {
         Self { client, over: () }
     }
 
@@ -4755,7 +4755,7 @@ impl Cli {
 }
 
 impl<T: CliOverride> Cli<T> {
-    pub fn new_with_override(client: oxide_api::Client, over: T) -> Self {
+    pub fn new_with_override(client: oxide::Client, over: T) -> Self {
         Self { client, over }
     }
 

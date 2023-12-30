@@ -6,7 +6,7 @@
 
 use assert_cmd::Command;
 use httpmock::prelude::*;
-use oxide_api::types::{InstanceSerialConsoleData, NameOrId};
+use oxide::types::{InstanceSerialConsoleData, NameOrId};
 use oxide_httpmock::MockServerExt;
 use predicates::prelude::predicate;
 use rand::SeedableRng;
@@ -25,13 +25,13 @@ fn test_instance_create() {
 
     let mock = server.instance_create(|when, then| {
         when.body(&body);
-        then.created(&oxide_api::types::Instance {
+        then.created(&oxide::types::Instance {
             description: body.description.clone(),
             hostname: body.hostname.clone(),
             memory: body.memory.clone(),
             name: body.name.clone(),
             ncpus: body.ncpus.clone(),
-            run_state: oxide_api::types::InstanceState::Creating,
+            run_state: oxide::types::InstanceState::Creating,
             ..JsonMock::mock_value(&mut src).unwrap()
         });
     });

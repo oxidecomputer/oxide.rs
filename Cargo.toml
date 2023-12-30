@@ -29,8 +29,8 @@ log = "0.4.20"
 newline-converter = "0.3.0"
 oauth2 = "4.4.2"
 open = "4.2.0"
-oxide-api = { path = "sdk" }
-oxide-httpmock = { path = "sdk-httpmock" }
+oxide = { path = "sdk", version = "0.2.0" }
+oxide-httpmock = { path = "sdk-httpmock", version = "0.2.0" }
 predicates = "3.0.4"
 pretty_assertions = "1.4.0"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor" }

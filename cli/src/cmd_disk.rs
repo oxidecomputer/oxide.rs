@@ -11,21 +11,21 @@ use async_trait::async_trait;
 use base64::Engine;
 use clap::Parser;
 use indicatif::{ProgressBar, ProgressStyle};
-use oxide_api::types::BlockSize;
-use oxide_api::types::ByteCount;
-use oxide_api::types::DiskCreate;
-use oxide_api::types::DiskSource;
-use oxide_api::types::FinalizeDisk;
-use oxide_api::types::ImageCreate;
-use oxide_api::types::ImageSource;
-use oxide_api::types::ImportBlocksBulkWrite;
-use oxide_api::types::Name;
-use oxide_api::types::NameOrId;
-use oxide_api::Client;
-use oxide_api::ClientDisksExt;
-use oxide_api::ClientImagesExt;
-use oxide_api::ClientSnapshotsExt;
-use oxide_api::ResponseValue;
+use oxide::types::BlockSize;
+use oxide::types::ByteCount;
+use oxide::types::DiskCreate;
+use oxide::types::DiskSource;
+use oxide::types::FinalizeDisk;
+use oxide::types::ImageCreate;
+use oxide::types::ImageSource;
+use oxide::types::ImportBlocksBulkWrite;
+use oxide::types::Name;
+use oxide::types::NameOrId;
+use oxide::Client;
+use oxide::ClientDisksExt;
+use oxide::ClientImagesExt;
+use oxide::ClientSnapshotsExt;
+use oxide::ResponseValue;
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
@@ -152,7 +152,7 @@ fn test_get_disk_size() {
 
 fn err_if_object_exists<T>(
     error_msg: String,
-    send_response: Result<ResponseValue<T>, oxide_api::Error<oxide_api::types::Error>>,
+    send_response: Result<ResponseValue<T>, oxide::Error<oxide::types::Error>>,
 ) -> Result<()> {
     match send_response {
         Ok(_) => {
@@ -162,7 +162,7 @@ fn err_if_object_exists<T>(
         Err(e) => {
             match &e {
                 // Match against 404
-                oxide_api::Error::ErrorResponse(response_value) => {
+                oxide::Error::ErrorResponse(response_value) => {
                     if response_value.status() == 404 {
                         // ok
                     } else {
