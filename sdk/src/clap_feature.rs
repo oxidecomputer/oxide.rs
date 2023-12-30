@@ -254,11 +254,10 @@ mod tests {
             "{err}"
         );
 
-        // TODO https://github.com/oxidecomputer/omicron/issues/4689
-        // let Err(err) = Cmd::try_parse_from(vec!["", "c-"]) else {
-        //     panic!()
-        // };
-        // assert!(err.to_string().contains("names cannot end with a '-'"));
+        let Err(err) = Cmd::try_parse_from(vec!["", "c-"]) else {
+            panic!()
+        };
+        assert!(err.to_string().contains("names cannot end with a '-'"));
 
         let Err(err) = Cmd::try_parse_from(vec!["", "a*"]) else {
             panic!()
