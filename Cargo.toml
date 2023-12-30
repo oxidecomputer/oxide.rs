@@ -61,20 +61,21 @@ uuid = { version = "1.6.1", features = ["serde", "v4"] }
 # Config for 'cargo dist'
 [workspace.metadata.dist]
 # The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
-cargo-dist-version = "0.0.7"
-# The preferred Rust toolchain to use in CI (rustup toolchain syntax)
-#rust-toolchain-version = "1.67.1"
-# CI backends to support (see 'cargo dist generate-ci')
+cargo-dist-version = "0.6.2"
+# CI backends to support
 ci = ["github"]
 # The installers to generate for each app
 installers = []
 # Target platforms to build apps for (Rust target-triple syntax)
 targets = [
+	"x86_64-unknown-linux-gnu",
 	"aarch64-apple-darwin",
 	"x86_64-apple-darwin",
+	"x86_64-unknown-linux-musl",
 	"x86_64-pc-windows-msvc",
-	"x86_64-unknown-linux-gnu",
 ]
+# Publish jobs to run in CI
+pr-run-mode = "plan"
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
