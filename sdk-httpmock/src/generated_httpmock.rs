@@ -5,7 +5,7 @@ pub mod operations {
     //! wrappers for each operation. Each can be converted to
     //! its inner type with a call to `into_inner()`. This can
     //! be used to explicitly deviate from permitted values.
-    use oxide_api::*;
+    use oxide::*;
     pub struct DeviceAuthRequestWhen(httpmock::When);
     impl DeviceAuthRequestWhen {
         pub fn new(inner: httpmock::When) -> Self {

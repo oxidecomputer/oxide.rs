@@ -102,7 +102,7 @@ fn generate(
     if httpmock {
         print!("generating httpmock ... ");
         std::io::stdout().flush().unwrap();
-        let code = generator.httpmock(&spec, "oxide_api").unwrap().to_string();
+        let code = generator.httpmock(&spec, "oxide").unwrap().to_string();
         let contents = format_code(code);
         loc += contents.matches('\n').count();
 
@@ -118,8 +118,8 @@ fn generate(
     if cli {
         print!("generating cli ... ");
         std::io::stdout().flush().unwrap();
-        let code = generator.cli(&spec, "oxide_api").unwrap().to_string();
-        let contents = format_code(format!("{}\n\n{}", "use oxide_api::*;", code));
+        let code = generator.cli(&spec, "oxide").unwrap().to_string();
+        let contents = format_code(format!("{}\n\n{}", "use oxide::*;", code));
         loc += contents.matches('\n').count();
 
         let mut out_path = root_path;

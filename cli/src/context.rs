@@ -8,7 +8,7 @@ use std::{net::SocketAddr, time::Duration};
 
 use anyhow::{anyhow, Result};
 use http::HeaderValue;
-use oxide_api::Client;
+use oxide::Client;
 use reqwest::ClientBuilder;
 
 use crate::{cli_builder::ResolveValue, config::Config};

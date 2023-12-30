@@ -13,7 +13,7 @@ use async_trait::async_trait;
 use cli_builder::NewCli;
 use context::Context;
 use generated_cli::CliOverride;
-use oxide_api::types::{IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
+use oxide::types::{IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
 
 mod cli_builder;
 mod cmd_api;
@@ -93,7 +93,7 @@ impl CliOverride for OxideOverride {
     fn execute_ip_pool_range_add(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut oxide_api::builder::IpPoolRangeAdd,
+        request: &mut oxide::builder::IpPoolRangeAdd,
     ) -> Result<(), String> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
@@ -101,7 +101,7 @@ impl CliOverride for OxideOverride {
     fn execute_ip_pool_range_remove(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut oxide_api::builder::IpPoolRangeRemove,
+        request: &mut oxide::builder::IpPoolRangeRemove,
     ) -> Result<(), String> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
@@ -109,7 +109,7 @@ impl CliOverride for OxideOverride {
     fn execute_ip_pool_service_range_add(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut oxide_api::builder::IpPoolServiceRangeAdd,
+        request: &mut oxide::builder::IpPoolServiceRangeAdd,
     ) -> Result<(), String> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
@@ -117,7 +117,7 @@ impl CliOverride for OxideOverride {
     fn execute_ip_pool_service_range_remove(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut oxide_api::builder::IpPoolServiceRangeRemove,
+        request: &mut oxide::builder::IpPoolServiceRangeRemove,
     ) -> Result<(), String> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
@@ -126,7 +126,7 @@ impl CliOverride for OxideOverride {
     fn execute_saml_identity_provider_create(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut oxide_api::builder::SamlIdentityProviderCreate,
+        request: &mut oxide::builder::SamlIdentityProviderCreate,
     ) -> Result<(), String> {
         match matches
             .get_one::<clap::Id>("idp_metadata_source")
@@ -156,7 +156,7 @@ impl CliOverride for OxideOverride {
 mod tests {
     use clap::Command;
     use expectorate::assert_contents;
-    use oxide_api::types::ByteCount;
+    use oxide::types::ByteCount;
 
     use crate::make_cli;
 
@@ -203,7 +203,7 @@ mod tests {
     }
 
     // this is the thing that may or may not exist
-    impl MyFromStr for oxide_api::types::ByteCount {
+    impl MyFromStr for oxide::types::ByteCount {
         type Err = &'static str;
 
         fn my_from_str(_value: &str) -> Result<Self, Self::Err> {

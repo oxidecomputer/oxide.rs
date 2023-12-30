@@ -1919,6 +1919,24 @@ dependencies = [
 name = "oxide"
 version = "0.2.0"
 dependencies = [
+ "base64 0.21.5",
+ "chrono",
+ "clap",
+ "futures",
+ "progenitor-client",
+ "rand",
+ "regress",
+ "reqwest",
+ "schemars",
+ "serde",
+ "serde_json",
+ "uuid",
+]
+
+[[package]]
+name = "oxide-cli"
+version = "0.2.0"
+dependencies = [
  "anyhow",
  "assert_cmd",
  "async-trait",
@@ -1938,7 +1956,7 @@ dependencies = [
  "log",
  "oauth2",
  "open",
- "oxide-api",
+ "oxide",
  "oxide-httpmock",
  "predicates",
  "pretty_assertions",
@@ -1962,30 +1980,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "oxide-api"
-version = "0.2.0"
-dependencies = [
- "base64 0.21.5",
- "chrono",
- "clap",
- "futures",
- "progenitor-client",
- "rand",
- "regress",
- "reqwest",
- "schemars",
- "serde",
- "serde_json",
- "uuid",
-]
-
-[[package]]
 name = "oxide-httpmock"
 version = "0.2.0"
 dependencies = [
  "chrono",
  "httpmock",
- "oxide-api",
+ "oxide",
  "regex",
  "serde_json",
  "uuid",

@@ -5,6 +5,7 @@
 // Copyright 2023 Oxide Computer Company
 
 #![forbid(unsafe_code)]
+#![doc = include_str!("../README.md")]
 
 #[allow(clippy::unnecessary_to_owned)]
 #[allow(clippy::to_string_in_format_args)]

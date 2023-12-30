@@ -6,7 +6,7 @@
 
 use assert_cmd::Command;
 use httpmock::MockServer;
-use oxide_api::types::{Project, ProjectResultsPage};
+use oxide::types::{Project, ProjectResultsPage};
 use oxide_httpmock::MockServerExt;
 use rand::SeedableRng;
 use test_common::JsonMock;
@@ -107,7 +107,7 @@ fn test_projects_list_paginated_fail() {
         when.page_token("page-3");
         then.client_error(
             400,
-            &oxide_api::types::Error {
+            &oxide::types::Error {
                 error_code: None,
                 message: "".to_string(),
                 request_id: "".to_string(),

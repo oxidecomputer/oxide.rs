@@ -1,5 +1,5 @@
 [package]
-name = "oxide"
+name = "oxide-cli"
 description = "CLI for the Oxide rack"
 version = "0.2.0"
 edition = "2021"
@@ -9,6 +9,10 @@ readme = "README.md"
 publish = false
 
 default-run = "oxide"
+
+[[bin]]
+name = "oxide"
+path = "src/main.rs"
 
 [package.metadata.dist]
 dist = true
@@ -28,7 +32,7 @@ indicatif = { workspace = true }
 log = { workspace = true }
 oauth2 = { workspace = true }
 open = { workspace = true }
-oxide-api = { workspace = true }
+oxide = { workspace = true }
 predicates = { workspace = true }
 reqwest = { workspace = true }
 schemars = { workspace = true }

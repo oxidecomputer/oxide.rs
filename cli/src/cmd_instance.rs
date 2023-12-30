@@ -8,13 +8,13 @@ use crate::RunnableCmd;
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
-use oxide_api::types::{
+use oxide::types::{
     ByteCount, DiskSource, ExternalIpCreate, InstanceCpuCount, InstanceDiskAttachment, Name,
     NameOrId,
 };
 
-use oxide_api::ClientImagesExt;
-use oxide_api::ClientInstancesExt;
+use oxide::ClientImagesExt;
+use oxide::ClientInstancesExt;
 use std::path::PathBuf;
 
 /// Connect to or retrieve data from the instance's serial console.
