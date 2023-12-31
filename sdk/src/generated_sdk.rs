@@ -10237,7 +10237,7 @@ pub mod types {
     /// configuration for the link.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/LldpServiceConfig"
+    ///          "$ref": "#/components/schemas/LldpServiceConfigCreate"
     ///        }
     ///      ]
     ///    },
@@ -10260,27 +10260,27 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct LinkConfig {
+    pub struct LinkConfigCreate {
         /// Whether or not to set autonegotiation
         pub autoneg: bool,
         /// The forward error correction mode of the link.
         pub fec: LinkFec,
         /// The link-layer discovery protocol (LLDP) configuration for the link.
-        pub lldp: LldpServiceConfig,
+        pub lldp: LldpServiceConfigCreate,
         /// Maximum transmission unit for the link.
         pub mtu: u16,
         /// The speed of the link.
         pub speed: LinkSpeed,
     }
 
-    impl From<&LinkConfig> for LinkConfig {
-        fn from(value: &LinkConfig) -> Self {
+    impl From<&LinkConfigCreate> for LinkConfigCreate {
+        fn from(value: &LinkConfigCreate) -> Self {
             value.clone()
         }
     }
 
-    impl LinkConfig {
-        pub fn builder() -> builder::LinkConfig {
+    impl LinkConfigCreate {
+        pub fn builder() -> builder::LinkConfigCreate {
             Default::default()
         }
     }
@@ -10571,6 +10571,65 @@ pub mod types {
         }
     }
 
+    /// A link layer discovery protocol (LLDP) service configuration.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A link layer discovery protocol (LLDP) service
+    /// configuration.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "enabled",
+    ///    "id"
+    ///  ],
+    ///  "properties": {
+    ///    "enabled": {
+    ///      "description": "Whether or not the LLDP service is enabled.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "id": {
+    ///      "description": "The id of this LLDP service instance.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "lldp_config_id": {
+    ///      "description": "The link-layer discovery protocol configuration for
+    /// this service.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct LldpServiceConfig {
+        /// Whether or not the LLDP service is enabled.
+        pub enabled: bool,
+        /// The id of this LLDP service instance.
+        pub id: uuid::Uuid,
+        /// The link-layer discovery protocol configuration for this service.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub lldp_config_id: Option<uuid::Uuid>,
+    }
+
+    impl From<&LldpServiceConfig> for LldpServiceConfig {
+        fn from(value: &LldpServiceConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl LldpServiceConfig {
+        pub fn builder() -> builder::LldpServiceConfig {
+            Default::default()
+        }
+    }
+
     /// The LLDP configuration associated with a port. LLDP may be either
     /// enabled or disabled, if enabled, an LLDP configuration must be provided
     /// by name or id.
@@ -10605,7 +10664,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct LldpServiceConfig {
+    pub struct LldpServiceConfigCreate {
         /// Whether or not LLDP is enabled.
         pub enabled: bool,
         /// A reference to the LLDP configuration used. Must not be `None` when
@@ -10614,14 +10673,14 @@ pub mod types {
         pub lldp_config: Option<NameOrId>,
     }
 
-    impl From<&LldpServiceConfig> for LldpServiceConfig {
-        fn from(value: &LldpServiceConfig) -> Self {
+    impl From<&LldpServiceConfigCreate> for LldpServiceConfigCreate {
+        fn from(value: &LldpServiceConfigCreate) -> Self {
             value.clone()
         }
     }
 
-    impl LldpServiceConfig {
-        pub fn builder() -> builder::LldpServiceConfig {
+    impl LldpServiceConfigCreate {
+        pub fn builder() -> builder::LldpServiceConfigCreate {
             Default::default()
         }
     }
@@ -15135,6 +15194,81 @@ pub mod types {
         }
     }
 
+    /// A switch port interface configuration for a port settings object.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A switch port interface configuration for a port
+    /// settings object.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "interface_name",
+    ///    "kind",
+    ///    "port_settings_id",
+    ///    "v6_enabled"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "description": "A unique identifier for this switch interface.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "interface_name": {
+    ///      "description": "The name of this switch interface.",
+    ///      "type": "string"
+    ///    },
+    ///    "kind": {
+    ///      "description": "The switch interface kind.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SwitchInterfaceKind2"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "port_settings_id": {
+    ///      "description": "The port settings object this switch interface
+    /// configuration belongs to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "v6_enabled": {
+    ///      "description": "Whether or not IPv6 is enabled on this interface.",
+    ///      "type": "boolean"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchInterfaceConfig {
+        /// A unique identifier for this switch interface.
+        pub id: uuid::Uuid,
+        /// The name of this switch interface.
+        pub interface_name: String,
+        /// The switch interface kind.
+        pub kind: SwitchInterfaceKind2,
+        /// The port settings object this switch interface configuration belongs
+        /// to.
+        pub port_settings_id: uuid::Uuid,
+        /// Whether or not IPv6 is enabled on this interface.
+        pub v6_enabled: bool,
+    }
+
+    impl From<&SwitchInterfaceConfig> for SwitchInterfaceConfig {
+        fn from(value: &SwitchInterfaceConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchInterfaceConfig {
+        pub fn builder() -> builder::SwitchInterfaceConfig {
+            Default::default()
+        }
+    }
+
     /// A layer-3 switch interface configuration. When IPv6 is enabled, a link
     /// local address will be created for the interface.
     ///
@@ -15168,21 +15302,21 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SwitchInterfaceConfig {
+    pub struct SwitchInterfaceConfigCreate {
         /// What kind of switch interface this configuration represents.
         pub kind: SwitchInterfaceKind,
         /// Whether or not IPv6 is enabled.
         pub v6_enabled: bool,
     }
 
-    impl From<&SwitchInterfaceConfig> for SwitchInterfaceConfig {
-        fn from(value: &SwitchInterfaceConfig) -> Self {
+    impl From<&SwitchInterfaceConfigCreate> for SwitchInterfaceConfigCreate {
+        fn from(value: &SwitchInterfaceConfigCreate) -> Self {
             value.clone()
         }
     }
 
-    impl SwitchInterfaceConfig {
-        pub fn builder() -> builder::SwitchInterfaceConfig {
+    impl SwitchInterfaceConfigCreate {
+        pub fn builder() -> builder::SwitchInterfaceConfigCreate {
             Default::default()
         }
     }
@@ -15281,6 +15415,121 @@ pub mod types {
     impl From<u16> for SwitchInterfaceKind {
         fn from(value: u16) -> Self {
             Self::Vlan(value)
+        }
+    }
+
+    /// Describes the kind of an switch interface.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Describes the kind of an switch interface.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Primary interfaces are associated with physical
+    /// links. There is exactly one primary interface per physical link.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "primary"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "VLAN interfaces allow physical interfaces to be
+    /// multiplexed onto multiple logical links, each distinguished by a 12-bit
+    /// 802.1Q Ethernet tag.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "vlan"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Loopback interfaces are anchors for IP addresses
+    /// that are not specific to any particular port.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "loopback"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum SwitchInterfaceKind2 {
+        /// Primary interfaces are associated with physical links. There is
+        /// exactly one primary interface per physical link.
+        #[serde(rename = "primary")]
+        Primary,
+        /// VLAN interfaces allow physical interfaces to be multiplexed onto
+        /// multiple logical links, each distinguished by a 12-bit 802.1Q
+        /// Ethernet tag.
+        #[serde(rename = "vlan")]
+        Vlan,
+        /// Loopback interfaces are anchors for IP addresses that are not
+        /// specific to any particular port.
+        #[serde(rename = "loopback")]
+        Loopback,
+    }
+
+    impl From<&SwitchInterfaceKind2> for SwitchInterfaceKind2 {
+        fn from(value: &SwitchInterfaceKind2) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for SwitchInterfaceKind2 {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Primary => "primary".to_string(),
+                Self::Vlan => "vlan".to_string(),
+                Self::Loopback => "loopback".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for SwitchInterfaceKind2 {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "primary" => Ok(Self::Primary),
+                "vlan" => Ok(Self::Vlan),
+                "loopback" => Ok(Self::Loopback),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for SwitchInterfaceKind2 {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for SwitchInterfaceKind2 {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for SwitchInterfaceKind2 {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
         }
     }
 
@@ -15631,6 +15880,58 @@ pub mod types {
         }
     }
 
+    /// A physical port configuration for a port settings object.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A physical port configuration for a port settings
+    /// object.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "geometry",
+    ///    "port_settings_id"
+    ///  ],
+    ///  "properties": {
+    ///    "geometry": {
+    ///      "description": "The physical link geometry of the port.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SwitchPortGeometry2"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "port_settings_id": {
+    ///      "description": "The id of the port settings object this
+    /// configuration belongs to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchPortConfig {
+        /// The physical link geometry of the port.
+        pub geometry: SwitchPortGeometry2,
+        /// The id of the port settings object this configuration belongs to.
+        pub port_settings_id: uuid::Uuid,
+    }
+
+    impl From<&SwitchPortConfig> for SwitchPortConfig {
+        fn from(value: &SwitchPortConfig) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchPortConfig {
+        pub fn builder() -> builder::SwitchPortConfig {
+            Default::default()
+        }
+    }
+
     /// Physical switch port configuration.
     ///
     /// <details><summary>JSON schema</summary>
@@ -15656,19 +15957,19 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SwitchPortConfig {
+    pub struct SwitchPortConfigCreate {
         /// Link geometry for the switch port.
         pub geometry: SwitchPortGeometry,
     }
 
-    impl From<&SwitchPortConfig> for SwitchPortConfig {
-        fn from(value: &SwitchPortConfig) -> Self {
+    impl From<&SwitchPortConfigCreate> for SwitchPortConfigCreate {
+        fn from(value: &SwitchPortConfigCreate) -> Self {
             value.clone()
         }
     }
 
-    impl SwitchPortConfig {
-        pub fn builder() -> builder::SwitchPortConfig {
+    impl SwitchPortConfigCreate {
+        pub fn builder() -> builder::SwitchPortConfigCreate {
             Default::default()
         }
     }
@@ -15777,6 +16078,116 @@ pub mod types {
     }
 
     impl std::convert::TryFrom<String> for SwitchPortGeometry {
+        type Error = &'static str;
+        fn try_from(value: String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    /// The link geometry associated with a switch port.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The link geometry associated with a switch port.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The port contains a single QSFP28 link with four
+    /// lanes.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "qsfp28x1"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The port contains two QSFP28 links each with two
+    /// lanes.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "qsfp28x2"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The port contains four SFP28 links each with one
+    /// lane.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "sfp28x4"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum SwitchPortGeometry2 {
+        /// The port contains a single QSFP28 link with four lanes.
+        #[serde(rename = "qsfp28x1")]
+        Qsfp28x1,
+        /// The port contains two QSFP28 links each with two lanes.
+        #[serde(rename = "qsfp28x2")]
+        Qsfp28x2,
+        /// The port contains four SFP28 links each with one lane.
+        #[serde(rename = "sfp28x4")]
+        Sfp28x4,
+    }
+
+    impl From<&SwitchPortGeometry2> for SwitchPortGeometry2 {
+        fn from(value: &SwitchPortGeometry2) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for SwitchPortGeometry2 {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Qsfp28x1 => "qsfp28x1".to_string(),
+                Self::Qsfp28x2 => "qsfp28x2".to_string(),
+                Self::Sfp28x4 => "sfp28x4".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for SwitchPortGeometry2 {
+        type Err = &'static str;
+        fn from_str(value: &str) -> Result<Self, &'static str> {
+            match value {
+                "qsfp28x1" => Ok(Self::Qsfp28x1),
+                "qsfp28x2" => Ok(Self::Qsfp28x2),
+                "sfp28x4" => Ok(Self::Sfp28x4),
+                _ => Err("invalid value"),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for SwitchPortGeometry2 {
+        type Error = &'static str;
+        fn try_from(value: &str) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for SwitchPortGeometry2 {
+        type Error = &'static str;
+        fn try_from(value: &String) -> Result<Self, &'static str> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for SwitchPortGeometry2 {
         type Error = &'static str;
         fn try_from(value: String) -> Result<Self, &'static str> {
             value.parse()
@@ -16115,7 +16526,7 @@ pub mod types {
     ///      "description": "Interfaces indexed by link name.",
     ///      "type": "object",
     ///      "additionalProperties": {
-    ///        "$ref": "#/components/schemas/SwitchInterfaceConfig"
+    ///        "$ref": "#/components/schemas/SwitchInterfaceConfigCreate"
     ///      }
     ///    },
     ///    "links": {
@@ -16124,14 +16535,14 @@ pub mod types {
     /// and phy1, on 4x phy0-phy3, etc.",
     ///      "type": "object",
     ///      "additionalProperties": {
-    ///        "$ref": "#/components/schemas/LinkConfig"
+    ///        "$ref": "#/components/schemas/LinkConfigCreate"
     ///      }
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
     ///    },
     ///    "port_config": {
-    ///      "$ref": "#/components/schemas/SwitchPortConfig"
+    ///      "$ref": "#/components/schemas/SwitchPortConfigCreate"
     ///    },
     ///    "routes": {
     ///      "description": "Routes indexed by interface name.",
@@ -16153,13 +16564,13 @@ pub mod types {
         pub description: String,
         pub groups: Vec<NameOrId>,
         /// Interfaces indexed by link name.
-        pub interfaces: std::collections::HashMap<String, SwitchInterfaceConfig>,
+        pub interfaces: std::collections::HashMap<String, SwitchInterfaceConfigCreate>,
         /// Links indexed by phy name. On ports that are not broken out, this is
         /// always phy0. On a 2x breakout the options are phy0 and phy1, on 4x
         /// phy0-phy3, etc.
-        pub links: std::collections::HashMap<String, LinkConfig>,
+        pub links: std::collections::HashMap<String, LinkConfigCreate>,
         pub name: Name,
-        pub port_config: SwitchPortConfig,
+        pub port_config: SwitchPortConfigCreate,
         /// Routes indexed by interface name.
         pub routes: std::collections::HashMap<String, RouteConfig>,
     }
@@ -25970,15 +26381,15 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct LinkConfig {
+        pub struct LinkConfigCreate {
             autoneg: Result<bool, String>,
             fec: Result<super::LinkFec, String>,
-            lldp: Result<super::LldpServiceConfig, String>,
+            lldp: Result<super::LldpServiceConfigCreate, String>,
             mtu: Result<u16, String>,
             speed: Result<super::LinkSpeed, String>,
         }
 
-        impl Default for LinkConfig {
+        impl Default for LinkConfigCreate {
             fn default() -> Self {
                 Self {
                     autoneg: Err("no value supplied for autoneg".to_string()),
@@ -25990,7 +26401,7 @@ pub mod types {
             }
         }
 
-        impl LinkConfig {
+        impl LinkConfigCreate {
             pub fn autoneg<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<bool>,
@@ -26013,7 +26424,7 @@ pub mod types {
             }
             pub fn lldp<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::LldpServiceConfig>,
+                T: std::convert::TryInto<super::LldpServiceConfigCreate>,
                 T::Error: std::fmt::Display,
             {
                 self.lldp = value
@@ -26043,9 +26454,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<LinkConfig> for super::LinkConfig {
+        impl std::convert::TryFrom<LinkConfigCreate> for super::LinkConfigCreate {
             type Error = String;
-            fn try_from(value: LinkConfig) -> Result<Self, String> {
+            fn try_from(value: LinkConfigCreate) -> Result<Self, String> {
                 Ok(Self {
                     autoneg: value.autoneg?,
                     fec: value.fec?,
@@ -26056,8 +26467,8 @@ pub mod types {
             }
         }
 
-        impl From<super::LinkConfig> for LinkConfig {
-            fn from(value: super::LinkConfig) -> Self {
+        impl From<super::LinkConfigCreate> for LinkConfigCreate {
+            fn from(value: super::LinkConfigCreate) -> Self {
                 Self {
                     autoneg: Ok(value.autoneg),
                     fec: Ok(value.fec),
@@ -26071,10 +26482,81 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct LldpServiceConfig {
             enabled: Result<bool, String>,
-            lldp_config: Result<Option<super::NameOrId>, String>,
+            id: Result<uuid::Uuid, String>,
+            lldp_config_id: Result<Option<uuid::Uuid>, String>,
         }
 
         impl Default for LldpServiceConfig {
+            fn default() -> Self {
+                Self {
+                    enabled: Err("no value supplied for enabled".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    lldp_config_id: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl LldpServiceConfig {
+            pub fn enabled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.enabled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for enabled: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn lldp_config_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.lldp_config_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for lldp_config_id: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<LldpServiceConfig> for super::LldpServiceConfig {
+            type Error = String;
+            fn try_from(value: LldpServiceConfig) -> Result<Self, String> {
+                Ok(Self {
+                    enabled: value.enabled?,
+                    id: value.id?,
+                    lldp_config_id: value.lldp_config_id?,
+                })
+            }
+        }
+
+        impl From<super::LldpServiceConfig> for LldpServiceConfig {
+            fn from(value: super::LldpServiceConfig) -> Self {
+                Self {
+                    enabled: Ok(value.enabled),
+                    id: Ok(value.id),
+                    lldp_config_id: Ok(value.lldp_config_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct LldpServiceConfigCreate {
+            enabled: Result<bool, String>,
+            lldp_config: Result<Option<super::NameOrId>, String>,
+        }
+
+        impl Default for LldpServiceConfigCreate {
             fn default() -> Self {
                 Self {
                     enabled: Err("no value supplied for enabled".to_string()),
@@ -26083,7 +26565,7 @@ pub mod types {
             }
         }
 
-        impl LldpServiceConfig {
+        impl LldpServiceConfigCreate {
             pub fn enabled<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<bool>,
@@ -26106,9 +26588,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<LldpServiceConfig> for super::LldpServiceConfig {
+        impl std::convert::TryFrom<LldpServiceConfigCreate> for super::LldpServiceConfigCreate {
             type Error = String;
-            fn try_from(value: LldpServiceConfig) -> Result<Self, String> {
+            fn try_from(value: LldpServiceConfigCreate) -> Result<Self, String> {
                 Ok(Self {
                     enabled: value.enabled?,
                     lldp_config: value.lldp_config?,
@@ -26116,8 +26598,8 @@ pub mod types {
             }
         }
 
-        impl From<super::LldpServiceConfig> for LldpServiceConfig {
-            fn from(value: super::LldpServiceConfig) -> Self {
+        impl From<super::LldpServiceConfigCreate> for LldpServiceConfigCreate {
+            fn from(value: super::LldpServiceConfigCreate) -> Self {
                 Self {
                     enabled: Ok(value.enabled),
                     lldp_config: Ok(value.lldp_config),
@@ -30024,11 +30506,113 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchInterfaceConfig {
-            kind: Result<super::SwitchInterfaceKind, String>,
+            id: Result<uuid::Uuid, String>,
+            interface_name: Result<String, String>,
+            kind: Result<super::SwitchInterfaceKind2, String>,
+            port_settings_id: Result<uuid::Uuid, String>,
             v6_enabled: Result<bool, String>,
         }
 
         impl Default for SwitchInterfaceConfig {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    interface_name: Err("no value supplied for interface_name".to_string()),
+                    kind: Err("no value supplied for kind".to_string()),
+                    port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                    v6_enabled: Err("no value supplied for v6_enabled".to_string()),
+                }
+            }
+        }
+
+        impl SwitchInterfaceConfig {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn interface_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for interface_name: {}", e)
+                });
+                self
+            }
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchInterfaceKind2>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn port_settings_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_settings_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn v6_enabled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.v6_enabled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for v6_enabled: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchInterfaceConfig> for super::SwitchInterfaceConfig {
+            type Error = String;
+            fn try_from(value: SwitchInterfaceConfig) -> Result<Self, String> {
+                Ok(Self {
+                    id: value.id?,
+                    interface_name: value.interface_name?,
+                    kind: value.kind?,
+                    port_settings_id: value.port_settings_id?,
+                    v6_enabled: value.v6_enabled?,
+                })
+            }
+        }
+
+        impl From<super::SwitchInterfaceConfig> for SwitchInterfaceConfig {
+            fn from(value: super::SwitchInterfaceConfig) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    interface_name: Ok(value.interface_name),
+                    kind: Ok(value.kind),
+                    port_settings_id: Ok(value.port_settings_id),
+                    v6_enabled: Ok(value.v6_enabled),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchInterfaceConfigCreate {
+            kind: Result<super::SwitchInterfaceKind, String>,
+            v6_enabled: Result<bool, String>,
+        }
+
+        impl Default for SwitchInterfaceConfigCreate {
             fn default() -> Self {
                 Self {
                     kind: Err("no value supplied for kind".to_string()),
@@ -30037,7 +30621,7 @@ pub mod types {
             }
         }
 
-        impl SwitchInterfaceConfig {
+        impl SwitchInterfaceConfigCreate {
             pub fn kind<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::SwitchInterfaceKind>,
@@ -30060,9 +30644,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchInterfaceConfig> for super::SwitchInterfaceConfig {
+        impl std::convert::TryFrom<SwitchInterfaceConfigCreate> for super::SwitchInterfaceConfigCreate {
             type Error = String;
-            fn try_from(value: SwitchInterfaceConfig) -> Result<Self, String> {
+            fn try_from(value: SwitchInterfaceConfigCreate) -> Result<Self, String> {
                 Ok(Self {
                     kind: value.kind?,
                     v6_enabled: value.v6_enabled?,
@@ -30070,8 +30654,8 @@ pub mod types {
             }
         }
 
-        impl From<super::SwitchInterfaceConfig> for SwitchInterfaceConfig {
-            fn from(value: super::SwitchInterfaceConfig) -> Self {
+        impl From<super::SwitchInterfaceConfigCreate> for SwitchInterfaceConfigCreate {
+            fn from(value: super::SwitchInterfaceConfigCreate) -> Self {
                 Self {
                     kind: Ok(value.kind),
                     v6_enabled: Ok(value.v6_enabled),
@@ -30407,10 +30991,70 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortConfig {
-            geometry: Result<super::SwitchPortGeometry, String>,
+            geometry: Result<super::SwitchPortGeometry2, String>,
+            port_settings_id: Result<uuid::Uuid, String>,
         }
 
         impl Default for SwitchPortConfig {
+            fn default() -> Self {
+                Self {
+                    geometry: Err("no value supplied for geometry".to_string()),
+                    port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                }
+            }
+        }
+
+        impl SwitchPortConfig {
+            pub fn geometry<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchPortGeometry2>,
+                T::Error: std::fmt::Display,
+            {
+                self.geometry = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for geometry: {}", e));
+                self
+            }
+            pub fn port_settings_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.port_settings_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for port_settings_id: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchPortConfig> for super::SwitchPortConfig {
+            type Error = String;
+            fn try_from(value: SwitchPortConfig) -> Result<Self, String> {
+                Ok(Self {
+                    geometry: value.geometry?,
+                    port_settings_id: value.port_settings_id?,
+                })
+            }
+        }
+
+        impl From<super::SwitchPortConfig> for SwitchPortConfig {
+            fn from(value: super::SwitchPortConfig) -> Self {
+                Self {
+                    geometry: Ok(value.geometry),
+                    port_settings_id: Ok(value.port_settings_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchPortConfigCreate {
+            geometry: Result<super::SwitchPortGeometry, String>,
+        }
+
+        impl Default for SwitchPortConfigCreate {
             fn default() -> Self {
                 Self {
                     geometry: Err("no value supplied for geometry".to_string()),
@@ -30418,7 +31062,7 @@ pub mod types {
             }
         }
 
-        impl SwitchPortConfig {
+        impl SwitchPortConfigCreate {
             pub fn geometry<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::SwitchPortGeometry>,
@@ -30431,17 +31075,17 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SwitchPortConfig> for super::SwitchPortConfig {
+        impl std::convert::TryFrom<SwitchPortConfigCreate> for super::SwitchPortConfigCreate {
             type Error = String;
-            fn try_from(value: SwitchPortConfig) -> Result<Self, String> {
+            fn try_from(value: SwitchPortConfigCreate) -> Result<Self, String> {
                 Ok(Self {
                     geometry: value.geometry?,
                 })
             }
         }
 
-        impl From<super::SwitchPortConfig> for SwitchPortConfig {
-            fn from(value: super::SwitchPortConfig) -> Self {
+        impl From<super::SwitchPortConfigCreate> for SwitchPortConfigCreate {
+            fn from(value: super::SwitchPortConfigCreate) -> Self {
                 Self {
                     geometry: Ok(value.geometry),
                 }
@@ -30805,11 +31449,13 @@ pub mod types {
             bgp_peers: Result<std::collections::HashMap<String, super::BgpPeerConfig>, String>,
             description: Result<String, String>,
             groups: Result<Vec<super::NameOrId>, String>,
-            interfaces:
-                Result<std::collections::HashMap<String, super::SwitchInterfaceConfig>, String>,
-            links: Result<std::collections::HashMap<String, super::LinkConfig>, String>,
+            interfaces: Result<
+                std::collections::HashMap<String, super::SwitchInterfaceConfigCreate>,
+                String,
+            >,
+            links: Result<std::collections::HashMap<String, super::LinkConfigCreate>, String>,
             name: Result<super::Name, String>,
-            port_config: Result<super::SwitchPortConfig, String>,
+            port_config: Result<super::SwitchPortConfigCreate, String>,
             routes: Result<std::collections::HashMap<String, super::RouteConfig>, String>,
         }
 
@@ -30873,7 +31519,7 @@ pub mod types {
             pub fn interfaces<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<
-                    std::collections::HashMap<String, super::SwitchInterfaceConfig>,
+                    std::collections::HashMap<String, super::SwitchInterfaceConfigCreate>,
                 >,
                 T::Error: std::fmt::Display,
             {
@@ -30884,7 +31530,9 @@ pub mod types {
             }
             pub fn links<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<std::collections::HashMap<String, super::LinkConfig>>,
+                T: std::convert::TryInto<
+                    std::collections::HashMap<String, super::LinkConfigCreate>,
+                >,
                 T::Error: std::fmt::Display,
             {
                 self.links = value
@@ -30904,7 +31552,7 @@ pub mod types {
             }
             pub fn port_config<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SwitchPortConfig>,
+                T: std::convert::TryInto<super::SwitchPortConfigCreate>,
                 T::Error: std::fmt::Display,
             {
                 self.port_config = value
