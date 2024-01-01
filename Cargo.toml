@@ -43,7 +43,7 @@ reqwest = { version = "0.11.23", features = ["native-tls-vendored"] }
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.16", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.193", features = ["derive"] }
-serde_json = "1.0.108"
+serde_json = "1.0.109"
 serial_test = "1.0.0"
 similar = "2.3.0"
 sha2 = "0.10.8"
