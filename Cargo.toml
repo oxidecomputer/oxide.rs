@@ -11,7 +11,7 @@ resolver = "2"
 [workspace.dependencies]
 anyhow = "1.0.77"
 assert_cmd = "2.0.12"
-async-trait = "0.1.75"
+async-trait = "0.1.76"
 base64 = "0.21.5"
 built = { version = "0.6.1", features = ["git2"] }
 chrono = { version = "0.4.31", features = ["serde"] }
