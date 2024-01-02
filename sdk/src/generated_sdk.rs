@@ -34210,7 +34210,7 @@ impl ClientDisksExt for Client {
 }
 
 pub trait ClientFloatingIpsExt {
-    /// List all Floating IPs
+    /// List all floating IPs
     ///
     /// Sends a `GET` request to `/v1/floating-ips`
     ///
@@ -34230,7 +34230,7 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_list(&self) -> builder::FloatingIpList;
-    /// Create a Floating IP
+    /// Create a floating IP
     ///
     /// Sends a `POST` request to `/v1/floating-ips`
     ///
@@ -34260,7 +34260,7 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_view(&self) -> builder::FloatingIpView;
-    /// Delete a Floating IP
+    /// Delete a floating IP
     ///
     /// Sends a `DELETE` request to `/v1/floating-ips/{floating_ip}`
     ///
@@ -35051,7 +35051,7 @@ impl ClientPolicyExt for Client {
 }
 
 pub trait ClientProjectsExt {
-    /// List all IP Pools that can be used by a given project
+    /// List all IP pools that can be used by a given project
     ///
     /// Sends a `GET` request to `/v1/ip-pools`
     ///
@@ -36063,7 +36063,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_view(&self) -> builder::IpPoolView;
-    /// Update an IP Pool
+    /// Update an IP pool
     ///
     /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
     ///
@@ -36078,7 +36078,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_update(&self) -> builder::IpPoolUpdate;
-    /// Delete an IP Pool
+    /// Delete an IP pool
     ///
     /// Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
     ///

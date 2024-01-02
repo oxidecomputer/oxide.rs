@@ -788,7 +788,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List all Floating IPs")
+            .about("List all floating IPs")
     }
 
     pub fn cli_floating_ip_create() -> clap::Command {
@@ -847,7 +847,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a Floating IP")
+            .about("Create a floating IP")
     }
 
     pub fn cli_floating_ip_view() -> clap::Command {
@@ -885,7 +885,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete a Floating IP")
+            .about("Delete a floating IP")
     }
 
     pub fn cli_group_list() -> clap::Command {
@@ -1592,7 +1592,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List all IP Pools that can be used by a given project.")
+            .about("List all IP pools that can be used by a given project")
     }
 
     pub fn cli_project_ip_pool_view() -> clap::Command {
@@ -2604,7 +2604,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Set the sled's provision state.")
+            .about("Set the sled's provision state")
     }
 
     pub fn cli_sled_list_uninitialized() -> clap::Command {
@@ -3110,7 +3110,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update an IP Pool")
+            .about("Update an IP pool")
     }
 
     pub fn cli_ip_pool_delete() -> clap::Command {
@@ -3122,7 +3122,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
-            .about("Delete an IP Pool")
+            .about("Delete an IP pool")
     }
 
     pub fn cli_ip_pool_range_list() -> clap::Command {
