@@ -600,7 +600,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a Floating IP",
+          "about": "Create a floating IP",
           "args": [
             {
               "long": "address",
@@ -632,7 +632,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete a Floating IP",
+          "about": "Delete a floating IP",
           "args": [
             {
               "long": "floating-ip",
@@ -646,7 +646,7 @@
         },
         {
           "name": "list",
-          "about": "List all Floating IPs",
+          "about": "List all floating IPs",
           "args": [
             {
               "long": "limit",
@@ -1367,7 +1367,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete an IP Pool",
+          "about": "Delete an IP pool",
           "args": [
             {
               "long": "pool",
@@ -1528,7 +1528,7 @@
         },
         {
           "name": "update",
-          "about": "Update an IP Pool",
+          "about": "Update an IP pool",
           "args": [
             {
               "long": "description"
@@ -1628,7 +1628,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List all IP Pools that can be used by a given project.",
+              "about": "List all IP pools that can be used by a given project",
               "args": [
                 {
                   "long": "limit",
@@ -2405,7 +2405,7 @@
                 },
                 {
                   "name": "set-provision-state",
-                  "about": "Set the sled's provision state.",
+                  "about": "Set the sled's provision state",
                   "args": [
                     {
                       "long": "json-body",
