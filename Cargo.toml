@@ -34,7 +34,7 @@ oxide-httpmock = { path = "sdk-httpmock", version = "0.2.0" }
 predicates = "3.0.4"
 pretty_assertions = "1.4.0"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor" }
-progenitor-client = { git = "https://github.com/oxidecomputer/progenitor" }
+progenitor-client = "0.5.0"
 rand = "0.8.5"
 rcgen = "0.10.0"
 regex = "1.10.2"
