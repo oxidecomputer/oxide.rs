@@ -1923,7 +1923,7 @@ dependencies = [
  "chrono",
  "clap",
  "futures",
- "progenitor-client 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "progenitor-client",
  "rand",
  "regress",
  "reqwest",
@@ -2191,9 +2191,9 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4625065afd3c4334ce967be4ba3986d348e1dd9f"
+source = "git+https://github.com/oxidecomputer/progenitor#067a5a4a62c2b7e11793b1061fd79c618f0c8b0d"
 dependencies = [
- "progenitor-client 0.5.0 (git+https://github.com/oxidecomputer/progenitor)",
+ "progenitor-client",
  "progenitor-impl",
  "progenitor-macro",
  "serde_json",
@@ -2202,22 +2202,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f24dd3cac4cd81ac77f90e5a8dcb8c9311c7500c6ce8c65c98ce61a5894672e9"
-dependencies = [
- "bytes",
- "futures-core",
- "percent-encoding",
- "reqwest",
- "serde",
- "serde_json",
- "serde_urlencoded",
-]
-
-[[package]]
-name = "progenitor-client"
-version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4625065afd3c4334ce967be4ba3986d348e1dd9f"
+source = "git+https://github.com/oxidecomputer/progenitor#067a5a4a62c2b7e11793b1061fd79c618f0c8b0d"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2231,7 +2216,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4625065afd3c4334ce967be4ba3986d348e1dd9f"
+source = "git+https://github.com/oxidecomputer/progenitor#067a5a4a62c2b7e11793b1061fd79c618f0c8b0d"
 dependencies = [
  "getopts",
  "heck",
@@ -2253,7 +2238,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4625065afd3c4334ce967be4ba3986d348e1dd9f"
+source = "git+https://github.com/oxidecomputer/progenitor#067a5a4a62c2b7e11793b1061fd79c618f0c8b0d"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -2846,9 +2831,9 @@ dependencies = [
 
 [[package]]
 name = "similar"
-version = "2.3.0"
+version = "2.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2aeaf503862c419d66959f5d7ca015337d864e9c49485d771b732e2a20453597"
+checksum = "32fea41aca09ee824cc9724996433064c89f7777e60762749a4170a14abbfa21"
 
 [[package]]
 name = "siphasher"
@@ -3033,9 +3018,9 @@ dependencies = [
 
 [[package]]
 name = "tabwriter"
-version = "1.3.0"
+version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08e1173ee641651a3095fe95d86ae314cd1f959888097debce3e0f9ca532eef1"
+checksum = "a327282c4f64f6dc37e3bba4c2b6842cc3a992f204fa58d917696a89f691e5f6"
 dependencies = [
  "unicode-width",
 ]
@@ -3426,7 +3411,7 @@ checksum = "497961ef93d974e23eb6f433eb5fe1b7930b659f06d12dec6fc44a8f554c0bba"
 [[package]]
 name = "typify"
 version = "0.0.15"
-source = "git+https://github.com/oxidecomputer/typify#7ceddf6644356819d1c829deb7a160197c4d0493"
+source = "git+https://github.com/oxidecomputer/typify#d5aefae80428db0d71a6d13f426f74aa49324f6f"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3435,7 +3420,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.0.15"
-source = "git+https://github.com/oxidecomputer/typify#7ceddf6644356819d1c829deb7a160197c4d0493"
+source = "git+https://github.com/oxidecomputer/typify#d5aefae80428db0d71a6d13f426f74aa49324f6f"
 dependencies = [
  "heck",
  "log",
@@ -3452,7 +3437,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.0.15"
-source = "git+https://github.com/oxidecomputer/typify#7ceddf6644356819d1c829deb7a160197c4d0493"
+source = "git+https://github.com/oxidecomputer/typify#d5aefae80428db0d71a6d13f426f74aa49324f6f"
 dependencies = [
  "proc-macro2",
  "quote",
