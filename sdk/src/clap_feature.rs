@@ -153,33 +153,31 @@ impl clap::builder::TypedValueParser for NameParser {
         value: &std::ffi::OsStr,
     ) -> Result<Self::Value, clap::Error> {
         fn parse(value: &str) -> Result<types::Name, String> {
-            types::Name::from_str(value)
-                .map_err(|e| {
-                    if value.len() > 63 {
-                        return "names must be at most 63 characters in length";
-                    }
+            types::Name::from_str(value).map_err(|e| {
+                if value.len() > 63 {
+                    return "names must be at most 63 characters in length".to_string();
+                }
 
-                    match value.chars().next() {
-                        None => return "names may not be empty",
-                        Some('a'..='z') => (),
-                        _ => return "names must start with a lowercase ascii letter",
-                    }
+                match value.chars().next() {
+                    None => return "names may not be empty".to_string(),
+                    Some('a'..='z') => (),
+                    _ => return "names must start with a lowercase ascii letter".to_string(),
+                }
 
-                    if !value.chars().all(|c| c.is_ascii_alphanumeric() || c == '-') {
-                        return "names must be composed of letters, numbers, and dashes";
-                    }
+                if !value.chars().all(|c| c.is_ascii_alphanumeric() || c == '-') {
+                    return "names must be composed of letters, numbers, and dashes".to_string();
+                }
 
-                    if value.ends_with('-') {
-                        return "names cannot end with a '-'";
-                    }
+                if value.ends_with('-') {
+                    return "names cannot end with a '-'".to_string();
+                }
 
-                    if uuid::Uuid::from_str(value).is_ok() {
-                        return "names must not be interpretable as a uuids";
-                    }
+                if uuid::Uuid::from_str(value).is_ok() {
+                    return "names must not be interpretable as a uuids".to_string();
+                }
 
-                    e
-                })
-                .map_err(str::to_string)
+                e.to_string()
+            })
         }
 
         parse.parse_ref(cmd, arg, value)

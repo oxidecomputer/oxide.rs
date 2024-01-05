@@ -76,11 +76,13 @@ impl OxideOverride {
 
         match (first, last) {
             (IpAddr::V4(first), IpAddr::V4(last)) => {
-                let range: Ipv4Range = Ipv4Range::builder().first(*first).last(*last).try_into()?;
+                let range = Ipv4Range::try_from(Ipv4Range::builder().first(*first).last(*last))
+                    .map_err(|e| e.to_string())?;
                 Ok(range.into())
             }
             (IpAddr::V6(first), IpAddr::V6(last)) => {
-                let range: Ipv6Range = Ipv6Range::builder().first(*first).last(*last).try_into()?;
+                let range = Ipv6Range::try_from(Ipv6Range::builder().first(*first).last(*last))
+                    .map_err(|e| e.to_string())?;
                 Ok(range.into())
             }
             _ => Err("first and last must either both be ipv4 or ipv6 addresses".to_string()),
