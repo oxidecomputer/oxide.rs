@@ -164,11 +164,12 @@ impl RunnableCmd for CmdApi {
             }
         }
 
-        let client = ctx.client().client();
-        let uri = format!("{}{}", ctx.client().baseurl(), endpoint_with_query);
+        let client = ctx.client()?;
+        let rclient = client.client();
+        let uri = format!("{}{}", client.baseurl(), endpoint_with_query);
 
         // Make the request.
-        let mut req = client.request(method.clone(), uri);
+        let mut req = rclient.request(method.clone(), uri);
 
         if !bytes.is_empty() {
             req = req.body(bytes.clone())
@@ -226,14 +227,9 @@ impl RunnableCmd for CmdApi {
                 let Some(page_token) = maybe_page_token else {
                     return Result::<Option<(Vec<serde_json::Value>, Option<String>)>>::Ok(None);
                 };
-                let uri = format!(
-                    "{}{}?page_token={}",
-                    ctx.client().baseurl(),
-                    endpoint,
-                    page_token,
-                );
+                let uri = format!("{}{}?page_token={}", client.baseurl(), endpoint, page_token,);
 
-                let mut req = client.request(method.clone(), uri);
+                let mut req = rclient.request(method.clone(), uri);
                 for (key, value) in headers.clone() {
                     req = req.header(key, value);
                 }

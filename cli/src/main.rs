@@ -62,7 +62,7 @@ async fn main() {
         .await
         .unwrap();
     if let Err(e) = result {
-        eprintln!("{e:?}");
+        eprintln!("{e}");
         std::process::exit(1)
     }
 }

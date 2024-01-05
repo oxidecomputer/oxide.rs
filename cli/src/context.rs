@@ -24,8 +24,10 @@ impl Context {
         Ok(Self { client, config })
     }
 
-    pub fn client(&self) -> &Client {
-        self.client.as_ref().expect("no authenticated hosts")
+    pub fn client(&self) -> Result<&Client> {
+        self.client
+            .as_ref()
+            .ok_or_else(|| anyhow!("no authenticated hosts"))
     }
 
     pub fn config(&self) -> &Config {
