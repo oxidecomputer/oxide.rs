@@ -93,7 +93,7 @@ impl RunnableCmd for CmdInstanceSerialConsole {
     // cli process becomes an interactive remote shell.
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         let mut req = ctx
-            .client()
+            .client()?
             .instance_serial_console_stream()
             .instance(self.instance.clone())
             .most_recent(self.most_recent);
@@ -168,7 +168,7 @@ impl RunnableCmd for CmdInstanceSerialHistory {
     // cli process becomes an interactive remote shell.
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         let mut req = ctx
-            .client()
+            .client()?
             .instance_serial_console()
             .instance(self.instance.clone());
 
@@ -244,7 +244,7 @@ pub struct CmdInstanceFromImage {
 impl RunnableCmd for CmdInstanceFromImage {
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         // Validate the image and get its ID (if specified by name).
-        let mut image_request = ctx.client().image_view().image(&self.image);
+        let mut image_request = ctx.client()?.image_view().image(&self.image);
         // We only need the project if the image is specified by name.
         if let NameOrId::Name(_) = &self.image {
             image_request = image_request.project(&self.project);
@@ -252,7 +252,7 @@ impl RunnableCmd for CmdInstanceFromImage {
         let image_view = image_request.send().await?;
 
         let instance = ctx
-            .client()
+            .client()?
             .instance_create()
             .project(&self.project)
             .body_map(|body| {

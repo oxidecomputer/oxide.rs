@@ -249,7 +249,7 @@ impl RunnableCmd for CmdDiskImport {
         false
     }
     async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
-        let client = ctx.client();
+        let client = ctx.client()?;
 
         if !Path::new(&self.path).exists() {
             bail!("path {} does not exist", self.path.to_string_lossy());
