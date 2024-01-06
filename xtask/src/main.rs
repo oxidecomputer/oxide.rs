@@ -119,7 +119,7 @@ fn generate(
         print!("generating cli ... ");
         std::io::stdout().flush().unwrap();
         let code = generator.cli(&spec, "oxide").unwrap().to_string();
-        let contents = format_code(format!("{}\n\n{}", "use oxide::*;", code));
+        let contents = format_code(code);
         loc += contents.matches('\n').count();
 
         let mut out_path = root_path;
