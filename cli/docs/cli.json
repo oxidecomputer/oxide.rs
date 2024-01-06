@@ -1341,14 +1341,6 @@
               "long": "description"
             },
             {
-              "long": "is-default",
-              "values": [
-                "true",
-                "false"
-              ],
-              "help": "Whether the IP pool is considered a default pool for its scope (fleet or silo). If a pool is marked default and is associated with a silo, instances created in that silo will draw IPs from that pool unless another pool is specified at instance create time."
-            },
-            {
               "long": "json-body",
               "help": "Path to a file that contains the full json body."
             },
@@ -1358,10 +1350,6 @@
             },
             {
               "long": "name"
-            },
-            {
-              "long": "silo",
-              "help": "If an IP pool is associated with a silo, instance IP allocations in that silo can draw from that pool."
             }
           ]
         },
@@ -1527,6 +1515,102 @@
           ]
         },
         {
+          "name": "silo",
+          "subcommands": [
+            {
+              "name": "link",
+              "about": "Make an IP pool available within a silo",
+              "args": [
+                {
+                  "long": "is-default",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
+                  "help": "When a pool is the default for a silo, floating IPs and instance ephemeral IPs will come from that pool when no other pool is specified. There can be at most one default for a given silo."
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the IP pool"
+                },
+                {
+                  "long": "silo"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List an IP pool's linked silos",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the IP pool"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "unlink",
+              "about": "Unlink an IP pool from a silo",
+              "long_about": "Will fail if there are any outstanding IPs allocated in the silo.",
+              "args": [
+                {
+                  "long": "pool"
+                },
+                {
+                  "long": "silo"
+                }
+              ]
+            },
+            {
+              "name": "update",
+              "about": "Make an IP pool default or not-default for a silo",
+              "long_about": "When a pool is made default for a silo, any existing default will remain linked to the silo, but will no longer be the default.",
+              "args": [
+                {
+                  "long": "is-default",
+                  "values": [
+                    "true",
+                    "false"
+                  ],
+                  "help": "When a pool is the default for a silo, floating IPs and instance ephemeral IPs will come from that pool when no other pool is specified. There can be at most one default for a given silo, so when a pool is made default, an existing default will remain linked but will no longer be the default."
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "pool"
+                },
+                {
+                  "long": "silo"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "update",
           "about": "Update an IP pool",
           "args": [
@@ -1628,15 +1712,11 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List all IP pools that can be used by a given project",
+              "about": "List all IP pools",
               "args": [
                 {
                   "long": "limit",
                   "help": "Maximum number of items returned by a single call"
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
                 },
                 {
                   "long": "sort-by",
@@ -1655,10 +1735,6 @@
                 {
                   "long": "pool",
                   "help": "Name or ID of the IP pool"
-                },
-                {
-                  "long": "project",
-                  "help": "Name or ID of the project"
                 }
               ]
             }
