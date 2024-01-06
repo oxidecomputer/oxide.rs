@@ -5,6 +5,7 @@ use progenitor_client::{encode_path, RequestBuilderExt};
 pub use progenitor_client::{ByteStream, Error, ResponseValue};
 #[allow(unused_imports)]
 use reqwest::header::{HeaderMap, HeaderValue};
+/// Types used as operation parameters and responses.
 pub mod types {
     use serde::{Deserialize, Serialize};
     #[allow(unused_imports)]
@@ -34501,6 +34502,8 @@ impl Client {
     }
 }
 
+/// Virtual disks are used to store instance-local data which includes the
+/// operating system.
 pub trait ClientDisksExt {
     /// List disks
     ///
@@ -34703,6 +34706,7 @@ impl ClientDisksExt for Client {
     }
 }
 
+/// Floating IPs allow a project to allocate well-known IPs to instances.
 pub trait ClientFloatingIpsExt {
     /// List all floating IPs
     ///
@@ -34789,6 +34793,7 @@ impl ClientFloatingIpsExt for Client {
     }
 }
 
+/// TODO operations that will not ship to customers
 pub trait ClientHiddenExt {
     /// Start an OAuth 2.0 Device Authorization Grant
     ///
@@ -34865,6 +34870,8 @@ impl ClientHiddenExt for Client {
     }
 }
 
+/// Images are read-only virtual disks that may be used to boot virtual
+/// machines.
 pub trait ClientImagesExt {
     /// List images
     ///
@@ -35005,6 +35012,8 @@ impl ClientImagesExt for Client {
     }
 }
 
+/// Virtual machine instances are the basic unit of computation. These
+/// operations are used for provisioning, controlling, and destroying instances.
 pub trait ClientInstancesExt {
     /// List instances
     ///
@@ -35437,6 +35446,7 @@ impl ClientInstancesExt for Client {
     }
 }
 
+/// Authentication endpoints
 pub trait ClientLoginExt {
     /// Authenticate a user via SAML
     ///
@@ -35475,6 +35485,7 @@ impl ClientLoginExt for Client {
     }
 }
 
+/// Silo-scoped metrics
 pub trait ClientMetricsExt {
     /// Access metrics data
     ///
@@ -35510,6 +35521,7 @@ impl ClientMetricsExt for Client {
     }
 }
 
+/// System-wide IAM policy
 pub trait ClientPolicyExt {
     /// Fetch the top-level IAM policy
     ///
@@ -35544,6 +35556,8 @@ impl ClientPolicyExt for Client {
     }
 }
 
+/// Projects are a grouping of associated resources such as instances and disks
+/// within a silo for purposes of billing and access control.
 pub trait ClientProjectsExt {
     /// List all IP pools
     ///
@@ -35714,6 +35728,8 @@ impl ClientProjectsExt for Client {
     }
 }
 
+/// Roles are a component of Identity and Access Management (IAM) that allow a
+/// user or agent account access to additional permissions.
 pub trait ClientRolesExt {
     /// List built-in roles
     ///
@@ -35756,6 +35772,7 @@ impl ClientRolesExt for Client {
     }
 }
 
+/// Information pertaining to the current session.
 pub trait ClientSessionExt {
     /// Fetch the user associated with the current session
     ///
@@ -35878,6 +35895,7 @@ impl ClientSessionExt for Client {
     }
 }
 
+/// Silos represent a logical partition of users and resources.
 pub trait ClientSilosExt {
     /// List certificates for external endpoints
     ///
@@ -36067,6 +36085,7 @@ impl ClientSilosExt for Client {
     }
 }
 
+/// Snapshots of virtual disks at a particular point in time.
 pub trait ClientSnapshotsExt {
     /// List snapshots
     ///
@@ -36155,6 +36174,9 @@ impl ClientSnapshotsExt for Client {
     }
 }
 
+/// These operations pertain to hardware inventory and management. Racks are the
+/// unit of expansion of an Oxide deployment. Racks are in turn composed of
+/// sleds, switches, power supplies, and a cabled backplane.
 pub trait ClientSystemHardwareExt {
     /// List physical disks
     ///
@@ -36475,6 +36497,9 @@ impl ClientSystemHardwareExt for Client {
     }
 }
 
+/// Metrics provide insight into the operation of the Oxide deployment. These
+/// include telemetry on hardware and software components that can be used to
+/// understand the current state as well as to diagnose issues.
 pub trait ClientSystemMetricsExt {
     /// Access metrics data
     ///
@@ -36510,6 +36535,7 @@ impl ClientSystemMetricsExt for Client {
     }
 }
 
+/// This provides rack-level network configuration.
 pub trait ClientSystemNetworkingExt {
     /// List IP pools
     ///
@@ -37179,6 +37205,7 @@ impl ClientSystemNetworkingExt for Client {
     }
 }
 
+/// Silos represent a logical partition of users and resources.
 pub trait ClientSystemSilosExt {
     /// List a silo's IdP's name
     ///
@@ -37606,6 +37633,7 @@ impl ClientSystemSilosExt for Client {
     }
 }
 
+/// Endpoints related to system health
 pub trait ClientSystemStatusExt {
     /// Ping API
     ///
@@ -37627,6 +37655,8 @@ impl ClientSystemStatusExt for Client {
     }
 }
 
+/// Virtual Private Clouds (VPCs) provide isolated network environments for
+/// managing and deploying services.
 pub trait ClientVpcsExt {
     /// List firewall rules
     ///
@@ -37922,6 +37952,7 @@ impl ClientVpcsExt for Client {
     }
 }
 
+/// Types for composing operation parameters.
 pub mod builder {
     use super::types;
     #[allow(unused_imports)]
@@ -54895,6 +54926,8 @@ pub mod builder {
     }
 }
 
+/// Items consumers will typically use such as the Client and
+/// extension traits.
 pub mod prelude {
     pub use super::Client;
     pub use super::ClientDisksExt;
