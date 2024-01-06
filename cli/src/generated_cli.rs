@@ -126,6 +126,10 @@ impl Cli {
             CliCommand::IpPoolRangeList => Self::cli_ip_pool_range_list(),
             CliCommand::IpPoolRangeAdd => Self::cli_ip_pool_range_add(),
             CliCommand::IpPoolRangeRemove => Self::cli_ip_pool_range_remove(),
+            CliCommand::IpPoolSiloList => Self::cli_ip_pool_silo_list(),
+            CliCommand::IpPoolSiloLink => Self::cli_ip_pool_silo_link(),
+            CliCommand::IpPoolSiloUpdate => Self::cli_ip_pool_silo_update(),
+            CliCommand::IpPoolSiloUnlink => Self::cli_ip_pool_silo_unlink(),
             CliCommand::IpPoolServiceView => Self::cli_ip_pool_service_view(),
             CliCommand::IpPoolServiceRangeList => Self::cli_ip_pool_service_range_list(),
             CliCommand::IpPoolServiceRangeAdd => Self::cli_ip_pool_service_range_add(),
@@ -1573,13 +1577,6 @@ impl Cli {
                     .help("Maximum number of items returned by a single call"),
             )
             .arg(
-                clap::Arg::new("project")
-                    .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the project"),
-            )
-            .arg(
                 clap::Arg::new("sort-by")
                     .long("sort-by")
                     .value_parser(clap::builder::TypedValueParser::map(
@@ -1592,7 +1589,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List all IP pools that can be used by a given project")
+            .about("List all IP pools")
     }
 
     pub fn cli_project_ip_pool_view() -> clap::Command {
@@ -1603,13 +1600,6 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
                     .help("Name or ID of the IP pool"),
-            )
-            .arg(
-                clap::Arg::new("project")
-                    .long("project")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help("Name or ID of the project"),
             )
             .about("Fetch an IP pool")
     }
@@ -3019,32 +3009,10 @@ impl Cli {
                     .required_unless_present("json-body"),
             )
             .arg(
-                clap::Arg::new("is-default")
-                    .long("is-default")
-                    .value_parser(clap::value_parser!(bool))
-                    .required(false)
-                    .help(
-                        "Whether the IP pool is considered a default pool for its scope (fleet or \
-                         silo). If a pool is marked default and is associated with a silo, \
-                         instances created in that silo will draw IPs from that pool unless \
-                         another pool is specified at instance create time.",
-                    ),
-            )
-            .arg(
                 clap::Arg::new("name")
                     .long("name")
                     .value_parser(clap::value_parser!(types::Name))
                     .required_unless_present("json-body"),
-            )
-            .arg(
-                clap::Arg::new("silo")
-                    .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(false)
-                    .help(
-                        "If an IP pool is associated with a silo, instance IP allocations in that \
-                         silo can draw from that pool.",
-                    ),
             )
             .arg(
                 clap::Arg::new("json-body")
@@ -3195,6 +3163,145 @@ impl Cli {
                     .help("XXX"),
             )
             .about("Remove a range from an IP pool")
+    }
+
+    pub fn cli_ip_pool_silo_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the IP pool"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::IdSortMode::IdAscending.to_string()
+                        ]),
+                        |s| types::IdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List an IP pool's linked silos")
+    }
+
+    pub fn cli_ip_pool_silo_link() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("is-default")
+                    .long("is-default")
+                    .value_parser(clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help(
+                        "When a pool is the default for a silo, floating IPs and instance \
+                         ephemeral IPs will come from that pool when no other pool is specified. \
+                         There can be at most one default for a given silo.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the IP pool"),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Make an IP pool available within a silo")
+    }
+
+    pub fn cli_ip_pool_silo_update() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("is-default")
+                    .long("is-default")
+                    .value_parser(clap::value_parser!(bool))
+                    .required_unless_present("json-body")
+                    .help(
+                        "When a pool is the default for a silo, floating IPs and instance \
+                         ephemeral IPs will come from that pool when no other pool is specified. \
+                         There can be at most one default for a given silo, so when a pool is \
+                         made default, an existing default will remain linked but will no longer \
+                         be the default.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Make an IP pool default or not-default for a silo")
+            .long_about(
+                "When a pool is made default for a silo, any existing default will remain linked \
+                 to the silo, but will no longer be the default.",
+            )
+    }
+
+    pub fn cli_ip_pool_silo_unlink() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true),
+            )
+            .about("Unlink an IP pool from a silo")
+            .long_about("Will fail if there are any outstanding IPs allocated in the silo.")
     }
 
     pub fn cli_ip_pool_service_view() -> clap::Command {
@@ -5072,6 +5179,18 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::IpPoolRangeRemove => {
                 self.execute_ip_pool_range_remove(matches).await;
             }
+            CliCommand::IpPoolSiloList => {
+                self.execute_ip_pool_silo_list(matches).await;
+            }
+            CliCommand::IpPoolSiloLink => {
+                self.execute_ip_pool_silo_link(matches).await;
+            }
+            CliCommand::IpPoolSiloUpdate => {
+                self.execute_ip_pool_silo_update(matches).await;
+            }
+            CliCommand::IpPoolSiloUnlink => {
+                self.execute_ip_pool_silo_unlink(matches).await;
+            }
             CliCommand::IpPoolServiceView => {
                 self.execute_ip_pool_service_view(matches).await;
             }
@@ -6549,10 +6668,6 @@ impl<T: CliOverride> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
-            request = request.project(value.clone());
-        }
-
         if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
             request = request.sort_by(value.clone());
         }
@@ -6581,10 +6696,6 @@ impl<T: CliOverride> Cli<T> {
         let mut request = self.client.project_ip_pool_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
-            request = request.project(value.clone());
         }
 
         self.over
@@ -8054,16 +8165,8 @@ impl<T: CliOverride> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<bool>("is-default") {
-            request = request.body_map(|body| body.is_default(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<types::Name>("name") {
             request = request.body_map(|body| body.name(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
-            request = request.body_map(|body| body.silo(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
@@ -8230,6 +8333,132 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_ip_pool_range_remove(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_ip_pool_silo_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_silo_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::IdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_ip_pool_silo_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_ip_pool_silo_link(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_silo_link();
+        if let Some(value) = matches.get_one::<bool>("is-default") {
+            request = request.body_map(|body| body.is_default(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.body_map(|body| body.silo(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::IpPoolSiloLink>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_ip_pool_silo_link(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_ip_pool_silo_update(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_silo_update();
+        if let Some(value) = matches.get_one::<bool>("is-default") {
+            request = request.body_map(|body| body.is_default(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::IpPoolSiloUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_ip_pool_silo_update(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_ip_pool_silo_unlink(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_silo_unlink();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        self.over
+            .execute_ip_pool_silo_unlink(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -10691,6 +10920,38 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_ip_pool_silo_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::IpPoolSiloList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_ip_pool_silo_link(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::IpPoolSiloLink,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_ip_pool_silo_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::IpPoolSiloUpdate,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_ip_pool_silo_unlink(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::IpPoolSiloUnlink,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_ip_pool_service_view(
         &self,
         matches: &clap::ArgMatches,
@@ -11261,6 +11522,10 @@ pub enum CliCommand {
     IpPoolRangeList,
     IpPoolRangeAdd,
     IpPoolRangeRemove,
+    IpPoolSiloList,
+    IpPoolSiloLink,
+    IpPoolSiloUpdate,
+    IpPoolSiloUnlink,
     IpPoolServiceView,
     IpPoolServiceRangeList,
     IpPoolServiceRangeAdd,
@@ -11426,6 +11691,10 @@ impl CliCommand {
             CliCommand::IpPoolRangeList,
             CliCommand::IpPoolRangeAdd,
             CliCommand::IpPoolRangeRemove,
+            CliCommand::IpPoolSiloList,
+            CliCommand::IpPoolSiloLink,
+            CliCommand::IpPoolSiloUpdate,
+            CliCommand::IpPoolSiloUnlink,
             CliCommand::IpPoolServiceView,
             CliCommand::IpPoolServiceRangeList,
             CliCommand::IpPoolServiceRangeAdd,

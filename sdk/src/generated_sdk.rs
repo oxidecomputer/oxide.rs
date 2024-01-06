@@ -9411,20 +9411,19 @@ pub mod types {
         }
     }
 
-    /// Identity-related metadata that's included in nearly all public API
-    /// objects
+    /// A collection of IP ranges. If a pool is linked to a silo, IP addresses
+    /// from the pool can be allocated within that silo
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Identity-related metadata that's included in nearly all
-    /// public API objects",
+    ///  "description": "A collection of IP ranges. If a pool is linked to a
+    /// silo, IP addresses from the pool can be allocated within that silo",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
     ///    "id",
-    ///    "is_default",
     ///    "name",
     ///    "time_created",
     ///    "time_modified"
@@ -9440,9 +9439,6 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "is_default": {
-    ///      "type": "boolean"
-    ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
     /// each resource",
@@ -9451,13 +9447,6 @@ pub mod types {
     ///          "$ref": "#/components/schemas/Name"
     ///        }
     ///      ]
-    ///    },
-    ///    "silo_id": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
     ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
@@ -9479,11 +9468,8 @@ pub mod types {
         pub description: String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        pub is_default: bool,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub silo_id: Option<uuid::Uuid>,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -9518,26 +9504,8 @@ pub mod types {
     ///    "description": {
     ///      "type": "string"
     ///    },
-    ///    "is_default": {
-    ///      "description": "Whether the IP pool is considered a default pool
-    /// for its scope (fleet or silo). If a pool is marked default and is
-    /// associated with a silo, instances created in that silo will draw IPs
-    /// from that pool unless another pool is specified at instance create
-    /// time.",
-    ///      "default": false,
-    ///      "type": "boolean"
-    ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
-    ///    },
-    ///    "silo": {
-    ///      "description": "If an IP pool is associated with a silo, instance
-    /// IP allocations in that silo can draw from that pool.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
-    ///        }
-    ///      ]
     ///    }
     ///  }
     /// }
@@ -9546,17 +9514,7 @@ pub mod types {
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct IpPoolCreate {
         pub description: String,
-        /// Whether the IP pool is considered a default pool for its scope
-        /// (fleet or silo). If a pool is marked default and is associated with
-        /// a silo, instances created in that silo will draw IPs from that pool
-        /// unless another pool is specified at instance create time.
-        #[serde(default)]
-        pub is_default: bool,
         pub name: Name,
-        /// If an IP pool is associated with a silo, instance IP allocations in
-        /// that silo can draw from that pool.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub silo: Option<NameOrId>,
     }
 
     impl From<&IpPoolCreate> for IpPoolCreate {
@@ -9724,6 +9682,205 @@ pub mod types {
 
     impl IpPoolResultsPage {
         pub fn builder() -> builder::IpPoolResultsPage {
+            Default::default()
+        }
+    }
+
+    /// A link between an IP pool and a silo that allows one to allocate IPs
+    /// from the pool within the silo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A link between an IP pool and a silo that allows one to
+    /// allocate IPs from the pool within the silo",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "ip_pool_id",
+    ///    "is_default",
+    ///    "silo_id"
+    ///  ],
+    ///  "properties": {
+    ///    "ip_pool_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "is_default": {
+    ///      "description": "When a pool is the default for a silo, floating IPs
+    /// and instance ephemeral IPs will come from that pool when no other pool
+    /// is specified. There can be at most one default for a given silo.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "silo_id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct IpPoolSilo {
+        pub ip_pool_id: uuid::Uuid,
+        /// When a pool is the default for a silo, floating IPs and instance
+        /// ephemeral IPs will come from that pool when no other pool is
+        /// specified. There can be at most one default for a given silo.
+        pub is_default: bool,
+        pub silo_id: uuid::Uuid,
+    }
+
+    impl From<&IpPoolSilo> for IpPoolSilo {
+        fn from(value: &IpPoolSilo) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IpPoolSilo {
+        pub fn builder() -> builder::IpPoolSilo {
+            Default::default()
+        }
+    }
+
+    /// IpPoolSiloLink
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "is_default",
+    ///    "silo"
+    ///  ],
+    ///  "properties": {
+    ///    "is_default": {
+    ///      "description": "When a pool is the default for a silo, floating IPs
+    /// and instance ephemeral IPs will come from that pool when no other pool
+    /// is specified. There can be at most one default for a given silo.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "silo": {
+    ///      "$ref": "#/components/schemas/NameOrId"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct IpPoolSiloLink {
+        /// When a pool is the default for a silo, floating IPs and instance
+        /// ephemeral IPs will come from that pool when no other pool is
+        /// specified. There can be at most one default for a given silo.
+        pub is_default: bool,
+        pub silo: NameOrId,
+    }
+
+    impl From<&IpPoolSiloLink> for IpPoolSiloLink {
+        fn from(value: &IpPoolSiloLink) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IpPoolSiloLink {
+        pub fn builder() -> builder::IpPoolSiloLink {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/IpPoolSilo"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct IpPoolSiloResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<IpPoolSilo>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&IpPoolSiloResultsPage> for IpPoolSiloResultsPage {
+        fn from(value: &IpPoolSiloResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IpPoolSiloResultsPage {
+        pub fn builder() -> builder::IpPoolSiloResultsPage {
+            Default::default()
+        }
+    }
+
+    /// IpPoolSiloUpdate
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "is_default"
+    ///  ],
+    ///  "properties": {
+    ///    "is_default": {
+    ///      "description": "When a pool is the default for a silo, floating IPs
+    /// and instance ephemeral IPs will come from that pool when no other pool
+    /// is specified. There can be at most one default for a given silo, so when
+    /// a pool is made default, an existing default will remain linked but will
+    /// no longer be the default.",
+    ///      "type": "boolean"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct IpPoolSiloUpdate {
+        /// When a pool is the default for a silo, floating IPs and instance
+        /// ephemeral IPs will come from that pool when no other pool is
+        /// specified. There can be at most one default for a given silo, so
+        /// when a pool is made default, an existing default will remain linked
+        /// but will no longer be the default.
+        pub is_default: bool,
+    }
+
+    impl From<&IpPoolSiloUpdate> for IpPoolSiloUpdate {
+        fn from(value: &IpPoolSiloUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IpPoolSiloUpdate {
+        pub fn builder() -> builder::IpPoolSiloUpdate {
             Default::default()
         }
     }
@@ -25802,9 +25959,7 @@ pub mod types {
         pub struct IpPool {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
-            is_default: Result<bool, String>,
             name: Result<super::Name, String>,
-            silo_id: Result<Option<uuid::Uuid>, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
         }
@@ -25814,9 +25969,7 @@ pub mod types {
                 Self {
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
-                    is_default: Err("no value supplied for is_default".to_string()),
                     name: Err("no value supplied for name".to_string()),
-                    silo_id: Ok(Default::default()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                 }
@@ -25844,16 +25997,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
-            pub fn is_default<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<bool>,
-                T::Error: std::fmt::Display,
-            {
-                self.is_default = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
-                self
-            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::Name>,
@@ -25862,16 +26005,6 @@ pub mod types {
                 self.name = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
-                self
-            }
-            pub fn silo_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<uuid::Uuid>>,
-                T::Error: std::fmt::Display,
-            {
-                self.silo_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -25902,9 +26035,7 @@ pub mod types {
                 Ok(Self {
                     description: value.description?,
                     id: value.id?,
-                    is_default: value.is_default?,
                     name: value.name?,
-                    silo_id: value.silo_id?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                 })
@@ -25916,9 +26047,7 @@ pub mod types {
                 Self {
                     description: Ok(value.description),
                     id: Ok(value.id),
-                    is_default: Ok(value.is_default),
                     name: Ok(value.name),
-                    silo_id: Ok(value.silo_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                 }
@@ -25928,18 +26057,14 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct IpPoolCreate {
             description: Result<String, String>,
-            is_default: Result<bool, String>,
             name: Result<super::Name, String>,
-            silo: Result<Option<super::NameOrId>, String>,
         }
 
         impl Default for IpPoolCreate {
             fn default() -> Self {
                 Self {
                     description: Err("no value supplied for description".to_string()),
-                    is_default: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
-                    silo: Ok(Default::default()),
                 }
             }
         }
@@ -25955,16 +26080,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
-            pub fn is_default<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<bool>,
-                T::Error: std::fmt::Display,
-            {
-                self.is_default = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
-                self
-            }
             pub fn name<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::Name>,
@@ -25975,16 +26090,6 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for name: {}", e));
                 self
             }
-            pub fn silo<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<super::NameOrId>>,
-                T::Error: std::fmt::Display,
-            {
-                self.silo = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo: {}", e));
-                self
-            }
         }
 
         impl std::convert::TryFrom<IpPoolCreate> for super::IpPoolCreate {
@@ -25992,9 +26097,7 @@ pub mod types {
             fn try_from(value: IpPoolCreate) -> Result<Self, String> {
                 Ok(Self {
                     description: value.description?,
-                    is_default: value.is_default?,
                     name: value.name?,
-                    silo: value.silo?,
                 })
             }
         }
@@ -26003,9 +26106,7 @@ pub mod types {
             fn from(value: super::IpPoolCreate) -> Self {
                 Self {
                     description: Ok(value.description),
-                    is_default: Ok(value.is_default),
                     name: Ok(value.name),
-                    silo: Ok(value.silo),
                 }
             }
         }
@@ -26205,6 +26306,234 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct IpPoolSilo {
+            ip_pool_id: Result<uuid::Uuid, String>,
+            is_default: Result<bool, String>,
+            silo_id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for IpPoolSilo {
+            fn default() -> Self {
+                Self {
+                    ip_pool_id: Err("no value supplied for ip_pool_id".to_string()),
+                    is_default: Err("no value supplied for is_default".to_string()),
+                    silo_id: Err("no value supplied for silo_id".to_string()),
+                }
+            }
+        }
+
+        impl IpPoolSilo {
+            pub fn ip_pool_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip_pool_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {}", e));
+                self
+            }
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
+                self
+            }
+            pub fn silo_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo_id: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<IpPoolSilo> for super::IpPoolSilo {
+            type Error = String;
+            fn try_from(value: IpPoolSilo) -> Result<Self, String> {
+                Ok(Self {
+                    ip_pool_id: value.ip_pool_id?,
+                    is_default: value.is_default?,
+                    silo_id: value.silo_id?,
+                })
+            }
+        }
+
+        impl From<super::IpPoolSilo> for IpPoolSilo {
+            fn from(value: super::IpPoolSilo) -> Self {
+                Self {
+                    ip_pool_id: Ok(value.ip_pool_id),
+                    is_default: Ok(value.is_default),
+                    silo_id: Ok(value.silo_id),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct IpPoolSiloLink {
+            is_default: Result<bool, String>,
+            silo: Result<super::NameOrId, String>,
+        }
+
+        impl Default for IpPoolSiloLink {
+            fn default() -> Self {
+                Self {
+                    is_default: Err("no value supplied for is_default".to_string()),
+                    silo: Err("no value supplied for silo".to_string()),
+                }
+            }
+        }
+
+        impl IpPoolSiloLink {
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
+                self
+            }
+            pub fn silo<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<IpPoolSiloLink> for super::IpPoolSiloLink {
+            type Error = String;
+            fn try_from(value: IpPoolSiloLink) -> Result<Self, String> {
+                Ok(Self {
+                    is_default: value.is_default?,
+                    silo: value.silo?,
+                })
+            }
+        }
+
+        impl From<super::IpPoolSiloLink> for IpPoolSiloLink {
+            fn from(value: super::IpPoolSiloLink) -> Self {
+                Self {
+                    is_default: Ok(value.is_default),
+                    silo: Ok(value.silo),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct IpPoolSiloResultsPage {
+            items: Result<Vec<super::IpPoolSilo>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for IpPoolSiloResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl IpPoolSiloResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::IpPoolSilo>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<IpPoolSiloResultsPage> for super::IpPoolSiloResultsPage {
+            type Error = String;
+            fn try_from(value: IpPoolSiloResultsPage) -> Result<Self, String> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::IpPoolSiloResultsPage> for IpPoolSiloResultsPage {
+            fn from(value: super::IpPoolSiloResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct IpPoolSiloUpdate {
+            is_default: Result<bool, String>,
+        }
+
+        impl Default for IpPoolSiloUpdate {
+            fn default() -> Self {
+                Self {
+                    is_default: Err("no value supplied for is_default".to_string()),
+                }
+            }
+        }
+
+        impl IpPoolSiloUpdate {
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<IpPoolSiloUpdate> for super::IpPoolSiloUpdate {
+            type Error = String;
+            fn try_from(value: IpPoolSiloUpdate) -> Result<Self, String> {
+                Ok(Self {
+                    is_default: value.is_default?,
+                })
+            }
+        }
+
+        impl From<super::IpPoolSiloUpdate> for IpPoolSiloUpdate {
+            fn from(value: super::IpPoolSiloUpdate) -> Self {
+                Self {
+                    is_default: Ok(value.is_default),
                 }
             }
         }
@@ -35051,7 +35380,7 @@ impl ClientPolicyExt for Client {
 }
 
 pub trait ClientProjectsExt {
-    /// List all IP pools that can be used by a given project
+    /// List all IP pools
     ///
     /// Sends a `GET` request to `/v1/ip-pools`
     ///
@@ -35059,13 +35388,11 @@ pub trait ClientProjectsExt {
     /// - `limit`: Maximum number of items returned by a single call
     /// - `page_token`: Token returned by previous call to retrieve the
     ///   subsequent page
-    /// - `project`: Name or ID of the project
     /// - `sort_by`
     /// ```ignore
     /// let response = client.project_ip_pool_list()
     ///    .limit(limit)
     ///    .page_token(page_token)
-    ///    .project(project)
     ///    .sort_by(sort_by)
     ///    .send()
     ///    .await;
@@ -35077,11 +35404,9 @@ pub trait ClientProjectsExt {
     ///
     /// Arguments:
     /// - `pool`: Name or ID of the IP pool
-    /// - `project`: Name or ID of the project
     /// ```ignore
     /// let response = client.project_ip_pool_view()
     ///    .pool(pool)
-    ///    .project(project)
     ///    .send()
     ///    .await;
     /// ```
@@ -36141,6 +36466,71 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove;
+    /// List an IP pool's linked silos
+    ///
+    /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/silos`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the IP pool
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.ip_pool_silo_list()
+    ///    .pool(pool)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList;
+    /// Make an IP pool available within a silo
+    ///
+    /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/silos`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the IP pool
+    /// - `body`
+    /// ```ignore
+    /// let response = client.ip_pool_silo_link()
+    ///    .pool(pool)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_silo_link(&self) -> builder::IpPoolSiloLink;
+    /// Make an IP pool default or not-default for a silo
+    ///
+    /// When a pool is made default for a silo, any existing default will remain
+    /// linked to the silo, but will no longer be the default.
+    ///
+    /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}/silos/{silo}`
+    ///
+    /// ```ignore
+    /// let response = client.ip_pool_silo_update()
+    ///    .pool(pool)
+    ///    .silo(silo)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_silo_update(&self) -> builder::IpPoolSiloUpdate;
+    /// Unlink an IP pool from a silo
+    ///
+    /// Will fail if there are any outstanding IPs allocated in the silo.
+    ///
+    /// Sends a `DELETE` request to `/v1/system/ip-pools/{pool}/silos/{silo}`
+    ///
+    /// ```ignore
+    /// let response = client.ip_pool_silo_unlink()
+    ///    .pool(pool)
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink;
     /// Fetch the IP pool used for Oxide services
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools-service`
@@ -36509,6 +36899,22 @@ impl ClientSystemNetworkingExt for Client {
 
     fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove {
         builder::IpPoolRangeRemove::new(self)
+    }
+
+    fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList {
+        builder::IpPoolSiloList::new(self)
+    }
+
+    fn ip_pool_silo_link(&self) -> builder::IpPoolSiloLink {
+        builder::IpPoolSiloLink::new(self)
+    }
+
+    fn ip_pool_silo_update(&self) -> builder::IpPoolSiloUpdate {
+        builder::IpPoolSiloUpdate::new(self)
+    }
+
+    fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink {
+        builder::IpPoolSiloUnlink::new(self)
     }
 
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
@@ -37400,7 +37806,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::DeviceAuthRequest>::try_into)
+                .and_then(|v| types::DeviceAuthRequest::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/device/auth", client.baseurl,);
             let request = client.client.post(url).form_urlencoded(&body)?.build()?;
@@ -37456,7 +37862,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::DeviceAuthVerify>::try_into)
+                .and_then(|v| types::DeviceAuthVerify::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/device/confirm", client.baseurl,);
             let request = client
@@ -37528,7 +37934,9 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<ByteStream>, Error<ByteStream>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::DeviceAccessTokenRequest>::try_into)
+                .and_then(|v| {
+                    types::DeviceAccessTokenRequest::try_from(v).map_err(|e| e.to_string())
+                })
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/device/token", client.baseurl,);
             let request = client.client.post(url).form_urlencoded(&body)?.build()?;
@@ -37833,7 +38241,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Certificate>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::CertificateCreate>::try_into)
+                .and_then(|v| types::CertificateCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/certificates", client.baseurl,);
             let request = client
@@ -38218,7 +38626,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::DiskCreate>::try_into)
+                .and_then(|v| types::DiskCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/disks", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -38489,7 +38897,7 @@ pub mod builder {
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::ImportBlocksBulkWrite>::try_into)
+                .and_then(|v| types::ImportBlocksBulkWrite::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/disks/{}/bulk-write",
@@ -38762,7 +39170,7 @@ pub mod builder {
             let disk = disk.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::FinalizeDisk>::try_into)
+                .and_then(|v| types::FinalizeDisk::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/disks/{}/finalize",
@@ -39282,7 +39690,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::FloatingIpCreate>::try_into)
+                .and_then(|v| types::FloatingIpCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/floating-ips", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -39927,7 +40335,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::ImageCreate>::try_into)
+                .and_then(|v| types::ImageCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/images", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -40518,7 +40926,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::InstanceCreate>::try_into)
+                .and_then(|v| types::InstanceCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/instances", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -40979,7 +41387,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::DiskPath>::try_into)
+                .and_then(|v| types::DiskPath::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/disks/attach",
@@ -41088,7 +41496,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::DiskPath>::try_into)
+                .and_then(|v| types::DiskPath::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/disks/detach",
@@ -41281,7 +41689,7 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::InstanceMigrate>::try_into)
+                .and_then(|v| types::InstanceMigrate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/instances/{}/migrate",
@@ -41813,7 +42221,6 @@ pub mod builder {
         client: &'a super::Client,
         limit: Result<Option<std::num::NonZeroU32>, String>,
         page_token: Result<Option<String>, String>,
-        project: Result<Option<types::NameOrId>, String>,
         sort_by: Result<Option<types::NameOrIdSortMode>, String>,
     }
 
@@ -41823,7 +42230,6 @@ pub mod builder {
                 client: client,
                 limit: Ok(None),
                 page_token: Ok(None),
-                project: Ok(None),
                 sort_by: Ok(None),
             }
         }
@@ -41849,17 +42255,6 @@ pub mod builder {
             self
         }
 
-        pub fn project<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.project = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
-            self
-        }
-
         pub fn sort_by<V>(mut self, value: V) -> Self
         where
             V: std::convert::TryInto<types::NameOrIdSortMode>,
@@ -41879,23 +42274,18 @@ pub mod builder {
                 client,
                 limit,
                 page_token,
-                project,
                 sort_by,
             } = self;
             let limit = limit.map_err(Error::InvalidRequest)?;
             let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let project = project.map_err(Error::InvalidRequest)?;
             let sort_by = sort_by.map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/ip-pools", client.baseurl,);
-            let mut query = Vec::with_capacity(4usize);
+            let mut query = Vec::with_capacity(3usize);
             if let Some(v) = &limit {
                 query.push(("limit", v.to_string()));
             }
             if let Some(v) = &page_token {
                 query.push(("page_token", v.to_string()));
-            }
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
             }
             if let Some(v) = &sort_by {
                 query.push(("sort_by", v.to_string()));
@@ -41942,7 +42332,6 @@ pub mod builder {
             let next = Self {
                 limit: Ok(None),
                 page_token: Ok(None),
-                project: Ok(None),
                 sort_by: Ok(None),
                 ..self.clone()
             };
@@ -41988,7 +42377,6 @@ pub mod builder {
     pub struct ProjectIpPoolView<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
-        project: Result<Option<types::NameOrId>, String>,
     }
 
     impl<'a> ProjectIpPoolView<'a> {
@@ -41996,7 +42384,6 @@ pub mod builder {
             Self {
                 client: client,
                 pool: Err("pool was not initialized".to_string()),
-                project: Ok(None),
             }
         }
 
@@ -42010,35 +42397,15 @@ pub mod builder {
             self
         }
 
-        pub fn project<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.project = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
-            self
-        }
-
         /// Sends a `GET` request to `/v1/ip-pools/{pool}`
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self {
-                client,
-                pool,
-                project,
-            } = self;
+            let Self { client, pool } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
-            let project = project.map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/ip-pools/{}",
                 client.baseurl,
                 encode_path(&pool.to_string()),
             );
-            let mut query = Vec::with_capacity(1usize);
-            if let Some(v) = &project {
-                query.push(("project", v.to_string()));
-            }
             let request = client
                 .client
                 .get(url)
@@ -42046,7 +42413,6 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&query)
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -42126,7 +42492,9 @@ pub mod builder {
             } = self;
             let silo_name = silo_name.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::UsernamePasswordCredentials>::try_into)
+                .and_then(|v| {
+                    types::UsernamePasswordCredentials::try_from(v).map_err(|e| e.to_string())
+                })
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/login/{}/local",
@@ -42592,7 +42960,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::SshKey>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::SshKeyCreate>::try_into)
+                .and_then(|v| types::SshKeyCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/me/ssh-keys", client.baseurl,);
             let request = client
@@ -43247,7 +43615,9 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::InstanceNetworkInterfaceCreate>::try_into)
+                .and_then(|v| {
+                    types::InstanceNetworkInterfaceCreate::try_from(v).map_err(|e| e.to_string())
+                })
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/network-interfaces", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
@@ -43477,7 +43847,9 @@ pub mod builder {
             let instance = instance.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::InstanceNetworkInterfaceUpdate>::try_into)
+                .and_then(|v| {
+                    types::InstanceNetworkInterfaceUpdate::try_from(v).map_err(|e| e.to_string())
+                })
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/network-interfaces/{}",
@@ -43741,7 +44113,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::SiloRolePolicy>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::SiloRolePolicy>::try_into)
+                .and_then(|v| types::SiloRolePolicy::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/policy", client.baseurl,);
             let request = client
@@ -43966,7 +44338,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Project>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::ProjectCreate>::try_into)
+                .and_then(|v| types::ProjectCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/projects", client.baseurl,);
             let request = client
@@ -44110,7 +44482,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::ProjectUpdate>::try_into)
+                .and_then(|v| types::ProjectUpdate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}",
@@ -44323,7 +44695,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::ProjectRolePolicy>::try_into)
+                .and_then(|v| types::ProjectRolePolicy::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/projects/{}/policy",
@@ -44588,7 +44960,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::SnapshotCreate>::try_into)
+                .and_then(|v| types::SnapshotCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/snapshots", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -45355,7 +45727,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::UninitializedSledId>::try_into)
+                .and_then(|v| types::UninitializedSledId::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/hardware/sleds", client.baseurl,);
             let request = client
@@ -45859,7 +46231,9 @@ pub mod builder {
             } = self;
             let sled_id = sled_id.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::SledProvisionStateParams>::try_into)
+                .and_then(|v| {
+                    types::SledProvisionStateParams::try_from(v).map_err(|e| e.to_string())
+                })
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/hardware/sleds/{}/provision-state",
@@ -46298,7 +46672,9 @@ pub mod builder {
             let rack_id = rack_id.map_err(Error::InvalidRequest)?;
             let switch_location = switch_location.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::SwitchPortApplySettings>::try_into)
+                .and_then(|v| {
+                    types::SwitchPortApplySettings::try_from(v).map_err(|e| e.to_string())
+                })
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/hardware/switch-port/{}/settings",
@@ -46877,7 +47253,7 @@ pub mod builder {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::UserCreate>::try_into)
+                .and_then(|v| types::UserCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/identity-providers/local/users",
@@ -47146,7 +47522,9 @@ pub mod builder {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::SamlIdentityProviderCreate>::try_into)
+                .and_then(|v| {
+                    types::SamlIdentityProviderCreate::try_from(v).map_err(|e| e.to_string())
+                })
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/identity-providers/saml", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -47456,7 +47834,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::IpPoolCreate>::try_into)
+                .and_then(|v| types::IpPoolCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/ip-pools", client.baseurl,);
             let request = client
@@ -47596,7 +47974,7 @@ pub mod builder {
             let Self { client, pool, body } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::IpPoolUpdate>::try_into)
+                .and_then(|v| types::IpPoolUpdate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/ip-pools/{}",
@@ -47972,6 +48350,446 @@ pub mod builder {
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_list`]
+    ///
+    /// [`ClientSystemNetworkingExt::ip_pool_silo_list`]: super::ClientSystemNetworkingExt::ip_pool_silo_list
+    #[derive(Debug, Clone)]
+    pub struct IpPoolSiloList<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::IdSortMode>, String>,
+    }
+
+    impl<'a> IpPoolSiloList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `IdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/silos`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IpPoolSiloResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                pool,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}/silos",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/ip-pools/{pool}/silos`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::IpPoolSilo, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_link`]
+    ///
+    /// [`ClientSystemNetworkingExt::ip_pool_silo_link`]: super::ClientSystemNetworkingExt::ip_pool_silo_link
+    #[derive(Debug, Clone)]
+    pub struct IpPoolSiloLink<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        body: Result<types::builder::IpPoolSiloLink, String>,
+    }
+
+    impl<'a> IpPoolSiloLink<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                body: Ok(types::builder::IpPoolSiloLink::default()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpPoolSiloLink>,
+            <V as std::convert::TryInto<types::IpPoolSiloLink>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `IpPoolSiloLink` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::IpPoolSiloLink) -> types::builder::IpPoolSiloLink,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/silos`
+        pub async fn send(self) -> Result<ResponseValue<types::IpPoolSilo>, Error<types::Error>> {
+            let Self { client, pool, body } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::IpPoolSiloLink::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}/silos",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_update`]
+    ///
+    /// [`ClientSystemNetworkingExt::ip_pool_silo_update`]: super::ClientSystemNetworkingExt::ip_pool_silo_update
+    #[derive(Debug, Clone)]
+    pub struct IpPoolSiloUpdate<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        silo: Result<types::NameOrId, String>,
+        body: Result<types::builder::IpPoolSiloUpdate, String>,
+    }
+
+    impl<'a> IpPoolSiloUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+                body: Ok(types::builder::IpPoolSiloUpdate::default()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpPoolSiloUpdate>,
+            <V as std::convert::TryInto<types::IpPoolSiloUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `IpPoolSiloUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::IpPoolSiloUpdate,
+            ) -> types::builder::IpPoolSiloUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}/silos/{silo}`
+        pub async fn send(self) -> Result<ResponseValue<types::IpPoolSilo>, Error<types::Error>> {
+            let Self {
+                client,
+                pool,
+                silo,
+                body,
+            } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::IpPoolSiloUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}/silos/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+                encode_path(&silo.to_string()),
+            );
+            let request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_silo_unlink`]
+    ///
+    /// [`ClientSystemNetworkingExt::ip_pool_silo_unlink`]: super::ClientSystemNetworkingExt::ip_pool_silo_unlink
+    #[derive(Debug, Clone)]
+    pub struct IpPoolSiloUnlink<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> IpPoolSiloUnlink<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/system/ip-pools/{pool}/silos/{silo}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, pool, silo } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}/silos/{}",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+                encode_path(&silo.to_string()),
+            );
+            let request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -48717,7 +49535,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::AddressLotCreateResponse>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::AddressLotCreate>::try_into)
+                .and_then(|v| types::AddressLotCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/address-lot", client.baseurl,);
             let request = client
@@ -49202,7 +50020,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::BgpConfig>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::BgpConfigCreate>::try_into)
+                .and_then(|v| types::BgpConfigCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp", client.baseurl,);
             let request = client
@@ -49396,7 +50214,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::BgpAnnounceSet>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::BgpAnnounceSetCreate>::try_into)
+                .and_then(|v| types::BgpAnnounceSetCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/bgp-announce", client.baseurl,);
             let request = client
@@ -49791,7 +50609,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::LoopbackAddress>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::LoopbackAddressCreate>::try_into)
+                .and_then(|v| types::LoopbackAddressCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/networking/loopback-address", client.baseurl,);
             let request = client
@@ -50161,7 +50979,9 @@ pub mod builder {
         ) -> Result<ResponseValue<types::SwitchPortSettingsView>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::SwitchPortSettingsCreate>::try_into)
+                .and_then(|v| {
+                    types::SwitchPortSettingsCreate::try_from(v).map_err(|e| e.to_string())
+                })
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/networking/switch-port-settings",
@@ -50408,7 +51228,7 @@ pub mod builder {
         ) -> Result<ResponseValue<types::FleetRolePolicy>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::FleetRolePolicy>::try_into)
+                .and_then(|v| types::FleetRolePolicy::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/policy", client.baseurl,);
             let request = client
@@ -50987,7 +51807,7 @@ pub mod builder {
         pub async fn send(self) -> Result<ResponseValue<types::Silo>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(std::convert::TryInto::<types::SiloCreate>::try_into)
+                .and_then(|v| types::SiloCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/system/silos", client.baseurl,);
             let request = client
@@ -51249,7 +52069,7 @@ pub mod builder {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::SiloRolePolicy>::try_into)
+                .and_then(|v| types::SiloRolePolicy::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/silos/{}/policy",
@@ -51395,7 +52215,7 @@ pub mod builder {
             let Self { client, silo, body } = self;
             let silo = silo.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::SiloQuotasUpdate>::try_into)
+                .and_then(|v| types::SiloQuotasUpdate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/silos/{}/quotas",
@@ -52492,7 +53312,9 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::VpcFirewallRuleUpdateParams>::try_into)
+                .and_then(|v| {
+                    types::VpcFirewallRuleUpdateParams::try_from(v).map_err(|e| e.to_string())
+                })
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-firewall-rules", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
@@ -52793,7 +53615,7 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::VpcSubnetCreate>::try_into)
+                .and_then(|v| types::VpcSubnetCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpc-subnets", client.baseurl,);
             let mut query = Vec::with_capacity(2usize);
@@ -53014,7 +53836,7 @@ pub mod builder {
             let project = project.map_err(Error::InvalidRequest)?;
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::VpcSubnetUpdate>::try_into)
+                .and_then(|v| types::VpcSubnetUpdate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpc-subnets/{}",
@@ -53604,7 +54426,7 @@ pub mod builder {
             } = self;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::VpcCreate>::try_into)
+                .and_then(|v| types::VpcCreate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!("{}/v1/vpcs", client.baseurl,);
             let mut query = Vec::with_capacity(1usize);
@@ -53789,7 +54611,7 @@ pub mod builder {
             let vpc = vpc.map_err(Error::InvalidRequest)?;
             let project = project.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(std::convert::TryInto::<types::VpcUpdate>::try_into)
+                .and_then(|v| types::VpcUpdate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/vpcs/{}",

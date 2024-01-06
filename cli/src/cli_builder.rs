@@ -337,6 +337,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::IpPoolServiceRangeList => Some("ip-pool service range list"),
         CliCommand::IpPoolServiceRangeAdd => Some("ip-pool service range add"),
         CliCommand::IpPoolServiceRangeRemove => Some("ip-pool service remove"),
+        CliCommand::IpPoolSiloList => Some("ip-pool silo list"),
+        CliCommand::IpPoolSiloLink => Some("ip-pool silo link"),
+        CliCommand::IpPoolSiloUpdate => Some("ip-pool silo update"),
+        CliCommand::IpPoolSiloUnlink => Some("ip-pool silo unlink"),
 
         CliCommand::SiloList => Some("silo list"),
         CliCommand::SiloCreate => Some("silo create"),
