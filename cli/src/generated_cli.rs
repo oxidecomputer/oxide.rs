@@ -2,13 +2,14 @@
 
 use oxide::*;
 
+use oxide::*;
 pub struct Cli<T: CliOverride = ()> {
-    client: oxide::Client,
+    client: Client,
     over: T,
 }
 
 impl Cli {
-    pub fn new(client: oxide::Client) -> Self {
+    pub fn new(client: Client) -> Self {
         Self { client, over: () }
     }
 
@@ -4862,7 +4863,7 @@ impl Cli {
 }
 
 impl<T: CliOverride> Cli<T> {
-    pub fn new_with_override(client: oxide::Client, over: T) -> Self {
+    pub fn new_with_override(client: Client, over: T) -> Self {
         Self { client, over }
     }
 

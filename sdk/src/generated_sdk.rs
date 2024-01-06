@@ -10,6 +10,7 @@ pub mod types {
     use serde::{Deserialize, Serialize};
     #[allow(unused_imports)]
     use std::convert::TryFrom;
+    /// Error types.
     pub mod error {
         /// Error from a TryFrom or FromStr implementation.
         pub struct ConversionError(std::borrow::Cow<'static, str>);
@@ -19619,6 +19620,7 @@ pub mod types {
         }
     }
 
+    /// Types for composing complex structures.
     pub mod builder {
         #[derive(Clone, Debug)]
         pub struct Address {
@@ -34428,6 +34430,7 @@ pub mod types {
         }
     }
 
+    /// Generation of default values for serde.
     pub mod defaults {
         pub(super) fn default_bool<const V: bool>() -> bool {
             V
