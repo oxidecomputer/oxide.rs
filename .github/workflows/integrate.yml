@@ -94,8 +94,7 @@ jobs:
 
           # Perform the update and capture the new commit on the integration branch
           git checkout $INT_BRANCH
-          cargo update -p progenitor
-          cargo update -p progenitor-client
+          cargo update -p https://github.com/oxidecomputer/progenitor
           TO=$(cargo tree -i progenitor | grep -Eo '#([0-9a-z]+)')
 
           echo "from=${FROM:1}" >> $GITHUB_OUTPUT
