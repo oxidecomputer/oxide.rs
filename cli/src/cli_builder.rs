@@ -444,6 +444,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::DiskDelete => Some("disk delete"),
         CliCommand::DiskMetricsList => Some("disk metrics list"),
 
+        CliCommand::DiskImport => Some("disk import"),
         CliCommand::DiskBulkWriteImportStart => Some("disk import start"),
         CliCommand::DiskBulkWriteImport => Some("disk import write"),
         CliCommand::DiskBulkWriteImportStop => Some("disk import stop"),

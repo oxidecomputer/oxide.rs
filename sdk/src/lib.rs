@@ -14,5 +14,6 @@ mod generated_sdk;
 
 #[cfg(feature = "clap")]
 mod clap_feature;
+mod cmd_disk;
 
 pub use generated_sdk::*;

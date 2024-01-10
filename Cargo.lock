@@ -1553,6 +1553,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "json-patch"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "55ff1e1486799e3f64129f8ccad108b38290df9cd7015cd31bed17239f0789d6"
+dependencies = [
+ "serde",
+ "serde_json",
+ "thiserror",
+ "treediff",
+]
+
+[[package]]
 name = "kv-log-macro"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1923,7 +1935,7 @@ dependencies = [
  "chrono",
  "clap",
  "futures",
- "progenitor-client 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "progenitor-client",
  "rand",
  "regress",
  "reqwest",
@@ -2191,9 +2203,9 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4a182d734e46fa1ce15415bf5bd497fc347dc43e"
+source = "git+https://github.com/oxidecomputer/progenitor?branch=extension2#28ef48e72c1cb9bfae278a2b59ffa97c57b24a88"
 dependencies = [
- "progenitor-client 0.5.0 (git+https://github.com/oxidecomputer/progenitor)",
+ "progenitor-client",
  "progenitor-impl",
  "progenitor-macro",
  "serde_json",
@@ -2202,22 +2214,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f24dd3cac4cd81ac77f90e5a8dcb8c9311c7500c6ce8c65c98ce61a5894672e9"
-dependencies = [
- "bytes",
- "futures-core",
- "percent-encoding",
- "reqwest",
- "serde",
- "serde_json",
- "serde_urlencoded",
-]
-
-[[package]]
-name = "progenitor-client"
-version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4a182d734e46fa1ce15415bf5bd497fc347dc43e"
+source = "git+https://github.com/oxidecomputer/progenitor?branch=extension2#28ef48e72c1cb9bfae278a2b59ffa97c57b24a88"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2231,7 +2228,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4a182d734e46fa1ce15415bf5bd497fc347dc43e"
+source = "git+https://github.com/oxidecomputer/progenitor?branch=extension2#28ef48e72c1cb9bfae278a2b59ffa97c57b24a88"
 dependencies = [
  "getopts",
  "heck",
@@ -2253,7 +2250,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#4a182d734e46fa1ce15415bf5bd497fc347dc43e"
+source = "git+https://github.com/oxidecomputer/progenitor?branch=extension2#28ef48e72c1cb9bfae278a2b59ffa97c57b24a88"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -3393,6 +3390,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "treediff"
+version = "4.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "52984d277bdf2a751072b5df30ec0377febdb02f7696d64c2d7d54630bac4303"
+dependencies = [
+ "serde_json",
+]
+
+[[package]]
 name = "try-lock"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3973,6 +3979,7 @@ name = "xtask"
 version = "0.0.0"
 dependencies = [
  "clap",
+ "json-patch",
  "newline-converter",
  "progenitor",
  "regex",

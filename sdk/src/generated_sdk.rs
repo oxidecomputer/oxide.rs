@@ -34505,6 +34505,24 @@ impl Client {
     }
 }
 
+impl Client {
+    /// Sends a `POST` request to `/disk_import`
+    ///
+    /// Arguments:
+    /// - `description`: Human readable description
+    /// - `project`: XXX
+    /// ```ignore
+    /// let response = client.disk_import()
+    ///    .description(description)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn disk_import(&self) -> builder::DiskImport {
+        builder::DiskImport::new(self)
+    }
+}
+
 /// Virtual disks are used to store instance-local data which includes the
 /// operating system.
 pub trait ClientDisksExt {
@@ -36259,6 +36277,22 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_add(&self) -> builder::SledAdd;
+    /// List uninitialized sleds in a given rack
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// ```ignore
+    /// let response = client.sled_list_uninitialized()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn sled_list_uninitialized(&self) -> builder::SledListUninitialized;
     /// Fetch a sled
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
@@ -36328,22 +36362,6 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_set_provision_state(&self) -> builder::SledSetProvisionState;
-    /// List uninitialized sleds in a given rack
-    ///
-    /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// ```ignore
-    /// let response = client.sled_list_uninitialized()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn sled_list_uninitialized(&self) -> builder::SledListUninitialized;
     /// List switch ports
     ///
     /// Sends a `GET` request to `/v1/system/hardware/switch-port`
@@ -36459,6 +36477,10 @@ impl ClientSystemHardwareExt for Client {
         builder::SledAdd::new(self)
     }
 
+    fn sled_list_uninitialized(&self) -> builder::SledListUninitialized {
+        builder::SledListUninitialized::new(self)
+    }
+
     fn sled_view(&self) -> builder::SledView {
         builder::SledView::new(self)
     }
@@ -36473,10 +36495,6 @@ impl ClientSystemHardwareExt for Client {
 
     fn sled_set_provision_state(&self) -> builder::SledSetProvisionState {
         builder::SledSetProvisionState::new(self)
-    }
-
-    fn sled_list_uninitialized(&self) -> builder::SledListUninitialized {
-        builder::SledListUninitialized::new(self)
     }
 
     fn networking_switch_port_list(&self) -> builder::NetworkingSwitchPortList {
@@ -36569,6 +36587,57 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_create(&self) -> builder::IpPoolCreate;
+    /// Fetch the IP pool used for Oxide services
+    ///
+    /// Sends a `GET` request to `/v1/system/ip-pools-service`
+    ///
+    /// ```ignore
+    /// let response = client.ip_pool_service_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
+    /// List ranges for the IP pool used for Oxide services
+    ///
+    /// List ranges for the IP pool used for Oxide services. Ranges are ordered
+    /// by their first address.
+    ///
+    /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// ```ignore
+    /// let response = client.ip_pool_service_range_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
+    /// Add a range to an IP pool used for Oxide services
+    ///
+    /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
+    ///
+    /// ```ignore
+    /// let response = client.ip_pool_service_range_add()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd;
+    /// Remove a range from an IP pool used for Oxide services
+    ///
+    /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
+    ///
+    /// ```ignore
+    /// let response = client.ip_pool_service_range_remove()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
     /// Fetch an IP pool
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}`
@@ -36725,57 +36794,6 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink;
-    /// Fetch the IP pool used for Oxide services
-    ///
-    /// Sends a `GET` request to `/v1/system/ip-pools-service`
-    ///
-    /// ```ignore
-    /// let response = client.ip_pool_service_view()
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
-    /// List ranges for the IP pool used for Oxide services
-    ///
-    /// List ranges for the IP pool used for Oxide services. Ranges are ordered
-    /// by their first address.
-    ///
-    /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
-    ///
-    /// Arguments:
-    /// - `limit`: Maximum number of items returned by a single call
-    /// - `page_token`: Token returned by previous call to retrieve the
-    ///   subsequent page
-    /// ```ignore
-    /// let response = client.ip_pool_service_range_list()
-    ///    .limit(limit)
-    ///    .page_token(page_token)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
-    /// Add a range to an IP pool used for Oxide services
-    ///
-    /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
-    ///
-    /// ```ignore
-    /// let response = client.ip_pool_service_range_add()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd;
-    /// Remove a range from an IP pool used for Oxide services
-    ///
-    /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
-    ///
-    /// ```ignore
-    /// let response = client.ip_pool_service_range_remove()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove;
     /// List address lots
     ///
     /// Sends a `GET` request to `/v1/system/networking/address-lot`
@@ -37071,6 +37089,22 @@ impl ClientSystemNetworkingExt for Client {
         builder::IpPoolCreate::new(self)
     }
 
+    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
+        builder::IpPoolServiceView::new(self)
+    }
+
+    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList {
+        builder::IpPoolServiceRangeList::new(self)
+    }
+
+    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd {
+        builder::IpPoolServiceRangeAdd::new(self)
+    }
+
+    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove {
+        builder::IpPoolServiceRangeRemove::new(self)
+    }
+
     fn ip_pool_view(&self) -> builder::IpPoolView {
         builder::IpPoolView::new(self)
     }
@@ -37109,22 +37143,6 @@ impl ClientSystemNetworkingExt for Client {
 
     fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink {
         builder::IpPoolSiloUnlink::new(self)
-    }
-
-    fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
-        builder::IpPoolServiceView::new(self)
-    }
-
-    fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList {
-        builder::IpPoolServiceRangeList::new(self)
-    }
-
-    fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd {
-        builder::IpPoolServiceRangeAdd::new(self)
-    }
-
-    fn ip_pool_service_range_remove(&self) -> builder::IpPoolServiceRangeRemove {
-        builder::IpPoolServiceRangeRemove::new(self)
     }
 
     fn networking_address_lot_list(&self) -> builder::NetworkingAddressLotList {
@@ -37473,21 +37491,6 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_user_list(&self) -> builder::SiloUserList;
-    /// Fetch a built-in (system) user
-    ///
-    /// Sends a `GET` request to `/v1/system/users/{user_id}`
-    ///
-    /// Arguments:
-    /// - `user_id`: The user's internal id
-    /// - `silo`: Name or ID of the silo
-    /// ```ignore
-    /// let response = client.silo_user_view()
-    ///    .user_id(user_id)
-    ///    .silo(silo)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn silo_user_view(&self) -> builder::SiloUserView;
     /// List built-in users
     ///
     /// Sends a `GET` request to `/v1/system/users-builtin`
@@ -37517,6 +37520,21 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn user_builtin_view(&self) -> builder::UserBuiltinView;
+    /// Fetch a built-in (system) user
+    ///
+    /// Sends a `GET` request to `/v1/system/users/{user_id}`
+    ///
+    /// Arguments:
+    /// - `user_id`: The user's internal id
+    /// - `silo`: Name or ID of the silo
+    /// ```ignore
+    /// let response = client.silo_user_view()
+    ///    .user_id(user_id)
+    ///    .silo(silo)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_user_view(&self) -> builder::SiloUserView;
     /// List current utilization state for all silos
     ///
     /// Sends a `GET` request to `/v1/system/utilization/silos`
@@ -37615,16 +37633,16 @@ impl ClientSystemSilosExt for Client {
         builder::SiloUserList::new(self)
     }
 
-    fn silo_user_view(&self) -> builder::SiloUserView {
-        builder::SiloUserView::new(self)
-    }
-
     fn user_builtin_list(&self) -> builder::UserBuiltinList {
         builder::UserBuiltinList::new(self)
     }
 
     fn user_builtin_view(&self) -> builder::UserBuiltinView {
         builder::UserBuiltinView::new(self)
+    }
+
+    fn silo_user_view(&self) -> builder::SiloUserView {
+        builder::SiloUserView::new(self)
     }
 
     fn silo_utilization_list(&self) -> builder::SiloUtilizationList {
@@ -38145,6 +38163,46 @@ pub mod builder {
                 200..=299 => Ok(ResponseValue::stream(response)),
                 _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
             }
+        }
+    }
+
+    /// Builder for [`Client::disk_import`]
+    ///
+    /// [`Client::disk_import`]: super::Client::disk_import
+    #[derive(Debug, Clone)]
+    pub struct DiskImport<'a> {
+        client: &'a super::Client,
+        description: Result<String, String>,
+        project: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> DiskImport<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                description: Err("description was not initialized".to_string()),
+                project: Err("project was not initialized".to_string()),
+            }
+        }
+
+        pub fn description<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.description = value
+                .try_into()
+                .map_err(|_| "conversion to `String` for description failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
         }
     }
 
@@ -45953,6 +46011,146 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemHardwareExt::sled_list_uninitialized`]
+    ///
+    /// [`ClientSystemHardwareExt::sled_list_uninitialized`]: super::ClientSystemHardwareExt::sled_list_uninitialized
+    #[derive(Debug, Clone)]
+    pub struct SledListUninitialized<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+    }
+
+    impl<'a> SledListUninitialized<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::UninitializedSledResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/hardware/sleds-uninitialized", client.baseurl,);
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/hardware/sleds-uninitialized`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::UninitializedSled, Error<types::Error>>>
+               + Unpin
+               + 'a {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientSystemHardwareExt::sled_view`]
     ///
     /// [`ClientSystemHardwareExt::sled_view`]: super::ClientSystemHardwareExt::sled_view
@@ -46460,146 +46658,6 @@ pub mod builder {
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
-        }
-    }
-
-    /// Builder for [`ClientSystemHardwareExt::sled_list_uninitialized`]
-    ///
-    /// [`ClientSystemHardwareExt::sled_list_uninitialized`]: super::ClientSystemHardwareExt::sled_list_uninitialized
-    #[derive(Debug, Clone)]
-    pub struct SledListUninitialized<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-    }
-
-    impl<'a> SledListUninitialized<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                limit: Ok(None),
-                page_token: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::UninitializedSledResultsPage>, Error<types::Error>>
-        {
-            let Self {
-                client,
-                limit,
-                page_token,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/hardware/sleds-uninitialized", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/system/hardware/sleds-uninitialized`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::UninitializedSled, Error<types::Error>>>
-               + Unpin
-               + 'a {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let limit = self
-                .limit
-                .clone()
-                .ok()
-                .flatten()
-                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
-                .map(std::num::NonZeroUsize::get)
-                .unwrap_or(usize::MAX);
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .take(limit)
-                .boxed()
         }
     }
 
@@ -48060,6 +48118,300 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_view`]
+    ///
+    /// [`ClientSystemNetworkingExt::ip_pool_service_view`]: super::ClientSystemNetworkingExt::ip_pool_service_view
+    #[derive(Debug, Clone)]
+    pub struct IpPoolServiceView<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> IpPoolServiceView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/ip-pools-service`
+        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/ip-pools-service", client.baseurl,);
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_list`]
+    ///
+    /// [`ClientSystemNetworkingExt::ip_pool_service_range_list`]: super::ClientSystemNetworkingExt::ip_pool_service_range_list
+    #[derive(Debug, Clone)]
+    pub struct IpPoolServiceRangeList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+    }
+
+    impl<'a> IpPoolServiceRangeList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/ip-pools-service/ranges", client.baseurl,);
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/ip-pools-service/ranges`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::IpPoolRange, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_add`]
+    ///
+    /// [`ClientSystemNetworkingExt::ip_pool_service_range_add`]: super::ClientSystemNetworkingExt::ip_pool_service_range_add
+    #[derive(Debug, Clone)]
+    pub struct IpPoolServiceRangeAdd<'a> {
+        client: &'a super::Client,
+        body: Result<types::IpRange, String>,
+    }
+
+    impl<'a> IpPoolServiceRangeAdd<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpRange>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
+        pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/ip-pools-service/ranges/add", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]
+    ///
+    /// [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]: super::ClientSystemNetworkingExt::ip_pool_service_range_remove
+    #[derive(Debug, Clone)]
+    pub struct IpPoolServiceRangeRemove<'a> {
+        client: &'a super::Client,
+        body: Result<types::IpRange, String>,
+    }
+
+    impl<'a> IpPoolServiceRangeRemove<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Err("body was not initialized".to_string()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::IpRange>,
+        {
+            self.body = value
+                .try_into()
+                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/system/ip-pools-service/ranges/remove`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools-service/ranges/remove",
+                client.baseurl,
+            );
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientSystemNetworkingExt::ip_pool_view`]
     ///
     /// [`ClientSystemNetworkingExt::ip_pool_view`]: super::ClientSystemNetworkingExt::ip_pool_view
@@ -48989,300 +49341,6 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_view`]
-    ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_view`]: super::ClientSystemNetworkingExt::ip_pool_service_view
-    #[derive(Debug, Clone)]
-    pub struct IpPoolServiceView<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> IpPoolServiceView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client: client }
-        }
-
-        /// Sends a `GET` request to `/v1/system/ip-pools-service`
-        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/system/ip-pools-service", client.baseurl,);
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_list`]
-    ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_range_list`]: super::ClientSystemNetworkingExt::ip_pool_service_range_list
-    #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeList<'a> {
-        client: &'a super::Client,
-        limit: Result<Option<std::num::NonZeroU32>, String>,
-        page_token: Result<Option<String>, String>,
-    }
-
-    impl<'a> IpPoolServiceRangeList<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                limit: Ok(None),
-                page_token: Ok(None),
-            }
-        }
-
-        pub fn limit<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<std::num::NonZeroU32>,
-        {
-            self.limit = value.try_into().map(Some).map_err(|_| {
-                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
-            });
-            self
-        }
-
-        pub fn page_token<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<String>,
-        {
-            self.page_token = value
-                .try_into()
-                .map(Some)
-                .map_err(|_| "conversion to `String` for page_token failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::IpPoolRangeResultsPage>, Error<types::Error>> {
-            let Self {
-                client,
-                limit,
-                page_token,
-            } = self;
-            let limit = limit.map_err(Error::InvalidRequest)?;
-            let page_token = page_token.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools-service/ranges", client.baseurl,);
-            let mut query = Vec::with_capacity(2usize);
-            if let Some(v) = &limit {
-                query.push(("limit", v.to_string()));
-            }
-            if let Some(v) = &page_token {
-                query.push(("page_token", v.to_string()));
-            }
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-
-        /// Streams `GET` requests to `/v1/system/ip-pools-service/ranges`
-        pub fn stream(
-            self,
-        ) -> impl futures::Stream<Item = Result<types::IpPoolRange, Error<types::Error>>> + Unpin + 'a
-        {
-            use futures::StreamExt;
-            use futures::TryFutureExt;
-            use futures::TryStreamExt;
-            let limit = self
-                .limit
-                .clone()
-                .ok()
-                .flatten()
-                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
-                .map(std::num::NonZeroUsize::get)
-                .unwrap_or(usize::MAX);
-            let next = Self {
-                limit: Ok(None),
-                page_token: Ok(None),
-                ..self.clone()
-            };
-            self.send()
-                .map_ok(move |page| {
-                    let page = page.into_inner();
-                    let first = futures::stream::iter(page.items).map(Ok);
-                    let rest = futures::stream::try_unfold(
-                        (page.next_page, next),
-                        |(next_page, next)| async {
-                            if next_page.is_none() {
-                                Ok(None)
-                            } else {
-                                Self {
-                                    page_token: Ok(next_page),
-                                    ..next.clone()
-                                }
-                                .send()
-                                .map_ok(|page| {
-                                    let page = page.into_inner();
-                                    Some((
-                                        futures::stream::iter(page.items).map(Ok),
-                                        (page.next_page, next),
-                                    ))
-                                })
-                                .await
-                            }
-                        },
-                    )
-                    .try_flatten();
-                    first.chain(rest)
-                })
-                .try_flatten_stream()
-                .take(limit)
-                .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_add`]
-    ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_range_add`]: super::ClientSystemNetworkingExt::ip_pool_service_range_add
-    #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeAdd<'a> {
-        client: &'a super::Client,
-        body: Result<types::IpRange, String>,
-    }
-
-    impl<'a> IpPoolServiceRangeAdd<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IpRange>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
-            self
-        }
-
-        /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
-        pub async fn send(self) -> Result<ResponseValue<types::IpPoolRange>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/ip-pools-service/ranges/add", client.baseurl,);
-            let request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                201u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]
-    ///
-    /// [`ClientSystemNetworkingExt::ip_pool_service_range_remove`]: super::ClientSystemNetworkingExt::ip_pool_service_range_remove
-    #[derive(Debug, Clone)]
-    pub struct IpPoolServiceRangeRemove<'a> {
-        client: &'a super::Client,
-        body: Result<types::IpRange, String>,
-    }
-
-    impl<'a> IpPoolServiceRangeRemove<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                body: Err("body was not initialized".to_string()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::IpRange>,
-        {
-            self.body = value
-                .try_into()
-                .map_err(|_| "conversion to `IpRange` for body failed".to_string());
-            self
-        }
-
-        /// Sends a `POST` request to
-        /// `/v1/system/ip-pools-service/ranges/remove`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/ip-pools-service/ranges/remove",
-                client.baseurl,
-            );
-            let request = client
-                .client
-                .post(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;
@@ -52621,85 +52679,6 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemSilosExt::silo_user_view`]
-    ///
-    /// [`ClientSystemSilosExt::silo_user_view`]: super::ClientSystemSilosExt::silo_user_view
-    #[derive(Debug, Clone)]
-    pub struct SiloUserView<'a> {
-        client: &'a super::Client,
-        user_id: Result<uuid::Uuid, String>,
-        silo: Result<types::NameOrId, String>,
-    }
-
-    impl<'a> SiloUserView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                user_id: Err("user_id was not initialized".to_string()),
-                silo: Err("silo was not initialized".to_string()),
-            }
-        }
-
-        pub fn user_id<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<uuid::Uuid>,
-        {
-            self.user_id = value
-                .try_into()
-                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
-            self
-        }
-
-        pub fn silo<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::NameOrId>,
-        {
-            self.silo = value
-                .try_into()
-                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
-            self
-        }
-
-        /// Sends a `GET` request to `/v1/system/users/{user_id}`
-        pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
-            let Self {
-                client,
-                user_id,
-                silo,
-            } = self;
-            let user_id = user_id.map_err(Error::InvalidRequest)?;
-            let silo = silo.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/v1/system/users/{}",
-                client.baseurl,
-                encode_path(&user_id.to_string()),
-            );
-            let mut query = Vec::with_capacity(1usize);
-            query.push(("silo", silo.to_string()));
-            let request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .query(&query)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
     /// Builder for [`ClientSystemSilosExt::user_builtin_list`]
     ///
     /// [`ClientSystemSilosExt::user_builtin_list`]: super::ClientSystemSilosExt::user_builtin_list
@@ -52900,6 +52879,85 @@ pub mod builder {
                     reqwest::header::ACCEPT,
                     reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemSilosExt::silo_user_view`]
+    ///
+    /// [`ClientSystemSilosExt::silo_user_view`]: super::ClientSystemSilosExt::silo_user_view
+    #[derive(Debug, Clone)]
+    pub struct SiloUserView<'a> {
+        client: &'a super::Client,
+        user_id: Result<uuid::Uuid, String>,
+        silo: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> SiloUserView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                user_id: Err("user_id was not initialized".to_string()),
+                silo: Err("silo was not initialized".to_string()),
+            }
+        }
+
+        pub fn user_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.user_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for user_id failed".to_string());
+            self
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/users/{user_id}`
+        pub async fn send(self) -> Result<ResponseValue<types::User>, Error<types::Error>> {
+            let Self {
+                client,
+                user_id,
+                silo,
+            } = self;
+            let user_id = user_id.map_err(Error::InvalidRequest)?;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/users/{}",
+                client.baseurl,
+                encode_path(&user_id.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("silo", silo.to_string()));
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
                 .build()?;
             let result = client.client.execute(request).await;
             let response = result?;

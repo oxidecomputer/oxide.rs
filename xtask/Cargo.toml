@@ -6,6 +6,7 @@ publish = false
 
 [dependencies]
 clap = { workspace = true }
+json-patch = { workspace = true }
 newline-converter = { workspace = true }
 progenitor = { workspace = true }
 regex = { workspace = true }

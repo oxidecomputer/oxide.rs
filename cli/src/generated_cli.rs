@@ -16,6 +16,7 @@ impl Cli {
             CliCommand::DeviceAuthRequest => Self::cli_device_auth_request(),
             CliCommand::DeviceAuthConfirm => Self::cli_device_auth_confirm(),
             CliCommand::DeviceAccessToken => Self::cli_device_access_token(),
+            CliCommand::DiskImport => Self::cli_disk_import(),
             CliCommand::LoginSaml => Self::cli_login_saml(),
             CliCommand::CertificateList => Self::cli_certificate_list(),
             CliCommand::CertificateCreate => Self::cli_certificate_create(),
@@ -97,11 +98,11 @@ impl Cli {
             CliCommand::RackView => Self::cli_rack_view(),
             CliCommand::SledList => Self::cli_sled_list(),
             CliCommand::SledAdd => Self::cli_sled_add(),
+            CliCommand::SledListUninitialized => Self::cli_sled_list_uninitialized(),
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
             CliCommand::SledSetProvisionState => Self::cli_sled_set_provision_state(),
-            CliCommand::SledListUninitialized => Self::cli_sled_list_uninitialized(),
             CliCommand::NetworkingSwitchPortList => Self::cli_networking_switch_port_list(),
             CliCommand::NetworkingSwitchPortApplySettings => {
                 Self::cli_networking_switch_port_apply_settings()
@@ -119,6 +120,10 @@ impl Cli {
             CliCommand::SamlIdentityProviderView => Self::cli_saml_identity_provider_view(),
             CliCommand::IpPoolList => Self::cli_ip_pool_list(),
             CliCommand::IpPoolCreate => Self::cli_ip_pool_create(),
+            CliCommand::IpPoolServiceView => Self::cli_ip_pool_service_view(),
+            CliCommand::IpPoolServiceRangeList => Self::cli_ip_pool_service_range_list(),
+            CliCommand::IpPoolServiceRangeAdd => Self::cli_ip_pool_service_range_add(),
+            CliCommand::IpPoolServiceRangeRemove => Self::cli_ip_pool_service_range_remove(),
             CliCommand::IpPoolView => Self::cli_ip_pool_view(),
             CliCommand::IpPoolUpdate => Self::cli_ip_pool_update(),
             CliCommand::IpPoolDelete => Self::cli_ip_pool_delete(),
@@ -129,10 +134,6 @@ impl Cli {
             CliCommand::IpPoolSiloLink => Self::cli_ip_pool_silo_link(),
             CliCommand::IpPoolSiloUpdate => Self::cli_ip_pool_silo_update(),
             CliCommand::IpPoolSiloUnlink => Self::cli_ip_pool_silo_unlink(),
-            CliCommand::IpPoolServiceView => Self::cli_ip_pool_service_view(),
-            CliCommand::IpPoolServiceRangeList => Self::cli_ip_pool_service_range_list(),
-            CliCommand::IpPoolServiceRangeAdd => Self::cli_ip_pool_service_range_add(),
-            CliCommand::IpPoolServiceRangeRemove => Self::cli_ip_pool_service_range_remove(),
             CliCommand::SystemMetric => Self::cli_system_metric(),
             CliCommand::NetworkingAddressLotList => Self::cli_networking_address_lot_list(),
             CliCommand::NetworkingAddressLotCreate => Self::cli_networking_address_lot_create(),
@@ -191,9 +192,9 @@ impl Cli {
             CliCommand::SiloQuotasView => Self::cli_silo_quotas_view(),
             CliCommand::SiloQuotasUpdate => Self::cli_silo_quotas_update(),
             CliCommand::SiloUserList => Self::cli_silo_user_list(),
-            CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::UserBuiltinList => Self::cli_user_builtin_list(),
             CliCommand::UserBuiltinView => Self::cli_user_builtin_view(),
+            CliCommand::SiloUserView => Self::cli_silo_user_view(),
             CliCommand::SiloUtilizationList => Self::cli_silo_utilization_list(),
             CliCommand::SiloUtilizationView => Self::cli_silo_utilization_view(),
             CliCommand::UserList => Self::cli_user_list(),
@@ -314,6 +315,24 @@ impl Cli {
             .long_about(
                 "This endpoint should be polled by the client until the user code is verified and \
                  the grant is confirmed.",
+            )
+    }
+
+    pub fn cli_disk_import() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required(true)
+                    .help("Human readable description"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("XXX"),
             )
     }
 
@@ -2485,6 +2504,18 @@ impl Cli {
             .about("Add a sled to an initialized rack")
     }
 
+    pub fn cli_sled_list_uninitialized() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about("List uninitialized sleds in a given rack")
+    }
+
     pub fn cli_sled_view() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -2594,18 +2625,6 @@ impl Cli {
                     .help("XXX"),
             )
             .about("Set the sled's provision state")
-    }
-
-    pub fn cli_sled_list_uninitialized() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .about("List uninitialized sleds in a given rack")
     }
 
     pub fn cli_networking_switch_port_list() -> clap::Command {
@@ -3030,6 +3049,64 @@ impl Cli {
             .about("Create an IP pool")
     }
 
+    pub fn cli_ip_pool_service_view() -> clap::Command {
+        clap::Command::new("").about("Fetch the IP pool used for Oxide services")
+    }
+
+    pub fn cli_ip_pool_service_range_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about("List ranges for the IP pool used for Oxide services")
+            .long_about(
+                "List ranges for the IP pool used for Oxide services. Ranges are ordered by their \
+                 first address.",
+            )
+    }
+
+    pub fn cli_ip_pool_service_range_add() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Add a range to an IP pool used for Oxide services")
+    }
+
+    pub fn cli_ip_pool_service_range_remove() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Remove a range from an IP pool used for Oxide services")
+    }
+
     pub fn cli_ip_pool_view() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -3301,64 +3378,6 @@ impl Cli {
             )
             .about("Unlink an IP pool from a silo")
             .long_about("Will fail if there are any outstanding IPs allocated in the silo.")
-    }
-
-    pub fn cli_ip_pool_service_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the IP pool used for Oxide services")
-    }
-
-    pub fn cli_ip_pool_service_range_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .about("List ranges for the IP pool used for Oxide services")
-            .long_about(
-                "List ranges for the IP pool used for Oxide services. Ranges are ordered by their \
-                 first address.",
-            )
-    }
-
-    pub fn cli_ip_pool_service_range_add() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Add a range to an IP pool used for Oxide services")
-    }
-
-    pub fn cli_ip_pool_service_range_remove() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(true)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Remove a range from an IP pool used for Oxide services")
     }
 
     pub fn cli_system_metric() -> clap::Command {
@@ -4234,25 +4253,6 @@ impl Cli {
             .about("List built-in (system) users in a silo")
     }
 
-    pub fn cli_silo_user_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("silo")
-                    .long("silo")
-                    .value_parser(clap::value_parser!(types::NameOrId))
-                    .required(true)
-                    .help("Name or ID of the silo"),
-            )
-            .arg(
-                clap::Arg::new("user-id")
-                    .long("user-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
-                    .required(true)
-                    .help("The user's internal id"),
-            )
-            .about("Fetch a built-in (system) user")
-    }
-
     pub fn cli_user_builtin_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -4285,6 +4285,25 @@ impl Cli {
                     .required(true),
             )
             .about("Fetch a built-in user")
+    }
+
+    pub fn cli_silo_user_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .arg(
+                clap::Arg::new("user-id")
+                    .long("user-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("The user's internal id"),
+            )
+            .about("Fetch a built-in (system) user")
     }
 
     pub fn cli_silo_utilization_list() -> clap::Command {
@@ -4876,6 +4895,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::DeviceAccessToken => {
                 self.execute_device_access_token(matches).await;
             }
+            CliCommand::DiskImport => {
+                self.execute_disk_import(matches).await;
+            }
             CliCommand::LoginSaml => {
                 self.execute_login_saml(matches).await;
             }
@@ -5104,6 +5126,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::SledAdd => {
                 self.execute_sled_add(matches).await;
             }
+            CliCommand::SledListUninitialized => {
+                self.execute_sled_list_uninitialized(matches).await;
+            }
             CliCommand::SledView => {
                 self.execute_sled_view(matches).await;
             }
@@ -5115,9 +5140,6 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SledSetProvisionState => {
                 self.execute_sled_set_provision_state(matches).await;
-            }
-            CliCommand::SledListUninitialized => {
-                self.execute_sled_list_uninitialized(matches).await;
             }
             CliCommand::NetworkingSwitchPortList => {
                 self.execute_networking_switch_port_list(matches).await;
@@ -5160,6 +5182,18 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::IpPoolCreate => {
                 self.execute_ip_pool_create(matches).await;
             }
+            CliCommand::IpPoolServiceView => {
+                self.execute_ip_pool_service_view(matches).await;
+            }
+            CliCommand::IpPoolServiceRangeList => {
+                self.execute_ip_pool_service_range_list(matches).await;
+            }
+            CliCommand::IpPoolServiceRangeAdd => {
+                self.execute_ip_pool_service_range_add(matches).await;
+            }
+            CliCommand::IpPoolServiceRangeRemove => {
+                self.execute_ip_pool_service_range_remove(matches).await;
+            }
             CliCommand::IpPoolView => {
                 self.execute_ip_pool_view(matches).await;
             }
@@ -5189,18 +5223,6 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::IpPoolSiloUnlink => {
                 self.execute_ip_pool_silo_unlink(matches).await;
-            }
-            CliCommand::IpPoolServiceView => {
-                self.execute_ip_pool_service_view(matches).await;
-            }
-            CliCommand::IpPoolServiceRangeList => {
-                self.execute_ip_pool_service_range_list(matches).await;
-            }
-            CliCommand::IpPoolServiceRangeAdd => {
-                self.execute_ip_pool_service_range_add(matches).await;
-            }
-            CliCommand::IpPoolServiceRangeRemove => {
-                self.execute_ip_pool_service_range_remove(matches).await;
             }
             CliCommand::SystemMetric => {
                 self.execute_system_metric(matches).await;
@@ -5314,14 +5336,14 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::SiloUserList => {
                 self.execute_silo_user_list(matches).await;
             }
-            CliCommand::SiloUserView => {
-                self.execute_silo_user_view(matches).await;
-            }
             CliCommand::UserBuiltinList => {
                 self.execute_user_builtin_list(matches).await;
             }
             CliCommand::UserBuiltinView => {
                 self.execute_user_builtin_view(matches).await;
+            }
+            CliCommand::SiloUserView => {
+                self.execute_silo_user_view(matches).await;
             }
             CliCommand::SiloUtilizationList => {
                 self.execute_silo_utilization_list(matches).await;
@@ -5461,6 +5483,30 @@ impl<T: CliOverride> Cli<T> {
             }
             Err(r) => {
                 todo!()
+            }
+        }
+    }
+
+    pub async fn execute_disk_import(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.disk_import();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.description(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_disk_import(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
             }
         }
     }
@@ -7633,6 +7679,32 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_sled_list_uninitialized(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.sled_list_uninitialized();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        self.over
+            .execute_sled_list_uninitialized(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_sled_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.sled_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
@@ -7746,32 +7818,6 @@ impl<T: CliOverride> Cli<T> {
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_sled_list_uninitialized(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.sled_list_uninitialized();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        self.over
-            .execute_sled_list_uninitialized(matches, &mut request)
-            .unwrap();
-        let mut stream = request.stream();
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    println!("error\n{:#?}", r);
-                    break;
-                }
-                Ok(None) => {
-                    break;
-                }
-                Ok(Some(value)) => {
-                    println!("{:#?}", value);
-                }
             }
         }
     }
@@ -8188,6 +8234,92 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_ip_pool_service_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_service_view();
+        self.over
+            .execute_ip_pool_service_view(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_ip_pool_service_range_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_service_range_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        self.over
+            .execute_ip_pool_service_range_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_ip_pool_service_range_add(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_service_range_add();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_ip_pool_service_range_add(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_ip_pool_service_range_remove(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.ip_pool_service_range_remove();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_ip_pool_service_range_remove(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_ip_pool_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.ip_pool_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
@@ -8458,92 +8590,6 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_ip_pool_silo_unlink(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_ip_pool_service_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.ip_pool_service_view();
-        self.over
-            .execute_ip_pool_service_view(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_ip_pool_service_range_list(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.ip_pool_service_range_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        self.over
-            .execute_ip_pool_service_range_list(matches, &mut request)
-            .unwrap();
-        let mut stream = request.stream();
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    println!("error\n{:#?}", r);
-                    break;
-                }
-                Ok(None) => {
-                    break;
-                }
-                Ok(Some(value)) => {
-                    println!("{:#?}", value);
-                }
-            }
-        }
-    }
-
-    pub async fn execute_ip_pool_service_range_add(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.ip_pool_service_range_add();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        self.over
-            .execute_ip_pool_service_range_add(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
-    pub async fn execute_ip_pool_service_range_remove(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.ip_pool_service_range_remove();
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpRange>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        self.over
-            .execute_ip_pool_service_range_remove(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -9494,30 +9540,6 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_user_view(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.silo_user_view();
-        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
-            request = request.silo(value.clone());
-        }
-
-        if let Some(value) = matches.get_one::<uuid::Uuid>("user-id") {
-            request = request.user_id(value.clone());
-        }
-
-        self.over
-            .execute_silo_user_view(matches, &mut request)
-            .unwrap();
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                println!("success\n{:#?}", r)
-            }
-            Err(r) => {
-                println!("error\n{:#?}", r)
-            }
-        }
-    }
-
     pub async fn execute_user_builtin_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.user_builtin_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -9556,6 +9578,30 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_user_builtin_view(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_silo_user_view(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_user_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("user-id") {
+            request = request.user_id(value.clone());
+        }
+
+        self.over
+            .execute_silo_user_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -10123,6 +10169,14 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DeviceAccessToken,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_disk_import(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::DiskImport,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -10727,6 +10781,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_sled_list_uninitialized(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SledListUninitialized,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_sled_view(
         &self,
         matches: &clap::ArgMatches,
@@ -10755,14 +10817,6 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SledSetProvisionState,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_sled_list_uninitialized(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SledListUninitialized,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -10871,6 +10925,38 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_ip_pool_service_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::IpPoolServiceView,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_ip_pool_service_range_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::IpPoolServiceRangeList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_ip_pool_service_range_add(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::IpPoolServiceRangeAdd,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_ip_pool_service_range_remove(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::IpPoolServiceRangeRemove,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_ip_pool_view(
         &self,
         matches: &clap::ArgMatches,
@@ -10947,38 +11033,6 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolSiloUnlink,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_ip_pool_service_view(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::IpPoolServiceView,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_ip_pool_service_range_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::IpPoolServiceRangeList,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_ip_pool_service_range_add(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::IpPoolServiceRangeAdd,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
-    fn execute_ip_pool_service_range_remove(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::IpPoolServiceRangeRemove,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -11255,14 +11309,6 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_silo_user_view(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::SiloUserView,
-    ) -> Result<(), String> {
-        Ok(())
-    }
-
     fn execute_user_builtin_list(
         &self,
         matches: &clap::ArgMatches,
@@ -11275,6 +11321,14 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::UserBuiltinView,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_silo_user_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SiloUserView,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -11422,6 +11476,7 @@ pub enum CliCommand {
     DeviceAuthRequest,
     DeviceAuthConfirm,
     DeviceAccessToken,
+    DiskImport,
     LoginSaml,
     CertificateList,
     CertificateCreate,
@@ -11497,11 +11552,11 @@ pub enum CliCommand {
     RackView,
     SledList,
     SledAdd,
+    SledListUninitialized,
     SledView,
     SledPhysicalDiskList,
     SledInstanceList,
     SledSetProvisionState,
-    SledListUninitialized,
     NetworkingSwitchPortList,
     NetworkingSwitchPortApplySettings,
     NetworkingSwitchPortClearSettings,
@@ -11515,6 +11570,10 @@ pub enum CliCommand {
     SamlIdentityProviderView,
     IpPoolList,
     IpPoolCreate,
+    IpPoolServiceView,
+    IpPoolServiceRangeList,
+    IpPoolServiceRangeAdd,
+    IpPoolServiceRangeRemove,
     IpPoolView,
     IpPoolUpdate,
     IpPoolDelete,
@@ -11525,10 +11584,6 @@ pub enum CliCommand {
     IpPoolSiloLink,
     IpPoolSiloUpdate,
     IpPoolSiloUnlink,
-    IpPoolServiceView,
-    IpPoolServiceRangeList,
-    IpPoolServiceRangeAdd,
-    IpPoolServiceRangeRemove,
     SystemMetric,
     NetworkingAddressLotList,
     NetworkingAddressLotCreate,
@@ -11563,9 +11618,9 @@ pub enum CliCommand {
     SiloQuotasView,
     SiloQuotasUpdate,
     SiloUserList,
-    SiloUserView,
     UserBuiltinList,
     UserBuiltinView,
+    SiloUserView,
     SiloUtilizationList,
     SiloUtilizationView,
     UserList,
@@ -11591,6 +11646,7 @@ impl CliCommand {
             CliCommand::DeviceAuthRequest,
             CliCommand::DeviceAuthConfirm,
             CliCommand::DeviceAccessToken,
+            CliCommand::DiskImport,
             CliCommand::LoginSaml,
             CliCommand::CertificateList,
             CliCommand::CertificateCreate,
@@ -11666,11 +11722,11 @@ impl CliCommand {
             CliCommand::RackView,
             CliCommand::SledList,
             CliCommand::SledAdd,
+            CliCommand::SledListUninitialized,
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
             CliCommand::SledInstanceList,
             CliCommand::SledSetProvisionState,
-            CliCommand::SledListUninitialized,
             CliCommand::NetworkingSwitchPortList,
             CliCommand::NetworkingSwitchPortApplySettings,
             CliCommand::NetworkingSwitchPortClearSettings,
@@ -11684,6 +11740,10 @@ impl CliCommand {
             CliCommand::SamlIdentityProviderView,
             CliCommand::IpPoolList,
             CliCommand::IpPoolCreate,
+            CliCommand::IpPoolServiceView,
+            CliCommand::IpPoolServiceRangeList,
+            CliCommand::IpPoolServiceRangeAdd,
+            CliCommand::IpPoolServiceRangeRemove,
             CliCommand::IpPoolView,
             CliCommand::IpPoolUpdate,
             CliCommand::IpPoolDelete,
@@ -11694,10 +11754,6 @@ impl CliCommand {
             CliCommand::IpPoolSiloLink,
             CliCommand::IpPoolSiloUpdate,
             CliCommand::IpPoolSiloUnlink,
-            CliCommand::IpPoolServiceView,
-            CliCommand::IpPoolServiceRangeList,
-            CliCommand::IpPoolServiceRangeAdd,
-            CliCommand::IpPoolServiceRangeRemove,
             CliCommand::SystemMetric,
             CliCommand::NetworkingAddressLotList,
             CliCommand::NetworkingAddressLotCreate,
@@ -11732,9 +11788,9 @@ impl CliCommand {
             CliCommand::SiloQuotasView,
             CliCommand::SiloQuotasUpdate,
             CliCommand::SiloUserList,
-            CliCommand::SiloUserView,
             CliCommand::UserBuiltinList,
             CliCommand::UserBuiltinView,
+            CliCommand::SiloUserView,
             CliCommand::SiloUtilizationList,
             CliCommand::SiloUtilizationView,
             CliCommand::UserList,

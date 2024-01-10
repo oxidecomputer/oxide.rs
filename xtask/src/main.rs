@@ -65,9 +65,19 @@ fn generate(
     let root_path = xtask_path.parent().unwrap().to_path_buf();
     let mut spec_path = root_path.clone();
     spec_path.push("oxide.json");
+    let mut extra_path = root_path.clone();
+    extra_path.push("composite.json");
 
     let file = File::open(spec_path).unwrap();
-    let spec = serde_json::from_reader(file).unwrap();
+    let mut spec = serde_json::from_reader(file).unwrap();
+
+    let file = File::open(extra_path).unwrap();
+    let extra = serde_json::from_reader(file).unwrap();
+
+    json_patch::merge(&mut spec, &extra);
+
+    //let final_spec : OpenAPI = serde_json::from_value(spec);
+
     let mut generator = Generator::new(
         GenerationSettings::default()
             .with_interface(progenitor::InterfaceStyle::Builder)
@@ -81,12 +91,14 @@ fn generate(
     // TODO I'd like to generate a hash as well to have a way to check if the
     // spec has changed since the last generation.
 
+    let final_spec = serde_json::from_value(spec).unwrap();
+
     // SDK
     if sdk {
         print!("generating sdk ... ");
         std::io::stdout().flush().unwrap();
 
-        let code = generator.generate_tokens(&spec).unwrap();
+        let code = generator.generate_tokens(&final_spec).unwrap();
         let contents = format_code(code.to_string());
         loc += contents.matches('\n').count();
 
@@ -102,7 +114,7 @@ fn generate(
     if httpmock {
         print!("generating httpmock ... ");
         std::io::stdout().flush().unwrap();
-        let code = generator.httpmock(&spec, "oxide").unwrap().to_string();
+        let code = generator.httpmock(&final_spec, "oxide").unwrap().to_string();
         let contents = format_code(code);
         loc += contents.matches('\n').count();
 
@@ -118,7 +130,7 @@ fn generate(
     if cli {
         print!("generating cli ... ");
         std::io::stdout().flush().unwrap();
-        let code = generator.cli(&spec, "oxide").unwrap().to_string();
+        let code = generator.cli(&final_spec, "oxide").unwrap().to_string();
         let contents = format_code(code);
         loc += contents.matches('\n').count();
 

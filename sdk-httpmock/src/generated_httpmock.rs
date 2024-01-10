@@ -138,6 +138,64 @@ pub mod operations {
         }
     }
 
+    pub struct DiskImportWhen(httpmock::When);
+    impl DiskImportWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/disk_import$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn description(self, value: &str) -> Self {
+            Self(self.0.query_param("description", value.to_string()))
+        }
+
+        pub fn project(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("project", value.to_string()))
+        }
+    }
+
+    pub struct DiskImportThen(httpmock::Then);
+    impl DiskImportThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self) -> Self {
+            Self(self.0.status(201u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct LoginSamlWhen(httpmock::When);
     impl LoginSamlWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -6227,6 +6285,91 @@ pub mod operations {
         }
     }
 
+    pub struct SledListUninitializedWhen(httpmock::When);
+    impl SledListUninitializedWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/hardware/sleds-uninitialized$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct SledListUninitializedThen(httpmock::Then);
+    impl SledListUninitializedThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::UninitializedSledResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct SledViewWhen(httpmock::When);
     impl SledViewWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -6548,91 +6691,6 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::SledProvisionStateResponse) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct SledListUninitializedWhen(httpmock::When);
-    impl SledListUninitializedWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(inner.method(httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/system/hardware/sleds-uninitialized$").unwrap(),
-            ))
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct SledListUninitializedThen(httpmock::Then);
-    impl SledListUninitializedThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::UninitializedSledResultsPage) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -7684,6 +7742,257 @@ pub mod operations {
         }
     }
 
+    pub struct IpPoolServiceViewWhen(httpmock::When);
+    impl IpPoolServiceViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/ip-pools-service$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct IpPoolServiceViewThen(httpmock::Then);
+    impl IpPoolServiceViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::IpPool) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct IpPoolServiceRangeListWhen(httpmock::When);
+    impl IpPoolServiceRangeListWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::GET).path_matches(
+                    regex::Regex::new("^/v1/system/ip-pools-service/ranges$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn limit<T>(self, value: T) -> Self
+        where
+            T: Into<Option<std::num::NonZeroU32>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("limit", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn page_token<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a str>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("page_token", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct IpPoolServiceRangeListThen(httpmock::Then);
+    impl IpPoolServiceRangeListThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::IpPoolRangeResultsPage) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct IpPoolServiceRangeAddWhen(httpmock::When);
+    impl IpPoolServiceRangeAddWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/ip-pools-service/ranges/add$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::IpRange) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolServiceRangeAddThen(httpmock::Then);
+    impl IpPoolServiceRangeAddThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn created(self, value: &types::IpPoolRange) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct IpPoolServiceRangeRemoveWhen(httpmock::When);
+    impl IpPoolServiceRangeRemoveWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::POST).path_matches(
+                regex::Regex::new("^/v1/system/ip-pools-service/ranges/remove$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::IpRange) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct IpPoolServiceRangeRemoveThen(httpmock::Then);
+    impl IpPoolServiceRangeRemoveThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct IpPoolViewWhen(httpmock::When);
     impl IpPoolViewWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -8379,257 +8688,6 @@ pub mod operations {
 
     pub struct IpPoolSiloUnlinkThen(httpmock::Then);
     impl IpPoolSiloUnlinkThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn no_content(self) -> Self {
-            Self(self.0.status(204u16))
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct IpPoolServiceViewWhen(httpmock::When);
-    impl IpPoolServiceViewWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/ip-pools-service$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-    }
-
-    pub struct IpPoolServiceViewThen(httpmock::Then);
-    impl IpPoolServiceViewThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::IpPool) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct IpPoolServiceRangeListWhen(httpmock::When);
-    impl IpPoolServiceRangeListWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner.method(httpmock::Method::GET).path_matches(
-                    regex::Regex::new("^/v1/system/ip-pools-service/ranges$").unwrap(),
-                ),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn limit<T>(self, value: T) -> Self
-        where
-            T: Into<Option<std::num::NonZeroU32>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("limit", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "limit"))
-                        .is_none()
-                }))
-            }
-        }
-
-        pub fn page_token<'a, T>(self, value: T) -> Self
-        where
-            T: Into<Option<&'a str>>,
-        {
-            if let Some(value) = value.into() {
-                Self(self.0.query_param("page_token", value.to_string()))
-            } else {
-                Self(self.0.matches(|req| {
-                    req.query_params
-                        .as_ref()
-                        .and_then(|qs| qs.iter().find(|(key, _)| key == "page_token"))
-                        .is_none()
-                }))
-            }
-        }
-    }
-
-    pub struct IpPoolServiceRangeListThen(httpmock::Then);
-    impl IpPoolServiceRangeListThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::IpPoolRangeResultsPage) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct IpPoolServiceRangeAddWhen(httpmock::When);
-    impl IpPoolServiceRangeAddWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(inner.method(httpmock::Method::POST).path_matches(
-                regex::Regex::new("^/v1/system/ip-pools-service/ranges/add$").unwrap(),
-            ))
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn body(self, value: &types::IpRange) -> Self {
-            Self(self.0.json_body_obj(value))
-        }
-    }
-
-    pub struct IpPoolServiceRangeAddThen(httpmock::Then);
-    impl IpPoolServiceRangeAddThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn created(self, value: &types::IpPoolRange) -> Self {
-            Self(
-                self.0
-                    .status(201u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
-    pub struct IpPoolServiceRangeRemoveWhen(httpmock::When);
-    impl IpPoolServiceRangeRemoveWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(inner.method(httpmock::Method::POST).path_matches(
-                regex::Regex::new("^/v1/system/ip-pools-service/ranges/remove$").unwrap(),
-            ))
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn body(self, value: &types::IpRange) -> Self {
-            Self(self.0.json_body_obj(value))
-        }
-    }
-
-    pub struct IpPoolServiceRangeRemoveThen(httpmock::Then);
-    impl IpPoolServiceRangeRemoveThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -11227,71 +11285,6 @@ pub mod operations {
         }
     }
 
-    pub struct SiloUserViewWhen(httpmock::When);
-    impl SiloUserViewWhen {
-        pub fn new(inner: httpmock::When) -> Self {
-            Self(
-                inner
-                    .method(httpmock::Method::GET)
-                    .path_matches(regex::Regex::new("^/v1/system/users/[^/]*$").unwrap()),
-            )
-        }
-
-        pub fn into_inner(self) -> httpmock::When {
-            self.0
-        }
-
-        pub fn user_id(self, value: &uuid::Uuid) -> Self {
-            let re =
-                regex::Regex::new(&format!("^/v1/system/users/{}$", value.to_string())).unwrap();
-            Self(self.0.path_matches(re))
-        }
-
-        pub fn silo(self, value: &types::NameOrId) -> Self {
-            Self(self.0.query_param("silo", value.to_string()))
-        }
-    }
-
-    pub struct SiloUserViewThen(httpmock::Then);
-    impl SiloUserViewThen {
-        pub fn new(inner: httpmock::Then) -> Self {
-            Self(inner)
-        }
-
-        pub fn into_inner(self) -> httpmock::Then {
-            self.0
-        }
-
-        pub fn ok(self, value: &types::User) -> Self {
-            Self(
-                self.0
-                    .status(200u16)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 4u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-
-        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
-            assert_eq!(status / 100u16, 5u16);
-            Self(
-                self.0
-                    .status(status)
-                    .header("content-type", "application/json")
-                    .json_body_obj(value),
-            )
-        }
-    }
-
     pub struct UserBuiltinListWhen(httpmock::When);
     impl UserBuiltinListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -11428,6 +11421,71 @@ pub mod operations {
         }
 
         pub fn ok(self, value: &types::UserBuiltin) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct SiloUserViewWhen(httpmock::When);
+    impl SiloUserViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/users/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn user_id(self, value: &uuid::Uuid) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/system/users/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn silo(self, value: &types::NameOrId) -> Self {
+            Self(self.0.query_param("silo", value.to_string()))
+        }
+    }
+
+    pub struct SiloUserViewThen(httpmock::Then);
+    impl SiloUserViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::User) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -13009,6 +13067,9 @@ pub trait MockServerExt {
     fn device_access_token<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::DeviceAccessTokenWhen, operations::DeviceAccessTokenThen);
+    fn disk_import<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskImportWhen, operations::DiskImportThen);
     fn login_saml<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::LoginSamlWhen, operations::LoginSamlThen);
@@ -13255,6 +13316,9 @@ pub trait MockServerExt {
     fn sled_add<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledAddWhen, operations::SledAddThen);
+    fn sled_list_uninitialized<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SledListUninitializedWhen, operations::SledListUninitializedThen);
     fn sled_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledViewWhen, operations::SledViewThen);
@@ -13267,9 +13331,6 @@ pub trait MockServerExt {
     fn sled_set_provision_state<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledSetProvisionStateWhen, operations::SledSetProvisionStateThen);
-    fn sled_list_uninitialized<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SledListUninitializedWhen, operations::SledListUninitializedThen);
     fn networking_switch_port_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
@@ -13327,6 +13388,21 @@ pub trait MockServerExt {
     fn ip_pool_create<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::IpPoolCreateWhen, operations::IpPoolCreateThen);
+    fn ip_pool_service_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolServiceViewWhen, operations::IpPoolServiceViewThen);
+    fn ip_pool_service_range_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolServiceRangeListWhen, operations::IpPoolServiceRangeListThen);
+    fn ip_pool_service_range_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolServiceRangeAddWhen, operations::IpPoolServiceRangeAddThen);
+    fn ip_pool_service_range_remove<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::IpPoolServiceRangeRemoveWhen,
+            operations::IpPoolServiceRangeRemoveThen,
+        );
     fn ip_pool_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::IpPoolViewWhen, operations::IpPoolViewThen);
@@ -13357,21 +13433,6 @@ pub trait MockServerExt {
     fn ip_pool_silo_unlink<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::IpPoolSiloUnlinkWhen, operations::IpPoolSiloUnlinkThen);
-    fn ip_pool_service_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::IpPoolServiceViewWhen, operations::IpPoolServiceViewThen);
-    fn ip_pool_service_range_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::IpPoolServiceRangeListWhen, operations::IpPoolServiceRangeListThen);
-    fn ip_pool_service_range_add<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::IpPoolServiceRangeAddWhen, operations::IpPoolServiceRangeAddThen);
-    fn ip_pool_service_range_remove<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(
-            operations::IpPoolServiceRangeRemoveWhen,
-            operations::IpPoolServiceRangeRemoveThen,
-        );
     fn system_metric<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SystemMetricWhen, operations::SystemMetricThen);
@@ -13525,15 +13586,15 @@ pub trait MockServerExt {
     fn silo_user_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SiloUserListWhen, operations::SiloUserListThen);
-    fn silo_user_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SiloUserViewWhen, operations::SiloUserViewThen);
     fn user_builtin_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::UserBuiltinListWhen, operations::UserBuiltinListThen);
     fn user_builtin_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::UserBuiltinViewWhen, operations::UserBuiltinViewThen);
+    fn silo_user_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloUserViewWhen, operations::SiloUserViewThen);
     fn silo_utilization_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SiloUtilizationListWhen, operations::SiloUtilizationListThen);
@@ -13623,6 +13684,18 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::DeviceAccessTokenWhen::new(when),
                 operations::DeviceAccessTokenThen::new(then),
+            )
+        })
+    }
+
+    fn disk_import<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::DiskImportWhen, operations::DiskImportThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::DiskImportWhen::new(when),
+                operations::DiskImportThen::new(then),
             )
         })
     }
@@ -14548,6 +14621,18 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
+    fn sled_list_uninitialized<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SledListUninitializedWhen, operations::SledListUninitializedThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SledListUninitializedWhen::new(when),
+                operations::SledListUninitializedThen::new(then),
+            )
+        })
+    }
+
     fn sled_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledViewWhen, operations::SledViewThen),
@@ -14592,18 +14677,6 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::SledSetProvisionStateWhen::new(when),
                 operations::SledSetProvisionStateThen::new(then),
-            )
-        })
-    }
-
-    fn sled_list_uninitialized<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SledListUninitializedWhen, operations::SledListUninitializedThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SledListUninitializedWhen::new(when),
-                operations::SledListUninitializedThen::new(then),
             )
         })
     }
@@ -14782,6 +14855,57 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
+    fn ip_pool_service_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolServiceViewWhen, operations::IpPoolServiceViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::IpPoolServiceViewWhen::new(when),
+                operations::IpPoolServiceViewThen::new(then),
+            )
+        })
+    }
+
+    fn ip_pool_service_range_list<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolServiceRangeListWhen, operations::IpPoolServiceRangeListThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::IpPoolServiceRangeListWhen::new(when),
+                operations::IpPoolServiceRangeListThen::new(then),
+            )
+        })
+    }
+
+    fn ip_pool_service_range_add<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::IpPoolServiceRangeAddWhen, operations::IpPoolServiceRangeAddThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::IpPoolServiceRangeAddWhen::new(when),
+                operations::IpPoolServiceRangeAddThen::new(then),
+            )
+        })
+    }
+
+    fn ip_pool_service_range_remove<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::IpPoolServiceRangeRemoveWhen,
+            operations::IpPoolServiceRangeRemoveThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::IpPoolServiceRangeRemoveWhen::new(when),
+                operations::IpPoolServiceRangeRemoveThen::new(then),
+            )
+        })
+    }
+
     fn ip_pool_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::IpPoolViewWhen, operations::IpPoolViewThen),
@@ -14898,57 +15022,6 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::IpPoolSiloUnlinkWhen::new(when),
                 operations::IpPoolSiloUnlinkThen::new(then),
-            )
-        })
-    }
-
-    fn ip_pool_service_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::IpPoolServiceViewWhen, operations::IpPoolServiceViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::IpPoolServiceViewWhen::new(when),
-                operations::IpPoolServiceViewThen::new(then),
-            )
-        })
-    }
-
-    fn ip_pool_service_range_list<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::IpPoolServiceRangeListWhen, operations::IpPoolServiceRangeListThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::IpPoolServiceRangeListWhen::new(when),
-                operations::IpPoolServiceRangeListThen::new(then),
-            )
-        })
-    }
-
-    fn ip_pool_service_range_add<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::IpPoolServiceRangeAddWhen, operations::IpPoolServiceRangeAddThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::IpPoolServiceRangeAddWhen::new(when),
-                operations::IpPoolServiceRangeAddThen::new(then),
-            )
-        })
-    }
-
-    fn ip_pool_service_range_remove<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(
-            operations::IpPoolServiceRangeRemoveWhen,
-            operations::IpPoolServiceRangeRemoveThen,
-        ),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::IpPoolServiceRangeRemoveWhen::new(when),
-                operations::IpPoolServiceRangeRemoveThen::new(then),
             )
         })
     }
@@ -15412,18 +15485,6 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
-    fn silo_user_view<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(operations::SiloUserViewWhen, operations::SiloUserViewThen),
-    {
-        self.mock(|when, then| {
-            config_fn(
-                operations::SiloUserViewWhen::new(when),
-                operations::SiloUserViewThen::new(then),
-            )
-        })
-    }
-
     fn user_builtin_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::UserBuiltinListWhen, operations::UserBuiltinListThen),
@@ -15444,6 +15505,18 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::UserBuiltinViewWhen::new(when),
                 operations::UserBuiltinViewThen::new(then),
+            )
+        })
+    }
+
+    fn silo_user_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::SiloUserViewWhen, operations::SiloUserViewThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::SiloUserViewWhen::new(when),
+                operations::SiloUserViewThen::new(then),
             )
         })
     }
