@@ -785,7 +785,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.9.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#d8b5a647317529a819e6453b7f7fe67b31500846"
+source = "git+https://github.com/oxidecomputer/dropshot#89c2fddb7bf914336ad87ad77f7269b61e1c64e9"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -830,7 +830,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.9.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#d8b5a647317529a819e6453b7f7fe67b31500846"
+source = "git+https://github.com/oxidecomputer/dropshot#89c2fddb7bf914336ad87ad77f7269b61e1c64e9"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2708,9 +2708,9 @@ dependencies = [
 
 [[package]]
 name = "serde_path_to_error"
-version = "0.1.14"
+version = "0.1.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4beec8bce849d58d06238cb50db2e1c417cfeafa4c63f692b15c82b7c80f8335"
+checksum = "ebd154a240de39fdebcf5775d2675c204d7c13cf39a4c697be6493c8e734337c"
 dependencies = [
  "itoa",
  "serde",
@@ -2885,9 +2885,9 @@ dependencies = [
 
 [[package]]
 name = "slog-bunyan"
-version = "2.4.0"
+version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "440fd32d0423c31e4f98d76c0b62ebdb847f905aa07357197e9b41ac620af97d"
+checksum = "dcaaf6e68789d3f0411f1e72bc443214ef252a1038b6e344836e50442541f190"
 dependencies = [
  "hostname",
  "slog",
