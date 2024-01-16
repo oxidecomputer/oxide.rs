@@ -257,6 +257,10 @@ impl<'a> NewCli<'a> {
     pub fn command(&self) -> &Command {
         &self.parser
     }
+
+    pub fn command_take(self) -> Command {
+        self.parser
+    }
 }
 
 impl<'a> CommandBuilder<'a> {
