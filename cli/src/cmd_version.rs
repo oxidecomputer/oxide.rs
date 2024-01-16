@@ -2,14 +2,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2024 Oxide Computer Company
 
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
-use oxide::Client;
+use oxide::{context::Context, Client};
 
-use crate::{context::Context, RunnableCmd};
+use crate::RunnableCmd;
 
 pub mod built_info {
     include!(concat!(env!("OUT_DIR"), "/built.rs"));

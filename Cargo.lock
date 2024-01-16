@@ -1922,7 +1922,9 @@ dependencies = [
  "base64 0.21.6",
  "chrono",
  "clap",
+ "dirs",
  "futures",
+ "http 0.2.11",
  "progenitor-client 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand",
  "regress",
@@ -1930,6 +1932,9 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
+ "thiserror",
+ "toml 0.8.8",
+ "toml_edit 0.21.0",
  "uuid",
 ]
 

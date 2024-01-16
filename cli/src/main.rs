@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2024 Oxide Computer Company
 
 #![forbid(unsafe_code)]
 
@@ -11,8 +11,8 @@ use std::net::IpAddr;
 use anyhow::Result;
 use async_trait::async_trait;
 use cli_builder::NewCli;
-use context::Context;
 use generated_cli::CliOverride;
+use oxide::context::Context;
 use oxide::types::{IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
 
 mod cli_builder;
@@ -23,8 +23,6 @@ mod cmd_docs;
 mod cmd_instance;
 
 mod cmd_version;
-mod config;
-mod context;
 #[allow(unused_mut)]
 #[allow(unused)] // TODO
 #[allow(unused_must_use)] // TODO

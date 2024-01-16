@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2024 Oxide Computer Company
 
 use crate::RunnableCmd;
 use anyhow::bail;
@@ -248,7 +248,7 @@ impl RunnableCmd for CmdDiskImport {
     fn is_subtree() -> bool {
         false
     }
-    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
+    async fn run(&self, ctx: &oxide::context::Context) -> Result<()> {
         let client = ctx.client()?;
 
         if !Path::new(&self.path).exists() {

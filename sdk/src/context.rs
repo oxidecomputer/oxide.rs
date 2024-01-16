@@ -2,16 +2,17 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2024 Oxide Computer Company
 
 use std::{net::SocketAddr, time::Duration};
 
-use anyhow::{anyhow, Result};
 use http::HeaderValue;
-use oxide::Client;
 use reqwest::ClientBuilder;
 
-use crate::{cli_builder::ResolveValue, config::Config};
+use crate::{
+    config::{Config, ResolveValue},
+    Client, OxideError,
+};
 
 pub struct Context {
     client: Option<Client>,
@@ -19,15 +20,15 @@ pub struct Context {
 }
 
 impl Context {
-    pub fn new(config: Config) -> Result<Self> {
+    pub fn new(config: Config) -> Result<Self, OxideError> {
         let client = get_client(&config)?;
         Ok(Self { client, config })
     }
 
-    pub fn client(&self) -> Result<&Client> {
+    pub fn client(&self) -> Result<&Client, OxideError> {
         self.client
             .as_ref()
-            .ok_or_else(|| anyhow!("no authenticated hosts"))
+            .ok_or_else(|| OxideError::NoAuthenticatedHosts)
     }
 
     pub fn config(&self) -> &Config {
@@ -35,16 +36,12 @@ impl Context {
     }
 }
 
-fn get_client(config: &Config) -> Result<Option<Client>> {
+fn get_client(config: &Config) -> Result<Option<Client>, OxideError> {
     let (host, token) = match (std::env::var("OXIDE_HOST"), std::env::var("OXIDE_TOKEN")) {
         (Ok(host), Ok(token)) => (host, token),
         (Ok(host), Err(_)) => {
             let Some(host_entry) = config.hosts.get(&host) else {
-                return Err(anyhow!(
-                    "$OXIDE_HOST is set, but {} has no corresponding token.\n{}",
-                    host,
-                    "Login without $OXIDE_HOST set or set $OXIDE_TOKEN."
-                ));
+                return Err(OxideError::MissingToken(host));
             };
             (host, host_entry.token.clone())
         }
