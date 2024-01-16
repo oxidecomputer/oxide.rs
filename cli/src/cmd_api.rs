@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2024 Oxide Computer Company
 
 use std::{
     collections::HashMap,
@@ -98,7 +98,7 @@ pub struct PaginatedResponse {
 
 #[async_trait]
 impl RunnableCmd for CmdApi {
-    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
+    async fn run(&self, ctx: &oxide::context::Context) -> Result<()> {
         // Make sure the endpoint starts with a slash.
         let endpoint = if self.endpoint.starts_with('/') {
             self.endpoint.clone()
@@ -294,7 +294,7 @@ impl CmdApi {
 
     fn parse_fields(
         &self,
-        _ctx: &crate::context::Context,
+        _ctx: &oxide::context::Context,
     ) -> Result<HashMap<String, serde_json::Value>> {
         let mut params: HashMap<String, serde_json::Value> = HashMap::new();
 
@@ -372,7 +372,7 @@ impl CmdApi {
 }
 
 fn print_headers(
-    _ctx: &crate::context::Context,
+    _ctx: &oxide::context::Context,
     headers: &reqwest::header::HeaderMap,
 ) -> Result<()> {
     let mut names: Vec<String> = headers.keys().map(|k| k.as_str().to_string()).collect();

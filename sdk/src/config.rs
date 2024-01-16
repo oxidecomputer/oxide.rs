@@ -2,17 +2,52 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2024 Oxide Computer Company
 
+use core::str::FromStr;
 use std::fs::create_dir_all;
+use std::net::IpAddr;
 use std::{collections::HashMap, path::PathBuf};
 
-use anyhow::Result;
+use crate::OxideError;
 use serde::{Deserialize, Serialize};
 use toml_edit::{Item, Table};
 use uuid::Uuid;
 
-use crate::cli_builder::ResolveValue;
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ResolveValue {
+    pub host: String,
+    pub port: u16,
+    pub addr: IpAddr,
+}
+
+impl FromStr for ResolveValue {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        let values = s.splitn(3, ':').collect::<Vec<_>>();
+        let [host, port, addr] = values.as_slice() else {
+            return Err(r#"value must be "host:port:addr"#.to_string());
+        };
+
+        let host = host.to_string();
+        let port = port
+            .parse()
+            .map_err(|_| format!("error parsing port '{}'", port))?;
+
+        // `IpAddr::parse()` does not accept enclosing brackets on IPv6
+        // addresses; strip them off if they exist.
+        let addr = addr
+            .strip_prefix('[')
+            .and_then(|s| s.strip_suffix(']'))
+            .unwrap_or(addr);
+        let addr = addr
+            .parse()
+            .map_err(|_| format!("error parsing address '{}'", addr))?;
+
+        Ok(Self { host, port, addr })
+    }
+}
 
 pub struct Config {
     pub client_id: Uuid,
@@ -76,7 +111,7 @@ impl Config {
         }
     }
 
-    pub fn update_host(&self, hostname: String, host_entry: Host) -> Result<()> {
+    pub fn update_host(&self, hostname: String, host_entry: Host) -> Result<(), OxideError> {
         let mut dir = dirs::home_dir().unwrap();
         dir.push(".config");
         dir.push("oxide");
@@ -84,7 +119,9 @@ impl Config {
 
         let hosts_path = dir.join("hosts.toml");
         let mut hosts = if let Ok(contents) = std::fs::read_to_string(hosts_path.clone()) {
-            contents.parse::<toml_edit::Document>()?
+            contents
+                .parse::<toml_edit::Document>()
+                .map_err(OxideError::TomlError)?
         } else {
             Default::default()
         };
@@ -108,7 +145,7 @@ impl Config {
             table.insert("default", toml_edit::value(default));
         }
 
-        std::fs::write(hosts_path, hosts.to_string())?;
+        std::fs::write(hosts_path, hosts.to_string()).map_err(OxideError::IoError)?;
 
         Ok(())
     }

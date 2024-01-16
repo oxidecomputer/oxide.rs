@@ -2,9 +2,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2024 Oxide Computer Company
 
-use std::{collections::BTreeMap, marker::PhantomData, net::IpAddr, path::PathBuf, str::FromStr};
+use std::{collections::BTreeMap, marker::PhantomData, path::PathBuf};
 
 use anyhow::{bail, Result};
 use async_trait::async_trait;
@@ -12,10 +12,12 @@ use clap::{ArgMatches, Command, CommandFactory, FromArgMatches};
 use log::LevelFilter;
 
 use crate::{
-    config::Config,
-    context::Context,
     generated_cli::{Cli, CliCommand},
     OxideOverride, RunnableCmd,
+};
+use oxide::{
+    config::{Config, ResolveValue},
+    context::Context,
 };
 
 #[derive(clap::Parser, Debug, Clone)]
@@ -44,41 +46,6 @@ struct OxideCli {
     /// Timeout value for individual API invocations
     #[clap(long, value_name = "SECONDS")]
     pub timeout: Option<u64>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ResolveValue {
-    pub host: String,
-    pub port: u16,
-    pub addr: IpAddr,
-}
-
-impl FromStr for ResolveValue {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        let values = s.splitn(3, ':').collect::<Vec<_>>();
-        let [host, port, addr] = values.as_slice() else {
-            return Err(r#"value must be "host:port:addr"#.to_string());
-        };
-
-        let host = host.to_string();
-        let port = port
-            .parse()
-            .map_err(|_| format!("error parsing port '{}'", port))?;
-
-        // `IpAddr::parse()` does not accept enclosing brackets on IPv6
-        // addresses; strip them off if they exist.
-        let addr = addr
-            .strip_prefix('[')
-            .and_then(|s| s.strip_suffix(']'))
-            .unwrap_or(addr);
-        let addr = addr
-            .parse()
-            .map_err(|_| format!("error parsing address '{}'", addr))?;
-
-        Ok(Self { host, port, addr })
-    }
 }
 
 #[async_trait]
