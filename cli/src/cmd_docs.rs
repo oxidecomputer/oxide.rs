@@ -49,10 +49,15 @@ pub struct JsonDoc {
 }
 
 fn to_json(cmd: &Command) -> JsonDoc {
-    let mut subcommands = cmd.get_subcommands().map(to_json).collect::<Vec<_>>();
+    let mut subcommands = cmd
+        .get_subcommands()
+        .filter(|cmd| cmd.get_name() != "help")
+        .map(to_json)
+        .collect::<Vec<_>>();
     subcommands.sort_unstable_by(|a, b| a.name.cmp(&b.name));
     let mut args = cmd
         .get_arguments()
+        .filter(|arg| arg.get_long() != Some("help"))
         .filter(|arg| arg.get_short().is_some() || arg.get_long().is_some())
         .map(|arg| JsonArg {
             short: arg.get_short().map(|char| char.to_string()),
@@ -88,8 +93,9 @@ fn to_json(cmd: &Command) -> JsonDoc {
 impl RunnableCmd for CmdDocs {
     async fn run(&self, _ctx: &Context) -> Result<()> {
         let cli = crate::make_cli();
-        let app = cli.command();
-        let json_doc = to_json(app);
+        let mut app = cli.command_take();
+        app.build();
+        let json_doc = to_json(&app);
         let pretty_json = serde_json::to_string_pretty(&json_doc)?;
         println!("{}", pretty_json);
         Ok(())
