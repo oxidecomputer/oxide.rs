@@ -736,7 +736,7 @@ fn test_disk_import_required_parameters() {
     bad_path.push("does.not.exist");
 
     let output = format!(
-        "path {} does not exist",
+        "Invalid Request: path {} does not exist",
         bad_path.clone().into_os_string().to_str().unwrap()
     );
 
