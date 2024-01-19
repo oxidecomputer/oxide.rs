@@ -10,9 +10,9 @@ resolver = "2"
 
 [workspace.dependencies]
 anyhow = "1.0.79"
-assert_cmd = "2.0.12"
+assert_cmd = "2.0.13"
 async-trait = "0.1.77"
-base64 = "0.21.6"
+base64 = "0.21.7"
 built = { version = "0.6.1", features = ["git2"] }
 chrono = { version = "0.4.31", features = ["serde"] }
 clap = { version = "4.4", features = ["derive", "string", "env"] }
@@ -31,7 +31,7 @@ oauth2 = "4.4.2"
 open = "4.2.0"
 oxide = { path = "sdk", version = "0.2.0" }
 oxide-httpmock = { path = "sdk-httpmock", version = "0.2.0" }
-predicates = "3.0.4"
+predicates = "3.1.0"
 pretty_assertions = "1.4.0"
 progenitor = { git = "https://github.com/oxidecomputer/progenitor" }
 progenitor-client = "0.5.0"
