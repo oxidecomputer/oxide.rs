@@ -278,6 +278,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceStart => Some("instance start"),
         CliCommand::InstanceStop => Some("instance stop"),
         CliCommand::InstanceExternalIpList => Some("instance external-ip list"),
+        CliCommand::InstanceEphemeralIpAttach => Some("instance external-ip attach-ephemeral"),
+        CliCommand::InstanceEphemeralIpDetach => Some("instance external-ip detach-ephemeral"),
 
         CliCommand::ProjectList => Some("project list"),
         CliCommand::ProjectCreate => Some("project create"),
@@ -467,6 +469,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::FloatingIpList => Some("floating-ip list"),
         CliCommand::FloatingIpCreate => Some("floating-ip create"),
         CliCommand::FloatingIpDelete => Some("floating-ip delete"),
+        CliCommand::FloatingIpAttach => Some("floating-ip attach"),
+        CliCommand::FloatingIpDetach => Some("floating-ip detach"),
 
         CliCommand::Ping => Some("ping"),
 
