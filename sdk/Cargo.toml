@@ -13,7 +13,6 @@ chrono = { workspace = true }
 clap = { workspace = true, optional = true }
 dirs = { workspace = true }
 futures = { workspace = true }
-http = { workspace = true }
 progenitor-client = { workspace = true }
 rand = { workspace = true }
 regress = { workspace = true }
