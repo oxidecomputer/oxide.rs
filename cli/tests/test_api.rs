@@ -19,11 +19,12 @@ fn test_simple_api_call() {
             .path("/simple/test/call")
             .query_param("param1", "value1")
             .query_param("param2", "value2");
-        then.status(http::StatusCode::OK.as_u16()).json_body(json!(
-            {
-                "a": "b"
-            }
-        ));
+        then.status(reqwest::StatusCode::OK.as_u16())
+            .json_body(json!(
+                {
+                    "a": "b"
+                }
+            ));
     });
 
     Command::cargo_bin("oxide")
@@ -85,28 +86,28 @@ fn test_pagination_success() {
             .path("/paginated")
             .query_param("param1", "value1")
             .query_param("param2", "value2");
-        then.status(http::StatusCode::OK.as_u16())
+        then.status(reqwest::StatusCode::OK.as_u16())
             .json_body_obj(&page1);
     });
     let mock_p2 = server.mock(|when, then| {
         when.method(GET)
             .path("/paginated")
             .query_param("page_token", "page-2");
-        then.status(http::StatusCode::OK.as_u16())
+        then.status(reqwest::StatusCode::OK.as_u16())
             .json_body_obj(&page2);
     });
     let mock_p3 = server.mock(|when, then| {
         when.method(GET)
             .path("/paginated")
             .query_param("page_token", "page-3");
-        then.status(http::StatusCode::OK.as_u16())
+        then.status(reqwest::StatusCode::OK.as_u16())
             .json_body_obj(&page3);
     });
     let mock_p4 = server.mock(|when, then| {
         when.method(GET)
             .path("/paginated")
             .query_param("page_token", "page-4");
-        then.status(http::StatusCode::OK.as_u16())
+        then.status(reqwest::StatusCode::OK.as_u16())
             .json_body_obj(&page4);
     });
 
@@ -160,21 +161,21 @@ fn test_pagination_midway_failure() {
             .path("/paginated")
             .query_param("param1", "value1")
             .query_param("param2", "value2");
-        then.status(http::StatusCode::OK.as_u16())
+        then.status(reqwest::StatusCode::OK.as_u16())
             .json_body_obj(&page1);
     });
     let mock_p2 = server.mock(|when, then| {
         when.method(GET)
             .path("/paginated")
             .query_param("page_token", "page-2");
-        then.status(http::StatusCode::OK.as_u16())
+        then.status(reqwest::StatusCode::OK.as_u16())
             .json_body_obj(&page2);
     });
     let mock_p3 = server.mock(|when, then| {
         when.method(GET)
             .path("/paginated")
             .query_param("page_token", "page-3");
-        then.status(http::StatusCode::NOT_FOUND.as_u16())
+        then.status(reqwest::StatusCode::NOT_FOUND.as_u16())
             .json_body(json!({ "oh": "noes!" }));
     });
 

@@ -27,7 +27,6 @@ dialoguer = { workspace = true }
 dirs = { workspace = true }
 env_logger = { workspace = true }
 futures = { workspace = true }
-http = { workspace = true }
 indicatif = { workspace = true }
 log = { workspace = true }
 oauth2 = { workspace = true }
