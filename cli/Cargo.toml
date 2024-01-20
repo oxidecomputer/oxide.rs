@@ -34,15 +34,11 @@ open = { workspace = true }
 oxide = { workspace = true }
 predicates = { workspace = true }
 reqwest = { workspace = true, features = ["native-tls-vendored"] }
-schemars = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 tabwriter = { workspace = true }
 thouart = { workspace = true }
 tokio = { workspace = true }
-tokio-tungstenite = { workspace = true }
-toml = { workspace = true }
-toml_edit = { workspace = true }
 url = { workspace = true }
 uuid = { workspace = true }
 
@@ -56,7 +52,6 @@ predicates = { workspace = true }
 pretty_assertions = { workspace = true }
 rcgen = { workspace = true }
 rand = { workspace = true, features = ["small_rng"] }
-serial_test = { workspace = true }
 tempfile = { workspace = true }
 test-common = { workspace = true }
 
