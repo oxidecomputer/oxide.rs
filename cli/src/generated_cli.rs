@@ -186,6 +186,7 @@ impl Cli {
             CliCommand::SiloCreate => Self::cli_silo_create(),
             CliCommand::SiloView => Self::cli_silo_view(),
             CliCommand::SiloDelete => Self::cli_silo_delete(),
+            CliCommand::SiloIpPoolList => Self::cli_silo_ip_pool_list(),
             CliCommand::SiloPolicyView => Self::cli_silo_policy_view(),
             CliCommand::SiloPolicyUpdate => Self::cli_silo_policy_update(),
             CliCommand::SiloQuotasView => Self::cli_silo_quotas_view(),
@@ -4088,7 +4089,7 @@ impl Cli {
                     .help("Name or ID of the silo"),
             )
             .about("Fetch a silo")
-            .long_about("Fetch a silo by name.")
+            .long_about("Fetch a silo by name or ID.")
     }
 
     pub fn cli_silo_delete() -> clap::Command {
@@ -4102,6 +4103,38 @@ impl Cli {
             )
             .about("Delete a silo")
             .long_about("Delete a silo by name.")
+    }
+
+    pub fn cli_silo_ip_pool_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List IP pools available within silo")
     }
 
     pub fn cli_silo_policy_view() -> clap::Command {
@@ -5298,6 +5331,9 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SiloDelete => {
                 self.execute_silo_delete(matches).await;
+            }
+            CliCommand::SiloIpPoolList => {
+                self.execute_silo_ip_pool_list(matches).await;
             }
             CliCommand::SiloPolicyView => {
                 self.execute_silo_policy_view(matches).await;
@@ -8394,7 +8430,7 @@ impl<T: CliOverride> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolSiloLink>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::IpPoolLinkSilo>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -9352,6 +9388,40 @@ impl<T: CliOverride> Cli<T> {
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_silo_ip_pool_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_ip_pool_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_silo_ip_pool_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -11215,6 +11285,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_silo_ip_pool_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SiloIpPoolList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_silo_policy_view(
         &self,
         matches: &clap::ArgMatches,
@@ -11558,6 +11636,7 @@ pub enum CliCommand {
     SiloCreate,
     SiloView,
     SiloDelete,
+    SiloIpPoolList,
     SiloPolicyView,
     SiloPolicyUpdate,
     SiloQuotasView,
@@ -11727,6 +11806,7 @@ impl CliCommand {
             CliCommand::SiloCreate,
             CliCommand::SiloView,
             CliCommand::SiloDelete,
+            CliCommand::SiloIpPoolList,
             CliCommand::SiloPolicyView,
             CliCommand::SiloPolicyUpdate,
             CliCommand::SiloQuotasView,
