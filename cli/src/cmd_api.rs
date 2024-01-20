@@ -54,7 +54,7 @@ pub struct CmdApi {
 
     /// The HTTP method for the request.
     #[clap(short = 'X', long)]
-    pub method: Option<http::method::Method>,
+    pub method: Option<reqwest::Method>,
 
     /// Make additional HTTP requests to fetch all pages of results.
     #[clap(long, conflicts_with = "input")]
@@ -122,12 +122,12 @@ impl RunnableCmd for CmdApi {
         let method = if let Some(m) = &self.method {
             m.clone()
         } else if !params.is_empty() {
-            http::method::Method::POST
+            reqwest::Method::POST
         } else {
-            http::method::Method::GET
+            reqwest::Method::GET
         };
 
-        if self.paginate && method != http::method::Method::GET {
+        if self.paginate && method != reqwest::Method::GET {
             return Err(anyhow!(
                 "the `--paginate` option is only compatible with GET requests",
             ));
@@ -200,7 +200,7 @@ impl RunnableCmd for CmdApi {
             print_headers(ctx, resp.headers())?;
         }
 
-        if resp.status() == http::StatusCode::NO_CONTENT {
+        if resp.status() == reqwest::StatusCode::NO_CONTENT {
             return Ok(());
         }
 

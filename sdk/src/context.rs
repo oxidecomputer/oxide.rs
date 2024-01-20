@@ -6,7 +6,6 @@
 
 use std::{net::SocketAddr, time::Duration};
 
-use http::HeaderValue;
 use reqwest::ClientBuilder;
 
 use crate::{
@@ -70,10 +69,11 @@ pub fn make_rclient(token: Option<String>, config: &Config) -> reqwest::ClientBu
     let mut client_builder = ClientBuilder::new().connect_timeout(Duration::from_secs(15));
 
     if let Some(token) = token {
-        let mut bearer = HeaderValue::from_str(format!("Bearer {}", token).as_str()).unwrap();
+        let mut bearer =
+            reqwest::header::HeaderValue::from_str(format!("Bearer {}", token).as_str()).unwrap();
         bearer.set_sensitive(true);
         client_builder = client_builder.default_headers(
-            [(http::header::AUTHORIZATION, bearer)]
+            [(reqwest::header::AUTHORIZATION, bearer)]
                 .into_iter()
                 .collect(),
         );
