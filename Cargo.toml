@@ -22,7 +22,7 @@ dropshot = { git = "https://github.com/oxidecomputer/dropshot" }
 env_logger = "0.10.1"
 expectorate = { version = "1.1.0", features = ["predicates"] }
 futures = "0.3.30"
-http = "0.2.11"
+http = "1.0.0"
 httpmock = "0.6.8"
 indicatif = "0.17"
 log = "0.4.20"
