@@ -41,7 +41,7 @@ augment commands that cannot be fully or optimally generated.
 
 There are several steps to releasing a new version.
 
-### Determining the version number
+### Determine the version number
 
 The CLI, SDK, and mocking library all carry the same version number which
 follows this pattern:
