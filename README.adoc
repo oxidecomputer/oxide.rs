@@ -1,12 +1,12 @@
 # Oxide SDK and CLI
 
-This repo contains two published crates: the Oxide Rust SDK and the Oxide CLI.
-The SDK and CLI are derived from the Oxide API OpenAPI spec and provide
-interfaces for interacting with the Oxide Rack.
+This repo contains the CLI, Rust SDK, and SDK mocking library. The CLI is
+released as binaries for various operating systens. The SDK and mocking library
+published to crates.io. All are derived from the Oxide API OpenAPI spec.
 
 ## Generation
 
-Both the SDK and CLI rely on
+Generation of the CLI, SDK, and mocking library
 https://github.com/oxidecomputer/progenitor[`progenitor`] for code generation
 from the OpenAPI description of the Oxide API. Typically `progenitor` is used
 via a macro or `build.rs`, here we use an
@@ -36,3 +36,35 @@ block so that the `ByteCount` type can be specified with a binary suffix (e.g.
 The CLI includes hand-written code for some of the blocking and tackling. It
 also has hand-written code to add additional subcommands (e.g. `auth`) and to
 augment commands that cannot be fully or optimally generated.
+
+## Releasing a new version
+
+There are several steps to releasing a new version.
+
+### Determining the version number
+
+The CLI, SDK, and mocking library all carry the same version number which
+follows this pattern:
+
+MAJOR.MINOR.PATCH+API_VERSION
+
+The version number is incremented according to semver. This means that both API
+incompatibilities **and** generation incompatibilities need to be taken into
+account. The version of the API appears as, effectively, a comment suffix. This
+allows users to reasonably recognize the proper version for the version of the
+Oxide API currently deployed in their environment.
+
+### Update Cargo.toml files
+
+Update Cargo.toml for the workspace, CLI, SDK, and mocking library. Commit
+changes.
+
+### Publish crates
+
+Use `cargo publish -p oxide` and `cargo publish -p oxide-httpmock`.
+
+### Release the CLI
+
+Tag the repo with the version number (`vMAJOR.MINOR.PATCH+API_VERSION`) and
+push change and tags. This will kick off the `cargo-dist` workflow to generate
+a release with binaries.
