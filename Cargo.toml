@@ -19,7 +19,7 @@ clap = { version = "4.4", features = ["derive", "string", "env"] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
 dropshot = { git = "https://github.com/oxidecomputer/dropshot" }
-env_logger = "0.10.1"
+env_logger = "0.10.2"
 expectorate = { version = "1.1.0", features = ["predicates"] }
 futures = "0.3.30"
 httpmock = "0.6.8"
@@ -36,7 +36,7 @@ progenitor = { git = "https://github.com/oxidecomputer/progenitor" }
 progenitor-client = "0.5.0"
 rand = "0.8.5"
 rcgen = "0.10.0"
-regex = "1.10.2"
+regex = "1.10.3"
 regress = "0.7.1"
 reqwest = "0.11.23"
 rustfmt-wrapper = "0.2.1"
@@ -53,7 +53,7 @@ tokio = { version = "1.35.1", features = ["full"] }
 toml = "0.8.2"
 toml_edit = "0.21.0"
 url = "2.5.0"
-uuid = { version = "1.6.1", features = ["serde", "v4"] }
+uuid = { version = "1.7.0", features = ["serde", "v4"] }
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]
