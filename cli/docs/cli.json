@@ -2050,6 +2050,33 @@
           ]
         },
         {
+          "name": "ip-pool",
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List IP pools available within silo",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "silo",
+                  "help": "Name or ID of the silo"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "list",
           "about": "List silos",
           "long_about": "Lists silos that are discoverable based on the current permissions.",
@@ -2238,7 +2265,7 @@
         {
           "name": "view",
           "about": "Fetch a silo",
-          "long_about": "Fetch a silo by name.",
+          "long_about": "Fetch a silo by name or ID.",
           "args": [
             {
               "long": "silo",
