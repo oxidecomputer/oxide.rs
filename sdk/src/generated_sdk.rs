@@ -5763,6 +5763,48 @@ pub mod types {
         }
     }
 
+    /// Parameters for creating an ephemeral IP address for an instance.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for creating an ephemeral IP address for an
+    /// instance.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "pool": {
+    ///      "description": "Name or ID of the IP pool used to allocate an
+    /// address",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct EphemeralIpCreate {
+        /// Name or ID of the IP pool used to allocate an address
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub pool: Option<NameOrId>,
+    }
+
+    impl From<&EphemeralIpCreate> for EphemeralIpCreate {
+        fn from(value: &EphemeralIpCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl EphemeralIpCreate {
+        pub fn builder() -> builder::EphemeralIpCreate {
+            Default::default()
+        }
+    }
+
     /// Error information from a response.
     ///
     /// <details><summary>JSON schema</summary>
@@ -5815,38 +5857,137 @@ pub mod types {
     ///
     /// ```json
     /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "ip",
-    ///    "kind"
-    ///  ],
-    ///  "properties": {
-    ///    "ip": {
-    ///      "type": "string",
-    ///      "format": "ip"
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "ip",
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "ip": {
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        },
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "ephemeral"
+    ///          ]
+    ///        }
+    ///      }
     ///    },
-    ///    "kind": {
-    ///      "$ref": "#/components/schemas/IpKind"
+    ///    {
+    ///      "description": "A Floating IP is a well-known IP address which can
+    /// be attached and detached from instances.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "description",
+    ///        "id",
+    ///        "ip",
+    ///        "kind",
+    ///        "name",
+    ///        "project_id",
+    ///        "time_created",
+    ///        "time_modified"
+    ///      ],
+    ///      "properties": {
+    ///        "description": {
+    ///          "description": "human-readable free-form text about a
+    /// resource",
+    ///          "type": "string"
+    ///        },
+    ///        "id": {
+    ///          "description": "unique, immutable, system-controlled identifier
+    /// for each resource",
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "instance_id": {
+    ///          "description": "The ID of the instance that this Floating IP is
+    /// attached to, if it is presently in use.",
+    ///          "type": [
+    ///            "string",
+    ///            "null"
+    ///          ],
+    ///          "format": "uuid"
+    ///        },
+    ///        "ip": {
+    ///          "description": "The IP address held by this resource.",
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        },
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "floating"
+    ///          ]
+    ///        },
+    ///        "name": {
+    ///          "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
+    ///        },
+    ///        "project_id": {
+    ///          "description": "The project this resource exists within.",
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "time_created": {
+    ///          "description": "timestamp when this resource was created",
+    ///          "type": "string",
+    ///          "format": "date-time"
+    ///        },
+    ///        "time_modified": {
+    ///          "description": "timestamp when this resource was last
+    /// modified",
+    ///          "type": "string",
+    ///          "format": "date-time"
+    ///        }
+    ///      }
     ///    }
-    ///  }
+    ///  ]
     /// }
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct ExternalIp {
-        pub ip: std::net::IpAddr,
-        pub kind: IpKind,
+    #[serde(tag = "kind")]
+    pub enum ExternalIp {
+        #[serde(rename = "ephemeral")]
+        Ephemeral { ip: std::net::IpAddr },
+        /// A Floating IP is a well-known IP address which can be attached and
+        /// detached from instances.
+        #[serde(rename = "floating")]
+        Floating {
+            /// human-readable free-form text about a resource
+            description: String,
+            /// unique, immutable, system-controlled identifier for each
+            /// resource
+            id: uuid::Uuid,
+            /// The ID of the instance that this Floating IP is attached to, if
+            /// it is presently in use.
+            #[serde(default, skip_serializing_if = "Option::is_none")]
+            instance_id: Option<uuid::Uuid>,
+            /// The IP address held by this resource.
+            ip: std::net::IpAddr,
+            /// unique, mutable, user-controlled identifier for each resource
+            name: Name,
+            /// The project this resource exists within.
+            project_id: uuid::Uuid,
+            /// timestamp when this resource was created
+            time_created: chrono::DateTime<chrono::offset::Utc>,
+            /// timestamp when this resource was last modified
+            time_modified: chrono::DateTime<chrono::offset::Utc>,
+        },
     }
 
     impl From<&ExternalIp> for ExternalIp {
         fn from(value: &ExternalIp) -> Self {
             value.clone()
-        }
-    }
-
-    impl ExternalIp {
-        pub fn builder() -> builder::ExternalIp {
-            Default::default()
         }
     }
 
@@ -5862,16 +6003,16 @@ pub mod types {
     ///    {
     ///      "description": "An IP address providing both inbound and outbound
     /// access. The address is automatically-assigned from the provided IP Pool,
-    /// or all available pools if not specified.",
+    /// or the current silo's default pool if not specified.",
     ///      "type": "object",
     ///      "required": [
     ///        "type"
     ///      ],
     ///      "properties": {
-    ///        "pool_name": {
+    ///        "pool": {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/Name"
+    ///              "$ref": "#/components/schemas/NameOrId"
     ///            }
     ///          ]
     ///        },
@@ -5885,17 +6026,17 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "An IP address providing both inbound and outbound
-    /// access. The address is an existing Floating IP object assigned to the
+    /// access. The address is an existing floating IP object assigned to the
     /// current project.\n\nThe floating IP must not be in use by another
     /// instance or service.",
     ///      "type": "object",
     ///      "required": [
-    ///        "floating_ip_name",
+    ///        "floating_ip",
     ///        "type"
     ///      ],
     ///      "properties": {
-    ///        "floating_ip_name": {
-    ///          "$ref": "#/components/schemas/Name"
+    ///        "floating_ip": {
+    ///          "$ref": "#/components/schemas/NameOrId"
     ///        },
     ///        "type": {
     ///          "type": "string",
@@ -5913,20 +6054,20 @@ pub mod types {
     #[serde(tag = "type")]
     pub enum ExternalIpCreate {
         /// An IP address providing both inbound and outbound access. The
-        /// address is automatically-assigned from the provided IP Pool, or all
-        /// available pools if not specified.
+        /// address is automatically-assigned from the provided IP Pool, or the
+        /// current silo's default pool if not specified.
         #[serde(rename = "ephemeral")]
         Ephemeral {
             #[serde(default, skip_serializing_if = "Option::is_none")]
-            pool_name: Option<Name>,
+            pool: Option<NameOrId>,
         },
         /// An IP address providing both inbound and outbound access. The
-        /// address is an existing Floating IP object assigned to the current
+        /// address is an existing floating IP object assigned to the current
         /// project.
         ///
         /// The floating IP must not be in use by another instance or service.
         #[serde(rename = "floating")]
-        Floating { floating_ip_name: Name },
+        Floating { floating_ip: NameOrId },
     }
 
     impl From<&ExternalIpCreate> for ExternalIpCreate {
@@ -6329,6 +6470,62 @@ pub mod types {
         }
     }
 
+    /// Parameters for attaching a floating IP address to another resource
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for attaching a floating IP address to
+    /// another resource",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "kind",
+    ///    "parent"
+    ///  ],
+    ///  "properties": {
+    ///    "kind": {
+    ///      "description": "The type of `parent`'s resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/FloatingIpParentKind"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "parent": {
+    ///      "description": "Name or ID of the resource that this IP address
+    /// should be attached to",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct FloatingIpAttach {
+        /// The type of `parent`'s resource
+        pub kind: FloatingIpParentKind,
+        /// Name or ID of the resource that this IP address should be attached
+        /// to
+        pub parent: NameOrId,
+    }
+
+    impl From<&FloatingIpAttach> for FloatingIpAttach {
+        fn from(value: &FloatingIpAttach) -> Self {
+            value.clone()
+        }
+    }
+
+    impl FloatingIpAttach {
+        pub fn builder() -> builder::FloatingIpAttach {
+            Default::default()
+        }
+    }
+
     /// Parameters for creating a new floating IP address for instances.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6398,6 +6595,84 @@ pub mod types {
     impl FloatingIpCreate {
         pub fn builder() -> builder::FloatingIpCreate {
             Default::default()
+        }
+    }
+
+    /// The type of resource that a floating IP is attached to
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The type of resource that a floating IP is attached
+    /// to",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "instance"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum FloatingIpParentKind {
+        #[serde(rename = "instance")]
+        Instance,
+    }
+
+    impl From<&FloatingIpParentKind> for FloatingIpParentKind {
+        fn from(value: &FloatingIpParentKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for FloatingIpParentKind {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Instance => "instance".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for FloatingIpParentKind {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "instance" => Ok(Self::Instance),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for FloatingIpParentKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for FloatingIpParentKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for FloatingIpParentKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -9259,88 +9534,6 @@ pub mod types {
     }
 
     impl std::convert::TryFrom<String> for InstanceState {
-        type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    /// The kind of an external IP address for an instance
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The kind of an external IP address for an instance",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "ephemeral",
-    ///    "floating"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        Deserialize,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        Serialize,
-        schemars :: JsonSchema,
-    )]
-    pub enum IpKind {
-        #[serde(rename = "ephemeral")]
-        Ephemeral,
-        #[serde(rename = "floating")]
-        Floating,
-    }
-
-    impl From<&IpKind> for IpKind {
-        fn from(value: &IpKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ToString for IpKind {
-        fn to_string(&self) -> String {
-            match *self {
-                Self::Ephemeral => "ephemeral".to_string(),
-                Self::Floating => "floating".to_string(),
-            }
-        }
-    }
-
-    impl std::str::FromStr for IpKind {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
-            match value {
-                "ephemeral" => Ok(Self::Ephemeral),
-                "floating" => Ok(Self::Floating),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for IpKind {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for IpKind {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for IpKind {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
@@ -23193,6 +23386,47 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct EphemeralIpCreate {
+            pool: Result<Option<super::NameOrId>, String>,
+        }
+
+        impl Default for EphemeralIpCreate {
+            fn default() -> Self {
+                Self {
+                    pool: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl EphemeralIpCreate {
+            pub fn pool<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.pool = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pool: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<EphemeralIpCreate> for super::EphemeralIpCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: EphemeralIpCreate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self { pool: value.pool? })
+            }
+        }
+
+        impl From<super::EphemeralIpCreate> for EphemeralIpCreate {
+            fn from(value: super::EphemeralIpCreate) -> Self {
+                Self {
+                    pool: Ok(value.pool),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Error {
             error_code: Result<Option<String>, String>,
             message: Result<String, String>,
@@ -23259,63 +23493,6 @@ pub mod types {
                     error_code: Ok(value.error_code),
                     message: Ok(value.message),
                     request_id: Ok(value.request_id),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct ExternalIp {
-            ip: Result<std::net::IpAddr, String>,
-            kind: Result<super::IpKind, String>,
-        }
-
-        impl Default for ExternalIp {
-            fn default() -> Self {
-                Self {
-                    ip: Err("no value supplied for ip".to_string()),
-                    kind: Err("no value supplied for kind".to_string()),
-                }
-            }
-        }
-
-        impl ExternalIp {
-            pub fn ip<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<std::net::IpAddr>,
-                T::Error: std::fmt::Display,
-            {
-                self.ip = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
-                self
-            }
-            pub fn kind<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::IpKind>,
-                T::Error: std::fmt::Display,
-            {
-                self.kind = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<ExternalIp> for super::ExternalIp {
-            type Error = super::error::ConversionError;
-            fn try_from(value: ExternalIp) -> Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    ip: value.ip?,
-                    kind: value.kind?,
-                })
-            }
-        }
-
-        impl From<super::ExternalIp> for ExternalIp {
-            fn from(value: super::ExternalIp) -> Self {
-                Self {
-                    ip: Ok(value.ip),
-                    kind: Ok(value.kind),
                 }
             }
         }
@@ -23678,6 +23855,63 @@ pub mod types {
                     project_id: Ok(value.project_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct FloatingIpAttach {
+            kind: Result<super::FloatingIpParentKind, String>,
+            parent: Result<super::NameOrId, String>,
+        }
+
+        impl Default for FloatingIpAttach {
+            fn default() -> Self {
+                Self {
+                    kind: Err("no value supplied for kind".to_string()),
+                    parent: Err("no value supplied for parent".to_string()),
+                }
+            }
+        }
+
+        impl FloatingIpAttach {
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::FloatingIpParentKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn parent<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.parent = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for parent: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<FloatingIpAttach> for super::FloatingIpAttach {
+            type Error = super::error::ConversionError;
+            fn try_from(value: FloatingIpAttach) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    kind: value.kind?,
+                    parent: value.parent?,
+                })
+            }
+        }
+
+        impl From<super::FloatingIpAttach> for FloatingIpAttach {
+            fn from(value: super::FloatingIpAttach) -> Self {
+                Self {
+                    kind: Ok(value.kind),
+                    parent: Ok(value.parent),
                 }
             }
         }
@@ -35061,7 +35295,7 @@ pub trait ClientFloatingIpsExt {
     /// Sends a `GET` request to `/v1/floating-ips/{floating_ip}`
     ///
     /// Arguments:
-    /// - `floating_ip`: Name or ID of the Floating IP
+    /// - `floating_ip`: Name or ID of the floating IP
     /// - `project`: Name or ID of the project
     /// ```ignore
     /// let response = client.floating_ip_view()
@@ -35076,7 +35310,7 @@ pub trait ClientFloatingIpsExt {
     /// Sends a `DELETE` request to `/v1/floating-ips/{floating_ip}`
     ///
     /// Arguments:
-    /// - `floating_ip`: Name or ID of the Floating IP
+    /// - `floating_ip`: Name or ID of the floating IP
     /// - `project`: Name or ID of the project
     /// ```ignore
     /// let response = client.floating_ip_delete()
@@ -35086,6 +35320,38 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_delete(&self) -> builder::FloatingIpDelete;
+    /// Attach a floating IP to an instance or other resource
+    ///
+    /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/attach`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the floating IP
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.floating_ip_attach()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_attach(&self) -> builder::FloatingIpAttach;
+    /// Detach a floating IP from an instance or other resource
+    ///
+    /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/detach`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the floating IP
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.floating_ip_detach()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_detach(&self) -> builder::FloatingIpDetach;
 }
 
 impl ClientFloatingIpsExt for Client {
@@ -35103,6 +35369,14 @@ impl ClientFloatingIpsExt for Client {
 
     fn floating_ip_delete(&self) -> builder::FloatingIpDelete {
         builder::FloatingIpDelete::new(self)
+    }
+
+    fn floating_ip_attach(&self) -> builder::FloatingIpAttach {
+        builder::FloatingIpAttach::new(self)
+    }
+
+    fn floating_ip_detach(&self) -> builder::FloatingIpDetach {
+        builder::FloatingIpDetach::new(self)
     }
 }
 
@@ -35464,6 +35738,40 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_external_ip_list(&self) -> builder::InstanceExternalIpList;
+    /// Allocate and attach an ephemeral IP to an instance
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/instances/{instance}/external-ips/ephemeral`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.instance_ephemeral_ip_attach()
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_ephemeral_ip_attach(&self) -> builder::InstanceEphemeralIpAttach;
+    /// Detach and deallocate an ephemeral IP from an instance
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/instances/{instance}/external-ips/ephemeral`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.instance_ephemeral_ip_detach()
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach;
     /// Migrate an instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/migrate`
@@ -35712,6 +36020,14 @@ impl ClientInstancesExt for Client {
 
     fn instance_external_ip_list(&self) -> builder::InstanceExternalIpList {
         builder::InstanceExternalIpList::new(self)
+    }
+
+    fn instance_ephemeral_ip_attach(&self) -> builder::InstanceEphemeralIpAttach {
+        builder::InstanceEphemeralIpAttach::new(self)
+    }
+
+    fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach {
+        builder::InstanceEphemeralIpDetach::new(self)
     }
 
     fn instance_migrate(&self) -> builder::InstanceMigrate {
@@ -40417,6 +40733,199 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientFloatingIpsExt::floating_ip_attach`]
+    ///
+    /// [`ClientFloatingIpsExt::floating_ip_attach`]: super::ClientFloatingIpsExt::floating_ip_attach
+    #[derive(Debug, Clone)]
+    pub struct FloatingIpAttach<'a> {
+        client: &'a super::Client,
+        floating_ip: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::FloatingIpAttach, String>,
+    }
+
+    impl<'a> FloatingIpAttach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                floating_ip: Err("floating_ip was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(types::builder::FloatingIpAttach::default()),
+            }
+        }
+
+        pub fn floating_ip<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.floating_ip = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for floating_ip failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::FloatingIpAttach>,
+            <V as std::convert::TryInto<types::FloatingIpAttach>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `FloatingIpAttach` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::FloatingIpAttach,
+            ) -> types::builder::FloatingIpAttach,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/attach`
+        pub async fn send(self) -> Result<ResponseValue<types::FloatingIp>, Error<types::Error>> {
+            let Self {
+                client,
+                floating_ip,
+                project,
+                body,
+            } = self;
+            let floating_ip = floating_ip.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::FloatingIpAttach::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/floating-ips/{}/attach",
+                client.baseurl,
+                encode_path(&floating_ip.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                202u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientFloatingIpsExt::floating_ip_detach`]
+    ///
+    /// [`ClientFloatingIpsExt::floating_ip_detach`]: super::ClientFloatingIpsExt::floating_ip_detach
+    #[derive(Debug, Clone)]
+    pub struct FloatingIpDetach<'a> {
+        client: &'a super::Client,
+        floating_ip: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> FloatingIpDetach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                floating_ip: Err("floating_ip was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn floating_ip<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.floating_ip = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for floating_ip failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/detach`
+        pub async fn send(self) -> Result<ResponseValue<types::FloatingIp>, Error<types::Error>> {
+            let Self {
+                client,
+                floating_ip,
+                project,
+            } = self;
+            let floating_ip = floating_ip.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/floating-ips/{}/detach",
+                client.baseurl,
+                encode_path(&floating_ip.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                202u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientSilosExt::group_list`]
     ///
     /// [`ClientSilosExt::group_list`]: super::ClientSilosExt::group_list
@@ -42138,6 +42647,201 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_ephemeral_ip_attach`]
+    ///
+    /// [`ClientInstancesExt::instance_ephemeral_ip_attach`]: super::ClientInstancesExt::instance_ephemeral_ip_attach
+    #[derive(Debug, Clone)]
+    pub struct InstanceEphemeralIpAttach<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::EphemeralIpCreate, String>,
+    }
+
+    impl<'a> InstanceEphemeralIpAttach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(types::builder::EphemeralIpCreate::default()),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::EphemeralIpCreate>,
+            <V as std::convert::TryInto<types::EphemeralIpCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `EphemeralIpCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::EphemeralIpCreate,
+            ) -> types::builder::EphemeralIpCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/instances/{instance}/external-ips/ephemeral`
+        pub async fn send(self) -> Result<ResponseValue<types::ExternalIp>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                project,
+                body,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::EphemeralIpCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/external-ips/ephemeral",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                202u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_ephemeral_ip_detach`]
+    ///
+    /// [`ClientInstancesExt::instance_ephemeral_ip_detach`]: super::ClientInstancesExt::instance_ephemeral_ip_detach
+    #[derive(Debug, Clone)]
+    pub struct InstanceEphemeralIpDetach<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InstanceEphemeralIpDetach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/instances/{instance}/external-ips/ephemeral`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                project,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/external-ips/ephemeral",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
