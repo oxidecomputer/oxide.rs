@@ -34,6 +34,8 @@ impl Cli {
             CliCommand::FloatingIpCreate => Self::cli_floating_ip_create(),
             CliCommand::FloatingIpView => Self::cli_floating_ip_view(),
             CliCommand::FloatingIpDelete => Self::cli_floating_ip_delete(),
+            CliCommand::FloatingIpAttach => Self::cli_floating_ip_attach(),
+            CliCommand::FloatingIpDetach => Self::cli_floating_ip_detach(),
             CliCommand::GroupList => Self::cli_group_list(),
             CliCommand::GroupView => Self::cli_group_view(),
             CliCommand::ImageList => Self::cli_image_list(),
@@ -50,6 +52,8 @@ impl Cli {
             CliCommand::InstanceDiskAttach => Self::cli_instance_disk_attach(),
             CliCommand::InstanceDiskDetach => Self::cli_instance_disk_detach(),
             CliCommand::InstanceExternalIpList => Self::cli_instance_external_ip_list(),
+            CliCommand::InstanceEphemeralIpAttach => Self::cli_instance_ephemeral_ip_attach(),
+            CliCommand::InstanceEphemeralIpDetach => Self::cli_instance_ephemeral_ip_detach(),
             CliCommand::InstanceMigrate => Self::cli_instance_migrate(),
             CliCommand::InstanceReboot => Self::cli_instance_reboot(),
             CliCommand::InstanceSerialConsole => Self::cli_instance_serial_console(),
@@ -861,7 +865,7 @@ impl Cli {
                     .long("floating-ip")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
-                    .help("Name or ID of the Floating IP"),
+                    .help("Name or ID of the floating IP"),
             )
             .arg(
                 clap::Arg::new("project")
@@ -880,7 +884,7 @@ impl Cli {
                     .long("floating-ip")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
-                    .help("Name or ID of the Floating IP"),
+                    .help("Name or ID of the floating IP"),
             )
             .arg(
                 clap::Arg::new("project")
@@ -890,6 +894,77 @@ impl Cli {
                     .help("Name or ID of the project"),
             )
             .about("Delete a floating IP")
+    }
+
+    pub fn cli_floating_ip_attach() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("floating-ip")
+                    .long("floating-ip")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the floating IP"),
+            )
+            .arg(
+                clap::Arg::new("kind")
+                    .long("kind")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::FloatingIpParentKind::Instance.to_string(),
+                        ]),
+                        |s| types::FloatingIpParentKind::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("The type of `parent`'s resource"),
+            )
+            .arg(
+                clap::Arg::new("parent")
+                    .long("parent")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help("Name or ID of the resource that this IP address should be attached to"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Attach a floating IP to an instance or other resource")
+    }
+
+    pub fn cli_floating_ip_detach() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("floating-ip")
+                    .long("floating-ip")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the floating IP"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Detach a floating IP from an instance or other resource")
     }
 
     pub fn cli_group_list() -> clap::Command {
@@ -1380,6 +1455,65 @@ impl Cli {
                     .help("Name or ID of the project"),
             )
             .about("List external IP addresses")
+    }
+
+    pub fn cli_instance_ephemeral_ip_attach() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the IP pool used to allocate an address"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Allocate and attach an ephemeral IP to an instance")
+    }
+
+    pub fn cli_instance_ephemeral_ip_detach() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Detach and deallocate an ephemeral IP from an instance")
     }
 
     pub fn cli_instance_migrate() -> clap::Command {
@@ -4963,6 +5097,12 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::FloatingIpDelete => {
                 self.execute_floating_ip_delete(matches).await;
             }
+            CliCommand::FloatingIpAttach => {
+                self.execute_floating_ip_attach(matches).await;
+            }
+            CliCommand::FloatingIpDetach => {
+                self.execute_floating_ip_detach(matches).await;
+            }
             CliCommand::GroupList => {
                 self.execute_group_list(matches).await;
             }
@@ -5010,6 +5150,12 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::InstanceExternalIpList => {
                 self.execute_instance_external_ip_list(matches).await;
+            }
+            CliCommand::InstanceEphemeralIpAttach => {
+                self.execute_instance_ephemeral_ip_attach(matches).await;
+            }
+            CliCommand::InstanceEphemeralIpDetach => {
+                self.execute_instance_ephemeral_ip_detach(matches).await;
             }
             CliCommand::InstanceMigrate => {
                 self.execute_instance_migrate(matches).await;
@@ -6047,6 +6193,68 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_floating_ip_attach(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.floating_ip_attach();
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
+            request = request.floating_ip(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::FloatingIpParentKind>("kind") {
+            request = request.body_map(|body| body.kind(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("parent") {
+            request = request.body_map(|body| body.parent(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::FloatingIpAttach>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_floating_ip_attach(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_floating_ip_detach(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.floating_ip_detach();
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
+            request = request.floating_ip(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_floating_ip_detach(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_group_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.group_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -6515,6 +6723,64 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_instance_external_ip_list(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_instance_ephemeral_ip_attach(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.instance_ephemeral_ip_attach();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.body_map(|body| body.pool(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::EphemeralIpCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_instance_ephemeral_ip_attach(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_instance_ephemeral_ip_detach(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.instance_ephemeral_ip_detach();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_instance_ephemeral_ip_detach(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -10341,6 +10607,22 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_floating_ip_attach(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::FloatingIpAttach,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_floating_ip_detach(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::FloatingIpDetach,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_group_list(
         &self,
         matches: &clap::ArgMatches,
@@ -10465,6 +10747,22 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceExternalIpList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_instance_ephemeral_ip_attach(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InstanceEphemeralIpAttach,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_instance_ephemeral_ip_detach(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InstanceEphemeralIpDetach,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -11518,6 +11816,8 @@ pub enum CliCommand {
     FloatingIpCreate,
     FloatingIpView,
     FloatingIpDelete,
+    FloatingIpAttach,
+    FloatingIpDetach,
     GroupList,
     GroupView,
     ImageList,
@@ -11534,6 +11834,8 @@ pub enum CliCommand {
     InstanceDiskAttach,
     InstanceDiskDetach,
     InstanceExternalIpList,
+    InstanceEphemeralIpAttach,
+    InstanceEphemeralIpDetach,
     InstanceMigrate,
     InstanceReboot,
     InstanceSerialConsole,
@@ -11688,6 +11990,8 @@ impl CliCommand {
             CliCommand::FloatingIpCreate,
             CliCommand::FloatingIpView,
             CliCommand::FloatingIpDelete,
+            CliCommand::FloatingIpAttach,
+            CliCommand::FloatingIpDetach,
             CliCommand::GroupList,
             CliCommand::GroupView,
             CliCommand::ImageList,
@@ -11704,6 +12008,8 @@ impl CliCommand {
             CliCommand::InstanceDiskAttach,
             CliCommand::InstanceDiskDetach,
             CliCommand::InstanceExternalIpList,
+            CliCommand::InstanceEphemeralIpAttach,
+            CliCommand::InstanceEphemeralIpDetach,
             CliCommand::InstanceMigrate,
             CliCommand::InstanceReboot,
             CliCommand::InstanceSerialConsole,
