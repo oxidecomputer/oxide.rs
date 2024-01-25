@@ -599,6 +599,39 @@
       "name": "floating-ip",
       "subcommands": [
         {
+          "name": "attach",
+          "about": "Attach a floating IP to an instance or other resource",
+          "args": [
+            {
+              "long": "floating-ip",
+              "help": "Name or ID of the floating IP"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "kind",
+              "values": [
+                "instance"
+              ],
+              "help": "The type of `parent`'s resource"
+            },
+            {
+              "long": "parent",
+              "help": "Name or ID of the resource that this IP address should be attached to"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
           "name": "create",
           "about": "Create a floating IP",
           "args": [
@@ -636,7 +669,21 @@
           "args": [
             {
               "long": "floating-ip",
-              "help": "Name or ID of the Floating IP"
+              "help": "Name or ID of the floating IP"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
+          "name": "detach",
+          "about": "Detach a floating IP from an instance or other resource",
+          "args": [
+            {
+              "long": "floating-ip",
+              "help": "Name or ID of the floating IP"
             },
             {
               "long": "project",
@@ -672,7 +719,7 @@
           "args": [
             {
               "long": "floating-ip",
-              "help": "Name or ID of the Floating IP"
+              "help": "Name or ID of the floating IP"
             },
             {
               "long": "project",
@@ -972,6 +1019,46 @@
         {
           "name": "external-ip",
           "subcommands": [
+            {
+              "name": "attach-ephemeral",
+              "about": "Allocate and attach an ephemeral IP to an instance",
+              "args": [
+                {
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "pool",
+                  "help": "Name or ID of the IP pool used to allocate an address"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
+            },
+            {
+              "name": "detach-ephemeral",
+              "about": "Detach and deallocate an ephemeral IP from an instance",
+              "args": [
+                {
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
+            },
             {
               "name": "list",
               "about": "List external IP addresses",
