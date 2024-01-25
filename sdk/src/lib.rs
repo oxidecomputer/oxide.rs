@@ -8,9 +8,6 @@
 #![doc = include_str!("../README.md")]
 
 use thiserror::Error;
-#[allow(clippy::clone_on_copy)]
-#[allow(clippy::len_zero)]
-#[allow(clippy::vec_init_then_push)]
 mod generated_sdk;
 
 #[cfg(feature = "clap")]
