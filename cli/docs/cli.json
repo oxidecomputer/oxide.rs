@@ -2827,6 +2827,79 @@
               ]
             },
             {
+              "name": "bfd",
+              "subcommands": [
+                {
+                  "name": "disable",
+                  "about": "Disable a BFD session.",
+                  "args": [
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "remote",
+                      "help": "Address of the remote peer to disable a BFD session for."
+                    },
+                    {
+                      "long": "switch",
+                      "help": "The switch to enable this session on. Must be `switch0` or `switch1`."
+                    }
+                  ]
+                },
+                {
+                  "name": "enable",
+                  "about": "Enable a BFD session.",
+                  "args": [
+                    {
+                      "long": "detection-threshold",
+                      "help": "The negotiated Control packet transmission interval, multiplied by this variable, will be the Detection Time for this session (as seen by the remote system)"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    },
+                    {
+                      "long": "local",
+                      "help": "Address the Oxide switch will listen on for BFD traffic. If `None` then the unspecified address (0.0.0.0 or ::) is used."
+                    },
+                    {
+                      "long": "mode",
+                      "values": [
+                        "single_hop",
+                        "multi_hop"
+                      ],
+                      "help": "Select either single-hop (RFC 5881) or multi-hop (RFC 5883)"
+                    },
+                    {
+                      "long": "remote",
+                      "help": "Address of the remote peer to establish a BFD session with."
+                    },
+                    {
+                      "long": "required-rx",
+                      "help": "The minimum interval, in microseconds, between received BFD Control packets that this system requires"
+                    },
+                    {
+                      "long": "switch",
+                      "help": "The switch to enable this session on. Must be `switch0` or `switch1`."
+                    }
+                  ]
+                },
+                {
+                  "name": "status",
+                  "about": "Get BFD status."
+                }
+              ]
+            },
+            {
               "name": "bgp-announce-set",
               "subcommands": [
                 {

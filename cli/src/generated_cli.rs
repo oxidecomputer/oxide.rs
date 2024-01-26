@@ -58,6 +58,7 @@ impl Cli {
             CliCommand::InstanceReboot => Self::cli_instance_reboot(),
             CliCommand::InstanceSerialConsole => Self::cli_instance_serial_console(),
             CliCommand::InstanceSerialConsoleStream => Self::cli_instance_serial_console_stream(),
+            CliCommand::InstanceSshPublicKeyList => Self::cli_instance_ssh_public_key_list(),
             CliCommand::InstanceStart => Self::cli_instance_start(),
             CliCommand::InstanceStop => Self::cli_instance_stop(),
             CliCommand::ProjectIpPoolList => Self::cli_project_ip_pool_list(),
@@ -144,6 +145,9 @@ impl Cli {
             CliCommand::NetworkingAddressLotBlockList => {
                 Self::cli_networking_address_lot_block_list()
             }
+            CliCommand::NetworkingBfdDisable => Self::cli_networking_bfd_disable(),
+            CliCommand::NetworkingBfdEnable => Self::cli_networking_bfd_enable(),
+            CliCommand::NetworkingBfdStatus => Self::cli_networking_bfd_status(),
             CliCommand::NetworkingBgpConfigList => Self::cli_networking_bgp_config_list(),
             CliCommand::NetworkingBgpConfigCreate => Self::cli_networking_bgp_config_create(),
             CliCommand::NetworkingBgpConfigDelete => Self::cli_networking_bgp_config_delete(),
@@ -1661,6 +1665,52 @@ impl Cli {
                     ),
             )
             .about("Stream an instance's serial console")
+    }
+
+    pub fn cli_instance_ssh_public_key_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about(
+                "List the SSH public keys added to the instance via cloud-init during instance \
+                 creation",
+            )
+            .long_about(
+                "Note that this list is a snapshot in time and will not reflect updates made \
+                 after the instance is created.",
+            )
     }
 
     pub fn cli_instance_start() -> clap::Command {
@@ -3666,6 +3716,120 @@ impl Cli {
             .about("List the blocks in an address lot")
     }
 
+    pub fn cli_networking_bfd_disable() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("remote")
+                    .long("remote")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("Address of the remote peer to disable a BFD session for."),
+            )
+            .arg(
+                clap::Arg::new("switch")
+                    .long("switch")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Disable a BFD session.")
+    }
+
+    pub fn cli_networking_bfd_enable() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("detection-threshold")
+                    .long("detection-threshold")
+                    .value_parser(clap::value_parser!(u8))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The negotiated Control packet transmission interval, multiplied by this \
+                         variable, will be the Detection Time for this session (as seen by the \
+                         remote system)",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("local")
+                    .long("local")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required(false)
+                    .help(
+                        "Address the Oxide switch will listen on for BFD traffic. If `None` then \
+                         the unspecified address (0.0.0.0 or ::) is used.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("mode")
+                    .long("mode")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::BfdMode::SingleHop.to_string(),
+                            types::BfdMode::MultiHop.to_string(),
+                        ]),
+                        |s| types::BfdMode::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("Select either single-hop (RFC 5881) or multi-hop (RFC 5883)"),
+            )
+            .arg(
+                clap::Arg::new("remote")
+                    .long("remote")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("Address of the remote peer to establish a BFD session with."),
+            )
+            .arg(
+                clap::Arg::new("required-rx")
+                    .long("required-rx")
+                    .value_parser(clap::value_parser!(u64))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The minimum interval, in microseconds, between received BFD Control \
+                         packets that this system requires",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("switch")
+                    .long("switch")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Enable a BFD session.")
+    }
+
+    pub fn cli_networking_bfd_status() -> clap::Command {
+        clap::Command::new("").about("Get BFD status.")
+    }
+
     pub fn cli_networking_bgp_config_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -5169,6 +5333,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::InstanceSerialConsoleStream => {
                 self.execute_instance_serial_console_stream(matches).await;
             }
+            CliCommand::InstanceSshPublicKeyList => {
+                self.execute_instance_ssh_public_key_list(matches).await;
+            }
             CliCommand::InstanceStart => {
                 self.execute_instance_start(matches).await;
             }
@@ -5396,6 +5563,15 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::NetworkingAddressLotBlockList => {
                 self.execute_networking_address_lot_block_list(matches)
                     .await;
+            }
+            CliCommand::NetworkingBfdDisable => {
+                self.execute_networking_bfd_disable(matches).await;
+            }
+            CliCommand::NetworkingBfdEnable => {
+                self.execute_networking_bfd_enable(matches).await;
+            }
+            CliCommand::NetworkingBfdStatus => {
+                self.execute_networking_bfd_status(matches).await;
             }
             CliCommand::NetworkingBgpConfigList => {
                 self.execute_networking_bgp_config_list(matches).await;
@@ -6911,6 +7087,44 @@ impl<T: CliOverride> Cli<T> {
             }
             Err(r) => {
                 todo!()
+            }
+        }
+    }
+
+    pub async fn execute_instance_ssh_public_key_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.instance_ssh_public_key_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_instance_ssh_public_key_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -9023,6 +9237,98 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_bfd_disable(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bfd_disable();
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("remote") {
+            request = request.body_map(|body| body.remote(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch") {
+            request = request.body_map(|body| body.switch(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::BfdSessionDisable>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_networking_bfd_disable(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_bfd_enable(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bfd_enable();
+        if let Some(value) = matches.get_one::<u8>("detection-threshold") {
+            request = request.body_map(|body| body.detection_threshold(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("local") {
+            request = request.body_map(|body| body.local(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::BfdMode>("mode") {
+            request = request.body_map(|body| body.mode(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("remote") {
+            request = request.body_map(|body| body.remote(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u64>("required-rx") {
+            request = request.body_map(|body| body.required_rx(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch") {
+            request = request.body_map(|body| body.switch(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::BfdSessionEnable>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_networking_bfd_enable(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_bfd_status(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bfd_status();
+        self.over
+            .execute_networking_bfd_status(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_networking_bgp_config_list(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.networking_bgp_config_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -10799,6 +11105,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_instance_ssh_public_key_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InstanceSshPublicKeyList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_instance_start(
         &self,
         matches: &clap::ArgMatches,
@@ -11391,6 +11705,30 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_networking_bfd_disable(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBfdDisable,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bfd_enable(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBfdEnable,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bfd_status(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBfdStatus,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_networking_bgp_config_list(
         &self,
         matches: &clap::ArgMatches,
@@ -11840,6 +12178,7 @@ pub enum CliCommand {
     InstanceReboot,
     InstanceSerialConsole,
     InstanceSerialConsoleStream,
+    InstanceSshPublicKeyList,
     InstanceStart,
     InstanceStop,
     ProjectIpPoolList,
@@ -11914,6 +12253,9 @@ pub enum CliCommand {
     NetworkingAddressLotCreate,
     NetworkingAddressLotDelete,
     NetworkingAddressLotBlockList,
+    NetworkingBfdDisable,
+    NetworkingBfdEnable,
+    NetworkingBfdStatus,
     NetworkingBgpConfigList,
     NetworkingBgpConfigCreate,
     NetworkingBgpConfigDelete,
@@ -12014,6 +12356,7 @@ impl CliCommand {
             CliCommand::InstanceReboot,
             CliCommand::InstanceSerialConsole,
             CliCommand::InstanceSerialConsoleStream,
+            CliCommand::InstanceSshPublicKeyList,
             CliCommand::InstanceStart,
             CliCommand::InstanceStop,
             CliCommand::ProjectIpPoolList,
@@ -12088,6 +12431,9 @@ impl CliCommand {
             CliCommand::NetworkingAddressLotCreate,
             CliCommand::NetworkingAddressLotDelete,
             CliCommand::NetworkingAddressLotBlockList,
+            CliCommand::NetworkingBfdDisable,
+            CliCommand::NetworkingBfdEnable,
+            CliCommand::NetworkingBfdStatus,
             CliCommand::NetworkingBgpConfigList,
             CliCommand::NetworkingBgpConfigCreate,
             CliCommand::NetworkingBgpConfigDelete,

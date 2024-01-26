@@ -409,6 +409,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("system networking bgp-imported-routes-ipv4 get")
         }
 
+        CliCommand::NetworkingBfdStatus => Some("system networking bfd status"),
+        CliCommand::NetworkingBfdEnable => Some("system networking bfd enable"),
+        CliCommand::NetworkingBfdDisable => Some("system networking bfd disable"),
+
         CliCommand::NetworkingBgpStatus => Some("system networking bgp-status get"),
 
         // Subcommand: disk
@@ -488,7 +492,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::SiloMetric
         | CliCommand::SystemMetric
         | CliCommand::UserBuiltinList
-        | CliCommand::UserBuiltinView => None,
+        | CliCommand::UserBuiltinView
+        | CliCommand::InstanceSshPublicKeyList => None,
     }
 }
 
