@@ -8587,7 +8587,7 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
-    ///    "ssh_keys": {
+    ///    "ssh_public_keys": {
     ///      "description": "An allowlist of SSH public keys to be transferred
     /// to the instance via cloud-init during instance creation.\n\nIf not
     /// provided, all SSH public keys from the user's profile will be sent. If
@@ -8648,7 +8648,7 @@ pub mod types {
         /// sent. If an empty list is provided, no public keys will be
         /// transmitted to the instance.
         #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub ssh_keys: Option<Vec<NameOrId>>,
+        pub ssh_public_keys: Option<Vec<NameOrId>>,
         /// Should this instance be started upon creation; true by default.
         #[serde(default = "defaults::default_bool::<true>")]
         pub start: bool,
@@ -25694,7 +25694,7 @@ pub mod types {
             name: Result<super::Name, String>,
             ncpus: Result<super::InstanceCpuCount, String>,
             network_interfaces: Result<super::InstanceNetworkInterfaceAttachment, String>,
-            ssh_keys: Result<Option<Vec<super::NameOrId>>, String>,
+            ssh_public_keys: Result<Option<Vec<super::NameOrId>>, String>,
             start: Result<bool, String>,
             user_data: Result<String, String>,
         }
@@ -25710,7 +25710,7 @@ pub mod types {
                     name: Err("no value supplied for name".to_string()),
                     ncpus: Err("no value supplied for ncpus".to_string()),
                     network_interfaces: Ok(super::defaults::instance_create_network_interfaces()),
-                    ssh_keys: Ok(Default::default()),
+                    ssh_public_keys: Ok(Default::default()),
                     start: Ok(super::defaults::default_bool::<true>()),
                     user_data: Ok(Default::default()),
                 }
@@ -25801,14 +25801,14 @@ pub mod types {
                 });
                 self
             }
-            pub fn ssh_keys<T>(mut self, value: T) -> Self
+            pub fn ssh_public_keys<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<Option<Vec<super::NameOrId>>>,
                 T::Error: std::fmt::Display,
             {
-                self.ssh_keys = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for ssh_keys: {}", e));
+                self.ssh_public_keys = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for ssh_public_keys: {}", e)
+                });
                 self
             }
             pub fn start<T>(mut self, value: T) -> Self
@@ -25845,7 +25845,7 @@ pub mod types {
                     name: value.name?,
                     ncpus: value.ncpus?,
                     network_interfaces: value.network_interfaces?,
-                    ssh_keys: value.ssh_keys?,
+                    ssh_public_keys: value.ssh_public_keys?,
                     start: value.start?,
                     user_data: value.user_data?,
                 })
@@ -25863,7 +25863,7 @@ pub mod types {
                     name: Ok(value.name),
                     ncpus: Ok(value.ncpus),
                     network_interfaces: Ok(value.network_interfaces),
-                    ssh_keys: Ok(value.ssh_keys),
+                    ssh_public_keys: Ok(value.ssh_public_keys),
                     start: Ok(value.start),
                     user_data: Ok(value.user_data),
                 }
