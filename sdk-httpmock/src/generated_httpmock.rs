@@ -9590,6 +9590,169 @@ pub mod operations {
         }
     }
 
+    pub struct NetworkingBfdDisableWhen(httpmock::When);
+    impl NetworkingBfdDisableWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner.method(httpmock::Method::POST).path_matches(
+                    regex::Regex::new("^/v1/system/networking/bfd-disable$").unwrap(),
+                ),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::BfdSessionDisable) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingBfdDisableThen(httpmock::Then);
+    impl NetworkingBfdDisableThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingBfdEnableWhen(httpmock::When);
+    impl NetworkingBfdEnableWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::POST)
+                    .path_matches(regex::Regex::new("^/v1/system/networking/bfd-enable$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::BfdSessionEnable) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingBfdEnableThen(httpmock::Then);
+    impl NetworkingBfdEnableThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingBfdStatusWhen(httpmock::When);
+    impl NetworkingBfdStatusWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/networking/bfd-status$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct NetworkingBfdStatusThen(httpmock::Then);
+    impl NetworkingBfdStatusThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &Vec<types::BfdStatus>) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct NetworkingBgpConfigListWhen(httpmock::When);
     impl NetworkingBgpConfigListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -13976,6 +14139,15 @@ pub trait MockServerExt {
             operations::NetworkingAddressLotBlockListWhen,
             operations::NetworkingAddressLotBlockListThen,
         );
+    fn networking_bfd_disable<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingBfdDisableWhen, operations::NetworkingBfdDisableThen);
+    fn networking_bfd_enable<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingBfdEnableWhen, operations::NetworkingBfdEnableThen);
+    fn networking_bfd_status<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingBfdStatusWhen, operations::NetworkingBfdStatusThen);
     fn networking_bgp_config_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::NetworkingBgpConfigListWhen, operations::NetworkingBgpConfigListThen);
@@ -15670,6 +15842,42 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::NetworkingAddressLotBlockListWhen::new(when),
                 operations::NetworkingAddressLotBlockListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bfd_disable<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingBfdDisableWhen, operations::NetworkingBfdDisableThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBfdDisableWhen::new(when),
+                operations::NetworkingBfdDisableThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bfd_enable<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingBfdEnableWhen, operations::NetworkingBfdEnableThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBfdEnableWhen::new(when),
+                operations::NetworkingBfdEnableThen::new(then),
+            )
+        })
+    }
+
+    fn networking_bfd_status<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingBfdStatusWhen, operations::NetworkingBfdStatusThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingBfdStatusWhen::new(when),
+                operations::NetworkingBfdStatusThen::new(then),
             )
         })
     }
