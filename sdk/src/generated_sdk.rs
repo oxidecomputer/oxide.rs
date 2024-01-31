@@ -8587,6 +8587,20 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "ssh_keys": {
+    ///      "description": "An allowlist of SSH public keys to be transferred
+    /// to the instance via cloud-init during instance creation.\n\nIf not
+    /// provided, all SSH public keys from the user's profile will be sent. If
+    /// an empty list is provided, no public keys will be transmitted to the
+    /// instance.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/NameOrId"
+    ///      }
+    ///    },
     ///    "start": {
     ///      "description": "Should this instance be started upon creation; true
     /// by default.",
@@ -8627,6 +8641,14 @@ pub mod types {
         /// The network interfaces to be created for this instance.
         #[serde(default = "defaults::instance_create_network_interfaces")]
         pub network_interfaces: InstanceNetworkInterfaceAttachment,
+        /// An allowlist of SSH public keys to be transferred to the instance
+        /// via cloud-init during instance creation.
+        ///
+        /// If not provided, all SSH public keys from the user's profile will be
+        /// sent. If an empty list is provided, no public keys will be
+        /// transmitted to the instance.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub ssh_keys: Option<Vec<NameOrId>>,
         /// Should this instance be started upon creation; true by default.
         #[serde(default = "defaults::default_bool::<true>")]
         pub start: bool,
@@ -25672,6 +25694,7 @@ pub mod types {
             name: Result<super::Name, String>,
             ncpus: Result<super::InstanceCpuCount, String>,
             network_interfaces: Result<super::InstanceNetworkInterfaceAttachment, String>,
+            ssh_keys: Result<Option<Vec<super::NameOrId>>, String>,
             start: Result<bool, String>,
             user_data: Result<String, String>,
         }
@@ -25687,6 +25710,7 @@ pub mod types {
                     name: Err("no value supplied for name".to_string()),
                     ncpus: Err("no value supplied for ncpus".to_string()),
                     network_interfaces: Ok(super::defaults::instance_create_network_interfaces()),
+                    ssh_keys: Ok(Default::default()),
                     start: Ok(super::defaults::default_bool::<true>()),
                     user_data: Ok(Default::default()),
                 }
@@ -25777,6 +25801,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn ssh_keys<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<Vec<super::NameOrId>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.ssh_keys = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ssh_keys: {}", e));
+                self
+            }
             pub fn start<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<bool>,
@@ -25811,6 +25845,7 @@ pub mod types {
                     name: value.name?,
                     ncpus: value.ncpus?,
                     network_interfaces: value.network_interfaces?,
+                    ssh_keys: value.ssh_keys?,
                     start: value.start?,
                     user_data: value.user_data?,
                 })
@@ -25828,6 +25863,7 @@ pub mod types {
                     name: Ok(value.name),
                     ncpus: Ok(value.ncpus),
                     network_interfaces: Ok(value.network_interfaces),
+                    ssh_keys: Ok(value.ssh_keys),
                     start: Ok(value.start),
                     user_data: Ok(value.user_data),
                 }
@@ -35856,6 +35892,32 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream;
+    /// List the SSH public keys added to the instance via cloud-init during
+    /// instance creation
+    ///
+    /// Note that this list is a snapshot in time and will not reflect updates
+    /// made after the instance is created.
+    ///
+    /// Sends a `GET` request to `/v1/instances/{instance}/ssh-public-keys`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.instance_ssh_public_key_list()
+    ///    .instance(instance)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_ssh_public_key_list(&self) -> builder::InstanceSshPublicKeyList;
     /// Boot an instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/start`
@@ -36045,6 +36107,10 @@ impl ClientInstancesExt for Client {
 
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream {
         builder::InstanceSerialConsoleStream::new(self)
+    }
+
+    fn instance_ssh_public_key_list(&self) -> builder::InstanceSshPublicKeyList {
+        builder::InstanceSshPublicKeyList::new(self)
     }
 
     fn instance_start(&self) -> builder::InstanceStart {
@@ -43285,6 +43351,200 @@ pub mod builder {
                 200..=299 => ResponseValue::upgrade(response).await,
                 _ => Err(Error::UnexpectedResponse(response)),
             }
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_ssh_public_key_list`]
+    ///
+    /// [`ClientInstancesExt::instance_ssh_public_key_list`]: super::ClientInstancesExt::instance_ssh_public_key_list
+    #[derive(Debug, Clone)]
+    pub struct InstanceSshPublicKeyList<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> InstanceSshPublicKeyList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/instances/{instance}/ssh-public-keys`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SshKeyResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/ssh-public-keys",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/instances/{instance}/ssh-public-keys`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SshKey, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
         }
     }
 

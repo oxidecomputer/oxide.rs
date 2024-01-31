@@ -58,6 +58,7 @@ impl Cli {
             CliCommand::InstanceReboot => Self::cli_instance_reboot(),
             CliCommand::InstanceSerialConsole => Self::cli_instance_serial_console(),
             CliCommand::InstanceSerialConsoleStream => Self::cli_instance_serial_console_stream(),
+            CliCommand::InstanceSshPublicKeyList => Self::cli_instance_ssh_public_key_list(),
             CliCommand::InstanceStart => Self::cli_instance_start(),
             CliCommand::InstanceStop => Self::cli_instance_stop(),
             CliCommand::ProjectIpPoolList => Self::cli_project_ip_pool_list(),
@@ -1661,6 +1662,52 @@ impl Cli {
                     ),
             )
             .about("Stream an instance's serial console")
+    }
+
+    pub fn cli_instance_ssh_public_key_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about(
+                "List the SSH public keys added to the instance via cloud-init during instance \
+                 creation",
+            )
+            .long_about(
+                "Note that this list is a snapshot in time and will not reflect updates made \
+                 after the instance is created.",
+            )
     }
 
     pub fn cli_instance_start() -> clap::Command {
@@ -5169,6 +5216,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::InstanceSerialConsoleStream => {
                 self.execute_instance_serial_console_stream(matches).await;
             }
+            CliCommand::InstanceSshPublicKeyList => {
+                self.execute_instance_ssh_public_key_list(matches).await;
+            }
             CliCommand::InstanceStart => {
                 self.execute_instance_start(matches).await;
             }
@@ -6911,6 +6961,44 @@ impl<T: CliOverride> Cli<T> {
             }
             Err(r) => {
                 todo!()
+            }
+        }
+    }
+
+    pub async fn execute_instance_ssh_public_key_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.instance_ssh_public_key_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_instance_ssh_public_key_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -10799,6 +10887,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_instance_ssh_public_key_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InstanceSshPublicKeyList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_instance_start(
         &self,
         matches: &clap::ArgMatches,
@@ -11840,6 +11936,7 @@ pub enum CliCommand {
     InstanceReboot,
     InstanceSerialConsole,
     InstanceSerialConsoleStream,
+    InstanceSshPublicKeyList,
     InstanceStart,
     InstanceStop,
     ProjectIpPoolList,
@@ -12014,6 +12111,7 @@ impl CliCommand {
             CliCommand::InstanceReboot,
             CliCommand::InstanceSerialConsole,
             CliCommand::InstanceSerialConsoleStream,
+            CliCommand::InstanceSshPublicKeyList,
             CliCommand::InstanceStart,
             CliCommand::InstanceStop,
             CliCommand::ProjectIpPoolList,
