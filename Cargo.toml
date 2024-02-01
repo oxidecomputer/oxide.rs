@@ -79,7 +79,7 @@ pr-run-mode = "plan"
 inherits = "release"
 lto = "thin"
 
-#[patch."https://github.com/oxidecomputer/progenitor"]
-#progenitor = { path = "../progenitor/progenitor" }
+[patch."https://github.com/oxidecomputer/progenitor"]
+progenitor = { path = "../progenitor/progenitor" }
 #[patch."https://github.com/oxidecomputer/typify"]
 #typify = { path = "../typify/typify" }

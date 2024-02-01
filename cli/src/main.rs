@@ -11,7 +11,7 @@ use std::net::IpAddr;
 use anyhow::Result;
 use async_trait::async_trait;
 use cli_builder::NewCli;
-use generated_cli::CliOverride;
+use generated_cli::CliConfig;
 use oxide::context::Context;
 use oxide::types::{IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
 
@@ -88,7 +88,47 @@ impl OxideOverride {
     }
 }
 
-impl CliOverride for OxideOverride {
+impl CliConfig for OxideOverride {
+    fn item_success<T>(&self, value: &oxide::ResponseValue<T>)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+    {
+        println!("success\n{:#?}", value)
+    }
+
+    fn item_error<T>(&self, value: &oxide::Error<T>)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+    {
+        println!("error\n{:#?}", value)
+    }
+
+    fn list_start<T>(&self)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+    {
+    }
+
+    fn list_item<T>(&self, value: &T)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+    {
+        println!("{:#?}", value);
+    }
+
+    fn list_end_success<T>(&self)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+    {
+    }
+
+    fn list_end_error<T>(&self, value: &oxide::Error<T>)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
+    {
+        println!("error\n{:#?}", value);
+    }
+
     // Deal with all the operations that require an `IpPool` as input
     fn execute_ip_pool_range_add(
         &self,

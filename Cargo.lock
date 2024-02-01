@@ -1928,6 +1928,7 @@ dependencies = [
  "rand",
  "rcgen",
  "reqwest",
+ "schemars",
  "serde",
  "serde_json",
  "tabwriter",
@@ -2150,12 +2151,24 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#86b60220b88a2ca3629fb87acf8f83ff35f63aaa"
 dependencies = [
- "progenitor-client 0.5.0 (git+https://github.com/oxidecomputer/progenitor)",
+ "progenitor-client 0.5.0",
  "progenitor-impl",
  "progenitor-macro",
  "serde_json",
+]
+
+[[package]]
+name = "progenitor-client"
+version = "0.5.0"
+dependencies = [
+ "bytes",
+ "futures-core",
+ "percent-encoding",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "serde_urlencoded",
 ]
 
 [[package]]
@@ -2174,23 +2187,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "progenitor-client"
-version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#86b60220b88a2ca3629fb87acf8f83ff35f63aaa"
-dependencies = [
- "bytes",
- "futures-core",
- "percent-encoding",
- "reqwest",
- "serde",
- "serde_json",
- "serde_urlencoded",
-]
-
-[[package]]
 name = "progenitor-impl"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#86b60220b88a2ca3629fb87acf8f83ff35f63aaa"
 dependencies = [
  "getopts",
  "heck",
@@ -2212,7 +2210,6 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#86b60220b88a2ca3629fb87acf8f83ff35f63aaa"
 dependencies = [
  "openapiv3",
  "proc-macro2",

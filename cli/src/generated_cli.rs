@@ -1,14 +1,14 @@
 // The contents of this file are generated; do not modify them.
 
 use oxide::*;
-pub struct Cli<T: CliOverride = ()> {
+pub struct Cli<T: CliConfig> {
     client: Client,
-    over: T,
+    config: T,
 }
 
-impl Cli {
-    pub fn new(client: Client) -> Self {
-        Self { client, over: () }
+impl<T: CliConfig> Cli<T> {
+    pub fn new(client: Client, config: T) -> Self {
+        Self { client, config }
     }
 
     pub fn get_command(cmd: CliCommand) -> clap::Command {
@@ -5025,12 +5025,6 @@ impl Cli {
             )
             .about("Delete a VPC")
     }
-}
-
-impl<T: CliOverride> Cli<T> {
-    pub fn new_with_override(client: Client, over: T) -> Self {
-        Self { client, over }
-    }
 
     pub async fn execute(&self, cmd: CliCommand, matches: &clap::ArgMatches) {
         match cmd {
@@ -5572,7 +5566,7 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_device_auth_request(matches, &mut request)
             .unwrap();
         let result = request.send().await;
@@ -5598,16 +5592,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_device_auth_confirm(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -5633,7 +5627,7 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_device_access_token(matches, &mut request)
             .unwrap();
         let result = request.send().await;
@@ -5657,14 +5651,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.silo_name(value.clone());
         }
 
-        self.over.execute_login_saml(matches, &mut request).unwrap();
+        self.config
+            .execute_login_saml(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
                 todo!()
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -5679,21 +5675,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_certificate_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::CertificateResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::CertificateResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -5727,16 +5726,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_certificate_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -5747,16 +5746,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.certificate(value.clone());
         }
 
-        self.over
+        self.config
             .execute_certificate_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -5767,16 +5766,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.certificate(value.clone());
         }
 
-        self.over
+        self.config
             .execute_certificate_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -5795,19 +5794,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over.execute_disk_list(matches, &mut request).unwrap();
+        self.config
+            .execute_disk_list(matches, &mut request)
+            .unwrap();
+        self.config.list_start::<types::DiskResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::DiskResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -5837,16 +5840,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_disk_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -5861,14 +5864,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over.execute_disk_view(matches, &mut request).unwrap();
+        self.config
+            .execute_disk_view(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -5883,16 +5888,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_disk_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -5922,16 +5927,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_disk_bulk_write_import(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -5946,16 +5951,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_disk_bulk_write_import_start(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -5970,16 +5975,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_disk_bulk_write_import_stop(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6004,16 +6009,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_disk_finalize_import(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6049,21 +6054,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.start_time(value.clone());
         }
 
-        self.over
+        self.config
             .execute_disk_metrics_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::MeasurementResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::MeasurementResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -6083,21 +6091,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_floating_ip_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::FloatingIpResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::FloatingIpResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -6131,16 +6142,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_floating_ip_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6155,16 +6166,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_floating_ip_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6179,16 +6190,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_floating_ip_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6217,16 +6228,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_floating_ip_attach(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6241,16 +6252,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_floating_ip_detach(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6265,19 +6276,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over.execute_group_list(matches, &mut request).unwrap();
+        self.config
+            .execute_group_list(matches, &mut request)
+            .unwrap();
+        self.config.list_start::<types::GroupResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::GroupResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -6289,14 +6304,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.group_id(value.clone());
         }
 
-        self.over.execute_group_view(matches, &mut request).unwrap();
+        self.config
+            .execute_group_view(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6315,19 +6332,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over.execute_image_list(matches, &mut request).unwrap();
+        self.config
+            .execute_image_list(matches, &mut request)
+            .unwrap();
+        self.config.list_start::<types::ImageResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::ImageResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -6361,16 +6382,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_image_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6385,14 +6406,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over.execute_image_view(matches, &mut request).unwrap();
+        self.config
+            .execute_image_view(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6407,16 +6430,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_image_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6431,16 +6454,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_image_demote(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6455,16 +6478,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_image_promote(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6483,21 +6506,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::InstanceResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::InstanceResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -6543,16 +6568,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_instance_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6567,16 +6592,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6591,16 +6616,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6623,21 +6648,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_disk_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::DiskResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::DiskResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -6663,16 +6690,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_instance_disk_attach(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6697,16 +6724,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_instance_disk_detach(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6721,16 +6748,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_external_ip_list(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6755,16 +6782,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_instance_ephemeral_ip_attach(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6779,16 +6806,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_ephemeral_ip_detach(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6813,16 +6840,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_instance_migrate(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6837,16 +6864,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_reboot(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6873,16 +6900,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_serial_console(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6901,7 +6928,7 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_serial_console_stream(matches, &mut request)
             .unwrap();
         let result = request.send().await;
@@ -6925,16 +6952,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_start(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6949,16 +6976,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_stop(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -6973,21 +7000,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_project_ip_pool_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::SiloIpPoolResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SiloIpPoolResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -6999,16 +7029,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.pool(value.clone());
         }
 
-        self.over
+        self.config
             .execute_project_ip_pool_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7034,46 +7064,46 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_login_local(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
 
     pub async fn execute_logout(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.logout();
-        self.over.execute_logout(matches, &mut request).unwrap();
+        self.config.execute_logout(matches, &mut request).unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
 
     pub async fn execute_current_user_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.current_user_view();
-        self.over
+        self.config
             .execute_current_user_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7088,21 +7118,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_current_user_groups(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::GroupResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::GroupResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -7118,21 +7150,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_current_user_ssh_key_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::SshKeyResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::SshKeyResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -7158,16 +7192,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_current_user_ssh_key_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7178,16 +7212,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.ssh_key(value.clone());
         }
 
-        self.over
+        self.config
             .execute_current_user_ssh_key_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7198,16 +7232,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.ssh_key(value.clone());
         }
 
-        self.over
+        self.config
             .execute_current_user_ssh_key_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7239,21 +7273,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.start_time(value.clone());
         }
 
-        self.over
+        self.config
             .execute_silo_metric(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::MeasurementResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::MeasurementResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -7277,21 +7314,25 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_network_interface_list(matches, &mut request)
             .unwrap();
+        self.config
+            .list_start::<types::InstanceNetworkInterfaceResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::InstanceNetworkInterfaceResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -7334,16 +7375,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_instance_network_interface_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7362,16 +7403,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_network_interface_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7409,16 +7450,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_instance_network_interface_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7437,46 +7478,46 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_instance_network_interface_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
 
     pub async fn execute_ping(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.ping();
-        self.over.execute_ping(matches, &mut request).unwrap();
+        self.config.execute_ping(matches, &mut request).unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
 
     pub async fn execute_policy_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.policy_view();
-        self.over
+        self.config
             .execute_policy_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7489,16 +7530,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_policy_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7513,21 +7554,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_project_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::ProjectResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::ProjectResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -7549,16 +7592,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_project_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7569,16 +7612,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_project_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7603,16 +7646,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_project_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7623,16 +7666,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_project_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7643,16 +7686,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.over
+        self.config
             .execute_project_policy_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7669,16 +7712,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_project_policy_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7697,21 +7740,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_snapshot_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::SnapshotResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::SnapshotResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -7741,16 +7786,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_snapshot_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7765,16 +7810,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.snapshot(value.clone());
         }
 
-        self.over
+        self.config
             .execute_snapshot_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7789,16 +7834,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.snapshot(value.clone());
         }
 
-        self.over
+        self.config
             .execute_snapshot_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7813,21 +7858,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_physical_disk_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::PhysicalDiskResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::PhysicalDiskResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -7843,19 +7891,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over.execute_rack_list(matches, &mut request).unwrap();
+        self.config
+            .execute_rack_list(matches, &mut request)
+            .unwrap();
+        self.config.list_start::<types::RackResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::RackResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -7867,14 +7919,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.rack_id(value.clone());
         }
 
-        self.over.execute_rack_view(matches, &mut request).unwrap();
+        self.config
+            .execute_rack_view(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7889,19 +7943,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over.execute_sled_list(matches, &mut request).unwrap();
+        self.config
+            .execute_sled_list(matches, &mut request)
+            .unwrap();
+        self.config.list_start::<types::SledResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::SledResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -7923,14 +7981,14 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over.execute_sled_add(matches, &mut request).unwrap();
+        self.config.execute_sled_add(matches, &mut request).unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7941,14 +7999,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.sled_id(value.clone());
         }
 
-        self.over.execute_sled_view(matches, &mut request).unwrap();
+        self.config
+            .execute_sled_view(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -7967,21 +8027,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_sled_physical_disk_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::PhysicalDiskResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::PhysicalDiskResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8001,21 +8064,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_sled_instance_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::SledInstanceResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SledInstanceResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8038,16 +8104,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_sled_set_provision_state(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8058,21 +8124,25 @@ impl<T: CliOverride> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        self.over
+        self.config
             .execute_sled_list_uninitialized(matches, &mut request)
             .unwrap();
+        self.config
+            .list_start::<types::UninitializedSledResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::UninitializedSledResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8092,21 +8162,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.switch_port_id(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_switch_port_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::SwitchPortResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SwitchPortResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8137,16 +8210,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_networking_switch_port_apply_settings(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8165,16 +8238,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.switch_location(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_switch_port_clear_settings(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8189,21 +8262,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_switch_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::SwitchResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::SwitchResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8215,16 +8290,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.switch_id(value.clone());
         }
 
-        self.over
+        self.config
             .execute_switch_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8243,21 +8318,25 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_silo_identity_provider_list(matches, &mut request)
             .unwrap();
+        self.config
+            .list_start::<types::IdentityProviderResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::IdentityProviderResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8279,16 +8358,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_local_idp_user_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8303,16 +8382,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.user_id(value.clone());
         }
 
-        self.over
+        self.config
             .execute_local_idp_user_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8333,16 +8412,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_local_idp_user_set_password(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8392,16 +8471,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_saml_identity_provider_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8416,16 +8495,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        self.over
+        self.config
             .execute_saml_identity_provider_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8440,21 +8519,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_ip_pool_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::IpPoolResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::IpPoolResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8476,16 +8557,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_ip_pool_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8496,16 +8577,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.pool(value.clone());
         }
 
-        self.over
+        self.config
             .execute_ip_pool_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8530,16 +8611,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_ip_pool_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8550,16 +8631,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.pool(value.clone());
         }
 
-        self.over
+        self.config
             .execute_ip_pool_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8574,21 +8655,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.pool(value.clone());
         }
 
-        self.over
+        self.config
             .execute_ip_pool_range_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::IpPoolRangeResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::IpPoolRangeResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8606,16 +8690,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_ip_pool_range_add(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8632,16 +8716,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_ip_pool_range_remove(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8660,21 +8744,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_ip_pool_silo_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::IpPoolSiloLinkResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::IpPoolSiloLinkResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8700,16 +8787,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_ip_pool_silo_link(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8734,16 +8821,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_ip_pool_silo_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8758,32 +8845,32 @@ impl<T: CliOverride> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        self.over
+        self.config
             .execute_ip_pool_silo_unlink(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
 
     pub async fn execute_ip_pool_service_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.ip_pool_service_view();
-        self.over
+        self.config
             .execute_ip_pool_service_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8794,21 +8881,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        self.over
+        self.config
             .execute_ip_pool_service_range_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::IpPoolRangeResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::IpPoolRangeResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8822,16 +8912,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_ip_pool_service_range_add(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8844,16 +8934,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_ip_pool_service_range_remove(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8885,21 +8975,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.start_time(value.clone());
         }
 
-        self.over
+        self.config
             .execute_system_metric(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::MeasurementResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::MeasurementResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8915,21 +9008,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_address_lot_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::AddressLotResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AddressLotResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -8955,16 +9051,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_networking_address_lot_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -8975,16 +9071,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.address_lot(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_address_lot_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9003,21 +9099,25 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_address_lot_block_list(matches, &mut request)
             .unwrap();
+        self.config
+            .list_start::<types::AddressLotBlockResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::AddressLotBlockResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9037,21 +9137,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_bgp_config_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::BgpConfigResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::BgpConfigResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9085,16 +9188,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_networking_bgp_config_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9105,16 +9208,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.name_or_id(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_bgp_config_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9125,16 +9228,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.name_or_id(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_bgp_announce_set_list(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9156,16 +9259,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_networking_bgp_announce_set_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9176,16 +9279,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.name_or_id(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_bgp_announce_set_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9196,32 +9299,32 @@ impl<T: CliOverride> Cli<T> {
             request = request.asn(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_bgp_imported_routes_ipv4(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
 
     pub async fn execute_networking_bgp_status(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.networking_bgp_status();
-        self.over
+        self.config
             .execute_networking_bgp_status(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9236,21 +9339,25 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_loopback_address_list(matches, &mut request)
             .unwrap();
+        self.config
+            .list_start::<types::LoopbackAddressResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::LoopbackAddressResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9289,16 +9396,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_networking_loopback_address_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9321,16 +9428,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.switch_location(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_loopback_address_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9349,21 +9456,25 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_switch_port_settings_list(matches, &mut request)
             .unwrap();
+        self.config
+            .list_start::<types::SwitchPortSettingsResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SwitchPortSettingsResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9386,16 +9497,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_networking_switch_port_settings_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9406,16 +9517,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.port_settings(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_switch_port_settings_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9426,32 +9537,32 @@ impl<T: CliOverride> Cli<T> {
             request = request.port(value.clone());
         }
 
-        self.over
+        self.config
             .execute_networking_switch_port_settings_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
 
     pub async fn execute_system_policy_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.system_policy_view();
-        self.over
+        self.config
             .execute_system_policy_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9464,16 +9575,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_system_policy_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9484,19 +9595,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.limit(value.clone());
         }
 
-        self.over.execute_role_list(matches, &mut request).unwrap();
+        self.config
+            .execute_role_list(matches, &mut request)
+            .unwrap();
+        self.config.list_start::<types::RoleResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::RoleResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9508,14 +9623,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.role_name(value.clone());
         }
 
-        self.over.execute_role_view(matches, &mut request).unwrap();
+        self.config
+            .execute_role_view(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9530,21 +9647,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_system_quotas_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::SiloQuotasResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SiloQuotasResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9560,19 +9680,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over.execute_silo_list(matches, &mut request).unwrap();
+        self.config
+            .execute_silo_list(matches, &mut request)
+            .unwrap();
+        self.config.list_start::<types::SiloResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::SiloResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9606,16 +9730,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_silo_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9626,14 +9750,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        self.over.execute_silo_view(matches, &mut request).unwrap();
+        self.config
+            .execute_silo_view(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9644,16 +9770,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        self.over
+        self.config
             .execute_silo_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9672,21 +9798,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_silo_ip_pool_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::SiloIpPoolResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SiloIpPoolResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9698,16 +9827,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        self.over
+        self.config
             .execute_silo_policy_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9724,16 +9853,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_silo_policy_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9744,16 +9873,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        self.over
+        self.config
             .execute_silo_quotas_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9782,16 +9911,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_silo_quotas_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9810,21 +9939,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_silo_user_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::UserResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::UserResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9840,16 +9971,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.user_id(value.clone());
         }
 
-        self.over
+        self.config
             .execute_silo_user_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9864,21 +9995,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_user_builtin_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::UserBuiltinResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::UserBuiltinResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9890,16 +10024,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.user(value.clone());
         }
 
-        self.over
+        self.config
             .execute_user_builtin_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9914,21 +10048,25 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over
+        self.config
             .execute_silo_utilization_list(matches, &mut request)
             .unwrap();
+        self.config
+            .list_start::<types::SiloUtilizationResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::SiloUtilizationResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9940,16 +10078,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.silo(value.clone());
         }
 
-        self.over
+        self.config
             .execute_silo_utilization_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -9968,19 +10106,23 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over.execute_user_list(matches, &mut request).unwrap();
+        self.config
+            .execute_user_list(matches, &mut request)
+            .unwrap();
+        self.config.list_start::<types::UserResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::UserResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -9988,16 +10130,16 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_utilization_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.utilization_view();
-        self.over
+        self.config
             .execute_utilization_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -10012,16 +10154,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.over
+        self.config
             .execute_vpc_firewall_rules_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -10043,16 +10185,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_vpc_firewall_rules_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -10075,21 +10217,24 @@ impl<T: CliOverride> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.over
+        self.config
             .execute_vpc_subnet_list(matches, &mut request)
             .unwrap();
+        self.config.list_start::<types::VpcSubnetResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::VpcSubnetResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -10127,16 +10272,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_vpc_subnet_create(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -10155,16 +10300,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.over
+        self.config
             .execute_vpc_subnet_view(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -10197,16 +10342,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over
+        self.config
             .execute_vpc_subnet_update(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -10225,16 +10370,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.over
+        self.config
             .execute_vpc_subnet_delete(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -10261,21 +10406,25 @@ impl<T: CliOverride> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.over
+        self.config
             .execute_vpc_subnet_list_network_interfaces(matches, &mut request)
             .unwrap();
+        self.config
+            .list_start::<types::InstanceNetworkInterfaceResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config
+                        .list_end_success::<types::InstanceNetworkInterfaceResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -10295,19 +10444,21 @@ impl<T: CliOverride> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.over.execute_vpc_list(matches, &mut request).unwrap();
+        self.config.execute_vpc_list(matches, &mut request).unwrap();
+        self.config.list_start::<types::VpcResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
-                    println!("error\n{:#?}", r);
+                    self.config.list_end_error(&r);
                     break;
                 }
                 Ok(None) => {
+                    self.config.list_end_success::<types::VpcResultsPage>();
                     break;
                 }
                 Ok(Some(value)) => {
-                    println!("{:#?}", value);
+                    self.config.list_item(&value);
                 }
             }
         }
@@ -10341,14 +10492,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over.execute_vpc_create(matches, &mut request).unwrap();
+        self.config
+            .execute_vpc_create(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -10363,14 +10516,14 @@ impl<T: CliOverride> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.over.execute_vpc_view(matches, &mut request).unwrap();
+        self.config.execute_vpc_view(matches, &mut request).unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -10403,14 +10556,16 @@ impl<T: CliOverride> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.over.execute_vpc_update(matches, &mut request).unwrap();
+        self.config
+            .execute_vpc_update(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
@@ -10425,20 +10580,40 @@ impl<T: CliOverride> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.over.execute_vpc_delete(matches, &mut request).unwrap();
+        self.config
+            .execute_vpc_delete(matches, &mut request)
+            .unwrap();
         let result = request.send().await;
         match result {
             Ok(r) => {
-                println!("success\n{:#?}", r)
+                self.config.item_success(&r);
             }
             Err(r) => {
-                println!("error\n{:#?}", r)
+                self.config.item_error(&r);
             }
         }
     }
 }
 
-pub trait CliOverride {
+pub trait CliConfig {
+    fn item_success<T>(&self, value: &ResponseValue<T>)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+    fn item_error<T>(&self, value: &Error<T>)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+    fn list_start<T>(&self)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+    fn list_item<T>(&self, value: &T)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+    fn list_end_success<T>(&self)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
+    fn list_end_error<T>(&self, value: &Error<T>)
+    where
+        T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug;
     fn execute_device_auth_request(
         &self,
         matches: &clap::ArgMatches,
@@ -11792,7 +11967,6 @@ pub trait CliOverride {
     }
 }
 
-impl CliOverride for () {}
 #[derive(Copy, Clone, Debug)]
 pub enum CliCommand {
     DeviceAuthRequest,
