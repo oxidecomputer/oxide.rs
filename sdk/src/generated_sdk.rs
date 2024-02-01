@@ -7937,6 +7937,110 @@ pub mod types {
         }
     }
 
+    /// A hostname identifies a host on a network, and is usually a
+    /// dot-delimited sequence of labels, where each label contains only
+    /// letters, digits, or the hyphen. See RFCs 1035 and 952 for more details.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "title": "An RFC-1035-compliant hostname",
+    ///  "description": "A hostname identifies a host on a network, and is
+    /// usually a dot-delimited sequence of labels, where each label contains
+    /// only letters, digits, or the hyphen. See RFCs 1035 and 952 for more
+    /// details.",
+    ///  "type": "string",
+    ///  "maxLength": 253,
+    ///  "minLength": 1,
+    ///  "pattern":
+    /// "^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!
+    /// -))*$"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
+    pub struct Hostname(String);
+    impl std::ops::Deref for Hostname {
+        type Target = String;
+        fn deref(&self) -> &String {
+            &self.0
+        }
+    }
+
+    impl From<Hostname> for String {
+        fn from(value: Hostname) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&Hostname> for Hostname {
+        fn from(value: &Hostname) -> Self {
+            value.clone()
+        }
+    }
+
+    impl std::str::FromStr for Hostname {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            if value.len() > 253usize {
+                return Err("longer than 253 characters".into());
+            }
+            if value.len() < 1usize {
+                return Err("shorter than 1 characters".into());
+            }
+            if regress::Regex::new(
+                "^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))*$",
+            )
+            .unwrap()
+            .find(value)
+            .is_none()
+            {
+                return Err("doesn't match pattern \
+                            \"^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\\
+                            -]*(?<!-))*$\""
+                    .into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for Hostname {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for Hostname {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for Hostname {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> serde::Deserialize<'de> for Hostname {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as serde::de::Error>::custom(e.to_string())
+                })
+        }
+    }
+
     /// Supported set of sort modes for scanning by id only.
     ///
     /// Currently, we only support scanning in ascending order.
@@ -8997,7 +9101,7 @@ pub mod types {
     ///      }
     ///    },
     ///    "hostname": {
-    ///      "type": "string"
+    ///      "$ref": "#/components/schemas/Hostname"
     ///    },
     ///    "memory": {
     ///      "$ref": "#/components/schemas/ByteCount"
@@ -9068,7 +9172,7 @@ pub mod types {
         /// instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
         pub external_ips: Vec<ExternalIpCreate>,
-        pub hostname: String,
+        pub hostname: Hostname,
         pub memory: ByteCount,
         pub name: Name,
         pub ncpus: InstanceCpuCount,
@@ -26430,7 +26534,7 @@ pub mod types {
             description: Result<String, String>,
             disks: Result<Vec<super::InstanceDiskAttachment>, String>,
             external_ips: Result<Vec<super::ExternalIpCreate>, String>,
-            hostname: Result<String, String>,
+            hostname: Result<super::Hostname, String>,
             memory: Result<super::ByteCount, String>,
             name: Result<super::Name, String>,
             ncpus: Result<super::InstanceCpuCount, String>,
@@ -26491,7 +26595,7 @@ pub mod types {
             }
             pub fn hostname<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<super::Hostname>,
                 T::Error: std::fmt::Display,
             {
                 self.hostname = value

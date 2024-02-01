@@ -1222,7 +1222,7 @@ impl Cli {
             .arg(
                 clap::Arg::new("hostname")
                     .long("hostname")
-                    .value_parser(clap::value_parser!(String))
+                    .value_parser(clap::value_parser!(types::Hostname))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -6685,7 +6685,7 @@ impl<T: CliOverride> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<String>("hostname") {
+        if let Some(value) = matches.get_one::<types::Hostname>("hostname") {
             request = request.body_map(|body| body.hostname(value.clone()))
         }
 
