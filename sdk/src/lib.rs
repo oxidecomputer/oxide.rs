@@ -10,6 +10,9 @@
 use thiserror::Error;
 mod generated_sdk;
 
+mod cmd_disk;
+pub mod composite;
+
 #[cfg(feature = "clap")]
 mod clap_feature;
 
