@@ -1376,9 +1376,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "2.1.0"
+version = "2.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d530e1a18b1cb4c484e6e34556a0d948706958449fca0cab753d649f2bce3d1f"
+checksum = "824b2ae422412366ba479e8111fd301f7b5faece8149317bb81925979a53f520"
 dependencies = [
  "equivalent",
  "hashbrown 0.14.1",
@@ -2150,7 +2150,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#86b60220b88a2ca3629fb87acf8f83ff35f63aaa"
+source = "git+https://github.com/oxidecomputer/progenitor#0014eda6bebaa036e4be5d254d715d845151b744"
 dependencies = [
  "progenitor-client 0.5.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
@@ -2176,7 +2176,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#86b60220b88a2ca3629fb87acf8f83ff35f63aaa"
+source = "git+https://github.com/oxidecomputer/progenitor#0014eda6bebaa036e4be5d254d715d845151b744"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2190,7 +2190,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#86b60220b88a2ca3629fb87acf8f83ff35f63aaa"
+source = "git+https://github.com/oxidecomputer/progenitor#0014eda6bebaa036e4be5d254d715d845151b744"
 dependencies = [
  "getopts",
  "heck",
@@ -2212,7 +2212,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.5.0"
-source = "git+https://github.com/oxidecomputer/progenitor#86b60220b88a2ca3629fb87acf8f83ff35f63aaa"
+source = "git+https://github.com/oxidecomputer/progenitor#0014eda6bebaa036e4be5d254d715d845151b744"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -2695,9 +2695,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.111"
+version = "1.0.113"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "176e46fa42316f18edd598015a5166857fc835ec732f5215eac6b7bdbf0a84f4"
+checksum = "69801b70b1c3dac963ecb03a364ba0ceda9cf60c71cfe475e99864759c8b8a79"
 dependencies = [
  "itoa",
  "ryu",
@@ -3416,7 +3416,7 @@ checksum = "497961ef93d974e23eb6f433eb5fe1b7930b659f06d12dec6fc44a8f554c0bba"
 [[package]]
 name = "typify"
 version = "0.0.15"
-source = "git+https://github.com/oxidecomputer/typify#1f97f167923f001818d461b1286f8a5242abf8b1"
+source = "git+https://github.com/oxidecomputer/typify#58b793d3566ac7f0d30daff5980eca2503b33b88"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3425,7 +3425,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.0.15"
-source = "git+https://github.com/oxidecomputer/typify#1f97f167923f001818d461b1286f8a5242abf8b1"
+source = "git+https://github.com/oxidecomputer/typify#58b793d3566ac7f0d30daff5980eca2503b33b88"
 dependencies = [
  "heck",
  "log",
@@ -3442,7 +3442,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.0.15"
-source = "git+https://github.com/oxidecomputer/typify#1f97f167923f001818d461b1286f8a5242abf8b1"
+source = "git+https://github.com/oxidecomputer/typify#58b793d3566ac7f0d30daff5980eca2503b33b88"
 dependencies = [
  "proc-macro2",
  "quote",
