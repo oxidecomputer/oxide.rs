@@ -129,15 +129,6 @@ fn test_projects_list_paginated_fail() {
         });
     });
 
-    let output = format!(
-        "{}error\nError Response: status: 400 Bad Request",
-        results
-            .iter()
-            .map(|item| format!("{:#?}\n", item))
-            .collect::<Vec<_>>()
-            .join(""),
-    );
-
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
@@ -146,8 +137,11 @@ fn test_projects_list_paginated_fail() {
         .arg("project")
         .arg("list")
         .assert()
-        .success()
-        .stdout(predicates::str::starts_with(output));
+        .failure()
+        // .stdout(predicates::str::starts_with(output));
+        .stdout(expectorate::eq_file_or_panic(
+            "tests/data/test_projects_list_paginated_fail.stdout",
+        ));
 
     mock_p1.assert();
     mock_p2.assert();

@@ -7,6 +7,7 @@
 #![forbid(unsafe_code)]
 
 use std::net::IpAddr;
+use std::sync::atomic::AtomicBool;
 
 use anyhow::Result;
 use async_trait::async_trait;
@@ -65,25 +66,28 @@ async fn main() {
     }
 }
 
-struct OxideOverride;
+#[derive(Default)]
+struct OxideOverride {
+    needs_comma: AtomicBool,
+}
 
 impl OxideOverride {
-    fn ip_range(matches: &clap::ArgMatches) -> Result<IpRange, String> {
+    fn ip_range(matches: &clap::ArgMatches) -> anyhow::Result<IpRange> {
         let first = matches.get_one::<IpAddr>("first").unwrap();
         let last = matches.get_one::<IpAddr>("last").unwrap();
 
         match (first, last) {
             (IpAddr::V4(first), IpAddr::V4(last)) => {
-                let range = Ipv4Range::try_from(Ipv4Range::builder().first(*first).last(*last))
-                    .map_err(|e| e.to_string())?;
+                let range = Ipv4Range::try_from(Ipv4Range::builder().first(*first).last(*last))?;
                 Ok(range.into())
             }
             (IpAddr::V6(first), IpAddr::V6(last)) => {
-                let range = Ipv6Range::try_from(Ipv6Range::builder().first(*first).last(*last))
-                    .map_err(|e| e.to_string())?;
+                let range = Ipv6Range::try_from(Ipv6Range::builder().first(*first).last(*last))?;
                 Ok(range.into())
             }
-            _ => Err("first and last must either both be ipv4 or ipv6 addresses".to_string()),
+            _ => anyhow::bail!(
+                "first and last must either both be ipv4 or ipv6 addresses".to_string()
+            ),
         }
     }
 }
@@ -93,40 +97,57 @@ impl CliConfig for OxideOverride {
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
-        println!("success\n{:#?}", value)
+        let s = serde_json::to_string_pretty(std::ops::Deref::deref(value))
+            .expect("failed to serialize return to json");
+        println!("{}", s);
     }
 
-    fn item_error<T>(&self, value: &oxide::Error<T>)
+    fn item_error<T>(&self, _value: &oxide::Error<T>)
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
-        println!("error\n{:#?}", value)
+        eprintln!("error");
     }
 
     fn list_start<T>(&self)
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
+        self.needs_comma
+            .store(false, std::sync::atomic::Ordering::Relaxed);
+        print!("[");
     }
 
     fn list_item<T>(&self, value: &T)
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
-        println!("{:#?}", value);
+        let s = serde_json::to_string_pretty(&[value]).expect("failed to serialize result to json");
+        if self.needs_comma.load(std::sync::atomic::Ordering::Relaxed) {
+            print!(", {}", &s[4..s.len() - 2]);
+        } else {
+            print!("\n{}", &s[2..s.len() - 2]);
+        };
+        self.needs_comma
+            .store(true, std::sync::atomic::Ordering::Relaxed);
     }
 
     fn list_end_success<T>(&self)
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
+        if self.needs_comma.load(std::sync::atomic::Ordering::Relaxed) {
+            println!("\n]");
+        } else {
+            println!("]");
+        }
     }
 
-    fn list_end_error<T>(&self, value: &oxide::Error<T>)
+    fn list_end_error<T>(&self, _value: &oxide::Error<T>)
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
-        println!("error\n{:#?}", value);
+        self.list_end_success::<T>()
     }
 
     // Deal with all the operations that require an `IpPool` as input
@@ -134,7 +155,7 @@ impl CliConfig for OxideOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut oxide::builder::IpPoolRangeAdd,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
     }
@@ -142,7 +163,7 @@ impl CliConfig for OxideOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut oxide::builder::IpPoolRangeRemove,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
     }
@@ -150,7 +171,7 @@ impl CliConfig for OxideOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut oxide::builder::IpPoolServiceRangeAdd,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
     }
@@ -158,7 +179,7 @@ impl CliConfig for OxideOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut oxide::builder::IpPoolServiceRangeRemove,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         *request = request.to_owned().body(Self::ip_range(matches)?);
         Ok(())
     }
@@ -167,7 +188,7 @@ impl CliConfig for OxideOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut oxide::builder::SamlIdentityProviderCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         match matches
             .get_one::<clap::Id>("idp_metadata_source")
             .map(clap::Id::as_str)

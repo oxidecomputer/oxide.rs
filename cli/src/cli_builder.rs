@@ -245,9 +245,8 @@ struct GeneratedCmd(CliCommand);
 #[async_trait]
 impl RunIt for GeneratedCmd {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
-        let cli = Cli::new(ctx.client()?.clone(), OxideOverride);
-        cli.execute(self.0, matches).await;
-        Ok(())
+        let cli = Cli::new(ctx.client()?.clone(), OxideOverride::default());
+        cli.execute(self.0, matches).await
     }
 
     fn is_subtree(&self) -> bool {

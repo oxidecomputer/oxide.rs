@@ -5026,535 +5026,296 @@ impl<T: CliConfig> Cli<T> {
             .about("Delete a VPC")
     }
 
-    pub async fn execute(&self, cmd: CliCommand, matches: &clap::ArgMatches) {
+    pub async fn execute(&self, cmd: CliCommand, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         match cmd {
-            CliCommand::DeviceAuthRequest => {
-                self.execute_device_auth_request(matches).await;
-            }
-            CliCommand::DeviceAuthConfirm => {
-                self.execute_device_auth_confirm(matches).await;
-            }
-            CliCommand::DeviceAccessToken => {
-                self.execute_device_access_token(matches).await;
-            }
-            CliCommand::LoginSaml => {
-                self.execute_login_saml(matches).await;
-            }
-            CliCommand::CertificateList => {
-                self.execute_certificate_list(matches).await;
-            }
-            CliCommand::CertificateCreate => {
-                self.execute_certificate_create(matches).await;
-            }
-            CliCommand::CertificateView => {
-                self.execute_certificate_view(matches).await;
-            }
-            CliCommand::CertificateDelete => {
-                self.execute_certificate_delete(matches).await;
-            }
-            CliCommand::DiskList => {
-                self.execute_disk_list(matches).await;
-            }
-            CliCommand::DiskCreate => {
-                self.execute_disk_create(matches).await;
-            }
-            CliCommand::DiskView => {
-                self.execute_disk_view(matches).await;
-            }
-            CliCommand::DiskDelete => {
-                self.execute_disk_delete(matches).await;
-            }
-            CliCommand::DiskBulkWriteImport => {
-                self.execute_disk_bulk_write_import(matches).await;
-            }
+            CliCommand::DeviceAuthRequest => self.execute_device_auth_request(matches).await,
+            CliCommand::DeviceAuthConfirm => self.execute_device_auth_confirm(matches).await,
+            CliCommand::DeviceAccessToken => self.execute_device_access_token(matches).await,
+            CliCommand::LoginSaml => self.execute_login_saml(matches).await,
+            CliCommand::CertificateList => self.execute_certificate_list(matches).await,
+            CliCommand::CertificateCreate => self.execute_certificate_create(matches).await,
+            CliCommand::CertificateView => self.execute_certificate_view(matches).await,
+            CliCommand::CertificateDelete => self.execute_certificate_delete(matches).await,
+            CliCommand::DiskList => self.execute_disk_list(matches).await,
+            CliCommand::DiskCreate => self.execute_disk_create(matches).await,
+            CliCommand::DiskView => self.execute_disk_view(matches).await,
+            CliCommand::DiskDelete => self.execute_disk_delete(matches).await,
+            CliCommand::DiskBulkWriteImport => self.execute_disk_bulk_write_import(matches).await,
             CliCommand::DiskBulkWriteImportStart => {
-                self.execute_disk_bulk_write_import_start(matches).await;
+                self.execute_disk_bulk_write_import_start(matches).await
             }
             CliCommand::DiskBulkWriteImportStop => {
-                self.execute_disk_bulk_write_import_stop(matches).await;
+                self.execute_disk_bulk_write_import_stop(matches).await
             }
-            CliCommand::DiskFinalizeImport => {
-                self.execute_disk_finalize_import(matches).await;
-            }
-            CliCommand::DiskMetricsList => {
-                self.execute_disk_metrics_list(matches).await;
-            }
-            CliCommand::FloatingIpList => {
-                self.execute_floating_ip_list(matches).await;
-            }
-            CliCommand::FloatingIpCreate => {
-                self.execute_floating_ip_create(matches).await;
-            }
-            CliCommand::FloatingIpView => {
-                self.execute_floating_ip_view(matches).await;
-            }
-            CliCommand::FloatingIpDelete => {
-                self.execute_floating_ip_delete(matches).await;
-            }
-            CliCommand::FloatingIpAttach => {
-                self.execute_floating_ip_attach(matches).await;
-            }
-            CliCommand::FloatingIpDetach => {
-                self.execute_floating_ip_detach(matches).await;
-            }
-            CliCommand::GroupList => {
-                self.execute_group_list(matches).await;
-            }
-            CliCommand::GroupView => {
-                self.execute_group_view(matches).await;
-            }
-            CliCommand::ImageList => {
-                self.execute_image_list(matches).await;
-            }
-            CliCommand::ImageCreate => {
-                self.execute_image_create(matches).await;
-            }
-            CliCommand::ImageView => {
-                self.execute_image_view(matches).await;
-            }
-            CliCommand::ImageDelete => {
-                self.execute_image_delete(matches).await;
-            }
-            CliCommand::ImageDemote => {
-                self.execute_image_demote(matches).await;
-            }
-            CliCommand::ImagePromote => {
-                self.execute_image_promote(matches).await;
-            }
-            CliCommand::InstanceList => {
-                self.execute_instance_list(matches).await;
-            }
-            CliCommand::InstanceCreate => {
-                self.execute_instance_create(matches).await;
-            }
-            CliCommand::InstanceView => {
-                self.execute_instance_view(matches).await;
-            }
-            CliCommand::InstanceDelete => {
-                self.execute_instance_delete(matches).await;
-            }
-            CliCommand::InstanceDiskList => {
-                self.execute_instance_disk_list(matches).await;
-            }
-            CliCommand::InstanceDiskAttach => {
-                self.execute_instance_disk_attach(matches).await;
-            }
-            CliCommand::InstanceDiskDetach => {
-                self.execute_instance_disk_detach(matches).await;
-            }
+            CliCommand::DiskFinalizeImport => self.execute_disk_finalize_import(matches).await,
+            CliCommand::DiskMetricsList => self.execute_disk_metrics_list(matches).await,
+            CliCommand::FloatingIpList => self.execute_floating_ip_list(matches).await,
+            CliCommand::FloatingIpCreate => self.execute_floating_ip_create(matches).await,
+            CliCommand::FloatingIpView => self.execute_floating_ip_view(matches).await,
+            CliCommand::FloatingIpDelete => self.execute_floating_ip_delete(matches).await,
+            CliCommand::FloatingIpAttach => self.execute_floating_ip_attach(matches).await,
+            CliCommand::FloatingIpDetach => self.execute_floating_ip_detach(matches).await,
+            CliCommand::GroupList => self.execute_group_list(matches).await,
+            CliCommand::GroupView => self.execute_group_view(matches).await,
+            CliCommand::ImageList => self.execute_image_list(matches).await,
+            CliCommand::ImageCreate => self.execute_image_create(matches).await,
+            CliCommand::ImageView => self.execute_image_view(matches).await,
+            CliCommand::ImageDelete => self.execute_image_delete(matches).await,
+            CliCommand::ImageDemote => self.execute_image_demote(matches).await,
+            CliCommand::ImagePromote => self.execute_image_promote(matches).await,
+            CliCommand::InstanceList => self.execute_instance_list(matches).await,
+            CliCommand::InstanceCreate => self.execute_instance_create(matches).await,
+            CliCommand::InstanceView => self.execute_instance_view(matches).await,
+            CliCommand::InstanceDelete => self.execute_instance_delete(matches).await,
+            CliCommand::InstanceDiskList => self.execute_instance_disk_list(matches).await,
+            CliCommand::InstanceDiskAttach => self.execute_instance_disk_attach(matches).await,
+            CliCommand::InstanceDiskDetach => self.execute_instance_disk_detach(matches).await,
             CliCommand::InstanceExternalIpList => {
-                self.execute_instance_external_ip_list(matches).await;
+                self.execute_instance_external_ip_list(matches).await
             }
             CliCommand::InstanceEphemeralIpAttach => {
-                self.execute_instance_ephemeral_ip_attach(matches).await;
+                self.execute_instance_ephemeral_ip_attach(matches).await
             }
             CliCommand::InstanceEphemeralIpDetach => {
-                self.execute_instance_ephemeral_ip_detach(matches).await;
+                self.execute_instance_ephemeral_ip_detach(matches).await
             }
-            CliCommand::InstanceMigrate => {
-                self.execute_instance_migrate(matches).await;
-            }
-            CliCommand::InstanceReboot => {
-                self.execute_instance_reboot(matches).await;
-            }
+            CliCommand::InstanceMigrate => self.execute_instance_migrate(matches).await,
+            CliCommand::InstanceReboot => self.execute_instance_reboot(matches).await,
             CliCommand::InstanceSerialConsole => {
-                self.execute_instance_serial_console(matches).await;
+                self.execute_instance_serial_console(matches).await
             }
             CliCommand::InstanceSerialConsoleStream => {
-                self.execute_instance_serial_console_stream(matches).await;
+                self.execute_instance_serial_console_stream(matches).await
             }
-            CliCommand::InstanceStart => {
-                self.execute_instance_start(matches).await;
-            }
-            CliCommand::InstanceStop => {
-                self.execute_instance_stop(matches).await;
-            }
-            CliCommand::ProjectIpPoolList => {
-                self.execute_project_ip_pool_list(matches).await;
-            }
-            CliCommand::ProjectIpPoolView => {
-                self.execute_project_ip_pool_view(matches).await;
-            }
-            CliCommand::LoginLocal => {
-                self.execute_login_local(matches).await;
-            }
-            CliCommand::Logout => {
-                self.execute_logout(matches).await;
-            }
-            CliCommand::CurrentUserView => {
-                self.execute_current_user_view(matches).await;
-            }
-            CliCommand::CurrentUserGroups => {
-                self.execute_current_user_groups(matches).await;
-            }
+            CliCommand::InstanceStart => self.execute_instance_start(matches).await,
+            CliCommand::InstanceStop => self.execute_instance_stop(matches).await,
+            CliCommand::ProjectIpPoolList => self.execute_project_ip_pool_list(matches).await,
+            CliCommand::ProjectIpPoolView => self.execute_project_ip_pool_view(matches).await,
+            CliCommand::LoginLocal => self.execute_login_local(matches).await,
+            CliCommand::Logout => self.execute_logout(matches).await,
+            CliCommand::CurrentUserView => self.execute_current_user_view(matches).await,
+            CliCommand::CurrentUserGroups => self.execute_current_user_groups(matches).await,
             CliCommand::CurrentUserSshKeyList => {
-                self.execute_current_user_ssh_key_list(matches).await;
+                self.execute_current_user_ssh_key_list(matches).await
             }
             CliCommand::CurrentUserSshKeyCreate => {
-                self.execute_current_user_ssh_key_create(matches).await;
+                self.execute_current_user_ssh_key_create(matches).await
             }
             CliCommand::CurrentUserSshKeyView => {
-                self.execute_current_user_ssh_key_view(matches).await;
+                self.execute_current_user_ssh_key_view(matches).await
             }
             CliCommand::CurrentUserSshKeyDelete => {
-                self.execute_current_user_ssh_key_delete(matches).await;
+                self.execute_current_user_ssh_key_delete(matches).await
             }
-            CliCommand::SiloMetric => {
-                self.execute_silo_metric(matches).await;
-            }
+            CliCommand::SiloMetric => self.execute_silo_metric(matches).await,
             CliCommand::InstanceNetworkInterfaceList => {
-                self.execute_instance_network_interface_list(matches).await;
+                self.execute_instance_network_interface_list(matches).await
             }
             CliCommand::InstanceNetworkInterfaceCreate => {
                 self.execute_instance_network_interface_create(matches)
-                    .await;
+                    .await
             }
             CliCommand::InstanceNetworkInterfaceView => {
-                self.execute_instance_network_interface_view(matches).await;
+                self.execute_instance_network_interface_view(matches).await
             }
             CliCommand::InstanceNetworkInterfaceUpdate => {
                 self.execute_instance_network_interface_update(matches)
-                    .await;
+                    .await
             }
             CliCommand::InstanceNetworkInterfaceDelete => {
                 self.execute_instance_network_interface_delete(matches)
-                    .await;
+                    .await
             }
-            CliCommand::Ping => {
-                self.execute_ping(matches).await;
-            }
-            CliCommand::PolicyView => {
-                self.execute_policy_view(matches).await;
-            }
-            CliCommand::PolicyUpdate => {
-                self.execute_policy_update(matches).await;
-            }
-            CliCommand::ProjectList => {
-                self.execute_project_list(matches).await;
-            }
-            CliCommand::ProjectCreate => {
-                self.execute_project_create(matches).await;
-            }
-            CliCommand::ProjectView => {
-                self.execute_project_view(matches).await;
-            }
-            CliCommand::ProjectUpdate => {
-                self.execute_project_update(matches).await;
-            }
-            CliCommand::ProjectDelete => {
-                self.execute_project_delete(matches).await;
-            }
-            CliCommand::ProjectPolicyView => {
-                self.execute_project_policy_view(matches).await;
-            }
-            CliCommand::ProjectPolicyUpdate => {
-                self.execute_project_policy_update(matches).await;
-            }
-            CliCommand::SnapshotList => {
-                self.execute_snapshot_list(matches).await;
-            }
-            CliCommand::SnapshotCreate => {
-                self.execute_snapshot_create(matches).await;
-            }
-            CliCommand::SnapshotView => {
-                self.execute_snapshot_view(matches).await;
-            }
-            CliCommand::SnapshotDelete => {
-                self.execute_snapshot_delete(matches).await;
-            }
-            CliCommand::PhysicalDiskList => {
-                self.execute_physical_disk_list(matches).await;
-            }
-            CliCommand::RackList => {
-                self.execute_rack_list(matches).await;
-            }
-            CliCommand::RackView => {
-                self.execute_rack_view(matches).await;
-            }
-            CliCommand::SledList => {
-                self.execute_sled_list(matches).await;
-            }
-            CliCommand::SledAdd => {
-                self.execute_sled_add(matches).await;
-            }
-            CliCommand::SledView => {
-                self.execute_sled_view(matches).await;
-            }
-            CliCommand::SledPhysicalDiskList => {
-                self.execute_sled_physical_disk_list(matches).await;
-            }
-            CliCommand::SledInstanceList => {
-                self.execute_sled_instance_list(matches).await;
-            }
+            CliCommand::Ping => self.execute_ping(matches).await,
+            CliCommand::PolicyView => self.execute_policy_view(matches).await,
+            CliCommand::PolicyUpdate => self.execute_policy_update(matches).await,
+            CliCommand::ProjectList => self.execute_project_list(matches).await,
+            CliCommand::ProjectCreate => self.execute_project_create(matches).await,
+            CliCommand::ProjectView => self.execute_project_view(matches).await,
+            CliCommand::ProjectUpdate => self.execute_project_update(matches).await,
+            CliCommand::ProjectDelete => self.execute_project_delete(matches).await,
+            CliCommand::ProjectPolicyView => self.execute_project_policy_view(matches).await,
+            CliCommand::ProjectPolicyUpdate => self.execute_project_policy_update(matches).await,
+            CliCommand::SnapshotList => self.execute_snapshot_list(matches).await,
+            CliCommand::SnapshotCreate => self.execute_snapshot_create(matches).await,
+            CliCommand::SnapshotView => self.execute_snapshot_view(matches).await,
+            CliCommand::SnapshotDelete => self.execute_snapshot_delete(matches).await,
+            CliCommand::PhysicalDiskList => self.execute_physical_disk_list(matches).await,
+            CliCommand::RackList => self.execute_rack_list(matches).await,
+            CliCommand::RackView => self.execute_rack_view(matches).await,
+            CliCommand::SledList => self.execute_sled_list(matches).await,
+            CliCommand::SledAdd => self.execute_sled_add(matches).await,
+            CliCommand::SledView => self.execute_sled_view(matches).await,
+            CliCommand::SledPhysicalDiskList => self.execute_sled_physical_disk_list(matches).await,
+            CliCommand::SledInstanceList => self.execute_sled_instance_list(matches).await,
             CliCommand::SledSetProvisionState => {
-                self.execute_sled_set_provision_state(matches).await;
+                self.execute_sled_set_provision_state(matches).await
             }
             CliCommand::SledListUninitialized => {
-                self.execute_sled_list_uninitialized(matches).await;
+                self.execute_sled_list_uninitialized(matches).await
             }
             CliCommand::NetworkingSwitchPortList => {
-                self.execute_networking_switch_port_list(matches).await;
+                self.execute_networking_switch_port_list(matches).await
             }
             CliCommand::NetworkingSwitchPortApplySettings => {
                 self.execute_networking_switch_port_apply_settings(matches)
-                    .await;
+                    .await
             }
             CliCommand::NetworkingSwitchPortClearSettings => {
                 self.execute_networking_switch_port_clear_settings(matches)
-                    .await;
+                    .await
             }
-            CliCommand::SwitchList => {
-                self.execute_switch_list(matches).await;
-            }
-            CliCommand::SwitchView => {
-                self.execute_switch_view(matches).await;
-            }
+            CliCommand::SwitchList => self.execute_switch_list(matches).await,
+            CliCommand::SwitchView => self.execute_switch_view(matches).await,
             CliCommand::SiloIdentityProviderList => {
-                self.execute_silo_identity_provider_list(matches).await;
+                self.execute_silo_identity_provider_list(matches).await
             }
-            CliCommand::LocalIdpUserCreate => {
-                self.execute_local_idp_user_create(matches).await;
-            }
-            CliCommand::LocalIdpUserDelete => {
-                self.execute_local_idp_user_delete(matches).await;
-            }
+            CliCommand::LocalIdpUserCreate => self.execute_local_idp_user_create(matches).await,
+            CliCommand::LocalIdpUserDelete => self.execute_local_idp_user_delete(matches).await,
             CliCommand::LocalIdpUserSetPassword => {
-                self.execute_local_idp_user_set_password(matches).await;
+                self.execute_local_idp_user_set_password(matches).await
             }
             CliCommand::SamlIdentityProviderCreate => {
-                self.execute_saml_identity_provider_create(matches).await;
+                self.execute_saml_identity_provider_create(matches).await
             }
             CliCommand::SamlIdentityProviderView => {
-                self.execute_saml_identity_provider_view(matches).await;
+                self.execute_saml_identity_provider_view(matches).await
             }
-            CliCommand::IpPoolList => {
-                self.execute_ip_pool_list(matches).await;
-            }
-            CliCommand::IpPoolCreate => {
-                self.execute_ip_pool_create(matches).await;
-            }
-            CliCommand::IpPoolView => {
-                self.execute_ip_pool_view(matches).await;
-            }
-            CliCommand::IpPoolUpdate => {
-                self.execute_ip_pool_update(matches).await;
-            }
-            CliCommand::IpPoolDelete => {
-                self.execute_ip_pool_delete(matches).await;
-            }
-            CliCommand::IpPoolRangeList => {
-                self.execute_ip_pool_range_list(matches).await;
-            }
-            CliCommand::IpPoolRangeAdd => {
-                self.execute_ip_pool_range_add(matches).await;
-            }
-            CliCommand::IpPoolRangeRemove => {
-                self.execute_ip_pool_range_remove(matches).await;
-            }
-            CliCommand::IpPoolSiloList => {
-                self.execute_ip_pool_silo_list(matches).await;
-            }
-            CliCommand::IpPoolSiloLink => {
-                self.execute_ip_pool_silo_link(matches).await;
-            }
-            CliCommand::IpPoolSiloUpdate => {
-                self.execute_ip_pool_silo_update(matches).await;
-            }
-            CliCommand::IpPoolSiloUnlink => {
-                self.execute_ip_pool_silo_unlink(matches).await;
-            }
-            CliCommand::IpPoolServiceView => {
-                self.execute_ip_pool_service_view(matches).await;
-            }
+            CliCommand::IpPoolList => self.execute_ip_pool_list(matches).await,
+            CliCommand::IpPoolCreate => self.execute_ip_pool_create(matches).await,
+            CliCommand::IpPoolView => self.execute_ip_pool_view(matches).await,
+            CliCommand::IpPoolUpdate => self.execute_ip_pool_update(matches).await,
+            CliCommand::IpPoolDelete => self.execute_ip_pool_delete(matches).await,
+            CliCommand::IpPoolRangeList => self.execute_ip_pool_range_list(matches).await,
+            CliCommand::IpPoolRangeAdd => self.execute_ip_pool_range_add(matches).await,
+            CliCommand::IpPoolRangeRemove => self.execute_ip_pool_range_remove(matches).await,
+            CliCommand::IpPoolSiloList => self.execute_ip_pool_silo_list(matches).await,
+            CliCommand::IpPoolSiloLink => self.execute_ip_pool_silo_link(matches).await,
+            CliCommand::IpPoolSiloUpdate => self.execute_ip_pool_silo_update(matches).await,
+            CliCommand::IpPoolSiloUnlink => self.execute_ip_pool_silo_unlink(matches).await,
+            CliCommand::IpPoolServiceView => self.execute_ip_pool_service_view(matches).await,
             CliCommand::IpPoolServiceRangeList => {
-                self.execute_ip_pool_service_range_list(matches).await;
+                self.execute_ip_pool_service_range_list(matches).await
             }
             CliCommand::IpPoolServiceRangeAdd => {
-                self.execute_ip_pool_service_range_add(matches).await;
+                self.execute_ip_pool_service_range_add(matches).await
             }
             CliCommand::IpPoolServiceRangeRemove => {
-                self.execute_ip_pool_service_range_remove(matches).await;
+                self.execute_ip_pool_service_range_remove(matches).await
             }
-            CliCommand::SystemMetric => {
-                self.execute_system_metric(matches).await;
-            }
+            CliCommand::SystemMetric => self.execute_system_metric(matches).await,
             CliCommand::NetworkingAddressLotList => {
-                self.execute_networking_address_lot_list(matches).await;
+                self.execute_networking_address_lot_list(matches).await
             }
             CliCommand::NetworkingAddressLotCreate => {
-                self.execute_networking_address_lot_create(matches).await;
+                self.execute_networking_address_lot_create(matches).await
             }
             CliCommand::NetworkingAddressLotDelete => {
-                self.execute_networking_address_lot_delete(matches).await;
+                self.execute_networking_address_lot_delete(matches).await
             }
             CliCommand::NetworkingAddressLotBlockList => {
                 self.execute_networking_address_lot_block_list(matches)
-                    .await;
+                    .await
             }
             CliCommand::NetworkingBgpConfigList => {
-                self.execute_networking_bgp_config_list(matches).await;
+                self.execute_networking_bgp_config_list(matches).await
             }
             CliCommand::NetworkingBgpConfigCreate => {
-                self.execute_networking_bgp_config_create(matches).await;
+                self.execute_networking_bgp_config_create(matches).await
             }
             CliCommand::NetworkingBgpConfigDelete => {
-                self.execute_networking_bgp_config_delete(matches).await;
+                self.execute_networking_bgp_config_delete(matches).await
             }
             CliCommand::NetworkingBgpAnnounceSetList => {
-                self.execute_networking_bgp_announce_set_list(matches).await;
+                self.execute_networking_bgp_announce_set_list(matches).await
             }
             CliCommand::NetworkingBgpAnnounceSetCreate => {
                 self.execute_networking_bgp_announce_set_create(matches)
-                    .await;
+                    .await
             }
             CliCommand::NetworkingBgpAnnounceSetDelete => {
                 self.execute_networking_bgp_announce_set_delete(matches)
-                    .await;
+                    .await
             }
             CliCommand::NetworkingBgpImportedRoutesIpv4 => {
                 self.execute_networking_bgp_imported_routes_ipv4(matches)
-                    .await;
+                    .await
             }
-            CliCommand::NetworkingBgpStatus => {
-                self.execute_networking_bgp_status(matches).await;
-            }
+            CliCommand::NetworkingBgpStatus => self.execute_networking_bgp_status(matches).await,
             CliCommand::NetworkingLoopbackAddressList => {
-                self.execute_networking_loopback_address_list(matches).await;
+                self.execute_networking_loopback_address_list(matches).await
             }
             CliCommand::NetworkingLoopbackAddressCreate => {
                 self.execute_networking_loopback_address_create(matches)
-                    .await;
+                    .await
             }
             CliCommand::NetworkingLoopbackAddressDelete => {
                 self.execute_networking_loopback_address_delete(matches)
-                    .await;
+                    .await
             }
             CliCommand::NetworkingSwitchPortSettingsList => {
                 self.execute_networking_switch_port_settings_list(matches)
-                    .await;
+                    .await
             }
             CliCommand::NetworkingSwitchPortSettingsCreate => {
                 self.execute_networking_switch_port_settings_create(matches)
-                    .await;
+                    .await
             }
             CliCommand::NetworkingSwitchPortSettingsDelete => {
                 self.execute_networking_switch_port_settings_delete(matches)
-                    .await;
+                    .await
             }
             CliCommand::NetworkingSwitchPortSettingsView => {
                 self.execute_networking_switch_port_settings_view(matches)
-                    .await;
+                    .await
             }
-            CliCommand::SystemPolicyView => {
-                self.execute_system_policy_view(matches).await;
-            }
-            CliCommand::SystemPolicyUpdate => {
-                self.execute_system_policy_update(matches).await;
-            }
-            CliCommand::RoleList => {
-                self.execute_role_list(matches).await;
-            }
-            CliCommand::RoleView => {
-                self.execute_role_view(matches).await;
-            }
-            CliCommand::SystemQuotasList => {
-                self.execute_system_quotas_list(matches).await;
-            }
-            CliCommand::SiloList => {
-                self.execute_silo_list(matches).await;
-            }
-            CliCommand::SiloCreate => {
-                self.execute_silo_create(matches).await;
-            }
-            CliCommand::SiloView => {
-                self.execute_silo_view(matches).await;
-            }
-            CliCommand::SiloDelete => {
-                self.execute_silo_delete(matches).await;
-            }
-            CliCommand::SiloIpPoolList => {
-                self.execute_silo_ip_pool_list(matches).await;
-            }
-            CliCommand::SiloPolicyView => {
-                self.execute_silo_policy_view(matches).await;
-            }
-            CliCommand::SiloPolicyUpdate => {
-                self.execute_silo_policy_update(matches).await;
-            }
-            CliCommand::SiloQuotasView => {
-                self.execute_silo_quotas_view(matches).await;
-            }
-            CliCommand::SiloQuotasUpdate => {
-                self.execute_silo_quotas_update(matches).await;
-            }
-            CliCommand::SiloUserList => {
-                self.execute_silo_user_list(matches).await;
-            }
-            CliCommand::SiloUserView => {
-                self.execute_silo_user_view(matches).await;
-            }
-            CliCommand::UserBuiltinList => {
-                self.execute_user_builtin_list(matches).await;
-            }
-            CliCommand::UserBuiltinView => {
-                self.execute_user_builtin_view(matches).await;
-            }
-            CliCommand::SiloUtilizationList => {
-                self.execute_silo_utilization_list(matches).await;
-            }
-            CliCommand::SiloUtilizationView => {
-                self.execute_silo_utilization_view(matches).await;
-            }
-            CliCommand::UserList => {
-                self.execute_user_list(matches).await;
-            }
-            CliCommand::UtilizationView => {
-                self.execute_utilization_view(matches).await;
-            }
-            CliCommand::VpcFirewallRulesView => {
-                self.execute_vpc_firewall_rules_view(matches).await;
-            }
+            CliCommand::SystemPolicyView => self.execute_system_policy_view(matches).await,
+            CliCommand::SystemPolicyUpdate => self.execute_system_policy_update(matches).await,
+            CliCommand::RoleList => self.execute_role_list(matches).await,
+            CliCommand::RoleView => self.execute_role_view(matches).await,
+            CliCommand::SystemQuotasList => self.execute_system_quotas_list(matches).await,
+            CliCommand::SiloList => self.execute_silo_list(matches).await,
+            CliCommand::SiloCreate => self.execute_silo_create(matches).await,
+            CliCommand::SiloView => self.execute_silo_view(matches).await,
+            CliCommand::SiloDelete => self.execute_silo_delete(matches).await,
+            CliCommand::SiloIpPoolList => self.execute_silo_ip_pool_list(matches).await,
+            CliCommand::SiloPolicyView => self.execute_silo_policy_view(matches).await,
+            CliCommand::SiloPolicyUpdate => self.execute_silo_policy_update(matches).await,
+            CliCommand::SiloQuotasView => self.execute_silo_quotas_view(matches).await,
+            CliCommand::SiloQuotasUpdate => self.execute_silo_quotas_update(matches).await,
+            CliCommand::SiloUserList => self.execute_silo_user_list(matches).await,
+            CliCommand::SiloUserView => self.execute_silo_user_view(matches).await,
+            CliCommand::UserBuiltinList => self.execute_user_builtin_list(matches).await,
+            CliCommand::UserBuiltinView => self.execute_user_builtin_view(matches).await,
+            CliCommand::SiloUtilizationList => self.execute_silo_utilization_list(matches).await,
+            CliCommand::SiloUtilizationView => self.execute_silo_utilization_view(matches).await,
+            CliCommand::UserList => self.execute_user_list(matches).await,
+            CliCommand::UtilizationView => self.execute_utilization_view(matches).await,
+            CliCommand::VpcFirewallRulesView => self.execute_vpc_firewall_rules_view(matches).await,
             CliCommand::VpcFirewallRulesUpdate => {
-                self.execute_vpc_firewall_rules_update(matches).await;
+                self.execute_vpc_firewall_rules_update(matches).await
             }
-            CliCommand::VpcSubnetList => {
-                self.execute_vpc_subnet_list(matches).await;
-            }
-            CliCommand::VpcSubnetCreate => {
-                self.execute_vpc_subnet_create(matches).await;
-            }
-            CliCommand::VpcSubnetView => {
-                self.execute_vpc_subnet_view(matches).await;
-            }
-            CliCommand::VpcSubnetUpdate => {
-                self.execute_vpc_subnet_update(matches).await;
-            }
-            CliCommand::VpcSubnetDelete => {
-                self.execute_vpc_subnet_delete(matches).await;
-            }
+            CliCommand::VpcSubnetList => self.execute_vpc_subnet_list(matches).await,
+            CliCommand::VpcSubnetCreate => self.execute_vpc_subnet_create(matches).await,
+            CliCommand::VpcSubnetView => self.execute_vpc_subnet_view(matches).await,
+            CliCommand::VpcSubnetUpdate => self.execute_vpc_subnet_update(matches).await,
+            CliCommand::VpcSubnetDelete => self.execute_vpc_subnet_delete(matches).await,
             CliCommand::VpcSubnetListNetworkInterfaces => {
                 self.execute_vpc_subnet_list_network_interfaces(matches)
-                    .await;
+                    .await
             }
-            CliCommand::VpcList => {
-                self.execute_vpc_list(matches).await;
-            }
-            CliCommand::VpcCreate => {
-                self.execute_vpc_create(matches).await;
-            }
-            CliCommand::VpcView => {
-                self.execute_vpc_view(matches).await;
-            }
-            CliCommand::VpcUpdate => {
-                self.execute_vpc_update(matches).await;
-            }
-            CliCommand::VpcDelete => {
-                self.execute_vpc_delete(matches).await;
-            }
+            CliCommand::VpcList => self.execute_vpc_list(matches).await,
+            CliCommand::VpcCreate => self.execute_vpc_create(matches).await,
+            CliCommand::VpcView => self.execute_vpc_view(matches).await,
+            CliCommand::VpcUpdate => self.execute_vpc_update(matches).await,
+            CliCommand::VpcDelete => self.execute_vpc_delete(matches).await,
         }
     }
 
-    pub async fn execute_device_auth_request(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_device_auth_request(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.device_auth_request();
         if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
             request = request.body_map(|body| body.client_id(value.clone()))
@@ -5567,8 +5328,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_device_auth_request(matches, &mut request)
-            .unwrap();
+            .execute_device_auth_request(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -5580,7 +5340,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_device_auth_confirm(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_device_auth_confirm(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.device_auth_confirm();
         if let Some(value) = matches.get_one::<String>("user-code") {
             request = request.body_map(|body| body.user_code(value.clone()))
@@ -5593,20 +5356,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_device_auth_confirm(matches, &mut request)
-            .unwrap();
+            .execute_device_auth_confirm(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_device_access_token(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_device_access_token(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.device_access_token();
         if let Some(value) = matches.get_one::<uuid::Uuid>("client-id") {
             request = request.body_map(|body| body.client_id(value.clone()))
@@ -5628,8 +5395,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_device_access_token(matches, &mut request)
-            .unwrap();
+            .execute_device_access_token(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -5641,7 +5407,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_login_saml(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_login_saml(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.login_saml();
         if let Some(value) = matches.get_one::<types::Name>("provider-name") {
             request = request.provider_name(value.clone());
@@ -5651,9 +5417,7 @@ impl<T: CliConfig> Cli<T> {
             request = request.silo_name(value.clone());
         }
 
-        self.config
-            .execute_login_saml(matches, &mut request)
-            .unwrap();
+        self.config.execute_login_saml(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -5661,11 +5425,12 @@ impl<T: CliConfig> Cli<T> {
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_certificate_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_certificate_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.certificate_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -5676,20 +5441,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_certificate_list(matches, &mut request)
-            .unwrap();
+            .execute_certificate_list(matches, &mut request)?;
         self.config.list_start::<types::CertificateResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::CertificateResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -5698,7 +5462,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_certificate_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_certificate_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.certificate_create();
         if let Some(value) = matches.get_one::<String>("cert") {
             request = request.body_map(|body| body.cert(value.clone()))
@@ -5727,60 +5494,66 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_certificate_create(matches, &mut request)
-            .unwrap();
+            .execute_certificate_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_certificate_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_certificate_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.certificate_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
             request = request.certificate(value.clone());
         }
 
         self.config
-            .execute_certificate_view(matches, &mut request)
-            .unwrap();
+            .execute_certificate_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_certificate_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_certificate_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.certificate_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("certificate") {
             request = request.certificate(value.clone());
         }
 
         self.config
-            .execute_certificate_delete(matches, &mut request)
-            .unwrap();
+            .execute_certificate_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_disk_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_disk_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -5794,20 +5567,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_disk_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_disk_list(matches, &mut request)?;
         self.config.list_start::<types::DiskResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::DiskResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -5816,7 +5587,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_disk_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_disk_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -5840,21 +5611,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_disk_create(matches, &mut request)
-            .unwrap();
+        self.config.execute_disk_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_disk_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_disk_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
@@ -5864,21 +5635,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_disk_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_disk_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_disk_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_disk_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.disk_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
@@ -5888,21 +5659,24 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_disk_delete(matches, &mut request)
-            .unwrap();
+        self.config.execute_disk_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_disk_bulk_write_import(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_disk_bulk_write_import(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.disk_bulk_write_import();
         if let Some(value) = matches.get_one::<String>("base64-encoded-data") {
             request = request.body_map(|body| body.base64_encoded_data(value.clone()))
@@ -5928,20 +5702,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_disk_bulk_write_import(matches, &mut request)
-            .unwrap();
+            .execute_disk_bulk_write_import(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_disk_bulk_write_import_start(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_disk_bulk_write_import_start(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.disk_bulk_write_import_start();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
@@ -5952,20 +5730,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_disk_bulk_write_import_start(matches, &mut request)
-            .unwrap();
+            .execute_disk_bulk_write_import_start(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_disk_bulk_write_import_stop(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_disk_bulk_write_import_stop(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.disk_bulk_write_import_stop();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
@@ -5976,20 +5758,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_disk_bulk_write_import_stop(matches, &mut request)
-            .unwrap();
+            .execute_disk_bulk_write_import_stop(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_disk_finalize_import(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_disk_finalize_import(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.disk_finalize_import();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
@@ -6010,20 +5796,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_disk_finalize_import(matches, &mut request)
-            .unwrap();
+            .execute_disk_finalize_import(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_disk_metrics_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_disk_metrics_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.disk_metrics_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.disk(value.clone());
@@ -6055,20 +5845,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_disk_metrics_list(matches, &mut request)
-            .unwrap();
+            .execute_disk_metrics_list(matches, &mut request)?;
         self.config.list_start::<types::MeasurementResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::MeasurementResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -6077,7 +5866,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_floating_ip_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_floating_ip_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -6092,20 +5881,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_floating_ip_list(matches, &mut request)
-            .unwrap();
+            .execute_floating_ip_list(matches, &mut request)?;
         self.config.list_start::<types::FloatingIpResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::FloatingIpResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -6114,7 +5902,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_floating_ip_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_floating_ip_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_create();
         if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
             request = request.body_map(|body| body.address(value.clone()))
@@ -6143,20 +5934,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_floating_ip_create(matches, &mut request)
-            .unwrap();
+            .execute_floating_ip_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_floating_ip_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_floating_ip_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
             request = request.floating_ip(value.clone());
@@ -6167,20 +5959,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_floating_ip_view(matches, &mut request)
-            .unwrap();
+            .execute_floating_ip_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_floating_ip_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_floating_ip_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
             request = request.floating_ip(value.clone());
@@ -6191,20 +5987,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_floating_ip_delete(matches, &mut request)
-            .unwrap();
+            .execute_floating_ip_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_floating_ip_attach(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_floating_ip_attach(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_attach();
         if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
             request = request.floating_ip(value.clone());
@@ -6229,20 +6029,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_floating_ip_attach(matches, &mut request)
-            .unwrap();
+            .execute_floating_ip_attach(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_floating_ip_detach(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_floating_ip_detach(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_detach();
         if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
             request = request.floating_ip(value.clone());
@@ -6253,20 +6057,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_floating_ip_detach(matches, &mut request)
-            .unwrap();
+            .execute_floating_ip_detach(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_group_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_group_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.group_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -6276,20 +6081,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_group_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_group_list(matches, &mut request)?;
         self.config.list_start::<types::GroupResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::GroupResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -6298,27 +6101,27 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_group_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_group_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.group_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("group-id") {
             request = request.group_id(value.clone());
         }
 
-        self.config
-            .execute_group_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_group_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_image_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_image_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -6332,20 +6135,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_image_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_image_list(matches, &mut request)?;
         self.config.list_start::<types::ImageResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::ImageResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -6354,7 +6155,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_image_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_image_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -6382,21 +6183,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_image_create(matches, &mut request)
-            .unwrap();
+        self.config.execute_image_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_image_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_image_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
@@ -6406,21 +6207,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_image_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_image_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_image_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_image_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
@@ -6430,21 +6231,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_image_delete(matches, &mut request)
-            .unwrap();
+        self.config.execute_image_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_image_demote(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_image_demote(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_demote();
         if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
@@ -6454,21 +6255,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_image_demote(matches, &mut request)
-            .unwrap();
+        self.config.execute_image_demote(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_image_promote(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_image_promote(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.image_promote();
         if let Some(value) = matches.get_one::<types::NameOrId>("image") {
             request = request.image(value.clone());
@@ -6478,21 +6279,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_image_promote(matches, &mut request)
-            .unwrap();
+        self.config.execute_image_promote(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -6506,20 +6307,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_instance_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_instance_list(matches, &mut request)?;
         self.config.list_start::<types::InstanceResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::InstanceResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -6528,7 +6327,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -6568,21 +6367,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_instance_create(matches, &mut request)
-            .unwrap();
+        self.config.execute_instance_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -6592,21 +6391,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_instance_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_instance_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -6616,21 +6415,24 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_instance_delete(matches, &mut request)
-            .unwrap();
+        self.config.execute_instance_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_disk_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_disk_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_disk_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -6649,19 +6451,18 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_disk_list(matches, &mut request)
-            .unwrap();
+            .execute_instance_disk_list(matches, &mut request)?;
         self.config.list_start::<types::DiskResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::DiskResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -6670,7 +6471,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_disk_attach(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_disk_attach(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_disk_attach();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.body_map(|body| body.disk(value.clone()))
@@ -6691,20 +6495,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_disk_attach(matches, &mut request)
-            .unwrap();
+            .execute_instance_disk_attach(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_disk_detach(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_disk_detach(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_disk_detach();
         if let Some(value) = matches.get_one::<types::NameOrId>("disk") {
             request = request.body_map(|body| body.disk(value.clone()))
@@ -6725,20 +6533,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_disk_detach(matches, &mut request)
-            .unwrap();
+            .execute_instance_disk_detach(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_external_ip_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_external_ip_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_external_ip_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -6749,20 +6561,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_external_ip_list(matches, &mut request)
-            .unwrap();
+            .execute_instance_external_ip_list(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_ephemeral_ip_attach(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_ephemeral_ip_attach(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_ephemeral_ip_attach();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -6783,20 +6599,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_ephemeral_ip_attach(matches, &mut request)
-            .unwrap();
+            .execute_instance_ephemeral_ip_attach(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_ephemeral_ip_detach(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_ephemeral_ip_detach(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_ephemeral_ip_detach();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -6807,20 +6627,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_ephemeral_ip_detach(matches, &mut request)
-            .unwrap();
+            .execute_instance_ephemeral_ip_detach(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_migrate(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_migrate(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_migrate();
         if let Some(value) = matches.get_one::<uuid::Uuid>("dst-sled-id") {
             request = request.body_map(|body| body.dst_sled_id(value.clone()))
@@ -6841,20 +6662,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_migrate(matches, &mut request)
-            .unwrap();
+            .execute_instance_migrate(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_reboot(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_reboot(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_reboot();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -6864,21 +6686,24 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_instance_reboot(matches, &mut request)
-            .unwrap();
+        self.config.execute_instance_reboot(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_serial_console(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_serial_console(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_serial_console();
         if let Some(value) = matches.get_one::<u64>("from-start") {
             request = request.from_start(value.clone());
@@ -6901,20 +6726,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_serial_console(matches, &mut request)
-            .unwrap();
+            .execute_instance_serial_console(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_serial_console_stream(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_serial_console_stream(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_serial_console_stream();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -6929,8 +6758,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_serial_console_stream(matches, &mut request)
-            .unwrap();
+            .execute_instance_serial_console_stream(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -6942,7 +6770,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_start(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_start(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_start();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -6952,21 +6780,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_instance_start(matches, &mut request)
-            .unwrap();
+        self.config.execute_instance_start(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_stop(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_stop(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.instance_stop();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -6976,21 +6804,24 @@ impl<T: CliConfig> Cli<T> {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_instance_stop(matches, &mut request)
-            .unwrap();
+        self.config.execute_instance_stop(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_project_ip_pool_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_project_ip_pool_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.project_ip_pool_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7001,20 +6832,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_project_ip_pool_list(matches, &mut request)
-            .unwrap();
+            .execute_project_ip_pool_list(matches, &mut request)?;
         self.config.list_start::<types::SiloIpPoolResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::SiloIpPoolResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -7023,27 +6853,31 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_project_ip_pool_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_project_ip_pool_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.project_ip_pool_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
         self.config
-            .execute_project_ip_pool_view(matches, &mut request)
-            .unwrap();
+            .execute_project_ip_pool_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_login_local(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_login_local(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.login_local();
         if let Some(value) = matches.get_one::<types::Password>("password") {
             request = request.body_map(|body| body.password(value.clone()))
@@ -7064,51 +6898,60 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_login_local(matches, &mut request)
-            .unwrap();
+        self.config.execute_login_local(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_logout(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_logout(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.logout();
-        self.config.execute_logout(matches, &mut request).unwrap();
+        self.config.execute_logout(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_current_user_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_current_user_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_view();
         self.config
-            .execute_current_user_view(matches, &mut request)
-            .unwrap();
+            .execute_current_user_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_current_user_groups(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_current_user_groups(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_groups();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7119,19 +6962,18 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_current_user_groups(matches, &mut request)
-            .unwrap();
+            .execute_current_user_groups(matches, &mut request)?;
         self.config.list_start::<types::GroupResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::GroupResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -7140,7 +6982,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_current_user_ssh_key_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_current_user_ssh_key_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7151,19 +6996,18 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_current_user_ssh_key_list(matches, &mut request)
-            .unwrap();
+            .execute_current_user_ssh_key_list(matches, &mut request)?;
         self.config.list_start::<types::SshKeyResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::SshKeyResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -7172,7 +7016,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_current_user_ssh_key_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_current_user_ssh_key_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -7193,60 +7040,69 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_current_user_ssh_key_create(matches, &mut request)
-            .unwrap();
+            .execute_current_user_ssh_key_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_current_user_ssh_key_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_current_user_ssh_key_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("ssh-key") {
             request = request.ssh_key(value.clone());
         }
 
         self.config
-            .execute_current_user_ssh_key_view(matches, &mut request)
-            .unwrap();
+            .execute_current_user_ssh_key_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_current_user_ssh_key_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_current_user_ssh_key_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.current_user_ssh_key_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("ssh-key") {
             request = request.ssh_key(value.clone());
         }
 
         self.config
-            .execute_current_user_ssh_key_delete(matches, &mut request)
-            .unwrap();
+            .execute_current_user_ssh_key_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_silo_metric(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_metric(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_metric();
         if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
             request = request.end_time(value.clone());
@@ -7273,21 +7129,19 @@ impl<T: CliConfig> Cli<T> {
             request = request.start_time(value.clone());
         }
 
-        self.config
-            .execute_silo_metric(matches, &mut request)
-            .unwrap();
+        self.config.execute_silo_metric(matches, &mut request)?;
         self.config.list_start::<types::MeasurementResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::MeasurementResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -7296,7 +7150,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_network_interface_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_network_interface_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -7315,8 +7172,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_network_interface_list(matches, &mut request)
-            .unwrap();
+            .execute_instance_network_interface_list(matches, &mut request)?;
         self.config
             .list_start::<types::InstanceNetworkInterfaceResultsPage>();
         let mut stream = request.stream();
@@ -7324,12 +7180,12 @@ impl<T: CliConfig> Cli<T> {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::InstanceNetworkInterfaceResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -7338,7 +7194,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_instance_network_interface_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_network_interface_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -7376,20 +7235,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_network_interface_create(matches, &mut request)
-            .unwrap();
+            .execute_instance_network_interface_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_network_interface_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_network_interface_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -7404,20 +7267,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_network_interface_view(matches, &mut request)
-            .unwrap();
+            .execute_instance_network_interface_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_network_interface_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_network_interface_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_update();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -7451,20 +7318,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_network_interface_update(matches, &mut request)
-            .unwrap();
+            .execute_instance_network_interface_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_instance_network_interface_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_instance_network_interface_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.instance_network_interface_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
             request = request.instance(value.clone());
@@ -7479,50 +7350,53 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_instance_network_interface_delete(matches, &mut request)
-            .unwrap();
+            .execute_instance_network_interface_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ping(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ping(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ping();
-        self.config.execute_ping(matches, &mut request).unwrap();
+        self.config.execute_ping(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_policy_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_policy_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.policy_view();
-        self.config
-            .execute_policy_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_policy_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_policy_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_policy_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.policy_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
@@ -7530,21 +7404,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_policy_update(matches, &mut request)
-            .unwrap();
+        self.config.execute_policy_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_project_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_project_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7554,20 +7428,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_project_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_project_list(matches, &mut request)?;
         self.config.list_start::<types::ProjectResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::ProjectResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -7576,7 +7448,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_project_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_project_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -7592,41 +7464,41 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_project_create(matches, &mut request)
-            .unwrap();
+        self.config.execute_project_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_project_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_project_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_project_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_project_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_project_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_project_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_update();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -7646,61 +7518,68 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_project_update(matches, &mut request)
-            .unwrap();
+        self.config.execute_project_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_project_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_project_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.project_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
-        self.config
-            .execute_project_delete(matches, &mut request)
-            .unwrap();
+        self.config.execute_project_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_project_policy_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_project_policy_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.project_policy_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
         }
 
         self.config
-            .execute_project_policy_view(matches, &mut request)
-            .unwrap();
+            .execute_project_policy_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_project_policy_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_project_policy_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.project_policy_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -7713,20 +7592,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_project_policy_update(matches, &mut request)
-            .unwrap();
+            .execute_project_policy_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_snapshot_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_snapshot_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7740,20 +7620,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_snapshot_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_snapshot_list(matches, &mut request)?;
         self.config.list_start::<types::SnapshotResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::SnapshotResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -7762,7 +7640,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_snapshot_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_snapshot_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -7786,21 +7664,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_snapshot_create(matches, &mut request)
-            .unwrap();
+        self.config.execute_snapshot_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_snapshot_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_snapshot_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -7810,21 +7688,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.snapshot(value.clone());
         }
 
-        self.config
-            .execute_snapshot_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_snapshot_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_snapshot_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_snapshot_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.snapshot_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -7834,21 +7712,24 @@ impl<T: CliConfig> Cli<T> {
             request = request.snapshot(value.clone());
         }
 
-        self.config
-            .execute_snapshot_delete(matches, &mut request)
-            .unwrap();
+        self.config.execute_snapshot_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_physical_disk_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_physical_disk_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.physical_disk_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7859,20 +7740,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_physical_disk_list(matches, &mut request)
-            .unwrap();
+            .execute_physical_disk_list(matches, &mut request)?;
         self.config.list_start::<types::PhysicalDiskResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::PhysicalDiskResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -7881,7 +7761,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_rack_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_rack_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.rack_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7891,20 +7771,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_rack_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_rack_list(matches, &mut request)?;
         self.config.list_start::<types::RackResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::RackResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -7913,27 +7791,27 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_rack_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_rack_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.rack_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
             request = request.rack_id(value.clone());
         }
 
-        self.config
-            .execute_rack_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_rack_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_sled_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_sled_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.sled_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -7943,20 +7821,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_sled_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_sled_list(matches, &mut request)?;
         self.config.list_start::<types::SledResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::SledResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -7965,7 +7841,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_sled_add(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_sled_add(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.sled_add();
         if let Some(value) = matches.get_one::<String>("part") {
             request = request.body_map(|body| body.part(value.clone()))
@@ -7981,39 +7857,44 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config.execute_sled_add(matches, &mut request).unwrap();
+        self.config.execute_sled_add(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_sled_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_sled_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.sled_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
         }
 
-        self.config
-            .execute_sled_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_sled_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_sled_physical_disk_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_sled_physical_disk_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.sled_physical_disk_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -8028,20 +7909,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_sled_physical_disk_list(matches, &mut request)
-            .unwrap();
+            .execute_sled_physical_disk_list(matches, &mut request)?;
         self.config.list_start::<types::PhysicalDiskResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::PhysicalDiskResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8050,7 +7930,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_sled_instance_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_sled_instance_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.sled_instance_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -8065,20 +7948,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_sled_instance_list(matches, &mut request)
-            .unwrap();
+            .execute_sled_instance_list(matches, &mut request)?;
         self.config.list_start::<types::SledInstanceResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::SledInstanceResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8087,7 +7969,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_sled_set_provision_state(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_sled_set_provision_state(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.sled_set_provision_state();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
@@ -8105,28 +7990,31 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_sled_set_provision_state(matches, &mut request)
-            .unwrap();
+            .execute_sled_set_provision_state(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_sled_list_uninitialized(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_sled_list_uninitialized(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.sled_list_uninitialized();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
         self.config
-            .execute_sled_list_uninitialized(matches, &mut request)
-            .unwrap();
+            .execute_sled_list_uninitialized(matches, &mut request)?;
         self.config
             .list_start::<types::UninitializedSledResultsPage>();
         let mut stream = request.stream();
@@ -8134,12 +8022,12 @@ impl<T: CliConfig> Cli<T> {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::UninitializedSledResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8148,7 +8036,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_switch_port_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_switch_port_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -8163,20 +8054,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_switch_port_list(matches, &mut request)
-            .unwrap();
+            .execute_networking_switch_port_list(matches, &mut request)?;
         self.config.list_start::<types::SwitchPortResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::SwitchPortResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8185,7 +8075,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_switch_port_apply_settings(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_switch_port_apply_settings(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_apply_settings();
         if let Some(value) = matches.get_one::<types::Name>("port") {
             request = request.port(value.clone());
@@ -8211,20 +8104,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_switch_port_apply_settings(matches, &mut request)
-            .unwrap();
+            .execute_networking_switch_port_apply_settings(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_switch_port_clear_settings(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_switch_port_clear_settings(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_clear_settings();
         if let Some(value) = matches.get_one::<types::Name>("port") {
             request = request.port(value.clone());
@@ -8239,20 +8136,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_switch_port_clear_settings(matches, &mut request)
-            .unwrap();
+            .execute_networking_switch_port_clear_settings(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_switch_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_switch_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.switch_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -8262,20 +8160,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_switch_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_switch_list(matches, &mut request)?;
         self.config.list_start::<types::SwitchResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::SwitchResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8284,27 +8180,30 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_switch_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_switch_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.switch_view();
         if let Some(value) = matches.get_one::<uuid::Uuid>("switch-id") {
             request = request.switch_id(value.clone());
         }
 
-        self.config
-            .execute_switch_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_switch_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_silo_identity_provider_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_identity_provider_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.silo_identity_provider_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -8319,8 +8218,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_silo_identity_provider_list(matches, &mut request)
-            .unwrap();
+            .execute_silo_identity_provider_list(matches, &mut request)?;
         self.config
             .list_start::<types::IdentityProviderResultsPage>();
         let mut stream = request.stream();
@@ -8328,12 +8226,12 @@ impl<T: CliConfig> Cli<T> {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::IdentityProviderResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8342,7 +8240,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_local_idp_user_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_local_idp_user_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.local_idp_user_create();
         if let Some(value) = matches.get_one::<types::UserId>("external-id") {
             request = request.body_map(|body| body.external_id(value.clone()))
@@ -8359,20 +8260,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_local_idp_user_create(matches, &mut request)
-            .unwrap();
+            .execute_local_idp_user_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_local_idp_user_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_local_idp_user_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.local_idp_user_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
@@ -8383,20 +8288,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_local_idp_user_delete(matches, &mut request)
-            .unwrap();
+            .execute_local_idp_user_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_local_idp_user_set_password(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_local_idp_user_set_password(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.local_idp_user_set_password();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
@@ -8413,20 +8322,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_local_idp_user_set_password(matches, &mut request)
-            .unwrap();
+            .execute_local_idp_user_set_password(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_saml_identity_provider_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_saml_identity_provider_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.saml_identity_provider_create();
         if let Some(value) = matches.get_one::<String>("acs-url") {
             request = request.body_map(|body| body.acs_url(value.clone()))
@@ -8472,20 +8385,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_saml_identity_provider_create(matches, &mut request)
-            .unwrap();
+            .execute_saml_identity_provider_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_saml_identity_provider_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_saml_identity_provider_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.saml_identity_provider_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("provider") {
             request = request.provider(value.clone());
@@ -8496,20 +8413,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_saml_identity_provider_view(matches, &mut request)
-            .unwrap();
+            .execute_saml_identity_provider_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -8519,20 +8437,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_ip_pool_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_ip_pool_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::IpPoolResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8541,7 +8457,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -8557,41 +8473,41 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_ip_pool_create(matches, &mut request)
-            .unwrap();
+        self.config.execute_ip_pool_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
-        self.config
-            .execute_ip_pool_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_ip_pool_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_update();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -8611,41 +8527,44 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_ip_pool_update(matches, &mut request)
-            .unwrap();
+        self.config.execute_ip_pool_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
         }
 
-        self.config
-            .execute_ip_pool_delete(matches, &mut request)
-            .unwrap();
+        self.config.execute_ip_pool_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_range_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_range_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_range_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -8656,20 +8575,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_range_list(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_range_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolRangeResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::IpPoolRangeResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8678,7 +8596,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_range_add(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_range_add(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_range_add();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
@@ -8691,20 +8612,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_range_add(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_range_add(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_range_remove(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_range_remove(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_range_remove();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
@@ -8717,20 +8642,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_range_remove(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_range_remove(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_silo_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_silo_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_silo_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -8745,20 +8674,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_silo_list(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_silo_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolSiloLinkResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::IpPoolSiloLinkResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8767,7 +8695,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_silo_link(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_silo_link(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_silo_link();
         if let Some(value) = matches.get_one::<bool>("is-default") {
             request = request.body_map(|body| body.is_default(value.clone()))
@@ -8788,20 +8719,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_silo_link(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_silo_link(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_silo_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_silo_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_silo_update();
         if let Some(value) = matches.get_one::<bool>("is-default") {
             request = request.body_map(|body| body.is_default(value.clone()))
@@ -8822,20 +8757,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_silo_update(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_silo_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_silo_unlink(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_silo_unlink(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_silo_unlink();
         if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
             request = request.pool(value.clone());
@@ -8846,56 +8785,63 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_silo_unlink(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_silo_unlink(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_service_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_service_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_view();
         self.config
-            .execute_ip_pool_service_view(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_service_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_service_range_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_service_range_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
         self.config
-            .execute_ip_pool_service_range_list(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_service_range_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolRangeResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::IpPoolRangeResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8904,7 +8850,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_ip_pool_service_range_add(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_service_range_add(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_add();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
@@ -8913,20 +8862,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_service_range_add(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_service_range_add(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_ip_pool_service_range_remove(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_ip_pool_service_range_remove(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.ip_pool_service_range_remove();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
@@ -8935,20 +8888,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_ip_pool_service_range_remove(matches, &mut request)
-            .unwrap();
+            .execute_ip_pool_service_range_remove(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_system_metric(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_system_metric(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.system_metric();
         if let Some(value) = matches.get_one::<chrono::DateTime<chrono::offset::Utc>>("end-time") {
             request = request.end_time(value.clone());
@@ -8975,21 +8929,19 @@ impl<T: CliConfig> Cli<T> {
             request = request.start_time(value.clone());
         }
 
-        self.config
-            .execute_system_metric(matches, &mut request)
-            .unwrap();
+        self.config.execute_system_metric(matches, &mut request)?;
         self.config.list_start::<types::MeasurementResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::MeasurementResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -8998,7 +8950,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_address_lot_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_address_lot_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -9009,20 +8964,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_address_lot_list(matches, &mut request)
-            .unwrap();
+            .execute_networking_address_lot_list(matches, &mut request)?;
         self.config.list_start::<types::AddressLotResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::AddressLotResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -9031,7 +8985,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_address_lot_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_address_lot_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -9052,40 +9009,48 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_address_lot_create(matches, &mut request)
-            .unwrap();
+            .execute_networking_address_lot_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_address_lot_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_address_lot_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
             request = request.address_lot(value.clone());
         }
 
         self.config
-            .execute_networking_address_lot_delete(matches, &mut request)
-            .unwrap();
+            .execute_networking_address_lot_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_address_lot_block_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_address_lot_block_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_address_lot_block_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("address-lot") {
             request = request.address_lot(value.clone());
@@ -9100,8 +9065,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_address_lot_block_list(matches, &mut request)
-            .unwrap();
+            .execute_networking_address_lot_block_list(matches, &mut request)?;
         self.config
             .list_start::<types::AddressLotBlockResultsPage>();
         let mut stream = request.stream();
@@ -9109,12 +9073,12 @@ impl<T: CliConfig> Cli<T> {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::AddressLotBlockResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -9123,7 +9087,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_bgp_config_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_bgp_config_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_config_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -9138,20 +9105,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_bgp_config_list(matches, &mut request)
-            .unwrap();
+            .execute_networking_bgp_config_list(matches, &mut request)?;
         self.config.list_start::<types::BgpConfigResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::BgpConfigResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -9160,7 +9126,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_bgp_config_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_bgp_config_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_config_create();
         if let Some(value) = matches.get_one::<u32>("asn") {
             request = request.body_map(|body| body.asn(value.clone()))
@@ -9189,60 +9158,72 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_bgp_config_create(matches, &mut request)
-            .unwrap();
+            .execute_networking_bgp_config_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_bgp_config_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_bgp_config_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_config_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
             request = request.name_or_id(value.clone());
         }
 
         self.config
-            .execute_networking_bgp_config_delete(matches, &mut request)
-            .unwrap();
+            .execute_networking_bgp_config_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_bgp_announce_set_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_bgp_announce_set_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_list();
         if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
             request = request.name_or_id(value.clone());
         }
 
         self.config
-            .execute_networking_bgp_announce_set_list(matches, &mut request)
-            .unwrap();
+            .execute_networking_bgp_announce_set_list(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_bgp_announce_set_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_bgp_announce_set_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -9260,76 +9241,92 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_bgp_announce_set_create(matches, &mut request)
-            .unwrap();
+            .execute_networking_bgp_announce_set_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_bgp_announce_set_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_bgp_announce_set_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_announce_set_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("name-or-id") {
             request = request.name_or_id(value.clone());
         }
 
         self.config
-            .execute_networking_bgp_announce_set_delete(matches, &mut request)
-            .unwrap();
+            .execute_networking_bgp_announce_set_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_bgp_imported_routes_ipv4(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_bgp_imported_routes_ipv4(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_imported_routes_ipv4();
         if let Some(value) = matches.get_one::<u32>("asn") {
             request = request.asn(value.clone());
         }
 
         self.config
-            .execute_networking_bgp_imported_routes_ipv4(matches, &mut request)
-            .unwrap();
+            .execute_networking_bgp_imported_routes_ipv4(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_bgp_status(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_bgp_status(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_bgp_status();
         self.config
-            .execute_networking_bgp_status(matches, &mut request)
-            .unwrap();
+            .execute_networking_bgp_status(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_loopback_address_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_loopback_address_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_loopback_address_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -9340,8 +9337,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_loopback_address_list(matches, &mut request)
-            .unwrap();
+            .execute_networking_loopback_address_list(matches, &mut request)?;
         self.config
             .list_start::<types::LoopbackAddressResultsPage>();
         let mut stream = request.stream();
@@ -9349,12 +9345,12 @@ impl<T: CliConfig> Cli<T> {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::LoopbackAddressResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -9363,7 +9359,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_loopback_address_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_loopback_address_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_loopback_address_create();
         if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
             request = request.body_map(|body| body.address(value.clone()))
@@ -9397,20 +9396,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_loopback_address_create(matches, &mut request)
-            .unwrap();
+            .execute_networking_loopback_address_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_loopback_address_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_loopback_address_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_loopback_address_delete();
         if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
             request = request.address(value.clone());
@@ -9429,20 +9432,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_loopback_address_delete(matches, &mut request)
-            .unwrap();
+            .execute_networking_loopback_address_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_switch_port_settings_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_switch_port_settings_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -9457,8 +9464,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_switch_port_settings_list(matches, &mut request)
-            .unwrap();
+            .execute_networking_switch_port_settings_list(matches, &mut request)?;
         self.config
             .list_start::<types::SwitchPortSettingsResultsPage>();
         let mut stream = request.stream();
@@ -9466,12 +9472,12 @@ impl<T: CliConfig> Cli<T> {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::SwitchPortSettingsResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -9480,7 +9486,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_switch_port_settings_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_switch_port_settings_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -9498,76 +9507,92 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_networking_switch_port_settings_create(matches, &mut request)
-            .unwrap();
+            .execute_networking_switch_port_settings_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_switch_port_settings_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_switch_port_settings_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("port-settings") {
             request = request.port_settings(value.clone());
         }
 
         self.config
-            .execute_networking_switch_port_settings_delete(matches, &mut request)
-            .unwrap();
+            .execute_networking_switch_port_settings_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_networking_switch_port_settings_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_networking_switch_port_settings_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.networking_switch_port_settings_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("port") {
             request = request.port(value.clone());
         }
 
         self.config
-            .execute_networking_switch_port_settings_view(matches, &mut request)
-            .unwrap();
+            .execute_networking_switch_port_settings_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_system_policy_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_system_policy_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.system_policy_view();
         self.config
-            .execute_system_policy_view(matches, &mut request)
-            .unwrap();
+            .execute_system_policy_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_system_policy_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_system_policy_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.system_policy_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
@@ -9576,39 +9601,38 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_system_policy_update(matches, &mut request)
-            .unwrap();
+            .execute_system_policy_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_role_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_role_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.role_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
         }
 
-        self.config
-            .execute_role_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_role_list(matches, &mut request)?;
         self.config.list_start::<types::RoleResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::RoleResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -9617,27 +9641,30 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_role_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_role_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.role_view();
         if let Some(value) = matches.get_one::<String>("role-name") {
             request = request.role_name(value.clone());
         }
 
-        self.config
-            .execute_role_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_role_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_system_quotas_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_system_quotas_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.system_quotas_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -9648,20 +9675,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_system_quotas_list(matches, &mut request)
-            .unwrap();
+            .execute_system_quotas_list(matches, &mut request)?;
         self.config.list_start::<types::SiloQuotasResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::SiloQuotasResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -9670,7 +9696,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -9680,20 +9706,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_silo_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_silo_list(matches, &mut request)?;
         self.config.list_start::<types::SiloResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::SiloResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -9702,7 +9726,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_create();
         if let Some(value) = matches.get_one::<String>("admin-group-name") {
             request = request.body_map(|body| body.admin_group_name(value.clone()))
@@ -9730,61 +9754,64 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_silo_create(matches, &mut request)
-            .unwrap();
+        self.config.execute_silo_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_silo_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
-        self.config
-            .execute_silo_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_silo_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_silo_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
-        self.config
-            .execute_silo_delete(matches, &mut request)
-            .unwrap();
+        self.config.execute_silo_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_silo_ip_pool_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_ip_pool_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.silo_ip_pool_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -9799,20 +9826,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_silo_ip_pool_list(matches, &mut request)
-            .unwrap();
+            .execute_silo_ip_pool_list(matches, &mut request)?;
         self.config.list_start::<types::SiloIpPoolResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::SiloIpPoolResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -9821,27 +9847,31 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_policy_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_policy_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_policy_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
         self.config
-            .execute_silo_policy_view(matches, &mut request)
-            .unwrap();
+            .execute_silo_policy_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_silo_policy_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_policy_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.silo_policy_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
@@ -9854,40 +9884,45 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_silo_policy_update(matches, &mut request)
-            .unwrap();
+            .execute_silo_policy_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_silo_quotas_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_quotas_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_quotas_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
         self.config
-            .execute_silo_quotas_view(matches, &mut request)
-            .unwrap();
+            .execute_silo_quotas_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_silo_quotas_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_quotas_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.silo_quotas_update();
         if let Some(value) = matches.get_one::<i64>("cpus") {
             request = request.body_map(|body| body.cpus(value.clone()))
@@ -9912,20 +9947,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_silo_quotas_update(matches, &mut request)
-            .unwrap();
+            .execute_silo_quotas_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_silo_user_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_user_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_user_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -9939,20 +9975,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_silo_user_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_silo_user_list(matches, &mut request)?;
         self.config.list_start::<types::UserResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::UserResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -9961,7 +9995,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_user_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_user_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.silo_user_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
@@ -9971,21 +10005,24 @@ impl<T: CliConfig> Cli<T> {
             request = request.user_id(value.clone());
         }
 
-        self.config
-            .execute_silo_user_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_silo_user_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_user_builtin_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_user_builtin_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.user_builtin_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -9996,20 +10033,19 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_user_builtin_list(matches, &mut request)
-            .unwrap();
+            .execute_user_builtin_list(matches, &mut request)?;
         self.config.list_start::<types::UserBuiltinResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::UserBuiltinResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -10018,27 +10054,34 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_user_builtin_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_user_builtin_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.user_builtin_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("user") {
             request = request.user(value.clone());
         }
 
         self.config
-            .execute_user_builtin_view(matches, &mut request)
-            .unwrap();
+            .execute_user_builtin_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_silo_utilization_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_utilization_list(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.silo_utilization_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -10049,8 +10092,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_silo_utilization_list(matches, &mut request)
-            .unwrap();
+            .execute_silo_utilization_list(matches, &mut request)?;
         self.config
             .list_start::<types::SiloUtilizationResultsPage>();
         let mut stream = request.stream();
@@ -10058,12 +10100,12 @@ impl<T: CliConfig> Cli<T> {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::SiloUtilizationResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -10072,27 +10114,31 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_silo_utilization_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_silo_utilization_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.silo_utilization_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
             request = request.silo(value.clone());
         }
 
         self.config
-            .execute_silo_utilization_view(matches, &mut request)
-            .unwrap();
+            .execute_silo_utilization_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_user_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_user_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.user_list();
         if let Some(value) = matches.get_one::<uuid::Uuid>("group") {
             request = request.group(value.clone());
@@ -10106,20 +10152,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config
-            .execute_user_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_user_list(matches, &mut request)?;
         self.config.list_start::<types::UserResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::UserResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -10128,23 +10172,27 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_utilization_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_utilization_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.utilization_view();
         self.config
-            .execute_utilization_view(matches, &mut request)
-            .unwrap();
+            .execute_utilization_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_vpc_firewall_rules_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_firewall_rules_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_firewall_rules_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -10155,20 +10203,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_vpc_firewall_rules_view(matches, &mut request)
-            .unwrap();
+            .execute_vpc_firewall_rules_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_vpc_firewall_rules_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_firewall_rules_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_firewall_rules_update();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -10186,20 +10238,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_vpc_firewall_rules_update(matches, &mut request)
-            .unwrap();
+            .execute_vpc_firewall_rules_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_vpc_subnet_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_subnet_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -10217,21 +10270,19 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.config
-            .execute_vpc_subnet_list(matches, &mut request)
-            .unwrap();
+        self.config.execute_vpc_subnet_list(matches, &mut request)?;
         self.config.list_start::<types::VpcSubnetResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::VpcSubnetResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -10240,7 +10291,10 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_subnet_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_subnet_create(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -10273,20 +10327,21 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_vpc_subnet_create(matches, &mut request)
-            .unwrap();
+            .execute_vpc_subnet_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_vpc_subnet_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_subnet_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -10300,21 +10355,24 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.config
-            .execute_vpc_subnet_view(matches, &mut request)
-            .unwrap();
+        self.config.execute_vpc_subnet_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_vpc_subnet_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_subnet_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_update();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -10343,20 +10401,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_vpc_subnet_update(matches, &mut request)
-            .unwrap();
+            .execute_vpc_subnet_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_vpc_subnet_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_subnet_delete(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -10371,20 +10433,24 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_vpc_subnet_delete(matches, &mut request)
-            .unwrap();
+            .execute_vpc_subnet_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_vpc_subnet_list_network_interfaces(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_subnet_list_network_interfaces(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
         let mut request = self.client.vpc_subnet_list_network_interfaces();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -10407,8 +10473,7 @@ impl<T: CliConfig> Cli<T> {
         }
 
         self.config
-            .execute_vpc_subnet_list_network_interfaces(matches, &mut request)
-            .unwrap();
+            .execute_vpc_subnet_list_network_interfaces(matches, &mut request)?;
         self.config
             .list_start::<types::InstanceNetworkInterfaceResultsPage>();
         let mut stream = request.stream();
@@ -10416,12 +10481,12 @@ impl<T: CliConfig> Cli<T> {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config
                         .list_end_success::<types::InstanceNetworkInterfaceResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -10430,7 +10495,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_list(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
             request = request.limit(value.clone());
@@ -10444,18 +10509,18 @@ impl<T: CliConfig> Cli<T> {
             request = request.sort_by(value.clone());
         }
 
-        self.config.execute_vpc_list(matches, &mut request).unwrap();
+        self.config.execute_vpc_list(matches, &mut request)?;
         self.config.list_start::<types::VpcResultsPage>();
         let mut stream = request.stream();
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
                     self.config.list_end_error(&r);
-                    break;
+                    return Err(anyhow::Error::new(r));
                 }
                 Ok(None) => {
                     self.config.list_end_success::<types::VpcResultsPage>();
-                    break;
+                    return Ok(());
                 }
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
@@ -10464,7 +10529,7 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_vpc_create(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_create();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -10492,21 +10557,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_vpc_create(matches, &mut request)
-            .unwrap();
+        self.config.execute_vpc_create(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_vpc_view(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -10516,19 +10581,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.config.execute_vpc_view(matches, &mut request).unwrap();
+        self.config.execute_vpc_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_vpc_update(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_update(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_update();
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
@@ -10556,21 +10623,21 @@ impl<T: CliConfig> Cli<T> {
             request = request.body(body_value);
         }
 
-        self.config
-            .execute_vpc_update(matches, &mut request)
-            .unwrap();
+        self.config.execute_vpc_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
 
-    pub async fn execute_vpc_delete(&self, matches: &clap::ArgMatches) {
+    pub async fn execute_vpc_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.vpc_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("project") {
             request = request.project(value.clone());
@@ -10580,16 +10647,16 @@ impl<T: CliConfig> Cli<T> {
             request = request.vpc(value.clone());
         }
 
-        self.config
-            .execute_vpc_delete(matches, &mut request)
-            .unwrap();
+        self.config.execute_vpc_delete(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
                 self.config.item_success(&r);
+                Ok(())
             }
             Err(r) => {
                 self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -10618,7 +10685,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DeviceAuthRequest,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10626,7 +10693,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DeviceAuthConfirm,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10634,7 +10701,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DeviceAccessToken,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10642,7 +10709,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::LoginSaml,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10650,7 +10717,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::CertificateList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10658,7 +10725,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::CertificateCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10666,7 +10733,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::CertificateView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10674,7 +10741,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::CertificateDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10682,7 +10749,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DiskList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10690,7 +10757,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DiskCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10698,7 +10765,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DiskView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10706,7 +10773,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DiskDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10714,7 +10781,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DiskBulkWriteImport,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10722,7 +10789,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DiskBulkWriteImportStart,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10730,7 +10797,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DiskBulkWriteImportStop,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10738,7 +10805,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DiskFinalizeImport,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10746,7 +10813,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::DiskMetricsList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10754,7 +10821,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::FloatingIpList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10762,7 +10829,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::FloatingIpCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10770,7 +10837,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::FloatingIpView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10778,7 +10845,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::FloatingIpDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10786,7 +10853,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::FloatingIpAttach,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10794,7 +10861,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::FloatingIpDetach,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10802,7 +10869,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::GroupList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10810,7 +10877,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::GroupView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10818,7 +10885,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ImageList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10826,7 +10893,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ImageCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10834,7 +10901,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ImageView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10842,7 +10909,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ImageDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10850,7 +10917,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ImageDemote,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10858,7 +10925,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ImagePromote,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10866,7 +10933,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10874,7 +10941,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10882,7 +10949,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10890,7 +10957,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10898,7 +10965,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceDiskList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10906,7 +10973,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceDiskAttach,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10914,7 +10981,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceDiskDetach,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10922,7 +10989,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceExternalIpList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10930,7 +10997,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceEphemeralIpAttach,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10938,7 +11005,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceEphemeralIpDetach,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10946,7 +11013,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceMigrate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10954,7 +11021,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceReboot,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10962,7 +11029,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceSerialConsole,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10970,7 +11037,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceSerialConsoleStream,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10978,7 +11045,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceStart,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10986,7 +11053,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceStop,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -10994,7 +11061,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ProjectIpPoolList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11002,7 +11069,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ProjectIpPoolView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11010,7 +11077,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::LoginLocal,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11018,7 +11085,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::Logout,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11026,7 +11093,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::CurrentUserView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11034,7 +11101,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::CurrentUserGroups,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11042,7 +11109,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::CurrentUserSshKeyList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11050,7 +11117,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::CurrentUserSshKeyCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11058,7 +11125,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::CurrentUserSshKeyView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11066,7 +11133,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::CurrentUserSshKeyDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11074,7 +11141,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloMetric,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11082,7 +11149,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceNetworkInterfaceList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11090,7 +11157,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceNetworkInterfaceCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11098,7 +11165,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceNetworkInterfaceView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11106,7 +11173,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceNetworkInterfaceUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11114,7 +11181,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceNetworkInterfaceDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11122,7 +11189,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::Ping,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11130,7 +11197,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::PolicyView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11138,7 +11205,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::PolicyUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11146,7 +11213,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ProjectList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11154,7 +11221,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ProjectCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11162,7 +11229,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ProjectView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11170,7 +11237,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ProjectUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11178,7 +11245,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ProjectDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11186,7 +11253,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ProjectPolicyView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11194,7 +11261,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::ProjectPolicyUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11202,7 +11269,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SnapshotList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11210,7 +11277,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SnapshotCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11218,7 +11285,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SnapshotView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11226,7 +11293,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SnapshotDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11234,7 +11301,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::PhysicalDiskList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11242,7 +11309,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::RackList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11250,7 +11317,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::RackView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11258,7 +11325,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SledList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11266,7 +11333,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SledAdd,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11274,7 +11341,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SledView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11282,7 +11349,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SledPhysicalDiskList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11290,7 +11357,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SledInstanceList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11298,7 +11365,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SledSetProvisionState,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11306,7 +11373,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SledListUninitialized,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11314,7 +11381,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11322,7 +11389,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortApplySettings,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11330,7 +11397,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortClearSettings,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11338,7 +11405,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SwitchList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11346,7 +11413,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SwitchView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11354,7 +11421,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloIdentityProviderList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11362,7 +11429,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::LocalIdpUserCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11370,7 +11437,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::LocalIdpUserDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11378,7 +11445,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::LocalIdpUserSetPassword,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11386,7 +11453,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SamlIdentityProviderCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11394,7 +11461,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SamlIdentityProviderView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11402,7 +11469,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11410,7 +11477,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11418,7 +11485,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11426,7 +11493,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11434,7 +11501,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11442,7 +11509,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolRangeList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11450,7 +11517,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolRangeAdd,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11458,7 +11525,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolRangeRemove,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11466,7 +11533,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolSiloList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11474,7 +11541,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolSiloLink,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11482,7 +11549,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolSiloUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11490,7 +11557,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolSiloUnlink,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11498,7 +11565,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolServiceView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11506,7 +11573,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolServiceRangeList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11514,7 +11581,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolServiceRangeAdd,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11522,7 +11589,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::IpPoolServiceRangeRemove,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11530,7 +11597,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SystemMetric,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11538,7 +11605,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingAddressLotList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11546,7 +11613,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingAddressLotCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11554,7 +11621,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingAddressLotDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11562,7 +11629,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingAddressLotBlockList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11570,7 +11637,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingBgpConfigList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11578,7 +11645,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingBgpConfigCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11586,7 +11653,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingBgpConfigDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11594,7 +11661,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingBgpAnnounceSetList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11602,7 +11669,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingBgpAnnounceSetCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11610,7 +11677,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingBgpAnnounceSetDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11618,7 +11685,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingBgpImportedRoutesIpv4,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11626,7 +11693,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingBgpStatus,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11634,7 +11701,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingLoopbackAddressList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11642,7 +11709,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingLoopbackAddressCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11650,7 +11717,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingLoopbackAddressDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11658,7 +11725,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortSettingsList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11666,7 +11733,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortSettingsCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11674,7 +11741,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortSettingsDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11682,7 +11749,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::NetworkingSwitchPortSettingsView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11690,7 +11757,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SystemPolicyView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11698,7 +11765,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SystemPolicyUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11706,7 +11773,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::RoleList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11714,7 +11781,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::RoleView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11722,7 +11789,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SystemQuotasList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11730,7 +11797,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11738,7 +11805,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11746,7 +11813,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11754,7 +11821,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11762,7 +11829,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloIpPoolList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11770,7 +11837,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloPolicyView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11778,7 +11845,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloPolicyUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11786,7 +11853,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloQuotasView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11794,7 +11861,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloQuotasUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11802,7 +11869,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloUserList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11810,7 +11877,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloUserView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11818,7 +11885,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::UserBuiltinList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11826,7 +11893,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::UserBuiltinView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11834,7 +11901,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloUtilizationList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11842,7 +11909,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloUtilizationView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11850,7 +11917,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::UserList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11858,7 +11925,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::UtilizationView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11866,7 +11933,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcFirewallRulesView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11874,7 +11941,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcFirewallRulesUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11882,7 +11949,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcSubnetList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11890,7 +11957,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcSubnetCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11898,7 +11965,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcSubnetView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11906,7 +11973,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcSubnetUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11914,7 +11981,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcSubnetDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11922,7 +11989,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcSubnetListNetworkInterfaces,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11930,7 +11997,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcList,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11938,7 +12005,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcCreate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11946,7 +12013,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcView,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11954,7 +12021,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcUpdate,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 
@@ -11962,7 +12029,7 @@ pub trait CliConfig {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::VpcDelete,
-    ) -> Result<(), String> {
+    ) -> anyhow::Result<()> {
         Ok(())
     }
 }
