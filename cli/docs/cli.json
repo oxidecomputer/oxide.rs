@@ -1374,6 +1374,38 @@
           ]
         },
         {
+          "name": "ssh-key",
+          "subcommands": [
+            {
+              "name": "list",
+              "about": "List the SSH public keys added to the instance via cloud-init during instance creation",
+              "long_about": "Note that this list is a snapshot in time and will not reflect updates made after the instance is created.",
+              "args": [
+                {
+                  "long": "instance",
+                  "help": "Name or ID of the instance"
+                },
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "name": "start",
           "about": "Boot an instance",
           "args": [
