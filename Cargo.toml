@@ -51,7 +51,7 @@ test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
 tokio = { version = "1.35.1", features = ["full"] }
 toml = "0.8.2"
-toml_edit = "0.21.0"
+toml_edit = "0.21.1"
 url = "2.5.0"
 uuid = { version = "1.7.0", features = ["serde", "v4"] }
 
