@@ -1376,9 +1376,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "2.1.0"
+version = "2.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d530e1a18b1cb4c484e6e34556a0d948706958449fca0cab753d649f2bce3d1f"
+checksum = "824b2ae422412366ba479e8111fd301f7b5faece8149317bb81925979a53f520"
 dependencies = [
  "equivalent",
  "hashbrown 0.14.1",
@@ -2151,24 +2151,12 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.5.0"
+source = "git+https://github.com/oxidecomputer/progenitor#dc5e1f1840a51354adb2b1aa31218f923aef3d64"
 dependencies = [
- "progenitor-client 0.5.0",
+ "progenitor-client 0.5.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
  "progenitor-macro",
  "serde_json",
-]
-
-[[package]]
-name = "progenitor-client"
-version = "0.5.0"
-dependencies = [
- "bytes",
- "futures-core",
- "percent-encoding",
- "reqwest",
- "serde",
- "serde_json",
- "serde_urlencoded",
 ]
 
 [[package]]
@@ -2187,8 +2175,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "progenitor-client"
+version = "0.5.0"
+source = "git+https://github.com/oxidecomputer/progenitor#dc5e1f1840a51354adb2b1aa31218f923aef3d64"
+dependencies = [
+ "bytes",
+ "futures-core",
+ "percent-encoding",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "serde_urlencoded",
+]
+
+[[package]]
 name = "progenitor-impl"
 version = "0.5.0"
+source = "git+https://github.com/oxidecomputer/progenitor#dc5e1f1840a51354adb2b1aa31218f923aef3d64"
 dependencies = [
  "getopts",
  "heck",
@@ -2210,6 +2213,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.5.0"
+source = "git+https://github.com/oxidecomputer/progenitor#dc5e1f1840a51354adb2b1aa31218f923aef3d64"
 dependencies = [
  "openapiv3",
  "proc-macro2",
