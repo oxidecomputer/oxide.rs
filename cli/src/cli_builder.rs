@@ -279,6 +279,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceExternalIpList => Some("instance external-ip list"),
         CliCommand::InstanceEphemeralIpAttach => Some("instance external-ip attach-ephemeral"),
         CliCommand::InstanceEphemeralIpDetach => Some("instance external-ip detach-ephemeral"),
+        CliCommand::InstanceSshPublicKeyList => Some("instance ssh-key list"),
 
         CliCommand::ProjectList => Some("project list"),
         CliCommand::ProjectCreate => Some("project create"),
@@ -407,6 +408,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingBgpImportedRoutesIpv4 => {
             Some("system networking bgp-imported-routes-ipv4 get")
         }
+
+        CliCommand::NetworkingBfdStatus => Some("system networking bfd status"),
+        CliCommand::NetworkingBfdEnable => Some("system networking bfd enable"),
+        CliCommand::NetworkingBfdDisable => Some("system networking bfd disable"),
 
         CliCommand::NetworkingBgpStatus => Some("system networking bgp-status get"),
 

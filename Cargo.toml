@@ -38,7 +38,7 @@ rand = "0.8.5"
 rcgen = "0.10.0"
 regex = "1.10.3"
 regress = "0.7.1"
-reqwest = "0.11.23"
+reqwest = "0.11.24"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.16", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.193", features = ["derive"] }
@@ -49,9 +49,9 @@ thiserror = { version = "1", default-features = false }
 tempfile = "3.9.0"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
-tokio = { version = "1.35.1", features = ["full"] }
+tokio = { version = "1.36.0", features = ["full"] }
 toml = "0.8.2"
-toml_edit = "0.21.0"
+toml_edit = "0.21.1"
 url = "2.5.0"
 uuid = { version = "1.7.0", features = ["serde", "v4"] }
 

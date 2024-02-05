@@ -696,6 +696,440 @@ pub mod types {
         }
     }
 
+    /// BfdMode
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "single_hop",
+    ///    "multi_hop"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum BfdMode {
+        #[serde(rename = "single_hop")]
+        SingleHop,
+        #[serde(rename = "multi_hop")]
+        MultiHop,
+    }
+
+    impl From<&BfdMode> for BfdMode {
+        fn from(value: &BfdMode) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for BfdMode {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::SingleHop => "single_hop".to_string(),
+                Self::MultiHop => "multi_hop".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for BfdMode {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "single_hop" => Ok(Self::SingleHop),
+                "multi_hop" => Ok(Self::MultiHop),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for BfdMode {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for BfdMode {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for BfdMode {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// Information needed to disable a BFD session
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Information needed to disable a BFD session",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "remote",
+    ///    "switch"
+    ///  ],
+    ///  "properties": {
+    ///    "remote": {
+    ///      "description": "Address of the remote peer to disable a BFD session
+    /// for.",
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "switch": {
+    ///      "description": "The switch to enable this session on. Must be
+    /// `switch0` or `switch1`.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BfdSessionDisable {
+        /// Address of the remote peer to disable a BFD session for.
+        pub remote: std::net::IpAddr,
+        /// The switch to enable this session on. Must be `switch0` or
+        /// `switch1`.
+        pub switch: Name,
+    }
+
+    impl From<&BfdSessionDisable> for BfdSessionDisable {
+        fn from(value: &BfdSessionDisable) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BfdSessionDisable {
+        pub fn builder() -> builder::BfdSessionDisable {
+            Default::default()
+        }
+    }
+
+    /// Information about a bidirectional forwarding detection (BFD) session.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Information about a bidirectional forwarding detection
+    /// (BFD) session.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "detection_threshold",
+    ///    "mode",
+    ///    "remote",
+    ///    "required_rx",
+    ///    "switch"
+    ///  ],
+    ///  "properties": {
+    ///    "detection_threshold": {
+    ///      "description": "The negotiated Control packet transmission
+    /// interval, multiplied by this variable, will be the Detection Time for
+    /// this session (as seen by the remote system)",
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "local": {
+    ///      "description": "Address the Oxide switch will listen on for BFD
+    /// traffic. If `None` then the unspecified address (0.0.0.0 or ::) is
+    /// used.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "ip"
+    ///    },
+    ///    "mode": {
+    ///      "description": "Select either single-hop (RFC 5881) or multi-hop
+    /// (RFC 5883)",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/BfdMode"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "remote": {
+    ///      "description": "Address of the remote peer to establish a BFD
+    /// session with.",
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "required_rx": {
+    ///      "description": "The minimum interval, in microseconds, between
+    /// received BFD Control packets that this system requires",
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "switch": {
+    ///      "description": "The switch to enable this session on. Must be
+    /// `switch0` or `switch1`.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BfdSessionEnable {
+        /// The negotiated Control packet transmission interval, multiplied by
+        /// this variable, will be the Detection Time for this session (as seen
+        /// by the remote system)
+        pub detection_threshold: u8,
+        /// Address the Oxide switch will listen on for BFD traffic. If `None`
+        /// then the unspecified address (0.0.0.0 or ::) is used.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub local: Option<std::net::IpAddr>,
+        /// Select either single-hop (RFC 5881) or multi-hop (RFC 5883)
+        pub mode: BfdMode,
+        /// Address of the remote peer to establish a BFD session with.
+        pub remote: std::net::IpAddr,
+        /// The minimum interval, in microseconds, between received BFD Control
+        /// packets that this system requires
+        pub required_rx: u64,
+        /// The switch to enable this session on. Must be `switch0` or
+        /// `switch1`.
+        pub switch: Name,
+    }
+
+    impl From<&BfdSessionEnable> for BfdSessionEnable {
+        fn from(value: &BfdSessionEnable) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BfdSessionEnable {
+        pub fn builder() -> builder::BfdSessionEnable {
+            Default::default()
+        }
+    }
+
+    /// BfdState
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "A stable down state. Non-responsive to incoming
+    /// messages.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "admin_down"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The initial state.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "down"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The peer has detected a remote peer in the down
+    /// state.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "init"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The peer has detected a remote peer in the up or
+    /// init state while in the init state.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "up"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum BfdState {
+        /// A stable down state. Non-responsive to incoming messages.
+        #[serde(rename = "admin_down")]
+        AdminDown,
+        /// The initial state.
+        #[serde(rename = "down")]
+        Down,
+        /// The peer has detected a remote peer in the down state.
+        #[serde(rename = "init")]
+        Init,
+        /// The peer has detected a remote peer in the up or init state while in
+        /// the init state.
+        #[serde(rename = "up")]
+        Up,
+    }
+
+    impl From<&BfdState> for BfdState {
+        fn from(value: &BfdState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for BfdState {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::AdminDown => "admin_down".to_string(),
+                Self::Down => "down".to_string(),
+                Self::Init => "init".to_string(),
+                Self::Up => "up".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for BfdState {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "admin_down" => Ok(Self::AdminDown),
+                "down" => Ok(Self::Down),
+                "init" => Ok(Self::Init),
+                "up" => Ok(Self::Up),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for BfdState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for BfdState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for BfdState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// BfdStatus
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "detection_threshold",
+    ///    "mode",
+    ///    "peer",
+    ///    "required_rx",
+    ///    "state",
+    ///    "switch"
+    ///  ],
+    ///  "properties": {
+    ///    "detection_threshold": {
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "local": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "ip"
+    ///    },
+    ///    "mode": {
+    ///      "$ref": "#/components/schemas/BfdMode"
+    ///    },
+    ///    "peer": {
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "required_rx": {
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "state": {
+    ///      "$ref": "#/components/schemas/BfdState"
+    ///    },
+    ///    "switch": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BfdStatus {
+        pub detection_threshold: u8,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub local: Option<std::net::IpAddr>,
+        pub mode: BfdMode,
+        pub peer: std::net::IpAddr,
+        pub required_rx: u64,
+        pub state: BfdState,
+        pub switch: Name,
+    }
+
+    impl From<&BfdStatus> for BfdStatus {
+        fn from(value: &BfdStatus) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BfdStatus {
+        pub fn builder() -> builder::BfdStatus {
+            Default::default()
+        }
+    }
+
     /// Represents a BGP announce set by id. The id can be used with other API
     /// calls to view and manage the announce set.
     ///
@@ -7503,6 +7937,110 @@ pub mod types {
         }
     }
 
+    /// A hostname identifies a host on a network, and is usually a
+    /// dot-delimited sequence of labels, where each label contains only
+    /// letters, digits, or the hyphen. See RFCs 1035 and 952 for more details.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "title": "An RFC-1035-compliant hostname",
+    ///  "description": "A hostname identifies a host on a network, and is
+    /// usually a dot-delimited sequence of labels, where each label contains
+    /// only letters, digits, or the hyphen. See RFCs 1035 and 952 for more
+    /// details.",
+    ///  "type": "string",
+    ///  "maxLength": 253,
+    ///  "minLength": 1,
+    ///  "pattern":
+    /// "^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!
+    /// -))*$"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
+    pub struct Hostname(String);
+    impl std::ops::Deref for Hostname {
+        type Target = String;
+        fn deref(&self) -> &String {
+            &self.0
+        }
+    }
+
+    impl From<Hostname> for String {
+        fn from(value: Hostname) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&Hostname> for Hostname {
+        fn from(value: &Hostname) -> Self {
+            value.clone()
+        }
+    }
+
+    impl std::str::FromStr for Hostname {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            if value.len() > 253usize {
+                return Err("longer than 253 characters".into());
+            }
+            if value.len() < 1usize {
+                return Err("shorter than 1 characters".into());
+            }
+            if regress::Regex::new(
+                "^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))*$",
+            )
+            .unwrap()
+            .find(value)
+            .is_none()
+            {
+                return Err("doesn't match pattern \
+                            \"^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\\
+                            -]*(?<!-))*$\""
+                    .into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for Hostname {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for Hostname {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for Hostname {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> serde::Deserialize<'de> for Hostname {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as serde::de::Error>::custom(e.to_string())
+                })
+        }
+    }
+
     /// Supported set of sort modes for scanning by id only.
     ///
     /// Currently, we only support scanning in ascending order.
@@ -8563,7 +9101,7 @@ pub mod types {
     ///      }
     ///    },
     ///    "hostname": {
-    ///      "type": "string"
+    ///      "$ref": "#/components/schemas/Hostname"
     ///    },
     ///    "memory": {
     ///      "$ref": "#/components/schemas/ByteCount"
@@ -8586,6 +9124,20 @@ pub mod types {
     /// "#/components/schemas/InstanceNetworkInterfaceAttachment"
     ///        }
     ///      ]
+    ///    },
+    ///    "ssh_public_keys": {
+    ///      "description": "An allowlist of SSH public keys to be transferred
+    /// to the instance via cloud-init during instance creation.\n\nIf not
+    /// provided, all SSH public keys from the user's profile will be sent. If
+    /// an empty list is provided, no public keys will be transmitted to the
+    /// instance.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/NameOrId"
+    ///      }
     ///    },
     ///    "start": {
     ///      "description": "Should this instance be started upon creation; true
@@ -8620,13 +9172,21 @@ pub mod types {
         /// instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
         pub external_ips: Vec<ExternalIpCreate>,
-        pub hostname: String,
+        pub hostname: Hostname,
         pub memory: ByteCount,
         pub name: Name,
         pub ncpus: InstanceCpuCount,
         /// The network interfaces to be created for this instance.
         #[serde(default = "defaults::instance_create_network_interfaces")]
         pub network_interfaces: InstanceNetworkInterfaceAttachment,
+        /// An allowlist of SSH public keys to be transferred to the instance
+        /// via cloud-init during instance creation.
+        ///
+        /// If not provided, all SSH public keys from the user's profile will be
+        /// sent. If an empty list is provided, no public keys will be
+        /// transmitted to the instance.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub ssh_public_keys: Option<Vec<NameOrId>>,
         /// Should this instance be started upon creation; true by default.
         #[serde(default = "defaults::default_bool::<true>")]
         pub start: bool,
@@ -20631,6 +21191,313 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct BfdSessionDisable {
+            remote: Result<std::net::IpAddr, String>,
+            switch: Result<super::Name, String>,
+        }
+
+        impl Default for BfdSessionDisable {
+            fn default() -> Self {
+                Self {
+                    remote: Err("no value supplied for remote".to_string()),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl BfdSessionDisable {
+            pub fn remote<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.remote = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for remote: {}", e));
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BfdSessionDisable> for super::BfdSessionDisable {
+            type Error = super::error::ConversionError;
+            fn try_from(value: BfdSessionDisable) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    remote: value.remote?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl From<super::BfdSessionDisable> for BfdSessionDisable {
+            fn from(value: super::BfdSessionDisable) -> Self {
+                Self {
+                    remote: Ok(value.remote),
+                    switch: Ok(value.switch),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BfdSessionEnable {
+            detection_threshold: Result<u8, String>,
+            local: Result<Option<std::net::IpAddr>, String>,
+            mode: Result<super::BfdMode, String>,
+            remote: Result<std::net::IpAddr, String>,
+            required_rx: Result<u64, String>,
+            switch: Result<super::Name, String>,
+        }
+
+        impl Default for BfdSessionEnable {
+            fn default() -> Self {
+                Self {
+                    detection_threshold: Err(
+                        "no value supplied for detection_threshold".to_string()
+                    ),
+                    local: Ok(Default::default()),
+                    mode: Err("no value supplied for mode".to_string()),
+                    remote: Err("no value supplied for remote".to_string()),
+                    required_rx: Err("no value supplied for required_rx".to_string()),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl BfdSessionEnable {
+            pub fn detection_threshold<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u8>,
+                T::Error: std::fmt::Display,
+            {
+                self.detection_threshold = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for detection_threshold: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn local<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.local = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for local: {}", e));
+                self
+            }
+            pub fn mode<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BfdMode>,
+                T::Error: std::fmt::Display,
+            {
+                self.mode = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mode: {}", e));
+                self
+            }
+            pub fn remote<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.remote = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for remote: {}", e));
+                self
+            }
+            pub fn required_rx<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.required_rx = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for required_rx: {}", e));
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BfdSessionEnable> for super::BfdSessionEnable {
+            type Error = super::error::ConversionError;
+            fn try_from(value: BfdSessionEnable) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    detection_threshold: value.detection_threshold?,
+                    local: value.local?,
+                    mode: value.mode?,
+                    remote: value.remote?,
+                    required_rx: value.required_rx?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl From<super::BfdSessionEnable> for BfdSessionEnable {
+            fn from(value: super::BfdSessionEnable) -> Self {
+                Self {
+                    detection_threshold: Ok(value.detection_threshold),
+                    local: Ok(value.local),
+                    mode: Ok(value.mode),
+                    remote: Ok(value.remote),
+                    required_rx: Ok(value.required_rx),
+                    switch: Ok(value.switch),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BfdStatus {
+            detection_threshold: Result<u8, String>,
+            local: Result<Option<std::net::IpAddr>, String>,
+            mode: Result<super::BfdMode, String>,
+            peer: Result<std::net::IpAddr, String>,
+            required_rx: Result<u64, String>,
+            state: Result<super::BfdState, String>,
+            switch: Result<super::Name, String>,
+        }
+
+        impl Default for BfdStatus {
+            fn default() -> Self {
+                Self {
+                    detection_threshold: Err(
+                        "no value supplied for detection_threshold".to_string()
+                    ),
+                    local: Ok(Default::default()),
+                    mode: Err("no value supplied for mode".to_string()),
+                    peer: Err("no value supplied for peer".to_string()),
+                    required_rx: Err("no value supplied for required_rx".to_string()),
+                    state: Err("no value supplied for state".to_string()),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl BfdStatus {
+            pub fn detection_threshold<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u8>,
+                T::Error: std::fmt::Display,
+            {
+                self.detection_threshold = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for detection_threshold: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn local<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.local = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for local: {}", e));
+                self
+            }
+            pub fn mode<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BfdMode>,
+                T::Error: std::fmt::Display,
+            {
+                self.mode = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mode: {}", e));
+                self
+            }
+            pub fn peer<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.peer = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for peer: {}", e));
+                self
+            }
+            pub fn required_rx<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.required_rx = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for required_rx: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BfdState>,
+                T::Error: std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BfdStatus> for super::BfdStatus {
+            type Error = super::error::ConversionError;
+            fn try_from(value: BfdStatus) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    detection_threshold: value.detection_threshold?,
+                    local: value.local?,
+                    mode: value.mode?,
+                    peer: value.peer?,
+                    required_rx: value.required_rx?,
+                    state: value.state?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl From<super::BfdStatus> for BfdStatus {
+            fn from(value: super::BfdStatus) -> Self {
+                Self {
+                    detection_threshold: Ok(value.detection_threshold),
+                    local: Ok(value.local),
+                    mode: Ok(value.mode),
+                    peer: Ok(value.peer),
+                    required_rx: Ok(value.required_rx),
+                    state: Ok(value.state),
+                    switch: Ok(value.switch),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct BgpAnnounceSet {
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
@@ -25667,11 +26534,12 @@ pub mod types {
             description: Result<String, String>,
             disks: Result<Vec<super::InstanceDiskAttachment>, String>,
             external_ips: Result<Vec<super::ExternalIpCreate>, String>,
-            hostname: Result<String, String>,
+            hostname: Result<super::Hostname, String>,
             memory: Result<super::ByteCount, String>,
             name: Result<super::Name, String>,
             ncpus: Result<super::InstanceCpuCount, String>,
             network_interfaces: Result<super::InstanceNetworkInterfaceAttachment, String>,
+            ssh_public_keys: Result<Option<Vec<super::NameOrId>>, String>,
             start: Result<bool, String>,
             user_data: Result<String, String>,
         }
@@ -25687,6 +26555,7 @@ pub mod types {
                     name: Err("no value supplied for name".to_string()),
                     ncpus: Err("no value supplied for ncpus".to_string()),
                     network_interfaces: Ok(super::defaults::instance_create_network_interfaces()),
+                    ssh_public_keys: Ok(Default::default()),
                     start: Ok(super::defaults::default_bool::<true>()),
                     user_data: Ok(Default::default()),
                 }
@@ -25726,7 +26595,7 @@ pub mod types {
             }
             pub fn hostname<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<super::Hostname>,
                 T::Error: std::fmt::Display,
             {
                 self.hostname = value
@@ -25777,6 +26646,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn ssh_public_keys<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<Vec<super::NameOrId>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.ssh_public_keys = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for ssh_public_keys: {}", e)
+                });
+                self
+            }
             pub fn start<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<bool>,
@@ -25811,6 +26690,7 @@ pub mod types {
                     name: value.name?,
                     ncpus: value.ncpus?,
                     network_interfaces: value.network_interfaces?,
+                    ssh_public_keys: value.ssh_public_keys?,
                     start: value.start?,
                     user_data: value.user_data?,
                 })
@@ -25828,6 +26708,7 @@ pub mod types {
                     name: Ok(value.name),
                     ncpus: Ok(value.ncpus),
                     network_interfaces: Ok(value.network_interfaces),
+                    ssh_public_keys: Ok(value.ssh_public_keys),
                     start: Ok(value.start),
                     user_data: Ok(value.user_data),
                 }
@@ -35856,6 +36737,32 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream;
+    /// List the SSH public keys added to the instance via cloud-init during
+    /// instance creation
+    ///
+    /// Note that this list is a snapshot in time and will not reflect updates
+    /// made after the instance is created.
+    ///
+    /// Sends a `GET` request to `/v1/instances/{instance}/ssh-public-keys`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.instance_ssh_public_key_list()
+    ///    .instance(instance)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_ssh_public_key_list(&self) -> builder::InstanceSshPublicKeyList;
     /// Boot an instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/start`
@@ -36045,6 +36952,10 @@ impl ClientInstancesExt for Client {
 
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream {
         builder::InstanceSerialConsoleStream::new(self)
+    }
+
+    fn instance_ssh_public_key_list(&self) -> builder::InstanceSshPublicKeyList {
+        builder::InstanceSshPublicKeyList::new(self)
     }
 
     fn instance_start(&self) -> builder::InstanceStart {
@@ -37467,6 +38378,38 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList;
+    /// Disable a BFD session
+    ///
+    /// Sends a `POST` request to `/v1/system/networking/bfd-disable`
+    ///
+    /// ```ignore
+    /// let response = client.networking_bfd_disable()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bfd_disable(&self) -> builder::NetworkingBfdDisable;
+    /// Enable a BFD session
+    ///
+    /// Sends a `POST` request to `/v1/system/networking/bfd-enable`
+    ///
+    /// ```ignore
+    /// let response = client.networking_bfd_enable()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bfd_enable(&self) -> builder::NetworkingBfdEnable;
+    /// Get BFD status
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/bfd-status`
+    ///
+    /// ```ignore
+    /// let response = client.networking_bfd_status()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bfd_status(&self) -> builder::NetworkingBfdStatus;
     /// List BGP configurations
     ///
     /// Sends a `GET` request to `/v1/system/networking/bgp`
@@ -37768,6 +38711,18 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList {
         builder::NetworkingAddressLotBlockList::new(self)
+    }
+
+    fn networking_bfd_disable(&self) -> builder::NetworkingBfdDisable {
+        builder::NetworkingBfdDisable::new(self)
+    }
+
+    fn networking_bfd_enable(&self) -> builder::NetworkingBfdEnable {
+        builder::NetworkingBfdEnable::new(self)
+    }
+
+    fn networking_bfd_status(&self) -> builder::NetworkingBfdStatus {
+        builder::NetworkingBfdStatus::new(self)
     }
 
     fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList {
@@ -43330,6 +44285,201 @@ pub mod builder {
                 200..=299 => ResponseValue::upgrade(response).await,
                 _ => Err(Error::UnexpectedResponse(response)),
             }
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_ssh_public_key_list`]
+    ///
+    /// [`ClientInstancesExt::instance_ssh_public_key_list`]: super::ClientInstancesExt::instance_ssh_public_key_list
+    #[derive(Debug, Clone)]
+    pub struct InstanceSshPublicKeyList<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> InstanceSshPublicKeyList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/instances/{instance}/ssh-public-keys`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SshKeyResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/ssh-public-keys",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/instances/{instance}/ssh-public-keys`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SshKey, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
         }
     }
 
@@ -51162,6 +52312,191 @@ pub mod builder {
                 .try_flatten_stream()
                 .take(limit)
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bfd_disable`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bfd_disable`]: super::ClientSystemNetworkingExt::networking_bfd_disable
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBfdDisable<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BfdSessionDisable, String>,
+    }
+
+    impl<'a> NetworkingBfdDisable<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::BfdSessionDisable::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BfdSessionDisable>,
+            <V as std::convert::TryInto<types::BfdSessionDisable>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BfdSessionDisable` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::BfdSessionDisable,
+            ) -> types::builder::BfdSessionDisable,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/networking/bfd-disable`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BfdSessionDisable::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bfd-disable", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bfd_enable`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bfd_enable`]: super::ClientSystemNetworkingExt::networking_bfd_enable
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBfdEnable<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BfdSessionEnable, String>,
+    }
+
+    impl<'a> NetworkingBfdEnable<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::BfdSessionEnable::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BfdSessionEnable>,
+            <V as std::convert::TryInto<types::BfdSessionEnable>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BfdSessionEnable` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::BfdSessionEnable,
+            ) -> types::builder::BfdSessionEnable,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/networking/bfd-enable`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BfdSessionEnable::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bfd-enable", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bfd_status`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bfd_status`]: super::ClientSystemNetworkingExt::networking_bfd_status
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBfdStatus<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> NetworkingBfdStatus<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bfd-status`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<Vec<types::BfdStatus>>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/networking/bfd-status", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
