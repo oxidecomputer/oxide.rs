@@ -2052,6 +2052,7 @@ dependencies = [
  "rand",
  "rcgen",
  "reqwest",
+ "schemars",
  "serde",
  "serde_json",
  "tabwriter",
