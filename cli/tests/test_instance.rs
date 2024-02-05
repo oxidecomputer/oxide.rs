@@ -27,7 +27,7 @@ fn test_instance_create() {
         when.body(&body);
         then.created(&oxide::types::Instance {
             description: body.description.clone(),
-            hostname: body.hostname.clone(),
+            hostname: body.hostname.to_string(),
             memory: body.memory.clone(),
             name: body.name.clone(),
             ncpus: body.ncpus.clone(),
