@@ -74,7 +74,7 @@ impl<'a> Default for NewCli<'a> {
             let Some(path) = xxx(op) else { continue };
             runner.add_cmd(path, GeneratedCmd(op));
 
-            let cmd = Cli::get_command(op);
+            let cmd = Cli::<OxideOverride>::get_command(op);
             let cmd = match op {
                 CliCommand::IpPoolRangeAdd
                 | CliCommand::IpPoolRangeRemove
@@ -245,9 +245,8 @@ struct GeneratedCmd(CliCommand);
 #[async_trait]
 impl RunIt for GeneratedCmd {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
-        let cli = Cli::new_with_override(ctx.client()?.clone(), OxideOverride);
-        cli.execute(self.0, matches).await;
-        Ok(())
+        let cli = Cli::new(ctx.client()?.clone(), OxideOverride::default());
+        cli.execute(self.0, matches).await
     }
 
     fn is_subtree(&self) -> bool {
