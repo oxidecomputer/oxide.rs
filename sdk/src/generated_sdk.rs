@@ -38218,7 +38218,11 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList;
-    /// Make an IP pool available within a silo
+    /// Link an IP pool to a silo
+    ///
+    /// Users in linked silos can allocate external IPs from this pool for their
+    /// instances. A silo can have at most one default pool. IPs are allocated
+    /// from the default pool when users ask for one without specifying a pool.
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/silos`
     ///
@@ -38233,10 +38237,13 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_link(&self) -> builder::IpPoolSiloLink;
-    /// Make an IP pool default or not-default for a silo
+    /// Make IP pool default for silo
     ///
-    /// When a pool is made default for a silo, any existing default will remain
-    /// linked to the silo, but will no longer be the default.
+    /// When a user asks for an IP (e.g., at instance create time) without
+    /// specifying a pool, the IP comes from the default pool if a default is
+    /// configured. When a pool is made the default for a silo, any existing
+    /// default will remain linked to the silo, but will no longer be the
+    /// default.
     ///
     /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}/silos/{silo}`
     ///
@@ -38263,7 +38270,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink;
-    /// Fetch the IP pool used for Oxide services
+    /// Fetch the Oxide service IP pool
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools-service`
     ///
@@ -38273,10 +38280,9 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
-    /// List ranges for the IP pool used for Oxide services
+    /// List IP ranges for the Oxide service pool
     ///
-    /// List ranges for the IP pool used for Oxide services. Ranges are ordered
-    /// by their first address.
+    /// Ranges are ordered by their first address.
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
     ///
@@ -38292,7 +38298,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
-    /// Add a range to an IP pool used for Oxide services
+    /// Add IP range to Oxide service pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
     ///
@@ -38303,7 +38309,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd;
-    /// Remove a range from an IP pool used for Oxide services
+    /// Remove IP range from Oxide service pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
     ///
@@ -38964,7 +38970,7 @@ pub trait ClientSystemSilosExt {
     fn silo_view(&self) -> builder::SiloView;
     /// Delete a silo
     ///
-    /// Delete a silo by name.
+    /// Delete a silo by name or ID.
     ///
     /// Sends a `DELETE` request to `/v1/system/silos/{silo}`
     ///
@@ -38977,7 +38983,11 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_delete(&self) -> builder::SiloDelete;
-    /// List IP pools available within silo
+    /// List IP pools linked to silo
+    ///
+    /// Linked IP pools are available to users in the specified silo. A silo can
+    /// have at most one default pool. IPs are allocated from the default pool
+    /// when users ask for one without specifying a pool.
     ///
     /// Sends a `GET` request to `/v1/system/silos/{silo}/ip-pools`
     ///

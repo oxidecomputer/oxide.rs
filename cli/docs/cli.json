@@ -1576,7 +1576,7 @@
               "subcommands": [
                 {
                   "name": "add",
-                  "about": "Add a range to an IP pool used for Oxide services",
+                  "about": "Add IP range to Oxide service pool",
                   "args": [
                     {
                       "long": "first"
@@ -1596,8 +1596,8 @@
                 },
                 {
                   "name": "list",
-                  "about": "List ranges for the IP pool used for Oxide services",
-                  "long_about": "List ranges for the IP pool used for Oxide services. Ranges are ordered by their first address.",
+                  "about": "List IP ranges for the Oxide service pool",
+                  "long_about": "Ranges are ordered by their first address.",
                   "args": [
                     {
                       "long": "limit",
@@ -1609,7 +1609,7 @@
             },
             {
               "name": "remove",
-              "about": "Remove a range from an IP pool used for Oxide services",
+              "about": "Remove IP range from Oxide service pool",
               "args": [
                 {
                   "long": "first"
@@ -1629,7 +1629,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch the IP pool used for Oxide services"
+              "about": "Fetch the Oxide service IP pool"
             }
           ]
         },
@@ -1638,7 +1638,8 @@
           "subcommands": [
             {
               "name": "link",
-              "about": "Make an IP pool available within a silo",
+              "about": "Link an IP pool to a silo",
+              "long_about": "Users in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
               "args": [
                 {
                   "long": "is-default",
@@ -1700,8 +1701,8 @@
             },
             {
               "name": "update",
-              "about": "Make an IP pool default or not-default for a silo",
-              "long_about": "When a pool is made default for a silo, any existing default will remain linked to the silo, but will no longer be the default.",
+              "about": "Make IP pool default for silo",
+              "long_about": "When a user asks for an IP (e.g., at instance create time) without specifying a pool, the IP comes from the default pool if a default is configured. When a pool is made the default for a silo, any existing default will remain linked to the silo, but will no longer be the default.",
               "args": [
                 {
                   "long": "is-default",
@@ -1990,7 +1991,7 @@
         {
           "name": "delete",
           "about": "Delete a silo",
-          "long_about": "Delete a silo by name.",
+          "long_about": "Delete a silo by name or ID.",
           "args": [
             {
               "long": "silo",
@@ -2173,7 +2174,8 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List IP pools available within silo",
+              "about": "List IP pools linked to silo",
+              "long_about": "Linked IP pools are available to users in the specified silo. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
               "args": [
                 {
                   "long": "limit",
@@ -2863,7 +2865,7 @@
               "subcommands": [
                 {
                   "name": "disable",
-                  "about": "Disable a BFD session.",
+                  "about": "Disable a BFD session",
                   "args": [
                     {
                       "long": "json-body",
@@ -2885,7 +2887,7 @@
                 },
                 {
                   "name": "enable",
-                  "about": "Enable a BFD session.",
+                  "about": "Enable a BFD session",
                   "args": [
                     {
                       "long": "detection-threshold",
@@ -2927,7 +2929,7 @@
                 },
                 {
                   "name": "status",
-                  "about": "Get BFD status."
+                  "about": "Get BFD status"
                 }
               ]
             },
