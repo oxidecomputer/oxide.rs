@@ -3419,7 +3419,12 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Make an IP pool available within a silo")
+            .about("Link an IP pool to a silo")
+            .long_about(
+                "Users in linked silos can allocate external IPs from this pool for their \
+                 instances. A silo can have at most one default pool. IPs are allocated from the \
+                 default pool when users ask for one without specifying a pool.",
+            )
     }
 
     pub fn cli_ip_pool_silo_update() -> clap::Command {
@@ -3463,10 +3468,12 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Make an IP pool default or not-default for a silo")
+            .about("Make IP pool default for silo")
             .long_about(
-                "When a pool is made default for a silo, any existing default will remain linked \
-                 to the silo, but will no longer be the default.",
+                "When a user asks for an IP (e.g., at instance create time) without specifying a \
+                 pool, the IP comes from the default pool if a default is configured. When a pool \
+                 is made the default for a silo, any existing default will remain linked to the \
+                 silo, but will no longer be the default.",
             )
     }
 
@@ -3489,7 +3496,7 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_ip_pool_service_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the IP pool used for Oxide services")
+        clap::Command::new("").about("Fetch the Oxide service IP pool")
     }
 
     pub fn cli_ip_pool_service_range_list() -> clap::Command {
@@ -3501,11 +3508,8 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
-            .about("List ranges for the IP pool used for Oxide services")
-            .long_about(
-                "List ranges for the IP pool used for Oxide services. Ranges are ordered by their \
-                 first address.",
-            )
+            .about("List IP ranges for the Oxide service pool")
+            .long_about("Ranges are ordered by their first address.")
     }
 
     pub fn cli_ip_pool_service_range_add() -> clap::Command {
@@ -3524,7 +3528,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add a range to an IP pool used for Oxide services")
+            .about("Add IP range to Oxide service pool")
     }
 
     pub fn cli_ip_pool_service_range_remove() -> clap::Command {
@@ -3543,7 +3547,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Remove a range from an IP pool used for Oxide services")
+            .about("Remove IP range from Oxide service pool")
     }
 
     pub fn cli_system_metric() -> clap::Command {
@@ -3746,7 +3750,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Disable a BFD session.")
+            .about("Disable a BFD session")
     }
 
     pub fn cli_networking_bfd_enable() -> clap::Command {
@@ -3823,11 +3827,11 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Enable a BFD session.")
+            .about("Enable a BFD session")
     }
 
     pub fn cli_networking_bfd_status() -> clap::Command {
-        clap::Command::new("").about("Get BFD status.")
+        clap::Command::new("").about("Get BFD status")
     }
 
     pub fn cli_networking_bgp_config_list() -> clap::Command {
@@ -4400,7 +4404,7 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the silo"),
             )
             .about("Delete a silo")
-            .long_about("Delete a silo by name.")
+            .long_about("Delete a silo by name or ID.")
     }
 
     pub fn cli_silo_ip_pool_list() -> clap::Command {
@@ -4432,7 +4436,12 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List IP pools available within silo")
+            .about("List IP pools linked to silo")
+            .long_about(
+                "Linked IP pools are available to users in the specified silo. A silo can have at \
+                 most one default pool. IPs are allocated from the default pool when users ask \
+                 for one without specifying a pool.",
+            )
     }
 
     pub fn cli_silo_policy_view() -> clap::Command {
