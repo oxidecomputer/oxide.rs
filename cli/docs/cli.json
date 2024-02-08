@@ -147,7 +147,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a new system-wide x.509 certificate",
+          "about": "Create new system-wide x.509 certificate",
           "long_about": "This certificate is automatically used by the Oxide Control plane to serve external connections.",
           "args": [
             {
@@ -183,7 +183,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete a certificate",
+          "about": "Delete certificate",
           "long_about": "Permanently delete a certificate. This operation cannot be undone.",
           "args": [
             {
@@ -212,7 +212,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch a certificate",
+          "about": "Fetch certificate",
           "long_about": "Returns the details of a specific certificate",
           "args": [
             {
@@ -227,7 +227,7 @@
       "subcommands": [
         {
           "name": "groups",
-          "about": "Fetch the silo groups the current user belongs to",
+          "about": "Fetch current user's groups",
           "args": [
             {
               "long": "limit",
@@ -246,7 +246,7 @@
           "subcommands": [
             {
               "name": "create",
-              "about": "Create an SSH public key",
+              "about": "Create SSH public key",
               "long_about": "Create an SSH public key for the currently authenticated user.",
               "args": [
                 {
@@ -271,7 +271,7 @@
             },
             {
               "name": "delete",
-              "about": "Delete an SSH public key",
+              "about": "Delete SSH public key",
               "long_about": "Delete an SSH public key associated with the currently authenticated user.",
               "args": [
                 {
@@ -301,8 +301,8 @@
             },
             {
               "name": "view",
-              "about": "Fetch an SSH public key",
-              "long_about": "Fetch an SSH public key associated with the currently authenticated user.",
+              "about": "Fetch SSH public key",
+              "long_about": "Fetch SSH public key associated with the currently authenticated user.",
               "args": [
                 {
                   "long": "ssh-key",
@@ -314,7 +314,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch the user associated with the current session"
+          "about": "Fetch user for current session"
         }
       ]
     },
@@ -351,7 +351,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete a disk",
+          "about": "Delete disk",
           "args": [
             {
               "long": "disk",
@@ -446,7 +446,7 @@
             },
             {
               "name": "start",
-              "about": "Start importing blocks into a disk",
+              "about": "Start importing blocks into disk",
               "long_about": "Start the process of importing blocks into a disk",
               "args": [
                 {
@@ -461,7 +461,7 @@
             },
             {
               "name": "stop",
-              "about": "Stop importing blocks into a disk",
+              "about": "Stop importing blocks into disk",
               "long_about": "Stop the process of importing blocks into a disk",
               "args": [
                 {
@@ -476,7 +476,7 @@
             },
             {
               "name": "write",
-              "about": "Import blocks into a disk",
+              "about": "Import blocks into disk",
               "args": [
                 {
                   "long": "base64-encoded-data"
@@ -577,7 +577,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch a disk",
+          "about": "Fetch disk",
           "args": [
             {
               "long": "disk",
@@ -600,7 +600,8 @@
       "subcommands": [
         {
           "name": "attach",
-          "about": "Attach a floating IP to an instance or other resource",
+          "about": "Attach floating IP",
+          "long_about": "Attach floating IP to an instance or other resource.",
           "args": [
             {
               "long": "floating-ip",
@@ -633,7 +634,7 @@
         },
         {
           "name": "create",
-          "about": "Create a floating IP",
+          "about": "Create floating IP",
           "args": [
             {
               "long": "address",
@@ -665,7 +666,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete a floating IP",
+          "about": "Delete floating IP",
           "args": [
             {
               "long": "floating-ip",
@@ -679,7 +680,7 @@
         },
         {
           "name": "detach",
-          "about": "Detach a floating IP from an instance or other resource",
+          "about": "Detach floating IP",
           "args": [
             {
               "long": "floating-ip",
@@ -715,7 +716,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch a floating IP",
+          "about": "Fetch floating IP",
           "args": [
             {
               "long": "floating-ip",
@@ -755,7 +756,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create an image",
+          "about": "Create image",
           "long_about": "Create a new image in a project.",
           "args": [
             {
@@ -788,7 +789,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete an image",
+          "about": "Delete image",
           "long_about": "Permanently delete an image from a project. This operation cannot be undone. Any instances in the project using the image will continue to run, however new instances can not be created with this image.",
           "args": [
             {
@@ -803,8 +804,8 @@
         },
         {
           "name": "demote",
-          "about": "Demote a silo image",
-          "long_about": "Demote a silo image to be visible only to a specified project",
+          "about": "Demote silo image",
+          "long_about": "Demote silo image to be visible only to a specified project",
           "args": [
             {
               "long": "image",
@@ -841,8 +842,8 @@
         },
         {
           "name": "promote",
-          "about": "Promote a project image",
-          "long_about": "Promote a project image to be visible to all projects in the silo",
+          "about": "Promote project image",
+          "long_about": "Promote project image to be visible to all projects in the silo",
           "args": [
             {
               "long": "image",
@@ -856,7 +857,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch an image",
+          "about": "Fetch image",
           "long_about": "Fetch the details for a specific image in a project.",
           "args": [
             {
@@ -876,7 +877,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create an instance",
+          "about": "Create instance",
           "args": [
             {
               "long": "description"
@@ -921,7 +922,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete an instance",
+          "about": "Delete instance",
           "args": [
             {
               "long": "instance",
@@ -938,7 +939,7 @@
           "subcommands": [
             {
               "name": "attach",
-              "about": "Attach a disk to an instance",
+              "about": "Attach disk to instance",
               "args": [
                 {
                   "long": "disk",
@@ -964,7 +965,7 @@
             },
             {
               "name": "detach",
-              "about": "Detach a disk from an instance",
+              "about": "Detach disk from instance",
               "args": [
                 {
                   "long": "disk",
@@ -990,7 +991,7 @@
             },
             {
               "name": "list",
-              "about": "List an instance's disks",
+              "about": "List disks for instance",
               "args": [
                 {
                   "long": "instance",
@@ -1021,7 +1022,7 @@
           "subcommands": [
             {
               "name": "attach-ephemeral",
-              "about": "Allocate and attach an ephemeral IP to an instance",
+              "about": "Allocate and attach ephemeral IP to instance",
               "args": [
                 {
                   "long": "instance",
@@ -1047,7 +1048,7 @@
             },
             {
               "name": "detach-ephemeral",
-              "about": "Detach and deallocate an ephemeral IP from an instance",
+              "about": "Detach and deallocate ephemeral IP from instance",
               "args": [
                 {
                   "long": "instance",
@@ -1144,7 +1145,7 @@
           "subcommands": [
             {
               "name": "create",
-              "about": "Create a network interface",
+              "about": "Create network interface",
               "args": [
                 {
                   "long": "description"
@@ -1184,7 +1185,7 @@
             },
             {
               "name": "delete",
-              "about": "Delete a network interface",
+              "about": "Delete network interface",
               "long_about": "Note that the primary interface for an instance cannot be deleted if there are any secondary interfaces. A new primary interface must be designated first. The primary interface can be deleted if there are no secondary interfaces.",
               "args": [
                 {
@@ -1229,7 +1230,7 @@
             },
             {
               "name": "update",
-              "about": "Update a network interface",
+              "about": "Update network interface",
               "args": [
                 {
                   "long": "description"
@@ -1269,7 +1270,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch a network interface",
+              "about": "Fetch network interface",
               "args": [
                 {
                   "long": "instance",
@@ -1378,8 +1379,8 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List the SSH public keys added to the instance via cloud-init during instance creation",
-              "long_about": "Note that this list is a snapshot in time and will not reflect updates made after the instance is created.",
+              "about": "List SSH public keys for instance",
+              "long_about": "List SSH public keys injected via cloud-init during instance creation. Note that this list is a snapshot in time and will not reflect updates made after the instance is created.",
               "args": [
                 {
                   "long": "instance",
@@ -1407,7 +1408,7 @@
         },
         {
           "name": "start",
-          "about": "Boot an instance",
+          "about": "Boot instance",
           "args": [
             {
               "long": "instance",
@@ -1421,7 +1422,7 @@
         },
         {
           "name": "stop",
-          "about": "Stop an instance",
+          "about": "Stop instance",
           "args": [
             {
               "long": "instance",
@@ -1435,7 +1436,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch an instance",
+          "about": "Fetch instance",
           "args": [
             {
               "long": "instance",
@@ -1454,7 +1455,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create an IP pool",
+          "about": "Create IP pool",
           "args": [
             {
               "long": "description"
@@ -1474,7 +1475,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete an IP pool",
+          "about": "Delete IP pool",
           "args": [
             {
               "long": "pool",
@@ -1505,7 +1506,7 @@
           "subcommands": [
             {
               "name": "add",
-              "about": "Add a range to an IP pool",
+              "about": "Add range to IP pool",
               "args": [
                 {
                   "long": "first"
@@ -1529,8 +1530,8 @@
             },
             {
               "name": "list",
-              "about": "List ranges for an IP pool",
-              "long_about": "List ranges for an IP pool. Ranges are ordered by their first address.",
+              "about": "List ranges for IP pool",
+              "long_about": "Ranges are ordered by their first address.",
               "args": [
                 {
                   "long": "limit",
@@ -1544,7 +1545,7 @@
             },
             {
               "name": "remove",
-              "about": "Remove a range from an IP pool",
+              "about": "Remove range from IP pool",
               "args": [
                 {
                   "long": "first"
@@ -1629,7 +1630,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch the Oxide service IP pool"
+              "about": "Fetch Oxide service IP pool"
             }
           ]
         },
@@ -1638,7 +1639,7 @@
           "subcommands": [
             {
               "name": "link",
-              "about": "Link an IP pool to a silo",
+              "about": "Link IP pool to silo",
               "long_about": "Users in linked silos can allocate external IPs from this pool for their instances. A silo can have at most one default pool. IPs are allocated from the default pool when users ask for one without specifying a pool.",
               "args": [
                 {
@@ -1668,7 +1669,7 @@
             },
             {
               "name": "list",
-              "about": "List an IP pool's linked silos",
+              "about": "List IP pool's linked silos",
               "args": [
                 {
                   "long": "limit",
@@ -1688,7 +1689,7 @@
             },
             {
               "name": "unlink",
-              "about": "Unlink an IP pool from a silo",
+              "about": "Unlink IP pool from silo",
               "long_about": "Will fail if there are any outstanding IPs allocated in the silo.",
               "args": [
                 {
@@ -1732,7 +1733,7 @@
         },
         {
           "name": "update",
-          "about": "Update an IP pool",
+          "about": "Update IP pool",
           "args": [
             {
               "long": "description"
@@ -1756,7 +1757,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch an IP pool",
+          "about": "Fetch IP pool",
           "args": [
             {
               "long": "pool",
@@ -1776,7 +1777,7 @@
       "subcommands": [
         {
           "name": "update",
-          "about": "Update the current silo's IAM policy",
+          "about": "Update current silo's IAM policy",
           "args": [
             {
               "long": "json-body",
@@ -1790,7 +1791,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch the current silo's IAM policy"
+          "about": "Fetch current silo's IAM policy"
         }
       ]
     },
@@ -1799,7 +1800,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a project",
+          "about": "Create project",
           "args": [
             {
               "long": "description"
@@ -1819,7 +1820,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete a project",
+          "about": "Delete project",
           "args": [
             {
               "long": "project",
@@ -1850,7 +1851,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch an IP pool",
+              "about": "Fetch IP pool",
               "args": [
                 {
                   "long": "pool",
@@ -1883,7 +1884,7 @@
           "subcommands": [
             {
               "name": "update",
-              "about": "Update a project's IAM policy",
+              "about": "Update project's IAM policy",
               "args": [
                 {
                   "long": "json-body",
@@ -1901,7 +1902,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch a project's IAM policy",
+              "about": "Fetch project's IAM policy",
               "args": [
                 {
                   "long": "project",
@@ -1937,7 +1938,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch a project",
+          "about": "Fetch project",
           "args": [
             {
               "long": "project",
@@ -2032,7 +2033,7 @@
                   "subcommands": [
                     {
                       "name": "create",
-                      "about": "Create a user",
+                      "about": "Create user",
                       "long_about": "Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, Silo users are just-in-time (JIT) provisioned when a user first logs in using an external Identity Provider.",
                       "args": [
                         {
@@ -2055,7 +2056,7 @@
                     },
                     {
                       "name": "delete",
-                      "about": "Delete a user",
+                      "about": "Delete user",
                       "args": [
                         {
                           "long": "silo",
@@ -2069,7 +2070,7 @@
                     },
                     {
                       "name": "set-password",
-                      "about": "Set or invalidate a user's password",
+                      "about": "Set or invalidate user's password",
                       "long_about": "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
                       "args": [
                         {
@@ -2099,7 +2100,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create a SAML IdP",
+                  "about": "Create SAML IdP",
                   "args": [
                     {
                       "long": "acs-url",
@@ -2153,7 +2154,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Fetch a SAML IdP",
+                  "about": "Fetch SAML IdP",
                   "args": [
                     {
                       "long": "provider",
@@ -2221,7 +2222,7 @@
           "subcommands": [
             {
               "name": "update",
-              "about": "Update a silo's IAM policy",
+              "about": "Update silo IAM policy",
               "args": [
                 {
                   "long": "json-body",
@@ -2239,7 +2240,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch a silo's IAM policy",
+              "about": "Fetch silo IAM policy",
               "args": [
                 {
                   "long": "silo",
@@ -2270,7 +2271,7 @@
             },
             {
               "name": "update",
-              "about": "Update the resource quotas of a given silo",
+              "about": "Update resource quotas for silo",
               "long_about": "If a quota value is not specified, it will remain unchanged.",
               "args": [
                 {
@@ -2301,7 +2302,7 @@
             },
             {
               "name": "view",
-              "about": "View the resource quotas of a given silo",
+              "about": "Fetch resource quotas for silo",
               "args": [
                 {
                   "long": "silo",
@@ -2316,7 +2317,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List built-in (system) users in a silo",
+              "about": "List built-in (system) users in silo",
               "args": [
                 {
                   "long": "limit",
@@ -2336,7 +2337,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch a built-in (system) user",
+              "about": "Fetch built-in (system) user",
               "args": [
                 {
                   "long": "silo",
@@ -2373,7 +2374,7 @@
             },
             {
               "name": "view",
-              "about": "View the current utilization of a given silo",
+              "about": "Fetch current utilization for given silo",
               "args": [
                 {
                   "long": "silo",
@@ -2385,8 +2386,8 @@
         },
         {
           "name": "view",
-          "about": "Fetch a silo",
-          "long_about": "Fetch a silo by name or ID.",
+          "about": "Fetch silo",
+          "long_about": "Fetch silo by name or ID.",
           "args": [
             {
               "long": "silo",
@@ -2401,7 +2402,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a snapshot",
+          "about": "Create snapshot",
           "long_about": "Creates a point-in-time snapshot from a disk.",
           "args": [
             {
@@ -2430,7 +2431,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete a snapshot",
+          "about": "Delete snapshot",
           "args": [
             {
               "long": "project",
@@ -2466,7 +2467,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch a snapshot",
+          "about": "Fetch snapshot",
           "args": [
             {
               "long": "project",
@@ -2528,7 +2529,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Fetch a rack",
+                  "about": "Fetch rack",
                   "args": [
                     {
                       "long": "rack-id",
@@ -2543,7 +2544,7 @@
               "subcommands": [
                 {
                   "name": "add",
-                  "about": "Add a sled to an initialized rack",
+                  "about": "Add sled to initialized rack",
                   "args": [
                     {
                       "long": "json-body",
@@ -2583,7 +2584,7 @@
                 },
                 {
                   "name": "instance-list",
-                  "about": "List instances running on a given sled",
+                  "about": "List instances running on given sled",
                   "args": [
                     {
                       "long": "limit",
@@ -2619,7 +2620,7 @@
                 },
                 {
                   "name": "list-uninitialized",
-                  "about": "List uninitialized sleds in a given rack",
+                  "about": "List uninitialized sleds",
                   "args": [
                     {
                       "long": "limit",
@@ -2629,7 +2630,7 @@
                 },
                 {
                   "name": "set-provision-state",
-                  "about": "Set the sled's provision state",
+                  "about": "Set sled provision state",
                   "args": [
                     {
                       "long": "json-body",
@@ -2655,7 +2656,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Fetch a sled",
+                  "about": "Fetch sled",
                   "args": [
                     {
                       "long": "sled-id",
@@ -2686,7 +2687,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Fetch a switch",
+                  "about": "Fetch switch",
                   "args": [
                     {
                       "long": "switch-id",
@@ -2782,7 +2783,7 @@
                   "subcommands": [
                     {
                       "name": "list",
-                      "about": "List the blocks in an address lot",
+                      "about": "List blocks in address lot",
                       "args": [
                         {
                           "long": "address-lot",
@@ -2804,7 +2805,7 @@
                 },
                 {
                   "name": "create",
-                  "about": "Create an address lot",
+                  "about": "Create address lot",
                   "args": [
                     {
                       "long": "description"
@@ -2832,7 +2833,7 @@
                 },
                 {
                   "name": "delete",
-                  "about": "Delete an address lot",
+                  "about": "Delete address lot",
                   "args": [
                     {
                       "long": "address-lot",
@@ -2938,7 +2939,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create a new BGP announce set",
+                  "about": "Create new BGP announce set",
                   "args": [
                     {
                       "long": "description"
@@ -2958,7 +2959,7 @@
                 },
                 {
                   "name": "delete",
-                  "about": "Delete a BGP announce set",
+                  "about": "Delete BGP announce set",
                   "args": [
                     {
                       "long": "name-or-id",
@@ -2983,7 +2984,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create a new BGP configuration",
+                  "about": "Create new BGP configuration",
                   "args": [
                     {
                       "long": "asn",
@@ -3014,7 +3015,7 @@
                 },
                 {
                   "name": "delete",
-                  "about": "Delete a BGP configuration",
+                  "about": "Delete BGP configuration",
                   "args": [
                     {
                       "long": "name-or-id",
@@ -3075,7 +3076,7 @@
               "subcommands": [
                 {
                   "name": "create",
-                  "about": "Create a loopback address",
+                  "about": "Create loopback address",
                   "args": [
                     {
                       "long": "address",
@@ -3117,7 +3118,7 @@
                 },
                 {
                   "name": "delete",
-                  "about": "Delete a loopback address",
+                  "about": "Delete loopback address",
                   "args": [
                     {
                       "long": "address",
@@ -3212,7 +3213,7 @@
                 },
                 {
                   "name": "view",
-                  "about": "Get information about a switch port",
+                  "about": "Get information about switch port",
                   "args": [
                     {
                       "long": "port",
@@ -3229,7 +3230,7 @@
           "subcommands": [
             {
               "name": "update",
-              "about": "Update the top-level IAM policy",
+              "about": "Update top-level IAM policy",
               "args": [
                 {
                   "long": "json-body",
@@ -3243,7 +3244,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch the top-level IAM policy"
+              "about": "Fetch top-level IAM policy"
             }
           ]
         }
@@ -3275,7 +3276,7 @@
     },
     {
       "name": "utilization",
-      "about": "View the resource utilization of the user's current silo"
+      "about": "Fetch resource utilization for user's current silo"
     },
     {
       "name": "version",
@@ -3286,7 +3287,7 @@
       "subcommands": [
         {
           "name": "create",
-          "about": "Create a VPC",
+          "about": "Create VPC",
           "args": [
             {
               "long": "description"
@@ -3317,7 +3318,7 @@
         },
         {
           "name": "delete",
-          "about": "Delete a VPC",
+          "about": "Delete VPC",
           "args": [
             {
               "long": "project",
@@ -3397,7 +3398,7 @@
           "subcommands": [
             {
               "name": "create",
-              "about": "Create a subnet",
+              "about": "Create subnet",
               "args": [
                 {
                   "long": "description"
@@ -3433,7 +3434,7 @@
             },
             {
               "name": "delete",
-              "about": "Delete a subnet",
+              "about": "Delete subnet",
               "args": [
                 {
                   "long": "project",
@@ -3512,7 +3513,7 @@
             },
             {
               "name": "update",
-              "about": "Update a subnet",
+              "about": "Update subnet",
               "args": [
                 {
                   "long": "description"
@@ -3544,7 +3545,7 @@
             },
             {
               "name": "view",
-              "about": "Fetch a subnet",
+              "about": "Fetch subnet",
               "args": [
                 {
                   "long": "project",
@@ -3595,7 +3596,7 @@
         },
         {
           "name": "view",
-          "about": "Fetch a VPC",
+          "about": "Fetch VPC",
           "args": [
             {
               "long": "project",

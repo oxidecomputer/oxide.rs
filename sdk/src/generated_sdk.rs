@@ -35969,7 +35969,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_create(&self) -> builder::DiskCreate;
-    /// Fetch a disk
+    /// Fetch disk
     ///
     /// Sends a `GET` request to `/v1/disks/{disk}`
     ///
@@ -35984,7 +35984,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_view(&self) -> builder::DiskView;
-    /// Delete a disk
+    /// Delete disk
     ///
     /// Sends a `DELETE` request to `/v1/disks/{disk}`
     ///
@@ -35999,7 +35999,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_delete(&self) -> builder::DiskDelete;
-    /// Import blocks into a disk
+    /// Import blocks into disk
     ///
     /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write`
     ///
@@ -36016,7 +36016,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_bulk_write_import(&self) -> builder::DiskBulkWriteImport;
-    /// Start importing blocks into a disk
+    /// Start importing blocks into disk
     ///
     /// Start the process of importing blocks into a disk
     ///
@@ -36033,7 +36033,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_bulk_write_import_start(&self) -> builder::DiskBulkWriteImportStart;
-    /// Stop importing blocks into a disk
+    /// Stop importing blocks into disk
     ///
     /// Stop the process of importing blocks into a disk
     ///
@@ -36157,7 +36157,7 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_list(&self) -> builder::FloatingIpList;
-    /// Create a floating IP
+    /// Create floating IP
     ///
     /// Sends a `POST` request to `/v1/floating-ips`
     ///
@@ -36172,7 +36172,7 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_create(&self) -> builder::FloatingIpCreate;
-    /// Fetch a floating IP
+    /// Fetch floating IP
     ///
     /// Sends a `GET` request to `/v1/floating-ips/{floating_ip}`
     ///
@@ -36187,7 +36187,7 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_view(&self) -> builder::FloatingIpView;
-    /// Delete a floating IP
+    /// Delete floating IP
     ///
     /// Sends a `DELETE` request to `/v1/floating-ips/{floating_ip}`
     ///
@@ -36202,7 +36202,9 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_delete(&self) -> builder::FloatingIpDelete;
-    /// Attach a floating IP to an instance or other resource
+    /// Attach floating IP
+    ///
+    /// Attach floating IP to an instance or other resource.
     ///
     /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/attach`
     ///
@@ -36219,7 +36221,7 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_attach(&self) -> builder::FloatingIpAttach;
-    /// Detach a floating IP from an instance or other resource
+    /// Detach floating IP
     ///
     /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/detach`
     ///
@@ -36366,7 +36368,7 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_list(&self) -> builder::ImageList;
-    /// Create an image
+    /// Create image
     ///
     /// Create a new image in a project.
     ///
@@ -36383,7 +36385,7 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_create(&self) -> builder::ImageCreate;
-    /// Fetch an image
+    /// Fetch image
     ///
     /// Fetch the details for a specific image in a project.
     ///
@@ -36400,7 +36402,7 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_view(&self) -> builder::ImageView;
-    /// Delete an image
+    /// Delete image
     ///
     /// Permanently delete an image from a project. This operation cannot be
     /// undone. Any instances in the project using the image will continue to
@@ -36419,9 +36421,9 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_delete(&self) -> builder::ImageDelete;
-    /// Demote a silo image
+    /// Demote silo image
     ///
-    /// Demote a silo image to be visible only to a specified project
+    /// Demote silo image to be visible only to a specified project
     ///
     /// Sends a `POST` request to `/v1/images/{image}/demote`
     ///
@@ -36436,9 +36438,9 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_demote(&self) -> builder::ImageDemote;
-    /// Promote a project image
+    /// Promote project image
     ///
-    /// Promote a project image to be visible to all projects in the silo
+    /// Promote project image to be visible to all projects in the silo
     ///
     /// Sends a `POST` request to `/v1/images/{image}/promote`
     ///
@@ -36504,7 +36506,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_list(&self) -> builder::InstanceList;
-    /// Create an instance
+    /// Create instance
     ///
     /// Sends a `POST` request to `/v1/instances`
     ///
@@ -36519,7 +36521,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_create(&self) -> builder::InstanceCreate;
-    /// Fetch an instance
+    /// Fetch instance
     ///
     /// Sends a `GET` request to `/v1/instances/{instance}`
     ///
@@ -36534,7 +36536,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_view(&self) -> builder::InstanceView;
-    /// Delete an instance
+    /// Delete instance
     ///
     /// Sends a `DELETE` request to `/v1/instances/{instance}`
     ///
@@ -36549,7 +36551,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_delete(&self) -> builder::InstanceDelete;
-    /// List an instance's disks
+    /// List disks for instance
     ///
     /// Sends a `GET` request to `/v1/instances/{instance}/disks`
     ///
@@ -36571,7 +36573,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_disk_list(&self) -> builder::InstanceDiskList;
-    /// Attach a disk to an instance
+    /// Attach disk to instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/disks/attach`
     ///
@@ -36588,7 +36590,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_disk_attach(&self) -> builder::InstanceDiskAttach;
-    /// Detach a disk from an instance
+    /// Detach disk from instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/disks/detach`
     ///
@@ -36620,7 +36622,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_external_ip_list(&self) -> builder::InstanceExternalIpList;
-    /// Allocate and attach an ephemeral IP to an instance
+    /// Allocate and attach ephemeral IP to instance
     ///
     /// Sends a `POST` request to
     /// `/v1/instances/{instance}/external-ips/ephemeral`
@@ -36638,7 +36640,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_ephemeral_ip_attach(&self) -> builder::InstanceEphemeralIpAttach;
-    /// Detach and deallocate an ephemeral IP from an instance
+    /// Detach and deallocate ephemeral IP from instance
     ///
     /// Sends a `DELETE` request to
     /// `/v1/instances/{instance}/external-ips/ephemeral`
@@ -36686,7 +36688,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_reboot(&self) -> builder::InstanceReboot;
-    /// Fetch an instance's serial console
+    /// Fetch instance serial console
     ///
     /// Sends a `GET` request to `/v1/instances/{instance}/serial-console`
     ///
@@ -36716,7 +36718,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_serial_console(&self) -> builder::InstanceSerialConsole;
-    /// Stream an instance's serial console
+    /// Stream instance serial console
     ///
     /// Sends a `GET` request to
     /// `/v1/instances/{instance}/serial-console/stream`
@@ -36737,9 +36739,9 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream;
-    /// List the SSH public keys added to the instance via cloud-init during
-    /// instance creation
+    /// List SSH public keys for instance
     ///
+    /// List SSH public keys injected via cloud-init during instance creation.
     /// Note that this list is a snapshot in time and will not reflect updates
     /// made after the instance is created.
     ///
@@ -36763,7 +36765,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_ssh_public_key_list(&self) -> builder::InstanceSshPublicKeyList;
-    /// Boot an instance
+    /// Boot instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/start`
     ///
@@ -36778,7 +36780,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_start(&self) -> builder::InstanceStart;
-    /// Stop an instance
+    /// Stop instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/stop`
     ///
@@ -36816,7 +36818,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList;
-    /// Create a network interface
+    /// Create network interface
     ///
     /// Sends a `POST` request to `/v1/network-interfaces`
     ///
@@ -36834,7 +36836,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate;
-    /// Fetch a network interface
+    /// Fetch network interface
     ///
     /// Sends a `GET` request to `/v1/network-interfaces/{interface}`
     ///
@@ -36852,7 +36854,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView;
-    /// Update a network interface
+    /// Update network interface
     ///
     /// Sends a `PUT` request to `/v1/network-interfaces/{interface}`
     ///
@@ -36872,7 +36874,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate;
-    /// Delete a network interface
+    /// Delete network interface
     ///
     /// Note that the primary interface for an instance cannot be deleted if
     /// there are any secondary interfaces. A new primary interface must be
@@ -37064,7 +37066,7 @@ impl ClientMetricsExt for Client {
 
 /// System-wide IAM policy
 pub trait ClientPolicyExt {
-    /// Fetch the top-level IAM policy
+    /// Fetch top-level IAM policy
     ///
     /// Sends a `GET` request to `/v1/system/policy`
     ///
@@ -37074,7 +37076,7 @@ pub trait ClientPolicyExt {
     ///    .await;
     /// ```
     fn system_policy_view(&self) -> builder::SystemPolicyView;
-    /// Update the top-level IAM policy
+    /// Update top-level IAM policy
     ///
     /// Sends a `PUT` request to `/v1/system/policy`
     ///
@@ -37118,7 +37120,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_ip_pool_list(&self) -> builder::ProjectIpPoolList;
-    /// Fetch an IP pool
+    /// Fetch IP pool
     ///
     /// Sends a `GET` request to `/v1/ip-pools/{pool}`
     ///
@@ -37149,7 +37151,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_list(&self) -> builder::ProjectList;
-    /// Create a project
+    /// Create project
     ///
     /// Sends a `POST` request to `/v1/projects`
     ///
@@ -37160,7 +37162,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_create(&self) -> builder::ProjectCreate;
-    /// Fetch a project
+    /// Fetch project
     ///
     /// Sends a `GET` request to `/v1/projects/{project}`
     ///
@@ -37188,7 +37190,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_update(&self) -> builder::ProjectUpdate;
-    /// Delete a project
+    /// Delete project
     ///
     /// Sends a `DELETE` request to `/v1/projects/{project}`
     ///
@@ -37201,7 +37203,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_delete(&self) -> builder::ProjectDelete;
-    /// Fetch a project's IAM policy
+    /// Fetch project's IAM policy
     ///
     /// Sends a `GET` request to `/v1/projects/{project}/policy`
     ///
@@ -37214,7 +37216,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_policy_view(&self) -> builder::ProjectPolicyView;
-    /// Update a project's IAM policy
+    /// Update project's IAM policy
     ///
     /// Sends a `PUT` request to `/v1/projects/{project}/policy`
     ///
@@ -37288,7 +37290,7 @@ pub trait ClientRolesExt {
     ///    .await;
     /// ```
     fn role_list(&self) -> builder::RoleList;
-    /// Fetch a built-in role
+    /// Fetch built-in role
     ///
     /// Sends a `GET` request to `/v1/system/roles/{role_name}`
     ///
@@ -37315,7 +37317,7 @@ impl ClientRolesExt for Client {
 
 /// Information pertaining to the current session.
 pub trait ClientSessionExt {
-    /// Fetch the user associated with the current session
+    /// Fetch user for current session
     ///
     /// Sends a `GET` request to `/v1/me`
     ///
@@ -37325,7 +37327,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_view(&self) -> builder::CurrentUserView;
-    /// Fetch the silo groups the current user belongs to
+    /// Fetch current user's groups
     ///
     /// Sends a `GET` request to `/v1/me/groups`
     ///
@@ -37363,7 +37365,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList;
-    /// Create an SSH public key
+    /// Create SSH public key
     ///
     /// Create an SSH public key for the currently authenticated user.
     ///
@@ -37376,10 +37378,9 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate;
-    /// Fetch an SSH public key
+    /// Fetch SSH public key
     ///
-    /// Fetch an SSH public key associated with the currently authenticated
-    /// user.
+    /// Fetch SSH public key associated with the currently authenticated user.
     ///
     /// Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`
     ///
@@ -37392,7 +37393,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView;
-    /// Delete an SSH public key
+    /// Delete SSH public key
     ///
     /// Delete an SSH public key associated with the currently authenticated
     /// user.
@@ -37460,7 +37461,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn certificate_list(&self) -> builder::CertificateList;
-    /// Create a new system-wide x.509 certificate
+    /// Create new system-wide x.509 certificate
     ///
     /// This certificate is automatically used by the Oxide Control plane to
     /// serve external connections.
@@ -37474,7 +37475,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn certificate_create(&self) -> builder::CertificateCreate;
-    /// Fetch a certificate
+    /// Fetch certificate
     ///
     /// Returns the details of a specific certificate
     ///
@@ -37487,7 +37488,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn certificate_view(&self) -> builder::CertificateView;
-    /// Delete a certificate
+    /// Delete certificate
     ///
     /// Permanently delete a certificate. This operation cannot be undone.
     ///
@@ -37531,7 +37532,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn group_view(&self) -> builder::GroupView;
-    /// Fetch the current silo's IAM policy
+    /// Fetch current silo's IAM policy
     ///
     /// Sends a `GET` request to `/v1/policy`
     ///
@@ -37541,7 +37542,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn policy_view(&self) -> builder::PolicyView;
-    /// Update the current silo's IAM policy
+    /// Update current silo's IAM policy
     ///
     /// Sends a `PUT` request to `/v1/policy`
     ///
@@ -37572,7 +37573,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn user_list(&self) -> builder::UserList;
-    /// View the resource utilization of the user's current silo
+    /// Fetch resource utilization for user's current silo
     ///
     /// Sends a `GET` request to `/v1/utilization`
     ///
@@ -37648,7 +37649,7 @@ pub trait ClientSnapshotsExt {
     ///    .await;
     /// ```
     fn snapshot_list(&self) -> builder::SnapshotList;
-    /// Create a snapshot
+    /// Create snapshot
     ///
     /// Creates a point-in-time snapshot from a disk.
     ///
@@ -37665,7 +37666,7 @@ pub trait ClientSnapshotsExt {
     ///    .await;
     /// ```
     fn snapshot_create(&self) -> builder::SnapshotCreate;
-    /// Fetch a snapshot
+    /// Fetch snapshot
     ///
     /// Sends a `GET` request to `/v1/snapshots/{snapshot}`
     ///
@@ -37680,7 +37681,7 @@ pub trait ClientSnapshotsExt {
     ///    .await;
     /// ```
     fn snapshot_view(&self) -> builder::SnapshotView;
-    /// Delete a snapshot
+    /// Delete snapshot
     ///
     /// Sends a `DELETE` request to `/v1/snapshots/{snapshot}`
     ///
@@ -37755,7 +37756,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn rack_list(&self) -> builder::RackList;
-    /// Fetch a rack
+    /// Fetch rack
     ///
     /// Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
     ///
@@ -37786,7 +37787,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_list(&self) -> builder::SledList;
-    /// Add a sled to an initialized rack
+    /// Add sled to initialized rack
     ///
     /// Sends a `POST` request to `/v1/system/hardware/sleds`
     ///
@@ -37797,7 +37798,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_add(&self) -> builder::SledAdd;
-    /// Fetch a sled
+    /// Fetch sled
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
     ///
@@ -37830,7 +37831,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList;
-    /// List instances running on a given sled
+    /// List instances running on given sled
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/instances`
     ///
@@ -37850,7 +37851,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_instance_list(&self) -> builder::SledInstanceList;
-    /// Set the sled's provision state
+    /// Set sled provision state
     ///
     /// Sends a `PUT` request to
     /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
@@ -37866,7 +37867,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_set_provision_state(&self) -> builder::SledSetProvisionState;
-    /// List uninitialized sleds in a given rack
+    /// List uninitialized sleds
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
     ///
@@ -37961,7 +37962,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn switch_list(&self) -> builder::SwitchList;
-    /// Fetch a switch
+    /// Fetch switch
     ///
     /// Sends a `GET` request to `/v1/system/hardware/switches/{switch_id}`
     ///
@@ -38096,7 +38097,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_list(&self) -> builder::IpPoolList;
-    /// Create an IP pool
+    /// Create IP pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools`
     ///
@@ -38107,7 +38108,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_create(&self) -> builder::IpPoolCreate;
-    /// Fetch an IP pool
+    /// Fetch IP pool
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}`
     ///
@@ -38120,7 +38121,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_view(&self) -> builder::IpPoolView;
-    /// Update an IP pool
+    /// Update IP pool
     ///
     /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
     ///
@@ -38135,7 +38136,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_update(&self) -> builder::IpPoolUpdate;
-    /// Delete an IP pool
+    /// Delete IP pool
     ///
     /// Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
     ///
@@ -38148,9 +38149,9 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_delete(&self) -> builder::IpPoolDelete;
-    /// List ranges for an IP pool
+    /// List ranges for IP pool
     ///
-    /// List ranges for an IP pool. Ranges are ordered by their first address.
+    /// Ranges are ordered by their first address.
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`
     ///
@@ -38168,7 +38169,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
-    /// Add a range to an IP pool
+    /// Add range to IP pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
     ///
@@ -38183,7 +38184,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd;
-    /// Remove a range from an IP pool
+    /// Remove range from IP pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`
     ///
@@ -38198,7 +38199,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove;
-    /// List an IP pool's linked silos
+    /// List IP pool's linked silos
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/silos`
     ///
@@ -38218,7 +38219,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList;
-    /// Link an IP pool to a silo
+    /// Link IP pool to silo
     ///
     /// Users in linked silos can allocate external IPs from this pool for their
     /// instances. A silo can have at most one default pool. IPs are allocated
@@ -38256,7 +38257,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_update(&self) -> builder::IpPoolSiloUpdate;
-    /// Unlink an IP pool from a silo
+    /// Unlink IP pool from silo
     ///
     /// Will fail if there are any outstanding IPs allocated in the silo.
     ///
@@ -38270,7 +38271,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink;
-    /// Fetch the Oxide service IP pool
+    /// Fetch Oxide service IP pool
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools-service`
     ///
@@ -38338,7 +38339,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_list(&self) -> builder::NetworkingAddressLotList;
-    /// Create an address lot
+    /// Create address lot
     ///
     /// Sends a `POST` request to `/v1/system/networking/address-lot`
     ///
@@ -38349,7 +38350,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_create(&self) -> builder::NetworkingAddressLotCreate;
-    /// Delete an address lot
+    /// Delete address lot
     ///
     /// Sends a `DELETE` request to
     /// `/v1/system/networking/address-lot/{address_lot}`
@@ -38363,7 +38364,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_delete(&self) -> builder::NetworkingAddressLotDelete;
-    /// List the blocks in an address lot
+    /// List blocks in address lot
     ///
     /// Sends a `GET` request to
     /// `/v1/system/networking/address-lot/{address_lot}/blocks`
@@ -38436,7 +38437,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList;
-    /// Create a new BGP configuration
+    /// Create new BGP configuration
     ///
     /// Sends a `POST` request to `/v1/system/networking/bgp`
     ///
@@ -38447,7 +38448,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_config_create(&self) -> builder::NetworkingBgpConfigCreate;
-    /// Delete a BGP configuration
+    /// Delete BGP configuration
     ///
     /// Sends a `DELETE` request to `/v1/system/networking/bgp`
     ///
@@ -38473,7 +38474,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_list(&self) -> builder::NetworkingBgpAnnounceSetList;
-    /// Create a new BGP announce set
+    /// Create new BGP announce set
     ///
     /// Sends a `POST` request to `/v1/system/networking/bgp-announce`
     ///
@@ -38484,7 +38485,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_create(&self) -> builder::NetworkingBgpAnnounceSetCreate;
-    /// Delete a BGP announce set
+    /// Delete BGP announce set
     ///
     /// Sends a `DELETE` request to `/v1/system/networking/bgp-announce`
     ///
@@ -38538,7 +38539,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_loopback_address_list(&self) -> builder::NetworkingLoopbackAddressList;
-    /// Create a loopback address
+    /// Create loopback address
     ///
     /// Sends a `POST` request to `/v1/system/networking/loopback-address`
     ///
@@ -38549,7 +38550,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_loopback_address_create(&self) -> builder::NetworkingLoopbackAddressCreate;
-    /// Delete a loopback address
+    /// Delete loopback address
     ///
     /// Sends a `DELETE` request to
     /// `/v1/system/networking/loopback-address/{rack_id}/{switch_location}/
@@ -38621,7 +38622,7 @@ pub trait ClientSystemNetworkingExt {
     /// ```
     fn networking_switch_port_settings_delete(&self)
         -> builder::NetworkingSwitchPortSettingsDelete;
-    /// Get information about a switch port
+    /// Get information about switch port
     ///
     /// Sends a `GET` request to
     /// `/v1/system/networking/switch-port-settings/{port}`
@@ -38818,7 +38819,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
-    /// Create a user
+    /// Create user
     ///
     /// Users can only be created in Silos with `provision_type` == `Fixed`.
     /// Otherwise, Silo users are just-in-time (JIT) provisioned when a user
@@ -38837,7 +38838,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
-    /// Delete a user
+    /// Delete user
     ///
     /// Sends a `DELETE` request to
     /// `/v1/system/identity-providers/local/users/{user_id}`
@@ -38853,7 +38854,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
-    /// Set or invalidate a user's password
+    /// Set or invalidate user's password
     ///
     /// Passwords can only be updated for users in Silos with identity mode
     /// `LocalOnly`.
@@ -38874,7 +38875,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
-    /// Create a SAML IdP
+    /// Create SAML IdP
     ///
     /// Sends a `POST` request to `/v1/system/identity-providers/saml`
     ///
@@ -38889,7 +38890,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
-    /// Fetch a SAML IdP
+    /// Fetch SAML IdP
     ///
     /// Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
     ///
@@ -38953,9 +38954,9 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_create(&self) -> builder::SiloCreate;
-    /// Fetch a silo
+    /// Fetch silo
     ///
-    /// Fetch a silo by name or ID.
+    /// Fetch silo by name or ID.
     ///
     /// Sends a `GET` request to `/v1/system/silos/{silo}`
     ///
@@ -39007,7 +39008,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_ip_pool_list(&self) -> builder::SiloIpPoolList;
-    /// Fetch a silo's IAM policy
+    /// Fetch silo IAM policy
     ///
     /// Sends a `GET` request to `/v1/system/silos/{silo}/policy`
     ///
@@ -39020,7 +39021,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_policy_view(&self) -> builder::SiloPolicyView;
-    /// Update a silo's IAM policy
+    /// Update silo IAM policy
     ///
     /// Sends a `PUT` request to `/v1/system/silos/{silo}/policy`
     ///
@@ -39035,7 +39036,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate;
-    /// View the resource quotas of a given silo
+    /// Fetch resource quotas for silo
     ///
     /// Sends a `GET` request to `/v1/system/silos/{silo}/quotas`
     ///
@@ -39048,7 +39049,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_quotas_view(&self) -> builder::SiloQuotasView;
-    /// Update the resource quotas of a given silo
+    /// Update resource quotas for silo
     ///
     /// If a quota value is not specified, it will remain unchanged.
     ///
@@ -39065,7 +39066,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_quotas_update(&self) -> builder::SiloQuotasUpdate;
-    /// List built-in (system) users in a silo
+    /// List built-in (system) users in silo
     ///
     /// Sends a `GET` request to `/v1/system/users`
     ///
@@ -39085,7 +39086,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_user_list(&self) -> builder::SiloUserList;
-    /// Fetch a built-in (system) user
+    /// Fetch built-in (system) user
     ///
     /// Sends a `GET` request to `/v1/system/users/{user_id}`
     ///
@@ -39118,7 +39119,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn user_builtin_list(&self) -> builder::UserBuiltinList;
-    /// Fetch a built-in user
+    /// Fetch built-in user
     ///
     /// Sends a `GET` request to `/v1/system/users-builtin/{user}`
     ///
@@ -39147,7 +39148,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_utilization_list(&self) -> builder::SiloUtilizationList;
-    /// View the current utilization of a given silo
+    /// Fetch current utilization for given silo
     ///
     /// Sends a `GET` request to `/v1/system/utilization/silos/{silo}`
     ///
@@ -39334,7 +39335,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_list(&self) -> builder::VpcSubnetList;
-    /// Create a subnet
+    /// Create subnet
     ///
     /// Sends a `POST` request to `/v1/vpc-subnets`
     ///
@@ -39352,7 +39353,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_create(&self) -> builder::VpcSubnetCreate;
-    /// Fetch a subnet
+    /// Fetch subnet
     ///
     /// Sends a `GET` request to `/v1/vpc-subnets/{subnet}`
     ///
@@ -39370,7 +39371,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_view(&self) -> builder::VpcSubnetView;
-    /// Update a subnet
+    /// Update subnet
     ///
     /// Sends a `PUT` request to `/v1/vpc-subnets/{subnet}`
     ///
@@ -39390,7 +39391,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_update(&self) -> builder::VpcSubnetUpdate;
-    /// Delete a subnet
+    /// Delete subnet
     ///
     /// Sends a `DELETE` request to `/v1/vpc-subnets/{subnet}`
     ///
@@ -39453,7 +39454,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_list(&self) -> builder::VpcList;
-    /// Create a VPC
+    /// Create VPC
     ///
     /// Sends a `POST` request to `/v1/vpcs`
     ///
@@ -39468,7 +39469,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_create(&self) -> builder::VpcCreate;
-    /// Fetch a VPC
+    /// Fetch VPC
     ///
     /// Sends a `GET` request to `/v1/vpcs/{vpc}`
     ///
@@ -39500,7 +39501,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_update(&self) -> builder::VpcUpdate;
-    /// Delete a VPC
+    /// Delete VPC
     ///
     /// Sends a `DELETE` request to `/v1/vpcs/{vpc}`
     ///
