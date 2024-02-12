@@ -427,7 +427,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a new system-wide x.509 certificate")
+            .about("Create new system-wide x.509 certificate")
             .long_about(
                 "This certificate is automatically used by the Oxide Control plane to serve \
                  external connections.",
@@ -442,7 +442,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
-            .about("Fetch a certificate")
+            .about("Fetch certificate")
             .long_about("Returns the details of a specific certificate")
     }
 
@@ -454,7 +454,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
-            .about("Delete a certificate")
+            .about("Delete certificate")
             .long_about("Permanently delete a certificate. This operation cannot be undone.")
     }
 
@@ -551,7 +551,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch a disk")
+            .about("Fetch disk")
     }
 
     pub fn cli_disk_delete() -> clap::Command {
@@ -570,7 +570,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete a disk")
+            .about("Delete disk")
     }
 
     pub fn cli_disk_bulk_write_import() -> clap::Command {
@@ -615,7 +615,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Import blocks into a disk")
+            .about("Import blocks into disk")
     }
 
     pub fn cli_disk_bulk_write_import_start() -> clap::Command {
@@ -634,7 +634,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Start importing blocks into a disk")
+            .about("Start importing blocks into disk")
             .long_about("Start the process of importing blocks into a disk")
     }
 
@@ -654,7 +654,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Stop importing blocks into a disk")
+            .about("Stop importing blocks into disk")
             .long_about("Stop the process of importing blocks into a disk")
     }
 
@@ -859,7 +859,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a floating IP")
+            .about("Create floating IP")
     }
 
     pub fn cli_floating_ip_view() -> clap::Command {
@@ -878,7 +878,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch a floating IP")
+            .about("Fetch floating IP")
     }
 
     pub fn cli_floating_ip_delete() -> clap::Command {
@@ -897,7 +897,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete a floating IP")
+            .about("Delete floating IP")
     }
 
     pub fn cli_floating_ip_attach() -> clap::Command {
@@ -949,7 +949,8 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach a floating IP to an instance or other resource")
+            .about("Attach floating IP")
+            .long_about("Attach floating IP to an instance or other resource.")
     }
 
     pub fn cli_floating_ip_detach() -> clap::Command {
@@ -968,7 +969,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Detach a floating IP from an instance or other resource")
+            .about("Detach floating IP")
     }
 
     pub fn cli_group_list() -> clap::Command {
@@ -1091,7 +1092,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an image")
+            .about("Create image")
             .long_about("Create a new image in a project.")
     }
 
@@ -1111,7 +1112,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an image")
+            .about("Fetch image")
             .long_about("Fetch the details for a specific image in a project.")
     }
 
@@ -1131,7 +1132,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete an image")
+            .about("Delete image")
             .long_about(
                 "Permanently delete an image from a project. This operation cannot be undone. Any \
                  instances in the project using the image will continue to run, however new \
@@ -1155,8 +1156,8 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the project"),
             )
-            .about("Demote a silo image")
-            .long_about("Demote a silo image to be visible only to a specified project")
+            .about("Demote silo image")
+            .long_about("Demote silo image to be visible only to a specified project")
     }
 
     pub fn cli_image_promote() -> clap::Command {
@@ -1175,8 +1176,8 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Promote a project image")
-            .long_about("Promote a project image to be visible to all projects in the silo")
+            .about("Promote project image")
+            .long_about("Promote project image to be visible to all projects in the silo")
     }
 
     pub fn cli_instance_list() -> clap::Command {
@@ -1282,7 +1283,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an instance")
+            .about("Create instance")
     }
 
     pub fn cli_instance_view() -> clap::Command {
@@ -1301,7 +1302,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an instance")
+            .about("Fetch instance")
     }
 
     pub fn cli_instance_delete() -> clap::Command {
@@ -1320,7 +1321,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete an instance")
+            .about("Delete instance")
     }
 
     pub fn cli_instance_disk_list() -> clap::Command {
@@ -1359,7 +1360,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List an instance's disks")
+            .about("List disks for instance")
     }
 
     pub fn cli_instance_disk_attach() -> clap::Command {
@@ -1399,7 +1400,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach a disk to an instance")
+            .about("Attach disk to instance")
     }
 
     pub fn cli_instance_disk_detach() -> clap::Command {
@@ -1439,7 +1440,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Detach a disk from an instance")
+            .about("Detach disk from instance")
     }
 
     pub fn cli_instance_external_ip_list() -> clap::Command {
@@ -1498,7 +1499,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Allocate and attach an ephemeral IP to an instance")
+            .about("Allocate and attach ephemeral IP to instance")
     }
 
     pub fn cli_instance_ephemeral_ip_detach() -> clap::Command {
@@ -1517,7 +1518,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Detach and deallocate an ephemeral IP from an instance")
+            .about("Detach and deallocate ephemeral IP from instance")
     }
 
     pub fn cli_instance_migrate() -> clap::Command {
@@ -1631,7 +1632,7 @@ impl<T: CliConfig> Cli<T> {
                          `Name`",
                     ),
             )
-            .about("Fetch an instance's serial console")
+            .about("Fetch instance serial console")
     }
 
     pub fn cli_instance_serial_console_stream() -> clap::Command {
@@ -1664,7 +1665,7 @@ impl<T: CliConfig> Cli<T> {
                          `Name`",
                     ),
             )
-            .about("Stream an instance's serial console")
+            .about("Stream instance serial console")
     }
 
     pub fn cli_instance_ssh_public_key_list() -> clap::Command {
@@ -1703,13 +1704,11 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about(
-                "List the SSH public keys added to the instance via cloud-init during instance \
-                 creation",
-            )
+            .about("List SSH public keys for instance")
             .long_about(
-                "Note that this list is a snapshot in time and will not reflect updates made \
-                 after the instance is created.",
+                "List SSH public keys injected via cloud-init during instance creation. Note that \
+                 this list is a snapshot in time and will not reflect updates made after the \
+                 instance is created.",
             )
     }
 
@@ -1729,7 +1728,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Boot an instance")
+            .about("Boot instance")
     }
 
     pub fn cli_instance_stop() -> clap::Command {
@@ -1748,7 +1747,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Stop an instance")
+            .about("Stop instance")
     }
 
     pub fn cli_project_ip_pool_list() -> clap::Command {
@@ -1785,7 +1784,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
-            .about("Fetch an IP pool")
+            .about("Fetch IP pool")
     }
 
     pub fn cli_login_local() -> clap::Command {
@@ -1831,7 +1830,7 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_current_user_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the user associated with the current session")
+        clap::Command::new("").about("Fetch user for current session")
     }
 
     pub fn cli_current_user_groups() -> clap::Command {
@@ -1854,7 +1853,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("Fetch the silo\u{a0}groups the current user belongs to")
+            .about("Fetch current user's groups")
     }
 
     pub fn cli_current_user_ssh_key_list() -> clap::Command {
@@ -1918,7 +1917,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an SSH public key")
+            .about("Create SSH public key")
             .long_about("Create an SSH public key for the currently authenticated user.")
     }
 
@@ -1931,8 +1930,8 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the SSH key"),
             )
-            .about("Fetch an SSH public key")
-            .long_about("Fetch an SSH public key associated with the currently authenticated user.")
+            .about("Fetch SSH public key")
+            .long_about("Fetch SSH public key associated with the currently authenticated user.")
     }
 
     pub fn cli_current_user_ssh_key_delete() -> clap::Command {
@@ -1944,7 +1943,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the SSH key"),
             )
-            .about("Delete an SSH public key")
+            .about("Delete SSH public key")
             .long_about(
                 "Delete an SSH public key associated with the currently authenticated user.",
             )
@@ -2120,7 +2119,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a network interface")
+            .about("Create network interface")
     }
 
     pub fn cli_instance_network_interface_view() -> clap::Command {
@@ -2149,7 +2148,7 @@ impl<T: CliConfig> Cli<T> {
                          `Name`",
                     ),
             )
-            .about("Fetch a network interface")
+            .about("Fetch network interface")
     }
 
     pub fn cli_instance_network_interface_update() -> clap::Command {
@@ -2220,7 +2219,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a network interface")
+            .about("Update network interface")
     }
 
     pub fn cli_instance_network_interface_delete() -> clap::Command {
@@ -2249,7 +2248,7 @@ impl<T: CliConfig> Cli<T> {
                          `Name`",
                     ),
             )
-            .about("Delete a network interface")
+            .about("Delete network interface")
             .long_about(
                 "Note that the primary interface for an instance cannot be deleted if there are \
                  any secondary interfaces. A new primary interface must be designated first. The \
@@ -2264,7 +2263,7 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_policy_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the current silo's IAM policy")
+        clap::Command::new("").about("Fetch current silo's IAM policy")
     }
 
     pub fn cli_policy_update() -> clap::Command {
@@ -2283,7 +2282,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update the current silo's IAM policy")
+            .about("Update current silo's IAM policy")
     }
 
     pub fn cli_project_list() -> clap::Command {
@@ -2339,7 +2338,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a project")
+            .about("Create project")
     }
 
     pub fn cli_project_view() -> clap::Command {
@@ -2351,7 +2350,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch a project")
+            .about("Fetch project")
     }
 
     pub fn cli_project_update() -> clap::Command {
@@ -2401,7 +2400,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the project"),
             )
-            .about("Delete a project")
+            .about("Delete project")
     }
 
     pub fn cli_project_policy_view() -> clap::Command {
@@ -2413,7 +2412,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch a project's IAM policy")
+            .about("Fetch project's IAM policy")
     }
 
     pub fn cli_project_policy_update() -> clap::Command {
@@ -2439,7 +2438,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a project's IAM policy")
+            .about("Update project's IAM policy")
     }
 
     pub fn cli_snapshot_list() -> clap::Command {
@@ -2516,7 +2515,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a snapshot")
+            .about("Create snapshot")
             .long_about("Creates a point-in-time snapshot from a disk.")
     }
 
@@ -2536,7 +2535,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the snapshot"),
             )
-            .about("Fetch a snapshot")
+            .about("Fetch snapshot")
     }
 
     pub fn cli_snapshot_delete() -> clap::Command {
@@ -2555,7 +2554,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the snapshot"),
             )
-            .about("Delete a snapshot")
+            .about("Delete snapshot")
     }
 
     pub fn cli_physical_disk_list() -> clap::Command {
@@ -2613,7 +2612,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("The rack's unique ID."),
             )
-            .about("Fetch a rack")
+            .about("Fetch rack")
     }
 
     pub fn cli_sled_list() -> clap::Command {
@@ -2667,7 +2666,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add a sled to an initialized rack")
+            .about("Add sled to initialized rack")
     }
 
     pub fn cli_sled_view() -> clap::Command {
@@ -2679,7 +2678,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the sled"),
             )
-            .about("Fetch a sled")
+            .about("Fetch sled")
     }
 
     pub fn cli_sled_physical_disk_list() -> clap::Command {
@@ -2739,7 +2738,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List instances running on a given sled")
+            .about("List instances running on given sled")
     }
 
     pub fn cli_sled_set_provision_state() -> clap::Command {
@@ -2778,7 +2777,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Set the sled's provision state")
+            .about("Set sled provision state")
     }
 
     pub fn cli_sled_list_uninitialized() -> clap::Command {
@@ -2790,7 +2789,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
-            .about("List uninitialized sleds in a given rack")
+            .about("List uninitialized sleds")
     }
 
     pub fn cli_networking_switch_port_list() -> clap::Command {
@@ -2928,7 +2927,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("ID of the switch"),
             )
-            .about("Fetch a switch")
+            .about("Fetch switch")
     }
 
     pub fn cli_silo_identity_provider_list() -> clap::Command {
@@ -2993,7 +2992,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a user")
+            .about("Create user")
             .long_about(
                 "Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, \
                  Silo users are just-in-time (JIT) provisioned when a user first logs in using an \
@@ -3017,7 +3016,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("The user's internal id"),
             )
-            .about("Delete a user")
+            .about("Delete user")
     }
 
     pub fn cli_local_idp_user_set_password() -> clap::Command {
@@ -3050,7 +3049,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Set or invalidate a user's password")
+            .about("Set or invalidate user's password")
             .long_about(
                 "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
             )
@@ -3137,7 +3136,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a SAML IdP")
+            .about("Create SAML IdP")
     }
 
     pub fn cli_saml_identity_provider_view() -> clap::Command {
@@ -3156,7 +3155,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a SAML IdP")
+            .about("Fetch SAML IdP")
     }
 
     pub fn cli_ip_pool_list() -> clap::Command {
@@ -3212,7 +3211,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an IP pool")
+            .about("Create IP pool")
     }
 
     pub fn cli_ip_pool_view() -> clap::Command {
@@ -3224,7 +3223,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
-            .about("Fetch an IP pool")
+            .about("Fetch IP pool")
     }
 
     pub fn cli_ip_pool_update() -> clap::Command {
@@ -3262,7 +3261,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update an IP pool")
+            .about("Update IP pool")
     }
 
     pub fn cli_ip_pool_delete() -> clap::Command {
@@ -3274,7 +3273,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
-            .about("Delete an IP pool")
+            .about("Delete IP pool")
     }
 
     pub fn cli_ip_pool_range_list() -> clap::Command {
@@ -3293,8 +3292,8 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
-            .about("List ranges for an IP pool")
-            .long_about("List ranges for an IP pool. Ranges are ordered by their first address.")
+            .about("List ranges for IP pool")
+            .long_about("Ranges are ordered by their first address.")
     }
 
     pub fn cli_ip_pool_range_add() -> clap::Command {
@@ -3320,7 +3319,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add a range to an IP pool")
+            .about("Add range to IP pool")
     }
 
     pub fn cli_ip_pool_range_remove() -> clap::Command {
@@ -3346,7 +3345,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Remove a range from an IP pool")
+            .about("Remove range from IP pool")
     }
 
     pub fn cli_ip_pool_silo_list() -> clap::Command {
@@ -3376,7 +3375,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List an IP pool's linked silos")
+            .about("List IP pool's linked silos")
     }
 
     pub fn cli_ip_pool_silo_link() -> clap::Command {
@@ -3419,7 +3418,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Link an IP pool to a silo")
+            .about("Link IP pool to silo")
             .long_about(
                 "Users in linked silos can allocate external IPs from this pool for their \
                  instances. A silo can have at most one default pool. IPs are allocated from the \
@@ -3491,12 +3490,12 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
-            .about("Unlink an IP pool from a silo")
+            .about("Unlink IP pool from silo")
             .long_about("Will fail if there are any outstanding IPs allocated in the silo.")
     }
 
     pub fn cli_ip_pool_service_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the Oxide service IP pool")
+        clap::Command::new("").about("Fetch Oxide service IP pool")
     }
 
     pub fn cli_ip_pool_service_range_list() -> clap::Command {
@@ -3675,7 +3674,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an address lot")
+            .about("Create address lot")
     }
 
     pub fn cli_networking_address_lot_delete() -> clap::Command {
@@ -3687,7 +3686,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the address lot"),
             )
-            .about("Delete an address lot")
+            .about("Delete address lot")
     }
 
     pub fn cli_networking_address_lot_block_list() -> clap::Command {
@@ -3717,7 +3716,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List the blocks in an address lot")
+            .about("List blocks in address lot")
     }
 
     pub fn cli_networking_bfd_disable() -> clap::Command {
@@ -3917,7 +3916,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a new BGP configuration")
+            .about("Create new BGP configuration")
     }
 
     pub fn cli_networking_bgp_config_delete() -> clap::Command {
@@ -3929,7 +3928,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("A name or id to use when selecting BGP config."),
             )
-            .about("Delete a BGP configuration")
+            .about("Delete BGP configuration")
     }
 
     pub fn cli_networking_bgp_announce_set_list() -> clap::Command {
@@ -3972,7 +3971,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a new BGP announce set")
+            .about("Create new BGP announce set")
     }
 
     pub fn cli_networking_bgp_announce_set_delete() -> clap::Command {
@@ -3984,7 +3983,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("A name or id to use when selecting BGP port settings"),
             )
-            .about("Delete a BGP announce set")
+            .about("Delete BGP announce set")
     }
 
     pub fn cli_networking_bgp_imported_routes_ipv4() -> clap::Command {
@@ -4093,7 +4092,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a loopback address")
+            .about("Create loopback address")
     }
 
     pub fn cli_networking_loopback_address_delete() -> clap::Command {
@@ -4132,7 +4131,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("The switch location to use when selecting the loopback address."),
             )
-            .about("Delete a loopback address")
+            .about("Delete loopback address")
     }
 
     pub fn cli_networking_switch_port_settings_list() -> clap::Command {
@@ -4219,11 +4218,11 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("A name or id to use when selecting switch port settings info objects."),
             )
-            .about("Get information about a switch port")
+            .about("Get information about switch port")
     }
 
     pub fn cli_system_policy_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the top-level IAM policy")
+        clap::Command::new("").about("Fetch top-level IAM policy")
     }
 
     pub fn cli_system_policy_update() -> clap::Command {
@@ -4242,7 +4241,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update the top-level IAM policy")
+            .about("Update top-level IAM policy")
     }
 
     pub fn cli_role_list() -> clap::Command {
@@ -4266,7 +4265,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("The built-in role's unique name."),
             )
-            .about("Fetch a built-in role")
+            .about("Fetch built-in role")
     }
 
     pub fn cli_system_quotas_list() -> clap::Command {
@@ -4390,8 +4389,8 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a silo")
-            .long_about("Fetch a silo by name or ID.")
+            .about("Fetch silo")
+            .long_about("Fetch silo by name or ID.")
     }
 
     pub fn cli_silo_delete() -> clap::Command {
@@ -4453,7 +4452,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a silo's IAM policy")
+            .about("Fetch silo IAM policy")
     }
 
     pub fn cli_silo_policy_update() -> clap::Command {
@@ -4479,7 +4478,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a silo's IAM policy")
+            .about("Update silo IAM policy")
     }
 
     pub fn cli_silo_quotas_view() -> clap::Command {
@@ -4491,7 +4490,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("View the resource quotas of a given silo")
+            .about("Fetch resource quotas for silo")
     }
 
     pub fn cli_silo_quotas_update() -> clap::Command {
@@ -4540,7 +4539,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update the resource quotas of a given silo")
+            .about("Update resource quotas for silo")
             .long_about("If a quota value is not specified, it will remain unchanged.")
     }
 
@@ -4571,7 +4570,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List built-in (system) users in a silo")
+            .about("List built-in (system) users in silo")
     }
 
     pub fn cli_silo_user_view() -> clap::Command {
@@ -4590,7 +4589,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("The user's internal id"),
             )
-            .about("Fetch a built-in (system) user")
+            .about("Fetch built-in (system) user")
     }
 
     pub fn cli_user_builtin_list() -> clap::Command {
@@ -4624,7 +4623,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
-            .about("Fetch a built-in user")
+            .about("Fetch built-in user")
     }
 
     pub fn cli_silo_utilization_list() -> clap::Command {
@@ -4661,7 +4660,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("View the current utilization of a given silo")
+            .about("Fetch current utilization for given silo")
     }
 
     pub fn cli_user_list() -> clap::Command {
@@ -4694,7 +4693,7 @@ impl<T: CliConfig> Cli<T> {
     }
 
     pub fn cli_utilization_view() -> clap::Command {
-        clap::Command::new("").about("View the resource utilization of the user's current silo")
+        clap::Command::new("").about("Fetch resource utilization for user's current silo")
     }
 
     pub fn cli_vpc_firewall_rules_view() -> clap::Command {
@@ -4861,7 +4860,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a subnet")
+            .about("Create subnet")
     }
 
     pub fn cli_vpc_subnet_view() -> clap::Command {
@@ -4889,7 +4888,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
-            .about("Fetch a subnet")
+            .about("Fetch subnet")
     }
 
     pub fn cli_vpc_subnet_update() -> clap::Command {
@@ -4943,7 +4942,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a subnet")
+            .about("Update subnet")
     }
 
     pub fn cli_vpc_subnet_delete() -> clap::Command {
@@ -4971,7 +4970,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
-            .about("Delete a subnet")
+            .about("Delete subnet")
     }
 
     pub fn cli_vpc_subnet_list_network_interfaces() -> clap::Command {
@@ -5107,7 +5106,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a VPC")
+            .about("Create VPC")
     }
 
     pub fn cli_vpc_view() -> clap::Command {
@@ -5126,7 +5125,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
-            .about("Fetch a VPC")
+            .about("Fetch VPC")
     }
 
     pub fn cli_vpc_update() -> clap::Command {
@@ -5196,7 +5195,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
-            .about("Delete a VPC")
+            .about("Delete VPC")
     }
 
     pub async fn execute(&self, cmd: CliCommand, matches: &clap::ArgMatches) -> anyhow::Result<()> {
