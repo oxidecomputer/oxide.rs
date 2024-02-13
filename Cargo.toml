@@ -14,7 +14,7 @@ assert_cmd = "2.0.13"
 async-trait = "0.1.77"
 base64 = "0.21.7"
 built = { version = "0.6.1", features = ["git2"] }
-chrono = { version = "0.4.31", features = ["serde"] }
+chrono = { version = "0.4.34", features = ["serde"] }
 clap = { version = "4.4", features = ["derive", "string", "env"] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
