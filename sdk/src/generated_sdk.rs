@@ -2,6 +2,7 @@
 
 #[allow(unused_imports)]
 use progenitor_client::{encode_path, RequestBuilderExt};
+#[allow(unused_imports)]
 pub use progenitor_client::{ByteStream, Error, ResponseValue};
 #[allow(unused_imports)]
 use reqwest::header::{HeaderMap, HeaderValue};
@@ -57666,6 +57667,7 @@ pub mod builder {
 /// Items consumers will typically use such as the Client and
 /// extension traits.
 pub mod prelude {
+    #[allow(unused_imports)]
     pub use super::Client;
     pub use super::ClientDisksExt;
     pub use super::ClientFloatingIpsExt;
