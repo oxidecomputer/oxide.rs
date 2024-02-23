@@ -6952,11 +6952,11 @@ pub mod operations {
         }
     }
 
-    pub struct SledSetProvisionStateWhen(httpmock::When);
-    impl SledSetProvisionStateWhen {
+    pub struct SledSetProvisionPolicyWhen(httpmock::When);
+    impl SledSetProvisionPolicyWhen {
         pub fn new(inner: httpmock::When) -> Self {
             Self(inner.method(httpmock::Method::PUT).path_matches(
-                regex::Regex::new("^/v1/system/hardware/sleds/[^/]*/provision-state$").unwrap(),
+                regex::Regex::new("^/v1/system/hardware/sleds/[^/]*/provision-policy$").unwrap(),
             ))
         }
 
@@ -6966,20 +6966,20 @@ pub mod operations {
 
         pub fn sled_id(self, value: &uuid::Uuid) -> Self {
             let re = regex::Regex::new(&format!(
-                "^/v1/system/hardware/sleds/{}/provision-state$",
+                "^/v1/system/hardware/sleds/{}/provision-policy$",
                 value.to_string()
             ))
             .unwrap();
             Self(self.0.path_matches(re))
         }
 
-        pub fn body(self, value: &types::SledProvisionStateParams) -> Self {
+        pub fn body(self, value: &types::SledProvisionPolicyParams) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
 
-    pub struct SledSetProvisionStateThen(httpmock::Then);
-    impl SledSetProvisionStateThen {
+    pub struct SledSetProvisionPolicyThen(httpmock::Then);
+    impl SledSetProvisionPolicyThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -6988,7 +6988,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::SledProvisionStateResponse) -> Self {
+        pub fn ok(self, value: &types::SledProvisionPolicyResponse) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -14004,9 +14004,9 @@ pub trait MockServerExt {
     fn sled_instance_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledInstanceListWhen, operations::SledInstanceListThen);
-    fn sled_set_provision_state<F>(&self, config_fn: F) -> httpmock::Mock
+    fn sled_set_provision_policy<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(operations::SledSetProvisionStateWhen, operations::SledSetProvisionStateThen);
+        F: FnOnce(operations::SledSetProvisionPolicyWhen, operations::SledSetProvisionPolicyThen);
     fn sled_list_uninitialized<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::SledListUninitializedWhen, operations::SledListUninitializedThen);
@@ -15405,14 +15405,14 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
-    fn sled_set_provision_state<F>(&self, config_fn: F) -> httpmock::Mock
+    fn sled_set_provision_policy<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(operations::SledSetProvisionStateWhen, operations::SledSetProvisionStateThen),
+        F: FnOnce(operations::SledSetProvisionPolicyWhen, operations::SledSetProvisionPolicyThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::SledSetProvisionStateWhen::new(when),
-                operations::SledSetProvisionStateThen::new(then),
+                operations::SledSetProvisionPolicyWhen::new(when),
+                operations::SledSetProvisionPolicyThen::new(then),
             )
         })
     }
