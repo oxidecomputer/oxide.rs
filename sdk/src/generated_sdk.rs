@@ -6976,7 +6976,10 @@ pub mod types {
     ///    "name"
     ///  ],
     ///  "properties": {
-    ///    "address": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "ip": {
     ///      "description": "An IP address to reserve for use as a floating IP.
     /// This field is optional: when not set, an address will be automatically
     /// chosen from `pool`. If set, then the IP must be available in the
@@ -6986,9 +6989,6 @@ pub mod types {
     ///        "null"
     ///      ],
     ///      "format": "ip"
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
@@ -7008,13 +7008,13 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FloatingIpCreate {
+        pub description: String,
         /// An IP address to reserve for use as a floating IP. This field is
         /// optional: when not set, an address will be automatically chosen from
         /// `pool`. If set, then the IP must be available in the resolved
         /// `pool`.
         #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub address: Option<std::net::IpAddr>,
-        pub description: String,
+        pub ip: Option<std::net::IpAddr>,
         pub name: Name,
         /// The parent IP pool that a floating IP is pulled from. If unset, the
         /// default pool is selected.
@@ -24983,8 +24983,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FloatingIpCreate {
-            address: Result<Option<std::net::IpAddr>, String>,
             description: Result<String, String>,
+            ip: Result<Option<std::net::IpAddr>, String>,
             name: Result<super::Name, String>,
             pool: Result<Option<super::NameOrId>, String>,
         }
@@ -24992,8 +24992,8 @@ pub mod types {
         impl Default for FloatingIpCreate {
             fn default() -> Self {
                 Self {
-                    address: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
+                    ip: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     pool: Ok(Default::default()),
                 }
@@ -25001,16 +25001,6 @@ pub mod types {
         }
 
         impl FloatingIpCreate {
-            pub fn address<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<std::net::IpAddr>>,
-                T::Error: std::fmt::Display,
-            {
-                self.address = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for address: {}", e));
-                self
-            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -25019,6 +25009,16 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -25047,8 +25047,8 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: FloatingIpCreate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    address: value.address?,
                     description: value.description?,
+                    ip: value.ip?,
                     name: value.name?,
                     pool: value.pool?,
                 })
@@ -25058,8 +25058,8 @@ pub mod types {
         impl From<super::FloatingIpCreate> for FloatingIpCreate {
             fn from(value: super::FloatingIpCreate) -> Self {
                 Self {
-                    address: Ok(value.address),
                     description: Ok(value.description),
+                    ip: Ok(value.ip),
                     name: Ok(value.name),
                     pool: Ok(value.pool),
                 }

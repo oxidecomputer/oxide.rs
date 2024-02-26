@@ -806,8 +806,14 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_floating_ip_create() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("address")
-                    .long("address")
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("ip")
+                    .long("ip")
                     .value_parser(clap::value_parser!(std::net::IpAddr))
                     .required(false)
                     .help(
@@ -815,12 +821,6 @@ impl<T: CliConfig> Cli<T> {
                          optional: when not set, an address will be automatically chosen from \
                          `pool`. If set, then the IP must be available in the resolved `pool`.",
                     ),
-            )
-            .arg(
-                clap::Arg::new("description")
-                    .long("description")
-                    .value_parser(clap::value_parser!(String))
-                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -6085,12 +6085,12 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_create();
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
-            request = request.body_map(|body| body.address(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("ip") {
+            request = request.body_map(|body| body.ip(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
