@@ -637,11 +637,11 @@
           "about": "Create floating IP",
           "args": [
             {
-              "long": "address",
-              "help": "An IP address to reserve for use as a floating IP. This field is optional: when not set, an address will be automatically chosen from `pool`. If set, then the IP must be available in the resolved `pool`."
+              "long": "description"
             },
             {
-              "long": "description"
+              "long": "ip",
+              "help": "An IP address to reserve for use as a floating IP. This field is optional: when not set, an address will be automatically chosen from `pool`. If set, then the IP must be available in the resolved `pool`."
             },
             {
               "long": "json-body",
@@ -2629,8 +2629,8 @@
                   ]
                 },
                 {
-                  "name": "set-provision-state",
-                  "about": "Set sled provision state",
+                  "name": "set-provision-policy",
+                  "about": "Set sled provision policy",
                   "args": [
                     {
                       "long": "json-body",
