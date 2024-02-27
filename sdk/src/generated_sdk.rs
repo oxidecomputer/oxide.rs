@@ -2,6 +2,7 @@
 
 #[allow(unused_imports)]
 use progenitor_client::{encode_path, RequestBuilderExt};
+#[allow(unused_imports)]
 pub use progenitor_client::{ByteStream, Error, ResponseValue};
 #[allow(unused_imports)]
 use reqwest::header::{HeaderMap, HeaderValue};
@@ -6975,7 +6976,10 @@ pub mod types {
     ///    "name"
     ///  ],
     ///  "properties": {
-    ///    "address": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "ip": {
     ///      "description": "An IP address to reserve for use as a floating IP.
     /// This field is optional: when not set, an address will be automatically
     /// chosen from `pool`. If set, then the IP must be available in the
@@ -6985,9 +6989,6 @@ pub mod types {
     ///        "null"
     ///      ],
     ///      "format": "ip"
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
@@ -7007,13 +7008,13 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FloatingIpCreate {
+        pub description: String,
         /// An IP address to reserve for use as a floating IP. This field is
         /// optional: when not set, an address will be automatically chosen from
         /// `pool`. If set, then the IP must be available in the resolved
         /// `pool`.
         #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub address: Option<std::net::IpAddr>,
-        pub description: String,
+        pub ip: Option<std::net::IpAddr>,
         pub name: Name,
         /// The parent IP pool that a floating IP is pulled from. If unset, the
         /// default pool is selected.
@@ -15242,8 +15243,9 @@ pub mod types {
     ///  "required": [
     ///    "baseboard",
     ///    "id",
-    ///    "provision_state",
+    ///    "policy",
     ///    "rack_id",
+    ///    "state",
     ///    "time_created",
     ///    "time_modified",
     ///    "usable_hardware_threads",
@@ -15259,11 +15261,11 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "provision_state": {
-    ///      "description": "The provision state of the sled.",
+    ///    "policy": {
+    ///      "description": "The operator-defined policy of a sled.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledPolicy"
     ///        }
     ///      ]
     ///    },
@@ -15271,6 +15273,15 @@ pub mod types {
     ///      "description": "The rack to which this Sled is currently attached",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "state": {
+    ///      "description": "The current state Nexus believes the sled to be
+    /// in.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SledState"
+    ///        }
+    ///      ]
     ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
@@ -15306,10 +15317,12 @@ pub mod types {
         pub baseboard: Baseboard,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        /// The provision state of the sled.
-        pub provision_state: SledProvisionState,
+        /// The operator-defined policy of a sled.
+        pub policy: SledPolicy,
         /// The rack to which this Sled is currently attached
         pub rack_id: uuid::Uuid,
+        /// The current state Nexus believes the sled to be in.
+        pub state: SledState,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -15488,7 +15501,86 @@ pub mod types {
         }
     }
 
-    /// The provision state of a sled.
+    /// The operator-defined policy of a sled.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The operator-defined policy of a sled.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The operator has indicated that the sled is
+    /// in-service.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind",
+    ///        "provision_policy"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "in_service"
+    ///          ]
+    ///        },
+    ///        "provision_policy": {
+    ///          "description": "Determines whether new resources can be
+    /// provisioned onto the sled.",
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SledProvisionPolicy"
+    ///            }
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The operator has indicated that the sled has been
+    /// permanently removed from service.\n\nThis is a terminal state: once a
+    /// particular sled ID is expunged, it will never return to service. (The
+    /// actual hardware may be reused, but it will be treated as a brand-new
+    /// sled.)\n\nAn expunged sled is always non-provisionable.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "expunged"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "kind", content = "provision_policy")]
+    pub enum SledPolicy {
+        /// The operator has indicated that the sled is in-service.
+        #[serde(rename = "in_service")]
+        InService(SledProvisionPolicy),
+        #[serde(rename = "expunged")]
+        Expunged,
+    }
+
+    impl From<&SledPolicy> for SledPolicy {
+        fn from(value: &SledPolicy) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<SledProvisionPolicy> for SledPolicy {
+        fn from(value: SledProvisionPolicy) -> Self {
+            Self::InService(value)
+        }
+    }
+
+    /// The operator-defined provision policy of a sled.
     ///
     /// This controls whether new resources are going to be provisioned on this
     /// sled.
@@ -15497,8 +15589,9 @@ pub mod types {
     ///
     /// ```json
     /// {
-    ///  "description": "The provision state of a sled.\n\nThis controls whether
-    /// new resources are going to be provisioned on this sled.",
+    ///  "description": "The operator-defined provision policy of a
+    /// sled.\n\nThis controls whether new resources are going to be provisioned
+    /// on this sled.",
     ///  "oneOf": [
     ///    {
     ///      "description": "New resources will be provisioned on this sled.",
@@ -15509,8 +15602,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "New resources will not be provisioned on this sled.
-    /// However, existing resources will continue to be on this sled unless
-    /// manually migrated off.",
+    /// However, if the sled is currently in service, existing resources will
+    /// continue to be on this sled unless manually migrated off.",
     ///      "type": "string",
     ///      "enum": [
     ///        "non_provisionable"
@@ -15533,24 +15626,24 @@ pub mod types {
         Serialize,
         schemars :: JsonSchema,
     )]
-    pub enum SledProvisionState {
+    pub enum SledProvisionPolicy {
         /// New resources will be provisioned on this sled.
         #[serde(rename = "provisionable")]
         Provisionable,
-        /// New resources will not be provisioned on this sled. However,
-        /// existing resources will continue to be on this sled unless manually
-        /// migrated off.
+        /// New resources will not be provisioned on this sled. However, if the
+        /// sled is currently in service, existing resources will continue to be
+        /// on this sled unless manually migrated off.
         #[serde(rename = "non_provisionable")]
         NonProvisionable,
     }
 
-    impl From<&SledProvisionState> for SledProvisionState {
-        fn from(value: &SledProvisionState) -> Self {
+    impl From<&SledProvisionPolicy> for SledProvisionPolicy {
+        fn from(value: &SledProvisionPolicy) -> Self {
             value.clone()
         }
     }
 
-    impl ToString for SledProvisionState {
+    impl ToString for SledProvisionPolicy {
         fn to_string(&self) -> String {
             match *self {
                 Self::Provisionable => "provisionable".to_string(),
@@ -15559,7 +15652,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for SledProvisionState {
+    impl std::str::FromStr for SledProvisionPolicy {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             match value {
@@ -15570,34 +15663,34 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for SledProvisionState {
+    impl std::convert::TryFrom<&str> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SledProvisionState {
+    impl std::convert::TryFrom<&String> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SledProvisionState {
+    impl std::convert::TryFrom<String> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    /// Parameters for `sled_set_provision_state`.
+    /// Parameters for `sled_set_provision_policy`.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Parameters for `sled_set_provision_state`.",
+    ///  "description": "Parameters for `sled_set_provision_policy`.",
     ///  "type": "object",
     ///  "required": [
     ///    "state"
@@ -15607,7 +15700,7 @@ pub mod types {
     ///      "description": "The provision state.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
     ///        }
     ///      ]
     ///    }
@@ -15616,30 +15709,30 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SledProvisionStateParams {
+    pub struct SledProvisionPolicyParams {
         /// The provision state.
-        pub state: SledProvisionState,
+        pub state: SledProvisionPolicy,
     }
 
-    impl From<&SledProvisionStateParams> for SledProvisionStateParams {
-        fn from(value: &SledProvisionStateParams) -> Self {
+    impl From<&SledProvisionPolicyParams> for SledProvisionPolicyParams {
+        fn from(value: &SledProvisionPolicyParams) -> Self {
             value.clone()
         }
     }
 
-    impl SledProvisionStateParams {
-        pub fn builder() -> builder::SledProvisionStateParams {
+    impl SledProvisionPolicyParams {
+        pub fn builder() -> builder::SledProvisionPolicyParams {
             Default::default()
         }
     }
 
-    /// Response to `sled_set_provision_state`.
+    /// Response to `sled_set_provision_policy`.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Response to `sled_set_provision_state`.",
+    ///  "description": "Response to `sled_set_provision_policy`.",
     ///  "type": "object",
     ///  "required": [
     ///    "new_state",
@@ -15650,7 +15743,7 @@ pub mod types {
     ///      "description": "The new provision state.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
     ///        }
     ///      ]
     ///    },
@@ -15658,7 +15751,7 @@ pub mod types {
     ///      "description": "The old provision state.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
     ///        }
     ///      ]
     ///    }
@@ -15667,21 +15760,21 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SledProvisionStateResponse {
+    pub struct SledProvisionPolicyResponse {
         /// The new provision state.
-        pub new_state: SledProvisionState,
+        pub new_state: SledProvisionPolicy,
         /// The old provision state.
-        pub old_state: SledProvisionState,
+        pub old_state: SledProvisionPolicy,
     }
 
-    impl From<&SledProvisionStateResponse> for SledProvisionStateResponse {
-        fn from(value: &SledProvisionStateResponse) -> Self {
+    impl From<&SledProvisionPolicyResponse> for SledProvisionPolicyResponse {
+        fn from(value: &SledProvisionPolicyResponse) -> Self {
             value.clone()
         }
     }
 
-    impl SledProvisionStateResponse {
-        pub fn builder() -> builder::SledProvisionStateResponse {
+    impl SledProvisionPolicyResponse {
+        pub fn builder() -> builder::SledProvisionPolicyResponse {
             Default::default()
         }
     }
@@ -15735,6 +15828,110 @@ pub mod types {
     impl SledResultsPage {
         pub fn builder() -> builder::SledResultsPage {
             Default::default()
+        }
+    }
+
+    /// The current state of the sled, as determined by Nexus.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The current state of the sled, as determined by
+    /// Nexus.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The sled is currently active, and has resources
+    /// allocated on it.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "active"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The sled has been permanently removed from
+    /// service.\n\nThis is a terminal state: once a particular sled ID is
+    /// decommissioned, it will never return to service. (The actual hardware
+    /// may be reused, but it will be treated as a brand-new sled.)",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "decommissioned"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum SledState {
+        /// The sled is currently active, and has resources allocated on it.
+        #[serde(rename = "active")]
+        Active,
+        /// The sled has been permanently removed from service.
+        ///
+        /// This is a terminal state: once a particular sled ID is
+        /// decommissioned, it will never return to service. (The actual
+        /// hardware may be reused, but it will be treated as a brand-new sled.)
+        #[serde(rename = "decommissioned")]
+        Decommissioned,
+    }
+
+    impl From<&SledState> for SledState {
+        fn from(value: &SledState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for SledState {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Active => "active".to_string(),
+                Self::Decommissioned => "decommissioned".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for SledState {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "active" => Ok(Self::Active),
+                "decommissioned" => Ok(Self::Decommissioned),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for SledState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for SledState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for SledState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -24786,8 +24983,8 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FloatingIpCreate {
-            address: Result<Option<std::net::IpAddr>, String>,
             description: Result<String, String>,
+            ip: Result<Option<std::net::IpAddr>, String>,
             name: Result<super::Name, String>,
             pool: Result<Option<super::NameOrId>, String>,
         }
@@ -24795,8 +24992,8 @@ pub mod types {
         impl Default for FloatingIpCreate {
             fn default() -> Self {
                 Self {
-                    address: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
+                    ip: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     pool: Ok(Default::default()),
                 }
@@ -24804,16 +25001,6 @@ pub mod types {
         }
 
         impl FloatingIpCreate {
-            pub fn address<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<std::net::IpAddr>>,
-                T::Error: std::fmt::Display,
-            {
-                self.address = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for address: {}", e));
-                self
-            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -24822,6 +25009,16 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -24850,8 +25047,8 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: FloatingIpCreate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    address: value.address?,
                     description: value.description?,
+                    ip: value.ip?,
                     name: value.name?,
                     pool: value.pool?,
                 })
@@ -24861,8 +25058,8 @@ pub mod types {
         impl From<super::FloatingIpCreate> for FloatingIpCreate {
             fn from(value: super::FloatingIpCreate) -> Self {
                 Self {
-                    address: Ok(value.address),
                     description: Ok(value.description),
+                    ip: Ok(value.ip),
                     name: Ok(value.name),
                     pool: Ok(value.pool),
                 }
@@ -31196,8 +31393,9 @@ pub mod types {
         pub struct Sled {
             baseboard: Result<super::Baseboard, String>,
             id: Result<uuid::Uuid, String>,
-            provision_state: Result<super::SledProvisionState, String>,
+            policy: Result<super::SledPolicy, String>,
             rack_id: Result<uuid::Uuid, String>,
+            state: Result<super::SledState, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             usable_hardware_threads: Result<u32, String>,
@@ -31209,8 +31407,9 @@ pub mod types {
                 Self {
                     baseboard: Err("no value supplied for baseboard".to_string()),
                     id: Err("no value supplied for id".to_string()),
-                    provision_state: Err("no value supplied for provision_state".to_string()),
+                    policy: Err("no value supplied for policy".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
+                    state: Err("no value supplied for state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                     usable_hardware_threads: Err(
@@ -31244,14 +31443,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
-            pub fn provision_state<T>(mut self, value: T) -> Self
+            pub fn policy<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledPolicy>,
                 T::Error: std::fmt::Display,
             {
-                self.provision_state = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for provision_state: {}", e)
-                });
+                self.policy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
@@ -31262,6 +31461,16 @@ pub mod types {
                 self.rack_id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledState>,
+                T::Error: std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -31318,8 +31527,9 @@ pub mod types {
                 Ok(Self {
                     baseboard: value.baseboard?,
                     id: value.id?,
-                    provision_state: value.provision_state?,
+                    policy: value.policy?,
                     rack_id: value.rack_id?,
+                    state: value.state?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                     usable_hardware_threads: value.usable_hardware_threads?,
@@ -31333,8 +31543,9 @@ pub mod types {
                 Self {
                     baseboard: Ok(value.baseboard),
                     id: Ok(value.id),
-                    provision_state: Ok(value.provision_state),
+                    policy: Ok(value.policy),
                     rack_id: Ok(value.rack_id),
+                    state: Ok(value.state),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                     usable_hardware_threads: Ok(value.usable_hardware_threads),
@@ -31586,11 +31797,11 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SledProvisionStateParams {
-            state: Result<super::SledProvisionState, String>,
+        pub struct SledProvisionPolicyParams {
+            state: Result<super::SledProvisionPolicy, String>,
         }
 
-        impl Default for SledProvisionStateParams {
+        impl Default for SledProvisionPolicyParams {
             fn default() -> Self {
                 Self {
                     state: Err("no value supplied for state".to_string()),
@@ -31598,10 +31809,10 @@ pub mod types {
             }
         }
 
-        impl SledProvisionStateParams {
+        impl SledProvisionPolicyParams {
             pub fn state<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledProvisionPolicy>,
                 T::Error: std::fmt::Display,
             {
                 self.state = value
@@ -31611,10 +31822,10 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledProvisionStateParams> for super::SledProvisionStateParams {
+        impl std::convert::TryFrom<SledProvisionPolicyParams> for super::SledProvisionPolicyParams {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: SledProvisionStateParams,
+                value: SledProvisionPolicyParams,
             ) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     state: value.state?,
@@ -31622,8 +31833,8 @@ pub mod types {
             }
         }
 
-        impl From<super::SledProvisionStateParams> for SledProvisionStateParams {
-            fn from(value: super::SledProvisionStateParams) -> Self {
+        impl From<super::SledProvisionPolicyParams> for SledProvisionPolicyParams {
+            fn from(value: super::SledProvisionPolicyParams) -> Self {
                 Self {
                     state: Ok(value.state),
                 }
@@ -31631,12 +31842,12 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SledProvisionStateResponse {
-            new_state: Result<super::SledProvisionState, String>,
-            old_state: Result<super::SledProvisionState, String>,
+        pub struct SledProvisionPolicyResponse {
+            new_state: Result<super::SledProvisionPolicy, String>,
+            old_state: Result<super::SledProvisionPolicy, String>,
         }
 
-        impl Default for SledProvisionStateResponse {
+        impl Default for SledProvisionPolicyResponse {
             fn default() -> Self {
                 Self {
                     new_state: Err("no value supplied for new_state".to_string()),
@@ -31645,10 +31856,10 @@ pub mod types {
             }
         }
 
-        impl SledProvisionStateResponse {
+        impl SledProvisionPolicyResponse {
             pub fn new_state<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledProvisionPolicy>,
                 T::Error: std::fmt::Display,
             {
                 self.new_state = value
@@ -31658,7 +31869,7 @@ pub mod types {
             }
             pub fn old_state<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledProvisionPolicy>,
                 T::Error: std::fmt::Display,
             {
                 self.old_state = value
@@ -31668,10 +31879,10 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledProvisionStateResponse> for super::SledProvisionStateResponse {
+        impl std::convert::TryFrom<SledProvisionPolicyResponse> for super::SledProvisionPolicyResponse {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: SledProvisionStateResponse,
+                value: SledProvisionPolicyResponse,
             ) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     new_state: value.new_state?,
@@ -31680,8 +31891,8 @@ pub mod types {
             }
         }
 
-        impl From<super::SledProvisionStateResponse> for SledProvisionStateResponse {
-            fn from(value: super::SledProvisionStateResponse) -> Self {
+        impl From<super::SledProvisionPolicyResponse> for SledProvisionPolicyResponse {
+            fn from(value: super::SledProvisionPolicyResponse) -> Self {
                 Self {
                     new_state: Ok(value.new_state),
                     old_state: Ok(value.old_state),
@@ -37851,22 +38062,22 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_instance_list(&self) -> builder::SledInstanceList;
-    /// Set sled provision state
+    /// Set sled provision policy
     ///
     /// Sends a `PUT` request to
-    /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
+    /// `/v1/system/hardware/sleds/{sled_id}/provision-policy`
     ///
     /// Arguments:
     /// - `sled_id`: ID of the sled
     /// - `body`
     /// ```ignore
-    /// let response = client.sled_set_provision_state()
+    /// let response = client.sled_set_provision_policy()
     ///    .sled_id(sled_id)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn sled_set_provision_state(&self) -> builder::SledSetProvisionState;
+    fn sled_set_provision_policy(&self) -> builder::SledSetProvisionPolicy;
     /// List uninitialized sleds
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
@@ -38010,8 +38221,8 @@ impl ClientSystemHardwareExt for Client {
         builder::SledInstanceList::new(self)
     }
 
-    fn sled_set_provision_state(&self) -> builder::SledSetProvisionState {
-        builder::SledSetProvisionState::new(self)
+    fn sled_set_provision_policy(&self) -> builder::SledSetProvisionPolicy {
+        builder::SledSetProvisionPolicy::new(self)
     }
 
     fn sled_list_uninitialized(&self) -> builder::SledListUninitialized {
@@ -48651,22 +48862,22 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemHardwareExt::sled_set_provision_state`]
+    /// Builder for [`ClientSystemHardwareExt::sled_set_provision_policy`]
     ///
-    /// [`ClientSystemHardwareExt::sled_set_provision_state`]: super::ClientSystemHardwareExt::sled_set_provision_state
+    /// [`ClientSystemHardwareExt::sled_set_provision_policy`]: super::ClientSystemHardwareExt::sled_set_provision_policy
     #[derive(Debug, Clone)]
-    pub struct SledSetProvisionState<'a> {
+    pub struct SledSetProvisionPolicy<'a> {
         client: &'a super::Client,
         sled_id: Result<uuid::Uuid, String>,
-        body: Result<types::builder::SledProvisionStateParams, String>,
+        body: Result<types::builder::SledProvisionPolicyParams, String>,
     }
 
-    impl<'a> SledSetProvisionState<'a> {
+    impl<'a> SledSetProvisionPolicy<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
                 sled_id: Err("sled_id was not initialized".to_string()),
-                body: Ok(types::builder::SledProvisionStateParams::default()),
+                body: Ok(types::builder::SledProvisionPolicyParams::default()),
             }
         }
 
@@ -48682,12 +48893,13 @@ pub mod builder {
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::SledProvisionStateParams>,
-            <V as std::convert::TryInto<types::SledProvisionStateParams>>::Error: std::fmt::Display,
+            V: std::convert::TryInto<types::SledProvisionPolicyParams>,
+            <V as std::convert::TryInto<types::SledProvisionPolicyParams>>::Error:
+                std::fmt::Display,
         {
             self.body = value.try_into().map(From::from).map_err(|s| {
                 format!(
-                    "conversion to `SledProvisionStateParams` for body failed: {}",
+                    "conversion to `SledProvisionPolicyParams` for body failed: {}",
                     s
                 )
             });
@@ -48697,18 +48909,19 @@ pub mod builder {
         pub fn body_map<F>(mut self, f: F) -> Self
         where
             F: std::ops::FnOnce(
-                types::builder::SledProvisionStateParams,
-            ) -> types::builder::SledProvisionStateParams,
+                types::builder::SledProvisionPolicyParams,
+            ) -> types::builder::SledProvisionPolicyParams,
         {
             self.body = self.body.map(f);
             self
         }
 
         /// Sends a `PUT` request to
-        /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
+        /// `/v1/system/hardware/sleds/{sled_id}/provision-policy`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::SledProvisionStateResponse>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::SledProvisionPolicyResponse>, Error<types::Error>>
+        {
             let Self {
                 client,
                 sled_id,
@@ -48717,11 +48930,11 @@ pub mod builder {
             let sled_id = sled_id.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(|v| {
-                    types::SledProvisionStateParams::try_from(v).map_err(|e| e.to_string())
+                    types::SledProvisionPolicyParams::try_from(v).map_err(|e| e.to_string())
                 })
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/v1/system/hardware/sleds/{}/provision-state",
+                "{}/v1/system/hardware/sleds/{}/provision-policy",
                 client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
@@ -57666,6 +57879,7 @@ pub mod builder {
 /// Items consumers will typically use such as the Client and
 /// extension traits.
 pub mod prelude {
+    #[allow(unused_imports)]
     pub use super::Client;
     pub use super::ClientDisksExt;
     pub use super::ClientFloatingIpsExt;

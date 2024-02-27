@@ -105,7 +105,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
-            CliCommand::SledSetProvisionState => Self::cli_sled_set_provision_state(),
+            CliCommand::SledSetProvisionPolicy => Self::cli_sled_set_provision_policy(),
             CliCommand::SledListUninitialized => Self::cli_sled_list_uninitialized(),
             CliCommand::NetworkingSwitchPortList => Self::cli_networking_switch_port_list(),
             CliCommand::NetworkingSwitchPortApplySettings => {
@@ -806,8 +806,14 @@ impl<T: CliConfig> Cli<T> {
     pub fn cli_floating_ip_create() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("address")
-                    .long("address")
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("ip")
+                    .long("ip")
                     .value_parser(clap::value_parser!(std::net::IpAddr))
                     .required(false)
                     .help(
@@ -815,12 +821,6 @@ impl<T: CliConfig> Cli<T> {
                          optional: when not set, an address will be automatically chosen from \
                          `pool`. If set, then the IP must be available in the resolved `pool`.",
                     ),
-            )
-            .arg(
-                clap::Arg::new("description")
-                    .long("description")
-                    .value_parser(clap::value_parser!(String))
-                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -2741,7 +2741,7 @@ impl<T: CliConfig> Cli<T> {
             .about("List instances running on given sled")
     }
 
-    pub fn cli_sled_set_provision_state() -> clap::Command {
+    pub fn cli_sled_set_provision_policy() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("sled-id")
@@ -2755,10 +2755,10 @@ impl<T: CliConfig> Cli<T> {
                     .long("state")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::SledProvisionState::Provisionable.to_string(),
-                            types::SledProvisionState::NonProvisionable.to_string(),
+                            types::SledProvisionPolicy::Provisionable.to_string(),
+                            types::SledProvisionPolicy::NonProvisionable.to_string(),
                         ]),
-                        |s| types::SledProvisionState::try_from(s).unwrap(),
+                        |s| types::SledProvisionPolicy::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body")
                     .help("The provision state."),
@@ -2777,7 +2777,7 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Set sled provision state")
+            .about("Set sled provision policy")
     }
 
     pub fn cli_sled_list_uninitialized() -> clap::Command {
@@ -5323,8 +5323,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SledView => self.execute_sled_view(matches).await,
             CliCommand::SledPhysicalDiskList => self.execute_sled_physical_disk_list(matches).await,
             CliCommand::SledInstanceList => self.execute_sled_instance_list(matches).await,
-            CliCommand::SledSetProvisionState => {
-                self.execute_sled_set_provision_state(matches).await
+            CliCommand::SledSetProvisionPolicy => {
+                self.execute_sled_set_provision_policy(matches).await
             }
             CliCommand::SledListUninitialized => {
                 self.execute_sled_list_uninitialized(matches).await
@@ -6085,12 +6085,12 @@ impl<T: CliConfig> Cli<T> {
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
         let mut request = self.client.floating_ip_create();
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
-            request = request.body_map(|body| body.address(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("ip") {
+            request = request.body_map(|body| body.ip(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
@@ -8189,28 +8189,28 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_sled_set_provision_state(
+    pub async fn execute_sled_set_provision_policy(
         &self,
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.sled_set_provision_state();
+        let mut request = self.client.sled_set_provision_policy();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::SledProvisionState>("state") {
+        if let Some(value) = matches.get_one::<types::SledProvisionPolicy>("state") {
             request = request.body_map(|body| body.state(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::SledProvisionStateParams>(&body_txt).unwrap();
+                serde_json::from_str::<types::SledProvisionPolicyParams>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
         self.config
-            .execute_sled_set_provision_state(matches, &mut request)?;
+            .execute_sled_set_provision_policy(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -11693,10 +11693,10 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_sled_set_provision_state(
+    fn execute_sled_set_provision_policy(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::SledSetProvisionState,
+        request: &mut builder::SledSetProvisionPolicy,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -12478,7 +12478,7 @@ pub enum CliCommand {
     SledView,
     SledPhysicalDiskList,
     SledInstanceList,
-    SledSetProvisionState,
+    SledSetProvisionPolicy,
     SledListUninitialized,
     NetworkingSwitchPortList,
     NetworkingSwitchPortApplySettings,
@@ -12656,7 +12656,7 @@ impl CliCommand {
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
             CliCommand::SledInstanceList,
-            CliCommand::SledSetProvisionState,
+            CliCommand::SledSetProvisionPolicy,
             CliCommand::SledListUninitialized,
             CliCommand::NetworkingSwitchPortList,
             CliCommand::NetworkingSwitchPortApplySettings,
