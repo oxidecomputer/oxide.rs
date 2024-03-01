@@ -1544,6 +1544,87 @@ pub mod operations {
         }
     }
 
+    pub struct FloatingIpUpdateWhen(httpmock::When);
+    impl FloatingIpUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/floating-ips/[^/]*$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn floating_ip(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/floating-ips/{}$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+
+        pub fn body(self, value: &types::FloatingIpUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct FloatingIpUpdateThen(httpmock::Then);
+    impl FloatingIpUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::FloatingIp) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
     pub struct FloatingIpDeleteWhen(httpmock::When);
     impl FloatingIpDeleteWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -13779,6 +13860,9 @@ pub trait MockServerExt {
     fn floating_ip_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::FloatingIpViewWhen, operations::FloatingIpViewThen);
+    fn floating_ip_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::FloatingIpUpdateWhen, operations::FloatingIpUpdateThen);
     fn floating_ip_delete<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::FloatingIpDeleteWhen, operations::FloatingIpDeleteThen);
@@ -14582,6 +14666,18 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::FloatingIpViewWhen::new(when),
                 operations::FloatingIpViewThen::new(then),
+            )
+        })
+    }
+
+    fn floating_ip_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::FloatingIpUpdateWhen, operations::FloatingIpUpdateThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::FloatingIpUpdateWhen::new(when),
+                operations::FloatingIpUpdateThen::new(then),
             )
         })
     }

@@ -33,6 +33,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::FloatingIpList => Self::cli_floating_ip_list(),
             CliCommand::FloatingIpCreate => Self::cli_floating_ip_create(),
             CliCommand::FloatingIpView => Self::cli_floating_ip_view(),
+            CliCommand::FloatingIpUpdate => Self::cli_floating_ip_update(),
             CliCommand::FloatingIpDelete => Self::cli_floating_ip_delete(),
             CliCommand::FloatingIpAttach => Self::cli_floating_ip_attach(),
             CliCommand::FloatingIpDetach => Self::cli_floating_ip_detach(),
@@ -879,6 +880,51 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Fetch floating IP")
+    }
+
+    pub fn cli_floating_ip_update() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("floating-ip")
+                    .long("floating-ip")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the floating IP"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update floating IP")
     }
 
     pub fn cli_floating_ip_delete() -> clap::Command {
@@ -5224,6 +5270,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::FloatingIpList => self.execute_floating_ip_list(matches).await,
             CliCommand::FloatingIpCreate => self.execute_floating_ip_create(matches).await,
             CliCommand::FloatingIpView => self.execute_floating_ip_view(matches).await,
+            CliCommand::FloatingIpUpdate => self.execute_floating_ip_update(matches).await,
             CliCommand::FloatingIpDelete => self.execute_floating_ip_delete(matches).await,
             CliCommand::FloatingIpAttach => self.execute_floating_ip_attach(matches).await,
             CliCommand::FloatingIpDetach => self.execute_floating_ip_detach(matches).await,
@@ -6138,6 +6185,48 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_floating_ip_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_floating_ip_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.floating_ip_update();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
+            request = request.floating_ip(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::FloatingIpUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_floating_ip_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -11165,6 +11254,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_floating_ip_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::FloatingIpUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_floating_ip_delete(
         &self,
         matches: &clap::ArgMatches,
@@ -12412,6 +12509,7 @@ pub enum CliCommand {
     FloatingIpList,
     FloatingIpCreate,
     FloatingIpView,
+    FloatingIpUpdate,
     FloatingIpDelete,
     FloatingIpAttach,
     FloatingIpDetach,
@@ -12590,6 +12688,7 @@ impl CliCommand {
             CliCommand::FloatingIpList,
             CliCommand::FloatingIpCreate,
             CliCommand::FloatingIpView,
+            CliCommand::FloatingIpUpdate,
             CliCommand::FloatingIpDelete,
             CliCommand::FloatingIpAttach,
             CliCommand::FloatingIpDetach,
