@@ -428,6 +428,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::DiskFinalizeImport => Some("disk import finalize"),
 
         CliCommand::GroupList => Some("group list"),
+
+        // Subcommand: instance
         CliCommand::InstanceDiskList => Some("instance disk list"),
         CliCommand::InstanceDiskAttach => Some("instance disk attach"),
         CliCommand::InstanceDiskDetach => Some("instance disk detach"),
@@ -436,6 +438,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceNetworkInterfaceView => Some("instance nic view"),
         CliCommand::InstanceNetworkInterfaceUpdate => Some("instance nic update"),
         CliCommand::InstanceNetworkInterfaceDelete => Some("instance nic delete"),
+
         CliCommand::PolicyView => Some("policy view"),
         CliCommand::PolicyUpdate => Some("policy update"),
         CliCommand::SnapshotList => Some("snapshot list"),
@@ -470,12 +473,13 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::CurrentUserSshKeyView => Some("current-user ssh-key view"),
         CliCommand::CurrentUserSshKeyDelete => Some("current-user ssh-key delete"),
 
-        CliCommand::FloatingIpView => Some("floating-ip view"),
-        CliCommand::FloatingIpList => Some("floating-ip list"),
+        CliCommand::FloatingIpAttach => Some("floating-ip attach"),
         CliCommand::FloatingIpCreate => Some("floating-ip create"),
         CliCommand::FloatingIpDelete => Some("floating-ip delete"),
-        CliCommand::FloatingIpAttach => Some("floating-ip attach"),
         CliCommand::FloatingIpDetach => Some("floating-ip detach"),
+        CliCommand::FloatingIpList => Some("floating-ip list"),
+        CliCommand::FloatingIpUpdate => Some("floating-ip update"),
+        CliCommand::FloatingIpView => Some("floating-ip view"),
 
         CliCommand::Ping => Some("ping"),
 

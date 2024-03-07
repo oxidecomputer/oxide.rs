@@ -715,6 +715,34 @@
           ]
         },
         {
+          "name": "update",
+          "about": "Update floating IP",
+          "args": [
+            {
+              "long": "description"
+            },
+            {
+              "long": "floating-ip",
+              "help": "Name or ID of the floating IP"
+            },
+            {
+              "long": "json-body",
+              "help": "Path to a file that contains the full json body."
+            },
+            {
+              "long": "json-body-template",
+              "help": "XXX"
+            },
+            {
+              "long": "name"
+            },
+            {
+              "long": "project",
+              "help": "Name or ID of the project"
+            }
+          ]
+        },
+        {
           "name": "view",
           "about": "Fetch floating IP",
           "args": [
