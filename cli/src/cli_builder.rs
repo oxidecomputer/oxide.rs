@@ -487,6 +487,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ProbeList => Some("experimental probe list"),
         CliCommand::ProbeView => Some("experimental probe view"),
 
+        // Metrics-related subcommands
+        CliCommand::TimeseriesQuery => Some("experimental timeseries query"),
+        CliCommand::TimeseriesSchemaList => Some("experimental timeseries schema list"),
+
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
         | CliCommand::DeviceAuthConfirm
@@ -500,7 +504,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::SiloMetric
         | CliCommand::SystemMetric
         | CliCommand::UserBuiltinList
-        | CliCommand::UserBuiltinView => None,
+        | CliCommand::UserBuiltinView
+        | CliCommand::PhysicalDiskView => None,
     }
 }
 
