@@ -695,6 +695,440 @@ pub mod types {
         }
     }
 
+    /// BfdMode
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "single_hop",
+    ///    "multi_hop"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum BfdMode {
+        #[serde(rename = "single_hop")]
+        SingleHop,
+        #[serde(rename = "multi_hop")]
+        MultiHop,
+    }
+
+    impl From<&BfdMode> for BfdMode {
+        fn from(value: &BfdMode) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for BfdMode {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::SingleHop => "single_hop".to_string(),
+                Self::MultiHop => "multi_hop".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for BfdMode {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "single_hop" => Ok(Self::SingleHop),
+                "multi_hop" => Ok(Self::MultiHop),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for BfdMode {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for BfdMode {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for BfdMode {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// Information needed to disable a BFD session
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Information needed to disable a BFD session",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "remote",
+    ///    "switch"
+    ///  ],
+    ///  "properties": {
+    ///    "remote": {
+    ///      "description": "Address of the remote peer to disable a BFD session
+    /// for.",
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "switch": {
+    ///      "description": "The switch to enable this session on. Must be
+    /// `switch0` or `switch1`.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BfdSessionDisable {
+        /// Address of the remote peer to disable a BFD session for.
+        pub remote: std::net::IpAddr,
+        /// The switch to enable this session on. Must be `switch0` or
+        /// `switch1`.
+        pub switch: Name,
+    }
+
+    impl From<&BfdSessionDisable> for BfdSessionDisable {
+        fn from(value: &BfdSessionDisable) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BfdSessionDisable {
+        pub fn builder() -> builder::BfdSessionDisable {
+            Default::default()
+        }
+    }
+
+    /// Information about a bidirectional forwarding detection (BFD) session.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Information about a bidirectional forwarding detection
+    /// (BFD) session.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "detection_threshold",
+    ///    "mode",
+    ///    "remote",
+    ///    "required_rx",
+    ///    "switch"
+    ///  ],
+    ///  "properties": {
+    ///    "detection_threshold": {
+    ///      "description": "The negotiated Control packet transmission
+    /// interval, multiplied by this variable, will be the Detection Time for
+    /// this session (as seen by the remote system)",
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "local": {
+    ///      "description": "Address the Oxide switch will listen on for BFD
+    /// traffic. If `None` then the unspecified address (0.0.0.0 or ::) is
+    /// used.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "ip"
+    ///    },
+    ///    "mode": {
+    ///      "description": "Select either single-hop (RFC 5881) or multi-hop
+    /// (RFC 5883)",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/BfdMode"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "remote": {
+    ///      "description": "Address of the remote peer to establish a BFD
+    /// session with.",
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "required_rx": {
+    ///      "description": "The minimum interval, in microseconds, between
+    /// received BFD Control packets that this system requires",
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "switch": {
+    ///      "description": "The switch to enable this session on. Must be
+    /// `switch0` or `switch1`.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BfdSessionEnable {
+        /// The negotiated Control packet transmission interval, multiplied by
+        /// this variable, will be the Detection Time for this session (as seen
+        /// by the remote system)
+        pub detection_threshold: u8,
+        /// Address the Oxide switch will listen on for BFD traffic. If `None`
+        /// then the unspecified address (0.0.0.0 or ::) is used.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub local: Option<std::net::IpAddr>,
+        /// Select either single-hop (RFC 5881) or multi-hop (RFC 5883)
+        pub mode: BfdMode,
+        /// Address of the remote peer to establish a BFD session with.
+        pub remote: std::net::IpAddr,
+        /// The minimum interval, in microseconds, between received BFD Control
+        /// packets that this system requires
+        pub required_rx: u64,
+        /// The switch to enable this session on. Must be `switch0` or
+        /// `switch1`.
+        pub switch: Name,
+    }
+
+    impl From<&BfdSessionEnable> for BfdSessionEnable {
+        fn from(value: &BfdSessionEnable) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BfdSessionEnable {
+        pub fn builder() -> builder::BfdSessionEnable {
+            Default::default()
+        }
+    }
+
+    /// BfdState
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "A stable down state. Non-responsive to incoming
+    /// messages.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "admin_down"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The initial state.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "down"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The peer has detected a remote peer in the down
+    /// state.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "init"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The peer has detected a remote peer in the up or
+    /// init state while in the init state.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "up"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum BfdState {
+        /// A stable down state. Non-responsive to incoming messages.
+        #[serde(rename = "admin_down")]
+        AdminDown,
+        /// The initial state.
+        #[serde(rename = "down")]
+        Down,
+        /// The peer has detected a remote peer in the down state.
+        #[serde(rename = "init")]
+        Init,
+        /// The peer has detected a remote peer in the up or init state while in
+        /// the init state.
+        #[serde(rename = "up")]
+        Up,
+    }
+
+    impl From<&BfdState> for BfdState {
+        fn from(value: &BfdState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for BfdState {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::AdminDown => "admin_down".to_string(),
+                Self::Down => "down".to_string(),
+                Self::Init => "init".to_string(),
+                Self::Up => "up".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for BfdState {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "admin_down" => Ok(Self::AdminDown),
+                "down" => Ok(Self::Down),
+                "init" => Ok(Self::Init),
+                "up" => Ok(Self::Up),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for BfdState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for BfdState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for BfdState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// BfdStatus
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "detection_threshold",
+    ///    "mode",
+    ///    "peer",
+    ///    "required_rx",
+    ///    "state",
+    ///    "switch"
+    ///  ],
+    ///  "properties": {
+    ///    "detection_threshold": {
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "local": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "ip"
+    ///    },
+    ///    "mode": {
+    ///      "$ref": "#/components/schemas/BfdMode"
+    ///    },
+    ///    "peer": {
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "required_rx": {
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "state": {
+    ///      "$ref": "#/components/schemas/BfdState"
+    ///    },
+    ///    "switch": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BfdStatus {
+        pub detection_threshold: u8,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub local: Option<std::net::IpAddr>,
+        pub mode: BfdMode,
+        pub peer: std::net::IpAddr,
+        pub required_rx: u64,
+        pub state: BfdState,
+        pub switch: Name,
+    }
+
+    impl From<&BfdStatus> for BfdStatus {
+        fn from(value: &BfdStatus) -> Self {
+            value.clone()
+        }
+    }
+
+    impl BfdStatus {
+        pub fn builder() -> builder::BfdStatus {
+            Default::default()
+        }
+    }
+
     /// Represents a BGP announce set by id. The id can be used with other API
     /// calls to view and manage the announce set.
     ///
@@ -5763,6 +6197,150 @@ pub mod types {
         }
     }
 
+    /// A distribution is a sequence of bins and counts in those bins.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A distribution is a sequence of bins and counts in
+    /// those bins.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "bins",
+    ///    "counts"
+    ///  ],
+    ///  "properties": {
+    ///    "bins": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "number",
+    ///        "format": "double"
+    ///      }
+    ///    },
+    ///    "counts": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "integer",
+    ///        "format": "uint64",
+    ///        "minimum": 0.0
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Distributiondouble {
+        pub bins: Vec<f64>,
+        pub counts: Vec<u64>,
+    }
+
+    impl From<&Distributiondouble> for Distributiondouble {
+        fn from(value: &Distributiondouble) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Distributiondouble {
+        pub fn builder() -> builder::Distributiondouble {
+            Default::default()
+        }
+    }
+
+    /// A distribution is a sequence of bins and counts in those bins.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A distribution is a sequence of bins and counts in
+    /// those bins.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "bins",
+    ///    "counts"
+    ///  ],
+    ///  "properties": {
+    ///    "bins": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "integer",
+    ///        "format": "int64"
+    ///      }
+    ///    },
+    ///    "counts": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "integer",
+    ///        "format": "uint64",
+    ///        "minimum": 0.0
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Distributionint64 {
+        pub bins: Vec<i64>,
+        pub counts: Vec<u64>,
+    }
+
+    impl From<&Distributionint64> for Distributionint64 {
+        fn from(value: &Distributionint64) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Distributionint64 {
+        pub fn builder() -> builder::Distributionint64 {
+            Default::default()
+        }
+    }
+
+    /// Parameters for creating an ephemeral IP address for an instance.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for creating an ephemeral IP address for an
+    /// instance.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "pool": {
+    ///      "description": "Name or ID of the IP pool used to allocate an
+    /// address",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct EphemeralIpCreate {
+        /// Name or ID of the IP pool used to allocate an address
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub pool: Option<NameOrId>,
+    }
+
+    impl From<&EphemeralIpCreate> for EphemeralIpCreate {
+        fn from(value: &EphemeralIpCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl EphemeralIpCreate {
+        pub fn builder() -> builder::EphemeralIpCreate {
+            Default::default()
+        }
+    }
+
     /// Error information from a response.
     ///
     /// <details><summary>JSON schema</summary>
@@ -5815,38 +6393,137 @@ pub mod types {
     ///
     /// ```json
     /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "ip",
-    ///    "kind"
-    ///  ],
-    ///  "properties": {
-    ///    "ip": {
-    ///      "type": "string",
-    ///      "format": "ip"
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "ip",
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "ip": {
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        },
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "ephemeral"
+    ///          ]
+    ///        }
+    ///      }
     ///    },
-    ///    "kind": {
-    ///      "$ref": "#/components/schemas/IpKind"
+    ///    {
+    ///      "description": "A Floating IP is a well-known IP address which can
+    /// be attached and detached from instances.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "description",
+    ///        "id",
+    ///        "ip",
+    ///        "kind",
+    ///        "name",
+    ///        "project_id",
+    ///        "time_created",
+    ///        "time_modified"
+    ///      ],
+    ///      "properties": {
+    ///        "description": {
+    ///          "description": "human-readable free-form text about a
+    /// resource",
+    ///          "type": "string"
+    ///        },
+    ///        "id": {
+    ///          "description": "unique, immutable, system-controlled identifier
+    /// for each resource",
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "instance_id": {
+    ///          "description": "The ID of the instance that this Floating IP is
+    /// attached to, if it is presently in use.",
+    ///          "type": [
+    ///            "string",
+    ///            "null"
+    ///          ],
+    ///          "format": "uuid"
+    ///        },
+    ///        "ip": {
+    ///          "description": "The IP address held by this resource.",
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        },
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "floating"
+    ///          ]
+    ///        },
+    ///        "name": {
+    ///          "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/Name"
+    ///            }
+    ///          ]
+    ///        },
+    ///        "project_id": {
+    ///          "description": "The project this resource exists within.",
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "time_created": {
+    ///          "description": "timestamp when this resource was created",
+    ///          "type": "string",
+    ///          "format": "date-time"
+    ///        },
+    ///        "time_modified": {
+    ///          "description": "timestamp when this resource was last
+    /// modified",
+    ///          "type": "string",
+    ///          "format": "date-time"
+    ///        }
+    ///      }
     ///    }
-    ///  }
+    ///  ]
     /// }
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct ExternalIp {
-        pub ip: std::net::IpAddr,
-        pub kind: IpKind,
+    #[serde(tag = "kind")]
+    pub enum ExternalIp {
+        #[serde(rename = "ephemeral")]
+        Ephemeral { ip: std::net::IpAddr },
+        /// A Floating IP is a well-known IP address which can be attached and
+        /// detached from instances.
+        #[serde(rename = "floating")]
+        Floating {
+            /// human-readable free-form text about a resource
+            description: String,
+            /// unique, immutable, system-controlled identifier for each
+            /// resource
+            id: uuid::Uuid,
+            /// The ID of the instance that this Floating IP is attached to, if
+            /// it is presently in use.
+            #[serde(default, skip_serializing_if = "Option::is_none")]
+            instance_id: Option<uuid::Uuid>,
+            /// The IP address held by this resource.
+            ip: std::net::IpAddr,
+            /// unique, mutable, user-controlled identifier for each resource
+            name: Name,
+            /// The project this resource exists within.
+            project_id: uuid::Uuid,
+            /// timestamp when this resource was created
+            time_created: chrono::DateTime<chrono::offset::Utc>,
+            /// timestamp when this resource was last modified
+            time_modified: chrono::DateTime<chrono::offset::Utc>,
+        },
     }
 
     impl From<&ExternalIp> for ExternalIp {
         fn from(value: &ExternalIp) -> Self {
             value.clone()
-        }
-    }
-
-    impl ExternalIp {
-        pub fn builder() -> builder::ExternalIp {
-            Default::default()
         }
     }
 
@@ -5862,16 +6539,16 @@ pub mod types {
     ///    {
     ///      "description": "An IP address providing both inbound and outbound
     /// access. The address is automatically-assigned from the provided IP Pool,
-    /// or all available pools if not specified.",
+    /// or the current silo's default pool if not specified.",
     ///      "type": "object",
     ///      "required": [
     ///        "type"
     ///      ],
     ///      "properties": {
-    ///        "pool_name": {
+    ///        "pool": {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/Name"
+    ///              "$ref": "#/components/schemas/NameOrId"
     ///            }
     ///          ]
     ///        },
@@ -5885,17 +6562,17 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "An IP address providing both inbound and outbound
-    /// access. The address is an existing Floating IP object assigned to the
+    /// access. The address is an existing floating IP object assigned to the
     /// current project.\n\nThe floating IP must not be in use by another
     /// instance or service.",
     ///      "type": "object",
     ///      "required": [
-    ///        "floating_ip_name",
+    ///        "floating_ip",
     ///        "type"
     ///      ],
     ///      "properties": {
-    ///        "floating_ip_name": {
-    ///          "$ref": "#/components/schemas/Name"
+    ///        "floating_ip": {
+    ///          "$ref": "#/components/schemas/NameOrId"
     ///        },
     ///        "type": {
     ///          "type": "string",
@@ -5913,20 +6590,20 @@ pub mod types {
     #[serde(tag = "type")]
     pub enum ExternalIpCreate {
         /// An IP address providing both inbound and outbound access. The
-        /// address is automatically-assigned from the provided IP Pool, or all
-        /// available pools if not specified.
+        /// address is automatically-assigned from the provided IP Pool, or the
+        /// current silo's default pool if not specified.
         #[serde(rename = "ephemeral")]
         Ephemeral {
             #[serde(default, skip_serializing_if = "Option::is_none")]
-            pool_name: Option<Name>,
+            pool: Option<NameOrId>,
         },
         /// An IP address providing both inbound and outbound access. The
-        /// address is an existing Floating IP object assigned to the current
+        /// address is an existing floating IP object assigned to the current
         /// project.
         ///
         /// The floating IP must not be in use by another instance or service.
         #[serde(rename = "floating")]
-        Floating { floating_ip_name: Name },
+        Floating { floating_ip: NameOrId },
     }
 
     impl From<&ExternalIpCreate> for ExternalIpCreate {
@@ -5984,6 +6661,613 @@ pub mod types {
     impl ExternalIpResultsPage {
         pub fn builder() -> builder::ExternalIpResultsPage {
             Default::default()
+        }
+    }
+
+    /// The name and type information for a field of a timeseries schema.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The name and type information for a field of a
+    /// timeseries schema.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "field_type",
+    ///    "name",
+    ///    "source"
+    ///  ],
+    ///  "properties": {
+    ///    "field_type": {
+    ///      "$ref": "#/components/schemas/FieldType"
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "source": {
+    ///      "$ref": "#/components/schemas/FieldSource"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct FieldSchema {
+        pub field_type: FieldType,
+        pub name: String,
+        pub source: FieldSource,
+    }
+
+    impl From<&FieldSchema> for FieldSchema {
+        fn from(value: &FieldSchema) -> Self {
+            value.clone()
+        }
+    }
+
+    impl FieldSchema {
+        pub fn builder() -> builder::FieldSchema {
+            Default::default()
+        }
+    }
+
+    /// The source from which a field is derived, the target or metric.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The source from which a field is derived, the target or
+    /// metric.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "target",
+    ///    "metric"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum FieldSource {
+        #[serde(rename = "target")]
+        Target,
+        #[serde(rename = "metric")]
+        Metric,
+    }
+
+    impl From<&FieldSource> for FieldSource {
+        fn from(value: &FieldSource) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for FieldSource {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Target => "target".to_string(),
+                Self::Metric => "metric".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for FieldSource {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "target" => Ok(Self::Target),
+                "metric" => Ok(Self::Metric),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for FieldSource {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for FieldSource {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for FieldSource {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// The `FieldType` identifies the data type of a target or metric field.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The `FieldType` identifies the data type of a target or
+    /// metric field.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "string",
+    ///    "i8",
+    ///    "u8",
+    ///    "i16",
+    ///    "u16",
+    ///    "i32",
+    ///    "u32",
+    ///    "i64",
+    ///    "u64",
+    ///    "ip_addr",
+    ///    "uuid",
+    ///    "bool"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum FieldType {
+        #[serde(rename = "string")]
+        String,
+        #[serde(rename = "i8")]
+        I8,
+        #[serde(rename = "u8")]
+        U8,
+        #[serde(rename = "i16")]
+        I16,
+        #[serde(rename = "u16")]
+        U16,
+        #[serde(rename = "i32")]
+        I32,
+        #[serde(rename = "u32")]
+        U32,
+        #[serde(rename = "i64")]
+        I64,
+        #[serde(rename = "u64")]
+        U64,
+        #[serde(rename = "ip_addr")]
+        IpAddr,
+        #[serde(rename = "uuid")]
+        Uuid,
+        #[serde(rename = "bool")]
+        Bool,
+    }
+
+    impl From<&FieldType> for FieldType {
+        fn from(value: &FieldType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for FieldType {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::String => "string".to_string(),
+                Self::I8 => "i8".to_string(),
+                Self::U8 => "u8".to_string(),
+                Self::I16 => "i16".to_string(),
+                Self::U16 => "u16".to_string(),
+                Self::I32 => "i32".to_string(),
+                Self::U32 => "u32".to_string(),
+                Self::I64 => "i64".to_string(),
+                Self::U64 => "u64".to_string(),
+                Self::IpAddr => "ip_addr".to_string(),
+                Self::Uuid => "uuid".to_string(),
+                Self::Bool => "bool".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for FieldType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "string" => Ok(Self::String),
+                "i8" => Ok(Self::I8),
+                "u8" => Ok(Self::U8),
+                "i16" => Ok(Self::I16),
+                "u16" => Ok(Self::U16),
+                "i32" => Ok(Self::I32),
+                "u32" => Ok(Self::U32),
+                "i64" => Ok(Self::I64),
+                "u64" => Ok(Self::U64),
+                "ip_addr" => Ok(Self::IpAddr),
+                "uuid" => Ok(Self::Uuid),
+                "bool" => Ok(Self::Bool),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for FieldType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for FieldType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for FieldType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    /// The `FieldValue` contains the value of a target or metric field.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The `FieldValue` contains the value of a target or
+    /// metric field.",
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "string"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "string"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "i8"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "integer",
+    ///          "format": "int8"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "u8"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "integer",
+    ///          "format": "uint8",
+    ///          "minimum": 0.0
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "i16"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "integer",
+    ///          "format": "int16"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "u16"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "integer",
+    ///          "format": "uint16",
+    ///          "minimum": 0.0
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "i32"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "integer",
+    ///          "format": "int32"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "u32"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "integer",
+    ///          "format": "uint32",
+    ///          "minimum": 0.0
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "i64"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "integer",
+    ///          "format": "int64"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "u64"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "integer",
+    ///          "format": "uint64",
+    ///          "minimum": 0.0
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "ip_addr"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "string",
+    ///          "format": "ip"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "uuid"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "bool"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "boolean"
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type", content = "value")]
+    pub enum FieldValue {
+        #[serde(rename = "string")]
+        String(String),
+        #[serde(rename = "i8")]
+        I8(i8),
+        #[serde(rename = "u8")]
+        U8(u8),
+        #[serde(rename = "i16")]
+        I16(i16),
+        #[serde(rename = "u16")]
+        U16(u16),
+        #[serde(rename = "i32")]
+        I32(i32),
+        #[serde(rename = "u32")]
+        U32(u32),
+        #[serde(rename = "i64")]
+        I64(i64),
+        #[serde(rename = "u64")]
+        U64(u64),
+        #[serde(rename = "ip_addr")]
+        IpAddr(std::net::IpAddr),
+        #[serde(rename = "uuid")]
+        Uuid(uuid::Uuid),
+        #[serde(rename = "bool")]
+        Bool(bool),
+    }
+
+    impl From<&FieldValue> for FieldValue {
+        fn from(value: &FieldValue) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<i8> for FieldValue {
+        fn from(value: i8) -> Self {
+            Self::I8(value)
+        }
+    }
+
+    impl From<u8> for FieldValue {
+        fn from(value: u8) -> Self {
+            Self::U8(value)
+        }
+    }
+
+    impl From<i16> for FieldValue {
+        fn from(value: i16) -> Self {
+            Self::I16(value)
+        }
+    }
+
+    impl From<u16> for FieldValue {
+        fn from(value: u16) -> Self {
+            Self::U16(value)
+        }
+    }
+
+    impl From<i32> for FieldValue {
+        fn from(value: i32) -> Self {
+            Self::I32(value)
+        }
+    }
+
+    impl From<u32> for FieldValue {
+        fn from(value: u32) -> Self {
+            Self::U32(value)
+        }
+    }
+
+    impl From<i64> for FieldValue {
+        fn from(value: i64) -> Self {
+            Self::I64(value)
+        }
+    }
+
+    impl From<u64> for FieldValue {
+        fn from(value: u64) -> Self {
+            Self::U64(value)
+        }
+    }
+
+    impl From<std::net::IpAddr> for FieldValue {
+        fn from(value: std::net::IpAddr) -> Self {
+            Self::IpAddr(value)
+        }
+    }
+
+    impl From<uuid::Uuid> for FieldValue {
+        fn from(value: uuid::Uuid) -> Self {
+            Self::Uuid(value)
+        }
+    }
+
+    impl From<bool> for FieldValue {
+        fn from(value: bool) -> Self {
+            Self::Bool(value)
         }
     }
 
@@ -6329,6 +7613,62 @@ pub mod types {
         }
     }
 
+    /// Parameters for attaching a floating IP address to another resource
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for attaching a floating IP address to
+    /// another resource",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "kind",
+    ///    "parent"
+    ///  ],
+    ///  "properties": {
+    ///    "kind": {
+    ///      "description": "The type of `parent`'s resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/FloatingIpParentKind"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "parent": {
+    ///      "description": "Name or ID of the resource that this IP address
+    /// should be attached to",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct FloatingIpAttach {
+        /// The type of `parent`'s resource
+        pub kind: FloatingIpParentKind,
+        /// Name or ID of the resource that this IP address should be attached
+        /// to
+        pub parent: NameOrId,
+    }
+
+    impl From<&FloatingIpAttach> for FloatingIpAttach {
+        fn from(value: &FloatingIpAttach) -> Self {
+            value.clone()
+        }
+    }
+
+    impl FloatingIpAttach {
+        pub fn builder() -> builder::FloatingIpAttach {
+            Default::default()
+        }
+    }
+
     /// Parameters for creating a new floating IP address for instances.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6343,7 +7683,10 @@ pub mod types {
     ///    "name"
     ///  ],
     ///  "properties": {
-    ///    "address": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "ip": {
     ///      "description": "An IP address to reserve for use as a floating IP.
     /// This field is optional: when not set, an address will be automatically
     /// chosen from `pool`. If set, then the IP must be available in the
@@ -6353,9 +7696,6 @@ pub mod types {
     ///        "null"
     ///      ],
     ///      "format": "ip"
-    ///    },
-    ///    "description": {
-    ///      "type": "string"
     ///    },
     ///    "name": {
     ///      "$ref": "#/components/schemas/Name"
@@ -6375,13 +7715,13 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FloatingIpCreate {
+        pub description: String,
         /// An IP address to reserve for use as a floating IP. This field is
         /// optional: when not set, an address will be automatically chosen from
         /// `pool`. If set, then the IP must be available in the resolved
         /// `pool`.
         #[serde(default, skip_serializing_if = "Option::is_none")]
-        pub address: Option<std::net::IpAddr>,
-        pub description: String,
+        pub ip: Option<std::net::IpAddr>,
         pub name: Name,
         /// The parent IP pool that a floating IP is pulled from. If unset, the
         /// default pool is selected.
@@ -6398,6 +7738,84 @@ pub mod types {
     impl FloatingIpCreate {
         pub fn builder() -> builder::FloatingIpCreate {
             Default::default()
+        }
+    }
+
+    /// The type of resource that a floating IP is attached to
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The type of resource that a floating IP is attached
+    /// to",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "instance"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum FloatingIpParentKind {
+        #[serde(rename = "instance")]
+        Instance,
+    }
+
+    impl From<&FloatingIpParentKind> for FloatingIpParentKind {
+        fn from(value: &FloatingIpParentKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for FloatingIpParentKind {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Instance => "instance".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for FloatingIpParentKind {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "instance" => Ok(Self::Instance),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for FloatingIpParentKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for FloatingIpParentKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for FloatingIpParentKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -6449,6 +7867,52 @@ pub mod types {
 
     impl FloatingIpResultsPage {
         pub fn builder() -> builder::FloatingIpResultsPage {
+            Default::default()
+        }
+    }
+
+    /// Updateable identity-related parameters
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Updateable identity-related parameters",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct FloatingIpUpdate {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub description: Option<String>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub name: Option<Name>,
+    }
+
+    impl From<&FloatingIpUpdate> for FloatingIpUpdate {
+        fn from(value: &FloatingIpUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl FloatingIpUpdate {
+        pub fn builder() -> builder::FloatingIpUpdate {
             Default::default()
         }
     }
@@ -7224,6 +8688,110 @@ pub mod types {
     impl Histogramuint8 {
         pub fn builder() -> builder::Histogramuint8 {
             Default::default()
+        }
+    }
+
+    /// A hostname identifies a host on a network, and is usually a
+    /// dot-delimited sequence of labels, where each label contains only
+    /// letters, digits, or the hyphen. See RFCs 1035 and 952 for more details.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "title": "An RFC-1035-compliant hostname",
+    ///  "description": "A hostname identifies a host on a network, and is
+    /// usually a dot-delimited sequence of labels, where each label contains
+    /// only letters, digits, or the hyphen. See RFCs 1035 and 952 for more
+    /// details.",
+    ///  "type": "string",
+    ///  "maxLength": 253,
+    ///  "minLength": 1,
+    ///  "pattern":
+    /// "^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!
+    /// -))*$"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
+    pub struct Hostname(String);
+    impl std::ops::Deref for Hostname {
+        type Target = String;
+        fn deref(&self) -> &String {
+            &self.0
+        }
+    }
+
+    impl From<Hostname> for String {
+        fn from(value: Hostname) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&Hostname> for Hostname {
+        fn from(value: &Hostname) -> Self {
+            value.clone()
+        }
+    }
+
+    impl std::str::FromStr for Hostname {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            if value.len() > 253usize {
+                return Err("longer than 253 characters".into());
+            }
+            if value.len() < 1usize {
+                return Err("shorter than 1 characters".into());
+            }
+            if regress::Regex::new(
+                "^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))*$",
+            )
+            .unwrap()
+            .find(value)
+            .is_none()
+            {
+                return Err("doesn't match pattern \
+                            \"^([a-zA-Z0-9]+[a-zA-Z0-9\\-]*(?<!-))(\\.[a-zA-Z0-9]+[a-zA-Z0-9\\\
+                            -]*(?<!-))*$\""
+                    .into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for Hostname {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for Hostname {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for Hostname {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> serde::Deserialize<'de> for Hostname {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as serde::de::Error>::custom(e.to_string())
+                })
         }
     }
 
@@ -8287,7 +9855,7 @@ pub mod types {
     ///      }
     ///    },
     ///    "hostname": {
-    ///      "type": "string"
+    ///      "$ref": "#/components/schemas/Hostname"
     ///    },
     ///    "memory": {
     ///      "$ref": "#/components/schemas/ByteCount"
@@ -8310,6 +9878,20 @@ pub mod types {
     /// "#/components/schemas/InstanceNetworkInterfaceAttachment"
     ///        }
     ///      ]
+    ///    },
+    ///    "ssh_public_keys": {
+    ///      "description": "An allowlist of SSH public keys to be transferred
+    /// to the instance via cloud-init during instance creation.\n\nIf not
+    /// provided, all SSH public keys from the user's profile will be sent. If
+    /// an empty list is provided, no public keys will be transmitted to the
+    /// instance.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/NameOrId"
+    ///      }
     ///    },
     ///    "start": {
     ///      "description": "Should this instance be started upon creation; true
@@ -8344,13 +9926,21 @@ pub mod types {
         /// instance.
         #[serde(default, skip_serializing_if = "Vec::is_empty")]
         pub external_ips: Vec<ExternalIpCreate>,
-        pub hostname: String,
+        pub hostname: Hostname,
         pub memory: ByteCount,
         pub name: Name,
         pub ncpus: InstanceCpuCount,
         /// The network interfaces to be created for this instance.
         #[serde(default = "defaults::instance_create_network_interfaces")]
         pub network_interfaces: InstanceNetworkInterfaceAttachment,
+        /// An allowlist of SSH public keys to be transferred to the instance
+        /// via cloud-init during instance creation.
+        ///
+        /// If not provided, all SSH public keys from the user's profile will be
+        /// sent. If an empty list is provided, no public keys will be
+        /// transmitted to the instance.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub ssh_public_keys: Option<Vec<NameOrId>>,
         /// Should this instance be started upon creation; true by default.
         #[serde(default = "defaults::default_bool::<true>")]
         pub start: bool,
@@ -9265,88 +10855,6 @@ pub mod types {
         }
     }
 
-    /// The kind of an external IP address for an instance
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "The kind of an external IP address for an instance",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "ephemeral",
-    ///    "floating"
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        Deserialize,
-        Eq,
-        Hash,
-        Ord,
-        PartialEq,
-        PartialOrd,
-        Serialize,
-        schemars :: JsonSchema,
-    )]
-    pub enum IpKind {
-        #[serde(rename = "ephemeral")]
-        Ephemeral,
-        #[serde(rename = "floating")]
-        Floating,
-    }
-
-    impl From<&IpKind> for IpKind {
-        fn from(value: &IpKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ToString for IpKind {
-        fn to_string(&self) -> String {
-            match *self {
-                Self::Ephemeral => "ephemeral".to_string(),
-                Self::Floating => "floating".to_string(),
-            }
-        }
-    }
-
-    impl std::str::FromStr for IpKind {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
-            match value {
-                "ephemeral" => Ok(Self::Ephemeral),
-                "floating" => Ok(Self::Floating),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for IpKind {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for IpKind {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for IpKind {
-        type Error = self::error::ConversionError;
-        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     /// IpNet
     ///
     /// <details><summary>JSON schema</summary>
@@ -9560,6 +11068,52 @@ pub mod types {
         }
     }
 
+    /// IpPoolLinkSilo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "is_default",
+    ///    "silo"
+    ///  ],
+    ///  "properties": {
+    ///    "is_default": {
+    ///      "description": "When a pool is the default for a silo, floating IPs
+    /// and instance ephemeral IPs will come from that pool when no other pool
+    /// is specified. There can be at most one default for a given silo.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "silo": {
+    ///      "$ref": "#/components/schemas/NameOrId"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct IpPoolLinkSilo {
+        /// When a pool is the default for a silo, floating IPs and instance
+        /// ephemeral IPs will come from that pool when no other pool is
+        /// specified. There can be at most one default for a given silo.
+        pub is_default: bool,
+        pub silo: NameOrId,
+    }
+
+    impl From<&IpPoolLinkSilo> for IpPoolLinkSilo {
+        fn from(value: &IpPoolLinkSilo) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IpPoolLinkSilo {
+        pub fn builder() -> builder::IpPoolLinkSilo {
+            Default::default()
+        }
+    }
+
     /// IpPoolRange
     ///
     /// <details><summary>JSON schema</summary>
@@ -9752,59 +11306,13 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct IpPoolSilo {
+    pub struct IpPoolSiloLink {
         pub ip_pool_id: uuid::Uuid,
         /// When a pool is the default for a silo, floating IPs and instance
         /// ephemeral IPs will come from that pool when no other pool is
         /// specified. There can be at most one default for a given silo.
         pub is_default: bool,
         pub silo_id: uuid::Uuid,
-    }
-
-    impl From<&IpPoolSilo> for IpPoolSilo {
-        fn from(value: &IpPoolSilo) -> Self {
-            value.clone()
-        }
-    }
-
-    impl IpPoolSilo {
-        pub fn builder() -> builder::IpPoolSilo {
-            Default::default()
-        }
-    }
-
-    /// IpPoolSiloLink
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "object",
-    ///  "required": [
-    ///    "is_default",
-    ///    "silo"
-    ///  ],
-    ///  "properties": {
-    ///    "is_default": {
-    ///      "description": "When a pool is the default for a silo, floating IPs
-    /// and instance ephemeral IPs will come from that pool when no other pool
-    /// is specified. There can be at most one default for a given silo.",
-    ///      "type": "boolean"
-    ///    },
-    ///    "silo": {
-    ///      "$ref": "#/components/schemas/NameOrId"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct IpPoolSiloLink {
-        /// When a pool is the default for a silo, floating IPs and instance
-        /// ephemeral IPs will come from that pool when no other pool is
-        /// specified. There can be at most one default for a given silo.
-        pub is_default: bool,
-        pub silo: NameOrId,
     }
 
     impl From<&IpPoolSiloLink> for IpPoolSiloLink {
@@ -9835,7 +11343,7 @@ pub mod types {
     ///      "description": "list of items on this page of results",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/IpPoolSilo"
+    ///        "$ref": "#/components/schemas/IpPoolSiloLink"
     ///      }
     ///    },
     ///    "next_page": {
@@ -9851,22 +11359,22 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct IpPoolSiloResultsPage {
+    pub struct IpPoolSiloLinkResultsPage {
         /// list of items on this page of results
-        pub items: Vec<IpPoolSilo>,
+        pub items: Vec<IpPoolSiloLink>,
         /// token used to fetch the next page of results (if any)
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub next_page: Option<String>,
     }
 
-    impl From<&IpPoolSiloResultsPage> for IpPoolSiloResultsPage {
-        fn from(value: &IpPoolSiloResultsPage) -> Self {
+    impl From<&IpPoolSiloLinkResultsPage> for IpPoolSiloLinkResultsPage {
+        fn from(value: &IpPoolSiloLinkResultsPage) -> Self {
             value.clone()
         }
     }
 
-    impl IpPoolSiloResultsPage {
-        pub fn builder() -> builder::IpPoolSiloResultsPage {
+    impl IpPoolSiloLinkResultsPage {
+        pub fn builder() -> builder::IpPoolSiloLinkResultsPage {
             Default::default()
         }
     }
@@ -11296,6 +12804,117 @@ pub mod types {
         }
     }
 
+    /// The type of the metric itself, indicating what its values represent.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The type of the metric itself, indicating what its
+    /// values represent.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The value represents an instantaneous measurement
+    /// in time.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "gauge"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The value represents a difference between two
+    /// points in time.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "delta"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The value represents an accumulation between two
+    /// points in time.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "cumulative"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum MetricType {
+        /// The value represents an instantaneous measurement in time.
+        #[serde(rename = "gauge")]
+        Gauge,
+        /// The value represents a difference between two points in time.
+        #[serde(rename = "delta")]
+        Delta,
+        /// The value represents an accumulation between two points in time.
+        #[serde(rename = "cumulative")]
+        Cumulative,
+    }
+
+    impl From<&MetricType> for MetricType {
+        fn from(value: &MetricType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for MetricType {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Gauge => "gauge".to_string(),
+                Self::Delta => "delta".to_string(),
+                Self::Cumulative => "cumulative".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for MetricType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "gauge" => Ok(Self::Gauge),
+                "delta" => Ok(Self::Delta),
+                "cumulative" => Ok(Self::Cumulative),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for MetricType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for MetricType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for MetricType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     /// MissingDatum
     ///
     /// <details><summary>JSON schema</summary>
@@ -12229,6 +13848,66 @@ pub mod types {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// Timepoints and values for one timeseries.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Timepoints and values for one timeseries.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "timestamps",
+    ///    "values"
+    ///  ],
+    ///  "properties": {
+    ///    "start_times": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string",
+    ///        "format": "date-time"
+    ///      }
+    ///    },
+    ///    "timestamps": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string",
+    ///        "format": "date-time"
+    ///      }
+    ///    },
+    ///    "values": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Values"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Points {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub start_times: Option<Vec<chrono::DateTime<chrono::offset::Utc>>>,
+        pub timestamps: Vec<chrono::DateTime<chrono::offset::Utc>>,
+        pub values: Vec<Values>,
+    }
+
+    impl From<&Points> for Points {
+        fn from(value: &Points) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Points {
+        pub fn builder() -> builder::Points {
+            Default::default()
         }
     }
 
@@ -13717,6 +15396,144 @@ pub mod types {
         }
     }
 
+    /// An IP pool in the context of a silo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "An IP pool in the context of a silo",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "is_default",
+    ///    "name",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "is_default": {
+    ///      "description": "When a pool is the default for a silo, floating IPs
+    /// and instance ephemeral IPs will come from that pool when no other pool
+    /// is specified. There can be at most one default for a given silo.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SiloIpPool {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// When a pool is the default for a silo, floating IPs and instance
+        /// ephemeral IPs will come from that pool when no other pool is
+        /// specified. There can be at most one default for a given silo.
+        pub is_default: bool,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&SiloIpPool> for SiloIpPool {
+        fn from(value: &SiloIpPool) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SiloIpPool {
+        pub fn builder() -> builder::SiloIpPool {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SiloIpPool"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SiloIpPoolResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<SiloIpPool>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&SiloIpPoolResultsPage> for SiloIpPoolResultsPage {
+        fn from(value: &SiloIpPoolResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SiloIpPoolResultsPage {
+        pub fn builder() -> builder::SiloIpPoolResultsPage {
+            Default::default()
+        }
+    }
+
     /// A collection of resource counts used to set the virtual capacity of a
     /// silo
     ///
@@ -14350,8 +16167,9 @@ pub mod types {
     ///  "required": [
     ///    "baseboard",
     ///    "id",
-    ///    "provision_state",
+    ///    "policy",
     ///    "rack_id",
+    ///    "state",
     ///    "time_created",
     ///    "time_modified",
     ///    "usable_hardware_threads",
@@ -14367,11 +16185,11 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "provision_state": {
-    ///      "description": "The provision state of the sled.",
+    ///    "policy": {
+    ///      "description": "The operator-defined policy of a sled.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledPolicy"
     ///        }
     ///      ]
     ///    },
@@ -14379,6 +16197,15 @@ pub mod types {
     ///      "description": "The rack to which this Sled is currently attached",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "state": {
+    ///      "description": "The current state Nexus believes the sled to be
+    /// in.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SledState"
+    ///        }
+    ///      ]
     ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
@@ -14414,10 +16241,12 @@ pub mod types {
         pub baseboard: Baseboard,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
-        /// The provision state of the sled.
-        pub provision_state: SledProvisionState,
+        /// The operator-defined policy of a sled.
+        pub policy: SledPolicy,
         /// The rack to which this Sled is currently attached
         pub rack_id: uuid::Uuid,
+        /// The current state Nexus believes the sled to be in.
+        pub state: SledState,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -14596,7 +16425,86 @@ pub mod types {
         }
     }
 
-    /// The provision state of a sled.
+    /// The operator-defined policy of a sled.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The operator-defined policy of a sled.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The operator has indicated that the sled is
+    /// in-service.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind",
+    ///        "provision_policy"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "in_service"
+    ///          ]
+    ///        },
+    ///        "provision_policy": {
+    ///          "description": "Determines whether new resources can be
+    /// provisioned onto the sled.",
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SledProvisionPolicy"
+    ///            }
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The operator has indicated that the sled has been
+    /// permanently removed from service.\n\nThis is a terminal state: once a
+    /// particular sled ID is expunged, it will never return to service. (The
+    /// actual hardware may be reused, but it will be treated as a brand-new
+    /// sled.)\n\nAn expunged sled is always non-provisionable.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "expunged"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "kind", content = "provision_policy")]
+    pub enum SledPolicy {
+        /// The operator has indicated that the sled is in-service.
+        #[serde(rename = "in_service")]
+        InService(SledProvisionPolicy),
+        #[serde(rename = "expunged")]
+        Expunged,
+    }
+
+    impl From<&SledPolicy> for SledPolicy {
+        fn from(value: &SledPolicy) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<SledProvisionPolicy> for SledPolicy {
+        fn from(value: SledProvisionPolicy) -> Self {
+            Self::InService(value)
+        }
+    }
+
+    /// The operator-defined provision policy of a sled.
     ///
     /// This controls whether new resources are going to be provisioned on this
     /// sled.
@@ -14605,8 +16513,9 @@ pub mod types {
     ///
     /// ```json
     /// {
-    ///  "description": "The provision state of a sled.\n\nThis controls whether
-    /// new resources are going to be provisioned on this sled.",
+    ///  "description": "The operator-defined provision policy of a
+    /// sled.\n\nThis controls whether new resources are going to be provisioned
+    /// on this sled.",
     ///  "oneOf": [
     ///    {
     ///      "description": "New resources will be provisioned on this sled.",
@@ -14617,8 +16526,8 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "New resources will not be provisioned on this sled.
-    /// However, existing resources will continue to be on this sled unless
-    /// manually migrated off.",
+    /// However, if the sled is currently in service, existing resources will
+    /// continue to be on this sled unless manually migrated off.",
     ///      "type": "string",
     ///      "enum": [
     ///        "non_provisionable"
@@ -14641,24 +16550,24 @@ pub mod types {
         Serialize,
         schemars :: JsonSchema,
     )]
-    pub enum SledProvisionState {
+    pub enum SledProvisionPolicy {
         /// New resources will be provisioned on this sled.
         #[serde(rename = "provisionable")]
         Provisionable,
-        /// New resources will not be provisioned on this sled. However,
-        /// existing resources will continue to be on this sled unless manually
-        /// migrated off.
+        /// New resources will not be provisioned on this sled. However, if the
+        /// sled is currently in service, existing resources will continue to be
+        /// on this sled unless manually migrated off.
         #[serde(rename = "non_provisionable")]
         NonProvisionable,
     }
 
-    impl From<&SledProvisionState> for SledProvisionState {
-        fn from(value: &SledProvisionState) -> Self {
+    impl From<&SledProvisionPolicy> for SledProvisionPolicy {
+        fn from(value: &SledProvisionPolicy) -> Self {
             value.clone()
         }
     }
 
-    impl ToString for SledProvisionState {
+    impl ToString for SledProvisionPolicy {
         fn to_string(&self) -> String {
             match *self {
                 Self::Provisionable => "provisionable".to_string(),
@@ -14667,7 +16576,7 @@ pub mod types {
         }
     }
 
-    impl std::str::FromStr for SledProvisionState {
+    impl std::str::FromStr for SledProvisionPolicy {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             match value {
@@ -14678,34 +16587,34 @@ pub mod types {
         }
     }
 
-    impl std::convert::TryFrom<&str> for SledProvisionState {
+    impl std::convert::TryFrom<&str> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<&String> for SledProvisionState {
+    impl std::convert::TryFrom<&String> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
         fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    impl std::convert::TryFrom<String> for SledProvisionState {
+    impl std::convert::TryFrom<String> for SledProvisionPolicy {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
 
-    /// Parameters for `sled_set_provision_state`.
+    /// Parameters for `sled_set_provision_policy`.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Parameters for `sled_set_provision_state`.",
+    ///  "description": "Parameters for `sled_set_provision_policy`.",
     ///  "type": "object",
     ///  "required": [
     ///    "state"
@@ -14715,7 +16624,7 @@ pub mod types {
     ///      "description": "The provision state.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
     ///        }
     ///      ]
     ///    }
@@ -14724,30 +16633,30 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SledProvisionStateParams {
+    pub struct SledProvisionPolicyParams {
         /// The provision state.
-        pub state: SledProvisionState,
+        pub state: SledProvisionPolicy,
     }
 
-    impl From<&SledProvisionStateParams> for SledProvisionStateParams {
-        fn from(value: &SledProvisionStateParams) -> Self {
+    impl From<&SledProvisionPolicyParams> for SledProvisionPolicyParams {
+        fn from(value: &SledProvisionPolicyParams) -> Self {
             value.clone()
         }
     }
 
-    impl SledProvisionStateParams {
-        pub fn builder() -> builder::SledProvisionStateParams {
+    impl SledProvisionPolicyParams {
+        pub fn builder() -> builder::SledProvisionPolicyParams {
             Default::default()
         }
     }
 
-    /// Response to `sled_set_provision_state`.
+    /// Response to `sled_set_provision_policy`.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "Response to `sled_set_provision_state`.",
+    ///  "description": "Response to `sled_set_provision_policy`.",
     ///  "type": "object",
     ///  "required": [
     ///    "new_state",
@@ -14758,7 +16667,7 @@ pub mod types {
     ///      "description": "The new provision state.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
     ///        }
     ///      ]
     ///    },
@@ -14766,7 +16675,7 @@ pub mod types {
     ///      "description": "The old provision state.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/SledProvisionState"
+    ///          "$ref": "#/components/schemas/SledProvisionPolicy"
     ///        }
     ///      ]
     ///    }
@@ -14775,21 +16684,21 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SledProvisionStateResponse {
+    pub struct SledProvisionPolicyResponse {
         /// The new provision state.
-        pub new_state: SledProvisionState,
+        pub new_state: SledProvisionPolicy,
         /// The old provision state.
-        pub old_state: SledProvisionState,
+        pub old_state: SledProvisionPolicy,
     }
 
-    impl From<&SledProvisionStateResponse> for SledProvisionStateResponse {
-        fn from(value: &SledProvisionStateResponse) -> Self {
+    impl From<&SledProvisionPolicyResponse> for SledProvisionPolicyResponse {
+        fn from(value: &SledProvisionPolicyResponse) -> Self {
             value.clone()
         }
     }
 
-    impl SledProvisionStateResponse {
-        pub fn builder() -> builder::SledProvisionStateResponse {
+    impl SledProvisionPolicyResponse {
+        pub fn builder() -> builder::SledProvisionPolicyResponse {
             Default::default()
         }
     }
@@ -14843,6 +16752,110 @@ pub mod types {
     impl SledResultsPage {
         pub fn builder() -> builder::SledResultsPage {
             Default::default()
+        }
+    }
+
+    /// The current state of the sled, as determined by Nexus.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The current state of the sled, as determined by
+    /// Nexus.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The sled is currently active, and has resources
+    /// allocated on it.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "active"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The sled has been permanently removed from
+    /// service.\n\nThis is a terminal state: once a particular sled ID is
+    /// decommissioned, it will never return to service. (The actual hardware
+    /// may be reused, but it will be treated as a brand-new sled.)",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "decommissioned"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum SledState {
+        /// The sled is currently active, and has resources allocated on it.
+        #[serde(rename = "active")]
+        Active,
+        /// The sled has been permanently removed from service.
+        ///
+        /// This is a terminal state: once a particular sled ID is
+        /// decommissioned, it will never return to service. (The actual
+        /// hardware may be reused, but it will be treated as a brand-new sled.)
+        #[serde(rename = "decommissioned")]
+        Decommissioned,
+    }
+
+    impl From<&SledState> for SledState {
+        fn from(value: &SledState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for SledState {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Active => "active".to_string(),
+                Self::Decommissioned => "decommissioned".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for SledState {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "active" => Ok(Self::Active),
+                "decommissioned" => Ok(Self::Decommissioned),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for SledState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for SledState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for SledState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -17233,6 +19246,346 @@ pub mod types {
         }
     }
 
+    /// A table represents one or more timeseries with the same schema.
+    ///
+    /// A table is the result of an OxQL query. It contains a name, usually the
+    /// name of the timeseries schema from which the data is derived, and any
+    /// number of timeseries, which contain the actual data.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A table represents one or more timeseries with the same schema.\n\nA table is the result of an OxQL query. It contains a name, usually the name of the timeseries schema from which the data is derived, and any number of timeseries, which contain the actual data.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "name",
+    ///    "timeseries"
+    ///  ],
+    ///  "properties": {
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "timeseries": {
+    ///      "type": "object",
+    ///      "additionalProperties": {
+    ///        "$ref": "#/components/schemas/Timeseries"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Table {
+        pub name: String,
+        pub timeseries: std::collections::HashMap<String, Timeseries>,
+    }
+
+    impl From<&Table> for Table {
+        fn from(value: &Table) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Table {
+        pub fn builder() -> builder::Table {
+            Default::default()
+        }
+    }
+
+    /// A timeseries contains a timestamped set of values from one source.
+    ///
+    /// This includes the typed key-value pairs that uniquely identify it, and
+    /// the set of timestamps and data values from it.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A timeseries contains a timestamped set of values from
+    /// one source.\n\nThis includes the typed key-value pairs that uniquely
+    /// identify it, and the set of timestamps and data values from it.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "fields",
+    ///    "points"
+    ///  ],
+    ///  "properties": {
+    ///    "fields": {
+    ///      "type": "object",
+    ///      "additionalProperties": {
+    ///        "$ref": "#/components/schemas/FieldValue"
+    ///      }
+    ///    },
+    ///    "points": {
+    ///      "$ref": "#/components/schemas/Points"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Timeseries {
+        pub fields: std::collections::HashMap<String, FieldValue>,
+        pub points: Points,
+    }
+
+    impl From<&Timeseries> for Timeseries {
+        fn from(value: &Timeseries) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Timeseries {
+        pub fn builder() -> builder::Timeseries {
+            Default::default()
+        }
+    }
+
+    /// Names are constructed by concatenating the target and metric names with
+    /// ':'. Target and metric names must be lowercase alphanumeric characters
+    /// with '_' separating words.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "title": "The name of a timeseries",
+    ///  "description": "Names are constructed by concatenating the target and
+    /// metric names with ':'. Target and metric names must be lowercase
+    /// alphanumeric characters with '_' separating words.",
+    ///  "type": "string",
+    ///  "pattern":
+    /// "^(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*):(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*
+    /// )$"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, schemars :: JsonSchema,
+    )]
+    pub struct TimeseriesName(String);
+    impl std::ops::Deref for TimeseriesName {
+        type Target = String;
+        fn deref(&self) -> &String {
+            &self.0
+        }
+    }
+
+    impl From<TimeseriesName> for String {
+        fn from(value: TimeseriesName) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&TimeseriesName> for TimeseriesName {
+        fn from(value: &TimeseriesName) -> Self {
+            value.clone()
+        }
+    }
+
+    impl std::str::FromStr for TimeseriesName {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            if regress::Regex::new(
+                "^(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*):(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*)$",
+            )
+            .unwrap()
+            .find(value)
+            .is_none()
+            {
+                return Err("doesn't match pattern \
+                            \"^(([a-z]+[a-z0-9]*)(_([a-z0-9]+))*):(([a-z]+[a-z0-9]*\
+                            )(_([a-z0-9]+))*)$\""
+                    .into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for TimeseriesName {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for TimeseriesName {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for TimeseriesName {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> serde::Deserialize<'de> for TimeseriesName {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+        {
+            String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| {
+                    <D::Error as serde::de::Error>::custom(e.to_string())
+                })
+        }
+    }
+
+    /// TimeseriesQuery
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "query"
+    ///  ],
+    ///  "properties": {
+    ///    "query": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct TimeseriesQuery {
+        pub query: String,
+    }
+
+    impl From<&TimeseriesQuery> for TimeseriesQuery {
+        fn from(value: &TimeseriesQuery) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TimeseriesQuery {
+        pub fn builder() -> builder::TimeseriesQuery {
+            Default::default()
+        }
+    }
+
+    /// The schema for a timeseries.
+    ///
+    /// This includes the name of the timeseries, as well as the datum type of
+    /// its metric and the schema for each field.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The schema for a timeseries.\n\nThis includes the name
+    /// of the timeseries, as well as the datum type of its metric and the
+    /// schema for each field.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "created",
+    ///    "datum_type",
+    ///    "field_schema",
+    ///    "timeseries_name"
+    ///  ],
+    ///  "properties": {
+    ///    "created": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "datum_type": {
+    ///      "$ref": "#/components/schemas/DatumType"
+    ///    },
+    ///    "field_schema": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/FieldSchema"
+    ///      },
+    ///      "uniqueItems": true
+    ///    },
+    ///    "timeseries_name": {
+    ///      "$ref": "#/components/schemas/TimeseriesName"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct TimeseriesSchema {
+        pub created: chrono::DateTime<chrono::offset::Utc>,
+        pub datum_type: DatumType,
+        pub field_schema: Vec<FieldSchema>,
+        pub timeseries_name: TimeseriesName,
+    }
+
+    impl From<&TimeseriesSchema> for TimeseriesSchema {
+        fn from(value: &TimeseriesSchema) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TimeseriesSchema {
+        pub fn builder() -> builder::TimeseriesSchema {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/TimeseriesSchema"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct TimeseriesSchemaResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<TimeseriesSchema>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&TimeseriesSchemaResultsPage> for TimeseriesSchemaResultsPage {
+        fn from(value: &TimeseriesSchemaResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TimeseriesSchemaResultsPage {
+        pub fn builder() -> builder::TimeseriesSchemaResultsPage {
+            Default::default()
+        }
+    }
+
     /// A sled that has not been added to an initialized rack yet
     ///
     /// <details><summary>JSON schema</summary>
@@ -17927,6 +20280,270 @@ pub mod types {
 
     impl Utilization {
         pub fn builder() -> builder::Utilization {
+            Default::default()
+        }
+    }
+
+    /// List of data values for one timeseries.
+    ///
+    /// Each element is an option, where `None` represents a missing sample.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "List of data values for one timeseries.\n\nEach element
+    /// is an option, where `None` represents a missing sample.",
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "values"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "integer"
+    ///          ]
+    ///        },
+    ///        "values": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "type": [
+    ///              "integer",
+    ///              "null"
+    ///            ],
+    ///            "format": "int64"
+    ///          }
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "values"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "double"
+    ///          ]
+    ///        },
+    ///        "values": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "type": [
+    ///              "number",
+    ///              "null"
+    ///            ],
+    ///            "format": "double"
+    ///          }
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "values"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "boolean"
+    ///          ]
+    ///        },
+    ///        "values": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "type": [
+    ///              "boolean",
+    ///              "null"
+    ///            ]
+    ///          }
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "values"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "string"
+    ///          ]
+    ///        },
+    ///        "values": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "type": [
+    ///              "string",
+    ///              "null"
+    ///            ]
+    ///          }
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "values"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "integer_distribution"
+    ///          ]
+    ///        },
+    ///        "values": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "allOf": [
+    ///              {
+    ///                "$ref": "#/components/schemas/Distributionint64"
+    ///              }
+    ///            ]
+    ///          }
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "values"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "double_distribution"
+    ///          ]
+    ///        },
+    ///        "values": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "allOf": [
+    ///              {
+    ///                "$ref": "#/components/schemas/Distributiondouble"
+    ///              }
+    ///            ]
+    ///          }
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type", content = "values")]
+    pub enum ValueArray {
+        #[serde(rename = "integer")]
+        Integer(Vec<Option<i64>>),
+        #[serde(rename = "double")]
+        Double(Vec<Option<f64>>),
+        #[serde(rename = "boolean")]
+        Boolean(Vec<Option<bool>>),
+        #[serde(rename = "string")]
+        String(Vec<Option<String>>),
+        #[serde(rename = "integer_distribution")]
+        IntegerDistribution(Vec<Distributionint64>),
+        #[serde(rename = "double_distribution")]
+        DoubleDistribution(Vec<Distributiondouble>),
+    }
+
+    impl From<&ValueArray> for ValueArray {
+        fn from(value: &ValueArray) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<Vec<Option<i64>>> for ValueArray {
+        fn from(value: Vec<Option<i64>>) -> Self {
+            Self::Integer(value)
+        }
+    }
+
+    impl From<Vec<Option<f64>>> for ValueArray {
+        fn from(value: Vec<Option<f64>>) -> Self {
+            Self::Double(value)
+        }
+    }
+
+    impl From<Vec<Option<bool>>> for ValueArray {
+        fn from(value: Vec<Option<bool>>) -> Self {
+            Self::Boolean(value)
+        }
+    }
+
+    impl From<Vec<Option<String>>> for ValueArray {
+        fn from(value: Vec<Option<String>>) -> Self {
+            Self::String(value)
+        }
+    }
+
+    impl From<Vec<Distributionint64>> for ValueArray {
+        fn from(value: Vec<Distributionint64>) -> Self {
+            Self::IntegerDistribution(value)
+        }
+    }
+
+    impl From<Vec<Distributiondouble>> for ValueArray {
+        fn from(value: Vec<Distributiondouble>) -> Self {
+            Self::DoubleDistribution(value)
+        }
+    }
+
+    /// A single list of values, for one dimension of a timeseries.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single list of values, for one dimension of a
+    /// timeseries.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "metric_type",
+    ///    "values"
+    ///  ],
+    ///  "properties": {
+    ///    "metric_type": {
+    ///      "$ref": "#/components/schemas/MetricType"
+    ///    },
+    ///    "values": {
+    ///      "$ref": "#/components/schemas/ValueArray"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Values {
+        pub metric_type: MetricType,
+        pub values: ValueArray,
+    }
+
+    impl From<&Values> for Values {
+        fn from(value: &Values) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Values {
+        pub fn builder() -> builder::Values {
             Default::default()
         }
     }
@@ -20294,6 +22911,313 @@ pub mod types {
                     part: Ok(value.part),
                     revision: Ok(value.revision),
                     serial: Ok(value.serial),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BfdSessionDisable {
+            remote: Result<std::net::IpAddr, String>,
+            switch: Result<super::Name, String>,
+        }
+
+        impl Default for BfdSessionDisable {
+            fn default() -> Self {
+                Self {
+                    remote: Err("no value supplied for remote".to_string()),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl BfdSessionDisable {
+            pub fn remote<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.remote = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for remote: {}", e));
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BfdSessionDisable> for super::BfdSessionDisable {
+            type Error = super::error::ConversionError;
+            fn try_from(value: BfdSessionDisable) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    remote: value.remote?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl From<super::BfdSessionDisable> for BfdSessionDisable {
+            fn from(value: super::BfdSessionDisable) -> Self {
+                Self {
+                    remote: Ok(value.remote),
+                    switch: Ok(value.switch),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BfdSessionEnable {
+            detection_threshold: Result<u8, String>,
+            local: Result<Option<std::net::IpAddr>, String>,
+            mode: Result<super::BfdMode, String>,
+            remote: Result<std::net::IpAddr, String>,
+            required_rx: Result<u64, String>,
+            switch: Result<super::Name, String>,
+        }
+
+        impl Default for BfdSessionEnable {
+            fn default() -> Self {
+                Self {
+                    detection_threshold: Err(
+                        "no value supplied for detection_threshold".to_string()
+                    ),
+                    local: Ok(Default::default()),
+                    mode: Err("no value supplied for mode".to_string()),
+                    remote: Err("no value supplied for remote".to_string()),
+                    required_rx: Err("no value supplied for required_rx".to_string()),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl BfdSessionEnable {
+            pub fn detection_threshold<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u8>,
+                T::Error: std::fmt::Display,
+            {
+                self.detection_threshold = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for detection_threshold: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn local<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.local = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for local: {}", e));
+                self
+            }
+            pub fn mode<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BfdMode>,
+                T::Error: std::fmt::Display,
+            {
+                self.mode = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mode: {}", e));
+                self
+            }
+            pub fn remote<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.remote = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for remote: {}", e));
+                self
+            }
+            pub fn required_rx<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.required_rx = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for required_rx: {}", e));
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BfdSessionEnable> for super::BfdSessionEnable {
+            type Error = super::error::ConversionError;
+            fn try_from(value: BfdSessionEnable) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    detection_threshold: value.detection_threshold?,
+                    local: value.local?,
+                    mode: value.mode?,
+                    remote: value.remote?,
+                    required_rx: value.required_rx?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl From<super::BfdSessionEnable> for BfdSessionEnable {
+            fn from(value: super::BfdSessionEnable) -> Self {
+                Self {
+                    detection_threshold: Ok(value.detection_threshold),
+                    local: Ok(value.local),
+                    mode: Ok(value.mode),
+                    remote: Ok(value.remote),
+                    required_rx: Ok(value.required_rx),
+                    switch: Ok(value.switch),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct BfdStatus {
+            detection_threshold: Result<u8, String>,
+            local: Result<Option<std::net::IpAddr>, String>,
+            mode: Result<super::BfdMode, String>,
+            peer: Result<std::net::IpAddr, String>,
+            required_rx: Result<u64, String>,
+            state: Result<super::BfdState, String>,
+            switch: Result<super::Name, String>,
+        }
+
+        impl Default for BfdStatus {
+            fn default() -> Self {
+                Self {
+                    detection_threshold: Err(
+                        "no value supplied for detection_threshold".to_string()
+                    ),
+                    local: Ok(Default::default()),
+                    mode: Err("no value supplied for mode".to_string()),
+                    peer: Err("no value supplied for peer".to_string()),
+                    required_rx: Err("no value supplied for required_rx".to_string()),
+                    state: Err("no value supplied for state".to_string()),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl BfdStatus {
+            pub fn detection_threshold<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u8>,
+                T::Error: std::fmt::Display,
+            {
+                self.detection_threshold = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for detection_threshold: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn local<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.local = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for local: {}", e));
+                self
+            }
+            pub fn mode<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BfdMode>,
+                T::Error: std::fmt::Display,
+            {
+                self.mode = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mode: {}", e));
+                self
+            }
+            pub fn peer<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.peer = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for peer: {}", e));
+                self
+            }
+            pub fn required_rx<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.required_rx = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for required_rx: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::BfdState>,
+                T::Error: std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<BfdStatus> for super::BfdStatus {
+            type Error = super::error::ConversionError;
+            fn try_from(value: BfdStatus) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    detection_threshold: value.detection_threshold?,
+                    local: value.local?,
+                    mode: value.mode?,
+                    peer: value.peer?,
+                    required_rx: value.required_rx?,
+                    state: value.state?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl From<super::BfdStatus> for BfdStatus {
+            fn from(value: super::BfdStatus) -> Self {
+                Self {
+                    detection_threshold: Ok(value.detection_threshold),
+                    local: Ok(value.local),
+                    mode: Ok(value.mode),
+                    peer: Ok(value.peer),
+                    required_rx: Ok(value.required_rx),
+                    state: Ok(value.state),
+                    switch: Ok(value.switch),
                 }
             }
         }
@@ -23055,6 +25979,161 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Distributiondouble {
+            bins: Result<Vec<f64>, String>,
+            counts: Result<Vec<u64>, String>,
+        }
+
+        impl Default for Distributiondouble {
+            fn default() -> Self {
+                Self {
+                    bins: Err("no value supplied for bins".to_string()),
+                    counts: Err("no value supplied for counts".to_string()),
+                }
+            }
+        }
+
+        impl Distributiondouble {
+            pub fn bins<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<f64>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bins = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
+                self
+            }
+            pub fn counts<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<u64>>,
+                T::Error: std::fmt::Display,
+            {
+                self.counts = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for counts: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Distributiondouble> for super::Distributiondouble {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Distributiondouble) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    bins: value.bins?,
+                    counts: value.counts?,
+                })
+            }
+        }
+
+        impl From<super::Distributiondouble> for Distributiondouble {
+            fn from(value: super::Distributiondouble) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    counts: Ok(value.counts),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Distributionint64 {
+            bins: Result<Vec<i64>, String>,
+            counts: Result<Vec<u64>, String>,
+        }
+
+        impl Default for Distributionint64 {
+            fn default() -> Self {
+                Self {
+                    bins: Err("no value supplied for bins".to_string()),
+                    counts: Err("no value supplied for counts".to_string()),
+                }
+            }
+        }
+
+        impl Distributionint64 {
+            pub fn bins<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<i64>>,
+                T::Error: std::fmt::Display,
+            {
+                self.bins = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for bins: {}", e));
+                self
+            }
+            pub fn counts<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<u64>>,
+                T::Error: std::fmt::Display,
+            {
+                self.counts = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for counts: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Distributionint64> for super::Distributionint64 {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Distributionint64) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    bins: value.bins?,
+                    counts: value.counts?,
+                })
+            }
+        }
+
+        impl From<super::Distributionint64> for Distributionint64 {
+            fn from(value: super::Distributionint64) -> Self {
+                Self {
+                    bins: Ok(value.bins),
+                    counts: Ok(value.counts),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct EphemeralIpCreate {
+            pool: Result<Option<super::NameOrId>, String>,
+        }
+
+        impl Default for EphemeralIpCreate {
+            fn default() -> Self {
+                Self {
+                    pool: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl EphemeralIpCreate {
+            pub fn pool<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.pool = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pool: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<EphemeralIpCreate> for super::EphemeralIpCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: EphemeralIpCreate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self { pool: value.pool? })
+            }
+        }
+
+        impl From<super::EphemeralIpCreate> for EphemeralIpCreate {
+            fn from(value: super::EphemeralIpCreate) -> Self {
+                Self {
+                    pool: Ok(value.pool),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Error {
             error_code: Result<Option<String>, String>,
             message: Result<String, String>,
@@ -23126,63 +26205,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct ExternalIp {
-            ip: Result<std::net::IpAddr, String>,
-            kind: Result<super::IpKind, String>,
-        }
-
-        impl Default for ExternalIp {
-            fn default() -> Self {
-                Self {
-                    ip: Err("no value supplied for ip".to_string()),
-                    kind: Err("no value supplied for kind".to_string()),
-                }
-            }
-        }
-
-        impl ExternalIp {
-            pub fn ip<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<std::net::IpAddr>,
-                T::Error: std::fmt::Display,
-            {
-                self.ip = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
-                self
-            }
-            pub fn kind<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::IpKind>,
-                T::Error: std::fmt::Display,
-            {
-                self.kind = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<ExternalIp> for super::ExternalIp {
-            type Error = super::error::ConversionError;
-            fn try_from(value: ExternalIp) -> Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    ip: value.ip?,
-                    kind: value.kind?,
-                })
-            }
-        }
-
-        impl From<super::ExternalIp> for ExternalIp {
-            fn from(value: super::ExternalIp) -> Self {
-                Self {
-                    ip: Ok(value.ip),
-                    kind: Ok(value.kind),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct ExternalIpResultsPage {
             items: Result<Vec<super::ExternalIp>, String>,
             next_page: Result<Option<String>, String>,
@@ -23237,6 +26259,77 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct FieldSchema {
+            field_type: Result<super::FieldType, String>,
+            name: Result<String, String>,
+            source: Result<super::FieldSource, String>,
+        }
+
+        impl Default for FieldSchema {
+            fn default() -> Self {
+                Self {
+                    field_type: Err("no value supplied for field_type".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    source: Err("no value supplied for source".to_string()),
+                }
+            }
+        }
+
+        impl FieldSchema {
+            pub fn field_type<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::FieldType>,
+                T::Error: std::fmt::Display,
+            {
+                self.field_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for field_type: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn source<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::FieldSource>,
+                T::Error: std::fmt::Display,
+            {
+                self.source = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for source: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<FieldSchema> for super::FieldSchema {
+            type Error = super::error::ConversionError;
+            fn try_from(value: FieldSchema) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    field_type: value.field_type?,
+                    name: value.name?,
+                    source: value.source?,
+                })
+            }
+        }
+
+        impl From<super::FieldSchema> for FieldSchema {
+            fn from(value: super::FieldSchema) -> Self {
+                Self {
+                    field_type: Ok(value.field_type),
+                    name: Ok(value.name),
+                    source: Ok(value.source),
                 }
             }
         }
@@ -23545,9 +26638,66 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct FloatingIpAttach {
+            kind: Result<super::FloatingIpParentKind, String>,
+            parent: Result<super::NameOrId, String>,
+        }
+
+        impl Default for FloatingIpAttach {
+            fn default() -> Self {
+                Self {
+                    kind: Err("no value supplied for kind".to_string()),
+                    parent: Err("no value supplied for parent".to_string()),
+                }
+            }
+        }
+
+        impl FloatingIpAttach {
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::FloatingIpParentKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn parent<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.parent = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for parent: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<FloatingIpAttach> for super::FloatingIpAttach {
+            type Error = super::error::ConversionError;
+            fn try_from(value: FloatingIpAttach) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    kind: value.kind?,
+                    parent: value.parent?,
+                })
+            }
+        }
+
+        impl From<super::FloatingIpAttach> for FloatingIpAttach {
+            fn from(value: super::FloatingIpAttach) -> Self {
+                Self {
+                    kind: Ok(value.kind),
+                    parent: Ok(value.parent),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct FloatingIpCreate {
-            address: Result<Option<std::net::IpAddr>, String>,
             description: Result<String, String>,
+            ip: Result<Option<std::net::IpAddr>, String>,
             name: Result<super::Name, String>,
             pool: Result<Option<super::NameOrId>, String>,
         }
@@ -23555,8 +26705,8 @@ pub mod types {
         impl Default for FloatingIpCreate {
             fn default() -> Self {
                 Self {
-                    address: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
+                    ip: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     pool: Ok(Default::default()),
                 }
@@ -23564,16 +26714,6 @@ pub mod types {
         }
 
         impl FloatingIpCreate {
-            pub fn address<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<Option<std::net::IpAddr>>,
-                T::Error: std::fmt::Display,
-            {
-                self.address = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for address: {}", e));
-                self
-            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -23582,6 +26722,16 @@ pub mod types {
                 self.description = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<std::net::IpAddr>>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -23610,8 +26760,8 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: FloatingIpCreate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
-                    address: value.address?,
                     description: value.description?,
+                    ip: value.ip?,
                     name: value.name?,
                     pool: value.pool?,
                 })
@@ -23621,8 +26771,8 @@ pub mod types {
         impl From<super::FloatingIpCreate> for FloatingIpCreate {
             fn from(value: super::FloatingIpCreate) -> Self {
                 Self {
-                    address: Ok(value.address),
                     description: Ok(value.description),
+                    ip: Ok(value.ip),
                     name: Ok(value.name),
                     pool: Ok(value.pool),
                 }
@@ -23684,6 +26834,63 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct FloatingIpUpdate {
+            description: Result<Option<String>, String>,
+            name: Result<Option<super::Name>, String>,
+        }
+
+        impl Default for FloatingIpUpdate {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    name: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl FloatingIpUpdate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Name>>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<FloatingIpUpdate> for super::FloatingIpUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: FloatingIpUpdate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    name: value.name?,
+                })
+            }
+        }
+
+        impl From<super::FloatingIpUpdate> for FloatingIpUpdate {
+            fn from(value: super::FloatingIpUpdate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    name: Ok(value.name),
                 }
             }
         }
@@ -25294,11 +28501,12 @@ pub mod types {
             description: Result<String, String>,
             disks: Result<Vec<super::InstanceDiskAttachment>, String>,
             external_ips: Result<Vec<super::ExternalIpCreate>, String>,
-            hostname: Result<String, String>,
+            hostname: Result<super::Hostname, String>,
             memory: Result<super::ByteCount, String>,
             name: Result<super::Name, String>,
             ncpus: Result<super::InstanceCpuCount, String>,
             network_interfaces: Result<super::InstanceNetworkInterfaceAttachment, String>,
+            ssh_public_keys: Result<Option<Vec<super::NameOrId>>, String>,
             start: Result<bool, String>,
             user_data: Result<String, String>,
         }
@@ -25314,6 +28522,7 @@ pub mod types {
                     name: Err("no value supplied for name".to_string()),
                     ncpus: Err("no value supplied for ncpus".to_string()),
                     network_interfaces: Ok(super::defaults::instance_create_network_interfaces()),
+                    ssh_public_keys: Ok(Default::default()),
                     start: Ok(super::defaults::default_bool::<true>()),
                     user_data: Ok(Default::default()),
                 }
@@ -25353,7 +28562,7 @@ pub mod types {
             }
             pub fn hostname<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<String>,
+                T: std::convert::TryInto<super::Hostname>,
                 T::Error: std::fmt::Display,
             {
                 self.hostname = value
@@ -25404,6 +28613,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn ssh_public_keys<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<Vec<super::NameOrId>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.ssh_public_keys = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for ssh_public_keys: {}", e)
+                });
+                self
+            }
             pub fn start<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<bool>,
@@ -25438,6 +28657,7 @@ pub mod types {
                     name: value.name?,
                     ncpus: value.ncpus?,
                     network_interfaces: value.network_interfaces?,
+                    ssh_public_keys: value.ssh_public_keys?,
                     start: value.start?,
                     user_data: value.user_data?,
                 })
@@ -25455,6 +28675,7 @@ pub mod types {
                     name: Ok(value.name),
                     ncpus: Ok(value.ncpus),
                     network_interfaces: Ok(value.network_interfaces),
+                    ssh_public_keys: Ok(value.ssh_public_keys),
                     start: Ok(value.start),
                     user_data: Ok(value.user_data),
                 }
@@ -26204,6 +29425,63 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct IpPoolLinkSilo {
+            is_default: Result<bool, String>,
+            silo: Result<super::NameOrId, String>,
+        }
+
+        impl Default for IpPoolLinkSilo {
+            fn default() -> Self {
+                Self {
+                    is_default: Err("no value supplied for is_default".to_string()),
+                    silo: Err("no value supplied for silo".to_string()),
+                }
+            }
+        }
+
+        impl IpPoolLinkSilo {
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
+                self
+            }
+            pub fn silo<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NameOrId>,
+                T::Error: std::fmt::Display,
+            {
+                self.silo = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for silo: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<IpPoolLinkSilo> for super::IpPoolLinkSilo {
+            type Error = super::error::ConversionError;
+            fn try_from(value: IpPoolLinkSilo) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    is_default: value.is_default?,
+                    silo: value.silo?,
+                })
+            }
+        }
+
+        impl From<super::IpPoolLinkSilo> for IpPoolLinkSilo {
+            fn from(value: super::IpPoolLinkSilo) -> Self {
+                Self {
+                    is_default: Ok(value.is_default),
+                    silo: Ok(value.silo),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct IpPoolRange {
             id: Result<uuid::Uuid, String>,
             ip_pool_id: Result<uuid::Uuid, String>,
@@ -26405,13 +29683,13 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct IpPoolSilo {
+        pub struct IpPoolSiloLink {
             ip_pool_id: Result<uuid::Uuid, String>,
             is_default: Result<bool, String>,
             silo_id: Result<uuid::Uuid, String>,
         }
 
-        impl Default for IpPoolSilo {
+        impl Default for IpPoolSiloLink {
             fn default() -> Self {
                 Self {
                     ip_pool_id: Err("no value supplied for ip_pool_id".to_string()),
@@ -26421,7 +29699,7 @@ pub mod types {
             }
         }
 
-        impl IpPoolSilo {
+        impl IpPoolSiloLink {
             pub fn ip_pool_id<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<uuid::Uuid>,
@@ -26454,9 +29732,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolSilo> for super::IpPoolSilo {
+        impl std::convert::TryFrom<IpPoolSiloLink> for super::IpPoolSiloLink {
             type Error = super::error::ConversionError;
-            fn try_from(value: IpPoolSilo) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: IpPoolSiloLink) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     ip_pool_id: value.ip_pool_id?,
                     is_default: value.is_default?,
@@ -26465,8 +29743,8 @@ pub mod types {
             }
         }
 
-        impl From<super::IpPoolSilo> for IpPoolSilo {
-            fn from(value: super::IpPoolSilo) -> Self {
+        impl From<super::IpPoolSiloLink> for IpPoolSiloLink {
+            fn from(value: super::IpPoolSiloLink) -> Self {
                 Self {
                     ip_pool_id: Ok(value.ip_pool_id),
                     is_default: Ok(value.is_default),
@@ -26476,69 +29754,12 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct IpPoolSiloLink {
-            is_default: Result<bool, String>,
-            silo: Result<super::NameOrId, String>,
-        }
-
-        impl Default for IpPoolSiloLink {
-            fn default() -> Self {
-                Self {
-                    is_default: Err("no value supplied for is_default".to_string()),
-                    silo: Err("no value supplied for silo".to_string()),
-                }
-            }
-        }
-
-        impl IpPoolSiloLink {
-            pub fn is_default<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<bool>,
-                T::Error: std::fmt::Display,
-            {
-                self.is_default = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
-                self
-            }
-            pub fn silo<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::NameOrId>,
-                T::Error: std::fmt::Display,
-            {
-                self.silo = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for silo: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<IpPoolSiloLink> for super::IpPoolSiloLink {
-            type Error = super::error::ConversionError;
-            fn try_from(value: IpPoolSiloLink) -> Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    is_default: value.is_default?,
-                    silo: value.silo?,
-                })
-            }
-        }
-
-        impl From<super::IpPoolSiloLink> for IpPoolSiloLink {
-            fn from(value: super::IpPoolSiloLink) -> Self {
-                Self {
-                    is_default: Ok(value.is_default),
-                    silo: Ok(value.silo),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct IpPoolSiloResultsPage {
-            items: Result<Vec<super::IpPoolSilo>, String>,
+        pub struct IpPoolSiloLinkResultsPage {
+            items: Result<Vec<super::IpPoolSiloLink>, String>,
             next_page: Result<Option<String>, String>,
         }
 
-        impl Default for IpPoolSiloResultsPage {
+        impl Default for IpPoolSiloLinkResultsPage {
             fn default() -> Self {
                 Self {
                     items: Err("no value supplied for items".to_string()),
@@ -26547,10 +29768,10 @@ pub mod types {
             }
         }
 
-        impl IpPoolSiloResultsPage {
+        impl IpPoolSiloLinkResultsPage {
             pub fn items<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::IpPoolSilo>>,
+                T: std::convert::TryInto<Vec<super::IpPoolSiloLink>>,
                 T::Error: std::fmt::Display,
             {
                 self.items = value
@@ -26570,10 +29791,10 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<IpPoolSiloResultsPage> for super::IpPoolSiloResultsPage {
+        impl std::convert::TryFrom<IpPoolSiloLinkResultsPage> for super::IpPoolSiloLinkResultsPage {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: IpPoolSiloResultsPage,
+                value: IpPoolSiloLinkResultsPage,
             ) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     items: value.items?,
@@ -26582,8 +29803,8 @@ pub mod types {
             }
         }
 
-        impl From<super::IpPoolSiloResultsPage> for IpPoolSiloResultsPage {
-            fn from(value: super::IpPoolSiloResultsPage) -> Self {
+        impl From<super::IpPoolSiloLinkResultsPage> for IpPoolSiloLinkResultsPage {
+            fn from(value: super::IpPoolSiloLinkResultsPage) -> Self {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
@@ -27724,6 +30945,77 @@ pub mod types {
             fn from(value: super::Ping) -> Self {
                 Self {
                     status: Ok(value.status),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Points {
+            start_times: Result<Option<Vec<chrono::DateTime<chrono::offset::Utc>>>, String>,
+            timestamps: Result<Vec<chrono::DateTime<chrono::offset::Utc>>, String>,
+            values: Result<Vec<super::Values>, String>,
+        }
+
+        impl Default for Points {
+            fn default() -> Self {
+                Self {
+                    start_times: Ok(Default::default()),
+                    timestamps: Err("no value supplied for timestamps".to_string()),
+                    values: Err("no value supplied for values".to_string()),
+                }
+            }
+        }
+
+        impl Points {
+            pub fn start_times<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<Vec<chrono::DateTime<chrono::offset::Utc>>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.start_times = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for start_times: {}", e));
+                self
+            }
+            pub fn timestamps<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<chrono::DateTime<chrono::offset::Utc>>>,
+                T::Error: std::fmt::Display,
+            {
+                self.timestamps = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for timestamps: {}", e));
+                self
+            }
+            pub fn values<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::Values>>,
+                T::Error: std::fmt::Display,
+            {
+                self.values = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for values: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Points> for super::Points {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Points) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    start_times: value.start_times?,
+                    timestamps: value.timestamps?,
+                    values: value.values?,
+                })
+            }
+        }
+
+        impl From<super::Points> for Points {
+            fn from(value: super::Points) -> Self {
+                Self {
+                    start_times: Ok(value.start_times),
+                    timestamps: Ok(value.timestamps),
+                    values: Ok(value.values),
                 }
             }
         }
@@ -29161,6 +32453,178 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SiloIpPool {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            is_default: Result<bool, String>,
+            name: Result<super::Name, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for SiloIpPool {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    is_default: Err("no value supplied for is_default".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl SiloIpPool {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn is_default<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.is_default = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for is_default: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SiloIpPool> for super::SiloIpPool {
+            type Error = super::error::ConversionError;
+            fn try_from(value: SiloIpPool) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    is_default: value.is_default?,
+                    name: value.name?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::SiloIpPool> for SiloIpPool {
+            fn from(value: super::SiloIpPool) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    is_default: Ok(value.is_default),
+                    name: Ok(value.name),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SiloIpPoolResultsPage {
+            items: Result<Vec<super::SiloIpPool>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for SiloIpPoolResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl SiloIpPoolResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SiloIpPool>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SiloIpPoolResultsPage> for super::SiloIpPoolResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SiloIpPoolResultsPage,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::SiloIpPoolResultsPage> for SiloIpPoolResultsPage {
+            fn from(value: super::SiloIpPoolResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SiloQuotas {
             cpus: Result<i64, String>,
             memory: Result<super::ByteCount, String>,
@@ -29770,8 +33234,9 @@ pub mod types {
         pub struct Sled {
             baseboard: Result<super::Baseboard, String>,
             id: Result<uuid::Uuid, String>,
-            provision_state: Result<super::SledProvisionState, String>,
+            policy: Result<super::SledPolicy, String>,
             rack_id: Result<uuid::Uuid, String>,
+            state: Result<super::SledState, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             usable_hardware_threads: Result<u32, String>,
@@ -29783,8 +33248,9 @@ pub mod types {
                 Self {
                     baseboard: Err("no value supplied for baseboard".to_string()),
                     id: Err("no value supplied for id".to_string()),
-                    provision_state: Err("no value supplied for provision_state".to_string()),
+                    policy: Err("no value supplied for policy".to_string()),
                     rack_id: Err("no value supplied for rack_id".to_string()),
+                    state: Err("no value supplied for state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                     usable_hardware_threads: Err(
@@ -29818,14 +33284,14 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for id: {}", e));
                 self
             }
-            pub fn provision_state<T>(mut self, value: T) -> Self
+            pub fn policy<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledPolicy>,
                 T::Error: std::fmt::Display,
             {
-                self.provision_state = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for provision_state: {}", e)
-                });
+                self.policy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
                 self
             }
             pub fn rack_id<T>(mut self, value: T) -> Self
@@ -29836,6 +33302,16 @@ pub mod types {
                 self.rack_id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for rack_id: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SledState>,
+                T::Error: std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -29892,8 +33368,9 @@ pub mod types {
                 Ok(Self {
                     baseboard: value.baseboard?,
                     id: value.id?,
-                    provision_state: value.provision_state?,
+                    policy: value.policy?,
                     rack_id: value.rack_id?,
+                    state: value.state?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                     usable_hardware_threads: value.usable_hardware_threads?,
@@ -29907,8 +33384,9 @@ pub mod types {
                 Self {
                     baseboard: Ok(value.baseboard),
                     id: Ok(value.id),
-                    provision_state: Ok(value.provision_state),
+                    policy: Ok(value.policy),
                     rack_id: Ok(value.rack_id),
+                    state: Ok(value.state),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                     usable_hardware_threads: Ok(value.usable_hardware_threads),
@@ -30160,11 +33638,11 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SledProvisionStateParams {
-            state: Result<super::SledProvisionState, String>,
+        pub struct SledProvisionPolicyParams {
+            state: Result<super::SledProvisionPolicy, String>,
         }
 
-        impl Default for SledProvisionStateParams {
+        impl Default for SledProvisionPolicyParams {
             fn default() -> Self {
                 Self {
                     state: Err("no value supplied for state".to_string()),
@@ -30172,10 +33650,10 @@ pub mod types {
             }
         }
 
-        impl SledProvisionStateParams {
+        impl SledProvisionPolicyParams {
             pub fn state<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledProvisionPolicy>,
                 T::Error: std::fmt::Display,
             {
                 self.state = value
@@ -30185,10 +33663,10 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledProvisionStateParams> for super::SledProvisionStateParams {
+        impl std::convert::TryFrom<SledProvisionPolicyParams> for super::SledProvisionPolicyParams {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: SledProvisionStateParams,
+                value: SledProvisionPolicyParams,
             ) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     state: value.state?,
@@ -30196,8 +33674,8 @@ pub mod types {
             }
         }
 
-        impl From<super::SledProvisionStateParams> for SledProvisionStateParams {
-            fn from(value: super::SledProvisionStateParams) -> Self {
+        impl From<super::SledProvisionPolicyParams> for SledProvisionPolicyParams {
+            fn from(value: super::SledProvisionPolicyParams) -> Self {
                 Self {
                     state: Ok(value.state),
                 }
@@ -30205,12 +33683,12 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SledProvisionStateResponse {
-            new_state: Result<super::SledProvisionState, String>,
-            old_state: Result<super::SledProvisionState, String>,
+        pub struct SledProvisionPolicyResponse {
+            new_state: Result<super::SledProvisionPolicy, String>,
+            old_state: Result<super::SledProvisionPolicy, String>,
         }
 
-        impl Default for SledProvisionStateResponse {
+        impl Default for SledProvisionPolicyResponse {
             fn default() -> Self {
                 Self {
                     new_state: Err("no value supplied for new_state".to_string()),
@@ -30219,10 +33697,10 @@ pub mod types {
             }
         }
 
-        impl SledProvisionStateResponse {
+        impl SledProvisionPolicyResponse {
             pub fn new_state<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledProvisionPolicy>,
                 T::Error: std::fmt::Display,
             {
                 self.new_state = value
@@ -30232,7 +33710,7 @@ pub mod types {
             }
             pub fn old_state<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::SledProvisionState>,
+                T: std::convert::TryInto<super::SledProvisionPolicy>,
                 T::Error: std::fmt::Display,
             {
                 self.old_state = value
@@ -30242,10 +33720,10 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<SledProvisionStateResponse> for super::SledProvisionStateResponse {
+        impl std::convert::TryFrom<SledProvisionPolicyResponse> for super::SledProvisionPolicyResponse {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: SledProvisionStateResponse,
+                value: SledProvisionPolicyResponse,
             ) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     new_state: value.new_state?,
@@ -30254,8 +33732,8 @@ pub mod types {
             }
         }
 
-        impl From<super::SledProvisionStateResponse> for SledProvisionStateResponse {
-            fn from(value: super::SledProvisionStateResponse) -> Self {
+        impl From<super::SledProvisionPolicyResponse> for SledProvisionPolicyResponse {
+            fn from(value: super::SledProvisionPolicyResponse) -> Self {
                 Self {
                     new_state: Ok(value.new_state),
                     old_state: Ok(value.old_state),
@@ -32497,6 +35975,307 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Table {
+            name: Result<String, String>,
+            timeseries: Result<std::collections::HashMap<String, super::Timeseries>, String>,
+        }
+
+        impl Default for Table {
+            fn default() -> Self {
+                Self {
+                    name: Err("no value supplied for name".to_string()),
+                    timeseries: Err("no value supplied for timeseries".to_string()),
+                }
+            }
+        }
+
+        impl Table {
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn timeseries<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::collections::HashMap<String, super::Timeseries>>,
+                T::Error: std::fmt::Display,
+            {
+                self.timeseries = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for timeseries: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Table> for super::Table {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Table) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    name: value.name?,
+                    timeseries: value.timeseries?,
+                })
+            }
+        }
+
+        impl From<super::Table> for Table {
+            fn from(value: super::Table) -> Self {
+                Self {
+                    name: Ok(value.name),
+                    timeseries: Ok(value.timeseries),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Timeseries {
+            fields: Result<std::collections::HashMap<String, super::FieldValue>, String>,
+            points: Result<super::Points, String>,
+        }
+
+        impl Default for Timeseries {
+            fn default() -> Self {
+                Self {
+                    fields: Err("no value supplied for fields".to_string()),
+                    points: Err("no value supplied for points".to_string()),
+                }
+            }
+        }
+
+        impl Timeseries {
+            pub fn fields<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::collections::HashMap<String, super::FieldValue>>,
+                T::Error: std::fmt::Display,
+            {
+                self.fields = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for fields: {}", e));
+                self
+            }
+            pub fn points<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Points>,
+                T::Error: std::fmt::Display,
+            {
+                self.points = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for points: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Timeseries> for super::Timeseries {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Timeseries) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    fields: value.fields?,
+                    points: value.points?,
+                })
+            }
+        }
+
+        impl From<super::Timeseries> for Timeseries {
+            fn from(value: super::Timeseries) -> Self {
+                Self {
+                    fields: Ok(value.fields),
+                    points: Ok(value.points),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TimeseriesQuery {
+            query: Result<String, String>,
+        }
+
+        impl Default for TimeseriesQuery {
+            fn default() -> Self {
+                Self {
+                    query: Err("no value supplied for query".to_string()),
+                }
+            }
+        }
+
+        impl TimeseriesQuery {
+            pub fn query<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.query = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for query: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<TimeseriesQuery> for super::TimeseriesQuery {
+            type Error = super::error::ConversionError;
+            fn try_from(value: TimeseriesQuery) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    query: value.query?,
+                })
+            }
+        }
+
+        impl From<super::TimeseriesQuery> for TimeseriesQuery {
+            fn from(value: super::TimeseriesQuery) -> Self {
+                Self {
+                    query: Ok(value.query),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TimeseriesSchema {
+            created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            datum_type: Result<super::DatumType, String>,
+            field_schema: Result<Vec<super::FieldSchema>, String>,
+            timeseries_name: Result<super::TimeseriesName, String>,
+        }
+
+        impl Default for TimeseriesSchema {
+            fn default() -> Self {
+                Self {
+                    created: Err("no value supplied for created".to_string()),
+                    datum_type: Err("no value supplied for datum_type".to_string()),
+                    field_schema: Err("no value supplied for field_schema".to_string()),
+                    timeseries_name: Err("no value supplied for timeseries_name".to_string()),
+                }
+            }
+        }
+
+        impl TimeseriesSchema {
+            pub fn created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.created = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for created: {}", e));
+                self
+            }
+            pub fn datum_type<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::DatumType>,
+                T::Error: std::fmt::Display,
+            {
+                self.datum_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for datum_type: {}", e));
+                self
+            }
+            pub fn field_schema<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::FieldSchema>>,
+                T::Error: std::fmt::Display,
+            {
+                self.field_schema = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for field_schema: {}", e)
+                });
+                self
+            }
+            pub fn timeseries_name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::TimeseriesName>,
+                T::Error: std::fmt::Display,
+            {
+                self.timeseries_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for timeseries_name: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<TimeseriesSchema> for super::TimeseriesSchema {
+            type Error = super::error::ConversionError;
+            fn try_from(value: TimeseriesSchema) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    created: value.created?,
+                    datum_type: value.datum_type?,
+                    field_schema: value.field_schema?,
+                    timeseries_name: value.timeseries_name?,
+                })
+            }
+        }
+
+        impl From<super::TimeseriesSchema> for TimeseriesSchema {
+            fn from(value: super::TimeseriesSchema) -> Self {
+                Self {
+                    created: Ok(value.created),
+                    datum_type: Ok(value.datum_type),
+                    field_schema: Ok(value.field_schema),
+                    timeseries_name: Ok(value.timeseries_name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct TimeseriesSchemaResultsPage {
+            items: Result<Vec<super::TimeseriesSchema>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for TimeseriesSchemaResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl TimeseriesSchemaResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::TimeseriesSchema>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<TimeseriesSchemaResultsPage> for super::TimeseriesSchemaResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TimeseriesSchemaResultsPage,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::TimeseriesSchemaResultsPage> for TimeseriesSchemaResultsPage {
+            fn from(value: super::TimeseriesSchemaResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct UninitializedSled {
             baseboard: Result<super::Baseboard, String>,
             cubby: Result<u16, String>,
@@ -33138,6 +36917,63 @@ pub mod types {
                 Self {
                     capacity: Ok(value.capacity),
                     provisioned: Ok(value.provisioned),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Values {
+            metric_type: Result<super::MetricType, String>,
+            values: Result<super::ValueArray, String>,
+        }
+
+        impl Default for Values {
+            fn default() -> Self {
+                Self {
+                    metric_type: Err("no value supplied for metric_type".to_string()),
+                    values: Err("no value supplied for values".to_string()),
+                }
+            }
+        }
+
+        impl Values {
+            pub fn metric_type<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::MetricType>,
+                T::Error: std::fmt::Display,
+            {
+                self.metric_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for metric_type: {}", e));
+                self
+            }
+            pub fn values<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ValueArray>,
+                T::Error: std::fmt::Display,
+            {
+                self.values = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for values: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Values> for super::Values {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Values) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    metric_type: value.metric_type?,
+                    values: value.values?,
+                })
+            }
+        }
+
+        impl From<super::Values> for Values {
+            fn from(value: super::Values) -> Self {
+                Self {
+                    metric_type: Ok(value.metric_type),
+                    values: Ok(value.values),
                 }
             }
         }
@@ -34448,7 +38284,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 0.0.1
+/// Version: 0.0.6
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -34501,7 +38337,7 @@ impl Client {
     /// This string is pulled directly from the source OpenAPI
     /// document and may be in any format the API selects.
     pub fn api_version(&self) -> &'static str {
-        "0.0.1"
+        "0.0.6"
     }
 }
 
@@ -34543,7 +38379,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_create(&self) -> builder::DiskCreate;
-    /// Fetch a disk
+    /// Fetch disk
     ///
     /// Sends a `GET` request to `/v1/disks/{disk}`
     ///
@@ -34558,7 +38394,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_view(&self) -> builder::DiskView;
-    /// Delete a disk
+    /// Delete disk
     ///
     /// Sends a `DELETE` request to `/v1/disks/{disk}`
     ///
@@ -34573,7 +38409,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_delete(&self) -> builder::DiskDelete;
-    /// Import blocks into a disk
+    /// Import blocks into disk
     ///
     /// Sends a `POST` request to `/v1/disks/{disk}/bulk-write`
     ///
@@ -34590,7 +38426,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_bulk_write_import(&self) -> builder::DiskBulkWriteImport;
-    /// Start importing blocks into a disk
+    /// Start importing blocks into disk
     ///
     /// Start the process of importing blocks into a disk
     ///
@@ -34607,7 +38443,7 @@ pub trait ClientDisksExt {
     ///    .await;
     /// ```
     fn disk_bulk_write_import_start(&self) -> builder::DiskBulkWriteImportStart;
-    /// Stop importing blocks into a disk
+    /// Stop importing blocks into disk
     ///
     /// Stop the process of importing blocks into a disk
     ///
@@ -34731,7 +38567,7 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_list(&self) -> builder::FloatingIpList;
-    /// Create a floating IP
+    /// Create floating IP
     ///
     /// Sends a `POST` request to `/v1/floating-ips`
     ///
@@ -34746,12 +38582,12 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_create(&self) -> builder::FloatingIpCreate;
-    /// Fetch a floating IP
+    /// Fetch floating IP
     ///
     /// Sends a `GET` request to `/v1/floating-ips/{floating_ip}`
     ///
     /// Arguments:
-    /// - `floating_ip`: Name or ID of the Floating IP
+    /// - `floating_ip`: Name or ID of the floating IP
     /// - `project`: Name or ID of the project
     /// ```ignore
     /// let response = client.floating_ip_view()
@@ -34761,12 +38597,29 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_view(&self) -> builder::FloatingIpView;
-    /// Delete a floating IP
+    /// Update floating IP
+    ///
+    /// Sends a `PUT` request to `/v1/floating-ips/{floating_ip}`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the floating IP
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.floating_ip_update()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_update(&self) -> builder::FloatingIpUpdate;
+    /// Delete floating IP
     ///
     /// Sends a `DELETE` request to `/v1/floating-ips/{floating_ip}`
     ///
     /// Arguments:
-    /// - `floating_ip`: Name or ID of the Floating IP
+    /// - `floating_ip`: Name or ID of the floating IP
     /// - `project`: Name or ID of the project
     /// ```ignore
     /// let response = client.floating_ip_delete()
@@ -34776,6 +38629,40 @@ pub trait ClientFloatingIpsExt {
     ///    .await;
     /// ```
     fn floating_ip_delete(&self) -> builder::FloatingIpDelete;
+    /// Attach floating IP
+    ///
+    /// Attach floating IP to an instance or other resource.
+    ///
+    /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/attach`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the floating IP
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.floating_ip_attach()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_attach(&self) -> builder::FloatingIpAttach;
+    /// Detach floating IP
+    ///
+    /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/detach`
+    ///
+    /// Arguments:
+    /// - `floating_ip`: Name or ID of the floating IP
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.floating_ip_detach()
+    ///    .floating_ip(floating_ip)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn floating_ip_detach(&self) -> builder::FloatingIpDetach;
 }
 
 impl ClientFloatingIpsExt for Client {
@@ -34791,8 +38678,20 @@ impl ClientFloatingIpsExt for Client {
         builder::FloatingIpView::new(self)
     }
 
+    fn floating_ip_update(&self) -> builder::FloatingIpUpdate {
+        builder::FloatingIpUpdate::new(self)
+    }
+
     fn floating_ip_delete(&self) -> builder::FloatingIpDelete {
         builder::FloatingIpDelete::new(self)
+    }
+
+    fn floating_ip_attach(&self) -> builder::FloatingIpAttach {
+        builder::FloatingIpAttach::new(self)
+    }
+
+    fn floating_ip_detach(&self) -> builder::FloatingIpDetach {
+        builder::FloatingIpDetach::new(self)
     }
 }
 
@@ -34900,7 +38799,7 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_list(&self) -> builder::ImageList;
-    /// Create an image
+    /// Create image
     ///
     /// Create a new image in a project.
     ///
@@ -34917,7 +38816,7 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_create(&self) -> builder::ImageCreate;
-    /// Fetch an image
+    /// Fetch image
     ///
     /// Fetch the details for a specific image in a project.
     ///
@@ -34934,7 +38833,7 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_view(&self) -> builder::ImageView;
-    /// Delete an image
+    /// Delete image
     ///
     /// Permanently delete an image from a project. This operation cannot be
     /// undone. Any instances in the project using the image will continue to
@@ -34953,9 +38852,9 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_delete(&self) -> builder::ImageDelete;
-    /// Demote a silo image
+    /// Demote silo image
     ///
-    /// Demote a silo image to be visible only to a specified project
+    /// Demote silo image to be visible only to a specified project
     ///
     /// Sends a `POST` request to `/v1/images/{image}/demote`
     ///
@@ -34970,9 +38869,9 @@ pub trait ClientImagesExt {
     ///    .await;
     /// ```
     fn image_demote(&self) -> builder::ImageDemote;
-    /// Promote a project image
+    /// Promote project image
     ///
-    /// Promote a project image to be visible to all projects in the silo
+    /// Promote project image to be visible to all projects in the silo
     ///
     /// Sends a `POST` request to `/v1/images/{image}/promote`
     ///
@@ -35038,7 +38937,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_list(&self) -> builder::InstanceList;
-    /// Create an instance
+    /// Create instance
     ///
     /// Sends a `POST` request to `/v1/instances`
     ///
@@ -35053,7 +38952,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_create(&self) -> builder::InstanceCreate;
-    /// Fetch an instance
+    /// Fetch instance
     ///
     /// Sends a `GET` request to `/v1/instances/{instance}`
     ///
@@ -35068,7 +38967,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_view(&self) -> builder::InstanceView;
-    /// Delete an instance
+    /// Delete instance
     ///
     /// Sends a `DELETE` request to `/v1/instances/{instance}`
     ///
@@ -35083,7 +38982,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_delete(&self) -> builder::InstanceDelete;
-    /// List an instance's disks
+    /// List disks for instance
     ///
     /// Sends a `GET` request to `/v1/instances/{instance}/disks`
     ///
@@ -35105,7 +39004,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_disk_list(&self) -> builder::InstanceDiskList;
-    /// Attach a disk to an instance
+    /// Attach disk to instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/disks/attach`
     ///
@@ -35122,7 +39021,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_disk_attach(&self) -> builder::InstanceDiskAttach;
-    /// Detach a disk from an instance
+    /// Detach disk from instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/disks/detach`
     ///
@@ -35154,6 +39053,40 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_external_ip_list(&self) -> builder::InstanceExternalIpList;
+    /// Allocate and attach ephemeral IP to instance
+    ///
+    /// Sends a `POST` request to
+    /// `/v1/instances/{instance}/external-ips/ephemeral`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.instance_ephemeral_ip_attach()
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_ephemeral_ip_attach(&self) -> builder::InstanceEphemeralIpAttach;
+    /// Detach and deallocate ephemeral IP from instance
+    ///
+    /// Sends a `DELETE` request to
+    /// `/v1/instances/{instance}/external-ips/ephemeral`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.instance_ephemeral_ip_detach()
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach;
     /// Migrate an instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/migrate`
@@ -35186,7 +39119,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_reboot(&self) -> builder::InstanceReboot;
-    /// Fetch an instance's serial console
+    /// Fetch instance serial console
     ///
     /// Sends a `GET` request to `/v1/instances/{instance}/serial-console`
     ///
@@ -35216,7 +39149,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_serial_console(&self) -> builder::InstanceSerialConsole;
-    /// Stream an instance's serial console
+    /// Stream instance serial console
     ///
     /// Sends a `GET` request to
     /// `/v1/instances/{instance}/serial-console/stream`
@@ -35237,7 +39170,33 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream;
-    /// Boot an instance
+    /// List SSH public keys for instance
+    ///
+    /// List SSH public keys injected via cloud-init during instance creation.
+    /// Note that this list is a snapshot in time and will not reflect updates
+    /// made after the instance is created.
+    ///
+    /// Sends a `GET` request to `/v1/instances/{instance}/ssh-public-keys`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.instance_ssh_public_key_list()
+    ///    .instance(instance)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_ssh_public_key_list(&self) -> builder::InstanceSshPublicKeyList;
+    /// Boot instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/start`
     ///
@@ -35252,7 +39211,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_start(&self) -> builder::InstanceStart;
-    /// Stop an instance
+    /// Stop instance
     ///
     /// Sends a `POST` request to `/v1/instances/{instance}/stop`
     ///
@@ -35290,7 +39249,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList;
-    /// Create a network interface
+    /// Create network interface
     ///
     /// Sends a `POST` request to `/v1/network-interfaces`
     ///
@@ -35308,7 +39267,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_create(&self) -> builder::InstanceNetworkInterfaceCreate;
-    /// Fetch a network interface
+    /// Fetch network interface
     ///
     /// Sends a `GET` request to `/v1/network-interfaces/{interface}`
     ///
@@ -35326,7 +39285,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_view(&self) -> builder::InstanceNetworkInterfaceView;
-    /// Update a network interface
+    /// Update network interface
     ///
     /// Sends a `PUT` request to `/v1/network-interfaces/{interface}`
     ///
@@ -35346,7 +39305,7 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_network_interface_update(&self) -> builder::InstanceNetworkInterfaceUpdate;
-    /// Delete a network interface
+    /// Delete network interface
     ///
     /// Note that the primary interface for an instance cannot be deleted if
     /// there are any secondary interfaces. A new primary interface must be
@@ -35404,6 +39363,14 @@ impl ClientInstancesExt for Client {
         builder::InstanceExternalIpList::new(self)
     }
 
+    fn instance_ephemeral_ip_attach(&self) -> builder::InstanceEphemeralIpAttach {
+        builder::InstanceEphemeralIpAttach::new(self)
+    }
+
+    fn instance_ephemeral_ip_detach(&self) -> builder::InstanceEphemeralIpDetach {
+        builder::InstanceEphemeralIpDetach::new(self)
+    }
+
     fn instance_migrate(&self) -> builder::InstanceMigrate {
         builder::InstanceMigrate::new(self)
     }
@@ -35418,6 +39385,10 @@ impl ClientInstancesExt for Client {
 
     fn instance_serial_console_stream(&self) -> builder::InstanceSerialConsoleStream {
         builder::InstanceSerialConsoleStream::new(self)
+    }
+
+    fn instance_ssh_public_key_list(&self) -> builder::InstanceSshPublicKeyList {
+        builder::InstanceSshPublicKeyList::new(self)
     }
 
     fn instance_start(&self) -> builder::InstanceStart {
@@ -35516,17 +39487,52 @@ pub trait ClientMetricsExt {
     ///    .await;
     /// ```
     fn silo_metric(&self) -> builder::SiloMetric;
+    /// Run a timeseries query, written OxQL
+    ///
+    /// Sends a `POST` request to `/v1/timeseries/query`
+    ///
+    /// ```ignore
+    /// let response = client.timeseries_query()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn timeseries_query(&self) -> builder::TimeseriesQuery;
+    /// List available timeseries schema
+    ///
+    /// Sends a `GET` request to `/v1/timeseries/schema`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// ```ignore
+    /// let response = client.timeseries_schema_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn timeseries_schema_list(&self) -> builder::TimeseriesSchemaList;
 }
 
 impl ClientMetricsExt for Client {
     fn silo_metric(&self) -> builder::SiloMetric {
         builder::SiloMetric::new(self)
     }
+
+    fn timeseries_query(&self) -> builder::TimeseriesQuery {
+        builder::TimeseriesQuery::new(self)
+    }
+
+    fn timeseries_schema_list(&self) -> builder::TimeseriesSchemaList {
+        builder::TimeseriesSchemaList::new(self)
+    }
 }
 
 /// System-wide IAM policy
 pub trait ClientPolicyExt {
-    /// Fetch the top-level IAM policy
+    /// Fetch top-level IAM policy
     ///
     /// Sends a `GET` request to `/v1/system/policy`
     ///
@@ -35536,7 +39542,7 @@ pub trait ClientPolicyExt {
     ///    .await;
     /// ```
     fn system_policy_view(&self) -> builder::SystemPolicyView;
-    /// Update the top-level IAM policy
+    /// Update top-level IAM policy
     ///
     /// Sends a `PUT` request to `/v1/system/policy`
     ///
@@ -35580,7 +39586,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_ip_pool_list(&self) -> builder::ProjectIpPoolList;
-    /// Fetch an IP pool
+    /// Fetch IP pool
     ///
     /// Sends a `GET` request to `/v1/ip-pools/{pool}`
     ///
@@ -35611,7 +39617,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_list(&self) -> builder::ProjectList;
-    /// Create a project
+    /// Create project
     ///
     /// Sends a `POST` request to `/v1/projects`
     ///
@@ -35622,7 +39628,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_create(&self) -> builder::ProjectCreate;
-    /// Fetch a project
+    /// Fetch project
     ///
     /// Sends a `GET` request to `/v1/projects/{project}`
     ///
@@ -35650,7 +39656,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_update(&self) -> builder::ProjectUpdate;
-    /// Delete a project
+    /// Delete project
     ///
     /// Sends a `DELETE` request to `/v1/projects/{project}`
     ///
@@ -35663,7 +39669,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_delete(&self) -> builder::ProjectDelete;
-    /// Fetch a project's IAM policy
+    /// Fetch project's IAM policy
     ///
     /// Sends a `GET` request to `/v1/projects/{project}/policy`
     ///
@@ -35676,7 +39682,7 @@ pub trait ClientProjectsExt {
     ///    .await;
     /// ```
     fn project_policy_view(&self) -> builder::ProjectPolicyView;
-    /// Update a project's IAM policy
+    /// Update project's IAM policy
     ///
     /// Sends a `PUT` request to `/v1/projects/{project}/policy`
     ///
@@ -35750,7 +39756,7 @@ pub trait ClientRolesExt {
     ///    .await;
     /// ```
     fn role_list(&self) -> builder::RoleList;
-    /// Fetch a built-in role
+    /// Fetch built-in role
     ///
     /// Sends a `GET` request to `/v1/system/roles/{role_name}`
     ///
@@ -35777,7 +39783,7 @@ impl ClientRolesExt for Client {
 
 /// Information pertaining to the current session.
 pub trait ClientSessionExt {
-    /// Fetch the user associated with the current session
+    /// Fetch user for current session
     ///
     /// Sends a `GET` request to `/v1/me`
     ///
@@ -35787,7 +39793,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_view(&self) -> builder::CurrentUserView;
-    /// Fetch the silo groups the current user belongs to
+    /// Fetch current user's groups
     ///
     /// Sends a `GET` request to `/v1/me/groups`
     ///
@@ -35825,7 +39831,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_ssh_key_list(&self) -> builder::CurrentUserSshKeyList;
-    /// Create an SSH public key
+    /// Create SSH public key
     ///
     /// Create an SSH public key for the currently authenticated user.
     ///
@@ -35838,10 +39844,9 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_ssh_key_create(&self) -> builder::CurrentUserSshKeyCreate;
-    /// Fetch an SSH public key
+    /// Fetch SSH public key
     ///
-    /// Fetch an SSH public key associated with the currently authenticated
-    /// user.
+    /// Fetch SSH public key associated with the currently authenticated user.
     ///
     /// Sends a `GET` request to `/v1/me/ssh-keys/{ssh_key}`
     ///
@@ -35854,7 +39859,7 @@ pub trait ClientSessionExt {
     ///    .await;
     /// ```
     fn current_user_ssh_key_view(&self) -> builder::CurrentUserSshKeyView;
-    /// Delete an SSH public key
+    /// Delete SSH public key
     ///
     /// Delete an SSH public key associated with the currently authenticated
     /// user.
@@ -35922,7 +39927,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn certificate_list(&self) -> builder::CertificateList;
-    /// Create a new system-wide x.509 certificate
+    /// Create new system-wide x.509 certificate
     ///
     /// This certificate is automatically used by the Oxide Control plane to
     /// serve external connections.
@@ -35936,7 +39941,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn certificate_create(&self) -> builder::CertificateCreate;
-    /// Fetch a certificate
+    /// Fetch certificate
     ///
     /// Returns the details of a specific certificate
     ///
@@ -35949,7 +39954,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn certificate_view(&self) -> builder::CertificateView;
-    /// Delete a certificate
+    /// Delete certificate
     ///
     /// Permanently delete a certificate. This operation cannot be undone.
     ///
@@ -35993,7 +39998,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn group_view(&self) -> builder::GroupView;
-    /// Fetch the current silo's IAM policy
+    /// Fetch current silo's IAM policy
     ///
     /// Sends a `GET` request to `/v1/policy`
     ///
@@ -36003,7 +40008,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn policy_view(&self) -> builder::PolicyView;
-    /// Update the current silo's IAM policy
+    /// Update current silo's IAM policy
     ///
     /// Sends a `PUT` request to `/v1/policy`
     ///
@@ -36034,7 +40039,7 @@ pub trait ClientSilosExt {
     ///    .await;
     /// ```
     fn user_list(&self) -> builder::UserList;
-    /// View the resource utilization of the user's current silo
+    /// Fetch resource utilization for user's current silo
     ///
     /// Sends a `GET` request to `/v1/utilization`
     ///
@@ -36110,7 +40115,7 @@ pub trait ClientSnapshotsExt {
     ///    .await;
     /// ```
     fn snapshot_list(&self) -> builder::SnapshotList;
-    /// Create a snapshot
+    /// Create snapshot
     ///
     /// Creates a point-in-time snapshot from a disk.
     ///
@@ -36127,7 +40132,7 @@ pub trait ClientSnapshotsExt {
     ///    .await;
     /// ```
     fn snapshot_create(&self) -> builder::SnapshotCreate;
-    /// Fetch a snapshot
+    /// Fetch snapshot
     ///
     /// Sends a `GET` request to `/v1/snapshots/{snapshot}`
     ///
@@ -36142,7 +40147,7 @@ pub trait ClientSnapshotsExt {
     ///    .await;
     /// ```
     fn snapshot_view(&self) -> builder::SnapshotView;
-    /// Delete a snapshot
+    /// Delete snapshot
     ///
     /// Sends a `DELETE` request to `/v1/snapshots/{snapshot}`
     ///
@@ -36217,7 +40222,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn rack_list(&self) -> builder::RackList;
-    /// Fetch a rack
+    /// Fetch rack
     ///
     /// Sends a `GET` request to `/v1/system/hardware/racks/{rack_id}`
     ///
@@ -36248,7 +40253,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_list(&self) -> builder::SledList;
-    /// Add a sled to an initialized rack
+    /// Add sled to initialized rack
     ///
     /// Sends a `POST` request to `/v1/system/hardware/sleds`
     ///
@@ -36259,7 +40264,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_add(&self) -> builder::SledAdd;
-    /// Fetch a sled
+    /// Fetch sled
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}`
     ///
@@ -36292,7 +40297,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_physical_disk_list(&self) -> builder::SledPhysicalDiskList;
-    /// List instances running on a given sled
+    /// List instances running on given sled
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds/{sled_id}/instances`
     ///
@@ -36312,23 +40317,23 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn sled_instance_list(&self) -> builder::SledInstanceList;
-    /// Set the sled's provision state
+    /// Set sled provision policy
     ///
     /// Sends a `PUT` request to
-    /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
+    /// `/v1/system/hardware/sleds/{sled_id}/provision-policy`
     ///
     /// Arguments:
     /// - `sled_id`: ID of the sled
     /// - `body`
     /// ```ignore
-    /// let response = client.sled_set_provision_state()
+    /// let response = client.sled_set_provision_policy()
     ///    .sled_id(sled_id)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn sled_set_provision_state(&self) -> builder::SledSetProvisionState;
-    /// List uninitialized sleds in a given rack
+    fn sled_set_provision_policy(&self) -> builder::SledSetProvisionPolicy;
+    /// List uninitialized sleds
     ///
     /// Sends a `GET` request to `/v1/system/hardware/sleds-uninitialized`
     ///
@@ -36423,7 +40428,7 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn switch_list(&self) -> builder::SwitchList;
-    /// Fetch a switch
+    /// Fetch switch
     ///
     /// Sends a `GET` request to `/v1/system/hardware/switches/{switch_id}`
     ///
@@ -36471,8 +40476,8 @@ impl ClientSystemHardwareExt for Client {
         builder::SledInstanceList::new(self)
     }
 
-    fn sled_set_provision_state(&self) -> builder::SledSetProvisionState {
-        builder::SledSetProvisionState::new(self)
+    fn sled_set_provision_policy(&self) -> builder::SledSetProvisionPolicy {
+        builder::SledSetProvisionPolicy::new(self)
     }
 
     fn sled_list_uninitialized(&self) -> builder::SledListUninitialized {
@@ -36558,7 +40563,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_list(&self) -> builder::IpPoolList;
-    /// Create an IP pool
+    /// Create IP pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools`
     ///
@@ -36569,7 +40574,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_create(&self) -> builder::IpPoolCreate;
-    /// Fetch an IP pool
+    /// Fetch IP pool
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}`
     ///
@@ -36582,7 +40587,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_view(&self) -> builder::IpPoolView;
-    /// Update an IP pool
+    /// Update IP pool
     ///
     /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}`
     ///
@@ -36597,7 +40602,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_update(&self) -> builder::IpPoolUpdate;
-    /// Delete an IP pool
+    /// Delete IP pool
     ///
     /// Sends a `DELETE` request to `/v1/system/ip-pools/{pool}`
     ///
@@ -36610,9 +40615,9 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_delete(&self) -> builder::IpPoolDelete;
-    /// List ranges for an IP pool
+    /// List ranges for IP pool
     ///
-    /// List ranges for an IP pool. Ranges are ordered by their first address.
+    /// Ranges are ordered by their first address.
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/ranges`
     ///
@@ -36630,7 +40635,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
-    /// Add a range to an IP pool
+    /// Add range to IP pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
     ///
@@ -36645,7 +40650,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_range_add(&self) -> builder::IpPoolRangeAdd;
-    /// Remove a range from an IP pool
+    /// Remove range from IP pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/remove`
     ///
@@ -36660,7 +40665,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_range_remove(&self) -> builder::IpPoolRangeRemove;
-    /// List an IP pool's linked silos
+    /// List IP pool's linked silos
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/silos`
     ///
@@ -36680,7 +40685,11 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_list(&self) -> builder::IpPoolSiloList;
-    /// Make an IP pool available within a silo
+    /// Link IP pool to silo
+    ///
+    /// Users in linked silos can allocate external IPs from this pool for their
+    /// instances. A silo can have at most one default pool. IPs are allocated
+    /// from the default pool when users ask for one without specifying a pool.
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/silos`
     ///
@@ -36695,10 +40704,13 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_link(&self) -> builder::IpPoolSiloLink;
-    /// Make an IP pool default or not-default for a silo
+    /// Make IP pool default for silo
     ///
-    /// When a pool is made default for a silo, any existing default will remain
-    /// linked to the silo, but will no longer be the default.
+    /// When a user asks for an IP (e.g., at instance create time) without
+    /// specifying a pool, the IP comes from the default pool if a default is
+    /// configured. When a pool is made the default for a silo, any existing
+    /// default will remain linked to the silo, but will no longer be the
+    /// default.
     ///
     /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}/silos/{silo}`
     ///
@@ -36711,7 +40723,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_update(&self) -> builder::IpPoolSiloUpdate;
-    /// Unlink an IP pool from a silo
+    /// Unlink IP pool from silo
     ///
     /// Will fail if there are any outstanding IPs allocated in the silo.
     ///
@@ -36725,7 +40737,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink;
-    /// Fetch the IP pool used for Oxide services
+    /// Fetch Oxide service IP pool
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools-service`
     ///
@@ -36735,10 +40747,9 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView;
-    /// List ranges for the IP pool used for Oxide services
+    /// List IP ranges for the Oxide service pool
     ///
-    /// List ranges for the IP pool used for Oxide services. Ranges are ordered
-    /// by their first address.
+    /// Ranges are ordered by their first address.
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools-service/ranges`
     ///
@@ -36754,7 +40765,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
-    /// Add a range to an IP pool used for Oxide services
+    /// Add IP range to Oxide service pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
     ///
@@ -36765,7 +40776,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_service_range_add(&self) -> builder::IpPoolServiceRangeAdd;
-    /// Remove a range from an IP pool used for Oxide services
+    /// Remove IP range from Oxide service pool
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/remove`
     ///
@@ -36794,7 +40805,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_list(&self) -> builder::NetworkingAddressLotList;
-    /// Create an address lot
+    /// Create address lot
     ///
     /// Sends a `POST` request to `/v1/system/networking/address-lot`
     ///
@@ -36805,7 +40816,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_create(&self) -> builder::NetworkingAddressLotCreate;
-    /// Delete an address lot
+    /// Delete address lot
     ///
     /// Sends a `DELETE` request to
     /// `/v1/system/networking/address-lot/{address_lot}`
@@ -36819,7 +40830,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_delete(&self) -> builder::NetworkingAddressLotDelete;
-    /// List the blocks in an address lot
+    /// List blocks in address lot
     ///
     /// Sends a `GET` request to
     /// `/v1/system/networking/address-lot/{address_lot}/blocks`
@@ -36840,6 +40851,38 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList;
+    /// Disable a BFD session
+    ///
+    /// Sends a `POST` request to `/v1/system/networking/bfd-disable`
+    ///
+    /// ```ignore
+    /// let response = client.networking_bfd_disable()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bfd_disable(&self) -> builder::NetworkingBfdDisable;
+    /// Enable a BFD session
+    ///
+    /// Sends a `POST` request to `/v1/system/networking/bfd-enable`
+    ///
+    /// ```ignore
+    /// let response = client.networking_bfd_enable()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bfd_enable(&self) -> builder::NetworkingBfdEnable;
+    /// Get BFD status
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/bfd-status`
+    ///
+    /// ```ignore
+    /// let response = client.networking_bfd_status()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bfd_status(&self) -> builder::NetworkingBfdStatus;
     /// List BGP configurations
     ///
     /// Sends a `GET` request to `/v1/system/networking/bgp`
@@ -36860,7 +40903,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList;
-    /// Create a new BGP configuration
+    /// Create new BGP configuration
     ///
     /// Sends a `POST` request to `/v1/system/networking/bgp`
     ///
@@ -36871,7 +40914,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_config_create(&self) -> builder::NetworkingBgpConfigCreate;
-    /// Delete a BGP configuration
+    /// Delete BGP configuration
     ///
     /// Sends a `DELETE` request to `/v1/system/networking/bgp`
     ///
@@ -36897,7 +40940,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_list(&self) -> builder::NetworkingBgpAnnounceSetList;
-    /// Create a new BGP announce set
+    /// Create new BGP announce set
     ///
     /// Sends a `POST` request to `/v1/system/networking/bgp-announce`
     ///
@@ -36908,7 +40951,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_create(&self) -> builder::NetworkingBgpAnnounceSetCreate;
-    /// Delete a BGP announce set
+    /// Delete BGP announce set
     ///
     /// Sends a `DELETE` request to `/v1/system/networking/bgp-announce`
     ///
@@ -36962,7 +41005,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_loopback_address_list(&self) -> builder::NetworkingLoopbackAddressList;
-    /// Create a loopback address
+    /// Create loopback address
     ///
     /// Sends a `POST` request to `/v1/system/networking/loopback-address`
     ///
@@ -36973,7 +41016,7 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_loopback_address_create(&self) -> builder::NetworkingLoopbackAddressCreate;
-    /// Delete a loopback address
+    /// Delete loopback address
     ///
     /// Sends a `DELETE` request to
     /// `/v1/system/networking/loopback-address/{rack_id}/{switch_location}/
@@ -37045,7 +41088,7 @@ pub trait ClientSystemNetworkingExt {
     /// ```
     fn networking_switch_port_settings_delete(&self)
         -> builder::NetworkingSwitchPortSettingsDelete;
-    /// Get information about a switch port
+    /// Get information about switch port
     ///
     /// Sends a `GET` request to
     /// `/v1/system/networking/switch-port-settings/{port}`
@@ -37143,6 +41186,18 @@ impl ClientSystemNetworkingExt for Client {
         builder::NetworkingAddressLotBlockList::new(self)
     }
 
+    fn networking_bfd_disable(&self) -> builder::NetworkingBfdDisable {
+        builder::NetworkingBfdDisable::new(self)
+    }
+
+    fn networking_bfd_enable(&self) -> builder::NetworkingBfdEnable {
+        builder::NetworkingBfdEnable::new(self)
+    }
+
+    fn networking_bfd_status(&self) -> builder::NetworkingBfdStatus {
+        builder::NetworkingBfdStatus::new(self)
+    }
+
     fn networking_bgp_config_list(&self) -> builder::NetworkingBgpConfigList {
         builder::NetworkingBgpConfigList::new(self)
     }
@@ -37230,7 +41285,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_identity_provider_list(&self) -> builder::SiloIdentityProviderList;
-    /// Create a user
+    /// Create user
     ///
     /// Users can only be created in Silos with `provision_type` == `Fixed`.
     /// Otherwise, Silo users are just-in-time (JIT) provisioned when a user
@@ -37249,7 +41304,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn local_idp_user_create(&self) -> builder::LocalIdpUserCreate;
-    /// Delete a user
+    /// Delete user
     ///
     /// Sends a `DELETE` request to
     /// `/v1/system/identity-providers/local/users/{user_id}`
@@ -37265,7 +41320,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn local_idp_user_delete(&self) -> builder::LocalIdpUserDelete;
-    /// Set or invalidate a user's password
+    /// Set or invalidate user's password
     ///
     /// Passwords can only be updated for users in Silos with identity mode
     /// `LocalOnly`.
@@ -37286,7 +41341,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn local_idp_user_set_password(&self) -> builder::LocalIdpUserSetPassword;
-    /// Create a SAML IdP
+    /// Create SAML IdP
     ///
     /// Sends a `POST` request to `/v1/system/identity-providers/saml`
     ///
@@ -37301,7 +41356,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn saml_identity_provider_create(&self) -> builder::SamlIdentityProviderCreate;
-    /// Fetch a SAML IdP
+    /// Fetch SAML IdP
     ///
     /// Sends a `GET` request to `/v1/system/identity-providers/saml/{provider}`
     ///
@@ -37365,9 +41420,9 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_create(&self) -> builder::SiloCreate;
-    /// Fetch a silo
+    /// Fetch silo
     ///
-    /// Fetch a silo by name.
+    /// Fetch silo by name or ID.
     ///
     /// Sends a `GET` request to `/v1/system/silos/{silo}`
     ///
@@ -37382,7 +41437,7 @@ pub trait ClientSystemSilosExt {
     fn silo_view(&self) -> builder::SiloView;
     /// Delete a silo
     ///
-    /// Delete a silo by name.
+    /// Delete a silo by name or ID.
     ///
     /// Sends a `DELETE` request to `/v1/system/silos/{silo}`
     ///
@@ -37395,7 +41450,31 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_delete(&self) -> builder::SiloDelete;
-    /// Fetch a silo's IAM policy
+    /// List IP pools linked to silo
+    ///
+    /// Linked IP pools are available to users in the specified silo. A silo can
+    /// have at most one default pool. IPs are allocated from the default pool
+    /// when users ask for one without specifying a pool.
+    ///
+    /// Sends a `GET` request to `/v1/system/silos/{silo}/ip-pools`
+    ///
+    /// Arguments:
+    /// - `silo`: Name or ID of the silo
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.silo_ip_pool_list()
+    ///    .silo(silo)
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn silo_ip_pool_list(&self) -> builder::SiloIpPoolList;
+    /// Fetch silo IAM policy
     ///
     /// Sends a `GET` request to `/v1/system/silos/{silo}/policy`
     ///
@@ -37408,7 +41487,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_policy_view(&self) -> builder::SiloPolicyView;
-    /// Update a silo's IAM policy
+    /// Update silo IAM policy
     ///
     /// Sends a `PUT` request to `/v1/system/silos/{silo}/policy`
     ///
@@ -37423,7 +41502,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_policy_update(&self) -> builder::SiloPolicyUpdate;
-    /// View the resource quotas of a given silo
+    /// Fetch resource quotas for silo
     ///
     /// Sends a `GET` request to `/v1/system/silos/{silo}/quotas`
     ///
@@ -37436,7 +41515,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_quotas_view(&self) -> builder::SiloQuotasView;
-    /// Update the resource quotas of a given silo
+    /// Update resource quotas for silo
     ///
     /// If a quota value is not specified, it will remain unchanged.
     ///
@@ -37453,7 +41532,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_quotas_update(&self) -> builder::SiloQuotasUpdate;
-    /// List built-in (system) users in a silo
+    /// List built-in (system) users in silo
     ///
     /// Sends a `GET` request to `/v1/system/users`
     ///
@@ -37473,7 +41552,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_user_list(&self) -> builder::SiloUserList;
-    /// Fetch a built-in (system) user
+    /// Fetch built-in (system) user
     ///
     /// Sends a `GET` request to `/v1/system/users/{user_id}`
     ///
@@ -37506,7 +41585,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn user_builtin_list(&self) -> builder::UserBuiltinList;
-    /// Fetch a built-in user
+    /// Fetch built-in user
     ///
     /// Sends a `GET` request to `/v1/system/users-builtin/{user}`
     ///
@@ -37535,7 +41614,7 @@ pub trait ClientSystemSilosExt {
     ///    .await;
     /// ```
     fn silo_utilization_list(&self) -> builder::SiloUtilizationList;
-    /// View the current utilization of a given silo
+    /// Fetch current utilization for given silo
     ///
     /// Sends a `GET` request to `/v1/system/utilization/silos/{silo}`
     ///
@@ -37593,6 +41672,10 @@ impl ClientSystemSilosExt for Client {
 
     fn silo_delete(&self) -> builder::SiloDelete {
         builder::SiloDelete::new(self)
+    }
+
+    fn silo_ip_pool_list(&self) -> builder::SiloIpPoolList {
+        builder::SiloIpPoolList::new(self)
     }
 
     fn silo_policy_view(&self) -> builder::SiloPolicyView {
@@ -37718,7 +41801,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_list(&self) -> builder::VpcSubnetList;
-    /// Create a subnet
+    /// Create subnet
     ///
     /// Sends a `POST` request to `/v1/vpc-subnets`
     ///
@@ -37736,7 +41819,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_create(&self) -> builder::VpcSubnetCreate;
-    /// Fetch a subnet
+    /// Fetch subnet
     ///
     /// Sends a `GET` request to `/v1/vpc-subnets/{subnet}`
     ///
@@ -37754,7 +41837,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_view(&self) -> builder::VpcSubnetView;
-    /// Update a subnet
+    /// Update subnet
     ///
     /// Sends a `PUT` request to `/v1/vpc-subnets/{subnet}`
     ///
@@ -37774,7 +41857,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_subnet_update(&self) -> builder::VpcSubnetUpdate;
-    /// Delete a subnet
+    /// Delete subnet
     ///
     /// Sends a `DELETE` request to `/v1/vpc-subnets/{subnet}`
     ///
@@ -37837,7 +41920,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_list(&self) -> builder::VpcList;
-    /// Create a VPC
+    /// Create VPC
     ///
     /// Sends a `POST` request to `/v1/vpcs`
     ///
@@ -37852,7 +41935,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_create(&self) -> builder::VpcCreate;
-    /// Fetch a VPC
+    /// Fetch VPC
     ///
     /// Sends a `GET` request to `/v1/vpcs/{vpc}`
     ///
@@ -37884,7 +41967,7 @@ pub trait ClientVpcsExt {
     ///    .await;
     /// ```
     fn vpc_update(&self) -> builder::VpcUpdate;
-    /// Delete a VPC
+    /// Delete VPC
     ///
     /// Sends a `DELETE` request to `/v1/vpcs/{vpc}`
     ///
@@ -40001,6 +44084,117 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientFloatingIpsExt::floating_ip_update`]
+    ///
+    /// [`ClientFloatingIpsExt::floating_ip_update`]: super::ClientFloatingIpsExt::floating_ip_update
+    #[derive(Debug, Clone)]
+    pub struct FloatingIpUpdate<'a> {
+        client: &'a super::Client,
+        floating_ip: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::FloatingIpUpdate, String>,
+    }
+
+    impl<'a> FloatingIpUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                floating_ip: Err("floating_ip was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(types::builder::FloatingIpUpdate::default()),
+            }
+        }
+
+        pub fn floating_ip<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.floating_ip = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for floating_ip failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::FloatingIpUpdate>,
+            <V as std::convert::TryInto<types::FloatingIpUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `FloatingIpUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::FloatingIpUpdate,
+            ) -> types::builder::FloatingIpUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/floating-ips/{floating_ip}`
+        pub async fn send(self) -> Result<ResponseValue<types::FloatingIp>, Error<types::Error>> {
+            let Self {
+                client,
+                floating_ip,
+                project,
+                body,
+            } = self;
+            let floating_ip = floating_ip.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::FloatingIpUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/floating-ips/{}",
+                client.baseurl,
+                encode_path(&floating_ip.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientFloatingIpsExt::floating_ip_delete`]
     ///
     /// [`ClientFloatingIpsExt::floating_ip_delete`]: super::ClientFloatingIpsExt::floating_ip_delete
@@ -40072,6 +44266,199 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientFloatingIpsExt::floating_ip_attach`]
+    ///
+    /// [`ClientFloatingIpsExt::floating_ip_attach`]: super::ClientFloatingIpsExt::floating_ip_attach
+    #[derive(Debug, Clone)]
+    pub struct FloatingIpAttach<'a> {
+        client: &'a super::Client,
+        floating_ip: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::FloatingIpAttach, String>,
+    }
+
+    impl<'a> FloatingIpAttach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                floating_ip: Err("floating_ip was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(types::builder::FloatingIpAttach::default()),
+            }
+        }
+
+        pub fn floating_ip<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.floating_ip = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for floating_ip failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::FloatingIpAttach>,
+            <V as std::convert::TryInto<types::FloatingIpAttach>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `FloatingIpAttach` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::FloatingIpAttach,
+            ) -> types::builder::FloatingIpAttach,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/attach`
+        pub async fn send(self) -> Result<ResponseValue<types::FloatingIp>, Error<types::Error>> {
+            let Self {
+                client,
+                floating_ip,
+                project,
+                body,
+            } = self;
+            let floating_ip = floating_ip.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::FloatingIpAttach::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/floating-ips/{}/attach",
+                client.baseurl,
+                encode_path(&floating_ip.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                202u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientFloatingIpsExt::floating_ip_detach`]
+    ///
+    /// [`ClientFloatingIpsExt::floating_ip_detach`]: super::ClientFloatingIpsExt::floating_ip_detach
+    #[derive(Debug, Clone)]
+    pub struct FloatingIpDetach<'a> {
+        client: &'a super::Client,
+        floating_ip: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> FloatingIpDetach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                floating_ip: Err("floating_ip was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn floating_ip<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.floating_ip = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for floating_ip failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/floating-ips/{floating_ip}/detach`
+        pub async fn send(self) -> Result<ResponseValue<types::FloatingIp>, Error<types::Error>> {
+            let Self {
+                client,
+                floating_ip,
+                project,
+            } = self;
+            let floating_ip = floating_ip.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/floating-ips/{}/detach",
+                client.baseurl,
+                encode_path(&floating_ip.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                202u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
@@ -41815,6 +46202,201 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientInstancesExt::instance_ephemeral_ip_attach`]
+    ///
+    /// [`ClientInstancesExt::instance_ephemeral_ip_attach`]: super::ClientInstancesExt::instance_ephemeral_ip_attach
+    #[derive(Debug, Clone)]
+    pub struct InstanceEphemeralIpAttach<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        body: Result<types::builder::EphemeralIpCreate, String>,
+    }
+
+    impl<'a> InstanceEphemeralIpAttach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+                body: Ok(types::builder::EphemeralIpCreate::default()),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::EphemeralIpCreate>,
+            <V as std::convert::TryInto<types::EphemeralIpCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `EphemeralIpCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::EphemeralIpCreate,
+            ) -> types::builder::EphemeralIpCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to
+        /// `/v1/instances/{instance}/external-ips/ephemeral`
+        pub async fn send(self) -> Result<ResponseValue<types::ExternalIp>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                project,
+                body,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::EphemeralIpCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/external-ips/ephemeral",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                202u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_ephemeral_ip_detach`]
+    ///
+    /// [`ClientInstancesExt::instance_ephemeral_ip_detach`]: super::ClientInstancesExt::instance_ephemeral_ip_detach
+    #[derive(Debug, Clone)]
+    pub struct InstanceEphemeralIpDetach<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InstanceEphemeralIpDetach<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to
+        /// `/v1/instances/{instance}/external-ips/ephemeral`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                project,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/external-ips/ephemeral",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            let request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientInstancesExt::instance_migrate`]
     ///
     /// [`ClientInstancesExt::instance_migrate`]: super::ClientInstancesExt::instance_migrate
@@ -42248,6 +46830,200 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientInstancesExt::instance_ssh_public_key_list`]
+    ///
+    /// [`ClientInstancesExt::instance_ssh_public_key_list`]: super::ClientInstancesExt::instance_ssh_public_key_list
+    #[derive(Debug, Clone)]
+    pub struct InstanceSshPublicKeyList<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> InstanceSshPublicKeyList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/instances/{instance}/ssh-public-keys`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SshKeyResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                instance,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/ssh-public-keys",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/instances/{instance}/ssh-public-keys`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SshKey, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientInstancesExt::instance_start`]
     ///
     /// [`ClientInstancesExt::instance_start`]: super::ClientInstancesExt::instance_start
@@ -42468,7 +47244,7 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/ip-pools`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::IpPoolResultsPage>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::SiloIpPoolResultsPage>, Error<types::Error>> {
             let Self {
                 client,
                 limit,
@@ -42515,7 +47291,7 @@ pub mod builder {
         /// Streams `GET` requests to `/v1/ip-pools`
         pub fn stream(
             self,
-        ) -> impl futures::Stream<Item = Result<types::IpPool, Error<types::Error>>> + Unpin + 'a
+        ) -> impl futures::Stream<Item = Result<types::SiloIpPool, Error<types::Error>>> + Unpin + 'a
         {
             use futures::StreamExt;
             use futures::TryFutureExt;
@@ -42597,7 +47373,7 @@ pub mod builder {
         }
 
         /// Sends a `GET` request to `/v1/ip-pools/{pool}`
-        pub async fn send(self) -> Result<ResponseValue<types::IpPool>, Error<types::Error>> {
+        pub async fn send(self) -> Result<ResponseValue<types::SiloIpPool>, Error<types::Error>> {
             let Self { client, pool } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let url = format!(
@@ -46365,22 +51141,22 @@ pub mod builder {
         }
     }
 
-    /// Builder for [`ClientSystemHardwareExt::sled_set_provision_state`]
+    /// Builder for [`ClientSystemHardwareExt::sled_set_provision_policy`]
     ///
-    /// [`ClientSystemHardwareExt::sled_set_provision_state`]: super::ClientSystemHardwareExt::sled_set_provision_state
+    /// [`ClientSystemHardwareExt::sled_set_provision_policy`]: super::ClientSystemHardwareExt::sled_set_provision_policy
     #[derive(Debug, Clone)]
-    pub struct SledSetProvisionState<'a> {
+    pub struct SledSetProvisionPolicy<'a> {
         client: &'a super::Client,
         sled_id: Result<uuid::Uuid, String>,
-        body: Result<types::builder::SledProvisionStateParams, String>,
+        body: Result<types::builder::SledProvisionPolicyParams, String>,
     }
 
-    impl<'a> SledSetProvisionState<'a> {
+    impl<'a> SledSetProvisionPolicy<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
                 sled_id: Err("sled_id was not initialized".to_string()),
-                body: Ok(types::builder::SledProvisionStateParams::default()),
+                body: Ok(types::builder::SledProvisionPolicyParams::default()),
             }
         }
 
@@ -46396,12 +51172,13 @@ pub mod builder {
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::SledProvisionStateParams>,
-            <V as std::convert::TryInto<types::SledProvisionStateParams>>::Error: std::fmt::Display,
+            V: std::convert::TryInto<types::SledProvisionPolicyParams>,
+            <V as std::convert::TryInto<types::SledProvisionPolicyParams>>::Error:
+                std::fmt::Display,
         {
             self.body = value.try_into().map(From::from).map_err(|s| {
                 format!(
-                    "conversion to `SledProvisionStateParams` for body failed: {}",
+                    "conversion to `SledProvisionPolicyParams` for body failed: {}",
                     s
                 )
             });
@@ -46411,18 +51188,19 @@ pub mod builder {
         pub fn body_map<F>(mut self, f: F) -> Self
         where
             F: std::ops::FnOnce(
-                types::builder::SledProvisionStateParams,
-            ) -> types::builder::SledProvisionStateParams,
+                types::builder::SledProvisionPolicyParams,
+            ) -> types::builder::SledProvisionPolicyParams,
         {
             self.body = self.body.map(f);
             self
         }
 
         /// Sends a `PUT` request to
-        /// `/v1/system/hardware/sleds/{sled_id}/provision-state`
+        /// `/v1/system/hardware/sleds/{sled_id}/provision-policy`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::SledProvisionStateResponse>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::SledProvisionPolicyResponse>, Error<types::Error>>
+        {
             let Self {
                 client,
                 sled_id,
@@ -46431,11 +51209,11 @@ pub mod builder {
             let sled_id = sled_id.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(|v| {
-                    types::SledProvisionStateParams::try_from(v).map_err(|e| e.to_string())
+                    types::SledProvisionPolicyParams::try_from(v).map_err(|e| e.to_string())
                 })
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/v1/system/hardware/sleds/{}/provision-state",
+                "{}/v1/system/hardware/sleds/{}/provision-policy",
                 client.baseurl,
                 encode_path(&sled_id.to_string()),
             );
@@ -48633,7 +53411,7 @@ pub mod builder {
         /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/silos`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::IpPoolSiloResultsPage>, Error<types::Error>> {
+        ) -> Result<ResponseValue<types::IpPoolSiloLinkResultsPage>, Error<types::Error>> {
             let Self {
                 client,
                 pool,
@@ -48686,7 +53464,7 @@ pub mod builder {
         /// Streams `GET` requests to `/v1/system/ip-pools/{pool}/silos`
         pub fn stream(
             self,
-        ) -> impl futures::Stream<Item = Result<types::IpPoolSilo, Error<types::Error>>> + Unpin + 'a
+        ) -> impl futures::Stream<Item = Result<types::IpPoolSiloLink, Error<types::Error>>> + Unpin + 'a
         {
             use futures::StreamExt;
             use futures::TryFutureExt;
@@ -48747,7 +53525,7 @@ pub mod builder {
     pub struct IpPoolSiloLink<'a> {
         client: &'a super::Client,
         pool: Result<types::NameOrId, String>,
-        body: Result<types::builder::IpPoolSiloLink, String>,
+        body: Result<types::builder::IpPoolLinkSilo, String>,
     }
 
     impl<'a> IpPoolSiloLink<'a> {
@@ -48755,7 +53533,7 @@ pub mod builder {
             Self {
                 client: client,
                 pool: Err("pool was not initialized".to_string()),
-                body: Ok(types::builder::IpPoolSiloLink::default()),
+                body: Ok(types::builder::IpPoolLinkSilo::default()),
             }
         }
 
@@ -48771,30 +53549,32 @@ pub mod builder {
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::IpPoolSiloLink>,
-            <V as std::convert::TryInto<types::IpPoolSiloLink>>::Error: std::fmt::Display,
+            V: std::convert::TryInto<types::IpPoolLinkSilo>,
+            <V as std::convert::TryInto<types::IpPoolLinkSilo>>::Error: std::fmt::Display,
         {
             self.body = value
                 .try_into()
                 .map(From::from)
-                .map_err(|s| format!("conversion to `IpPoolSiloLink` for body failed: {}", s));
+                .map_err(|s| format!("conversion to `IpPoolLinkSilo` for body failed: {}", s));
             self
         }
 
         pub fn body_map<F>(mut self, f: F) -> Self
         where
-            F: std::ops::FnOnce(types::builder::IpPoolSiloLink) -> types::builder::IpPoolSiloLink,
+            F: std::ops::FnOnce(types::builder::IpPoolLinkSilo) -> types::builder::IpPoolLinkSilo,
         {
             self.body = self.body.map(f);
             self
         }
 
         /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/silos`
-        pub async fn send(self) -> Result<ResponseValue<types::IpPoolSilo>, Error<types::Error>> {
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IpPoolSiloLink>, Error<types::Error>> {
             let Self { client, pool, body } = self;
             let pool = pool.map_err(Error::InvalidRequest)?;
             let body = body
-                .and_then(|v| types::IpPoolSiloLink::try_from(v).map_err(|e| e.to_string()))
+                .and_then(|v| types::IpPoolLinkSilo::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
                 "{}/v1/system/ip-pools/{}/silos",
@@ -48889,7 +53669,9 @@ pub mod builder {
         }
 
         /// Sends a `PUT` request to `/v1/system/ip-pools/{pool}/silos/{silo}`
-        pub async fn send(self) -> Result<ResponseValue<types::IpPoolSilo>, Error<types::Error>> {
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IpPoolSiloLink>, Error<types::Error>> {
             let Self {
                 client,
                 pool,
@@ -49999,6 +54781,188 @@ pub mod builder {
                 .try_flatten_stream()
                 .take(limit)
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bfd_disable`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bfd_disable`]: super::ClientSystemNetworkingExt::networking_bfd_disable
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBfdDisable<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BfdSessionDisable, String>,
+    }
+
+    impl<'a> NetworkingBfdDisable<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::BfdSessionDisable::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BfdSessionDisable>,
+            <V as std::convert::TryInto<types::BfdSessionDisable>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BfdSessionDisable` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::BfdSessionDisable,
+            ) -> types::builder::BfdSessionDisable,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/networking/bfd-disable`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BfdSessionDisable::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bfd-disable", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bfd_enable`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bfd_enable`]: super::ClientSystemNetworkingExt::networking_bfd_enable
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBfdEnable<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BfdSessionEnable, String>,
+    }
+
+    impl<'a> NetworkingBfdEnable<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::BfdSessionEnable::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BfdSessionEnable>,
+            <V as std::convert::TryInto<types::BfdSessionEnable>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BfdSessionEnable` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::BfdSessionEnable,
+            ) -> types::builder::BfdSessionEnable,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/system/networking/bfd-enable`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BfdSessionEnable::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/bfd-enable", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_bfd_status`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bfd_status`]: super::ClientSystemNetworkingExt::networking_bfd_status
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBfdStatus<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> NetworkingBfdStatus<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bfd-status`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<Vec<types::BfdStatus>>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/networking/bfd-status", client.baseurl,);
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
@@ -52151,6 +57115,181 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemSilosExt::silo_ip_pool_list`]
+    ///
+    /// [`ClientSystemSilosExt::silo_ip_pool_list`]: super::ClientSystemSilosExt::silo_ip_pool_list
+    #[derive(Debug, Clone)]
+    pub struct SiloIpPoolList<'a> {
+        client: &'a super::Client,
+        silo: Result<types::NameOrId, String>,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> SiloIpPoolList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                silo: Err("silo was not initialized".to_string()),
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn silo<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.silo = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for silo failed".to_string());
+            self
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/silos/{silo}/ip-pools`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SiloIpPoolResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                silo,
+                limit,
+                page_token,
+                sort_by,
+            } = self;
+            let silo = silo.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/silos/{}/ip-pools",
+                client.baseurl,
+                encode_path(&silo.to_string()),
+            );
+            let mut query = Vec::with_capacity(3usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/system/silos/{silo}/ip-pools`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::SiloIpPool, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
     /// Builder for [`ClientSystemSilosExt::silo_policy_view`]
     ///
     /// [`ClientSystemSilosExt::silo_policy_view`]: super::ClientSystemSilosExt::silo_policy_view
@@ -53131,6 +58270,213 @@ pub mod builder {
                 )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
+        }
+    }
+
+    /// Builder for [`ClientMetricsExt::timeseries_query`]
+    ///
+    /// [`ClientMetricsExt::timeseries_query`]: super::ClientMetricsExt::timeseries_query
+    #[derive(Debug, Clone)]
+    pub struct TimeseriesQuery<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::TimeseriesQuery, String>,
+    }
+
+    impl<'a> TimeseriesQuery<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::TimeseriesQuery::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::TimeseriesQuery>,
+            <V as std::convert::TryInto<types::TimeseriesQuery>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `TimeseriesQuery` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::TimeseriesQuery) -> types::builder::TimeseriesQuery,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/v1/timeseries/query`
+        pub async fn send(self) -> Result<ResponseValue<Vec<types::Table>>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::TimeseriesQuery::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/timeseries/query", client.baseurl,);
+            let request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientMetricsExt::timeseries_schema_list`]
+    ///
+    /// [`ClientMetricsExt::timeseries_schema_list`]: super::ClientMetricsExt::timeseries_schema_list
+    #[derive(Debug, Clone)]
+    pub struct TimeseriesSchemaList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+    }
+
+    impl<'a> TimeseriesSchemaList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/timeseries/schema`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::TimeseriesSchemaResultsPage>, Error<types::Error>>
+        {
+            let Self {
+                client,
+                limit,
+                page_token,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/timeseries/schema", client.baseurl,);
+            let mut query = Vec::with_capacity(2usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            let request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/v1/timeseries/schema`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::TimeseriesSchema, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
         }
     }
 

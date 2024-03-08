@@ -448,7 +448,6 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SledListUninitialized => Some("system hardware sled list-uninitialized"),
         CliCommand::SledView => Some("system hardware sled view"),
         CliCommand::SledAdd => Some("system hardware sled add"),
-        CliCommand::SledSetProvisionState => Some("system hardware sled set-provision-state"),
         CliCommand::SledInstanceList => Some("system hardware sled instance-list"),
         CliCommand::PhysicalDiskList => Some("system hardware disk list"),
         CliCommand::SledPhysicalDiskList => Some("system hardware sled disk-led"),
@@ -470,10 +469,25 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
 
         CliCommand::Ping => Some("ping"),
 
+        // Metrics-related subcommands
+        CliCommand::TimeseriesQuery => Some("timeseries query"),
+        CliCommand::TimeseriesSchemaList => Some("timeseries schema list"),
+
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
         | CliCommand::DeviceAuthConfirm
         | CliCommand::DeviceAuthRequest
+        | CliCommand::FloatingIpUpdate
+        | CliCommand::FloatingIpAttach
+        | CliCommand::FloatingIpDetach
+        | CliCommand::InstanceEphemeralIpAttach
+        | CliCommand::InstanceEphemeralIpDetach
+        | CliCommand::InstanceSshPublicKeyList
+        | CliCommand::SledSetProvisionPolicy
+        | CliCommand::NetworkingBfdDisable
+        | CliCommand::NetworkingBfdEnable
+        | CliCommand::NetworkingBfdStatus
+        | CliCommand::SiloIpPoolList
         | CliCommand::GroupView
         | CliCommand::LoginLocal
         | CliCommand::LoginSaml

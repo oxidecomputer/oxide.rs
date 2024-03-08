@@ -33,7 +33,10 @@ impl Cli {
             CliCommand::FloatingIpList => Self::cli_floating_ip_list(),
             CliCommand::FloatingIpCreate => Self::cli_floating_ip_create(),
             CliCommand::FloatingIpView => Self::cli_floating_ip_view(),
+            CliCommand::FloatingIpUpdate => Self::cli_floating_ip_update(),
             CliCommand::FloatingIpDelete => Self::cli_floating_ip_delete(),
+            CliCommand::FloatingIpAttach => Self::cli_floating_ip_attach(),
+            CliCommand::FloatingIpDetach => Self::cli_floating_ip_detach(),
             CliCommand::GroupList => Self::cli_group_list(),
             CliCommand::GroupView => Self::cli_group_view(),
             CliCommand::ImageList => Self::cli_image_list(),
@@ -50,10 +53,13 @@ impl Cli {
             CliCommand::InstanceDiskAttach => Self::cli_instance_disk_attach(),
             CliCommand::InstanceDiskDetach => Self::cli_instance_disk_detach(),
             CliCommand::InstanceExternalIpList => Self::cli_instance_external_ip_list(),
+            CliCommand::InstanceEphemeralIpAttach => Self::cli_instance_ephemeral_ip_attach(),
+            CliCommand::InstanceEphemeralIpDetach => Self::cli_instance_ephemeral_ip_detach(),
             CliCommand::InstanceMigrate => Self::cli_instance_migrate(),
             CliCommand::InstanceReboot => Self::cli_instance_reboot(),
             CliCommand::InstanceSerialConsole => Self::cli_instance_serial_console(),
             CliCommand::InstanceSerialConsoleStream => Self::cli_instance_serial_console_stream(),
+            CliCommand::InstanceSshPublicKeyList => Self::cli_instance_ssh_public_key_list(),
             CliCommand::InstanceStart => Self::cli_instance_start(),
             CliCommand::InstanceStop => Self::cli_instance_stop(),
             CliCommand::ProjectIpPoolList => Self::cli_project_ip_pool_list(),
@@ -100,7 +106,7 @@ impl Cli {
             CliCommand::SledView => Self::cli_sled_view(),
             CliCommand::SledPhysicalDiskList => Self::cli_sled_physical_disk_list(),
             CliCommand::SledInstanceList => Self::cli_sled_instance_list(),
-            CliCommand::SledSetProvisionState => Self::cli_sled_set_provision_state(),
+            CliCommand::SledSetProvisionPolicy => Self::cli_sled_set_provision_policy(),
             CliCommand::SledListUninitialized => Self::cli_sled_list_uninitialized(),
             CliCommand::NetworkingSwitchPortList => Self::cli_networking_switch_port_list(),
             CliCommand::NetworkingSwitchPortApplySettings => {
@@ -140,6 +146,9 @@ impl Cli {
             CliCommand::NetworkingAddressLotBlockList => {
                 Self::cli_networking_address_lot_block_list()
             }
+            CliCommand::NetworkingBfdDisable => Self::cli_networking_bfd_disable(),
+            CliCommand::NetworkingBfdEnable => Self::cli_networking_bfd_enable(),
+            CliCommand::NetworkingBfdStatus => Self::cli_networking_bfd_status(),
             CliCommand::NetworkingBgpConfigList => Self::cli_networking_bgp_config_list(),
             CliCommand::NetworkingBgpConfigCreate => Self::cli_networking_bgp_config_create(),
             CliCommand::NetworkingBgpConfigDelete => Self::cli_networking_bgp_config_delete(),
@@ -186,6 +195,7 @@ impl Cli {
             CliCommand::SiloCreate => Self::cli_silo_create(),
             CliCommand::SiloView => Self::cli_silo_view(),
             CliCommand::SiloDelete => Self::cli_silo_delete(),
+            CliCommand::SiloIpPoolList => Self::cli_silo_ip_pool_list(),
             CliCommand::SiloPolicyView => Self::cli_silo_policy_view(),
             CliCommand::SiloPolicyUpdate => Self::cli_silo_policy_update(),
             CliCommand::SiloQuotasView => Self::cli_silo_quotas_view(),
@@ -196,6 +206,8 @@ impl Cli {
             CliCommand::UserBuiltinView => Self::cli_user_builtin_view(),
             CliCommand::SiloUtilizationList => Self::cli_silo_utilization_list(),
             CliCommand::SiloUtilizationView => Self::cli_silo_utilization_view(),
+            CliCommand::TimeseriesQuery => Self::cli_timeseries_query(),
+            CliCommand::TimeseriesSchemaList => Self::cli_timeseries_schema_list(),
             CliCommand::UserList => Self::cli_user_list(),
             CliCommand::UtilizationView => Self::cli_utilization_view(),
             CliCommand::VpcFirewallRulesView => Self::cli_vpc_firewall_rules_view(),
@@ -418,7 +430,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a new system-wide x.509 certificate")
+            .about("Create new system-wide x.509 certificate")
             .long_about(
                 "This certificate is automatically used by the Oxide Control plane to serve \
                  external connections.",
@@ -433,7 +445,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
-            .about("Fetch a certificate")
+            .about("Fetch certificate")
             .long_about("Returns the details of a specific certificate")
     }
 
@@ -445,7 +457,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
-            .about("Delete a certificate")
+            .about("Delete certificate")
             .long_about("Permanently delete a certificate. This operation cannot be undone.")
     }
 
@@ -542,7 +554,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch a disk")
+            .about("Fetch disk")
     }
 
     pub fn cli_disk_delete() -> clap::Command {
@@ -561,7 +573,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete a disk")
+            .about("Delete disk")
     }
 
     pub fn cli_disk_bulk_write_import() -> clap::Command {
@@ -606,7 +618,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Import blocks into a disk")
+            .about("Import blocks into disk")
     }
 
     pub fn cli_disk_bulk_write_import_start() -> clap::Command {
@@ -625,7 +637,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Start importing blocks into a disk")
+            .about("Start importing blocks into disk")
             .long_about("Start the process of importing blocks into a disk")
     }
 
@@ -645,7 +657,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Stop importing blocks into a disk")
+            .about("Stop importing blocks into disk")
             .long_about("Stop the process of importing blocks into a disk")
     }
 
@@ -797,8 +809,14 @@ impl Cli {
     pub fn cli_floating_ip_create() -> clap::Command {
         clap::Command::new("")
             .arg(
-                clap::Arg::new("address")
-                    .long("address")
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("ip")
+                    .long("ip")
                     .value_parser(clap::value_parser!(std::net::IpAddr))
                     .required(false)
                     .help(
@@ -806,12 +824,6 @@ impl Cli {
                          optional: when not set, an address will be automatically chosen from \
                          `pool`. If set, then the IP must be available in the resolved `pool`.",
                     ),
-            )
-            .arg(
-                clap::Arg::new("description")
-                    .long("description")
-                    .value_parser(clap::value_parser!(String))
-                    .required_unless_present("json-body"),
             )
             .arg(
                 clap::Arg::new("name")
@@ -850,7 +862,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a floating IP")
+            .about("Create floating IP")
     }
 
     pub fn cli_floating_ip_view() -> clap::Command {
@@ -860,7 +872,7 @@ impl Cli {
                     .long("floating-ip")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
-                    .help("Name or ID of the Floating IP"),
+                    .help("Name or ID of the floating IP"),
             )
             .arg(
                 clap::Arg::new("project")
@@ -869,7 +881,52 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch a floating IP")
+            .about("Fetch floating IP")
+    }
+
+    pub fn cli_floating_ip_update() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("floating-ip")
+                    .long("floating-ip")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the floating IP"),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update floating IP")
     }
 
     pub fn cli_floating_ip_delete() -> clap::Command {
@@ -879,7 +936,7 @@ impl Cli {
                     .long("floating-ip")
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true)
-                    .help("Name or ID of the Floating IP"),
+                    .help("Name or ID of the floating IP"),
             )
             .arg(
                 clap::Arg::new("project")
@@ -888,7 +945,79 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete a floating IP")
+            .about("Delete floating IP")
+    }
+
+    pub fn cli_floating_ip_attach() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("floating-ip")
+                    .long("floating-ip")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the floating IP"),
+            )
+            .arg(
+                clap::Arg::new("kind")
+                    .long("kind")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::FloatingIpParentKind::Instance.to_string(),
+                        ]),
+                        |s| types::FloatingIpParentKind::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("The type of `parent`'s resource"),
+            )
+            .arg(
+                clap::Arg::new("parent")
+                    .long("parent")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required_unless_present("json-body")
+                    .help("Name or ID of the resource that this IP address should be attached to"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Attach floating IP")
+            .long_about("Attach floating IP to an instance or other resource.")
+    }
+
+    pub fn cli_floating_ip_detach() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("floating-ip")
+                    .long("floating-ip")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the floating IP"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Detach floating IP")
     }
 
     pub fn cli_group_list() -> clap::Command {
@@ -1011,7 +1140,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an image")
+            .about("Create image")
             .long_about("Create a new image in a project.")
     }
 
@@ -1031,7 +1160,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an image")
+            .about("Fetch image")
             .long_about("Fetch the details for a specific image in a project.")
     }
 
@@ -1051,7 +1180,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete an image")
+            .about("Delete image")
             .long_about(
                 "Permanently delete an image from a project. This operation cannot be undone. Any \
                  instances in the project using the image will continue to run, however new \
@@ -1075,8 +1204,8 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the project"),
             )
-            .about("Demote a silo image")
-            .long_about("Demote a silo image to be visible only to a specified project")
+            .about("Demote silo image")
+            .long_about("Demote silo image to be visible only to a specified project")
     }
 
     pub fn cli_image_promote() -> clap::Command {
@@ -1095,8 +1224,8 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Promote a project image")
-            .long_about("Promote a project image to be visible to all projects in the silo")
+            .about("Promote project image")
+            .long_about("Promote project image to be visible to all projects in the silo")
     }
 
     pub fn cli_instance_list() -> clap::Command {
@@ -1142,7 +1271,7 @@ impl Cli {
             .arg(
                 clap::Arg::new("hostname")
                     .long("hostname")
-                    .value_parser(clap::value_parser!(String))
+                    .value_parser(clap::value_parser!(types::Hostname))
                     .required_unless_present("json-body"),
             )
             .arg(
@@ -1202,7 +1331,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an instance")
+            .about("Create instance")
     }
 
     pub fn cli_instance_view() -> clap::Command {
@@ -1221,7 +1350,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch an instance")
+            .about("Fetch instance")
     }
 
     pub fn cli_instance_delete() -> clap::Command {
@@ -1240,7 +1369,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Delete an instance")
+            .about("Delete instance")
     }
 
     pub fn cli_instance_disk_list() -> clap::Command {
@@ -1279,7 +1408,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List an instance's disks")
+            .about("List disks for instance")
     }
 
     pub fn cli_instance_disk_attach() -> clap::Command {
@@ -1319,7 +1448,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Attach a disk to an instance")
+            .about("Attach disk to instance")
     }
 
     pub fn cli_instance_disk_detach() -> clap::Command {
@@ -1359,7 +1488,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Detach a disk from an instance")
+            .about("Detach disk from instance")
     }
 
     pub fn cli_instance_external_ip_list() -> clap::Command {
@@ -1379,6 +1508,65 @@ impl Cli {
                     .help("Name or ID of the project"),
             )
             .about("List external IP addresses")
+    }
+
+    pub fn cli_instance_ephemeral_ip_attach() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the IP pool used to allocate an address"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Allocate and attach ephemeral IP to instance")
+    }
+
+    pub fn cli_instance_ephemeral_ip_detach() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Detach and deallocate ephemeral IP from instance")
     }
 
     pub fn cli_instance_migrate() -> clap::Command {
@@ -1492,7 +1680,7 @@ impl Cli {
                          `Name`",
                     ),
             )
-            .about("Fetch an instance's serial console")
+            .about("Fetch instance serial console")
     }
 
     pub fn cli_instance_serial_console_stream() -> clap::Command {
@@ -1525,7 +1713,51 @@ impl Cli {
                          `Name`",
                     ),
             )
-            .about("Stream an instance's serial console")
+            .about("Stream instance serial console")
+    }
+
+    pub fn cli_instance_ssh_public_key_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List SSH public keys for instance")
+            .long_about(
+                "List SSH public keys injected via cloud-init during instance creation. Note that \
+                 this list is a snapshot in time and will not reflect updates made after the \
+                 instance is created.",
+            )
     }
 
     pub fn cli_instance_start() -> clap::Command {
@@ -1544,7 +1776,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Boot an instance")
+            .about("Boot instance")
     }
 
     pub fn cli_instance_stop() -> clap::Command {
@@ -1563,7 +1795,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the project"),
             )
-            .about("Stop an instance")
+            .about("Stop instance")
     }
 
     pub fn cli_project_ip_pool_list() -> clap::Command {
@@ -1600,7 +1832,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
-            .about("Fetch an IP pool")
+            .about("Fetch IP pool")
     }
 
     pub fn cli_login_local() -> clap::Command {
@@ -1646,7 +1878,7 @@ impl Cli {
     }
 
     pub fn cli_current_user_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the user associated with the current session")
+        clap::Command::new("").about("Fetch user for current session")
     }
 
     pub fn cli_current_user_groups() -> clap::Command {
@@ -1669,7 +1901,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("Fetch the silo\u{a0}groups the current user belongs to")
+            .about("Fetch current user's groups")
     }
 
     pub fn cli_current_user_ssh_key_list() -> clap::Command {
@@ -1733,7 +1965,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an SSH public key")
+            .about("Create SSH public key")
             .long_about("Create an SSH public key for the currently authenticated user.")
     }
 
@@ -1746,8 +1978,8 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the SSH key"),
             )
-            .about("Fetch an SSH public key")
-            .long_about("Fetch an SSH public key associated with the currently authenticated user.")
+            .about("Fetch SSH public key")
+            .long_about("Fetch SSH public key associated with the currently authenticated user.")
     }
 
     pub fn cli_current_user_ssh_key_delete() -> clap::Command {
@@ -1759,7 +1991,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the SSH key"),
             )
-            .about("Delete an SSH public key")
+            .about("Delete SSH public key")
             .long_about(
                 "Delete an SSH public key associated with the currently authenticated user.",
             )
@@ -1935,7 +2167,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a network interface")
+            .about("Create network interface")
     }
 
     pub fn cli_instance_network_interface_view() -> clap::Command {
@@ -1964,7 +2196,7 @@ impl Cli {
                          `Name`",
                     ),
             )
-            .about("Fetch a network interface")
+            .about("Fetch network interface")
     }
 
     pub fn cli_instance_network_interface_update() -> clap::Command {
@@ -2035,7 +2267,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a network interface")
+            .about("Update network interface")
     }
 
     pub fn cli_instance_network_interface_delete() -> clap::Command {
@@ -2064,7 +2296,7 @@ impl Cli {
                          `Name`",
                     ),
             )
-            .about("Delete a network interface")
+            .about("Delete network interface")
             .long_about(
                 "Note that the primary interface for an instance cannot be deleted if there are \
                  any secondary interfaces. A new primary interface must be designated first. The \
@@ -2079,7 +2311,7 @@ impl Cli {
     }
 
     pub fn cli_policy_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the current silo's IAM policy")
+        clap::Command::new("").about("Fetch current silo's IAM policy")
     }
 
     pub fn cli_policy_update() -> clap::Command {
@@ -2098,7 +2330,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update the current silo's IAM policy")
+            .about("Update current silo's IAM policy")
     }
 
     pub fn cli_project_list() -> clap::Command {
@@ -2154,7 +2386,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a project")
+            .about("Create project")
     }
 
     pub fn cli_project_view() -> clap::Command {
@@ -2166,7 +2398,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch a project")
+            .about("Fetch project")
     }
 
     pub fn cli_project_update() -> clap::Command {
@@ -2216,7 +2448,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the project"),
             )
-            .about("Delete a project")
+            .about("Delete project")
     }
 
     pub fn cli_project_policy_view() -> clap::Command {
@@ -2228,7 +2460,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the project"),
             )
-            .about("Fetch a project's IAM policy")
+            .about("Fetch project's IAM policy")
     }
 
     pub fn cli_project_policy_update() -> clap::Command {
@@ -2254,7 +2486,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a project's IAM policy")
+            .about("Update project's IAM policy")
     }
 
     pub fn cli_snapshot_list() -> clap::Command {
@@ -2331,7 +2563,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a snapshot")
+            .about("Create snapshot")
             .long_about("Creates a point-in-time snapshot from a disk.")
     }
 
@@ -2351,7 +2583,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the snapshot"),
             )
-            .about("Fetch a snapshot")
+            .about("Fetch snapshot")
     }
 
     pub fn cli_snapshot_delete() -> clap::Command {
@@ -2370,7 +2602,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the snapshot"),
             )
-            .about("Delete a snapshot")
+            .about("Delete snapshot")
     }
 
     pub fn cli_physical_disk_list() -> clap::Command {
@@ -2428,7 +2660,7 @@ impl Cli {
                     .required(true)
                     .help("The rack's unique ID."),
             )
-            .about("Fetch a rack")
+            .about("Fetch rack")
     }
 
     pub fn cli_sled_list() -> clap::Command {
@@ -2482,7 +2714,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add a sled to an initialized rack")
+            .about("Add sled to initialized rack")
     }
 
     pub fn cli_sled_view() -> clap::Command {
@@ -2494,7 +2726,7 @@ impl Cli {
                     .required(true)
                     .help("ID of the sled"),
             )
-            .about("Fetch a sled")
+            .about("Fetch sled")
     }
 
     pub fn cli_sled_physical_disk_list() -> clap::Command {
@@ -2554,10 +2786,10 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List instances running on a given sled")
+            .about("List instances running on given sled")
     }
 
-    pub fn cli_sled_set_provision_state() -> clap::Command {
+    pub fn cli_sled_set_provision_policy() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("sled-id")
@@ -2571,10 +2803,10 @@ impl Cli {
                     .long("state")
                     .value_parser(clap::builder::TypedValueParser::map(
                         clap::builder::PossibleValuesParser::new([
-                            types::SledProvisionState::Provisionable.to_string(),
-                            types::SledProvisionState::NonProvisionable.to_string(),
+                            types::SledProvisionPolicy::Provisionable.to_string(),
+                            types::SledProvisionPolicy::NonProvisionable.to_string(),
                         ]),
-                        |s| types::SledProvisionState::try_from(s).unwrap(),
+                        |s| types::SledProvisionPolicy::try_from(s).unwrap(),
                     ))
                     .required_unless_present("json-body")
                     .help("The provision state."),
@@ -2593,7 +2825,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Set the sled's provision state")
+            .about("Set sled provision policy")
     }
 
     pub fn cli_sled_list_uninitialized() -> clap::Command {
@@ -2605,7 +2837,7 @@ impl Cli {
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
-            .about("List uninitialized sleds in a given rack")
+            .about("List uninitialized sleds")
     }
 
     pub fn cli_networking_switch_port_list() -> clap::Command {
@@ -2743,7 +2975,7 @@ impl Cli {
                     .required(true)
                     .help("ID of the switch"),
             )
-            .about("Fetch a switch")
+            .about("Fetch switch")
     }
 
     pub fn cli_silo_identity_provider_list() -> clap::Command {
@@ -2808,7 +3040,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a user")
+            .about("Create user")
             .long_about(
                 "Users can only be created in Silos with `provision_type` == `Fixed`. Otherwise, \
                  Silo users are just-in-time (JIT) provisioned when a user first logs in using an \
@@ -2832,7 +3064,7 @@ impl Cli {
                     .required(true)
                     .help("The user's internal id"),
             )
-            .about("Delete a user")
+            .about("Delete user")
     }
 
     pub fn cli_local_idp_user_set_password() -> clap::Command {
@@ -2865,7 +3097,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Set or invalidate a user's password")
+            .about("Set or invalidate user's password")
             .long_about(
                 "Passwords can only be updated for users in Silos with identity mode `LocalOnly`.",
             )
@@ -2952,7 +3184,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a SAML IdP")
+            .about("Create SAML IdP")
     }
 
     pub fn cli_saml_identity_provider_view() -> clap::Command {
@@ -2971,7 +3203,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a SAML IdP")
+            .about("Fetch SAML IdP")
     }
 
     pub fn cli_ip_pool_list() -> clap::Command {
@@ -3027,7 +3259,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an IP pool")
+            .about("Create IP pool")
     }
 
     pub fn cli_ip_pool_view() -> clap::Command {
@@ -3039,7 +3271,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
-            .about("Fetch an IP pool")
+            .about("Fetch IP pool")
     }
 
     pub fn cli_ip_pool_update() -> clap::Command {
@@ -3077,7 +3309,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update an IP pool")
+            .about("Update IP pool")
     }
 
     pub fn cli_ip_pool_delete() -> clap::Command {
@@ -3089,7 +3321,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
-            .about("Delete an IP pool")
+            .about("Delete IP pool")
     }
 
     pub fn cli_ip_pool_range_list() -> clap::Command {
@@ -3108,8 +3340,8 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the IP pool"),
             )
-            .about("List ranges for an IP pool")
-            .long_about("List ranges for an IP pool. Ranges are ordered by their first address.")
+            .about("List ranges for IP pool")
+            .long_about("Ranges are ordered by their first address.")
     }
 
     pub fn cli_ip_pool_range_add() -> clap::Command {
@@ -3135,7 +3367,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add a range to an IP pool")
+            .about("Add range to IP pool")
     }
 
     pub fn cli_ip_pool_range_remove() -> clap::Command {
@@ -3161,7 +3393,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Remove a range from an IP pool")
+            .about("Remove range from IP pool")
     }
 
     pub fn cli_ip_pool_silo_list() -> clap::Command {
@@ -3191,7 +3423,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List an IP pool's linked silos")
+            .about("List IP pool's linked silos")
     }
 
     pub fn cli_ip_pool_silo_link() -> clap::Command {
@@ -3234,7 +3466,12 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Make an IP pool available within a silo")
+            .about("Link IP pool to silo")
+            .long_about(
+                "Users in linked silos can allocate external IPs from this pool for their \
+                 instances. A silo can have at most one default pool. IPs are allocated from the \
+                 default pool when users ask for one without specifying a pool.",
+            )
     }
 
     pub fn cli_ip_pool_silo_update() -> clap::Command {
@@ -3278,10 +3515,12 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Make an IP pool default or not-default for a silo")
+            .about("Make IP pool default for silo")
             .long_about(
-                "When a pool is made default for a silo, any existing default will remain linked \
-                 to the silo, but will no longer be the default.",
+                "When a user asks for an IP (e.g., at instance create time) without specifying a \
+                 pool, the IP comes from the default pool if a default is configured. When a pool \
+                 is made the default for a silo, any existing default will remain linked to the \
+                 silo, but will no longer be the default.",
             )
     }
 
@@ -3299,12 +3538,12 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
-            .about("Unlink an IP pool from a silo")
+            .about("Unlink IP pool from silo")
             .long_about("Will fail if there are any outstanding IPs allocated in the silo.")
     }
 
     pub fn cli_ip_pool_service_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the IP pool used for Oxide services")
+        clap::Command::new("").about("Fetch Oxide service IP pool")
     }
 
     pub fn cli_ip_pool_service_range_list() -> clap::Command {
@@ -3316,11 +3555,8 @@ impl Cli {
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
-            .about("List ranges for the IP pool used for Oxide services")
-            .long_about(
-                "List ranges for the IP pool used for Oxide services. Ranges are ordered by their \
-                 first address.",
-            )
+            .about("List IP ranges for the Oxide service pool")
+            .long_about("Ranges are ordered by their first address.")
     }
 
     pub fn cli_ip_pool_service_range_add() -> clap::Command {
@@ -3339,7 +3575,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Add a range to an IP pool used for Oxide services")
+            .about("Add IP range to Oxide service pool")
     }
 
     pub fn cli_ip_pool_service_range_remove() -> clap::Command {
@@ -3358,7 +3594,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Remove a range from an IP pool used for Oxide services")
+            .about("Remove IP range from Oxide service pool")
     }
 
     pub fn cli_system_metric() -> clap::Command {
@@ -3486,7 +3722,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create an address lot")
+            .about("Create address lot")
     }
 
     pub fn cli_networking_address_lot_delete() -> clap::Command {
@@ -3498,7 +3734,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the address lot"),
             )
-            .about("Delete an address lot")
+            .about("Delete address lot")
     }
 
     pub fn cli_networking_address_lot_block_list() -> clap::Command {
@@ -3528,7 +3764,121 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List the blocks in an address lot")
+            .about("List blocks in address lot")
+    }
+
+    pub fn cli_networking_bfd_disable() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("remote")
+                    .long("remote")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("Address of the remote peer to disable a BFD session for."),
+            )
+            .arg(
+                clap::Arg::new("switch")
+                    .long("switch")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Disable a BFD session")
+    }
+
+    pub fn cli_networking_bfd_enable() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("detection-threshold")
+                    .long("detection-threshold")
+                    .value_parser(clap::value_parser!(u8))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The negotiated Control packet transmission interval, multiplied by this \
+                         variable, will be the Detection Time for this session (as seen by the \
+                         remote system)",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("local")
+                    .long("local")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required(false)
+                    .help(
+                        "Address the Oxide switch will listen on for BFD traffic. If `None` then \
+                         the unspecified address (0.0.0.0 or ::) is used.",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("mode")
+                    .long("mode")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::BfdMode::SingleHop.to_string(),
+                            types::BfdMode::MultiHop.to_string(),
+                        ]),
+                        |s| types::BfdMode::try_from(s).unwrap(),
+                    ))
+                    .required_unless_present("json-body")
+                    .help("Select either single-hop (RFC 5881) or multi-hop (RFC 5883)"),
+            )
+            .arg(
+                clap::Arg::new("remote")
+                    .long("remote")
+                    .value_parser(clap::value_parser!(std::net::IpAddr))
+                    .required_unless_present("json-body")
+                    .help("Address of the remote peer to establish a BFD session with."),
+            )
+            .arg(
+                clap::Arg::new("required-rx")
+                    .long("required-rx")
+                    .value_parser(clap::value_parser!(u64))
+                    .required_unless_present("json-body")
+                    .help(
+                        "The minimum interval, in microseconds, between received BFD Control \
+                         packets that this system requires",
+                    ),
+            )
+            .arg(
+                clap::Arg::new("switch")
+                    .long("switch")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body")
+                    .help("The switch to enable this session on. Must be `switch0` or `switch1`."),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Enable a BFD session")
+    }
+
+    pub fn cli_networking_bfd_status() -> clap::Command {
+        clap::Command::new("").about("Get BFD status")
     }
 
     pub fn cli_networking_bgp_config_list() -> clap::Command {
@@ -3614,7 +3964,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a new BGP configuration")
+            .about("Create new BGP configuration")
     }
 
     pub fn cli_networking_bgp_config_delete() -> clap::Command {
@@ -3626,7 +3976,7 @@ impl Cli {
                     .required(true)
                     .help("A name or id to use when selecting BGP config."),
             )
-            .about("Delete a BGP configuration")
+            .about("Delete BGP configuration")
     }
 
     pub fn cli_networking_bgp_announce_set_list() -> clap::Command {
@@ -3669,7 +4019,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a new BGP announce set")
+            .about("Create new BGP announce set")
     }
 
     pub fn cli_networking_bgp_announce_set_delete() -> clap::Command {
@@ -3681,7 +4031,7 @@ impl Cli {
                     .required(true)
                     .help("A name or id to use when selecting BGP port settings"),
             )
-            .about("Delete a BGP announce set")
+            .about("Delete BGP announce set")
     }
 
     pub fn cli_networking_bgp_imported_routes_ipv4() -> clap::Command {
@@ -3790,7 +4140,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a loopback address")
+            .about("Create loopback address")
     }
 
     pub fn cli_networking_loopback_address_delete() -> clap::Command {
@@ -3829,7 +4179,7 @@ impl Cli {
                     .required(true)
                     .help("The switch location to use when selecting the loopback address."),
             )
-            .about("Delete a loopback address")
+            .about("Delete loopback address")
     }
 
     pub fn cli_networking_switch_port_settings_list() -> clap::Command {
@@ -3916,11 +4266,11 @@ impl Cli {
                     .required(true)
                     .help("A name or id to use when selecting switch port settings info objects."),
             )
-            .about("Get information about a switch port")
+            .about("Get information about switch port")
     }
 
     pub fn cli_system_policy_view() -> clap::Command {
-        clap::Command::new("").about("Fetch the top-level IAM policy")
+        clap::Command::new("").about("Fetch top-level IAM policy")
     }
 
     pub fn cli_system_policy_update() -> clap::Command {
@@ -3939,7 +4289,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update the top-level IAM policy")
+            .about("Update top-level IAM policy")
     }
 
     pub fn cli_role_list() -> clap::Command {
@@ -3963,7 +4313,7 @@ impl Cli {
                     .required(true)
                     .help("The built-in role's unique name."),
             )
-            .about("Fetch a built-in role")
+            .about("Fetch built-in role")
     }
 
     pub fn cli_system_quotas_list() -> clap::Command {
@@ -4087,8 +4437,8 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a silo")
-            .long_about("Fetch a silo by name.")
+            .about("Fetch silo")
+            .long_about("Fetch silo by name or ID.")
     }
 
     pub fn cli_silo_delete() -> clap::Command {
@@ -4101,7 +4451,44 @@ impl Cli {
                     .help("Name or ID of the silo"),
             )
             .about("Delete a silo")
-            .long_about("Delete a silo by name.")
+            .long_about("Delete a silo by name or ID.")
+    }
+
+    pub fn cli_silo_ip_pool_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("silo")
+                    .long("silo")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the silo"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List IP pools linked to silo")
+            .long_about(
+                "Linked IP pools are available to users in the specified silo. A silo can have at \
+                 most one default pool. IPs are allocated from the default pool when users ask \
+                 for one without specifying a pool.",
+            )
     }
 
     pub fn cli_silo_policy_view() -> clap::Command {
@@ -4113,7 +4500,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("Fetch a silo's IAM policy")
+            .about("Fetch silo IAM policy")
     }
 
     pub fn cli_silo_policy_update() -> clap::Command {
@@ -4139,7 +4526,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a silo's IAM policy")
+            .about("Update silo IAM policy")
     }
 
     pub fn cli_silo_quotas_view() -> clap::Command {
@@ -4151,7 +4538,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("View the resource quotas of a given silo")
+            .about("Fetch resource quotas for silo")
     }
 
     pub fn cli_silo_quotas_update() -> clap::Command {
@@ -4200,7 +4587,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update the resource quotas of a given silo")
+            .about("Update resource quotas for silo")
             .long_about("If a quota value is not specified, it will remain unchanged.")
     }
 
@@ -4231,7 +4618,7 @@ impl Cli {
                     ))
                     .required(false),
             )
-            .about("List built-in (system) users in a silo")
+            .about("List built-in (system) users in silo")
     }
 
     pub fn cli_silo_user_view() -> clap::Command {
@@ -4250,7 +4637,7 @@ impl Cli {
                     .required(true)
                     .help("The user's internal id"),
             )
-            .about("Fetch a built-in (system) user")
+            .about("Fetch built-in (system) user")
     }
 
     pub fn cli_user_builtin_list() -> clap::Command {
@@ -4284,7 +4671,7 @@ impl Cli {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(true),
             )
-            .about("Fetch a built-in user")
+            .about("Fetch built-in user")
     }
 
     pub fn cli_silo_utilization_list() -> clap::Command {
@@ -4321,7 +4708,44 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the silo"),
             )
-            .about("View the current utilization of a given silo")
+            .about("Fetch current utilization for given silo")
+    }
+
+    pub fn cli_timeseries_query() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("query")
+                    .long("query")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Run a timeseries query, written OxQL.")
+    }
+
+    pub fn cli_timeseries_schema_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .about("List available timeseries schema.")
     }
 
     pub fn cli_user_list() -> clap::Command {
@@ -4354,7 +4778,7 @@ impl Cli {
     }
 
     pub fn cli_utilization_view() -> clap::Command {
-        clap::Command::new("").about("View the resource utilization of the user's current silo")
+        clap::Command::new("").about("Fetch resource utilization for user's current silo")
     }
 
     pub fn cli_vpc_firewall_rules_view() -> clap::Command {
@@ -4521,7 +4945,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a subnet")
+            .about("Create subnet")
     }
 
     pub fn cli_vpc_subnet_view() -> clap::Command {
@@ -4549,7 +4973,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
-            .about("Fetch a subnet")
+            .about("Fetch subnet")
     }
 
     pub fn cli_vpc_subnet_update() -> clap::Command {
@@ -4603,7 +5027,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Update a subnet")
+            .about("Update subnet")
     }
 
     pub fn cli_vpc_subnet_delete() -> clap::Command {
@@ -4631,7 +5055,7 @@ impl Cli {
                     .required(false)
                     .help("Name or ID of the VPC"),
             )
-            .about("Delete a subnet")
+            .about("Delete subnet")
     }
 
     pub fn cli_vpc_subnet_list_network_interfaces() -> clap::Command {
@@ -4767,7 +5191,7 @@ impl Cli {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Create a VPC")
+            .about("Create VPC")
     }
 
     pub fn cli_vpc_view() -> clap::Command {
@@ -4786,7 +5210,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
-            .about("Fetch a VPC")
+            .about("Fetch VPC")
     }
 
     pub fn cli_vpc_update() -> clap::Command {
@@ -4856,7 +5280,7 @@ impl Cli {
                     .required(true)
                     .help("Name or ID of the VPC"),
             )
-            .about("Delete a VPC")
+            .about("Delete VPC")
     }
 }
 
@@ -4927,8 +5351,17 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::FloatingIpView => {
                 self.execute_floating_ip_view(matches).await;
             }
+            CliCommand::FloatingIpUpdate => {
+                self.execute_floating_ip_update(matches).await;
+            }
             CliCommand::FloatingIpDelete => {
                 self.execute_floating_ip_delete(matches).await;
+            }
+            CliCommand::FloatingIpAttach => {
+                self.execute_floating_ip_attach(matches).await;
+            }
+            CliCommand::FloatingIpDetach => {
+                self.execute_floating_ip_detach(matches).await;
             }
             CliCommand::GroupList => {
                 self.execute_group_list(matches).await;
@@ -4978,6 +5411,12 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::InstanceExternalIpList => {
                 self.execute_instance_external_ip_list(matches).await;
             }
+            CliCommand::InstanceEphemeralIpAttach => {
+                self.execute_instance_ephemeral_ip_attach(matches).await;
+            }
+            CliCommand::InstanceEphemeralIpDetach => {
+                self.execute_instance_ephemeral_ip_detach(matches).await;
+            }
             CliCommand::InstanceMigrate => {
                 self.execute_instance_migrate(matches).await;
             }
@@ -4989,6 +5428,9 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::InstanceSerialConsoleStream => {
                 self.execute_instance_serial_console_stream(matches).await;
+            }
+            CliCommand::InstanceSshPublicKeyList => {
+                self.execute_instance_ssh_public_key_list(matches).await;
             }
             CliCommand::InstanceStart => {
                 self.execute_instance_start(matches).await;
@@ -5113,8 +5555,8 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::SledInstanceList => {
                 self.execute_sled_instance_list(matches).await;
             }
-            CliCommand::SledSetProvisionState => {
-                self.execute_sled_set_provision_state(matches).await;
+            CliCommand::SledSetProvisionPolicy => {
+                self.execute_sled_set_provision_policy(matches).await;
             }
             CliCommand::SledListUninitialized => {
                 self.execute_sled_list_uninitialized(matches).await;
@@ -5218,6 +5660,15 @@ impl<T: CliOverride> Cli<T> {
                 self.execute_networking_address_lot_block_list(matches)
                     .await;
             }
+            CliCommand::NetworkingBfdDisable => {
+                self.execute_networking_bfd_disable(matches).await;
+            }
+            CliCommand::NetworkingBfdEnable => {
+                self.execute_networking_bfd_enable(matches).await;
+            }
+            CliCommand::NetworkingBfdStatus => {
+                self.execute_networking_bfd_status(matches).await;
+            }
             CliCommand::NetworkingBgpConfigList => {
                 self.execute_networking_bgp_config_list(matches).await;
             }
@@ -5299,6 +5750,9 @@ impl<T: CliOverride> Cli<T> {
             CliCommand::SiloDelete => {
                 self.execute_silo_delete(matches).await;
             }
+            CliCommand::SiloIpPoolList => {
+                self.execute_silo_ip_pool_list(matches).await;
+            }
             CliCommand::SiloPolicyView => {
                 self.execute_silo_policy_view(matches).await;
             }
@@ -5328,6 +5782,12 @@ impl<T: CliOverride> Cli<T> {
             }
             CliCommand::SiloUtilizationView => {
                 self.execute_silo_utilization_view(matches).await;
+            }
+            CliCommand::TimeseriesQuery => {
+                self.execute_timeseries_query(matches).await;
+            }
+            CliCommand::TimeseriesSchemaList => {
+                self.execute_timeseries_schema_list(matches).await;
             }
             CliCommand::UserList => {
                 self.execute_user_list(matches).await;
@@ -5923,12 +6383,12 @@ impl<T: CliOverride> Cli<T> {
 
     pub async fn execute_floating_ip_create(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.floating_ip_create();
-        if let Some(value) = matches.get_one::<std::net::IpAddr>("address") {
-            request = request.body_map(|body| body.address(value.clone()))
-        }
-
         if let Some(value) = matches.get_one::<String>("description") {
             request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("ip") {
+            request = request.body_map(|body| body.ip(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<types::Name>("name") {
@@ -5987,6 +6447,44 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_floating_ip_update(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.floating_ip_update();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
+            request = request.floating_ip(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::FloatingIpUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_floating_ip_update(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_floating_ip_delete(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.floating_ip_delete();
         if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
@@ -5999,6 +6497,68 @@ impl<T: CliOverride> Cli<T> {
 
         self.over
             .execute_floating_ip_delete(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_floating_ip_attach(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.floating_ip_attach();
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
+            request = request.floating_ip(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::FloatingIpParentKind>("kind") {
+            request = request.body_map(|body| body.kind(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("parent") {
+            request = request.body_map(|body| body.parent(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::FloatingIpAttach>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_floating_ip_attach(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_floating_ip_detach(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.floating_ip_detach();
+        if let Some(value) = matches.get_one::<types::NameOrId>("floating-ip") {
+            request = request.floating_ip(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_floating_ip_detach(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -6265,7 +6825,7 @@ impl<T: CliOverride> Cli<T> {
             request = request.body_map(|body| body.description(value.clone()))
         }
 
-        if let Some(value) = matches.get_one::<String>("hostname") {
+        if let Some(value) = matches.get_one::<types::Hostname>("hostname") {
             request = request.body_map(|body| body.hostname(value.clone()))
         }
 
@@ -6491,6 +7051,64 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_instance_ephemeral_ip_attach(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.instance_ephemeral_ip_attach();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.body_map(|body| body.pool(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::EphemeralIpCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_instance_ephemeral_ip_attach(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_instance_ephemeral_ip_detach(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.instance_ephemeral_ip_detach();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.over
+            .execute_instance_ephemeral_ip_detach(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
     pub async fn execute_instance_migrate(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.instance_migrate();
         if let Some(value) = matches.get_one::<uuid::Uuid>("dst-sled-id") {
@@ -6609,6 +7227,44 @@ impl<T: CliOverride> Cli<T> {
             }
             Err(r) => {
                 todo!()
+            }
+        }
+    }
+
+    pub async fn execute_instance_ssh_public_key_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.instance_ssh_public_key_list();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_instance_ssh_public_key_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -7719,25 +8375,25 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
-    pub async fn execute_sled_set_provision_state(&self, matches: &clap::ArgMatches) {
-        let mut request = self.client.sled_set_provision_state();
+    pub async fn execute_sled_set_provision_policy(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.sled_set_provision_policy();
         if let Some(value) = matches.get_one::<uuid::Uuid>("sled-id") {
             request = request.sled_id(value.clone());
         }
 
-        if let Some(value) = matches.get_one::<types::SledProvisionState>("state") {
+        if let Some(value) = matches.get_one::<types::SledProvisionPolicy>("state") {
             request = request.body_map(|body| body.state(value.clone()))
         }
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
             let body_value =
-                serde_json::from_str::<types::SledProvisionStateParams>(&body_txt).unwrap();
+                serde_json::from_str::<types::SledProvisionPolicyParams>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
         self.over
-            .execute_sled_set_provision_state(matches, &mut request)
+            .execute_sled_set_provision_policy(matches, &mut request)
             .unwrap();
         let result = request.send().await;
         match result {
@@ -8394,7 +9050,7 @@ impl<T: CliOverride> Cli<T> {
 
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::IpPoolSiloLink>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::IpPoolLinkSilo>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
@@ -8717,6 +9373,98 @@ impl<T: CliOverride> Cli<T> {
                 Ok(Some(value)) => {
                     println!("{:#?}", value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_networking_bfd_disable(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bfd_disable();
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("remote") {
+            request = request.body_map(|body| body.remote(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch") {
+            request = request.body_map(|body| body.switch(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::BfdSessionDisable>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_networking_bfd_disable(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_bfd_enable(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bfd_enable();
+        if let Some(value) = matches.get_one::<u8>("detection-threshold") {
+            request = request.body_map(|body| body.detection_threshold(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("local") {
+            request = request.body_map(|body| body.local(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::BfdMode>("mode") {
+            request = request.body_map(|body| body.mode(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::net::IpAddr>("remote") {
+            request = request.body_map(|body| body.remote(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<u64>("required-rx") {
+            request = request.body_map(|body| body.required_rx(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch") {
+            request = request.body_map(|body| body.switch(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::BfdSessionEnable>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_networking_bfd_enable(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_networking_bfd_status(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.networking_bfd_status();
+        self.over
+            .execute_networking_bfd_status(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
             }
         }
     }
@@ -9356,6 +10104,40 @@ impl<T: CliOverride> Cli<T> {
         }
     }
 
+    pub async fn execute_silo_ip_pool_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.silo_ip_pool_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
+            request = request.silo(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.over
+            .execute_silo_ip_pool_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
+            }
+        }
+    }
+
     pub async fn execute_silo_policy_view(&self, matches: &clap::ArgMatches) {
         let mut request = self.client.silo_policy_view();
         if let Some(value) = matches.get_one::<types::NameOrId>("silo") {
@@ -9614,6 +10396,58 @@ impl<T: CliOverride> Cli<T> {
             }
             Err(r) => {
                 println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_timeseries_query(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.timeseries_query();
+        if let Some(value) = matches.get_one::<String>("query") {
+            request = request.body_map(|body| body.query(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.over
+            .execute_timeseries_query(matches, &mut request)
+            .unwrap();
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                println!("success\n{:#?}", r)
+            }
+            Err(r) => {
+                println!("error\n{:#?}", r)
+            }
+        }
+    }
+
+    pub async fn execute_timeseries_schema_list(&self, matches: &clap::ArgMatches) {
+        let mut request = self.client.timeseries_schema_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        self.over
+            .execute_timeseries_schema_list(matches, &mut request)
+            .unwrap();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    println!("error\n{:#?}", r);
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Ok(Some(value)) => {
+                    println!("{:#?}", value);
+                }
             }
         }
     }
@@ -10263,10 +11097,34 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_floating_ip_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::FloatingIpUpdate,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_floating_ip_delete(
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::FloatingIpDelete,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_floating_ip_attach(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::FloatingIpAttach,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_floating_ip_detach(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::FloatingIpDetach,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -10399,6 +11257,22 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_instance_ephemeral_ip_attach(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InstanceEphemeralIpAttach,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_instance_ephemeral_ip_detach(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InstanceEphemeralIpDetach,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_instance_migrate(
         &self,
         matches: &clap::ArgMatches,
@@ -10427,6 +11301,14 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::InstanceSerialConsoleStream,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_instance_ssh_public_key_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InstanceSshPublicKeyList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -10751,10 +11633,10 @@ pub trait CliOverride {
         Ok(())
     }
 
-    fn execute_sled_set_provision_state(
+    fn execute_sled_set_provision_policy(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::SledSetProvisionState,
+        request: &mut builder::SledSetProvisionPolicy,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -11023,6 +11905,30 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_networking_bfd_disable(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBfdDisable,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bfd_enable(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBfdEnable,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_networking_bfd_status(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingBfdStatus,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_networking_bgp_config_list(
         &self,
         matches: &clap::ArgMatches,
@@ -11215,6 +12121,14 @@ pub trait CliOverride {
         Ok(())
     }
 
+    fn execute_silo_ip_pool_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::SiloIpPoolList,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
     fn execute_silo_policy_view(
         &self,
         matches: &clap::ArgMatches,
@@ -11291,6 +12205,22 @@ pub trait CliOverride {
         &self,
         matches: &clap::ArgMatches,
         request: &mut builder::SiloUtilizationView,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_timeseries_query(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::TimeseriesQuery,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    fn execute_timeseries_schema_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::TimeseriesSchemaList,
     ) -> Result<(), String> {
         Ok(())
     }
@@ -11439,7 +12369,10 @@ pub enum CliCommand {
     FloatingIpList,
     FloatingIpCreate,
     FloatingIpView,
+    FloatingIpUpdate,
     FloatingIpDelete,
+    FloatingIpAttach,
+    FloatingIpDetach,
     GroupList,
     GroupView,
     ImageList,
@@ -11456,10 +12389,13 @@ pub enum CliCommand {
     InstanceDiskAttach,
     InstanceDiskDetach,
     InstanceExternalIpList,
+    InstanceEphemeralIpAttach,
+    InstanceEphemeralIpDetach,
     InstanceMigrate,
     InstanceReboot,
     InstanceSerialConsole,
     InstanceSerialConsoleStream,
+    InstanceSshPublicKeyList,
     InstanceStart,
     InstanceStop,
     ProjectIpPoolList,
@@ -11500,7 +12436,7 @@ pub enum CliCommand {
     SledView,
     SledPhysicalDiskList,
     SledInstanceList,
-    SledSetProvisionState,
+    SledSetProvisionPolicy,
     SledListUninitialized,
     NetworkingSwitchPortList,
     NetworkingSwitchPortApplySettings,
@@ -11534,6 +12470,9 @@ pub enum CliCommand {
     NetworkingAddressLotCreate,
     NetworkingAddressLotDelete,
     NetworkingAddressLotBlockList,
+    NetworkingBfdDisable,
+    NetworkingBfdEnable,
+    NetworkingBfdStatus,
     NetworkingBgpConfigList,
     NetworkingBgpConfigCreate,
     NetworkingBgpConfigDelete,
@@ -11558,6 +12497,7 @@ pub enum CliCommand {
     SiloCreate,
     SiloView,
     SiloDelete,
+    SiloIpPoolList,
     SiloPolicyView,
     SiloPolicyUpdate,
     SiloQuotasView,
@@ -11568,6 +12508,8 @@ pub enum CliCommand {
     UserBuiltinView,
     SiloUtilizationList,
     SiloUtilizationView,
+    TimeseriesQuery,
+    TimeseriesSchemaList,
     UserList,
     UtilizationView,
     VpcFirewallRulesView,
@@ -11608,7 +12550,10 @@ impl CliCommand {
             CliCommand::FloatingIpList,
             CliCommand::FloatingIpCreate,
             CliCommand::FloatingIpView,
+            CliCommand::FloatingIpUpdate,
             CliCommand::FloatingIpDelete,
+            CliCommand::FloatingIpAttach,
+            CliCommand::FloatingIpDetach,
             CliCommand::GroupList,
             CliCommand::GroupView,
             CliCommand::ImageList,
@@ -11625,10 +12570,13 @@ impl CliCommand {
             CliCommand::InstanceDiskAttach,
             CliCommand::InstanceDiskDetach,
             CliCommand::InstanceExternalIpList,
+            CliCommand::InstanceEphemeralIpAttach,
+            CliCommand::InstanceEphemeralIpDetach,
             CliCommand::InstanceMigrate,
             CliCommand::InstanceReboot,
             CliCommand::InstanceSerialConsole,
             CliCommand::InstanceSerialConsoleStream,
+            CliCommand::InstanceSshPublicKeyList,
             CliCommand::InstanceStart,
             CliCommand::InstanceStop,
             CliCommand::ProjectIpPoolList,
@@ -11669,7 +12617,7 @@ impl CliCommand {
             CliCommand::SledView,
             CliCommand::SledPhysicalDiskList,
             CliCommand::SledInstanceList,
-            CliCommand::SledSetProvisionState,
+            CliCommand::SledSetProvisionPolicy,
             CliCommand::SledListUninitialized,
             CliCommand::NetworkingSwitchPortList,
             CliCommand::NetworkingSwitchPortApplySettings,
@@ -11703,6 +12651,9 @@ impl CliCommand {
             CliCommand::NetworkingAddressLotCreate,
             CliCommand::NetworkingAddressLotDelete,
             CliCommand::NetworkingAddressLotBlockList,
+            CliCommand::NetworkingBfdDisable,
+            CliCommand::NetworkingBfdEnable,
+            CliCommand::NetworkingBfdStatus,
             CliCommand::NetworkingBgpConfigList,
             CliCommand::NetworkingBgpConfigCreate,
             CliCommand::NetworkingBgpConfigDelete,
@@ -11727,6 +12678,7 @@ impl CliCommand {
             CliCommand::SiloCreate,
             CliCommand::SiloView,
             CliCommand::SiloDelete,
+            CliCommand::SiloIpPoolList,
             CliCommand::SiloPolicyView,
             CliCommand::SiloPolicyUpdate,
             CliCommand::SiloQuotasView,
@@ -11737,6 +12689,8 @@ impl CliCommand {
             CliCommand::UserBuiltinView,
             CliCommand::SiloUtilizationList,
             CliCommand::SiloUtilizationView,
+            CliCommand::TimeseriesQuery,
+            CliCommand::TimeseriesSchemaList,
             CliCommand::UserList,
             CliCommand::UtilizationView,
             CliCommand::VpcFirewallRulesView,

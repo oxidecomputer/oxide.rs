@@ -268,7 +268,7 @@ impl RunnableCmd for CmdInstanceFromImage {
                             .expect("valid disk name"),
                         size: self.size.clone(),
                     }])
-                    .external_ips(vec![ExternalIpCreate::Ephemeral { pool_name: None }])
+                    .external_ips(vec![ExternalIpCreate::Ephemeral { pool: None }])
                     .hostname(self.hostname.clone())
                     .memory(self.memory.clone())
                     .ncpus(self.ncpus.clone())

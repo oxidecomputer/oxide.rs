@@ -21,6 +21,7 @@ mod cmd_auth;
 mod cmd_disk;
 mod cmd_docs;
 mod cmd_instance;
+mod cmd_timeseries;
 
 mod cmd_version;
 #[allow(unused_mut)]
@@ -46,6 +47,7 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_disk::CmdDiskImport>("disk import")
         .add_custom::<cmd_instance::CmdInstanceSerial>("instance serial")
         .add_custom::<cmd_instance::CmdInstanceFromImage>("instance from-image")
+        .add_custom::<cmd_timeseries::CmdTimeseriesDashboard>("timeseries dashboard")
 }
 
 #[tokio::main]
