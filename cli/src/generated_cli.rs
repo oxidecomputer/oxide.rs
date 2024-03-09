@@ -16,6 +16,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::DeviceAuthRequest => Self::cli_device_auth_request(),
             CliCommand::DeviceAuthConfirm => Self::cli_device_auth_confirm(),
             CliCommand::DeviceAccessToken => Self::cli_device_access_token(),
+            CliCommand::ProbeList => Self::cli_probe_list(),
+            CliCommand::ProbeCreate => Self::cli_probe_create(),
+            CliCommand::ProbeView => Self::cli_probe_view(),
+            CliCommand::ProbeDelete => Self::cli_probe_delete(),
             CliCommand::LoginSaml => Self::cli_login_saml(),
             CliCommand::CertificateList => Self::cli_certificate_list(),
             CliCommand::CertificateCreate => Self::cli_certificate_create(),
@@ -325,6 +329,126 @@ impl<T: CliConfig> Cli<T> {
                 "This endpoint should be polled by the client until the user code is verified and \
                  the grant is confirmed.",
             )
+    }
+
+    pub fn cli_probe_list() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("limit")
+                    .long("limit")
+                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
+                    .required(false)
+                    .help("Maximum number of items returned by a single call"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("sort-by")
+                    .long("sort-by")
+                    .value_parser(clap::builder::TypedValueParser::map(
+                        clap::builder::PossibleValuesParser::new([
+                            types::NameOrIdSortMode::NameAscending.to_string(),
+                            types::NameOrIdSortMode::NameDescending.to_string(),
+                            types::NameOrIdSortMode::IdAscending.to_string(),
+                        ]),
+                        |s| types::NameOrIdSortMode::try_from(s).unwrap(),
+                    ))
+                    .required(false),
+            )
+            .about("List instrumentation probes")
+    }
+
+    pub fn cli_probe_create() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("description")
+                    .long("description")
+                    .value_parser(clap::value_parser!(String))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("ip-pool")
+                    .long("ip-pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false),
+            )
+            .arg(
+                clap::Arg::new("name")
+                    .long("name")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .arg(
+                clap::Arg::new("sled")
+                    .long("sled")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required_unless_present("json-body"),
+            )
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(false)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Create instrumentation probe")
+    }
+
+    pub fn cli_probe_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("probe")
+                    .long("probe")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the probe"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .about("View instrumentation probe")
+    }
+
+    pub fn cli_probe_delete() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("probe")
+                    .long("probe")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the probe"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the project"),
+            )
+            .about("Delete instrumentation probe")
     }
 
     pub fn cli_login_saml() -> clap::Command {
@@ -5249,6 +5373,10 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::DeviceAuthRequest => self.execute_device_auth_request(matches).await,
             CliCommand::DeviceAuthConfirm => self.execute_device_auth_confirm(matches).await,
             CliCommand::DeviceAccessToken => self.execute_device_access_token(matches).await,
+            CliCommand::ProbeList => self.execute_probe_list(matches).await,
+            CliCommand::ProbeCreate => self.execute_probe_create(matches).await,
+            CliCommand::ProbeView => self.execute_probe_view(matches).await,
+            CliCommand::ProbeDelete => self.execute_probe_delete(matches).await,
             CliCommand::LoginSaml => self.execute_login_saml(matches).await,
             CliCommand::CertificateList => self.execute_certificate_list(matches).await,
             CliCommand::CertificateCreate => self.execute_certificate_create(matches).await,
@@ -5628,6 +5756,131 @@ impl<T: CliConfig> Cli<T> {
             }
             Err(r) => {
                 todo!()
+            }
+        }
+    }
+
+    pub async fn execute_probe_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.probe_list();
+        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
+            request = request.limit(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrIdSortMode>("sort-by") {
+            request = request.sort_by(value.clone());
+        }
+
+        self.config.execute_probe_list(matches, &mut request)?;
+        self.config.list_start::<types::ProbeInfoResultsPage>();
+        let mut stream = request.stream();
+        loop {
+            match futures::TryStreamExt::try_next(&mut stream).await {
+                Err(r) => {
+                    self.config.list_end_error(&r);
+                    return Err(anyhow::Error::new(r));
+                }
+                Ok(None) => {
+                    self.config
+                        .list_end_success::<types::ProbeInfoResultsPage>();
+                    return Ok(());
+                }
+                Ok(Some(value)) => {
+                    self.config.list_item(&value);
+                }
+            }
+        }
+    }
+
+    pub async fn execute_probe_create(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.probe_create();
+        if let Some(value) = matches.get_one::<String>("description") {
+            request = request.body_map(|body| body.description(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("ip-pool") {
+            request = request.body_map(|body| body.ip_pool(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("name") {
+            request = request.body_map(|body| body.name(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("sled") {
+            request = request.body_map(|body| body.sled(value.clone()))
+        }
+
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value = serde_json::from_str::<types::ProbeCreate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config.execute_probe_create(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_probe_view(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.probe_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("probe") {
+            request = request.probe(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config.execute_probe_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_probe_delete(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.probe_delete();
+        if let Some(value) = matches.get_one::<types::NameOrId>("probe") {
+            request = request.probe(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config.execute_probe_delete(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -11118,6 +11371,38 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_probe_list(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ProbeList,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_probe_create(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ProbeCreate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_probe_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ProbeView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_probe_delete(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::ProbeDelete,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_login_saml(
         &self,
         matches: &clap::ArgMatches,
@@ -12492,6 +12777,10 @@ pub enum CliCommand {
     DeviceAuthRequest,
     DeviceAuthConfirm,
     DeviceAccessToken,
+    ProbeList,
+    ProbeCreate,
+    ProbeView,
+    ProbeDelete,
     LoginSaml,
     CertificateList,
     CertificateCreate,
@@ -12671,6 +12960,10 @@ impl CliCommand {
             CliCommand::DeviceAuthRequest,
             CliCommand::DeviceAuthConfirm,
             CliCommand::DeviceAccessToken,
+            CliCommand::ProbeList,
+            CliCommand::ProbeCreate,
+            CliCommand::ProbeView,
+            CliCommand::ProbeDelete,
             CliCommand::LoginSaml,
             CliCommand::CertificateList,
             CliCommand::CertificateCreate,
