@@ -223,6 +223,25 @@
       ]
     },
     {
+      "name": "completion",
+      "about": "Generate shell completion scripts for Oxide CLI commands.",
+      "long_about": "Generate shell completion scripts for Oxide CLI commands.\n\nThis command generates scripts for various shells that can be used to\nenable completion.\n\n>>> bash\n\nAdd this to your `~/.bash_profile`:\n\n    eval \"$(oxide completion -s bash)\"\n\n>>> zsh\n\nGenerate an `_oxide` completion script and put it somewhere in your\n`$fpath`, for example:\n\n   oxide completion -s zsh > ~/.zfunc/_oxide\n\nand check that you have the following lines in your `~/.zshrc`:\n\n   autoload -U compinit\n   compinit -i\n\n>>> fish\n\nGenerate an `oxide.fish` completion script:\n\n   oxide completion -s fish > ~/.config/fish/completions/oxide.fish\n\n>>> PowerShell\n\nOpen your profile script with:\n\n   mkdir -Path (Split-Path -Parent $profile)\n   notepad $profile\n\nAdd the following line and save the file:\n\n   Invoke-Expression -Command $(oxide completion -s powershell | Out-String)\n\n>>> Elvish\n\nGenerate an `oxide.elv` completion script and put it in a module search\ndirectory, for example:\n\n   oxide completion -s elvish > ~/.local/share/elvish/lib/oxide.elv\n\nand import this by adding the following to `~/.config/elvish/rc.elv`\n\n   use oxide",
+      "args": [
+        {
+          "long": "shell",
+          "short": "s",
+          "values": [
+            "bash",
+            "elvish",
+            "fish",
+            "powershell",
+            "zsh"
+          ],
+          "help": "Type of the shell"
+        }
+      ]
+    },
+    {
       "name": "current-user",
       "subcommands": [
         {
