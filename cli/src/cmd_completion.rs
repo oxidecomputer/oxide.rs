@@ -16,56 +16,74 @@ use std::io;
 /// This command generates scripts for various shells that can be used to
 /// enable completion.
 ///
-/// >>> bash
+/// ## Installation
+///
+/// ### Bash
 ///
 /// Add this to your `~/.bash_profile`:
 ///
-///     eval "$(oxide completion -s bash)"
+/// ```sh
+/// eval "$(oxide completion -s bash)"
+/// ```
 ///
-/// >>> zsh
+/// ### Zsh
 ///
 /// Generate an `_oxide` completion script and put it somewhere in your
 /// `$fpath`, for example:
 ///
-///    oxide completion -s zsh > ~/.zfunc/_oxide
+/// ```sh
+/// oxide completion -s zsh > ~/.zfunc/_oxide
+/// ```
 ///
 /// and check that you have the following lines in your `~/.zshrc`:
 ///
-///    autoload -U compinit
-///    compinit -i
+/// ```sh
+/// autoload -U compinit
+/// compinit -i
+/// ```
 ///
-/// >>> fish
+/// ### Fish
 ///
 /// Generate an `oxide.fish` completion script:
 ///
-///    oxide completion -s fish > ~/.config/fish/completions/oxide.fish
+/// ```sh
+/// oxide completion -s fish > ~/.config/fish/completions/oxide.fish
+/// ```
 ///
-/// >>> PowerShell
+/// ### PowerShell
 ///
 /// Open your profile script with:
 ///
-///    mkdir -Path (Split-Path -Parent $profile)
-///    notepad $profile
+/// ```sh
+/// mkdir -Path (Split-Path -Parent $profile)
+/// notepad $profile
+/// ```
 ///
 /// Add the following line and save the file:
 ///
-///    Invoke-Expression -Command $(oxide completion -s powershell | Out-String)
+/// ```powershell
+/// Invoke-Expression -Command $(oxide completion -s powershell | Out-String)
+/// ```
 ///
-/// >>> Elvish
+/// ### Elvish
 ///
 /// Generate an `oxide.elv` completion script and put it in a module search
 /// directory, for example:
 ///
-///    oxide completion -s elvish > ~/.local/share/elvish/lib/oxide.elv
+/// ```sh
+/// oxide completion -s elvish > ~/.local/share/elvish/lib/oxide.elv
+/// ```
 ///
 /// and import this by adding the following to `~/.config/elvish/rc.elv`
 ///
-///    use oxide
+/// ```
+/// use oxide
+/// ```
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "generate-completions")]
 pub struct CmdCompletion {
-    /// Type of the shell
+    /// Shell type
     #[clap(short, long)]
     shell: Shell,
 }
