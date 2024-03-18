@@ -139,6 +139,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::IpPoolSiloLink => Self::cli_ip_pool_silo_link(),
             CliCommand::IpPoolSiloUpdate => Self::cli_ip_pool_silo_update(),
             CliCommand::IpPoolSiloUnlink => Self::cli_ip_pool_silo_unlink(),
+            CliCommand::IpPoolUtilizationView => Self::cli_ip_pool_utilization_view(),
             CliCommand::IpPoolServiceView => Self::cli_ip_pool_service_view(),
             CliCommand::IpPoolServiceRangeList => Self::cli_ip_pool_service_range_list(),
             CliCommand::IpPoolServiceRangeAdd => Self::cli_ip_pool_service_range_add(),
@@ -3664,6 +3665,18 @@ impl<T: CliConfig> Cli<T> {
             .long_about("Will fail if there are any outstanding IPs allocated in the silo.")
     }
 
+    pub fn cli_ip_pool_utilization_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("pool")
+                    .long("pool")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the IP pool"),
+            )
+            .about("Fetch IP pool utilization")
+    }
+
     pub fn cli_ip_pool_service_view() -> clap::Command {
         clap::Command::new("").about("Fetch Oxide service IP pool")
     }
@@ -5543,6 +5556,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::IpPoolSiloLink => self.execute_ip_pool_silo_link(matches).await,
             CliCommand::IpPoolSiloUpdate => self.execute_ip_pool_silo_update(matches).await,
             CliCommand::IpPoolSiloUnlink => self.execute_ip_pool_silo_unlink(matches).await,
+            CliCommand::IpPoolUtilizationView => {
+                self.execute_ip_pool_utilization_view(matches).await
+            }
             CliCommand::IpPoolServiceView => self.execute_ip_pool_service_view(matches).await,
             CliCommand::IpPoolServiceRangeList => {
                 self.execute_ip_pool_service_range_list(matches).await
@@ -9361,6 +9377,30 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_ip_pool_utilization_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.ip_pool_utilization_view();
+        if let Some(value) = matches.get_one::<types::NameOrId>("pool") {
+            request = request.pool(value.clone());
+        }
+
+        self.config
+            .execute_ip_pool_utilization_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_ip_pool_service_view(
         &self,
         matches: &clap::ArgMatches,
@@ -12275,6 +12315,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_ip_pool_utilization_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::IpPoolUtilizationView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_ip_pool_service_view(
         &self,
         matches: &clap::ArgMatches,
@@ -12890,6 +12938,7 @@ pub enum CliCommand {
     IpPoolSiloLink,
     IpPoolSiloUpdate,
     IpPoolSiloUnlink,
+    IpPoolUtilizationView,
     IpPoolServiceView,
     IpPoolServiceRangeList,
     IpPoolServiceRangeAdd,
@@ -13073,6 +13122,7 @@ impl CliCommand {
             CliCommand::IpPoolSiloLink,
             CliCommand::IpPoolSiloUpdate,
             CliCommand::IpPoolSiloUnlink,
+            CliCommand::IpPoolUtilizationView,
             CliCommand::IpPoolServiceView,
             CliCommand::IpPoolServiceRangeList,
             CliCommand::IpPoolServiceRangeAdd,

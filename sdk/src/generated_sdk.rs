@@ -10849,6 +10849,60 @@ pub mod types {
         }
     }
 
+    /// IpPoolUtilization
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "ipv4",
+    ///    "ipv6"
+    ///  ],
+    ///  "properties": {
+    ///    "ipv4": {
+    ///      "description": "Number of allocated and total available IPv4
+    /// addresses in pool",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Ipv4Utilization"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "ipv6": {
+    ///      "description": "Number of allocated and total available IPv6
+    /// addresses in pool",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Ipv6Utilization"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct IpPoolUtilization {
+        /// Number of allocated and total available IPv4 addresses in pool
+        pub ipv4: Ipv4Utilization,
+        /// Number of allocated and total available IPv6 addresses in pool
+        pub ipv6: Ipv6Utilization,
+    }
+
+    impl From<&IpPoolUtilization> for IpPoolUtilization {
+        fn from(value: &IpPoolUtilization) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IpPoolUtilization {
+        pub fn builder() -> builder::IpPoolUtilization {
+            Default::default()
+        }
+    }
+
     /// IpRange
     ///
     /// <details><summary>JSON schema</summary>
@@ -11046,6 +11100,57 @@ pub mod types {
         }
     }
 
+    /// Ipv4Utilization
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allocated",
+    ///    "capacity"
+    ///  ],
+    ///  "properties": {
+    ///    "allocated": {
+    ///      "description": "The number of IPv4 addresses allocated from this
+    /// pool",
+    ///      "type": "integer",
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "capacity": {
+    ///      "description": "The total number of IPv4 addresses in the pool, i.e., the sum of the lengths of the IPv4 ranges. Unlike IPv6 capacity, can be a 32-bit integer because there are only 2^32 IPv4 addresses.",
+    ///      "type": "integer",
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Ipv4Utilization {
+        /// The number of IPv4 addresses allocated from this pool
+        pub allocated: u32,
+        /// The total number of IPv4 addresses in the pool, i.e., the sum of the
+        /// lengths of the IPv4 ranges. Unlike IPv6 capacity, can be a 32-bit
+        /// integer because there are only 2^32 IPv4 addresses.
+        pub capacity: u32,
+    }
+
+    impl From<&Ipv4Utilization> for Ipv4Utilization {
+        fn from(value: &Ipv4Utilization) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Ipv4Utilization {
+        pub fn builder() -> builder::Ipv4Utilization {
+            Default::default()
+        }
+    }
+
     /// An IPv6 subnet, including prefix and subnet mask
     ///
     /// <details><summary>JSON schema</summary>
@@ -11186,6 +11291,60 @@ pub mod types {
 
     impl Ipv6Range {
         pub fn builder() -> builder::Ipv6Range {
+            Default::default()
+        }
+    }
+
+    /// Ipv6Utilization
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allocated",
+    ///    "capacity"
+    ///  ],
+    ///  "properties": {
+    ///    "allocated": {
+    ///      "description": "The number of IPv6 addresses allocated from this
+    /// pool. A 128-bit integer string to match the capacity field.",
+    ///      "type": "string",
+    ///      "format": "uint128"
+    ///    },
+    ///    "capacity": {
+    ///      "description": "The total number of IPv6 addresses in the pool,
+    /// i.e., the sum of the lengths of the IPv6 ranges. An IPv6 range can
+    /// contain up to 2^128 addresses, so we represent this value in JSON as a
+    /// numeric string with a custom \"uint128\" format.",
+    ///      "type": "string",
+    ///      "format": "uint128"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Ipv6Utilization {
+        /// The number of IPv6 addresses allocated from this pool. A 128-bit
+        /// integer string to match the capacity field.
+        pub allocated: String,
+        /// The total number of IPv6 addresses in the pool, i.e., the sum of the
+        /// lengths of the IPv6 ranges. An IPv6 range can contain up to 2^128
+        /// addresses, so we represent this value in JSON as a numeric string
+        /// with a custom "uint128" format.
+        pub capacity: String,
+    }
+
+    impl From<&Ipv6Utilization> for Ipv6Utilization {
+        fn from(value: &Ipv6Utilization) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Ipv6Utilization {
+        pub fn builder() -> builder::Ipv6Utilization {
             Default::default()
         }
     }
@@ -28885,6 +29044,63 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct IpPoolUtilization {
+            ipv4: Result<super::Ipv4Utilization, String>,
+            ipv6: Result<super::Ipv6Utilization, String>,
+        }
+
+        impl Default for IpPoolUtilization {
+            fn default() -> Self {
+                Self {
+                    ipv4: Err("no value supplied for ipv4".to_string()),
+                    ipv6: Err("no value supplied for ipv6".to_string()),
+                }
+            }
+        }
+
+        impl IpPoolUtilization {
+            pub fn ipv4<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Ipv4Utilization>,
+                T::Error: std::fmt::Display,
+            {
+                self.ipv4 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ipv4: {}", e));
+                self
+            }
+            pub fn ipv6<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Ipv6Utilization>,
+                T::Error: std::fmt::Display,
+            {
+                self.ipv6 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ipv6: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<IpPoolUtilization> for super::IpPoolUtilization {
+            type Error = super::error::ConversionError;
+            fn try_from(value: IpPoolUtilization) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    ipv4: value.ipv4?,
+                    ipv6: value.ipv6?,
+                })
+            }
+        }
+
+        impl From<super::IpPoolUtilization> for IpPoolUtilization {
+            fn from(value: super::IpPoolUtilization) -> Self {
+                Self {
+                    ipv4: Ok(value.ipv4),
+                    ipv6: Ok(value.ipv6),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Ipv4Range {
             first: Result<std::net::Ipv4Addr, String>,
             last: Result<std::net::Ipv4Addr, String>,
@@ -28942,6 +29158,63 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Ipv4Utilization {
+            allocated: Result<u32, String>,
+            capacity: Result<u32, String>,
+        }
+
+        impl Default for Ipv4Utilization {
+            fn default() -> Self {
+                Self {
+                    allocated: Err("no value supplied for allocated".to_string()),
+                    capacity: Err("no value supplied for capacity".to_string()),
+                }
+            }
+        }
+
+        impl Ipv4Utilization {
+            pub fn allocated<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.allocated = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for allocated: {}", e));
+                self
+            }
+            pub fn capacity<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.capacity = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Ipv4Utilization> for super::Ipv4Utilization {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Ipv4Utilization) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    allocated: value.allocated?,
+                    capacity: value.capacity?,
+                })
+            }
+        }
+
+        impl From<super::Ipv4Utilization> for Ipv4Utilization {
+            fn from(value: super::Ipv4Utilization) -> Self {
+                Self {
+                    allocated: Ok(value.allocated),
+                    capacity: Ok(value.capacity),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Ipv6Range {
             first: Result<std::net::Ipv6Addr, String>,
             last: Result<std::net::Ipv6Addr, String>,
@@ -28994,6 +29267,63 @@ pub mod types {
                 Self {
                     first: Ok(value.first),
                     last: Ok(value.last),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Ipv6Utilization {
+            allocated: Result<String, String>,
+            capacity: Result<String, String>,
+        }
+
+        impl Default for Ipv6Utilization {
+            fn default() -> Self {
+                Self {
+                    allocated: Err("no value supplied for allocated".to_string()),
+                    capacity: Err("no value supplied for capacity".to_string()),
+                }
+            }
+        }
+
+        impl Ipv6Utilization {
+            pub fn allocated<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.allocated = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for allocated: {}", e));
+                self
+            }
+            pub fn capacity<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.capacity = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Ipv6Utilization> for super::Ipv6Utilization {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Ipv6Utilization) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    allocated: value.allocated?,
+                    capacity: value.capacity?,
+                })
+            }
+        }
+
+        impl From<super::Ipv6Utilization> for Ipv6Utilization {
+            fn from(value: super::Ipv6Utilization) -> Self {
+                Self {
+                    allocated: Ok(value.allocated),
+                    capacity: Ok(value.capacity),
                 }
             }
         }
@@ -39922,6 +40252,19 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink;
+    /// Fetch IP pool utilization
+    ///
+    /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/utilization`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the IP pool
+    /// ```ignore
+    /// let response = client.ip_pool_utilization_view()
+    ///    .pool(pool)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_utilization_view(&self) -> builder::IpPoolUtilizationView;
     /// Fetch Oxide service IP pool
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools-service`
@@ -40337,6 +40680,10 @@ impl ClientSystemNetworkingExt for Client {
 
     fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink {
         builder::IpPoolSiloUnlink::new(self)
+    }
+
+    fn ip_pool_utilization_view(&self) -> builder::IpPoolUtilizationView {
+        builder::IpPoolUtilizationView::new(self)
     }
 
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
@@ -53500,6 +53847,68 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_utilization_view`]
+    ///
+    /// [`ClientSystemNetworkingExt::ip_pool_utilization_view`]: super::ClientSystemNetworkingExt::ip_pool_utilization_view
+    #[derive(Debug, Clone)]
+    pub struct IpPoolUtilizationView<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> IpPoolUtilizationView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/utilization`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IpPoolUtilization>, Error<types::Error>> {
+            let Self { client, pool } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}/utilization",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
