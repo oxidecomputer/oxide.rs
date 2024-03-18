@@ -120,7 +120,7 @@ impl Config {
         let hosts_path = dir.join("hosts.toml");
         let mut hosts = if let Ok(contents) = std::fs::read_to_string(hosts_path.clone()) {
             contents
-                .parse::<toml_edit::Document>()
+                .parse::<toml_edit::DocumentMut>()
                 .map_err(OxideError::TomlError)?
         } else {
             Default::default()
