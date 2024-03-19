@@ -649,6 +649,47 @@ pub mod types {
         }
     }
 
+    /// BGP message history for rack switches.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "BGP message history for rack switches.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "switch_histories"
+    ///  ],
+    ///  "properties": {
+    ///    "switch_histories": {
+    ///      "description": "BGP history organized by switch.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SwitchBgpHistory"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AggregateBgpMessageHistory {
+        /// BGP history organized by switch.
+        pub switch_histories: Vec<SwitchBgpHistory>,
+    }
+
+    impl From<&AggregateBgpMessageHistory> for AggregateBgpMessageHistory {
+        fn from(value: &AggregateBgpMessageHistory) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AggregateBgpMessageHistory {
+        pub fn builder() -> builder::AggregateBgpMessageHistory {
+            Default::default()
+        }
+    }
+
     /// Properties that uniquely identify an Oxide hardware component
     ///
     /// <details><summary>JSON schema</summary>
@@ -1662,6 +1703,41 @@ pub mod types {
     impl BgpImportedRouteIpv4 {
         pub fn builder() -> builder::BgpImportedRouteIpv4 {
             Default::default()
+        }
+    }
+
+    /// BgpMessageHistory
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {}
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpMessageHistory(pub serde_json::Value);
+    impl std::ops::Deref for BgpMessageHistory {
+        type Target = serde_json::Value;
+        fn deref(&self) -> &serde_json::Value {
+            &self.0
+        }
+    }
+
+    impl From<BgpMessageHistory> for serde_json::Value {
+        fn from(value: BgpMessageHistory) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&BgpMessageHistory> for BgpMessageHistory {
+        fn from(value: &BgpMessageHistory) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<serde_json::Value> for BgpMessageHistory {
+        fn from(value: serde_json::Value) -> Self {
+            Self(value)
         }
     }
 
@@ -10148,6 +10224,92 @@ pub mod types {
         }
     }
 
+    /// IpKind
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "snat",
+    ///    "floating",
+    ///    "ephemeral"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum IpKind {
+        #[serde(rename = "snat")]
+        Snat,
+        #[serde(rename = "floating")]
+        Floating,
+        #[serde(rename = "ephemeral")]
+        Ephemeral,
+    }
+
+    impl From<&IpKind> for IpKind {
+        fn from(value: &IpKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for IpKind {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Snat => "snat".to_string(),
+                Self::Floating => "floating".to_string(),
+                Self::Ephemeral => "ephemeral".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for IpKind {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "snat" => Ok(Self::Snat),
+                "floating" => Ok(Self::Floating),
+                "ephemeral" => Ok(Self::Ephemeral),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for IpKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for IpKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for IpKind {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     /// IpNet
     ///
     /// <details><summary>JSON schema</summary>
@@ -10763,6 +10925,60 @@ pub mod types {
         }
     }
 
+    /// IpPoolUtilization
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "ipv4",
+    ///    "ipv6"
+    ///  ],
+    ///  "properties": {
+    ///    "ipv4": {
+    ///      "description": "Number of allocated and total available IPv4
+    /// addresses in pool",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Ipv4Utilization"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "ipv6": {
+    ///      "description": "Number of allocated and total available IPv6
+    /// addresses in pool",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Ipv6Utilization"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct IpPoolUtilization {
+        /// Number of allocated and total available IPv4 addresses in pool
+        pub ipv4: Ipv4Utilization,
+        /// Number of allocated and total available IPv6 addresses in pool
+        pub ipv6: Ipv6Utilization,
+    }
+
+    impl From<&IpPoolUtilization> for IpPoolUtilization {
+        fn from(value: &IpPoolUtilization) -> Self {
+            value.clone()
+        }
+    }
+
+    impl IpPoolUtilization {
+        pub fn builder() -> builder::IpPoolUtilization {
+            Default::default()
+        }
+    }
+
     /// IpRange
     ///
     /// <details><summary>JSON schema</summary>
@@ -10960,6 +11176,57 @@ pub mod types {
         }
     }
 
+    /// Ipv4Utilization
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allocated",
+    ///    "capacity"
+    ///  ],
+    ///  "properties": {
+    ///    "allocated": {
+    ///      "description": "The number of IPv4 addresses allocated from this
+    /// pool",
+    ///      "type": "integer",
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "capacity": {
+    ///      "description": "The total number of IPv4 addresses in the pool, i.e., the sum of the lengths of the IPv4 ranges. Unlike IPv6 capacity, can be a 32-bit integer because there are only 2^32 IPv4 addresses.",
+    ///      "type": "integer",
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Ipv4Utilization {
+        /// The number of IPv4 addresses allocated from this pool
+        pub allocated: u32,
+        /// The total number of IPv4 addresses in the pool, i.e., the sum of the
+        /// lengths of the IPv4 ranges. Unlike IPv6 capacity, can be a 32-bit
+        /// integer because there are only 2^32 IPv4 addresses.
+        pub capacity: u32,
+    }
+
+    impl From<&Ipv4Utilization> for Ipv4Utilization {
+        fn from(value: &Ipv4Utilization) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Ipv4Utilization {
+        pub fn builder() -> builder::Ipv4Utilization {
+            Default::default()
+        }
+    }
+
     /// An IPv6 subnet, including prefix and subnet mask
     ///
     /// <details><summary>JSON schema</summary>
@@ -11100,6 +11367,60 @@ pub mod types {
 
     impl Ipv6Range {
         pub fn builder() -> builder::Ipv6Range {
+            Default::default()
+        }
+    }
+
+    /// Ipv6Utilization
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allocated",
+    ///    "capacity"
+    ///  ],
+    ///  "properties": {
+    ///    "allocated": {
+    ///      "description": "The number of IPv6 addresses allocated from this
+    /// pool. A 128-bit integer string to match the capacity field.",
+    ///      "type": "string",
+    ///      "format": "uint128"
+    ///    },
+    ///    "capacity": {
+    ///      "description": "The total number of IPv6 addresses in the pool,
+    /// i.e., the sum of the lengths of the IPv6 ranges. An IPv6 range can
+    /// contain up to 2^128 addresses, so we represent this value in JSON as a
+    /// numeric string with a custom \"uint128\" format.",
+    ///      "type": "string",
+    ///      "format": "uint128"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Ipv6Utilization {
+        /// The number of IPv6 addresses allocated from this pool. A 128-bit
+        /// integer string to match the capacity field.
+        pub allocated: String,
+        /// The total number of IPv6 addresses in the pool, i.e., the sum of the
+        /// lengths of the IPv6 ranges. An IPv6 range can contain up to 2^128
+        /// addresses, so we represent this value in JSON as a numeric string
+        /// with a custom "uint128" format.
+        pub capacity: String,
+    }
+
+    impl From<&Ipv6Utilization> for Ipv6Utilization {
+        fn from(value: &Ipv6Utilization) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Ipv6Utilization {
+        pub fn builder() -> builder::Ipv6Utilization {
             Default::default()
         }
     }
@@ -12524,6 +12845,179 @@ pub mod types {
         }
     }
 
+    /// Information required to construct a virtual network interface
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Information required to construct a virtual network
+    /// interface",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "ip",
+    ///    "kind",
+    ///    "mac",
+    ///    "name",
+    ///    "primary",
+    ///    "slot",
+    ///    "subnet",
+    ///    "vni"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "ip": {
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "kind": {
+    ///      "$ref": "#/components/schemas/NetworkInterfaceKind"
+    ///    },
+    ///    "mac": {
+    ///      "$ref": "#/components/schemas/MacAddr"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "primary": {
+    ///      "type": "boolean"
+    ///    },
+    ///    "slot": {
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "subnet": {
+    ///      "$ref": "#/components/schemas/IpNet"
+    ///    },
+    ///    "vni": {
+    ///      "$ref": "#/components/schemas/Vni"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct NetworkInterface {
+        pub id: uuid::Uuid,
+        pub ip: std::net::IpAddr,
+        pub kind: NetworkInterfaceKind,
+        pub mac: MacAddr,
+        pub name: Name,
+        pub primary: bool,
+        pub slot: u8,
+        pub subnet: IpNet,
+        pub vni: Vni,
+    }
+
+    impl From<&NetworkInterface> for NetworkInterface {
+        fn from(value: &NetworkInterface) -> Self {
+            value.clone()
+        }
+    }
+
+    impl NetworkInterface {
+        pub fn builder() -> builder::NetworkInterface {
+            Default::default()
+        }
+    }
+
+    /// The type of network interface
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The type of network interface",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "A vNIC attached to a guest instance",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "id",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "instance"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "A vNIC associated with an internal service",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "id",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "service"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "A vNIC associated with a probe",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "id",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "id": {
+    ///          "type": "string",
+    ///          "format": "uuid"
+    ///        },
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "probe"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type", content = "id")]
+    pub enum NetworkInterfaceKind {
+        /// A vNIC attached to a guest instance
+        #[serde(rename = "instance")]
+        Instance(uuid::Uuid),
+        /// A vNIC associated with an internal service
+        #[serde(rename = "service")]
+        Service(uuid::Uuid),
+        /// A vNIC associated with a probe
+        #[serde(rename = "probe")]
+        Probe(uuid::Uuid),
+    }
+
+    impl From<&NetworkInterfaceKind> for NetworkInterfaceKind {
+        fn from(value: &NetworkInterfaceKind) -> Self {
+            value.clone()
+        }
+    }
+
     /// The order in which the client wants to page through the requested
     /// collection
     ///
@@ -13030,6 +13524,312 @@ pub mod types {
         type Error = self::error::ConversionError;
         fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    /// Identity-related metadata that's included in nearly all public API
+    /// objects
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Identity-related metadata that's included in nearly all
+    /// public API objects",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "id",
+    ///    "name",
+    ///    "sled",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "human-readable free-form text about a resource",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "unique, immutable, system-controlled identifier for
+    /// each resource",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "unique, mutable, user-controlled identifier for
+    /// each resource",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Name"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "sled": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "time_created": {
+    ///      "description": "timestamp when this resource was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "timestamp when this resource was last modified",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Probe {
+        /// human-readable free-form text about a resource
+        pub description: String,
+        /// unique, immutable, system-controlled identifier for each resource
+        pub id: uuid::Uuid,
+        /// unique, mutable, user-controlled identifier for each resource
+        pub name: Name,
+        pub sled: uuid::Uuid,
+        /// timestamp when this resource was created
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// timestamp when this resource was last modified
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&Probe> for Probe {
+        fn from(value: &Probe) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Probe {
+        pub fn builder() -> builder::Probe {
+            Default::default()
+        }
+    }
+
+    /// Create time parameters for probes.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Create time parameters for probes.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "description",
+    ///    "name",
+    ///    "sled"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
+    ///    "ip_pool": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/NameOrId"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "sled": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct ProbeCreate {
+        pub description: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub ip_pool: Option<NameOrId>,
+        pub name: Name,
+        pub sled: uuid::Uuid,
+    }
+
+    impl From<&ProbeCreate> for ProbeCreate {
+        fn from(value: &ProbeCreate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ProbeCreate {
+        pub fn builder() -> builder::ProbeCreate {
+            Default::default()
+        }
+    }
+
+    /// ProbeExternalIp
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "first_port",
+    ///    "ip",
+    ///    "kind",
+    ///    "last_port"
+    ///  ],
+    ///  "properties": {
+    ///    "first_port": {
+    ///      "type": "integer",
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "ip": {
+    ///      "type": "string",
+    ///      "format": "ip"
+    ///    },
+    ///    "kind": {
+    ///      "$ref": "#/components/schemas/IpKind"
+    ///    },
+    ///    "last_port": {
+    ///      "type": "integer",
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct ProbeExternalIp {
+        pub first_port: u16,
+        pub ip: std::net::IpAddr,
+        pub kind: IpKind,
+        pub last_port: u16,
+    }
+
+    impl From<&ProbeExternalIp> for ProbeExternalIp {
+        fn from(value: &ProbeExternalIp) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ProbeExternalIp {
+        pub fn builder() -> builder::ProbeExternalIp {
+            Default::default()
+        }
+    }
+
+    /// ProbeInfo
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "object",
+    ///  "required": [
+    ///    "external_ips",
+    ///    "id",
+    ///    "interface",
+    ///    "name",
+    ///    "sled"
+    ///  ],
+    ///  "properties": {
+    ///    "external_ips": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ProbeExternalIp"
+    ///      }
+    ///    },
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "interface": {
+    ///      "$ref": "#/components/schemas/NetworkInterface"
+    ///    },
+    ///    "name": {
+    ///      "$ref": "#/components/schemas/Name"
+    ///    },
+    ///    "sled": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct ProbeInfo {
+        pub external_ips: Vec<ProbeExternalIp>,
+        pub id: uuid::Uuid,
+        pub interface: NetworkInterface,
+        pub name: Name,
+        pub sled: uuid::Uuid,
+    }
+
+    impl From<&ProbeInfo> for ProbeInfo {
+        fn from(value: &ProbeInfo) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ProbeInfo {
+        pub fn builder() -> builder::ProbeInfo {
+            Default::default()
+        }
+    }
+
+    /// A single page of results
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A single page of results",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "list of items on this page of results",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ProbeInfo"
+    ///      }
+    ///    },
+    ///    "next_page": {
+    ///      "description": "token used to fetch the next page of results (if
+    /// any)",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct ProbeInfoResultsPage {
+        /// list of items on this page of results
+        pub items: Vec<ProbeInfo>,
+        /// token used to fetch the next page of results (if any)
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub next_page: Option<String>,
+    }
+
+    impl From<&ProbeInfoResultsPage> for ProbeInfoResultsPage {
+        fn from(value: &ProbeInfoResultsPage) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ProbeInfoResultsPage {
+        pub fn builder() -> builder::ProbeInfoResultsPage {
+            Default::default()
         }
     }
 
@@ -16535,6 +17335,58 @@ pub mod types {
         }
     }
 
+    /// BGP message history for a particular switch.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "BGP message history for a particular switch.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "history",
+    ///    "switch"
+    ///  ],
+    ///  "properties": {
+    ///    "history": {
+    ///      "description": "Message history indexed by peer address.",
+    ///      "type": "object",
+    ///      "additionalProperties": {
+    ///        "$ref": "#/components/schemas/BgpMessageHistory"
+    ///      }
+    ///    },
+    ///    "switch": {
+    ///      "description": "Switch this message history is associated with.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchBgpHistory {
+        /// Message history indexed by peer address.
+        pub history: std::collections::HashMap<String, BgpMessageHistory>,
+        /// Switch this message history is associated with.
+        pub switch: SwitchLocation,
+    }
+
+    impl From<&SwitchBgpHistory> for SwitchBgpHistory {
+        fn from(value: &SwitchBgpHistory) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchBgpHistory {
+        pub fn builder() -> builder::SwitchBgpHistory {
+            Default::default()
+        }
+    }
+
     /// A switch port interface configuration for a port settings object.
     ///
     /// <details><summary>JSON schema</summary>
@@ -19129,6 +19981,80 @@ pub mod types {
         }
     }
 
+    /// A Geneve Virtual Network Identifier
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A Geneve Virtual Network Identifier",
+    ///  "type": "integer",
+    ///  "format": "uint32",
+    ///  "minimum": 0.0
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Vni(pub u32);
+    impl std::ops::Deref for Vni {
+        type Target = u32;
+        fn deref(&self) -> &u32 {
+            &self.0
+        }
+    }
+
+    impl From<Vni> for u32 {
+        fn from(value: Vni) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&Vni> for Vni {
+        fn from(value: &Vni) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<u32> for Vni {
+        fn from(value: u32) -> Self {
+            Self(value)
+        }
+    }
+
+    impl std::str::FromStr for Vni {
+        type Err = <u32 as std::str::FromStr>::Err;
+        fn from_str(value: &str) -> Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for Vni {
+        type Error = <u32 as std::str::FromStr>::Err;
+        fn try_from(value: &str) -> Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for Vni {
+        type Error = <u32 as std::str::FromStr>::Err;
+        fn try_from(value: &String) -> Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for Vni {
+        type Error = <u32 as std::str::FromStr>::Err;
+        fn try_from(value: String) -> Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ToString for Vni {
+        fn to_string(&self) -> String {
+            self.0.to_string()
+        }
+    }
+
     /// View of a VPC
     ///
     /// <details><summary>JSON schema</summary>
@@ -21358,6 +22284,54 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AggregateBgpMessageHistory {
+            switch_histories: Result<Vec<super::SwitchBgpHistory>, String>,
+        }
+
+        impl Default for AggregateBgpMessageHistory {
+            fn default() -> Self {
+                Self {
+                    switch_histories: Err("no value supplied for switch_histories".to_string()),
+                }
+            }
+        }
+
+        impl AggregateBgpMessageHistory {
+            pub fn switch_histories<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchBgpHistory>>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch_histories = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for switch_histories: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AggregateBgpMessageHistory> for super::AggregateBgpMessageHistory {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AggregateBgpMessageHistory,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    switch_histories: value.switch_histories?,
+                })
+            }
+        }
+
+        impl From<super::AggregateBgpMessageHistory> for AggregateBgpMessageHistory {
+            fn from(value: super::AggregateBgpMessageHistory) -> Self {
+                Self {
+                    switch_histories: Ok(value.switch_histories),
                 }
             }
         }
@@ -28246,6 +29220,63 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct IpPoolUtilization {
+            ipv4: Result<super::Ipv4Utilization, String>,
+            ipv6: Result<super::Ipv6Utilization, String>,
+        }
+
+        impl Default for IpPoolUtilization {
+            fn default() -> Self {
+                Self {
+                    ipv4: Err("no value supplied for ipv4".to_string()),
+                    ipv6: Err("no value supplied for ipv6".to_string()),
+                }
+            }
+        }
+
+        impl IpPoolUtilization {
+            pub fn ipv4<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Ipv4Utilization>,
+                T::Error: std::fmt::Display,
+            {
+                self.ipv4 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ipv4: {}", e));
+                self
+            }
+            pub fn ipv6<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Ipv6Utilization>,
+                T::Error: std::fmt::Display,
+            {
+                self.ipv6 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ipv6: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<IpPoolUtilization> for super::IpPoolUtilization {
+            type Error = super::error::ConversionError;
+            fn try_from(value: IpPoolUtilization) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    ipv4: value.ipv4?,
+                    ipv6: value.ipv6?,
+                })
+            }
+        }
+
+        impl From<super::IpPoolUtilization> for IpPoolUtilization {
+            fn from(value: super::IpPoolUtilization) -> Self {
+                Self {
+                    ipv4: Ok(value.ipv4),
+                    ipv6: Ok(value.ipv6),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Ipv4Range {
             first: Result<std::net::Ipv4Addr, String>,
             last: Result<std::net::Ipv4Addr, String>,
@@ -28303,6 +29334,63 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct Ipv4Utilization {
+            allocated: Result<u32, String>,
+            capacity: Result<u32, String>,
+        }
+
+        impl Default for Ipv4Utilization {
+            fn default() -> Self {
+                Self {
+                    allocated: Err("no value supplied for allocated".to_string()),
+                    capacity: Err("no value supplied for capacity".to_string()),
+                }
+            }
+        }
+
+        impl Ipv4Utilization {
+            pub fn allocated<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.allocated = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for allocated: {}", e));
+                self
+            }
+            pub fn capacity<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.capacity = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Ipv4Utilization> for super::Ipv4Utilization {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Ipv4Utilization) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    allocated: value.allocated?,
+                    capacity: value.capacity?,
+                })
+            }
+        }
+
+        impl From<super::Ipv4Utilization> for Ipv4Utilization {
+            fn from(value: super::Ipv4Utilization) -> Self {
+                Self {
+                    allocated: Ok(value.allocated),
+                    capacity: Ok(value.capacity),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Ipv6Range {
             first: Result<std::net::Ipv6Addr, String>,
             last: Result<std::net::Ipv6Addr, String>,
@@ -28355,6 +29443,63 @@ pub mod types {
                 Self {
                     first: Ok(value.first),
                     last: Ok(value.last),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Ipv6Utilization {
+            allocated: Result<String, String>,
+            capacity: Result<String, String>,
+        }
+
+        impl Default for Ipv6Utilization {
+            fn default() -> Self {
+                Self {
+                    allocated: Err("no value supplied for allocated".to_string()),
+                    capacity: Err("no value supplied for capacity".to_string()),
+                }
+            }
+        }
+
+        impl Ipv6Utilization {
+            pub fn allocated<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.allocated = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for allocated: {}", e));
+                self
+            }
+            pub fn capacity<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.capacity = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for capacity: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Ipv6Utilization> for super::Ipv6Utilization {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Ipv6Utilization) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    allocated: value.allocated?,
+                    capacity: value.capacity?,
+                })
+            }
+        }
+
+        impl From<super::Ipv6Utilization> for Ipv6Utilization {
+            fn from(value: super::Ipv6Utilization) -> Self {
+                Self {
+                    allocated: Ok(value.allocated),
+                    capacity: Ok(value.capacity),
                 }
             }
         }
@@ -29040,6 +30185,161 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct NetworkInterface {
+            id: Result<uuid::Uuid, String>,
+            ip: Result<std::net::IpAddr, String>,
+            kind: Result<super::NetworkInterfaceKind, String>,
+            mac: Result<super::MacAddr, String>,
+            name: Result<super::Name, String>,
+            primary: Result<bool, String>,
+            slot: Result<u8, String>,
+            subnet: Result<super::IpNet, String>,
+            vni: Result<super::Vni, String>,
+        }
+
+        impl Default for NetworkInterface {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    ip: Err("no value supplied for ip".to_string()),
+                    kind: Err("no value supplied for kind".to_string()),
+                    mac: Err("no value supplied for mac".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    primary: Err("no value supplied for primary".to_string()),
+                    slot: Err("no value supplied for slot".to_string()),
+                    subnet: Err("no value supplied for subnet".to_string()),
+                    vni: Err("no value supplied for vni".to_string()),
+                }
+            }
+        }
+
+        impl NetworkInterface {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NetworkInterfaceKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn mac<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::MacAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.mac = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mac: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn primary<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.primary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for primary: {}", e));
+                self
+            }
+            pub fn slot<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u8>,
+                T::Error: std::fmt::Display,
+            {
+                self.slot = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for slot: {}", e));
+                self
+            }
+            pub fn subnet<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpNet>,
+                T::Error: std::fmt::Display,
+            {
+                self.subnet = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subnet: {}", e));
+                self
+            }
+            pub fn vni<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Vni>,
+                T::Error: std::fmt::Display,
+            {
+                self.vni = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vni: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<NetworkInterface> for super::NetworkInterface {
+            type Error = super::error::ConversionError;
+            fn try_from(value: NetworkInterface) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    ip: value.ip?,
+                    kind: value.kind?,
+                    mac: value.mac?,
+                    name: value.name?,
+                    primary: value.primary?,
+                    slot: value.slot?,
+                    subnet: value.subnet?,
+                    vni: value.vni?,
+                })
+            }
+        }
+
+        impl From<super::NetworkInterface> for NetworkInterface {
+            fn from(value: super::NetworkInterface) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    ip: Ok(value.ip),
+                    kind: Ok(value.kind),
+                    mac: Ok(value.mac),
+                    name: Ok(value.name),
+                    primary: Ok(value.primary),
+                    slot: Ok(value.slot),
+                    subnet: Ok(value.subnet),
+                    vni: Ok(value.vni),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct PhysicalDisk {
             form_factor: Result<super::PhysicalDiskKind, String>,
             id: Result<uuid::Uuid, String>,
@@ -29278,6 +30578,447 @@ pub mod types {
             fn from(value: super::Ping) -> Self {
                 Self {
                     status: Ok(value.status),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Probe {
+            description: Result<String, String>,
+            id: Result<uuid::Uuid, String>,
+            name: Result<super::Name, String>,
+            sled: Result<uuid::Uuid, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for Probe {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    sled: Err("no value supplied for sled".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl Probe {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn sled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.sled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sled: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Probe> for super::Probe {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Probe) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    id: value.id?,
+                    name: value.name?,
+                    sled: value.sled?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::Probe> for Probe {
+            fn from(value: super::Probe) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    sled: Ok(value.sled),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ProbeCreate {
+            description: Result<String, String>,
+            ip_pool: Result<Option<super::NameOrId>, String>,
+            name: Result<super::Name, String>,
+            sled: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for ProbeCreate {
+            fn default() -> Self {
+                Self {
+                    description: Err("no value supplied for description".to_string()),
+                    ip_pool: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    sled: Err("no value supplied for sled".to_string()),
+                }
+            }
+        }
+
+        impl ProbeCreate {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
+            pub fn ip_pool<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::NameOrId>>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip_pool = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_pool: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn sled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.sled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sled: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<ProbeCreate> for super::ProbeCreate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: ProbeCreate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    ip_pool: value.ip_pool?,
+                    name: value.name?,
+                    sled: value.sled?,
+                })
+            }
+        }
+
+        impl From<super::ProbeCreate> for ProbeCreate {
+            fn from(value: super::ProbeCreate) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    ip_pool: Ok(value.ip_pool),
+                    name: Ok(value.name),
+                    sled: Ok(value.sled),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ProbeExternalIp {
+            first_port: Result<u16, String>,
+            ip: Result<std::net::IpAddr, String>,
+            kind: Result<super::IpKind, String>,
+            last_port: Result<u16, String>,
+        }
+
+        impl Default for ProbeExternalIp {
+            fn default() -> Self {
+                Self {
+                    first_port: Err("no value supplied for first_port".to_string()),
+                    ip: Err("no value supplied for ip".to_string()),
+                    kind: Err("no value supplied for kind".to_string()),
+                    last_port: Err("no value supplied for last_port".to_string()),
+                }
+            }
+        }
+
+        impl ProbeExternalIp {
+            pub fn first_port<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.first_port = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for first_port: {}", e));
+                self
+            }
+            pub fn ip<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::net::IpAddr>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn kind<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::IpKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.kind = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for kind: {}", e));
+                self
+            }
+            pub fn last_port<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.last_port = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for last_port: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<ProbeExternalIp> for super::ProbeExternalIp {
+            type Error = super::error::ConversionError;
+            fn try_from(value: ProbeExternalIp) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    first_port: value.first_port?,
+                    ip: value.ip?,
+                    kind: value.kind?,
+                    last_port: value.last_port?,
+                })
+            }
+        }
+
+        impl From<super::ProbeExternalIp> for ProbeExternalIp {
+            fn from(value: super::ProbeExternalIp) -> Self {
+                Self {
+                    first_port: Ok(value.first_port),
+                    ip: Ok(value.ip),
+                    kind: Ok(value.kind),
+                    last_port: Ok(value.last_port),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ProbeInfo {
+            external_ips: Result<Vec<super::ProbeExternalIp>, String>,
+            id: Result<uuid::Uuid, String>,
+            interface: Result<super::NetworkInterface, String>,
+            name: Result<super::Name, String>,
+            sled: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for ProbeInfo {
+            fn default() -> Self {
+                Self {
+                    external_ips: Err("no value supplied for external_ips".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    interface: Err("no value supplied for interface".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    sled: Err("no value supplied for sled".to_string()),
+                }
+            }
+        }
+
+        impl ProbeInfo {
+            pub fn external_ips<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::ProbeExternalIp>>,
+                T::Error: std::fmt::Display,
+            {
+                self.external_ips = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for external_ips: {}", e)
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+            pub fn interface<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::NetworkInterface>,
+                T::Error: std::fmt::Display,
+            {
+                self.interface = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for interface: {}", e));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Name>,
+                T::Error: std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {}", e));
+                self
+            }
+            pub fn sled<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.sled = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sled: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<ProbeInfo> for super::ProbeInfo {
+            type Error = super::error::ConversionError;
+            fn try_from(value: ProbeInfo) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    external_ips: value.external_ips?,
+                    id: value.id?,
+                    interface: value.interface?,
+                    name: value.name?,
+                    sled: value.sled?,
+                })
+            }
+        }
+
+        impl From<super::ProbeInfo> for ProbeInfo {
+            fn from(value: super::ProbeInfo) -> Self {
+                Self {
+                    external_ips: Ok(value.external_ips),
+                    id: Ok(value.id),
+                    interface: Ok(value.interface),
+                    name: Ok(value.name),
+                    sled: Ok(value.sled),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct ProbeInfoResultsPage {
+            items: Result<Vec<super::ProbeInfo>, String>,
+            next_page: Result<Option<String>, String>,
+        }
+
+        impl Default for ProbeInfoResultsPage {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                    next_page: Ok(Default::default()),
+                }
+            }
+        }
+
+        impl ProbeInfoResultsPage {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::ProbeInfo>>,
+                T::Error: std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {}", e));
+                self
+            }
+            pub fn next_page<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_page: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<ProbeInfoResultsPage> for super::ProbeInfoResultsPage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ProbeInfoResultsPage,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                    next_page: value.next_page?,
+                })
+            }
+        }
+
+        impl From<super::ProbeInfoResultsPage> for ProbeInfoResultsPage {
+            fn from(value: super::ProbeInfoResultsPage) -> Self {
+                Self {
+                    items: Ok(value.items),
+                    next_page: Ok(value.next_page),
                 }
             }
         }
@@ -32693,6 +34434,65 @@ pub mod types {
                     rack_id: Ok(value.rack_id),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SwitchBgpHistory {
+            history: Result<std::collections::HashMap<String, super::BgpMessageHistory>, String>,
+            switch: Result<super::SwitchLocation, String>,
+        }
+
+        impl Default for SwitchBgpHistory {
+            fn default() -> Self {
+                Self {
+                    history: Err("no value supplied for history".to_string()),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl SwitchBgpHistory {
+            pub fn history<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<
+                    std::collections::HashMap<String, super::BgpMessageHistory>,
+                >,
+                T::Error: std::fmt::Display,
+            {
+                self.history = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for history: {}", e));
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchLocation>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchBgpHistory> for super::SwitchBgpHistory {
+            type Error = super::error::ConversionError;
+            fn try_from(value: SwitchBgpHistory) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    history: value.history?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl From<super::SwitchBgpHistory> for SwitchBgpHistory {
+            fn from(value: super::SwitchBgpHistory) -> Self {
+                Self {
+                    history: Ok(value.history),
+                    switch: Ok(value.switch),
                 }
             }
         }
@@ -36646,6 +38446,71 @@ pub trait ClientHiddenExt {
     ///    .await;
     /// ```
     fn device_access_token(&self) -> builder::DeviceAccessToken;
+    /// List instrumentation probes
+    ///
+    /// Sends a `GET` request to `/experimental/v1/probes`
+    ///
+    /// Arguments:
+    /// - `limit`: Maximum number of items returned by a single call
+    /// - `page_token`: Token returned by previous call to retrieve the
+    ///   subsequent page
+    /// - `project`: Name or ID of the project
+    /// - `sort_by`
+    /// ```ignore
+    /// let response = client.probe_list()
+    ///    .limit(limit)
+    ///    .page_token(page_token)
+    ///    .project(project)
+    ///    .sort_by(sort_by)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn probe_list(&self) -> builder::ProbeList;
+    /// Create instrumentation probe
+    ///
+    /// Sends a `POST` request to `/experimental/v1/probes`
+    ///
+    /// Arguments:
+    /// - `project`: Name or ID of the project
+    /// - `body`
+    /// ```ignore
+    /// let response = client.probe_create()
+    ///    .project(project)
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn probe_create(&self) -> builder::ProbeCreate;
+    /// View instrumentation probe
+    ///
+    /// Sends a `GET` request to `/experimental/v1/probes/{probe}`
+    ///
+    /// Arguments:
+    /// - `probe`: Name or ID of the probe
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.probe_view()
+    ///    .probe(probe)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn probe_view(&self) -> builder::ProbeView;
+    /// Delete instrumentation probe
+    ///
+    /// Sends a `DELETE` request to `/experimental/v1/probes/{probe}`
+    ///
+    /// Arguments:
+    /// - `probe`: Name or ID of the probe
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.probe_delete()
+    ///    .probe(probe)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn probe_delete(&self) -> builder::ProbeDelete;
     /// Log user out of web console by deleting session on client and server
     ///
     /// Sends a `POST` request to `/v1/logout`
@@ -36669,6 +38534,22 @@ impl ClientHiddenExt for Client {
 
     fn device_access_token(&self) -> builder::DeviceAccessToken {
         builder::DeviceAccessToken::new(self)
+    }
+
+    fn probe_list(&self) -> builder::ProbeList {
+        builder::ProbeList::new(self)
+    }
+
+    fn probe_create(&self) -> builder::ProbeCreate {
+        builder::ProbeCreate::new(self)
+    }
+
+    fn probe_view(&self) -> builder::ProbeView {
+        builder::ProbeView::new(self)
+    }
+
+    fn probe_delete(&self) -> builder::ProbeDelete {
+        builder::ProbeDelete::new(self)
     }
 
     fn logout(&self) -> builder::Logout {
@@ -38606,6 +40487,19 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn ip_pool_silo_unlink(&self) -> builder::IpPoolSiloUnlink;
+    /// Fetch IP pool utilization
+    ///
+    /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/utilization`
+    ///
+    /// Arguments:
+    /// - `pool`: Name or ID of the IP pool
+    /// ```ignore
+    /// let response = client.ip_pool_utilization_view()
+    ///    .pool(pool)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn ip_pool_utilization_view(&self) -> builder::IpPoolUtilizationView;
     /// Fetch Oxide service IP pool
     ///
     /// Sends a `GET` request to `/v1/system/ip-pools-service`
@@ -38833,6 +40727,19 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete;
+    /// Get BGP router message history
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/bgp-message-history`
+    ///
+    /// Arguments:
+    /// - `asn`: The ASN to filter on. Required.
+    /// ```ignore
+    /// let response = client.networking_bgp_message_history()
+    ///    .asn(asn)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_message_history(&self) -> builder::NetworkingBgpMessageHistory;
     /// Get imported IPv4 BGP routes
     ///
     /// Sends a `GET` request to `/v1/system/networking/bgp-routes-ipv4`
@@ -39023,6 +40930,10 @@ impl ClientSystemNetworkingExt for Client {
         builder::IpPoolSiloUnlink::new(self)
     }
 
+    fn ip_pool_utilization_view(&self) -> builder::IpPoolUtilizationView {
+        builder::IpPoolUtilizationView::new(self)
+    }
+
     fn ip_pool_service_view(&self) -> builder::IpPoolServiceView {
         builder::IpPoolServiceView::new(self)
     }
@@ -39089,6 +41000,10 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete {
         builder::NetworkingBgpAnnounceSetDelete::new(self)
+    }
+
+    fn networking_bgp_message_history(&self) -> builder::NetworkingBgpMessageHistory {
+        builder::NetworkingBgpMessageHistory::new(self)
     }
 
     fn networking_bgp_imported_routes_ipv4(&self) -> builder::NetworkingBgpImportedRoutesIpv4 {
@@ -40100,6 +42015,432 @@ pub mod builder {
             match response.status().as_u16() {
                 200..=299 => Ok(ResponseValue::stream(response)),
                 _ => Err(Error::ErrorResponse(ResponseValue::stream(response))),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::probe_list`]
+    ///
+    /// [`ClientHiddenExt::probe_list`]: super::ClientHiddenExt::probe_list
+    #[derive(Debug, Clone)]
+    pub struct ProbeList<'a> {
+        client: &'a super::Client,
+        limit: Result<Option<std::num::NonZeroU32>, String>,
+        page_token: Result<Option<String>, String>,
+        project: Result<Option<types::NameOrId>, String>,
+        sort_by: Result<Option<types::NameOrIdSortMode>, String>,
+    }
+
+    impl<'a> ProbeList<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+            }
+        }
+
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<std::num::NonZeroU32>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `std :: num :: NonZeroU32` for limit failed".to_string()
+            });
+            self
+        }
+
+        pub fn page_token<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<String>,
+        {
+            self.page_token = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `String` for page_token failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn sort_by<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrIdSortMode>,
+        {
+            self.sort_by = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrIdSortMode` for sort_by failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/experimental/v1/probes`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::ProbeInfoResultsPage>, Error<types::Error>> {
+            let Self {
+                client,
+                limit,
+                page_token,
+                project,
+                sort_by,
+            } = self;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let page_token = page_token.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let sort_by = sort_by.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/experimental/v1/probes", client.baseurl,);
+            let mut query = Vec::with_capacity(4usize);
+            if let Some(v) = &limit {
+                query.push(("limit", v.to_string()));
+            }
+            if let Some(v) = &page_token {
+                query.push(("page_token", v.to_string()));
+            }
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            if let Some(v) = &sort_by {
+                query.push(("sort_by", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+
+        /// Streams `GET` requests to `/experimental/v1/probes`
+        pub fn stream(
+            self,
+        ) -> impl futures::Stream<Item = Result<types::ProbeInfo, Error<types::Error>>> + Unpin + 'a
+        {
+            use futures::StreamExt;
+            use futures::TryFutureExt;
+            use futures::TryStreamExt;
+            let limit = self
+                .limit
+                .clone()
+                .ok()
+                .flatten()
+                .and_then(|x| std::num::NonZeroUsize::try_from(x).ok())
+                .map(std::num::NonZeroUsize::get)
+                .unwrap_or(usize::MAX);
+            let next = Self {
+                limit: Ok(None),
+                page_token: Ok(None),
+                project: Ok(None),
+                sort_by: Ok(None),
+                ..self.clone()
+            };
+            self.send()
+                .map_ok(move |page| {
+                    let page = page.into_inner();
+                    let first = futures::stream::iter(page.items).map(Ok);
+                    let rest = futures::stream::try_unfold(
+                        (page.next_page, next),
+                        |(next_page, next)| async {
+                            if next_page.is_none() {
+                                Ok(None)
+                            } else {
+                                Self {
+                                    page_token: Ok(next_page),
+                                    ..next.clone()
+                                }
+                                .send()
+                                .map_ok(|page| {
+                                    let page = page.into_inner();
+                                    Some((
+                                        futures::stream::iter(page.items).map(Ok),
+                                        (page.next_page, next),
+                                    ))
+                                })
+                                .await
+                            }
+                        },
+                    )
+                    .try_flatten();
+                    first.chain(rest)
+                })
+                .try_flatten_stream()
+                .take(limit)
+                .boxed()
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::probe_create`]
+    ///
+    /// [`ClientHiddenExt::probe_create`]: super::ClientHiddenExt::probe_create
+    #[derive(Debug, Clone)]
+    pub struct ProbeCreate<'a> {
+        client: &'a super::Client,
+        project: Result<types::NameOrId, String>,
+        body: Result<types::builder::ProbeCreate, String>,
+    }
+
+    impl<'a> ProbeCreate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                project: Err("project was not initialized".to_string()),
+                body: Ok(types::builder::ProbeCreate::default()),
+            }
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ProbeCreate>,
+            <V as std::convert::TryInto<types::ProbeCreate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `ProbeCreate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::ProbeCreate) -> types::builder::ProbeCreate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `POST` request to `/experimental/v1/probes`
+        pub async fn send(self) -> Result<ResponseValue<types::Probe>, Error<types::Error>> {
+            let Self {
+                client,
+                project,
+                body,
+            } = self;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let body = body
+                .and_then(|v| types::ProbeCreate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/experimental/v1/probes", client.baseurl,);
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("project", project.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                201u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::probe_view`]
+    ///
+    /// [`ClientHiddenExt::probe_view`]: super::ClientHiddenExt::probe_view
+    #[derive(Debug, Clone)]
+    pub struct ProbeView<'a> {
+        client: &'a super::Client,
+        probe: Result<types::NameOrId, String>,
+        project: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> ProbeView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                probe: Err("probe was not initialized".to_string()),
+                project: Err("project was not initialized".to_string()),
+            }
+        }
+
+        pub fn probe<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.probe = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for probe failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/experimental/v1/probes/{probe}`
+        pub async fn send(self) -> Result<ResponseValue<types::ProbeInfo>, Error<types::Error>> {
+            let Self {
+                client,
+                probe,
+                project,
+            } = self;
+            let probe = probe.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/probes/{}",
+                client.baseurl,
+                encode_path(&probe.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("project", project.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientHiddenExt::probe_delete`]
+    ///
+    /// [`ClientHiddenExt::probe_delete`]: super::ClientHiddenExt::probe_delete
+    #[derive(Debug, Clone)]
+    pub struct ProbeDelete<'a> {
+        client: &'a super::Client,
+        probe: Result<types::NameOrId, String>,
+        project: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> ProbeDelete<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                probe: Err("probe was not initialized".to_string()),
+                project: Err("project was not initialized".to_string()),
+            }
+        }
+
+        pub fn probe<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.probe = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for probe failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `DELETE` request to `/experimental/v1/probes/{probe}`
+        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+            let Self {
+                client,
+                probe,
+                project,
+            } = self;
+            let probe = probe.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/experimental/v1/probes/{}",
+                client.baseurl,
+                encode_path(&probe.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("project", project.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .delete(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
@@ -51769,6 +54110,68 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemNetworkingExt::ip_pool_utilization_view`]
+    ///
+    /// [`ClientSystemNetworkingExt::ip_pool_utilization_view`]: super::ClientSystemNetworkingExt::ip_pool_utilization_view
+    #[derive(Debug, Clone)]
+    pub struct IpPoolUtilizationView<'a> {
+        client: &'a super::Client,
+        pool: Result<types::NameOrId, String>,
+    }
+
+    impl<'a> IpPoolUtilizationView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                pool: Err("pool was not initialized".to_string()),
+            }
+        }
+
+        pub fn pool<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.pool = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for pool failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/ip-pools/{pool}/utilization`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::IpPoolUtilization>, Error<types::Error>> {
+            let Self { client, pool } = self;
+            let pool = pool.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/ip-pools/{}/utilization",
+                client.baseurl,
+                encode_path(&pool.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientSystemNetworkingExt::ip_pool_service_view`]
     ///
     /// [`ClientSystemNetworkingExt::ip_pool_service_view`]: super::ClientSystemNetworkingExt::ip_pool_service_view
@@ -53452,6 +55855,71 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_bgp_message_history`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_message_history`]: super::ClientSystemNetworkingExt::networking_bgp_message_history
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpMessageHistory<'a> {
+        client: &'a super::Client,
+        asn: Result<u32, String>,
+    }
+
+    impl<'a> NetworkingBgpMessageHistory<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                asn: Err("asn was not initialized".to_string()),
+            }
+        }
+
+        pub fn asn<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<u32>,
+        {
+            self.asn = value
+                .try_into()
+                .map_err(|_| "conversion to `u32` for asn failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bgp-message-history`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AggregateBgpMessageHistory>, Error<types::Error>> {
+            let Self { client, asn } = self;
+            let asn = asn.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/bgp-message-history",
+                client.baseurl,
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("asn", asn.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
