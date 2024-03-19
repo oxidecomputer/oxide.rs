@@ -3082,138 +3082,148 @@
               ]
             },
             {
-              "name": "bgp-announce-set",
+              "name": "bgp",
               "subcommands": [
                 {
-                  "name": "create",
-                  "about": "Create new BGP announce set",
-                  "args": [
+                  "name": "announce-set",
+                  "subcommands": [
                     {
-                      "long": "description"
+                      "name": "create",
+                      "about": "Create new BGP announce set",
+                      "args": [
+                        {
+                          "long": "description"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "name"
+                        }
+                      ]
                     },
                     {
-                      "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
+                      "name": "delete",
+                      "about": "Delete BGP announce set",
+                      "args": [
+                        {
+                          "long": "name-or-id",
+                          "help": "A name or id to use when selecting BGP port settings"
+                        }
+                      ]
                     },
                     {
-                      "long": "json-body-template",
-                      "help": "XXX"
-                    },
-                    {
-                      "long": "name"
-                    }
-                  ]
-                },
-                {
-                  "name": "delete",
-                  "about": "Delete BGP announce set",
-                  "args": [
-                    {
-                      "long": "name-or-id",
-                      "help": "A name or id to use when selecting BGP port settings"
-                    }
-                  ]
-                },
-                {
-                  "name": "list",
-                  "about": "Get originated routes for a BGP configuration",
-                  "args": [
-                    {
-                      "long": "name-or-id",
-                      "help": "A name or id to use when selecting BGP port settings"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "bgp-config",
-              "subcommands": [
-                {
-                  "name": "create",
-                  "about": "Create new BGP configuration",
-                  "args": [
-                    {
-                      "long": "asn",
-                      "help": "The autonomous system number of this BGP configuration."
-                    },
-                    {
-                      "long": "bgp-announce-set-id"
-                    },
-                    {
-                      "long": "description"
-                    },
-                    {
-                      "long": "json-body",
-                      "help": "Path to a file that contains the full json body."
-                    },
-                    {
-                      "long": "json-body-template",
-                      "help": "XXX"
-                    },
-                    {
-                      "long": "name"
-                    },
-                    {
-                      "long": "vrf",
-                      "help": "Optional virtual routing and forwarding identifier for this BGP configuration."
-                    }
-                  ]
-                },
-                {
-                  "name": "delete",
-                  "about": "Delete BGP configuration",
-                  "args": [
-                    {
-                      "long": "name-or-id",
-                      "help": "A name or id to use when selecting BGP config."
-                    }
-                  ]
-                },
-                {
-                  "name": "list",
-                  "about": "List BGP configurations",
-                  "args": [
-                    {
-                      "long": "limit",
-                      "help": "Maximum number of items returned by a single call"
-                    },
-                    {
-                      "long": "name-or-id",
-                      "help": "A name or id to use when selecting BGP config."
-                    },
-                    {
-                      "long": "sort-by",
-                      "values": [
-                        "name_ascending",
-                        "name_descending",
-                        "id_ascending"
+                      "name": "list",
+                      "about": "Get originated routes for a BGP configuration",
+                      "args": [
+                        {
+                          "long": "name-or-id",
+                          "help": "A name or id to use when selecting BGP port settings"
+                        }
                       ]
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "name": "bgp-imported-routes-ipv4",
-              "subcommands": [
+                },
                 {
-                  "name": "get",
-                  "about": "Get imported IPv4 BGP routes",
+                  "name": "config",
+                  "subcommands": [
+                    {
+                      "name": "create",
+                      "about": "Create new BGP configuration",
+                      "args": [
+                        {
+                          "long": "asn",
+                          "help": "The autonomous system number of this BGP configuration."
+                        },
+                        {
+                          "long": "bgp-announce-set-id"
+                        },
+                        {
+                          "long": "description"
+                        },
+                        {
+                          "long": "json-body",
+                          "help": "Path to a file that contains the full json body."
+                        },
+                        {
+                          "long": "json-body-template",
+                          "help": "XXX"
+                        },
+                        {
+                          "long": "name"
+                        },
+                        {
+                          "long": "vrf",
+                          "help": "Optional virtual routing and forwarding identifier for this BGP configuration."
+                        }
+                      ]
+                    },
+                    {
+                      "name": "delete",
+                      "about": "Delete BGP configuration",
+                      "args": [
+                        {
+                          "long": "name-or-id",
+                          "help": "A name or id to use when selecting BGP config."
+                        }
+                      ]
+                    },
+                    {
+                      "name": "list",
+                      "about": "List BGP configurations",
+                      "args": [
+                        {
+                          "long": "limit",
+                          "help": "Maximum number of items returned by a single call"
+                        },
+                        {
+                          "long": "name-or-id",
+                          "help": "A name or id to use when selecting BGP config."
+                        },
+                        {
+                          "long": "sort-by",
+                          "values": [
+                            "name_ascending",
+                            "name_descending",
+                            "id_ascending"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "history",
+                  "about": "Get BGP router message history",
                   "args": [
                     {
                       "long": "asn",
                       "help": "The ASN to filter on. Required."
                     }
                   ]
-                }
-              ]
-            },
-            {
-              "name": "bgp-status",
-              "subcommands": [
+                },
                 {
-                  "name": "get",
+                  "name": "imported",
+                  "subcommands": [
+                    {
+                      "name": "ipv4",
+                      "about": "Get imported IPv4 BGP routes",
+                      "args": [
+                        {
+                          "long": "asn",
+                          "help": "The ASN to filter on. Required."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "status",
                   "about": "Get BGP peer status"
                 }
               ]

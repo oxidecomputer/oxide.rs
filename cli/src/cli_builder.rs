@@ -395,26 +395,24 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::NetworkingSwitchPortSettingsView => {
             Some("system networking switch-port-settings view")
         }
-        CliCommand::NetworkingBgpConfigCreate => Some("system networking bgp-config create"),
-        CliCommand::NetworkingBgpConfigList => Some("system networking bgp-config list"),
-        CliCommand::NetworkingBgpConfigDelete => Some("system networking bgp-config delete"),
-
-        CliCommand::NetworkingBgpAnnounceSetList => Some("system networking bgp-announce-set list"),
-        CliCommand::NetworkingBgpAnnounceSetCreate => {
-            Some("system networking bgp-announce-set create")
-        }
-        CliCommand::NetworkingBgpAnnounceSetDelete => {
-            Some("system networking bgp-announce-set delete")
-        }
-        CliCommand::NetworkingBgpImportedRoutesIpv4 => {
-            Some("system networking bgp-imported-routes-ipv4 get")
-        }
 
         CliCommand::NetworkingBfdStatus => Some("system networking bfd status"),
         CliCommand::NetworkingBfdEnable => Some("system networking bfd enable"),
         CliCommand::NetworkingBfdDisable => Some("system networking bfd disable"),
 
-        CliCommand::NetworkingBgpStatus => Some("system networking bgp-status get"),
+        CliCommand::NetworkingBgpStatus => Some("system networking bgp status"),
+        CliCommand::NetworkingBgpMessageHistory => Some("system networking bgp history"),
+        CliCommand::NetworkingBgpConfigCreate => Some("system networking bgp config create"),
+        CliCommand::NetworkingBgpConfigDelete => Some("system networking bgp config delete"),
+        CliCommand::NetworkingBgpConfigList => Some("system networking bgp config list"),
+        CliCommand::NetworkingBgpAnnounceSetCreate => {
+            Some("system networking bgp announce-set create")
+        }
+        CliCommand::NetworkingBgpAnnounceSetDelete => {
+            Some("system networking bgp announce-set delete")
+        }
+        CliCommand::NetworkingBgpAnnounceSetList => Some("system networking bgp announce-set list"),
+        CliCommand::NetworkingBgpImportedRoutesIpv4 => Some("system networking bgp imported ipv4"),
 
         // Subcommand: disk
         CliCommand::DiskList => Some("disk list"),
