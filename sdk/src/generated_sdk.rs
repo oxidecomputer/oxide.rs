@@ -649,6 +649,47 @@ pub mod types {
         }
     }
 
+    /// BGP message history for rack switches.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "BGP message history for rack switches.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "switch_histories"
+    ///  ],
+    ///  "properties": {
+    ///    "switch_histories": {
+    ///      "description": "BGP history organized by switch.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SwitchBgpHistory"
+    ///      }
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AggregateBgpMessageHistory {
+        /// BGP history organized by switch.
+        pub switch_histories: Vec<SwitchBgpHistory>,
+    }
+
+    impl From<&AggregateBgpMessageHistory> for AggregateBgpMessageHistory {
+        fn from(value: &AggregateBgpMessageHistory) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AggregateBgpMessageHistory {
+        pub fn builder() -> builder::AggregateBgpMessageHistory {
+            Default::default()
+        }
+    }
+
     /// Properties that uniquely identify an Oxide hardware component
     ///
     /// <details><summary>JSON schema</summary>
@@ -1662,6 +1703,41 @@ pub mod types {
     impl BgpImportedRouteIpv4 {
         pub fn builder() -> builder::BgpImportedRouteIpv4 {
             Default::default()
+        }
+    }
+
+    /// BgpMessageHistory
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {}
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct BgpMessageHistory(pub serde_json::Value);
+    impl std::ops::Deref for BgpMessageHistory {
+        type Target = serde_json::Value;
+        fn deref(&self) -> &serde_json::Value {
+            &self.0
+        }
+    }
+
+    impl From<BgpMessageHistory> for serde_json::Value {
+        fn from(value: BgpMessageHistory) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&BgpMessageHistory> for BgpMessageHistory {
+        fn from(value: &BgpMessageHistory) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<serde_json::Value> for BgpMessageHistory {
+        fn from(value: serde_json::Value) -> Self {
+            Self(value)
         }
     }
 
@@ -17259,6 +17335,58 @@ pub mod types {
         }
     }
 
+    /// BGP message history for a particular switch.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "BGP message history for a particular switch.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "history",
+    ///    "switch"
+    ///  ],
+    ///  "properties": {
+    ///    "history": {
+    ///      "description": "Message history indexed by peer address.",
+    ///      "type": "object",
+    ///      "additionalProperties": {
+    ///        "$ref": "#/components/schemas/BgpMessageHistory"
+    ///      }
+    ///    },
+    ///    "switch": {
+    ///      "description": "Switch this message history is associated with.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/SwitchLocation"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchBgpHistory {
+        /// Message history indexed by peer address.
+        pub history: std::collections::HashMap<String, BgpMessageHistory>,
+        /// Switch this message history is associated with.
+        pub switch: SwitchLocation,
+    }
+
+    impl From<&SwitchBgpHistory> for SwitchBgpHistory {
+        fn from(value: &SwitchBgpHistory) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SwitchBgpHistory {
+        pub fn builder() -> builder::SwitchBgpHistory {
+            Default::default()
+        }
+    }
+
     /// A switch port interface configuration for a port settings object.
     ///
     /// <details><summary>JSON schema</summary>
@@ -22156,6 +22284,54 @@ pub mod types {
                 Self {
                     items: Ok(value.items),
                     next_page: Ok(value.next_page),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AggregateBgpMessageHistory {
+            switch_histories: Result<Vec<super::SwitchBgpHistory>, String>,
+        }
+
+        impl Default for AggregateBgpMessageHistory {
+            fn default() -> Self {
+                Self {
+                    switch_histories: Err("no value supplied for switch_histories".to_string()),
+                }
+            }
+        }
+
+        impl AggregateBgpMessageHistory {
+            pub fn switch_histories<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<super::SwitchBgpHistory>>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch_histories = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for switch_histories: {}",
+                        e
+                    )
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AggregateBgpMessageHistory> for super::AggregateBgpMessageHistory {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AggregateBgpMessageHistory,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    switch_histories: value.switch_histories?,
+                })
+            }
+        }
+
+        impl From<super::AggregateBgpMessageHistory> for AggregateBgpMessageHistory {
+            fn from(value: super::AggregateBgpMessageHistory) -> Self {
+                Self {
+                    switch_histories: Ok(value.switch_histories),
                 }
             }
         }
@@ -34263,6 +34439,65 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SwitchBgpHistory {
+            history: Result<std::collections::HashMap<String, super::BgpMessageHistory>, String>,
+            switch: Result<super::SwitchLocation, String>,
+        }
+
+        impl Default for SwitchBgpHistory {
+            fn default() -> Self {
+                Self {
+                    history: Err("no value supplied for history".to_string()),
+                    switch: Err("no value supplied for switch".to_string()),
+                }
+            }
+        }
+
+        impl SwitchBgpHistory {
+            pub fn history<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<
+                    std::collections::HashMap<String, super::BgpMessageHistory>,
+                >,
+                T::Error: std::fmt::Display,
+            {
+                self.history = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for history: {}", e));
+                self
+            }
+            pub fn switch<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::SwitchLocation>,
+                T::Error: std::fmt::Display,
+            {
+                self.switch = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for switch: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SwitchBgpHistory> for super::SwitchBgpHistory {
+            type Error = super::error::ConversionError;
+            fn try_from(value: SwitchBgpHistory) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    history: value.history?,
+                    switch: value.switch?,
+                })
+            }
+        }
+
+        impl From<super::SwitchBgpHistory> for SwitchBgpHistory {
+            fn from(value: super::SwitchBgpHistory) -> Self {
+                Self {
+                    history: Ok(value.history),
+                    switch: Ok(value.switch),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SwitchInterfaceConfig {
             id: Result<uuid::Uuid, String>,
             interface_name: Result<String, String>,
@@ -40492,6 +40727,19 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete;
+    /// Get BGP router message history
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/bgp-message-history`
+    ///
+    /// Arguments:
+    /// - `asn`: The ASN to filter on. Required.
+    /// ```ignore
+    /// let response = client.networking_bgp_message_history()
+    ///    .asn(asn)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_bgp_message_history(&self) -> builder::NetworkingBgpMessageHistory;
     /// Get imported IPv4 BGP routes
     ///
     /// Sends a `GET` request to `/v1/system/networking/bgp-routes-ipv4`
@@ -40752,6 +41000,10 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_bgp_announce_set_delete(&self) -> builder::NetworkingBgpAnnounceSetDelete {
         builder::NetworkingBgpAnnounceSetDelete::new(self)
+    }
+
+    fn networking_bgp_message_history(&self) -> builder::NetworkingBgpMessageHistory {
+        builder::NetworkingBgpMessageHistory::new(self)
     }
 
     fn networking_bgp_imported_routes_ipv4(&self) -> builder::NetworkingBgpImportedRoutesIpv4 {
@@ -55603,6 +55855,71 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 204u16 => Ok(ResponseValue::empty(response)),
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for
+    /// [`ClientSystemNetworkingExt::networking_bgp_message_history`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_bgp_message_history`]: super::ClientSystemNetworkingExt::networking_bgp_message_history
+    #[derive(Debug, Clone)]
+    pub struct NetworkingBgpMessageHistory<'a> {
+        client: &'a super::Client,
+        asn: Result<u32, String>,
+    }
+
+    impl<'a> NetworkingBgpMessageHistory<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                asn: Err("asn was not initialized".to_string()),
+            }
+        }
+
+        pub fn asn<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<u32>,
+        {
+            self.asn = value
+                .try_into()
+                .map_err(|_| "conversion to `u32` for asn failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/bgp-message-history`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::AggregateBgpMessageHistory>, Error<types::Error>> {
+            let Self { client, asn } = self;
+            let asn = asn.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/networking/bgp-message-history",
+                client.baseurl,
+            );
+            let mut query = Vec::with_capacity(1usize);
+            query.push(("asn", asn.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
