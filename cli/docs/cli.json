@@ -615,6 +615,96 @@
       "about": "Generate CLI docs in JSON format"
     },
     {
+      "name": "experimental",
+      "subcommands": [
+        {
+          "name": "probe",
+          "subcommands": [
+            {
+              "name": "create",
+              "about": "Create instrumentation probe",
+              "args": [
+                {
+                  "long": "description"
+                },
+                {
+                  "long": "ip-pool"
+                },
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "name"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "sled"
+                }
+              ]
+            },
+            {
+              "name": "delete",
+              "about": "Delete instrumentation probe",
+              "args": [
+                {
+                  "long": "probe",
+                  "help": "Name or ID of the probe"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
+            },
+            {
+              "name": "list",
+              "about": "List instrumentation probes",
+              "args": [
+                {
+                  "long": "limit",
+                  "help": "Maximum number of items returned by a single call"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                },
+                {
+                  "long": "sort-by",
+                  "values": [
+                    "name_ascending",
+                    "name_descending",
+                    "id_ascending"
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "view",
+              "about": "View instrumentation probe",
+              "args": [
+                {
+                  "long": "probe",
+                  "help": "Name or ID of the probe"
+                },
+                {
+                  "long": "project",
+                  "help": "Name or ID of the project"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "floating-ip",
       "subcommands": [
         {
@@ -1796,6 +1886,16 @@
             {
               "long": "name"
             },
+            {
+              "long": "pool",
+              "help": "Name or ID of the IP pool"
+            }
+          ]
+        },
+        {
+          "name": "utilization",
+          "about": "Fetch IP pool utilization",
+          "args": [
             {
               "long": "pool",
               "help": "Name or ID of the IP pool"

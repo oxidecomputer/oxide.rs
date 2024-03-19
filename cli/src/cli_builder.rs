@@ -314,6 +314,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::IpPoolSiloLink => Some("ip-pool silo link"),
         CliCommand::IpPoolSiloUpdate => Some("ip-pool silo update"),
         CliCommand::IpPoolSiloUnlink => Some("ip-pool silo unlink"),
+        CliCommand::IpPoolUtilizationView => Some("ip-pool utilization"),
 
         CliCommand::SiloList => Some("silo list"),
         CliCommand::SiloCreate => Some("silo create"),
@@ -482,6 +483,11 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::FloatingIpView => Some("floating-ip view"),
 
         CliCommand::Ping => Some("ping"),
+
+        CliCommand::ProbeCreate => Some("experimental probe create"),
+        CliCommand::ProbeDelete => Some("experimental probe delete"),
+        CliCommand::ProbeList => Some("experimental probe list"),
+        CliCommand::ProbeView => Some("experimental probe view"),
 
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
