@@ -14,7 +14,7 @@ assert_cmd = "2.0.14"
 async-trait = "0.1.77"
 base64 = "0.21.7"
 built = { version = "0.7.1", features = ["git2"] }
-chrono = { version = "0.4.34", features = ["serde"] }
+chrono = { version = "0.4.35", features = ["serde"] }
 clap = { version = "4.5.3", features = ["derive", "string", "env"] }
 clap_complete = "4.5.1"
 dialoguer = "0.10.4"
@@ -39,7 +39,7 @@ rand = "0.8.5"
 rcgen = "0.10.0"
 regex = "1.10.3"
 regress = "0.9.0"
-reqwest = "0.11.24"
+reqwest = "0.11.26"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.16", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.197", features = ["derive"] }
@@ -51,7 +51,7 @@ tempfile = "3.10.1"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
 tokio = { version = "1.36.0", features = ["full"] }
-toml = "0.8.10"
+toml = "0.8.12"
 toml_edit = "0.22.6"
 url = "2.5.0"
 uuid = { version = "1.7.0", features = ["serde", "v4"] }
