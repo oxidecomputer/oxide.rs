@@ -1644,6 +1644,7 @@
             {
               "name": "add",
               "about": "Add range to IP pool",
+              "long_about": "IPv6 ranges are not allowed yet.",
               "args": [
                 {
                   "long": "first"
@@ -1715,6 +1716,7 @@
                 {
                   "name": "add",
                   "about": "Add IP range to Oxide service pool",
+                  "long_about": "IPv6 ranges are not allowed yet.",
                   "args": [
                     {
                       "long": "first"

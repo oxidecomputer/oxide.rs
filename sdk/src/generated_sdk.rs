@@ -37988,7 +37988,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 0.0.6
+/// Version: 20240327.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -38041,7 +38041,7 @@ impl Client {
     /// This string is pulled directly from the source OpenAPI
     /// document and may be in any format the API selects.
     pub fn api_version(&self) -> &'static str {
-        "0.0.6"
+        "20240327.0"
     }
 }
 
@@ -40387,6 +40387,8 @@ pub trait ClientSystemNetworkingExt {
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
     /// Add range to IP pool
     ///
+    /// IPv6 ranges are not allowed yet.
+    ///
     /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
     ///
     /// Arguments:
@@ -40529,6 +40531,8 @@ pub trait ClientSystemNetworkingExt {
     /// ```
     fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
     /// Add IP range to Oxide service pool
+    ///
+    /// IPv6 ranges are not allowed yet.
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
     ///

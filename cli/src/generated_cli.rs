@@ -3492,6 +3492,7 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Add range to IP pool")
+            .long_about("IPv6 ranges are not allowed yet.")
     }
 
     pub fn cli_ip_pool_range_remove() -> clap::Command {
@@ -3712,6 +3713,7 @@ impl<T: CliConfig> Cli<T> {
                     .help("XXX"),
             )
             .about("Add IP range to Oxide service pool")
+            .long_about("IPv6 ranges are not allowed yet.")
     }
 
     pub fn cli_ip_pool_service_range_remove() -> clap::Command {
