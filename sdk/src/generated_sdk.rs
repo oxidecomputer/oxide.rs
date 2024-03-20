@@ -40387,6 +40387,8 @@ pub trait ClientSystemNetworkingExt {
     fn ip_pool_range_list(&self) -> builder::IpPoolRangeList;
     /// Add range to IP pool
     ///
+    /// IPv6 ranges are not allowed yet.
+    ///
     /// Sends a `POST` request to `/v1/system/ip-pools/{pool}/ranges/add`
     ///
     /// Arguments:
@@ -40529,6 +40531,8 @@ pub trait ClientSystemNetworkingExt {
     /// ```
     fn ip_pool_service_range_list(&self) -> builder::IpPoolServiceRangeList;
     /// Add IP range to Oxide service pool
+    ///
+    /// IPv6 ranges are not allowed yet.
     ///
     /// Sends a `POST` request to `/v1/system/ip-pools-service/ranges/add`
     ///
