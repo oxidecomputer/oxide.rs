@@ -156,6 +156,7 @@ jobs:
         run: |
           # Compare the integration branch with the target branch
           CHANGED_FILES=$(git diff integration..main --name-only | wc -l)
+          HAS_NON_LOCK_CHANGES=[ "$CHANGED_FILES" -gt 0 ] && ([ "$CHANGED_FILES" -gt 1 ] || [ $(git diff integration..main --name-only) != "Cargo.lock" ])
           TARGET_TO_INT="$(git rev-list --count $TARGET_BRANCH..$INT_BRANCH)"
           INT_TO_TARGET="$(git rev-list --count $INT_BRANCH..$TARGET_BRANCH)"
 
@@ -224,7 +225,14 @@ jobs:
 
             if [ -z "$NUMBER" -o "$STATE" != "OPEN" ]
             then
-              gh pr create -B $TARGET_BRANCH -H $INT_BRANCH --title "$title" --body-file body
+              # Only create a new PR if the changes between the integration branch and target branch
+              # affect more than the Cargo.lock file
+              if [ "$HAS_NON_LOCK_CHANGES" -eq 0 ]
+              then
+                gh pr create -B $TARGET_BRANCH -H $INT_BRANCH --title "$title" --body-file body
+              else
+                echo "Only integration changes is a modification to Cargo.lock. Skipping PR creation"
+              fi
             else
               echo "PR already exists: ($NUMBER) $URL . Updating..."
               gh pr edit "$NUMBER" --title "$title" --body-file body
