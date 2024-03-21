@@ -231,7 +231,7 @@ jobs:
               then
                 gh pr create -B $TARGET_BRANCH -H $INT_BRANCH --title "$title" --body-file body
               else
-                echo "Only integration changes is a modification to Cargo.lock. Skipping PR creation"
+                echo "Only integration change is a modification to Cargo.lock. Skipping PR creation"
               fi
             else
               echo "PR already exists: ($NUMBER) $URL . Updating..."
