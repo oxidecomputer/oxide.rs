@@ -3195,6 +3195,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "termini"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2ad441d87dd98bc5eeb31cf2fb7e4839968763006b478efb38668a3bf9da0d59"
+dependencies = [
+ "home",
+]
+
+[[package]]
 name = "termtree"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3235,11 +3244,13 @@ dependencies = [
 [[package]]
 name = "thouart"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/thouart.git#b55912f8935a3ff5acf8052b3e4d00409352ce45"
+source = "git+https://github.com/oxidecomputer/thouart.git#f960190b90261549361930924e22911af4fbe6fa"
 dependencies = [
  "futures",
  "libc",
  "regex",
+ "term",
+ "termini",
  "thiserror",
  "tokio",
  "tokio-tungstenite",
