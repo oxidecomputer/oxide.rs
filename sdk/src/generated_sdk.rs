@@ -38251,7 +38251,7 @@ impl ClientDisksExt for Client {
 
 /// Floating IPs allow a project to allocate well-known IPs to instances.
 pub trait ClientFloatingIpsExt {
-    /// List all floating IPs
+    /// List floating IPs
     ///
     /// Sends a `GET` request to `/v1/floating-ips`
     ///
@@ -39318,7 +39318,7 @@ impl ClientPolicyExt for Client {
 /// Projects are a grouping of associated resources such as instances and disks
 /// within a silo for purposes of billing and access control.
 pub trait ClientProjectsExt {
-    /// List all IP pools
+    /// List IP pools
     ///
     /// Sends a `GET` request to `/v1/ip-pools`
     ///
