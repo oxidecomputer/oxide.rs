@@ -927,7 +927,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List all floating IPs")
+            .about("List floating IPs")
     }
 
     pub fn cli_floating_ip_create() -> clap::Command {
@@ -1944,7 +1944,7 @@ impl<T: CliConfig> Cli<T> {
                     ))
                     .required(false),
             )
-            .about("List all IP pools")
+            .about("List IP pools")
     }
 
     pub fn cli_project_ip_pool_view() -> clap::Command {

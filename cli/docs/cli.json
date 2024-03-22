@@ -803,7 +803,7 @@
         },
         {
           "name": "list",
-          "about": "List all floating IPs",
+          "about": "List floating IPs",
           "args": [
             {
               "long": "limit",
@@ -1982,7 +1982,7 @@
           "subcommands": [
             {
               "name": "list",
-              "about": "List all IP pools",
+              "about": "List IP pools",
               "args": [
                 {
                   "long": "limit",
