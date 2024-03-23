@@ -738,12 +738,13 @@ pub mod types {
         }
     }
 
-    /// BfdMode
+    /// BFD connection mode.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
+    ///  "description": "BFD connection mode.",
     ///  "type": "string",
     ///  "enum": [
     ///    "single_hop",
