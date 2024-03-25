@@ -92,10 +92,6 @@
               "help": "The host of the Oxide instance to authenticate with. This assumes http; specify an `http://` prefix if needed"
             },
             {
-              "long": "no-browser",
-              "help": "Print the authentication URL rather than opening a browser window"
-            },
-            {
               "long": "with-token",
               "help": "Read token from standard input"
             }

@@ -142,10 +142,6 @@ pub struct CmdAuthLogin {
     /// Override the default browser when opening the authentication URL.
     #[clap(long, group = "browser-options")]
     browser: Option<String>,
-
-    /// Print the authentication URL rather than opening a browser window.
-    #[clap(long = "no-browser", group = "browser-options")]
-    no_browser: bool,
 }
 
 impl CmdAuthLogin {
@@ -243,20 +239,28 @@ impl CmdAuthLogin {
 
             let uri = details.verification_uri().to_string();
 
-            let opened = match (&self.browser, self.no_browser) {
-                (None, false) => open::that(&uri).is_ok(),
-                (Some(app), false) => open::with(&uri, app).is_ok(),
-                (None, true) => false,
-                (Some(_), true) => unreachable!(),
+            println!(
+                "\nEnter the code: \x1b[1m{}\x1b[0m",
+                details.user_code().secret()
+            );
+            println!(
+                "\x1b[1mPress Enter\x1b[0m to open {} in your browser...",
+                uri
+            );
+
+            // Wait for the user to press Enter.
+            let mut input = String::new();
+            std::io::stdin().read_line(&mut input)?;
+
+            // Open the URL in the browser after Enter is pressed.
+            let opened = match &self.browser {
+                Some(app) => open::with(&uri, app).is_ok(),
+                None => open::that(&uri).is_ok(),
             };
 
-            if opened {
-                println!("Opened this URL in your browser:\n  {}", uri);
-            } else {
-                println!("Open this URL in your browser:\n  {}", uri);
+            if !opened {
+                println!("Failed to open the browser automatically. Please open this URL manually:\n  {}", uri);
             }
-
-            println!("\nEnter the code: {}\n", details.user_code().secret());
 
             auth_client
                 .exchange_device_access_token(&details)
