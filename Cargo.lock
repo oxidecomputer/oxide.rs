@@ -409,6 +409,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9d297deb1925b89f2ccc13d7635fa0714f12c87adce1c75356b39ca9b7178567"
 
 [[package]]
+name = "base64"
+version = "0.22.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9475866fec1451be56a3c2400fd081ff546538961565ccb5b7142cbd22bc7a51"
+
+[[package]]
 name = "basic-cookies"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -824,11 +830,11 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.10.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#80390543a0bb9d18d30823f7c95c6d045910f219"
+source = "git+https://github.com/oxidecomputer/dropshot#e6691c1818fb952cd29af02f2fe57e77fc591c94"
 dependencies = [
  "async-stream",
  "async-trait",
- "base64 0.21.7",
+ "base64 0.22.0",
  "bytes",
  "camino",
  "chrono",
@@ -844,7 +850,6 @@ dependencies = [
  "openapiv3",
  "paste",
  "percent-encoding",
- "proc-macro2",
  "rustls 0.22.2",
  "rustls-pemfile 2.1.1",
  "schemars",
@@ -869,7 +874,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.10.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#80390543a0bb9d18d30823f7c95c6d045910f219"
+source = "git+https://github.com/oxidecomputer/dropshot#e6691c1818fb952cd29af02f2fe57e77fc591c94"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1417,7 +1422,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10",
+ "socket2 0.5.5",
  "tokio",
  "tower-service",
  "tracing",
@@ -2847,9 +2852,9 @@ dependencies = [
 
 [[package]]
 name = "serde_path_to_error"
-version = "0.1.15"
+version = "0.1.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ebd154a240de39fdebcf5775d2675c204d7c13cf39a4c697be6493c8e734337c"
+checksum = "af99884400da37c88f5e9146b7f1fd0fbcae8f6eec4e9da38b67d05486f814a6"
 dependencies = [
  "itoa",
  "serde",
