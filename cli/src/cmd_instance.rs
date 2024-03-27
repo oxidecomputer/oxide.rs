@@ -291,7 +291,10 @@ impl RunnableCmd for CmdInstanceVnc {
                             .expect("tcp_ready should never be writable if we have nothing to write");
                         match tcp_stream.try_write(&buf) {
                             Ok(num_bytes) => {
-                                stored_out_buf = Some(Vec::from(&buf[num_bytes..]));
+                                if num_bytes < buf.len() {
+                                    // TODO: less allocating
+                                    stored_out_buf = Some(Vec::from(&buf[num_bytes..]));
+                                }
                             }
                             Err(ref e) if e.kind() == std::io::ErrorKind::WouldBlock => {
                                 continue; // false positive, ignore
