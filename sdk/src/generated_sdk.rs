@@ -39011,6 +39011,21 @@ pub trait ClientInstancesExt {
     ///    .await;
     /// ```
     fn instance_stop(&self) -> builder::InstanceStop;
+    /// Stream instance VNC framebuffer
+    ///
+    /// Sends a `GET` request to `/v1/instances/{instance}/vnc`
+    ///
+    /// Arguments:
+    /// - `instance`: Name or ID of the instance
+    /// - `project`: Name or ID of the project
+    /// ```ignore
+    /// let response = client.instance_vnc()
+    ///    .instance(instance)
+    ///    .project(project)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn instance_vnc(&self) -> builder::InstanceVnc;
     /// List network interfaces
     ///
     /// Sends a `GET` request to `/v1/network-interfaces`
@@ -39182,6 +39197,10 @@ impl ClientInstancesExt for Client {
 
     fn instance_stop(&self) -> builder::InstanceStop {
         builder::InstanceStop::new(self)
+    }
+
+    fn instance_vnc(&self) -> builder::InstanceVnc {
+        builder::InstanceVnc::new(self)
     }
 
     fn instance_network_interface_list(&self) -> builder::InstanceNetworkInterfaceList {
@@ -47447,6 +47466,92 @@ pub mod builder {
                 500u16..=599u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientInstancesExt::instance_vnc`]
+    ///
+    /// [`ClientInstancesExt::instance_vnc`]: super::ClientInstancesExt::instance_vnc
+    #[derive(Debug, Clone)]
+    pub struct InstanceVnc<'a> {
+        client: &'a super::Client,
+        instance: Result<types::NameOrId, String>,
+        project: Result<Option<types::NameOrId>, String>,
+    }
+
+    impl<'a> InstanceVnc<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                instance: Err("instance was not initialized".to_string()),
+                project: Ok(None),
+            }
+        }
+
+        pub fn instance<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.instance = value
+                .try_into()
+                .map_err(|_| "conversion to `NameOrId` for instance failed".to_string());
+            self
+        }
+
+        pub fn project<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::NameOrId>,
+        {
+            self.project = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `NameOrId` for project failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/instances/{instance}/vnc`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<reqwest::Upgraded>, Error<reqwest::Upgraded>> {
+            let Self {
+                client,
+                instance,
+                project,
+            } = self;
+            let instance = instance.map_err(Error::InvalidRequest)?;
+            let project = project.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/instances/{}/vnc",
+                client.baseurl,
+                encode_path(&instance.to_string()),
+            );
+            let mut query = Vec::with_capacity(1usize);
+            if let Some(v) = &project {
+                query.push(("project", v.to_string()));
+            }
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .query(&query)
+                .header(reqwest::header::CONNECTION, "Upgrade")
+                .header(reqwest::header::UPGRADE, "websocket")
+                .header(reqwest::header::SEC_WEBSOCKET_VERSION, "13")
+                .header(
+                    reqwest::header::SEC_WEBSOCKET_KEY,
+                    base64::Engine::encode(
+                        &base64::engine::general_purpose::STANDARD,
+                        rand::random::<[u8; 16]>(),
+                    ),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                101u16 => ResponseValue::upgrade(response).await,
+                200..=299 => ResponseValue::upgrade(response).await,
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }

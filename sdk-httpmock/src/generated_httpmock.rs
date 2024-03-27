@@ -4306,6 +4306,62 @@ pub mod operations {
         }
     }
 
+    pub struct InstanceVncWhen(httpmock::When);
+    impl InstanceVncWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/instances/[^/]*/vnc$").unwrap()),
+            )
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn instance(self, value: &types::NameOrId) -> Self {
+            let re =
+                regex::Regex::new(&format!("^/v1/instances/{}/vnc$", value.to_string())).unwrap();
+            Self(self.0.path_matches(re))
+        }
+
+        pub fn project<'a, T>(self, value: T) -> Self
+        where
+            T: Into<Option<&'a types::NameOrId>>,
+        {
+            if let Some(value) = value.into() {
+                Self(self.0.query_param("project", value.to_string()))
+            } else {
+                Self(self.0.matches(|req| {
+                    req.query_params
+                        .as_ref()
+                        .and_then(|qs| qs.iter().find(|(key, _)| key == "project"))
+                        .is_none()
+                }))
+            }
+        }
+    }
+
+    pub struct InstanceVncThen(httpmock::Then);
+    impl InstanceVncThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn default_response(self, status: u16) -> Self {
+            Self(self.0.status(status))
+        }
+
+        pub fn switching_protocols(self) -> Self {
+            Self(self.0.status(101u16))
+        }
+    }
+
     pub struct ProjectIpPoolListWhen(httpmock::When);
     impl ProjectIpPoolListWhen {
         pub fn new(inner: httpmock::When) -> Self {
@@ -14397,6 +14453,9 @@ pub trait MockServerExt {
     fn instance_stop<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::InstanceStopWhen, operations::InstanceStopThen);
+    fn instance_vnc<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceVncWhen, operations::InstanceVncThen);
     fn project_ip_pool_list<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::ProjectIpPoolListWhen, operations::ProjectIpPoolListThen);
@@ -15521,6 +15580,18 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::InstanceStopWhen::new(when),
                 operations::InstanceStopThen::new(then),
+            )
+        })
+    }
+
+    fn instance_vnc<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::InstanceVncWhen, operations::InstanceVncThen),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::InstanceVncWhen::new(when),
+                operations::InstanceVncThen::new(then),
             )
         })
     }
