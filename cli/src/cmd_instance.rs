@@ -17,7 +17,7 @@ use futures::{SinkExt, StreamExt};
 use oxide::ClientImagesExt;
 use oxide::ClientInstancesExt;
 use std::path::PathBuf;
-use tokio::io::Interest;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio_tungstenite::tungstenite::protocol::{frame::coding::CloseCode, CloseFrame, Role};
 use tokio_tungstenite::tungstenite::Message;
 use tokio_tungstenite::WebSocketStream;
@@ -257,62 +257,57 @@ impl RunnableCmd for CmdInstanceVnc {
         // okay, we have a local client, now actually start requesting I/O through nexus
         let upgraded = req.send().await.map_err(|e| e.into_untyped())?.into_inner();
 
-        let mut ws_stream = WebSocketStream::from_raw_socket(upgraded, Role::Client, None).await;
+        let ws = WebSocketStream::from_raw_socket(upgraded, Role::Client, None).await;
 
-        let mut stored_out_buf: Option<Vec<u8>> = None;
-        loop {
-            let tcp_ready = if stored_out_buf.is_some() {
-                tcp_stream.ready(Interest::READABLE | Interest::WRITABLE)
-            } else {
-                tcp_stream.ready(Interest::READABLE)
-            };
-            tokio::select! {
-                ready_res = tcp_ready => {
-                    let ready = ready_res?;
-                    if ready.is_readable() {
-                        // TODO: find a justifiable size
-                        let mut buf = [0u8; 65536];
-                        match tcp_stream.try_read(&mut buf) {
+        let (mut ws_sink, mut ws_stream) = ws.split();
+        let (mut tcp_reader, mut tcp_writer) = tcp_stream.into_split();
+        let (closed_tx, mut closed_rx) = tokio::sync::oneshot::channel::<()>();
+
+        let mut jh = tokio::spawn(async move {
+            // medium-sized websocket payload
+            let mut tcp_read_buf = vec![0u8; 65535];
+            loop {
+                tokio::select! {
+                    _ = &mut closed_rx => break,
+                    num_bytes_res = tcp_reader.read(&mut tcp_read_buf) => {
+                        match num_bytes_res {
                             Ok(num_bytes) => {
-                                ws_stream.send(Message::Binary(Vec::from(&buf[..num_bytes]))).await?;
-                            }
-                            Err(ref e) if e.kind() == std::io::ErrorKind::WouldBlock => {
-                                continue; // false positive, ignore
+                                ws_sink
+                                    .send(Message::Binary(Vec::from(&tcp_read_buf[..num_bytes])))
+                                    .await?;
                             }
                             Err(e) => {
-                                ws_stream.send(Message::Close(None)).await?;
-                                return Err(e.into());
-                            }
-                        }
-                    }
-                    if ready.is_writable() {
-                        let buf = stored_out_buf
-                            .take()
-                            .expect("tcp_ready should never be writable if we have nothing to write");
-                        match tcp_stream.try_write(&buf) {
-                            Ok(num_bytes) => {
-                                if num_bytes < buf.len() {
-                                    // TODO: less allocating
-                                    stored_out_buf = Some(Vec::from(&buf[num_bytes..]));
-                                }
-                            }
-                            Err(ref e) if e.kind() == std::io::ErrorKind::WouldBlock => {
-                                continue; // false positive, ignore
-                            }
-                            Err(e) => {
-                                ws_stream.send(Message::Close(None)).await?;
-                                return Err(e.into());
+                                ws_sink.send(Message::Close(None)).await?;
+                                anyhow::bail!("Local client disconnected: {}", e);
                             }
                         }
                     }
                 }
-                out_buf = ws_stream.next() => {
-                    match out_buf {
+            }
+            Ok(ws_sink)
+        });
+
+        let mut close_frame = None;
+        loop {
+            tokio::select! {
+                _ = &mut jh => break,
+                msg = ws_stream.next() => {
+                    match msg {
                         Some(Ok(Message::Binary(data))) => {
-                            if let Some(existing) = &mut stored_out_buf {
-                                existing.extend_from_slice(&data);
-                            } else {
-                                stored_out_buf = Some(data);
+                            let mut start = 0;
+                            while start < data.len() {
+                                match tcp_writer.write(&data[start..]).await {
+                                    Ok(num_bytes) => {
+                                        start += num_bytes;
+                                    }
+                                    Err(e) => {
+                                        close_frame = Some(CloseFrame {
+                                            code: CloseCode::Error,
+                                            reason: e.to_string().into(),
+                                        });
+                                        break;
+                                    }
+                                }
                             }
                         }
                         Some(Ok(Message::Close(Some(CloseFrame {code, reason})))) => {
@@ -343,8 +338,12 @@ impl RunnableCmd for CmdInstanceVnc {
                 }
             }
         }
+
         // let _: the connection may have already been dropped at this point.
-        let _ = ws_stream.send(Message::Close(None)).await;
+        let _ = closed_tx.send(()).is_ok();
+        if let Ok(Ok(mut ws_sink)) = jh.await {
+            let _ = ws_sink.send(Message::Close(close_frame)).await.is_ok();
+        }
 
         Ok(())
     }
