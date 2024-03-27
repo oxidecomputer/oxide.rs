@@ -13,9 +13,14 @@ use oxide::types::{
     NameOrId,
 };
 
+use futures::{SinkExt, StreamExt};
 use oxide::ClientImagesExt;
 use oxide::ClientInstancesExt;
 use std::path::PathBuf;
+use tokio::io::Interest;
+use tokio_tungstenite::tungstenite::protocol::{frame::coding::CloseCode, CloseFrame, Role};
+use tokio_tungstenite::tungstenite::Message;
+use tokio_tungstenite::WebSocketStream;
 
 /// Connect to or retrieve data from the instance's serial console.
 #[derive(Parser, Debug, Clone)]
@@ -165,7 +170,6 @@ pub struct CmdInstanceSerialHistory {
 
 #[async_trait]
 impl RunnableCmd for CmdInstanceSerialHistory {
-    // cli process becomes an interactive remote shell.
     async fn run(&self, ctx: &oxide::context::Context) -> Result<()> {
         let mut req = ctx
             .client()?
@@ -194,6 +198,151 @@ impl RunnableCmd for CmdInstanceSerialHistory {
             let mut tty = thouart::Console::new_stdio(None).await?;
             tty.write_stdout(&data.data).await?;
         }
+        Ok(())
+    }
+}
+
+/// Connect to the instance's framebuffer and input with a local VNC client.
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "serial")]
+pub struct CmdInstanceVnc {
+    /// Name or ID of the instance
+    #[clap(long, short)]
+    instance: NameOrId,
+
+    /// Name or ID of the project
+    #[clap(long, short)]
+    project: Option<NameOrId>,
+    // TODO: vncviewer executable, or flag that says not to
+}
+
+#[async_trait]
+impl RunnableCmd for CmdInstanceVnc {
+    async fn run(&self, ctx: &oxide::context::Context) -> Result<()> {
+        let mut req = ctx.client()?.instance_vnc().instance(self.instance.clone());
+
+        if let Some(value) = &self.project {
+            req = req.project(value.clone());
+        } else if let NameOrId::Name(_) = &self.instance {
+            // on the server end, the connection is upgraded by the server
+            // before the worker thread attempts to look up the instance.
+            anyhow::bail!("Must provide --project when specifying instance by name rather than ID");
+        }
+
+        // TODO: custom listen address
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await?;
+        let addr = listener.local_addr()?;
+        // yes, two ':' between IP and port. otherwise VNC adds 5900 to it!
+        let vncviewer_arg = format!("{ip}::{port}", ip = addr.ip(), port = addr.port());
+
+        // TODO: custom args etc.
+        let mut cmd = std::process::Command::new("vncviewer");
+        cmd.arg(&vncviewer_arg);
+        let child_res = cmd.spawn();
+        if child_res.is_err() {
+            eprintln!(
+                "Please connect a VNC client to {ip} on TCP port {port}.\nFor example: vncviewer {vncviewer_arg}",
+                ip = addr.ip(),
+                port = addr.port(),
+                vncviewer_arg = vncviewer_arg,
+            );
+        }
+
+        // TODO: clearer error case communication
+        let Ok((tcp_stream, _addr)) = listener.accept().await else {
+            anyhow::bail!("Failed to accept connection from local VNC client");
+        };
+
+        // okay, we have a local client, now actually start requesting I/O through nexus
+        let upgraded = req.send().await.map_err(|e| e.into_untyped())?.into_inner();
+
+        let mut ws_stream = WebSocketStream::from_raw_socket(upgraded, Role::Client, None).await;
+
+        let mut stored_out_buf: Option<Vec<u8>> = None;
+        loop {
+            let tcp_ready = if stored_out_buf.is_some() {
+                tcp_stream.ready(Interest::READABLE | Interest::WRITABLE)
+            } else {
+                tcp_stream.ready(Interest::READABLE)
+            };
+            tokio::select! {
+                ready_res = tcp_ready => {
+                    let ready = ready_res?;
+                    if ready.is_readable() {
+                        // TODO: find a justifiable size
+                        let mut buf = [0u8; 65536];
+                        match tcp_stream.try_read(&mut buf) {
+                            Ok(num_bytes) => {
+                                ws_stream.send(Message::Binary(Vec::from(&buf[..num_bytes]))).await?;
+                            }
+                            Err(ref e) if e.kind() == std::io::ErrorKind::WouldBlock => {
+                                continue; // false positive, ignore
+                            }
+                            Err(e) => {
+                                ws_stream.send(Message::Close(None)).await?;
+                                return Err(e.into());
+                            }
+                        }
+                    }
+                    if ready.is_writable() {
+                        let buf = stored_out_buf
+                            .take()
+                            .expect("tcp_ready should never be writable if we have nothing to write");
+                        match tcp_stream.try_write(&buf) {
+                            Ok(num_bytes) => {
+                                stored_out_buf = Some(Vec::from(&buf[num_bytes..]));
+                            }
+                            Err(ref e) if e.kind() == std::io::ErrorKind::WouldBlock => {
+                                continue; // false positive, ignore
+                            }
+                            Err(e) => {
+                                ws_stream.send(Message::Close(None)).await?;
+                                return Err(e.into());
+                            }
+                        }
+                    }
+                }
+                out_buf = ws_stream.next() => {
+                    match out_buf {
+                        Some(Ok(Message::Binary(data))) => {
+                            if let Some(existing) = &mut stored_out_buf {
+                                existing.extend_from_slice(&data);
+                            } else {
+                                stored_out_buf = Some(data);
+                            }
+                        }
+                        Some(Ok(Message::Close(Some(CloseFrame {code, reason})))) => {
+                            match code {
+                                CloseCode::Abnormal
+                                | CloseCode::Error
+                                | CloseCode::Extension
+                                | CloseCode::Invalid
+                                | CloseCode::Policy
+                                | CloseCode::Protocol
+                                | CloseCode::Size
+                                | CloseCode::Unsupported => {
+                                    anyhow::bail!("Server disconnected: {}", reason.to_string());
+                                }
+                                _ => break,
+                            }
+                        }
+                        Some(Ok(Message::Close(None))) => {
+                            eprintln!("Connection closed.");
+                            break;
+                        }
+                        None => {
+                            eprintln!("Connection lost.");
+                            break;
+                        }
+                        _ => continue,
+                    }
+                }
+            }
+        }
+        // let _: the connection may have already been dropped at this point.
+        let _ = ws_stream.send(Message::Close(None)).await;
+
         Ok(())
     }
 }

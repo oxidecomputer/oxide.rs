@@ -66,6 +66,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::InstanceSshPublicKeyList => Self::cli_instance_ssh_public_key_list(),
             CliCommand::InstanceStart => Self::cli_instance_start(),
             CliCommand::InstanceStop => Self::cli_instance_stop(),
+            CliCommand::InstanceVnc => Self::cli_instance_vnc(),
             CliCommand::ProjectIpPoolList => Self::cli_project_ip_pool_list(),
             CliCommand::ProjectIpPoolView => Self::cli_project_ip_pool_view(),
             CliCommand::LoginLocal => Self::cli_login_local(),
@@ -1920,6 +1921,25 @@ impl<T: CliConfig> Cli<T> {
                     .help("Name or ID of the project"),
             )
             .about("Stop instance")
+    }
+
+    pub fn cli_instance_vnc() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("instance")
+                    .long("instance")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(true)
+                    .help("Name or ID of the instance"),
+            )
+            .arg(
+                clap::Arg::new("project")
+                    .long("project")
+                    .value_parser(clap::value_parser!(types::NameOrId))
+                    .required(false)
+                    .help("Name or ID of the project"),
+            )
+            .about("Stream instance VNC framebuffer")
     }
 
     pub fn cli_project_ip_pool_list() -> clap::Command {
@@ -5467,6 +5487,7 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::InstanceStart => self.execute_instance_start(matches).await,
             CliCommand::InstanceStop => self.execute_instance_stop(matches).await,
+            CliCommand::InstanceVnc => self.execute_instance_vnc(matches).await,
             CliCommand::ProjectIpPoolList => self.execute_project_ip_pool_list(matches).await,
             CliCommand::ProjectIpPoolView => self.execute_project_ip_pool_view(matches).await,
             CliCommand::LoginLocal => self.execute_login_local(matches).await,
@@ -7410,6 +7431,28 @@ impl<T: CliConfig> Cli<T> {
             Err(r) => {
                 self.config.item_error(&r);
                 Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_instance_vnc(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
+        let mut request = self.client.instance_vnc();
+        if let Some(value) = matches.get_one::<types::NameOrId>("instance") {
+            request = request.instance(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::NameOrId>("project") {
+            request = request.project(value.clone());
+        }
+
+        self.config.execute_instance_vnc(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                todo!()
+            }
+            Err(r) => {
+                todo!()
             }
         }
     }
@@ -11853,6 +11896,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_instance_vnc(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::InstanceVnc,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_project_ip_pool_list(
         &self,
         matches: &clap::ArgMatches,
@@ -12925,6 +12976,7 @@ pub enum CliCommand {
     InstanceSshPublicKeyList,
     InstanceStart,
     InstanceStop,
+    InstanceVnc,
     ProjectIpPoolList,
     ProjectIpPoolView,
     LoginLocal,
@@ -13110,6 +13162,7 @@ impl CliCommand {
             CliCommand::InstanceSshPublicKeyList,
             CliCommand::InstanceStart,
             CliCommand::InstanceStop,
+            CliCommand::InstanceVnc,
             CliCommand::ProjectIpPoolList,
             CliCommand::ProjectIpPoolView,
             CliCommand::LoginLocal,

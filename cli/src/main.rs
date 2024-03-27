@@ -47,6 +47,7 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_version::CmdVersion>("version")
         .add_custom::<cmd_disk::CmdDiskImport>("disk import")
         .add_custom::<cmd_instance::CmdInstanceSerial>("instance serial")
+        .add_custom::<cmd_instance::CmdInstanceVnc>("instance vnc")
         .add_custom::<cmd_instance::CmdInstanceFromImage>("instance from-image")
         .add_custom::<cmd_completion::CmdCompletion>("completion")
 }

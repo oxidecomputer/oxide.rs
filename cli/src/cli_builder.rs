@@ -274,6 +274,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::InstanceReboot => Some("instance reboot"),
         CliCommand::InstanceSerialConsole => None, // Special-cased
         CliCommand::InstanceSerialConsoleStream => None, // Ditto
+        CliCommand::InstanceVnc => None,           // Ditto
         CliCommand::InstanceStart => Some("instance start"),
         CliCommand::InstanceStop => Some("instance stop"),
         CliCommand::InstanceExternalIpList => Some("instance external-ip list"),
