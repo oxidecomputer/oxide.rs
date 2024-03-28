@@ -13,9 +13,14 @@ use oxide::types::{
     NameOrId,
 };
 
+use futures::{SinkExt, StreamExt};
 use oxide::ClientImagesExt;
 use oxide::ClientInstancesExt;
 use std::path::PathBuf;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio_tungstenite::tungstenite::protocol::{frame::coding::CloseCode, CloseFrame, Role};
+use tokio_tungstenite::tungstenite::Message;
+use tokio_tungstenite::WebSocketStream;
 
 /// Connect to or retrieve data from the instance's serial console.
 #[derive(Parser, Debug, Clone)]
@@ -165,7 +170,6 @@ pub struct CmdInstanceSerialHistory {
 
 #[async_trait]
 impl RunnableCmd for CmdInstanceSerialHistory {
-    // cli process becomes an interactive remote shell.
     async fn run(&self, ctx: &oxide::context::Context) -> Result<()> {
         let mut req = ctx
             .client()?
@@ -194,6 +198,153 @@ impl RunnableCmd for CmdInstanceSerialHistory {
             let mut tty = thouart::Console::new_stdio(None).await?;
             tty.write_stdout(&data.data).await?;
         }
+        Ok(())
+    }
+}
+
+/// Connect to the instance's framebuffer and input with a local VNC client.
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "serial")]
+pub struct CmdInstanceVnc {
+    /// Name or ID of the instance
+    #[clap(long, short)]
+    instance: NameOrId,
+
+    /// Name or ID of the project
+    #[clap(long, short)]
+    project: Option<NameOrId>,
+    // TODO: vncviewer executable, or flag that says not to
+}
+
+#[async_trait]
+impl RunnableCmd for CmdInstanceVnc {
+    async fn run(&self, ctx: &oxide::context::Context) -> Result<()> {
+        let mut req = ctx.client()?.instance_vnc().instance(self.instance.clone());
+
+        if let Some(value) = &self.project {
+            req = req.project(value.clone());
+        } else if let NameOrId::Name(_) = &self.instance {
+            // on the server end, the connection is upgraded by the server
+            // before the worker thread attempts to look up the instance.
+            anyhow::bail!("Must provide --project when specifying instance by name rather than ID");
+        }
+
+        // TODO: custom listen address
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await?;
+        let addr = listener.local_addr()?;
+        // yes, two ':' between IP and port. otherwise VNC adds 5900 to it!
+        let vncviewer_arg = format!("{ip}::{port}", ip = addr.ip(), port = addr.port());
+
+        // TODO: custom args etc.
+        let mut cmd = std::process::Command::new("vncviewer");
+        cmd.arg(&vncviewer_arg);
+        let child_res = cmd.spawn();
+        if child_res.is_err() {
+            eprintln!(
+                "Please connect a VNC client to {ip} on TCP port {port}.\nFor example: vncviewer {vncviewer_arg}",
+                ip = addr.ip(),
+                port = addr.port(),
+                vncviewer_arg = vncviewer_arg,
+            );
+        }
+
+        // TODO: clearer error case communication
+        let Ok((tcp_stream, _addr)) = listener.accept().await else {
+            anyhow::bail!("Failed to accept connection from local VNC client");
+        };
+
+        // okay, we have a local client, now actually start requesting I/O through nexus
+        let upgraded = req.send().await.map_err(|e| e.into_untyped())?.into_inner();
+
+        let ws = WebSocketStream::from_raw_socket(upgraded, Role::Client, None).await;
+
+        let (mut ws_sink, mut ws_stream) = ws.split();
+        let (mut tcp_reader, mut tcp_writer) = tcp_stream.into_split();
+        let (closed_tx, mut closed_rx) = tokio::sync::oneshot::channel::<()>();
+
+        let mut jh = tokio::spawn(async move {
+            // medium-sized websocket payload
+            let mut tcp_read_buf = vec![0u8; 65535];
+            loop {
+                tokio::select! {
+                    _ = &mut closed_rx => break,
+                    num_bytes_res = tcp_reader.read(&mut tcp_read_buf) => {
+                        match num_bytes_res {
+                            Ok(num_bytes) => {
+                                ws_sink
+                                    .send(Message::Binary(Vec::from(&tcp_read_buf[..num_bytes])))
+                                    .await?;
+                            }
+                            Err(e) => {
+                                ws_sink.send(Message::Close(None)).await?;
+                                anyhow::bail!("Local client disconnected: {}", e);
+                            }
+                        }
+                    }
+                }
+            }
+            Ok(ws_sink)
+        });
+
+        let mut close_frame = None;
+        loop {
+            tokio::select! {
+                _ = &mut jh => break,
+                msg = ws_stream.next() => {
+                    match msg {
+                        Some(Ok(Message::Binary(data))) => {
+                            let mut start = 0;
+                            while start < data.len() {
+                                match tcp_writer.write(&data[start..]).await {
+                                    Ok(num_bytes) => {
+                                        start += num_bytes;
+                                    }
+                                    Err(e) => {
+                                        close_frame = Some(CloseFrame {
+                                            code: CloseCode::Error,
+                                            reason: e.to_string().into(),
+                                        });
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        Some(Ok(Message::Close(Some(CloseFrame {code, reason})))) => {
+                            match code {
+                                CloseCode::Abnormal
+                                | CloseCode::Error
+                                | CloseCode::Extension
+                                | CloseCode::Invalid
+                                | CloseCode::Policy
+                                | CloseCode::Protocol
+                                | CloseCode::Size
+                                | CloseCode::Unsupported => {
+                                    anyhow::bail!("Server disconnected: {}", reason.to_string());
+                                }
+                                _ => break,
+                            }
+                        }
+                        Some(Ok(Message::Close(None))) => {
+                            eprintln!("Connection closed.");
+                            break;
+                        }
+                        None => {
+                            eprintln!("Connection lost.");
+                            break;
+                        }
+                        _ => continue,
+                    }
+                }
+            }
+        }
+
+        // let _: the connection may have already been dropped at this point.
+        let _ = closed_tx.send(()).is_ok();
+        if let Ok(Ok(mut ws_sink)) = jh.await {
+            let _ = ws_sink.send(Message::Close(close_frame)).await.is_ok();
+        }
+
         Ok(())
     }
 }
