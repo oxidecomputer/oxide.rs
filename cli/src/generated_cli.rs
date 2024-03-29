@@ -103,6 +103,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotView => Self::cli_snapshot_view(),
             CliCommand::SnapshotDelete => Self::cli_snapshot_delete(),
             CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
+            CliCommand::PhysicalDiskView => Self::cli_physical_disk_view(),
             CliCommand::RackList => Self::cli_rack_list(),
             CliCommand::RackView => Self::cli_rack_view(),
             CliCommand::SledList => Self::cli_sled_list(),
@@ -2750,6 +2751,18 @@ impl<T: CliConfig> Cli<T> {
                     .required(false),
             )
             .about("List physical disks")
+    }
+
+    pub fn cli_physical_disk_view() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("disk-id")
+                    .long("disk-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("ID of the physical disk"),
+            )
+            .about("Get a physical disk")
     }
 
     pub fn cli_rack_list() -> clap::Command {
@@ -5519,6 +5532,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotView => self.execute_snapshot_view(matches).await,
             CliCommand::SnapshotDelete => self.execute_snapshot_delete(matches).await,
             CliCommand::PhysicalDiskList => self.execute_physical_disk_list(matches).await,
+            CliCommand::PhysicalDiskView => self.execute_physical_disk_view(matches).await,
             CliCommand::RackList => self.execute_rack_list(matches).await,
             CliCommand::RackView => self.execute_rack_view(matches).await,
             CliCommand::SledList => self.execute_sled_list(matches).await,
@@ -8353,6 +8367,30 @@ impl<T: CliConfig> Cli<T> {
                 Ok(Some(value)) => {
                     self.config.list_item(&value);
                 }
+            }
+        }
+    }
+
+    pub async fn execute_physical_disk_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.physical_disk_view();
+        if let Some(value) = matches.get_one::<uuid::Uuid>("disk-id") {
+            request = request.disk_id(value.clone());
+        }
+
+        self.config
+            .execute_physical_disk_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
             }
         }
     }
@@ -12101,6 +12139,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_physical_disk_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::PhysicalDiskView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_rack_list(
         &self,
         matches: &clap::ArgMatches,
@@ -12956,6 +13002,7 @@ pub enum CliCommand {
     SnapshotView,
     SnapshotDelete,
     PhysicalDiskList,
+    PhysicalDiskView,
     RackList,
     RackView,
     SledList,
@@ -13141,6 +13188,7 @@ impl CliCommand {
             CliCommand::SnapshotView,
             CliCommand::SnapshotDelete,
             CliCommand::PhysicalDiskList,
+            CliCommand::PhysicalDiskView,
             CliCommand::RackList,
             CliCommand::RackView,
             CliCommand::SledList,

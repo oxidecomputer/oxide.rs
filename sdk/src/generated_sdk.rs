@@ -13200,7 +13200,9 @@ pub mod types {
     ///    "form_factor",
     ///    "id",
     ///    "model",
+    ///    "policy",
     ///    "serial",
+    ///    "state",
     ///    "time_created",
     ///    "time_modified",
     ///    "vendor"
@@ -13218,6 +13220,14 @@ pub mod types {
     ///    "model": {
     ///      "type": "string"
     ///    },
+    ///    "policy": {
+    ///      "description": "The operator-defined policy for a physical disk.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/PhysicalDiskPolicy"
+    ///        }
+    ///      ]
+    ///    },
     ///    "serial": {
     ///      "type": "string"
     ///    },
@@ -13228,6 +13238,15 @@ pub mod types {
     ///        "null"
     ///      ],
     ///      "format": "uuid"
+    ///    },
+    ///    "state": {
+    ///      "description": "The current state Nexus believes the disk to be
+    /// in.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/PhysicalDiskState"
+    ///        }
+    ///      ]
     ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
@@ -13252,10 +13271,14 @@ pub mod types {
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         pub model: String,
+        /// The operator-defined policy for a physical disk.
+        pub policy: PhysicalDiskPolicy,
         pub serial: String,
         /// The sled to which this disk is attached, if any.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         pub sled_id: Option<uuid::Uuid>,
+        /// The current state Nexus believes the disk to be in.
+        pub state: PhysicalDiskState,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// timestamp when this resource was last modified
@@ -13357,6 +13380,121 @@ pub mod types {
         }
     }
 
+    /// The operator-defined policy of a physical disk.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The operator-defined policy of a physical disk.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The operator has indicated that the disk is
+    /// in-service.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "in_service"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "The operator has indicated that the disk has been
+    /// permanently removed from service.\n\nThis is a terminal state: once a
+    /// particular disk ID is expunged, it will never return to service. (The
+    /// actual hardware may be reused, but it will be treated as a brand-new
+    /// disk.)\n\nAn expunged disk is always non-provisionable.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "kind"
+    ///      ],
+    ///      "properties": {
+    ///        "kind": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "expunged"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    #[serde(tag = "kind")]
+    pub enum PhysicalDiskPolicy {
+        #[serde(rename = "in_service")]
+        InService,
+        #[serde(rename = "expunged")]
+        Expunged,
+    }
+
+    impl From<&PhysicalDiskPolicy> for PhysicalDiskPolicy {
+        fn from(value: &PhysicalDiskPolicy) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for PhysicalDiskPolicy {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::InService => "in_service".to_string(),
+                Self::Expunged => "expunged".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for PhysicalDiskPolicy {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "in_service" => Ok(Self::InService),
+                "expunged" => Ok(Self::Expunged),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for PhysicalDiskPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for PhysicalDiskPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for PhysicalDiskPolicy {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     /// A single page of results
     ///
     /// <details><summary>JSON schema</summary>
@@ -13406,6 +13544,110 @@ pub mod types {
     impl PhysicalDiskResultsPage {
         pub fn builder() -> builder::PhysicalDiskResultsPage {
             Default::default()
+        }
+    }
+
+    /// The current state of the disk, as determined by Nexus.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The current state of the disk, as determined by
+    /// Nexus.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "The disk is currently active, and has resources
+    /// allocated on it.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "active"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The disk has been permanently removed from
+    /// service.\n\nThis is a terminal state: once a particular disk ID is
+    /// decommissioned, it will never return to service. (The actual hardware
+    /// may be reused, but it will be treated as a brand-new disk.)",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "decommissioned"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum PhysicalDiskState {
+        /// The disk is currently active, and has resources allocated on it.
+        #[serde(rename = "active")]
+        Active,
+        /// The disk has been permanently removed from service.
+        ///
+        /// This is a terminal state: once a particular disk ID is
+        /// decommissioned, it will never return to service. (The actual
+        /// hardware may be reused, but it will be treated as a brand-new disk.)
+        #[serde(rename = "decommissioned")]
+        Decommissioned,
+    }
+
+    impl From<&PhysicalDiskState> for PhysicalDiskState {
+        fn from(value: &PhysicalDiskState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for PhysicalDiskState {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Active => "active".to_string(),
+                Self::Decommissioned => "decommissioned".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for PhysicalDiskState {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "active" => Ok(Self::Active),
+                "decommissioned" => Ok(Self::Decommissioned),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for PhysicalDiskState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for PhysicalDiskState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for PhysicalDiskState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -30345,8 +30587,10 @@ pub mod types {
             form_factor: Result<super::PhysicalDiskKind, String>,
             id: Result<uuid::Uuid, String>,
             model: Result<String, String>,
+            policy: Result<super::PhysicalDiskPolicy, String>,
             serial: Result<String, String>,
             sled_id: Result<Option<uuid::Uuid>, String>,
+            state: Result<super::PhysicalDiskState, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             vendor: Result<String, String>,
@@ -30358,8 +30602,10 @@ pub mod types {
                     form_factor: Err("no value supplied for form_factor".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     model: Err("no value supplied for model".to_string()),
+                    policy: Err("no value supplied for policy".to_string()),
                     serial: Err("no value supplied for serial".to_string()),
                     sled_id: Ok(Default::default()),
+                    state: Err("no value supplied for state".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
                     time_modified: Err("no value supplied for time_modified".to_string()),
                     vendor: Err("no value supplied for vendor".to_string()),
@@ -30398,6 +30644,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for model: {}", e));
                 self
             }
+            pub fn policy<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::PhysicalDiskPolicy>,
+                T::Error: std::fmt::Display,
+            {
+                self.policy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for policy: {}", e));
+                self
+            }
             pub fn serial<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -30416,6 +30672,16 @@ pub mod types {
                 self.sled_id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for sled_id: {}", e));
+                self
+            }
+            pub fn state<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::PhysicalDiskState>,
+                T::Error: std::fmt::Display,
+            {
+                self.state = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for state: {}", e));
                 self
             }
             pub fn time_created<T>(mut self, value: T) -> Self
@@ -30457,8 +30723,10 @@ pub mod types {
                     form_factor: value.form_factor?,
                     id: value.id?,
                     model: value.model?,
+                    policy: value.policy?,
                     serial: value.serial?,
                     sled_id: value.sled_id?,
+                    state: value.state?,
                     time_created: value.time_created?,
                     time_modified: value.time_modified?,
                     vendor: value.vendor?,
@@ -30472,8 +30740,10 @@ pub mod types {
                     form_factor: Ok(value.form_factor),
                     id: Ok(value.id),
                     model: Ok(value.model),
+                    policy: Ok(value.policy),
                     serial: Ok(value.serial),
                     sled_id: Ok(value.sled_id),
+                    state: Ok(value.state),
                     time_created: Ok(value.time_created),
                     time_modified: Ok(value.time_modified),
                     vendor: Ok(value.vendor),
@@ -39955,6 +40225,19 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn physical_disk_list(&self) -> builder::PhysicalDiskList;
+    /// Get a physical disk
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/disks/{disk_id}`
+    ///
+    /// Arguments:
+    /// - `disk_id`: ID of the physical disk
+    /// ```ignore
+    /// let response = client.physical_disk_view()
+    ///    .disk_id(disk_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn physical_disk_view(&self) -> builder::PhysicalDiskView;
     /// List racks
     ///
     /// Sends a `GET` request to `/v1/system/hardware/racks`
@@ -40197,6 +40480,10 @@ pub trait ClientSystemHardwareExt {
 impl ClientSystemHardwareExt for Client {
     fn physical_disk_list(&self) -> builder::PhysicalDiskList {
         builder::PhysicalDiskList::new(self)
+    }
+
+    fn physical_disk_view(&self) -> builder::PhysicalDiskView {
+        builder::PhysicalDiskView::new(self)
     }
 
     fn rack_list(&self) -> builder::RackList {
@@ -50579,6 +50866,66 @@ pub mod builder {
                 .try_flatten_stream()
                 .take(limit)
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemHardwareExt::physical_disk_view`]
+    ///
+    /// [`ClientSystemHardwareExt::physical_disk_view`]: super::ClientSystemHardwareExt::physical_disk_view
+    #[derive(Debug, Clone)]
+    pub struct PhysicalDiskView<'a> {
+        client: &'a super::Client,
+        disk_id: Result<uuid::Uuid, String>,
+    }
+
+    impl<'a> PhysicalDiskView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                disk_id: Err("disk_id was not initialized".to_string()),
+            }
+        }
+
+        pub fn disk_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.disk_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for disk_id failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to `/v1/system/hardware/disks/{disk_id}`
+        pub async fn send(self) -> Result<ResponseValue<types::PhysicalDisk>, Error<types::Error>> {
+            let Self { client, disk_id } = self;
+            let disk_id = disk_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/disks/{}",
+                client.baseurl,
+                encode_path(&disk_id.to_string()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 
