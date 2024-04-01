@@ -15,7 +15,7 @@ async-trait = "0.1.79"
 base64 = "0.21.7"
 built = { version = "0.7.1", features = ["git2"] }
 chrono = { version = "0.4.35", features = ["serde"] }
-clap = { version = "4.5.3", features = ["derive", "string", "env"] }
+clap = { version = "4.5.4", features = ["derive", "string", "env"] }
 clap_complete = "4.5.1"
 dialoguer = "0.10.4"
 dirs = "4.0.0"
