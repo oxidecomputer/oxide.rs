@@ -2070,6 +2070,7 @@ dependencies = [
  "test-common",
  "thouart",
  "tokio",
+ "tokio-tungstenite",
  "url",
  "uuid",
 ]
