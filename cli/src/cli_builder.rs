@@ -460,6 +460,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SledSetProvisionPolicy => Some("system hardware sled set-provision-policy"),
         CliCommand::SledInstanceList => Some("system hardware sled instance-list"),
         CliCommand::PhysicalDiskList => Some("system hardware disk list"),
+        CliCommand::PhysicalDiskView => Some("system hardware disk view"),
         CliCommand::SledPhysicalDiskList => Some("system hardware sled disk-led"),
 
         CliCommand::SystemPolicyView => Some("system policy view"),
@@ -486,6 +487,10 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::ProbeDelete => Some("experimental probe delete"),
         CliCommand::ProbeList => Some("experimental probe list"),
         CliCommand::ProbeView => Some("experimental probe view"),
+
+        // Metrics-related subcommands
+        CliCommand::TimeseriesQuery => Some("experimental timeseries query"),
+        CliCommand::TimeseriesSchemaList => Some("experimental timeseries schema list"),
 
         // Commands not yet implemented
         CliCommand::DeviceAccessToken
