@@ -155,11 +155,17 @@ jobs:
           GH_TOKEN: ${{ inputs.reflector_access_token }}
         run: |
           # Compare the integration branch with the target branch
-          CHANGED_FILES_LIST=$(git diff integration..main --name-only)
-          CHANGED_FILES=$(git diff integration..main --name-only | wc -l)
-          HAS_NON_LOCK_CHANGES=$([ "$CHANGED_FILES" -gt 0 ] && ([ "$CHANGED_FILES" -gt 1 ] || [ "$CHANGED_FILES_LIST" != "Cargo.lock" ]))
           TARGET_TO_INT="$(git rev-list --count $TARGET_BRANCH..$INT_BRANCH)"
           INT_TO_TARGET="$(git rev-list --count $INT_BRANCH..$TARGET_BRANCH)"
+
+          CHANGED_FILES_LIST=$(git diff integration..main --name-only)
+          CHANGED_FILES=$(git diff integration..main --name-only | wc -l)
+          HAS_NON_LOCK_CHANGES=1
+
+          # Check if there are more changes than just Cargo.lock
+          if [ "$CHANGED_FILES" -gt 1 ] || ([ "$CHANGED_FILES" -eq 1 ] && [ "$CHANGED_FILES_LIST" != "Cargo.lock" ]); then
+            HAS_NON_LOCK_CHANGES=0
+          fi
 
           # Check for an existing pull request from the integration branch to the target branch
           eval $(gh pr view $INT_BRANCH --repo $GITHUB_REPOSITORY --json url,number,state | jq -r 'to_entries[] | "\(.key | ascii_upcase)=\(.value)"')
