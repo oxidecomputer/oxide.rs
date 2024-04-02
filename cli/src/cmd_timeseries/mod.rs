@@ -24,7 +24,7 @@ use ratatui::{prelude::CrosstermBackend, Terminal};
 use self::dashboard::Dashboard;
 use crate::RunnableCmd;
 
-/// Prints version information about the CLI.
+/// Graph the results of an OxQL timeseries query.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "timeseries dashboard")]
