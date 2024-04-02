@@ -460,6 +460,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SledSetProvisionPolicy => Some("system hardware sled set-provision-policy"),
         CliCommand::SledInstanceList => Some("system hardware sled instance-list"),
         CliCommand::PhysicalDiskList => Some("system hardware disk list"),
+        CliCommand::PhysicalDiskView => Some("system hardware disk view"),
         CliCommand::SledPhysicalDiskList => Some("system hardware sled disk-led"),
 
         CliCommand::SystemPolicyView => Some("system policy view"),
@@ -504,8 +505,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         | CliCommand::SiloMetric
         | CliCommand::SystemMetric
         | CliCommand::UserBuiltinList
-        | CliCommand::UserBuiltinView
-        | CliCommand::PhysicalDiskView => None,
+        | CliCommand::UserBuiltinView => None,
     }
 }
 
