@@ -1,7 +1,7 @@
 [package]
 name = "oxide"
 description = "SDK for the Oxide rack"
-version = "0.3.0+0.0.6"
+version = "0.4.0+20240327.0"
 edition = "2021"
 license = "MPL-2.0"
 repository = "https://github.com/oxidecomputer/oxide.rs"

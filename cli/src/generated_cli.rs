@@ -103,7 +103,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotView => Self::cli_snapshot_view(),
             CliCommand::SnapshotDelete => Self::cli_snapshot_delete(),
             CliCommand::PhysicalDiskList => Self::cli_physical_disk_list(),
-            CliCommand::PhysicalDiskView => Self::cli_physical_disk_view(),
             CliCommand::RackList => Self::cli_rack_list(),
             CliCommand::RackView => Self::cli_rack_view(),
             CliCommand::SledList => Self::cli_sled_list(),
@@ -213,8 +212,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::UserBuiltinView => Self::cli_user_builtin_view(),
             CliCommand::SiloUtilizationList => Self::cli_silo_utilization_list(),
             CliCommand::SiloUtilizationView => Self::cli_silo_utilization_view(),
-            CliCommand::TimeseriesQuery => Self::cli_timeseries_query(),
-            CliCommand::TimeseriesSchemaList => Self::cli_timeseries_schema_list(),
             CliCommand::UserList => Self::cli_user_list(),
             CliCommand::UtilizationView => Self::cli_utilization_view(),
             CliCommand::VpcFirewallRulesView => Self::cli_vpc_firewall_rules_view(),
@@ -2755,18 +2752,6 @@ impl<T: CliConfig> Cli<T> {
             .about("List physical disks")
     }
 
-    pub fn cli_physical_disk_view() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("disk-id")
-                    .long("disk-id")
-                    .value_parser(clap::value_parser!(uuid::Uuid))
-                    .required(true)
-                    .help("ID of the physical disk"),
-            )
-            .about("Get a physical disk")
-    }
-
     pub fn cli_rack_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -4876,44 +4861,6 @@ impl<T: CliConfig> Cli<T> {
             .about("Fetch current utilization for given silo")
     }
 
-    pub fn cli_timeseries_query() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("query")
-                    .long("query")
-                    .value_parser(clap::value_parser!(String))
-                    .required_unless_present("json-body")
-                    .help("A timeseries query string, written in the Oximeter query language."),
-            )
-            .arg(
-                clap::Arg::new("json-body")
-                    .long("json-body")
-                    .value_name("JSON-FILE")
-                    .required(false)
-                    .value_parser(clap::value_parser!(std::path::PathBuf))
-                    .help("Path to a file that contains the full json body."),
-            )
-            .arg(
-                clap::Arg::new("json-body-template")
-                    .long("json-body-template")
-                    .action(clap::ArgAction::SetTrue)
-                    .help("XXX"),
-            )
-            .about("Run a timeseries query, written OxQL.")
-    }
-
-    pub fn cli_timeseries_schema_list() -> clap::Command {
-        clap::Command::new("")
-            .arg(
-                clap::Arg::new("limit")
-                    .long("limit")
-                    .value_parser(clap::value_parser!(std::num::NonZeroU32))
-                    .required(false)
-                    .help("Maximum number of items returned by a single call"),
-            )
-            .about("List available timeseries schema.")
-    }
-
     pub fn cli_user_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -5572,7 +5519,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::SnapshotView => self.execute_snapshot_view(matches).await,
             CliCommand::SnapshotDelete => self.execute_snapshot_delete(matches).await,
             CliCommand::PhysicalDiskList => self.execute_physical_disk_list(matches).await,
-            CliCommand::PhysicalDiskView => self.execute_physical_disk_view(matches).await,
             CliCommand::RackList => self.execute_rack_list(matches).await,
             CliCommand::RackView => self.execute_rack_view(matches).await,
             CliCommand::SledList => self.execute_sled_list(matches).await,
@@ -5730,8 +5676,6 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::UserBuiltinView => self.execute_user_builtin_view(matches).await,
             CliCommand::SiloUtilizationList => self.execute_silo_utilization_list(matches).await,
             CliCommand::SiloUtilizationView => self.execute_silo_utilization_view(matches).await,
-            CliCommand::TimeseriesQuery => self.execute_timeseries_query(matches).await,
-            CliCommand::TimeseriesSchemaList => self.execute_timeseries_schema_list(matches).await,
             CliCommand::UserList => self.execute_user_list(matches).await,
             CliCommand::UtilizationView => self.execute_utilization_view(matches).await,
             CliCommand::VpcFirewallRulesView => self.execute_vpc_firewall_rules_view(matches).await,
@@ -8413,30 +8357,6 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_physical_disk_view(
-        &self,
-        matches: &clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.physical_disk_view();
-        if let Some(value) = matches.get_one::<uuid::Uuid>("disk-id") {
-            request = request.disk_id(value.clone());
-        }
-
-        self.config
-            .execute_physical_disk_view(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.item_success(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.item_error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
     pub async fn execute_rack_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.rack_list();
         if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
@@ -10966,65 +10886,6 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_timeseries_query(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
-        let mut request = self.client.timeseries_query();
-        if let Some(value) = matches.get_one::<String>("query") {
-            request = request.body_map(|body| body.query(value.clone()))
-        }
-
-        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
-            let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value = serde_json::from_str::<types::TimeseriesQuery>(&body_txt).unwrap();
-            request = request.body(body_value);
-        }
-
-        self.config
-            .execute_timeseries_query(matches, &mut request)?;
-        let result = request.send().await;
-        match result {
-            Ok(r) => {
-                self.config.item_success(&r);
-                Ok(())
-            }
-            Err(r) => {
-                self.config.item_error(&r);
-                Err(anyhow::Error::new(r))
-            }
-        }
-    }
-
-    pub async fn execute_timeseries_schema_list(
-        &self,
-        matches: &clap::ArgMatches,
-    ) -> anyhow::Result<()> {
-        let mut request = self.client.timeseries_schema_list();
-        if let Some(value) = matches.get_one::<std::num::NonZeroU32>("limit") {
-            request = request.limit(value.clone());
-        }
-
-        self.config
-            .execute_timeseries_schema_list(matches, &mut request)?;
-        self.config
-            .list_start::<types::TimeseriesSchemaResultsPage>();
-        let mut stream = request.stream();
-        loop {
-            match futures::TryStreamExt::try_next(&mut stream).await {
-                Err(r) => {
-                    self.config.list_end_error(&r);
-                    return Err(anyhow::Error::new(r));
-                }
-                Ok(None) => {
-                    self.config
-                        .list_end_success::<types::TimeseriesSchemaResultsPage>();
-                    return Ok(());
-                }
-                Ok(Some(value)) => {
-                    self.config.list_item(&value);
-                }
-            }
-        }
-    }
-
     pub async fn execute_user_list(&self, matches: &clap::ArgMatches) -> anyhow::Result<()> {
         let mut request = self.client.user_list();
         if let Some(value) = matches.get_one::<uuid::Uuid>("group") {
@@ -12240,14 +12101,6 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_physical_disk_view(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::PhysicalDiskView,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_rack_list(
         &self,
         matches: &clap::ArgMatches,
@@ -12896,22 +12749,6 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_timeseries_query(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::TimeseriesQuery,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
-    fn execute_timeseries_schema_list(
-        &self,
-        matches: &clap::ArgMatches,
-        request: &mut builder::TimeseriesSchemaList,
-    ) -> anyhow::Result<()> {
-        Ok(())
-    }
-
     fn execute_user_list(
         &self,
         matches: &clap::ArgMatches,
@@ -13119,7 +12956,6 @@ pub enum CliCommand {
     SnapshotView,
     SnapshotDelete,
     PhysicalDiskList,
-    PhysicalDiskView,
     RackList,
     RackView,
     SledList,
@@ -13201,8 +13037,6 @@ pub enum CliCommand {
     UserBuiltinView,
     SiloUtilizationList,
     SiloUtilizationView,
-    TimeseriesQuery,
-    TimeseriesSchemaList,
     UserList,
     UtilizationView,
     VpcFirewallRulesView,
@@ -13307,7 +13141,6 @@ impl CliCommand {
             CliCommand::SnapshotView,
             CliCommand::SnapshotDelete,
             CliCommand::PhysicalDiskList,
-            CliCommand::PhysicalDiskView,
             CliCommand::RackList,
             CliCommand::RackView,
             CliCommand::SledList,
@@ -13389,8 +13222,6 @@ impl CliCommand {
             CliCommand::UserBuiltinView,
             CliCommand::SiloUtilizationList,
             CliCommand::SiloUtilizationView,
-            CliCommand::TimeseriesQuery,
-            CliCommand::TimeseriesSchemaList,
             CliCommand::UserList,
             CliCommand::UtilizationView,
             CliCommand::VpcFirewallRulesView,
