@@ -155,8 +155,9 @@ jobs:
           GH_TOKEN: ${{ inputs.reflector_access_token }}
         run: |
           # Compare the integration branch with the target branch
+          CHANGED_FILES_LIST=$(git diff integration..main --name-only)
           CHANGED_FILES=$(git diff integration..main --name-only | wc -l)
-          HAS_NON_LOCK_CHANGES=[ "$CHANGED_FILES" -gt 0 ] && ([ "$CHANGED_FILES" -gt 1 ] || [ $(git diff integration..main --name-only) != "Cargo.lock" ])
+          HAS_NON_LOCK_CHANGES=$([ "$CHANGED_FILES" -gt 0 ] && ([ "$CHANGED_FILES" -gt 1 ] || [ "$CHANGED_FILES_LIST" != "Cargo.lock" ]))
           TARGET_TO_INT="$(git rev-list --count $TARGET_BRANCH..$INT_BRANCH)"
           INT_TO_TARGET="$(git rev-list --count $INT_BRANCH..$TARGET_BRANCH)"
 
