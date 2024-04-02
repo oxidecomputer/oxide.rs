@@ -2074,7 +2074,7 @@ dependencies = [
 name = "oxide"
 version = "0.4.0+20240327.0"
 dependencies = [
- "base64 0.21.7",
+ "base64 0.22.0",
  "chrono",
  "clap",
  "dirs",
@@ -2099,7 +2099,7 @@ dependencies = [
  "anyhow",
  "assert_cmd",
  "async-trait",
- "base64 0.21.7",
+ "base64 0.22.0",
  "built",
  "chrono",
  "clap",
