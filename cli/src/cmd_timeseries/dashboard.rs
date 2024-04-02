@@ -102,7 +102,7 @@ impl<'a> Dashboard<'a> {
             // Always draw the frame on each tick.
             terminal.draw(|frame| self.render_frame(frame))?;
         }
-        if let Err(_) = done_tx.send(()) {
+        if done_tx.send(()).is_err() {
             anyhow::bail!("Failed to notify client task to exit");
         }
         task.await.context("failed to await client task")
@@ -503,7 +503,7 @@ impl<'a> Widget for TimeseriesGraph<'a> {
             .enumerate()
             .map(|(i, (_key, data))| {
                 let ds = Dataset::default()
-                    .data(&data)
+                    .data(data)
                     .marker(Marker::Dot)
                     .graph_type(GraphType::Scatter);
                 // If this is the highlighted dataset, make it obvious.
