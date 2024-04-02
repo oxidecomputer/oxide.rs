@@ -2703,6 +2703,16 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "name": "view",
+                  "about": "Get a physical disk",
+                  "args": [
+                    {
+                      "long": "disk-id",
+                      "help": "ID of the physical disk"
+                    }
+                  ]
                 }
               ]
             },
