@@ -701,6 +701,55 @@
               ]
             }
           ]
+        },
+        {
+          "name": "timeseries",
+          "subcommands": [
+            {
+              "name": "dashboard",
+              "about": "Graph the results of an OxQL timeseries query.",
+              "args": [
+                {
+                  "long": "interval",
+                  "short": "i",
+                  "help": "The interval on which to update the dashboard display, in seconds"
+                }
+              ]
+            },
+            {
+              "name": "query",
+              "about": "Run a timeseries query, written OxQL.",
+              "args": [
+                {
+                  "long": "json-body",
+                  "help": "Path to a file that contains the full json body."
+                },
+                {
+                  "long": "json-body-template",
+                  "help": "XXX"
+                },
+                {
+                  "long": "query",
+                  "help": "A timeseries query string, written in the Oximeter query language."
+                }
+              ]
+            },
+            {
+              "name": "schema",
+              "subcommands": [
+                {
+                  "name": "list",
+                  "about": "List available timeseries schema.",
+                  "args": [
+                    {
+                      "long": "limit",
+                      "help": "Maximum number of items returned by a single call"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -2652,6 +2701,16 @@
                       "values": [
                         "id_ascending"
                       ]
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Get a physical disk",
+                  "args": [
+                    {
+                      "long": "disk-id",
+                      "help": "ID of the physical disk"
                     }
                   ]
                 }
