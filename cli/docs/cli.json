@@ -718,7 +718,8 @@
             },
             {
               "name": "query",
-              "about": "Run a timeseries query, written OxQL.",
+              "about": "Run timeseries query",
+              "long_about": "Queries are written in OxQL.",
               "args": [
                 {
                   "long": "json-body",
@@ -739,7 +740,7 @@
               "subcommands": [
                 {
                   "name": "list",
-                  "about": "List available timeseries schema.",
+                  "about": "List timeseries schemas",
                   "args": [
                     {
                       "long": "limit",

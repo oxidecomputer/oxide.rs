@@ -2180,7 +2180,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("An inclusive start time of metrics."),
             )
-            .about("Access metrics data")
+            .about("View metrics")
+            .long_about(
+                "View CPU, memory, or storage utilization metrics at the silo or project level.",
+            )
     }
 
     pub fn cli_instance_network_interface_list() -> clap::Command {
@@ -3806,7 +3809,10 @@ impl<T: CliConfig> Cli<T> {
                     .required(true)
                     .help("An inclusive start time of metrics."),
             )
-            .about("Access metrics data")
+            .about("View metrics")
+            .long_about(
+                "View CPU, memory, or storage utilization metrics at the fleet or silo level.",
+            )
     }
 
     pub fn cli_networking_address_lot_list() -> clap::Command {
@@ -4899,7 +4905,8 @@ impl<T: CliConfig> Cli<T> {
                     .action(clap::ArgAction::SetTrue)
                     .help("XXX"),
             )
-            .about("Run a timeseries query, written OxQL.")
+            .about("Run timeseries query")
+            .long_about("Queries are written in OxQL.")
     }
 
     pub fn cli_timeseries_schema_list() -> clap::Command {
@@ -4911,7 +4918,7 @@ impl<T: CliConfig> Cli<T> {
                     .required(false)
                     .help("Maximum number of items returned by a single call"),
             )
-            .about("List available timeseries schema.")
+            .about("List timeseries schemas")
     }
 
     pub fn cli_user_list() -> clap::Command {
