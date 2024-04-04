@@ -5866,7 +5866,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_probe_list(matches, &mut request)?;
         self.config.list_start::<types::ProbeInfoResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -6011,7 +6016,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_certificate_list(matches, &mut request)?;
         self.config.list_start::<types::CertificateResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -6137,7 +6147,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_disk_list(matches, &mut request)?;
         self.config.list_start::<types::DiskResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -6415,7 +6430,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_disk_metrics_list(matches, &mut request)?;
         self.config.list_start::<types::MeasurementResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -6451,7 +6471,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_floating_ip_list(matches, &mut request)?;
         self.config.list_start::<types::FloatingIpResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -6693,7 +6718,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_group_list(matches, &mut request)?;
         self.config.list_start::<types::GroupResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -6747,7 +6777,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_image_list(matches, &mut request)?;
         self.config.list_start::<types::ImageResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -6919,7 +6954,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_instance_list(matches, &mut request)?;
         self.config.list_start::<types::InstanceResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -7063,7 +7103,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_instance_disk_list(matches, &mut request)?;
         self.config.list_start::<types::DiskResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -7404,7 +7449,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_instance_ssh_public_key_list(matches, &mut request)?;
         self.config.list_start::<types::SshKeyResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -7486,7 +7536,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_project_ip_pool_list(matches, &mut request)?;
         self.config.list_start::<types::SiloIpPoolResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -7616,7 +7671,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_current_user_groups(matches, &mut request)?;
         self.config.list_start::<types::GroupResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -7650,7 +7710,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_current_user_ssh_key_list(matches, &mut request)?;
         self.config.list_start::<types::SshKeyResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -7783,7 +7848,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_silo_metric(matches, &mut request)?;
         self.config.list_start::<types::MeasurementResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -7827,7 +7897,12 @@ impl<T: CliConfig> Cli<T> {
             .execute_instance_network_interface_list(matches, &mut request)?;
         self.config
             .list_start::<types::InstanceNetworkInterfaceResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8082,7 +8157,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_project_list(matches, &mut request)?;
         self.config.list_start::<types::ProjectResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8274,7 +8354,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_snapshot_list(matches, &mut request)?;
         self.config.list_start::<types::SnapshotResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8394,7 +8479,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_physical_disk_list(matches, &mut request)?;
         self.config.list_start::<types::PhysicalDiskResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8449,7 +8539,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_rack_list(matches, &mut request)?;
         self.config.list_start::<types::RackResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8499,7 +8594,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_sled_list(matches, &mut request)?;
         self.config.list_start::<types::SledResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8587,7 +8687,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_sled_physical_disk_list(matches, &mut request)?;
         self.config.list_start::<types::PhysicalDiskResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8626,7 +8731,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_sled_instance_list(matches, &mut request)?;
         self.config.list_start::<types::SledInstanceResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8693,7 +8803,12 @@ impl<T: CliConfig> Cli<T> {
             .execute_sled_list_uninitialized(matches, &mut request)?;
         self.config
             .list_start::<types::UninitializedSledResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8732,7 +8847,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_networking_switch_port_list(matches, &mut request)?;
         self.config.list_start::<types::SwitchPortResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8838,7 +8958,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_switch_list(matches, &mut request)?;
         self.config.list_start::<types::SwitchResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -8897,7 +9022,12 @@ impl<T: CliConfig> Cli<T> {
             .execute_silo_identity_provider_list(matches, &mut request)?;
         self.config
             .list_start::<types::IdentityProviderResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -9115,7 +9245,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_ip_pool_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -9253,7 +9388,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_ip_pool_range_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolRangeResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -9352,7 +9492,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_ip_pool_silo_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolSiloLinkResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -9531,7 +9676,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_ip_pool_service_range_list(matches, &mut request)?;
         self.config.list_start::<types::IpPoolRangeResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -9631,7 +9781,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_system_metric(matches, &mut request)?;
         self.config.list_start::<types::MeasurementResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -9666,7 +9821,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_networking_address_lot_list(matches, &mut request)?;
         self.config.list_start::<types::AddressLotResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -9768,7 +9928,12 @@ impl<T: CliConfig> Cli<T> {
             .execute_networking_address_lot_block_list(matches, &mut request)?;
         self.config
             .list_start::<types::AddressLotBlockResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -9911,7 +10076,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_networking_bgp_config_list(matches, &mut request)?;
         self.config.list_start::<types::BgpConfigResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -10168,7 +10338,12 @@ impl<T: CliConfig> Cli<T> {
             .execute_networking_loopback_address_list(matches, &mut request)?;
         self.config
             .list_start::<types::LoopbackAddressResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -10295,7 +10470,12 @@ impl<T: CliConfig> Cli<T> {
             .execute_networking_switch_port_settings_list(matches, &mut request)?;
         self.config
             .list_start::<types::SwitchPortSettingsResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -10451,7 +10631,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_role_list(matches, &mut request)?;
         self.config.list_start::<types::RoleResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -10505,7 +10690,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_system_quotas_list(matches, &mut request)?;
         self.config.list_start::<types::SiloQuotasResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -10536,7 +10726,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_silo_list(matches, &mut request)?;
         self.config.list_start::<types::SiloResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -10656,7 +10851,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_silo_ip_pool_list(matches, &mut request)?;
         self.config.list_start::<types::SiloIpPoolResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -10805,7 +11005,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_silo_user_list(matches, &mut request)?;
         self.config.list_start::<types::UserResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -10863,7 +11068,12 @@ impl<T: CliConfig> Cli<T> {
         self.config
             .execute_user_builtin_list(matches, &mut request)?;
         self.config.list_start::<types::UserBuiltinResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -10923,7 +11133,12 @@ impl<T: CliConfig> Cli<T> {
             .execute_silo_utilization_list(matches, &mut request)?;
         self.config
             .list_start::<types::SiloUtilizationResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -11006,7 +11221,12 @@ impl<T: CliConfig> Cli<T> {
             .execute_timeseries_schema_list(matches, &mut request)?;
         self.config
             .list_start::<types::TimeseriesSchemaResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -11041,7 +11261,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_user_list(matches, &mut request)?;
         self.config.list_start::<types::UserResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -11159,7 +11384,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_vpc_subnet_list(matches, &mut request)?;
         self.config.list_start::<types::VpcSubnetResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -11363,7 +11593,12 @@ impl<T: CliConfig> Cli<T> {
             .execute_vpc_subnet_list_network_interfaces(matches, &mut request)?;
         self.config
             .list_start::<types::InstanceNetworkInterfaceResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
@@ -11398,7 +11633,12 @@ impl<T: CliConfig> Cli<T> {
 
         self.config.execute_vpc_list(matches, &mut request)?;
         self.config.list_start::<types::VpcResultsPage>();
-        let mut stream = request.stream();
+        let mut stream = futures::StreamExt::take(
+            request.stream(),
+            matches
+                .get_one::<std::num::NonZeroU32>("limit")
+                .map_or(usize::MAX, |x| x.get() as usize),
+        );
         loop {
             match futures::TryStreamExt::try_next(&mut stream).await {
                 Err(r) => {
