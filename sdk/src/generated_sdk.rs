@@ -41620,7 +41620,10 @@ impl ClientLoginExt for Client {
 
 /// Silo-scoped metrics
 pub trait ClientMetricsExt {
-    /// Access metrics data
+    /// View metrics
+    ///
+    /// View CPU, memory, or storage utilization metrics at the silo or project
+    /// level.
     ///
     /// Sends a `GET` request to `/v1/metrics/{metric_name}`
     ///
@@ -41646,7 +41649,9 @@ pub trait ClientMetricsExt {
     ///    .await;
     /// ```
     fn silo_metric(&self) -> builder::SiloMetric;
-    /// Run a timeseries query, written OxQL
+    /// Run timeseries query
+    ///
+    /// Queries are written in OxQL.
     ///
     /// Sends a `POST` request to `/v1/timeseries/query`
     ///
@@ -41657,7 +41662,7 @@ pub trait ClientMetricsExt {
     ///    .await;
     /// ```
     fn timeseries_query(&self) -> builder::TimeseriesQuery;
-    /// List available timeseries schema
+    /// List timeseries schemas
     ///
     /// Sends a `GET` request to `/v1/timeseries/schema`
     ///
@@ -42685,7 +42690,10 @@ impl ClientSystemHardwareExt for Client {
 /// include telemetry on hardware and software components that can be used to
 /// understand the current state as well as to diagnose issues.
 pub trait ClientSystemMetricsExt {
-    /// Access metrics data
+    /// View metrics
+    ///
+    /// View CPU, memory, or storage utilization metrics at the fleet or silo
+    /// level.
     ///
     /// Sends a `GET` request to `/v1/system/metrics/{metric_name}`
     ///
