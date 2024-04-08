@@ -884,7 +884,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.10.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#fe98401f8f4e07cc67b991f655b5b4419a54f496"
+source = "git+https://github.com/oxidecomputer/dropshot#bb34c74dd1e3c8b3f6c2a72b9eec6095cb4148a1"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -928,7 +928,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.10.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#fe98401f8f4e07cc67b991f655b5b4419a54f496"
+source = "git+https://github.com/oxidecomputer/dropshot#bb34c74dd1e3c8b3f6c2a72b9eec6095cb4148a1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1476,7 +1476,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10",
+ "socket2 0.5.6",
  "tokio",
  "tower-service",
  "tracing",
@@ -2600,9 +2600,9 @@ checksum = "adad44e29e4c806119491a7f06f03de4d1af22c3a680dd47f1e6e179439d1f56"
 
 [[package]]
 name = "regress"
-version = "0.9.0"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d06f9a1f7cd8473611ba1a480cf35f9c5cffc2954336ba90a982fdb7e7d7f51e"
+checksum = "0eae2a1ebfecc58aff952ef8ccd364329abe627762f5bf09ff42eb9d98522479"
 dependencies = [
  "hashbrown",
  "memchr",
