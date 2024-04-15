@@ -2096,7 +2096,7 @@ dependencies = [
  "clap",
  "dirs",
  "futures",
- "progenitor-client 0.5.0",
+ "progenitor-client 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand",
  "regress",
  "reqwest",
@@ -2404,7 +2404,7 @@ name = "progenitor"
 version = "0.6.0"
 source = "git+https://github.com/oxidecomputer/progenitor#b3f59bfb9ab779df75180eea6e4071913a89f033"
 dependencies = [
- "progenitor-client 0.6.0",
+ "progenitor-client 0.6.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
  "progenitor-macro",
  "serde_json",
@@ -2412,9 +2412,9 @@ dependencies = [
 
 [[package]]
 name = "progenitor-client"
-version = "0.5.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f24dd3cac4cd81ac77f90e5a8dcb8c9311c7500c6ce8c65c98ce61a5894672e9"
+checksum = "2a1cbe96ca4846b5c1606fe6b4b4a3ba9fb05b01eb60e79c04a7cf4a99a0d9a8"
 dependencies = [
  "bytes",
  "futures-core",
