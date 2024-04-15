@@ -12,4 +12,3 @@ updates:
     ignore:
       # progenitor is managed by .github/workflows/integrate.yml
       - dependency-name: "progenitor"
-      - dependency-name: "progenitor-client"
