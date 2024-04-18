@@ -14,7 +14,7 @@ assert_cmd = "2.0.14"
 async-trait = "0.1.80"
 base64 = "0.22.0"
 built = { version = "0.7.1", features = ["git2"] }
-chrono = { version = "0.4.35", features = ["serde"] }
+chrono = { version = "0.4.38", features = ["serde"] }
 clap = { version = "4.5.4", features = ["derive", "string", "env"] }
 clap_complete = "4.5.1"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
