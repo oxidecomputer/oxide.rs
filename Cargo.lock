@@ -1487,7 +1487,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10",
+ "socket2 0.5.6",
  "tokio",
  "tower-service",
  "tracing",
@@ -3212,7 +3212,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2ff9eaf853dec4c8802325d8b6d3dffa86cc707fd7a1a4cdbf416e13b061787a"
 dependencies = [
  "quote",
- "syn 2.0.57",
+ "syn 2.0.58",
 ]
 
 [[package]]
@@ -3710,7 +3710,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "typify"
 version = "0.0.16"
-source = "git+https://github.com/oxidecomputer/typify#e366532f9cb8e3b91fd91f6c2a1d06a56c9922bc"
+source = "git+https://github.com/oxidecomputer/typify#31ec4c504cb82582c65b97509b45bbc568247910"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3719,7 +3719,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.0.16"
-source = "git+https://github.com/oxidecomputer/typify#e366532f9cb8e3b91fd91f6c2a1d06a56c9922bc"
+source = "git+https://github.com/oxidecomputer/typify#31ec4c504cb82582c65b97509b45bbc568247910"
 dependencies = [
  "heck 0.5.0",
  "log",
@@ -3736,7 +3736,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.0.16"
-source = "git+https://github.com/oxidecomputer/typify#e366532f9cb8e3b91fd91f6c2a1d06a56c9922bc"
+source = "git+https://github.com/oxidecomputer/typify#31ec4c504cb82582c65b97509b45bbc568247910"
 dependencies = [
  "proc-macro2",
  "quote",
