@@ -349,7 +349,7 @@ checksum = "16e62a023e7c117e27523144c5d2459f4397fcc3cab0085af8e2224f643a0193"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -366,7 +366,7 @@ checksum = "c6fa2087f2753a7da8cc1c0dbfcf89579dd57458e36769de5ac750b4671737ca"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -616,7 +616,7 @@ dependencies = [
  "heck 0.5.0",
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -934,7 +934,7 @@ dependencies = [
  "quote",
  "serde",
  "serde_tokenstream",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -1217,7 +1217,7 @@ checksum = "87750cf4b7a4c0625b1529e4c543c2182106e4dedc60a2a6455e00d212c489ac"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -1487,7 +1487,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10",
+ "socket2 0.5.6",
  "tokio",
  "tower-service",
  "tracing",
@@ -2067,7 +2067,7 @@ checksum = "a948666b637a0f465e8564c73e89d4dde00d72d4d473cc972f390fc3dcee7d9c"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -2274,7 +2274,7 @@ checksum = "2f38a4412a78282e09a2cf38d195ea5420d15ba0602cb375210efbc877243965"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -2413,7 +2413,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#3fdd63768681de14716df350c1958bf5c48063f0"
+source = "git+https://github.com/oxidecomputer/progenitor#b0fdd988378204813b104ab5aadc0d4b92b41381"
 dependencies = [
  "progenitor-client 0.6.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
@@ -2439,7 +2439,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#3fdd63768681de14716df350c1958bf5c48063f0"
+source = "git+https://github.com/oxidecomputer/progenitor#b0fdd988378204813b104ab5aadc0d4b92b41381"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2453,7 +2453,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#3fdd63768681de14716df350c1958bf5c48063f0"
+source = "git+https://github.com/oxidecomputer/progenitor#b0fdd988378204813b104ab5aadc0d4b92b41381"
 dependencies = [
  "getopts",
  "heck 0.5.0",
@@ -2466,7 +2466,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "syn 2.0.58",
+ "syn 2.0.60",
  "thiserror",
  "typify",
  "unicode-ident",
@@ -2475,7 +2475,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#3fdd63768681de14716df350c1958bf5c48063f0"
+source = "git+https://github.com/oxidecomputer/progenitor#b0fdd988378204813b104ab5aadc0d4b92b41381"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -2486,7 +2486,7 @@ dependencies = [
  "serde_json",
  "serde_tokenstream",
  "serde_yaml",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -2931,7 +2931,7 @@ checksum = "e88edab869b01783ba905e7d0153f9fc1a6505a96e4ad3018011eedb838566d9"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -2994,7 +2994,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "serde",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -3212,7 +3212,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2ff9eaf853dec4c8802325d8b6d3dffa86cc707fd7a1a4cdbf416e13b061787a"
 dependencies = [
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -3259,7 +3259,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "rustversion",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -3281,9 +3281,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.58"
+version = "2.0.60"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "44cfb93f38070beee36b3fef7d4f5a16f27751d94b187b666a5cc5e9b0d30687"
+checksum = "909518bc7b1c9b779f1bbf07f2929d35af9f0f37e47c6e9ef7f9dddc1e1821f3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3408,7 +3408,7 @@ checksum = "d1cd413b5d558b4c5bf3680e324a6fa5014e7b7c067a51e69dbdf47eb7148b66"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -3521,7 +3521,7 @@ checksum = "5b8a1e28f2deaa14e508979454cb3a223b10b938b45af148bc0986de36f1923b"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -3654,7 +3654,7 @@ checksum = "34704c8d6ebcbc939824180af020566b01a7c01f80641264eba0999f6c2b6be7"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
@@ -3710,7 +3710,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "typify"
 version = "0.0.16"
-source = "git+https://github.com/oxidecomputer/typify#d71637478ce873f51bd1f86133b08e4095f26b1f"
+source = "git+https://github.com/oxidecomputer/typify#8718e16aa99836a9b2e9e2e4d18cfd050e98e647"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3719,7 +3719,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.0.16"
-source = "git+https://github.com/oxidecomputer/typify#d71637478ce873f51bd1f86133b08e4095f26b1f"
+source = "git+https://github.com/oxidecomputer/typify#8718e16aa99836a9b2e9e2e4d18cfd050e98e647"
 dependencies = [
  "heck 0.5.0",
  "log",
@@ -3728,7 +3728,7 @@ dependencies = [
  "regress",
  "schemars",
  "serde_json",
- "syn 2.0.58",
+ "syn 2.0.60",
  "thiserror",
  "unicode-ident",
 ]
@@ -3736,7 +3736,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.0.16"
-source = "git+https://github.com/oxidecomputer/typify#d71637478ce873f51bd1f86133b08e4095f26b1f"
+source = "git+https://github.com/oxidecomputer/typify#8718e16aa99836a9b2e9e2e4d18cfd050e98e647"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3744,7 +3744,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_tokenstream",
- "syn 2.0.58",
+ "syn 2.0.60",
  "typify-impl",
 ]
 
@@ -3927,7 +3927,7 @@ dependencies = [
  "once_cell",
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
  "wasm-bindgen-shared",
 ]
 
@@ -3961,7 +3961,7 @@ checksum = "e94f17b526d0a461a191c78ea52bbce64071ed5c04c9ffe424dcb38f74171bb7"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
  "wasm-bindgen-backend",
  "wasm-bindgen-shared",
 ]
@@ -4247,7 +4247,7 @@ checksum = "9ce1b18ccd8e73a9321186f97e46f9f04b778851177567b1975109d26a08d2a6"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.58",
+ "syn 2.0.60",
 ]
 
 [[package]]
