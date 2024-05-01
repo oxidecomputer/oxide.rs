@@ -17314,6 +17314,42 @@ pub mod types {
         }
     }
 
+    /// The unique ID of a sled.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The unique ID of a sled.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "$ref": "#/components/schemas/TypedUuidForSledKind"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SledId {
+        pub id: TypedUuidForSledKind,
+    }
+
+    impl From<&SledId> for SledId {
+        fn from(value: &SledId) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SledId {
+        pub fn builder() -> builder::SledId {
+            Default::default()
+        }
+    }
+
     /// An operator's view of an instance running on a given sled
     ///
     /// <details><summary>JSON schema</summary>
@@ -20685,6 +20721,78 @@ pub mod types {
     impl TimeseriesSchemaResultsPage {
         pub fn builder() -> builder::TimeseriesSchemaResultsPage {
             Default::default()
+        }
+    }
+
+    /// TypedUuidForSledKind
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "type": "string",
+    ///  "format": "uuid"
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct TypedUuidForSledKind(pub uuid::Uuid);
+    impl std::ops::Deref for TypedUuidForSledKind {
+        type Target = uuid::Uuid;
+        fn deref(&self) -> &uuid::Uuid {
+            &self.0
+        }
+    }
+
+    impl From<TypedUuidForSledKind> for uuid::Uuid {
+        fn from(value: TypedUuidForSledKind) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&TypedUuidForSledKind> for TypedUuidForSledKind {
+        fn from(value: &TypedUuidForSledKind) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<uuid::Uuid> for TypedUuidForSledKind {
+        fn from(value: uuid::Uuid) -> Self {
+            Self(value)
+        }
+    }
+
+    impl std::str::FromStr for TypedUuidForSledKind {
+        type Err = <uuid::Uuid as std::str::FromStr>::Err;
+        fn from_str(value: &str) -> Result<Self, Self::Err> {
+            Ok(Self(value.parse()?))
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for TypedUuidForSledKind {
+        type Error = <uuid::Uuid as std::str::FromStr>::Err;
+        fn try_from(value: &str) -> Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for TypedUuidForSledKind {
+        type Error = <uuid::Uuid as std::str::FromStr>::Err;
+        fn try_from(value: &String) -> Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for TypedUuidForSledKind {
+        type Error = <uuid::Uuid as std::str::FromStr>::Err;
+        fn try_from(value: String) -> Result<Self, Self::Error> {
+            value.parse()
+        }
+    }
+
+    impl ToString for TypedUuidForSledKind {
+        fn to_string(&self) -> String {
+            self.0.to_string()
         }
     }
 
@@ -35411,6 +35519,45 @@ pub mod types {
                     usable_hardware_threads: Ok(value.usable_hardware_threads),
                     usable_physical_ram: Ok(value.usable_physical_ram),
                 }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct SledId {
+            id: Result<super::TypedUuidForSledKind, String>,
+        }
+
+        impl Default for SledId {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                }
+            }
+        }
+
+        impl SledId {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::TypedUuidForSledKind>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SledId> for super::SledId {
+            type Error = super::error::ConversionError;
+            fn try_from(value: SledId) -> Result<Self, super::error::ConversionError> {
+                Ok(Self { id: value.id? })
+            }
+        }
+
+        impl From<super::SledId> for SledId {
+            fn from(value: super::SledId) -> Self {
+                Self { id: Ok(value.id) }
             }
         }
 
@@ -53291,7 +53438,7 @@ pub mod builder {
         }
 
         /// Sends a `POST` request to `/v1/system/hardware/sleds`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+        pub async fn send(self) -> Result<ResponseValue<types::SledId>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
                 .and_then(|v| types::UninitializedSledId::try_from(v).map_err(|e| e.to_string()))
@@ -53310,7 +53457,7 @@ pub mod builder {
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+                201u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),
