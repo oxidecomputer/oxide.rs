@@ -17327,7 +17327,8 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "id": {
-    ///      "$ref": "#/components/schemas/TypedUuidForSledKind"
+    ///      "type": "string",
+    ///      "format": "uuid"
     ///    }
     ///  }
     /// }
@@ -17335,7 +17336,7 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SledId {
-        pub id: TypedUuidForSledKind,
+        pub id: uuid::Uuid,
     }
 
     impl From<&SledId> for SledId {
@@ -20721,78 +20722,6 @@ pub mod types {
     impl TimeseriesSchemaResultsPage {
         pub fn builder() -> builder::TimeseriesSchemaResultsPage {
             Default::default()
-        }
-    }
-
-    /// TypedUuidForSledKind
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "uuid"
-    /// }
-    /// ```
-    /// </details>
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct TypedUuidForSledKind(pub uuid::Uuid);
-    impl std::ops::Deref for TypedUuidForSledKind {
-        type Target = uuid::Uuid;
-        fn deref(&self) -> &uuid::Uuid {
-            &self.0
-        }
-    }
-
-    impl From<TypedUuidForSledKind> for uuid::Uuid {
-        fn from(value: TypedUuidForSledKind) -> Self {
-            value.0
-        }
-    }
-
-    impl From<&TypedUuidForSledKind> for TypedUuidForSledKind {
-        fn from(value: &TypedUuidForSledKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl From<uuid::Uuid> for TypedUuidForSledKind {
-        fn from(value: uuid::Uuid) -> Self {
-            Self(value)
-        }
-    }
-
-    impl std::str::FromStr for TypedUuidForSledKind {
-        type Err = <uuid::Uuid as std::str::FromStr>::Err;
-        fn from_str(value: &str) -> Result<Self, Self::Err> {
-            Ok(Self(value.parse()?))
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for TypedUuidForSledKind {
-        type Error = <uuid::Uuid as std::str::FromStr>::Err;
-        fn try_from(value: &str) -> Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for TypedUuidForSledKind {
-        type Error = <uuid::Uuid as std::str::FromStr>::Err;
-        fn try_from(value: &String) -> Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for TypedUuidForSledKind {
-        type Error = <uuid::Uuid as std::str::FromStr>::Err;
-        fn try_from(value: String) -> Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ToString for TypedUuidForSledKind {
-        fn to_string(&self) -> String {
-            self.0.to_string()
         }
     }
 
@@ -35524,7 +35453,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SledId {
-            id: Result<super::TypedUuidForSledKind, String>,
+            id: Result<uuid::Uuid, String>,
         }
 
         impl Default for SledId {
@@ -35538,7 +35467,7 @@ pub mod types {
         impl SledId {
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::TypedUuidForSledKind>,
+                T: std::convert::TryInto<uuid::Uuid>,
                 T::Error: std::fmt::Display,
             {
                 self.id = value
