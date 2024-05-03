@@ -7095,8 +7095,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn no_content(self) -> Self {
-            Self(self.0.status(204u16))
+        pub fn created(self, value: &types::SledId) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -10081,6 +10086,111 @@ pub mod operations {
                     .header("content-type", "application/json")
                     .json_body_obj(value),
             )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingAllowedSourceIpsViewWhen(httpmock::When);
+    impl NetworkingAllowedSourceIpsViewWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::GET).path_matches(
+                regex::Regex::new("^/v1/system/networking/allowed-source-ips$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+    }
+
+    pub struct NetworkingAllowedSourceIpsViewThen(httpmock::Then);
+    impl NetworkingAllowedSourceIpsViewThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn ok(self, value: &types::AllowedSourceIps) -> Self {
+            Self(
+                self.0
+                    .status(200u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn client_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 4u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+
+        pub fn server_error(self, status: u16, value: &types::Error) -> Self {
+            assert_eq!(status / 100u16, 5u16);
+            Self(
+                self.0
+                    .status(status)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
+        }
+    }
+
+    pub struct NetworkingAllowedSourceIpsUpdateWhen(httpmock::When);
+    impl NetworkingAllowedSourceIpsUpdateWhen {
+        pub fn new(inner: httpmock::When) -> Self {
+            Self(inner.method(httpmock::Method::PUT).path_matches(
+                regex::Regex::new("^/v1/system/networking/allowed-source-ips$").unwrap(),
+            ))
+        }
+
+        pub fn into_inner(self) -> httpmock::When {
+            self.0
+        }
+
+        pub fn body(self, value: &types::AllowedSourceIpsUpdate) -> Self {
+            Self(self.0.json_body_obj(value))
+        }
+    }
+
+    pub struct NetworkingAllowedSourceIpsUpdateThen(httpmock::Then);
+    impl NetworkingAllowedSourceIpsUpdateThen {
+        pub fn new(inner: httpmock::Then) -> Self {
+            Self(inner)
+        }
+
+        pub fn into_inner(self) -> httpmock::Then {
+            self.0
+        }
+
+        pub fn no_content(self) -> Self {
+            Self(self.0.status(204u16))
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
@@ -14877,6 +14987,18 @@ pub trait MockServerExt {
             operations::NetworkingAddressLotBlockListWhen,
             operations::NetworkingAddressLotBlockListThen,
         );
+    fn networking_allowed_source_ips_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingAllowedSourceIpsViewWhen,
+            operations::NetworkingAllowedSourceIpsViewThen,
+        );
+    fn networking_allowed_source_ips_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingAllowedSourceIpsUpdateWhen,
+            operations::NetworkingAllowedSourceIpsUpdateThen,
+        );
     fn networking_bfd_disable<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(operations::NetworkingBfdDisableWhen, operations::NetworkingBfdDisableThen);
@@ -16676,6 +16798,36 @@ impl MockServerExt for httpmock::MockServer {
             config_fn(
                 operations::NetworkingAddressLotBlockListWhen::new(when),
                 operations::NetworkingAddressLotBlockListThen::new(then),
+            )
+        })
+    }
+
+    fn networking_allowed_source_ips_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingAllowedSourceIpsViewWhen,
+            operations::NetworkingAllowedSourceIpsViewThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingAllowedSourceIpsViewWhen::new(when),
+                operations::NetworkingAllowedSourceIpsViewThen::new(then),
+            )
+        })
+    }
+
+    fn networking_allowed_source_ips_update<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(
+            operations::NetworkingAllowedSourceIpsUpdateWhen,
+            operations::NetworkingAllowedSourceIpsUpdateThen,
+        ),
+    {
+        self.mock(|when, then| {
+            config_fn(
+                operations::NetworkingAllowedSourceIpsUpdateWhen::new(when),
+                operations::NetworkingAllowedSourceIpsUpdateThen::new(then),
             )
         })
     }

@@ -152,6 +152,12 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingAddressLotBlockList => {
                 Self::cli_networking_address_lot_block_list()
             }
+            CliCommand::NetworkingAllowedSourceIpsView => {
+                Self::cli_networking_allowed_source_ips_view()
+            }
+            CliCommand::NetworkingAllowedSourceIpsUpdate => {
+                Self::cli_networking_allowed_source_ips_update()
+            }
             CliCommand::NetworkingBfdDisable => Self::cli_networking_bfd_disable(),
             CliCommand::NetworkingBfdEnable => Self::cli_networking_bfd_enable(),
             CliCommand::NetworkingBfdStatus => Self::cli_networking_bfd_status(),
@@ -3926,6 +3932,29 @@ impl<T: CliConfig> Cli<T> {
             .about("List blocks in address lot")
     }
 
+    pub fn cli_networking_allowed_source_ips_view() -> clap::Command {
+        clap::Command::new("").about("Get user-facing services IP allowlist")
+    }
+
+    pub fn cli_networking_allowed_source_ips_update() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("json-body")
+                    .long("json-body")
+                    .value_name("JSON-FILE")
+                    .required(true)
+                    .value_parser(clap::value_parser!(std::path::PathBuf))
+                    .help("Path to a file that contains the full json body."),
+            )
+            .arg(
+                clap::Arg::new("json-body-template")
+                    .long("json-body-template")
+                    .action(clap::ArgAction::SetTrue)
+                    .help("XXX"),
+            )
+            .about("Update user-facing services IP allowlist")
+    }
+
     pub fn cli_networking_bfd_disable() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -5657,6 +5686,14 @@ impl<T: CliConfig> Cli<T> {
             }
             CliCommand::NetworkingAddressLotBlockList => {
                 self.execute_networking_address_lot_block_list(matches)
+                    .await
+            }
+            CliCommand::NetworkingAllowedSourceIpsView => {
+                self.execute_networking_allowed_source_ips_view(matches)
+                    .await
+            }
+            CliCommand::NetworkingAllowedSourceIpsUpdate => {
+                self.execute_networking_allowed_source_ips_update(matches)
                     .await
             }
             CliCommand::NetworkingBfdDisable => self.execute_networking_bfd_disable(matches).await,
@@ -9959,6 +9996,53 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
+    pub async fn execute_networking_allowed_source_ips_view(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_allowed_source_ips_view();
+        self.config
+            .execute_networking_allowed_source_ips_view(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_allowed_source_ips_update(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_allowed_source_ips_update();
+        if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
+            let body_txt = std::fs::read_to_string(value).unwrap();
+            let body_value =
+                serde_json::from_str::<types::AllowedSourceIpsUpdate>(&body_txt).unwrap();
+            request = request.body(body_value);
+        }
+
+        self.config
+            .execute_networking_allowed_source_ips_update(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
     pub async fn execute_networking_bfd_disable(
         &self,
         matches: &clap::ArgMatches,
@@ -12831,6 +12915,22 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_allowed_source_ips_view(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingAllowedSourceIpsView,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    fn execute_networking_allowed_source_ips_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingAllowedSourceIpsUpdate,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_networking_bfd_disable(
         &self,
         matches: &clap::ArgMatches,
@@ -13409,6 +13509,8 @@ pub enum CliCommand {
     NetworkingAddressLotCreate,
     NetworkingAddressLotDelete,
     NetworkingAddressLotBlockList,
+    NetworkingAllowedSourceIpsView,
+    NetworkingAllowedSourceIpsUpdate,
     NetworkingBfdDisable,
     NetworkingBfdEnable,
     NetworkingBfdStatus,
@@ -13597,6 +13699,8 @@ impl CliCommand {
             CliCommand::NetworkingAddressLotCreate,
             CliCommand::NetworkingAddressLotDelete,
             CliCommand::NetworkingAddressLotBlockList,
+            CliCommand::NetworkingAllowedSourceIpsView,
+            CliCommand::NetworkingAllowedSourceIpsUpdate,
             CliCommand::NetworkingBfdDisable,
             CliCommand::NetworkingBfdEnable,
             CliCommand::NetworkingBfdStatus,

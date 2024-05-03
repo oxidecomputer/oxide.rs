@@ -4326,8 +4326,15 @@
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "resource updated"
+          "201": {
+            "description": "successful creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SledId"
+                }
+              }
+            }
           },
           "4XX": {
             "$ref": "#/components/responses/Error"
@@ -6238,6 +6245,61 @@
         },
         "x-dropshot-pagination": {
           "required": []
+        }
+      }
+    },
+    "/v1/system/networking/allowed-source-ips": {
+      "get": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Get user-facing services IP allowlist",
+        "operationId": "networking_allowed_source_ips_view",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllowedSourceIps"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "system/networking"
+        ],
+        "summary": "Update user-facing services IP allowlist",
+        "operationId": "networking_allowed_source_ips_update",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AllowedSourceIpsUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "resource updated"
+          },
+          "4XX": {
+            "$ref": "#/components/responses/Error"
+          },
+          "5XX": {
+            "$ref": "#/components/responses/Error"
+          }
         }
       }
     },
@@ -9121,6 +9183,94 @@
         },
         "required": [
           "switch_histories"
+        ]
+      },
+      "AllowedSourceIps": {
+        "description": "Allowlist of IPs or subnets that can make requests to user-facing services.",
+        "type": "object",
+        "properties": {
+          "allowed_ips": {
+            "description": "The allowlist of IPs or subnets.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AllowedSourceIps2"
+              }
+            ]
+          },
+          "time_created": {
+            "description": "Time the list was created.",
+            "type": "string",
+            "format": "date-time"
+          },
+          "time_modified": {
+            "description": "Time the list was last modified.",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "allowed_ips",
+          "time_created",
+          "time_modified"
+        ]
+      },
+      "AllowedSourceIps2": {
+        "description": "Description of source IPs allowed to reach rack services.",
+        "oneOf": [
+          {
+            "description": "Allow traffic from any external IP address.",
+            "type": "object",
+            "properties": {
+              "allow": {
+                "type": "string",
+                "enum": [
+                  "any"
+                ]
+              }
+            },
+            "required": [
+              "allow"
+            ]
+          },
+          {
+            "description": "Restrict access to a specific set of source IP addresses or subnets.\n\nAll others are prevented from reaching rack services.",
+            "type": "object",
+            "properties": {
+              "allow": {
+                "type": "string",
+                "enum": [
+                  "list"
+                ]
+              },
+              "ips": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IpNet"
+                }
+              }
+            },
+            "required": [
+              "allow",
+              "ips"
+            ]
+          }
+        ]
+      },
+      "AllowedSourceIpsUpdate": {
+        "description": "Parameters for updating allowed source IPs",
+        "type": "object",
+        "properties": {
+          "allowed_ips": {
+            "description": "The new list of allowed source IPs.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AllowedSourceIps2"
+              }
+            ]
+          }
+        },
+        "required": [
+          "allowed_ips"
         ]
       },
       "Baseboard": {
@@ -16203,6 +16353,18 @@
           "usable_physical_ram"
         ]
       },
+      "SledId": {
+        "description": "The unique ID of a sled.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/TypedUuidForSledKind"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
       "SledInstance": {
         "description": "An operator's view of an instance running on a given sled",
         "type": "object",
@@ -17555,6 +17717,10 @@
         "required": [
           "items"
         ]
+      },
+      "TypedUuidForSledKind": {
+        "type": "string",
+        "format": "uuid"
       },
       "UninitializedSled": {
         "description": "A sled that has not been added to an initialized rack yet",

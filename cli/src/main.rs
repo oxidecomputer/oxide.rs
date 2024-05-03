@@ -14,7 +14,7 @@ use async_trait::async_trait;
 use cli_builder::NewCli;
 use generated_cli::CliConfig;
 use oxide::context::Context;
-use oxide::types::{IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
+use oxide::types::{AllowedSourceIps2, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
 
 mod cli_builder;
 mod cmd_api;
@@ -213,6 +213,35 @@ impl CliConfig for OxideOverride {
             }
             _ => unreachable!("invalid value for idp_metadata_source group"),
         }
+        Ok(())
+    }
+
+    fn execute_networking_allowed_source_ips_update(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut oxide::builder::NetworkingAllowedSourceIpsUpdate,
+    ) -> anyhow::Result<()> {
+        match matches
+            .get_one::<clap::Id>("allow-list")
+            .map(clap::Id::as_str)
+        {
+            Some("any") => {
+                let value = matches.get_one::<bool>("any").unwrap();
+                assert!(value);
+                *request = request
+                    .to_owned()
+                    .body_map(|body| body.allowed_ips(AllowedSourceIps2::Any));
+            }
+            Some("ips") => {
+                let values: Vec<oxide::types::IpNet> =
+                    matches.get_many("ips").unwrap().cloned().collect();
+                *request = request
+                    .to_owned()
+                    .body_map(|body| body.allowed_ips(AllowedSourceIps2::List(values)));
+            }
+            _ => unreachable!("invalid value for allow-list group"),
+        }
+
         Ok(())
     }
 }
