@@ -152,12 +152,8 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingAddressLotBlockList => {
                 Self::cli_networking_address_lot_block_list()
             }
-            CliCommand::NetworkingAllowedSourceIpsView => {
-                Self::cli_networking_allowed_source_ips_view()
-            }
-            CliCommand::NetworkingAllowedSourceIpsUpdate => {
-                Self::cli_networking_allowed_source_ips_update()
-            }
+            CliCommand::NetworkingAllowListView => Self::cli_networking_allow_list_view(),
+            CliCommand::NetworkingAllowListUpdate => Self::cli_networking_allow_list_update(),
             CliCommand::NetworkingBfdDisable => Self::cli_networking_bfd_disable(),
             CliCommand::NetworkingBfdEnable => Self::cli_networking_bfd_enable(),
             CliCommand::NetworkingBfdStatus => Self::cli_networking_bfd_status(),
@@ -3932,11 +3928,11 @@ impl<T: CliConfig> Cli<T> {
             .about("List blocks in address lot")
     }
 
-    pub fn cli_networking_allowed_source_ips_view() -> clap::Command {
+    pub fn cli_networking_allow_list_view() -> clap::Command {
         clap::Command::new("").about("Get user-facing services IP allowlist")
     }
 
-    pub fn cli_networking_allowed_source_ips_update() -> clap::Command {
+    pub fn cli_networking_allow_list_update() -> clap::Command {
         clap::Command::new("")
             .arg(
                 clap::Arg::new("json-body")
@@ -5688,13 +5684,11 @@ impl<T: CliConfig> Cli<T> {
                 self.execute_networking_address_lot_block_list(matches)
                     .await
             }
-            CliCommand::NetworkingAllowedSourceIpsView => {
-                self.execute_networking_allowed_source_ips_view(matches)
-                    .await
+            CliCommand::NetworkingAllowListView => {
+                self.execute_networking_allow_list_view(matches).await
             }
-            CliCommand::NetworkingAllowedSourceIpsUpdate => {
-                self.execute_networking_allowed_source_ips_update(matches)
-                    .await
+            CliCommand::NetworkingAllowListUpdate => {
+                self.execute_networking_allow_list_update(matches).await
             }
             CliCommand::NetworkingBfdDisable => self.execute_networking_bfd_disable(matches).await,
             CliCommand::NetworkingBfdEnable => self.execute_networking_bfd_enable(matches).await,
@@ -9996,13 +9990,13 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_allowed_source_ips_view(
+    pub async fn execute_networking_allow_list_view(
         &self,
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.networking_allowed_source_ips_view();
+        let mut request = self.client.networking_allow_list_view();
         self.config
-            .execute_networking_allowed_source_ips_view(matches, &mut request)?;
+            .execute_networking_allow_list_view(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -10016,20 +10010,19 @@ impl<T: CliConfig> Cli<T> {
         }
     }
 
-    pub async fn execute_networking_allowed_source_ips_update(
+    pub async fn execute_networking_allow_list_update(
         &self,
         matches: &clap::ArgMatches,
     ) -> anyhow::Result<()> {
-        let mut request = self.client.networking_allowed_source_ips_update();
+        let mut request = self.client.networking_allow_list_update();
         if let Some(value) = matches.get_one::<std::path::PathBuf>("json-body") {
             let body_txt = std::fs::read_to_string(value).unwrap();
-            let body_value =
-                serde_json::from_str::<types::AllowedSourceIpsUpdate>(&body_txt).unwrap();
+            let body_value = serde_json::from_str::<types::AllowListUpdate>(&body_txt).unwrap();
             request = request.body(body_value);
         }
 
         self.config
-            .execute_networking_allowed_source_ips_update(matches, &mut request)?;
+            .execute_networking_allow_list_update(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -12915,18 +12908,18 @@ pub trait CliConfig {
         Ok(())
     }
 
-    fn execute_networking_allowed_source_ips_view(
+    fn execute_networking_allow_list_view(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::NetworkingAllowedSourceIpsView,
+        request: &mut builder::NetworkingAllowListView,
     ) -> anyhow::Result<()> {
         Ok(())
     }
 
-    fn execute_networking_allowed_source_ips_update(
+    fn execute_networking_allow_list_update(
         &self,
         matches: &clap::ArgMatches,
-        request: &mut builder::NetworkingAllowedSourceIpsUpdate,
+        request: &mut builder::NetworkingAllowListUpdate,
     ) -> anyhow::Result<()> {
         Ok(())
     }
@@ -13509,8 +13502,8 @@ pub enum CliCommand {
     NetworkingAddressLotCreate,
     NetworkingAddressLotDelete,
     NetworkingAddressLotBlockList,
-    NetworkingAllowedSourceIpsView,
-    NetworkingAllowedSourceIpsUpdate,
+    NetworkingAllowListView,
+    NetworkingAllowListUpdate,
     NetworkingBfdDisable,
     NetworkingBfdEnable,
     NetworkingBfdStatus,
@@ -13699,8 +13692,8 @@ impl CliCommand {
             CliCommand::NetworkingAddressLotCreate,
             CliCommand::NetworkingAddressLotDelete,
             CliCommand::NetworkingAddressLotBlockList,
-            CliCommand::NetworkingAllowedSourceIpsView,
-            CliCommand::NetworkingAllowedSourceIpsUpdate,
+            CliCommand::NetworkingAllowListView,
+            CliCommand::NetworkingAllowListUpdate,
             CliCommand::NetworkingBfdDisable,
             CliCommand::NetworkingBfdEnable,
             CliCommand::NetworkingBfdStatus,

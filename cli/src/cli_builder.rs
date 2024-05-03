@@ -117,7 +117,7 @@ impl<'a> Default for NewCli<'a> {
                             .multiple(false),
                     ),
 
-                CliCommand::NetworkingAllowedSourceIpsUpdate => cmd
+                CliCommand::NetworkingAllowListUpdate => cmd
                     .mut_arg("json-body", |arg| arg.required(false))
                     .arg(
                         clap::Arg::new("any")
@@ -488,8 +488,8 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
         CliCommand::SystemPolicyView => Some("system policy view"),
         CliCommand::SystemPolicyUpdate => Some("system policy update"),
 
-        CliCommand::NetworkingAllowedSourceIpsView => Some("system networking allow-list view"),
-        CliCommand::NetworkingAllowedSourceIpsUpdate => Some("system networking allow-list update"),
+        CliCommand::NetworkingAllowListView => Some("system networking allow-list view"),
+        CliCommand::NetworkingAllowListUpdate => Some("system networking allow-list update"),
 
         CliCommand::CurrentUserView => Some("current-user view"),
         CliCommand::CurrentUserGroups => Some("current-user groups"),

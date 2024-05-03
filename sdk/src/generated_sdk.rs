@@ -710,7 +710,7 @@ pub mod types {
     ///      "description": "The allowlist of IPs or subnets.",
     ///      "allOf": [
     ///        {
-    ///          "$ref": "#/components/schemas/AllowedSourceIps2"
+    ///          "$ref": "#/components/schemas/AllowedSourceIps"
     ///        }
     ///      ]
     ///    },
@@ -729,23 +729,65 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct AllowedSourceIps {
+    pub struct AllowList {
         /// The allowlist of IPs or subnets.
-        pub allowed_ips: AllowedSourceIps2,
+        pub allowed_ips: AllowedSourceIps,
         /// Time the list was created.
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
         /// Time the list was last modified.
         pub time_modified: chrono::DateTime<chrono::offset::Utc>,
     }
 
-    impl From<&AllowedSourceIps> for AllowedSourceIps {
-        fn from(value: &AllowedSourceIps) -> Self {
+    impl From<&AllowList> for AllowList {
+        fn from(value: &AllowList) -> Self {
             value.clone()
         }
     }
 
-    impl AllowedSourceIps {
-        pub fn builder() -> builder::AllowedSourceIps {
+    impl AllowList {
+        pub fn builder() -> builder::AllowList {
+            Default::default()
+        }
+    }
+
+    /// Parameters for updating allowed source IPs
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for updating allowed source IPs",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allowed_ips"
+    ///  ],
+    ///  "properties": {
+    ///    "allowed_ips": {
+    ///      "description": "The new list of allowed source IPs.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AllowedSourceIps"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AllowListUpdate {
+        /// The new list of allowed source IPs.
+        pub allowed_ips: AllowedSourceIps,
+    }
+
+    impl From<&AllowListUpdate> for AllowListUpdate {
+        fn from(value: &AllowListUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AllowListUpdate {
+        pub fn builder() -> builder::AllowListUpdate {
             Default::default()
         }
     }
@@ -804,7 +846,7 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     #[serde(tag = "allow", content = "ips")]
-    pub enum AllowedSourceIps2 {
+    pub enum AllowedSourceIps {
         #[serde(rename = "any")]
         Any,
         /// Restrict access to a specific set of source IP addresses or subnets.
@@ -814,57 +856,15 @@ pub mod types {
         List(Vec<IpNet>),
     }
 
-    impl From<&AllowedSourceIps2> for AllowedSourceIps2 {
-        fn from(value: &AllowedSourceIps2) -> Self {
+    impl From<&AllowedSourceIps> for AllowedSourceIps {
+        fn from(value: &AllowedSourceIps) -> Self {
             value.clone()
         }
     }
 
-    impl From<Vec<IpNet>> for AllowedSourceIps2 {
+    impl From<Vec<IpNet>> for AllowedSourceIps {
         fn from(value: Vec<IpNet>) -> Self {
             Self::List(value)
-        }
-    }
-
-    /// Parameters for updating allowed source IPs
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for updating allowed source IPs",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "allowed_ips"
-    ///  ],
-    ///  "properties": {
-    ///    "allowed_ips": {
-    ///      "description": "The new list of allowed source IPs.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AllowedSourceIps2"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct AllowedSourceIpsUpdate {
-        /// The new list of allowed source IPs.
-        pub allowed_ips: AllowedSourceIps2,
-    }
-
-    impl From<&AllowedSourceIpsUpdate> for AllowedSourceIpsUpdate {
-        fn from(value: &AllowedSourceIpsUpdate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl AllowedSourceIpsUpdate {
-        pub fn builder() -> builder::AllowedSourceIpsUpdate {
-            Default::default()
         }
     }
 
@@ -24355,13 +24355,13 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct AllowedSourceIps {
-            allowed_ips: Result<super::AllowedSourceIps2, String>,
+        pub struct AllowList {
+            allowed_ips: Result<super::AllowedSourceIps, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
         }
 
-        impl Default for AllowedSourceIps {
+        impl Default for AllowList {
             fn default() -> Self {
                 Self {
                     allowed_ips: Err("no value supplied for allowed_ips".to_string()),
@@ -24371,10 +24371,10 @@ pub mod types {
             }
         }
 
-        impl AllowedSourceIps {
+        impl AllowList {
             pub fn allowed_ips<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::AllowedSourceIps2>,
+                T: std::convert::TryInto<super::AllowedSourceIps>,
                 T::Error: std::fmt::Display,
             {
                 self.allowed_ips = value
@@ -24404,9 +24404,9 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AllowedSourceIps> for super::AllowedSourceIps {
+        impl std::convert::TryFrom<AllowList> for super::AllowList {
             type Error = super::error::ConversionError;
-            fn try_from(value: AllowedSourceIps) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: AllowList) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     allowed_ips: value.allowed_ips?,
                     time_created: value.time_created?,
@@ -24415,8 +24415,8 @@ pub mod types {
             }
         }
 
-        impl From<super::AllowedSourceIps> for AllowedSourceIps {
-            fn from(value: super::AllowedSourceIps) -> Self {
+        impl From<super::AllowList> for AllowList {
+            fn from(value: super::AllowList) -> Self {
                 Self {
                     allowed_ips: Ok(value.allowed_ips),
                     time_created: Ok(value.time_created),
@@ -24426,11 +24426,11 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct AllowedSourceIpsUpdate {
-            allowed_ips: Result<super::AllowedSourceIps2, String>,
+        pub struct AllowListUpdate {
+            allowed_ips: Result<super::AllowedSourceIps, String>,
         }
 
-        impl Default for AllowedSourceIpsUpdate {
+        impl Default for AllowListUpdate {
             fn default() -> Self {
                 Self {
                     allowed_ips: Err("no value supplied for allowed_ips".to_string()),
@@ -24438,10 +24438,10 @@ pub mod types {
             }
         }
 
-        impl AllowedSourceIpsUpdate {
+        impl AllowListUpdate {
             pub fn allowed_ips<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::AllowedSourceIps2>,
+                T: std::convert::TryInto<super::AllowedSourceIps>,
                 T::Error: std::fmt::Display,
             {
                 self.allowed_ips = value
@@ -24451,19 +24451,17 @@ pub mod types {
             }
         }
 
-        impl std::convert::TryFrom<AllowedSourceIpsUpdate> for super::AllowedSourceIpsUpdate {
+        impl std::convert::TryFrom<AllowListUpdate> for super::AllowListUpdate {
             type Error = super::error::ConversionError;
-            fn try_from(
-                value: AllowedSourceIpsUpdate,
-            ) -> Result<Self, super::error::ConversionError> {
+            fn try_from(value: AllowListUpdate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     allowed_ips: value.allowed_ips?,
                 })
             }
         }
 
-        impl From<super::AllowedSourceIpsUpdate> for AllowedSourceIpsUpdate {
-            fn from(value: super::AllowedSourceIpsUpdate) -> Self {
+        impl From<super::AllowListUpdate> for AllowListUpdate {
+            fn from(value: super::AllowListUpdate) -> Self {
                 Self {
                     allowed_ips: Ok(value.allowed_ips),
                 }
@@ -43495,25 +43493,25 @@ pub trait ClientSystemNetworkingExt {
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList;
     /// Get user-facing services IP allowlist
     ///
-    /// Sends a `GET` request to `/v1/system/networking/allowed-source-ips`
+    /// Sends a `GET` request to `/v1/system/networking/allow-list`
     ///
     /// ```ignore
-    /// let response = client.networking_allowed_source_ips_view()
+    /// let response = client.networking_allow_list_view()
     ///    .send()
     ///    .await;
     /// ```
-    fn networking_allowed_source_ips_view(&self) -> builder::NetworkingAllowedSourceIpsView;
+    fn networking_allow_list_view(&self) -> builder::NetworkingAllowListView;
     /// Update user-facing services IP allowlist
     ///
-    /// Sends a `PUT` request to `/v1/system/networking/allowed-source-ips`
+    /// Sends a `PUT` request to `/v1/system/networking/allow-list`
     ///
     /// ```ignore
-    /// let response = client.networking_allowed_source_ips_update()
+    /// let response = client.networking_allow_list_update()
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    fn networking_allowed_source_ips_update(&self) -> builder::NetworkingAllowedSourceIpsUpdate;
+    fn networking_allow_list_update(&self) -> builder::NetworkingAllowListUpdate;
     /// Disable a BFD session
     ///
     /// Sends a `POST` request to `/v1/system/networking/bfd-disable`
@@ -43866,12 +43864,12 @@ impl ClientSystemNetworkingExt for Client {
         builder::NetworkingAddressLotBlockList::new(self)
     }
 
-    fn networking_allowed_source_ips_view(&self) -> builder::NetworkingAllowedSourceIpsView {
-        builder::NetworkingAllowedSourceIpsView::new(self)
+    fn networking_allow_list_view(&self) -> builder::NetworkingAllowListView {
+        builder::NetworkingAllowListView::new(self)
     }
 
-    fn networking_allowed_source_ips_update(&self) -> builder::NetworkingAllowedSourceIpsUpdate {
-        builder::NetworkingAllowedSourceIpsUpdate::new(self)
+    fn networking_allow_list_update(&self) -> builder::NetworkingAllowListUpdate {
+        builder::NetworkingAllowListUpdate::new(self)
     }
 
     fn networking_bfd_disable(&self) -> builder::NetworkingBfdDisable {
@@ -57816,26 +57814,23 @@ pub mod builder {
         }
     }
 
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_allowed_source_ips_view`]
+    /// Builder for [`ClientSystemNetworkingExt::networking_allow_list_view`]
     ///
-    /// [`ClientSystemNetworkingExt::networking_allowed_source_ips_view`]: super::ClientSystemNetworkingExt::networking_allowed_source_ips_view
+    /// [`ClientSystemNetworkingExt::networking_allow_list_view`]: super::ClientSystemNetworkingExt::networking_allow_list_view
     #[derive(Debug, Clone)]
-    pub struct NetworkingAllowedSourceIpsView<'a> {
+    pub struct NetworkingAllowListView<'a> {
         client: &'a super::Client,
     }
 
-    impl<'a> NetworkingAllowedSourceIpsView<'a> {
+    impl<'a> NetworkingAllowListView<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
 
-        /// Sends a `GET` request to `/v1/system/networking/allowed-source-ips`
-        pub async fn send(
-            self,
-        ) -> Result<ResponseValue<types::AllowedSourceIps>, Error<types::Error>> {
+        /// Sends a `GET` request to `/v1/system/networking/allow-list`
+        pub async fn send(self) -> Result<ResponseValue<types::AllowList>, Error<types::Error>> {
             let Self { client } = self;
-            let url = format!("{}/v1/system/networking/allowed-source-ips", client.baseurl,);
+            let url = format!("{}/v1/system/networking/allow-list", client.baseurl,);
             #[allow(unused_mut)]
             let mut request = client
                 .client
@@ -57860,55 +57855,50 @@ pub mod builder {
         }
     }
 
-    /// Builder for
-    /// [`ClientSystemNetworkingExt::networking_allowed_source_ips_update`]
+    /// Builder for [`ClientSystemNetworkingExt::networking_allow_list_update`]
     ///
-    /// [`ClientSystemNetworkingExt::networking_allowed_source_ips_update`]: super::ClientSystemNetworkingExt::networking_allowed_source_ips_update
+    /// [`ClientSystemNetworkingExt::networking_allow_list_update`]: super::ClientSystemNetworkingExt::networking_allow_list_update
     #[derive(Debug, Clone)]
-    pub struct NetworkingAllowedSourceIpsUpdate<'a> {
+    pub struct NetworkingAllowListUpdate<'a> {
         client: &'a super::Client,
-        body: Result<types::builder::AllowedSourceIpsUpdate, String>,
+        body: Result<types::builder::AllowListUpdate, String>,
     }
 
-    impl<'a> NetworkingAllowedSourceIpsUpdate<'a> {
+    impl<'a> NetworkingAllowListUpdate<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
-                body: Ok(types::builder::AllowedSourceIpsUpdate::default()),
+                body: Ok(types::builder::AllowListUpdate::default()),
             }
         }
 
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::AllowedSourceIpsUpdate>,
-            <V as std::convert::TryInto<types::AllowedSourceIpsUpdate>>::Error: std::fmt::Display,
+            V: std::convert::TryInto<types::AllowListUpdate>,
+            <V as std::convert::TryInto<types::AllowListUpdate>>::Error: std::fmt::Display,
         {
-            self.body = value.try_into().map(From::from).map_err(|s| {
-                format!(
-                    "conversion to `AllowedSourceIpsUpdate` for body failed: {}",
-                    s
-                )
-            });
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `AllowListUpdate` for body failed: {}", s));
             self
         }
 
         pub fn body_map<F>(mut self, f: F) -> Self
         where
-            F: std::ops::FnOnce(
-                types::builder::AllowedSourceIpsUpdate,
-            ) -> types::builder::AllowedSourceIpsUpdate,
+            F: std::ops::FnOnce(types::builder::AllowListUpdate) -> types::builder::AllowListUpdate,
         {
             self.body = self.body.map(f);
             self
         }
 
-        /// Sends a `PUT` request to `/v1/system/networking/allowed-source-ips`
+        /// Sends a `PUT` request to `/v1/system/networking/allow-list`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(|v| types::AllowedSourceIpsUpdate::try_from(v).map_err(|e| e.to_string()))
+                .and_then(|v| types::AllowListUpdate::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/allowed-source-ips", client.baseurl,);
+            let url = format!("{}/v1/system/networking/allow-list", client.baseurl,);
             #[allow(unused_mut)]
             let mut request = client
                 .client

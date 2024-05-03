@@ -10109,12 +10109,14 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingAllowedSourceIpsViewWhen(httpmock::When);
-    impl NetworkingAllowedSourceIpsViewWhen {
+    pub struct NetworkingAllowListViewWhen(httpmock::When);
+    impl NetworkingAllowListViewWhen {
         pub fn new(inner: httpmock::When) -> Self {
-            Self(inner.method(httpmock::Method::GET).path_matches(
-                regex::Regex::new("^/v1/system/networking/allowed-source-ips$").unwrap(),
-            ))
+            Self(
+                inner
+                    .method(httpmock::Method::GET)
+                    .path_matches(regex::Regex::new("^/v1/system/networking/allow-list$").unwrap()),
+            )
         }
 
         pub fn into_inner(self) -> httpmock::When {
@@ -10122,8 +10124,8 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingAllowedSourceIpsViewThen(httpmock::Then);
-    impl NetworkingAllowedSourceIpsViewThen {
+    pub struct NetworkingAllowListViewThen(httpmock::Then);
+    impl NetworkingAllowListViewThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -10132,7 +10134,7 @@ pub mod operations {
             self.0
         }
 
-        pub fn ok(self, value: &types::AllowedSourceIps) -> Self {
+        pub fn ok(self, value: &types::AllowList) -> Self {
             Self(
                 self.0
                     .status(200u16)
@@ -10162,25 +10164,27 @@ pub mod operations {
         }
     }
 
-    pub struct NetworkingAllowedSourceIpsUpdateWhen(httpmock::When);
-    impl NetworkingAllowedSourceIpsUpdateWhen {
+    pub struct NetworkingAllowListUpdateWhen(httpmock::When);
+    impl NetworkingAllowListUpdateWhen {
         pub fn new(inner: httpmock::When) -> Self {
-            Self(inner.method(httpmock::Method::PUT).path_matches(
-                regex::Regex::new("^/v1/system/networking/allowed-source-ips$").unwrap(),
-            ))
+            Self(
+                inner
+                    .method(httpmock::Method::PUT)
+                    .path_matches(regex::Regex::new("^/v1/system/networking/allow-list$").unwrap()),
+            )
         }
 
         pub fn into_inner(self) -> httpmock::When {
             self.0
         }
 
-        pub fn body(self, value: &types::AllowedSourceIpsUpdate) -> Self {
+        pub fn body(self, value: &types::AllowListUpdate) -> Self {
             Self(self.0.json_body_obj(value))
         }
     }
 
-    pub struct NetworkingAllowedSourceIpsUpdateThen(httpmock::Then);
-    impl NetworkingAllowedSourceIpsUpdateThen {
+    pub struct NetworkingAllowListUpdateThen(httpmock::Then);
+    impl NetworkingAllowListUpdateThen {
         pub fn new(inner: httpmock::Then) -> Self {
             Self(inner)
         }
@@ -14987,17 +14991,14 @@ pub trait MockServerExt {
             operations::NetworkingAddressLotBlockListWhen,
             operations::NetworkingAddressLotBlockListThen,
         );
-    fn networking_allowed_source_ips_view<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_allow_list_view<F>(&self, config_fn: F) -> httpmock::Mock
+    where
+        F: FnOnce(operations::NetworkingAllowListViewWhen, operations::NetworkingAllowListViewThen);
+    fn networking_allow_list_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingAllowedSourceIpsViewWhen,
-            operations::NetworkingAllowedSourceIpsViewThen,
-        );
-    fn networking_allowed_source_ips_update<F>(&self, config_fn: F) -> httpmock::Mock
-    where
-        F: FnOnce(
-            operations::NetworkingAllowedSourceIpsUpdateWhen,
-            operations::NetworkingAllowedSourceIpsUpdateThen,
+            operations::NetworkingAllowListUpdateWhen,
+            operations::NetworkingAllowListUpdateThen,
         );
     fn networking_bfd_disable<F>(&self, config_fn: F) -> httpmock::Mock
     where
@@ -16802,32 +16803,29 @@ impl MockServerExt for httpmock::MockServer {
         })
     }
 
-    fn networking_allowed_source_ips_view<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_allow_list_view<F>(&self, config_fn: F) -> httpmock::Mock
     where
-        F: FnOnce(
-            operations::NetworkingAllowedSourceIpsViewWhen,
-            operations::NetworkingAllowedSourceIpsViewThen,
-        ),
+        F: FnOnce(operations::NetworkingAllowListViewWhen, operations::NetworkingAllowListViewThen),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::NetworkingAllowedSourceIpsViewWhen::new(when),
-                operations::NetworkingAllowedSourceIpsViewThen::new(then),
+                operations::NetworkingAllowListViewWhen::new(when),
+                operations::NetworkingAllowListViewThen::new(then),
             )
         })
     }
 
-    fn networking_allowed_source_ips_update<F>(&self, config_fn: F) -> httpmock::Mock
+    fn networking_allow_list_update<F>(&self, config_fn: F) -> httpmock::Mock
     where
         F: FnOnce(
-            operations::NetworkingAllowedSourceIpsUpdateWhen,
-            operations::NetworkingAllowedSourceIpsUpdateThen,
+            operations::NetworkingAllowListUpdateWhen,
+            operations::NetworkingAllowListUpdateThen,
         ),
     {
         self.mock(|when, then| {
             config_fn(
-                operations::NetworkingAllowedSourceIpsUpdateWhen::new(when),
-                operations::NetworkingAllowedSourceIpsUpdateThen::new(then),
+                operations::NetworkingAllowListUpdateWhen::new(when),
+                operations::NetworkingAllowListUpdateThen::new(then),
             )
         })
     }

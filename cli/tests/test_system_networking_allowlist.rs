@@ -6,7 +6,7 @@
 
 use assert_cmd::Command;
 use httpmock::MockServer;
-use oxide::types::{AllowedSourceIps2, AllowedSourceIpsUpdate};
+use oxide::types::{AllowListUpdate, AllowedSourceIps};
 use oxide_httpmock::MockServerExt;
 
 // Check that we have at least one of --any or --ip
@@ -55,9 +55,9 @@ fn test_allowlist_both() {
 fn test_allowlist_any() {
     let server = MockServer::start();
 
-    let mock = server.networking_allowed_source_ips_update(|when, then| {
-        when.body(&AllowedSourceIpsUpdate {
-            allowed_ips: AllowedSourceIps2::Any,
+    let mock = server.networking_allow_list_update(|when, then| {
+        when.body(&AllowListUpdate {
+            allowed_ips: AllowedSourceIps::Any,
         });
         then.no_content();
     });
@@ -86,9 +86,9 @@ fn test_allowlist_any() {
 fn test_allowlist_one_ip() {
     let server = MockServer::start();
 
-    let mock = server.networking_allowed_source_ips_update(|when, then| {
-        when.body(&AllowedSourceIpsUpdate {
-            allowed_ips: AllowedSourceIps2::List(vec!["1.2.3.4/5".try_into().unwrap()]),
+    let mock = server.networking_allow_list_update(|when, then| {
+        when.body(&AllowListUpdate {
+            allowed_ips: AllowedSourceIps::List(vec!["1.2.3.4/5".try_into().unwrap()]),
         });
         then.no_content();
     });
@@ -117,9 +117,9 @@ fn test_allowlist_one_ip() {
 fn test_allowlist_many_ips() {
     let server = MockServer::start();
 
-    let mock = server.networking_allowed_source_ips_update(|when, then| {
-        when.body(&AllowedSourceIpsUpdate {
-            allowed_ips: AllowedSourceIps2::List(vec![
+    let mock = server.networking_allow_list_update(|when, then| {
+        when.body(&AllowListUpdate {
+            allowed_ips: AllowedSourceIps::List(vec![
                 "1.2.3.4/5".try_into().unwrap(),
                 "5.6.7.8/9".try_into().unwrap(),
             ]),

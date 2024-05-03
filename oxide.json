@@ -6248,20 +6248,20 @@
         }
       }
     },
-    "/v1/system/networking/allowed-source-ips": {
+    "/v1/system/networking/allow-list": {
       "get": {
         "tags": [
           "system/networking"
         ],
         "summary": "Get user-facing services IP allowlist",
-        "operationId": "networking_allowed_source_ips_view",
+        "operationId": "networking_allow_list_view",
         "responses": {
           "200": {
             "description": "successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AllowedSourceIps"
+                  "$ref": "#/components/schemas/AllowList"
                 }
               }
             }
@@ -6279,12 +6279,12 @@
           "system/networking"
         ],
         "summary": "Update user-facing services IP allowlist",
-        "operationId": "networking_allowed_source_ips_update",
+        "operationId": "networking_allow_list_update",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AllowedSourceIpsUpdate"
+                "$ref": "#/components/schemas/AllowListUpdate"
               }
             }
           },
@@ -9185,7 +9185,7 @@
           "switch_histories"
         ]
       },
-      "AllowedSourceIps": {
+      "AllowList": {
         "description": "Allowlist of IPs or subnets that can make requests to user-facing services.",
         "type": "object",
         "properties": {
@@ -9193,7 +9193,7 @@
             "description": "The allowlist of IPs or subnets.",
             "allOf": [
               {
-                "$ref": "#/components/schemas/AllowedSourceIps2"
+                "$ref": "#/components/schemas/AllowedSourceIps"
               }
             ]
           },
@@ -9214,7 +9214,24 @@
           "time_modified"
         ]
       },
-      "AllowedSourceIps2": {
+      "AllowListUpdate": {
+        "description": "Parameters for updating allowed source IPs",
+        "type": "object",
+        "properties": {
+          "allowed_ips": {
+            "description": "The new list of allowed source IPs.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AllowedSourceIps"
+              }
+            ]
+          }
+        },
+        "required": [
+          "allowed_ips"
+        ]
+      },
+      "AllowedSourceIps": {
         "description": "Description of source IPs allowed to reach rack services.",
         "oneOf": [
           {
@@ -9254,23 +9271,6 @@
               "ips"
             ]
           }
-        ]
-      },
-      "AllowedSourceIpsUpdate": {
-        "description": "Parameters for updating allowed source IPs",
-        "type": "object",
-        "properties": {
-          "allowed_ips": {
-            "description": "The new list of allowed source IPs.",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AllowedSourceIps2"
-              }
-            ]
-          }
-        },
-        "required": [
-          "allowed_ips"
         ]
       },
       "Baseboard": {
