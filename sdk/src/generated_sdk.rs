@@ -833,10 +833,7 @@ pub mod types {
     ///          ]
     ///        },
     ///        "ips": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "$ref": "#/components/schemas/IpNet"
-    ///          }
+    ///          "$ref": "#/components/schemas/IpAllowList"
     ///        }
     ///      }
     ///    }
@@ -853,7 +850,7 @@ pub mod types {
         ///
         /// All others are prevented from reaching rack services.
         #[serde(rename = "list")]
-        List(Vec<IpNet>),
+        List(IpAllowList),
     }
 
     impl From<&AllowedSourceIps> for AllowedSourceIps {
@@ -862,8 +859,8 @@ pub mod types {
         }
     }
 
-    impl From<Vec<IpNet>> for AllowedSourceIps {
-        fn from(value: Vec<IpNet>) -> Self {
+    impl From<IpAllowList> for AllowedSourceIps {
+        fn from(value: IpAllowList) -> Self {
             Self::List(value)
         }
     }
@@ -11112,6 +11109,47 @@ pub mod types {
         }
     }
 
+    /// A non-empty allowlist of IP addresses or subnets
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "A non-empty allowlist of IP addresses or subnets",
+    ///  "type": "array",
+    ///  "items": {
+    ///    "$ref": "#/components/schemas/IpNet"
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct IpAllowList(pub Vec<IpNet>);
+    impl std::ops::Deref for IpAllowList {
+        type Target = Vec<IpNet>;
+        fn deref(&self) -> &Vec<IpNet> {
+            &self.0
+        }
+    }
+
+    impl From<IpAllowList> for Vec<IpNet> {
+        fn from(value: IpAllowList) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&IpAllowList> for IpAllowList {
+        fn from(value: &IpAllowList) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<Vec<IpNet>> for IpAllowList {
+        fn from(value: Vec<IpNet>) -> Self {
+            Self(value)
+        }
+    }
+
     /// IpKind
     ///
     /// <details><summary>JSON schema</summary>
@@ -12128,8 +12166,16 @@ pub mod types {
     ///  ],
     ///  "type": "string",
     ///  "pattern":
-    /// "^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,
-    /// 4}|([0-9a-fA-F]{1,4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/
+    /// "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:
+    /// |([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:
+    /// [0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,
+    /// 3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:
+    /// ){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,
+    /// 6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%
+    /// [0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,
+    /// 1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,
+    /// 1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,
+    /// 1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\\/
     /// ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$"
     /// }
     /// ```
@@ -12161,16 +12207,33 @@ pub mod types {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if regress::Regex::new(
-                "^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,\
-                 4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
+                "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:\
+                 |([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:\
+                 [0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,\
+                 3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:\
+                 [0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:\
+                 [0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:\
+                 0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,\
+                 3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:\
+                 ((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,\
+                 1}[0-9]){0,1}[0-9]))\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
             )
             .unwrap()
             .find(value)
             .is_none()
             {
                 return Err("doesn't match pattern \
-                            \"^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,\
-                            4}|([0-9a-fA-F]{1,4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/\
+                            \"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,\
+                            7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,\
+                            5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,\
+                            4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,\
+                            4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,\
+                            4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:\
+                            [0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,\
+                            1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,\
+                            3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:\
+                            ((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,\
+                            3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\\/\
                             ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$\""
                     .into());
             }

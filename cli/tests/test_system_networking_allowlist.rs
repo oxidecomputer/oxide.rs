@@ -6,7 +6,7 @@
 
 use assert_cmd::Command;
 use httpmock::MockServer;
-use oxide::types::{AllowListUpdate, AllowedSourceIps};
+use oxide::types::{AllowListUpdate, AllowedSourceIps, IpAllowList};
 use oxide_httpmock::MockServerExt;
 
 // Check that we have at least one of --any or --ip
@@ -88,7 +88,7 @@ fn test_allowlist_one_ip() {
 
     let mock = server.networking_allow_list_update(|when, then| {
         when.body(&AllowListUpdate {
-            allowed_ips: AllowedSourceIps::List(vec!["1.2.3.4/5".try_into().unwrap()]),
+            allowed_ips: AllowedSourceIps::List(IpAllowList(vec!["1.2.3.4/5".try_into().unwrap()])),
         });
         then.no_content();
     });
@@ -119,10 +119,13 @@ fn test_allowlist_many_ips() {
 
     let mock = server.networking_allow_list_update(|when, then| {
         when.body(&AllowListUpdate {
-            allowed_ips: AllowedSourceIps::List(vec![
+            allowed_ips: AllowedSourceIps::List(IpAllowList(vec![
                 "1.2.3.4/5".try_into().unwrap(),
                 "5.6.7.8/9".try_into().unwrap(),
-            ]),
+                "1.0.0.1/32".try_into().unwrap(),
+                "::1/127".try_into().unwrap(),
+                "::1/128".try_into().unwrap(),
+            ])),
         });
         then.no_content();
     });
@@ -140,6 +143,12 @@ fn test_allowlist_many_ips() {
         .arg("1.2.3.4/5")
         .arg("--ip")
         .arg("5.6.7.8/9")
+        .arg("--ip")
+        .arg("1.0.0.1")
+        .arg("--ip")
+        .arg("::1/127")
+        .arg("--ip")
+        .arg("::1")
         .assert()
         .success()
         .stdout(expectorate::eq_file_or_panic(

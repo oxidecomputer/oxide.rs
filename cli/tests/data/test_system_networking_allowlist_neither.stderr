@@ -1,6 +1,6 @@
 error: the following required arguments were not provided:
-  <--ip <IPNET>|--any>
+  <--ip <IP or IPNET>|--any>
 
-Usage: oxide system networking allow-list update <--ip <IPNET>|--any>
+Usage: oxide system networking allow-list update <--ip <IP or IPNET>|--any>
 
 For more information, try '--help'.

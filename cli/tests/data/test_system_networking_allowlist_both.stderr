@@ -1,5 +1,5 @@
-error: the argument '--any' cannot be used with '--ip <IPNET>'
+error: the argument '--any' cannot be used with '--ip <IP or IPNET>'
 
-Usage: oxide system networking allow-list update <--ip <IPNET>|--any>
+Usage: oxide system networking allow-list update <--ip <IP or IPNET>|--any>
 
 For more information, try '--help'.

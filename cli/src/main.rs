@@ -14,7 +14,9 @@ use async_trait::async_trait;
 use cli_builder::NewCli;
 use generated_cli::CliConfig;
 use oxide::context::Context;
-use oxide::types::{AllowedSourceIps, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
+use oxide::types::{
+    AllowedSourceIps, IdpMetadataSource, IpAllowList, IpRange, Ipv4Range, Ipv6Range,
+};
 
 mod cli_builder;
 mod cmd_api;
@@ -233,11 +235,12 @@ impl CliConfig for OxideOverride {
                     .body_map(|body| body.allowed_ips(AllowedSourceIps::Any));
             }
             Some("ips") => {
-                let values: Vec<oxide::types::IpNet> =
-                    matches.get_many("ips").unwrap().cloned().collect();
-                *request = request
-                    .to_owned()
-                    .body_map(|body| body.allowed_ips(AllowedSourceIps::List(values)));
+                let values: Vec<IpOrNet> = matches.get_many("ips").unwrap().cloned().collect();
+                *request = request.to_owned().body_map(|body| {
+                    body.allowed_ips(AllowedSourceIps::List(IpAllowList(
+                        values.into_iter().map(IpOrNet::into_ip_net).collect(),
+                    )))
+                });
             }
             _ => unreachable!("invalid value for allow-list group"),
         }
@@ -340,5 +343,54 @@ mod tests {
 
         // We want this list to shrink, not grow.
         assert_contents("tests/data/json-body-required.txt", &out);
+    }
+}
+
+#[derive(Debug, Clone)]
+pub(crate) enum IpOrNet {
+    Ip(std::net::IpAddr),
+    Net(oxide::types::IpNet),
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct IpOrNetParser;
+impl clap::builder::TypedValueParser for IpOrNetParser {
+    type Value = IpOrNet;
+
+    fn parse_ref(
+        &self,
+        cmd: &clap::Command,
+        arg: Option<&clap::Arg>,
+        value: &std::ffi::OsStr,
+    ) -> std::prelude::v1::Result<Self::Value, clap::Error> {
+        fn parse(value: &str) -> Result<IpOrNet, String> {
+            if let Ok(ip) = value.parse() {
+                Ok(IpOrNet::Ip(ip))
+            } else if let Ok(net) = value.parse() {
+                Ok(IpOrNet::Net(net))
+            } else {
+                Err("value must be an IP address or subnet".to_string())
+            }
+        }
+
+        parse.parse_ref(cmd, arg, value)
+    }
+}
+
+impl clap::builder::ValueParserFactory for IpOrNet {
+    type Parser = IpOrNetParser;
+
+    fn value_parser() -> Self::Parser {
+        IpOrNetParser
+    }
+}
+
+impl IpOrNet {
+    pub fn into_ip_net(self) -> oxide::types::IpNet {
+        match self {
+            IpOrNet::Ip(std::net::IpAddr::V4(v4)) => format!("{}/32", v4).parse().unwrap(),
+            IpOrNet::Ip(std::net::IpAddr::V6(v6)) => format!("{}/128", v6).parse().unwrap(),
+            IpOrNet::Net(net) => net,
+        }
     }
 }

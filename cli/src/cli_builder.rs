@@ -129,8 +129,8 @@ impl<'a> Default for NewCli<'a> {
                         clap::Arg::new("ips")
                             .long("ip")
                             .action(clap::ArgAction::Append)
-                            .value_name("IPNET")
-                            .value_parser(clap::value_parser!(oxide::types::IpNet)),
+                            .value_name("IP or IPNET")
+                            .value_parser(clap::value_parser!(crate::IpOrNet)),
                     )
                     .group(
                         clap::ArgGroup::new("allow-list")
