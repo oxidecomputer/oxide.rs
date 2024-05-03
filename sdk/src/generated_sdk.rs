@@ -17314,6 +17314,43 @@ pub mod types {
         }
     }
 
+    /// The unique ID of a sled.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "The unique ID of a sled.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SledId {
+        pub id: uuid::Uuid,
+    }
+
+    impl From<&SledId> for SledId {
+        fn from(value: &SledId) -> Self {
+            value.clone()
+        }
+    }
+
+    impl SledId {
+        pub fn builder() -> builder::SledId {
+            Default::default()
+        }
+    }
+
     /// An operator's view of an instance running on a given sled
     ///
     /// <details><summary>JSON schema</summary>
@@ -35415,6 +35452,45 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct SledId {
+            id: Result<uuid::Uuid, String>,
+        }
+
+        impl Default for SledId {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                }
+            }
+        }
+
+        impl SledId {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<SledId> for super::SledId {
+            type Error = super::error::ConversionError;
+            fn try_from(value: SledId) -> Result<Self, super::error::ConversionError> {
+                Ok(Self { id: value.id? })
+            }
+        }
+
+        impl From<super::SledId> for SledId {
+            fn from(value: super::SledId) -> Self {
+                Self { id: Ok(value.id) }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct SledInstance {
             active_sled_id: Result<uuid::Uuid, String>,
             id: Result<uuid::Uuid, String>,
@@ -40362,7 +40438,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20240327.0
+/// Version: 20240502.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -40415,7 +40491,7 @@ impl Client {
     /// This string is pulled directly from the source OpenAPI
     /// document and may be in any format the API selects.
     pub fn api_version(&self) -> &'static str {
-        "20240327.0"
+        "20240502.0"
     }
 }
 
@@ -53291,7 +53367,7 @@ pub mod builder {
         }
 
         /// Sends a `POST` request to `/v1/system/hardware/sleds`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
+        pub async fn send(self) -> Result<ResponseValue<types::SledId>, Error<types::Error>> {
             let Self { client, body } = self;
             let body = body
                 .and_then(|v| types::UninitializedSledId::try_from(v).map_err(|e| e.to_string()))
@@ -53310,7 +53386,7 @@ pub mod builder {
             let result = client.client.execute(request).await;
             let response = result?;
             match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
+                201u16 => ResponseValue::from_response(response).await,
                 400u16..=499u16 => Err(Error::ErrorResponse(
                     ResponseValue::from_response(response).await?,
                 )),

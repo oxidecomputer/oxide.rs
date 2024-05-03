@@ -7095,8 +7095,13 @@ pub mod operations {
             self.0
         }
 
-        pub fn no_content(self) -> Self {
-            Self(self.0.status(204u16))
+        pub fn created(self, value: &types::SledId) -> Self {
+            Self(
+                self.0
+                    .status(201u16)
+                    .header("content-type", "application/json")
+                    .json_body_obj(value),
+            )
         }
 
         pub fn client_error(self, status: u16, value: &types::Error) -> Self {
