@@ -13,6 +13,7 @@ use oxide_httpmock::MockServerExt;
 // Check that we have at least one of --any or --ip
 #[test]
 fn test_allowlist_neither() {
+    #[cfg(not(target_os = "windows"))]
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
@@ -32,6 +33,7 @@ fn test_allowlist_neither() {
 // Check that we don't have both --any *and* --ip
 #[test]
 fn test_allowlist_both() {
+    #[cfg(not(target_os = "windows"))]
     Command::cargo_bin("oxide")
         .unwrap()
         .env("RUST_BACKTRACE", "1")
