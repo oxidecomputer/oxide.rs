@@ -690,181 +690,6 @@ pub mod types {
         }
     }
 
-    /// Allowlist of IPs or subnets that can make requests to user-facing
-    /// services.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Allowlist of IPs or subnets that can make requests to
-    /// user-facing services.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "allowed_ips",
-    ///    "time_created",
-    ///    "time_modified"
-    ///  ],
-    ///  "properties": {
-    ///    "allowed_ips": {
-    ///      "description": "The allowlist of IPs or subnets.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AllowedSourceIps"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "time_created": {
-    ///      "description": "Time the list was created.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "time_modified": {
-    ///      "description": "Time the list was last modified.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct AllowList {
-        /// The allowlist of IPs or subnets.
-        pub allowed_ips: AllowedSourceIps,
-        /// Time the list was created.
-        pub time_created: chrono::DateTime<chrono::offset::Utc>,
-        /// Time the list was last modified.
-        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
-    }
-
-    impl From<&AllowList> for AllowList {
-        fn from(value: &AllowList) -> Self {
-            value.clone()
-        }
-    }
-
-    impl AllowList {
-        pub fn builder() -> builder::AllowList {
-            Default::default()
-        }
-    }
-
-    /// Parameters for updating allowed source IPs
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Parameters for updating allowed source IPs",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "allowed_ips"
-    ///  ],
-    ///  "properties": {
-    ///    "allowed_ips": {
-    ///      "description": "The new list of allowed source IPs.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/AllowedSourceIps"
-    ///        }
-    ///      ]
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct AllowListUpdate {
-        /// The new list of allowed source IPs.
-        pub allowed_ips: AllowedSourceIps,
-    }
-
-    impl From<&AllowListUpdate> for AllowListUpdate {
-        fn from(value: &AllowListUpdate) -> Self {
-            value.clone()
-        }
-    }
-
-    impl AllowListUpdate {
-        pub fn builder() -> builder::AllowListUpdate {
-            Default::default()
-        }
-    }
-
-    /// Description of source IPs allowed to reach rack services.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "Description of source IPs allowed to reach rack
-    /// services.",
-    ///  "oneOf": [
-    ///    {
-    ///      "description": "Allow traffic from any external IP address.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "allow"
-    ///      ],
-    ///      "properties": {
-    ///        "allow": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "any"
-    ///          ]
-    ///        }
-    ///      }
-    ///    },
-    ///    {
-    ///      "description": "Restrict access to a specific set of source IP
-    /// addresses or subnets.\n\nAll others are prevented from reaching rack
-    /// services.",
-    ///      "type": "object",
-    ///      "required": [
-    ///        "allow",
-    ///        "ips"
-    ///      ],
-    ///      "properties": {
-    ///        "allow": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "list"
-    ///          ]
-    ///        },
-    ///        "ips": {
-    ///          "$ref": "#/components/schemas/IpAllowList"
-    ///        }
-    ///      }
-    ///    }
-    ///  ]
-    /// }
-    /// ```
-    /// </details>
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    #[serde(tag = "allow", content = "ips")]
-    pub enum AllowedSourceIps {
-        #[serde(rename = "any")]
-        Any,
-        /// Restrict access to a specific set of source IP addresses or subnets.
-        ///
-        /// All others are prevented from reaching rack services.
-        #[serde(rename = "list")]
-        List(IpAllowList),
-    }
-
-    impl From<&AllowedSourceIps> for AllowedSourceIps {
-        fn from(value: &AllowedSourceIps) -> Self {
-            value.clone()
-        }
-    }
-
-    impl From<IpAllowList> for AllowedSourceIps {
-        fn from(value: IpAllowList) -> Self {
-            Self::List(value)
-        }
-    }
-
     /// Properties that uniquely identify an Oxide hardware component
     ///
     /// <details><summary>JSON schema</summary>
@@ -11109,47 +10934,6 @@ pub mod types {
         }
     }
 
-    /// A non-empty allowlist of IP addresses or subnets
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A non-empty allowlist of IP addresses or subnets",
-    ///  "type": "array",
-    ///  "items": {
-    ///    "$ref": "#/components/schemas/IpNet"
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct IpAllowList(pub Vec<IpNet>);
-    impl std::ops::Deref for IpAllowList {
-        type Target = Vec<IpNet>;
-        fn deref(&self) -> &Vec<IpNet> {
-            &self.0
-        }
-    }
-
-    impl From<IpAllowList> for Vec<IpNet> {
-        fn from(value: IpAllowList) -> Self {
-            value.0
-        }
-    }
-
-    impl From<&IpAllowList> for IpAllowList {
-        fn from(value: &IpAllowList) -> Self {
-            value.clone()
-        }
-    }
-
-    impl From<Vec<IpNet>> for IpAllowList {
-        fn from(value: Vec<IpNet>) -> Self {
-            Self(value)
-        }
-    }
-
     /// IpKind
     ///
     /// <details><summary>JSON schema</summary>
@@ -12166,16 +11950,8 @@ pub mod types {
     ///  ],
     ///  "type": "string",
     ///  "pattern":
-    /// "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:
-    /// |([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:
-    /// [0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,
-    /// 3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:
-    /// ){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,
-    /// 6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%
-    /// [0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,
-    /// 1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,
-    /// 1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,
-    /// 1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\\/
+    /// "^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,
+    /// 4}|([0-9a-fA-F]{1,4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/
     /// ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$"
     /// }
     /// ```
@@ -12207,33 +11983,16 @@ pub mod types {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if regress::Regex::new(
-                "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:\
-                 |([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:\
-                 [0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,\
-                 3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:\
-                 [0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:\
-                 [0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:\
-                 0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,\
-                 3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:\
-                 ((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,\
-                 1}[0-9]){0,1}[0-9]))\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
+                "^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,\
+                 4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
             )
             .unwrap()
             .find(value)
             .is_none()
             {
                 return Err("doesn't match pattern \
-                            \"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,\
-                            7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,\
-                            5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,\
-                            4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,\
-                            4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,\
-                            4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:\
-                            [0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,\
-                            1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,\
-                            3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:\
-                            ((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,\
-                            3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\\/\
+                            \"^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,\
+                            4}|([0-9a-fA-F]{1,4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/\
                             ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$\""
                     .into());
             }
@@ -17568,7 +17327,8 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "id": {
-    ///      "$ref": "#/components/schemas/TypedUuidForSledKind"
+    ///      "type": "string",
+    ///      "format": "uuid"
     ///    }
     ///  }
     /// }
@@ -17576,7 +17336,7 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SledId {
-        pub id: TypedUuidForSledKind,
+        pub id: uuid::Uuid,
     }
 
     impl From<&SledId> for SledId {
@@ -20965,78 +20725,6 @@ pub mod types {
         }
     }
 
-    /// TypedUuidForSledKind
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "type": "string",
-    ///  "format": "uuid"
-    /// }
-    /// ```
-    /// </details>
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct TypedUuidForSledKind(pub uuid::Uuid);
-    impl std::ops::Deref for TypedUuidForSledKind {
-        type Target = uuid::Uuid;
-        fn deref(&self) -> &uuid::Uuid {
-            &self.0
-        }
-    }
-
-    impl From<TypedUuidForSledKind> for uuid::Uuid {
-        fn from(value: TypedUuidForSledKind) -> Self {
-            value.0
-        }
-    }
-
-    impl From<&TypedUuidForSledKind> for TypedUuidForSledKind {
-        fn from(value: &TypedUuidForSledKind) -> Self {
-            value.clone()
-        }
-    }
-
-    impl From<uuid::Uuid> for TypedUuidForSledKind {
-        fn from(value: uuid::Uuid) -> Self {
-            Self(value)
-        }
-    }
-
-    impl std::str::FromStr for TypedUuidForSledKind {
-        type Err = <uuid::Uuid as std::str::FromStr>::Err;
-        fn from_str(value: &str) -> Result<Self, Self::Err> {
-            Ok(Self(value.parse()?))
-        }
-    }
-
-    impl std::convert::TryFrom<&str> for TypedUuidForSledKind {
-        type Error = <uuid::Uuid as std::str::FromStr>::Err;
-        fn try_from(value: &str) -> Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<&String> for TypedUuidForSledKind {
-        type Error = <uuid::Uuid as std::str::FromStr>::Err;
-        fn try_from(value: &String) -> Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl std::convert::TryFrom<String> for TypedUuidForSledKind {
-        type Error = <uuid::Uuid as std::str::FromStr>::Err;
-        fn try_from(value: String) -> Result<Self, Self::Error> {
-            value.parse()
-        }
-    }
-
-    impl ToString for TypedUuidForSledKind {
-        fn to_string(&self) -> String {
-            self.0.to_string()
-        }
-    }
-
     /// A sled that has not been added to an initialized rack yet
     ///
     /// <details><summary>JSON schema</summary>
@@ -24413,120 +24101,6 @@ pub mod types {
             fn from(value: super::AggregateBgpMessageHistory) -> Self {
                 Self {
                     switch_histories: Ok(value.switch_histories),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct AllowList {
-            allowed_ips: Result<super::AllowedSourceIps, String>,
-            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
-        }
-
-        impl Default for AllowList {
-            fn default() -> Self {
-                Self {
-                    allowed_ips: Err("no value supplied for allowed_ips".to_string()),
-                    time_created: Err("no value supplied for time_created".to_string()),
-                    time_modified: Err("no value supplied for time_modified".to_string()),
-                }
-            }
-        }
-
-        impl AllowList {
-            pub fn allowed_ips<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::AllowedSourceIps>,
-                T::Error: std::fmt::Display,
-            {
-                self.allowed_ips = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for allowed_ips: {}", e));
-                self
-            }
-            pub fn time_created<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_created = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_created: {}", e)
-                });
-                self
-            }
-            pub fn time_modified<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
-                T::Error: std::fmt::Display,
-            {
-                self.time_modified = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for time_modified: {}", e)
-                });
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<AllowList> for super::AllowList {
-            type Error = super::error::ConversionError;
-            fn try_from(value: AllowList) -> Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    allowed_ips: value.allowed_ips?,
-                    time_created: value.time_created?,
-                    time_modified: value.time_modified?,
-                })
-            }
-        }
-
-        impl From<super::AllowList> for AllowList {
-            fn from(value: super::AllowList) -> Self {
-                Self {
-                    allowed_ips: Ok(value.allowed_ips),
-                    time_created: Ok(value.time_created),
-                    time_modified: Ok(value.time_modified),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
-        pub struct AllowListUpdate {
-            allowed_ips: Result<super::AllowedSourceIps, String>,
-        }
-
-        impl Default for AllowListUpdate {
-            fn default() -> Self {
-                Self {
-                    allowed_ips: Err("no value supplied for allowed_ips".to_string()),
-                }
-            }
-        }
-
-        impl AllowListUpdate {
-            pub fn allowed_ips<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::AllowedSourceIps>,
-                T::Error: std::fmt::Display,
-            {
-                self.allowed_ips = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for allowed_ips: {}", e));
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<AllowListUpdate> for super::AllowListUpdate {
-            type Error = super::error::ConversionError;
-            fn try_from(value: AllowListUpdate) -> Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    allowed_ips: value.allowed_ips?,
-                })
-            }
-        }
-
-        impl From<super::AllowListUpdate> for AllowListUpdate {
-            fn from(value: super::AllowListUpdate) -> Self {
-                Self {
-                    allowed_ips: Ok(value.allowed_ips),
                 }
             }
         }
@@ -35879,7 +35453,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SledId {
-            id: Result<super::TypedUuidForSledKind, String>,
+            id: Result<uuid::Uuid, String>,
         }
 
         impl Default for SledId {
@@ -35893,7 +35467,7 @@ pub mod types {
         impl SledId {
             pub fn id<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<super::TypedUuidForSledKind>,
+                T: std::convert::TryInto<uuid::Uuid>,
                 T::Error: std::fmt::Display,
             {
                 self.id = value
@@ -40864,7 +40438,7 @@ pub mod types {
 ///
 /// API for interacting with the Oxide control plane
 ///
-/// Version: 20240327.0
+/// Version: 20240502.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -40917,7 +40491,7 @@ impl Client {
     /// This string is pulled directly from the source OpenAPI
     /// document and may be in any format the API selects.
     pub fn api_version(&self) -> &'static str {
-        "20240327.0"
+        "20240502.0"
     }
 }
 
@@ -43554,27 +43128,6 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList;
-    /// Get user-facing services IP allowlist
-    ///
-    /// Sends a `GET` request to `/v1/system/networking/allow-list`
-    ///
-    /// ```ignore
-    /// let response = client.networking_allow_list_view()
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_allow_list_view(&self) -> builder::NetworkingAllowListView;
-    /// Update user-facing services IP allowlist
-    ///
-    /// Sends a `PUT` request to `/v1/system/networking/allow-list`
-    ///
-    /// ```ignore
-    /// let response = client.networking_allow_list_update()
-    ///    .body(body)
-    ///    .send()
-    ///    .await;
-    /// ```
-    fn networking_allow_list_update(&self) -> builder::NetworkingAllowListUpdate;
     /// Disable a BFD session
     ///
     /// Sends a `POST` request to `/v1/system/networking/bfd-disable`
@@ -43925,14 +43478,6 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList {
         builder::NetworkingAddressLotBlockList::new(self)
-    }
-
-    fn networking_allow_list_view(&self) -> builder::NetworkingAllowListView {
-        builder::NetworkingAllowListView::new(self)
-    }
-
-    fn networking_allow_list_update(&self) -> builder::NetworkingAllowListUpdate {
-        builder::NetworkingAllowListUpdate::new(self)
     }
 
     fn networking_bfd_disable(&self) -> builder::NetworkingBfdDisable {
@@ -57874,116 +57419,6 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
-        }
-    }
-
-    /// Builder for [`ClientSystemNetworkingExt::networking_allow_list_view`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_allow_list_view`]: super::ClientSystemNetworkingExt::networking_allow_list_view
-    #[derive(Debug, Clone)]
-    pub struct NetworkingAllowListView<'a> {
-        client: &'a super::Client,
-    }
-
-    impl<'a> NetworkingAllowListView<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self { client: client }
-        }
-
-        /// Sends a `GET` request to `/v1/system/networking/allow-list`
-        pub async fn send(self) -> Result<ResponseValue<types::AllowList>, Error<types::Error>> {
-            let Self { client } = self;
-            let url = format!("{}/v1/system/networking/allow-list", client.baseurl,);
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .get(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                200u16 => ResponseValue::from_response(response).await,
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
-        }
-    }
-
-    /// Builder for [`ClientSystemNetworkingExt::networking_allow_list_update`]
-    ///
-    /// [`ClientSystemNetworkingExt::networking_allow_list_update`]: super::ClientSystemNetworkingExt::networking_allow_list_update
-    #[derive(Debug, Clone)]
-    pub struct NetworkingAllowListUpdate<'a> {
-        client: &'a super::Client,
-        body: Result<types::builder::AllowListUpdate, String>,
-    }
-
-    impl<'a> NetworkingAllowListUpdate<'a> {
-        pub fn new(client: &'a super::Client) -> Self {
-            Self {
-                client: client,
-                body: Ok(types::builder::AllowListUpdate::default()),
-            }
-        }
-
-        pub fn body<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<types::AllowListUpdate>,
-            <V as std::convert::TryInto<types::AllowListUpdate>>::Error: std::fmt::Display,
-        {
-            self.body = value
-                .try_into()
-                .map(From::from)
-                .map_err(|s| format!("conversion to `AllowListUpdate` for body failed: {}", s));
-            self
-        }
-
-        pub fn body_map<F>(mut self, f: F) -> Self
-        where
-            F: std::ops::FnOnce(types::builder::AllowListUpdate) -> types::builder::AllowListUpdate,
-        {
-            self.body = self.body.map(f);
-            self
-        }
-
-        /// Sends a `PUT` request to `/v1/system/networking/allow-list`
-        pub async fn send(self) -> Result<ResponseValue<()>, Error<types::Error>> {
-            let Self { client, body } = self;
-            let body = body
-                .and_then(|v| types::AllowListUpdate::try_from(v).map_err(|e| e.to_string()))
-                .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/v1/system/networking/allow-list", client.baseurl,);
-            #[allow(unused_mut)]
-            let mut request = client
-                .client
-                .put(url)
-                .header(
-                    reqwest::header::ACCEPT,
-                    reqwest::header::HeaderValue::from_static("application/json"),
-                )
-                .json(&body)
-                .build()?;
-            let result = client.client.execute(request).await;
-            let response = result?;
-            match response.status().as_u16() {
-                204u16 => Ok(ResponseValue::empty(response)),
-                400u16..=499u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                500u16..=599u16 => Err(Error::ErrorResponse(
-                    ResponseValue::from_response(response).await?,
-                )),
-                _ => Err(Error::UnexpectedResponse(response)),
-            }
         }
     }
 
