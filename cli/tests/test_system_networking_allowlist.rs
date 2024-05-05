@@ -5,7 +5,7 @@
 // Copyright 2024 Oxide Computer Company
 
 use assert_cmd::Command;
-use chrono::Utc;
+use chrono::{TimeZone, Utc};
 use httpmock::MockServer;
 use oxide::types::{AllowList, AllowListUpdate, AllowedSourceIps};
 use oxide_httpmock::MockServerExt;
@@ -55,6 +55,7 @@ fn test_allowlist_both() {
 #[test]
 fn test_allowlist_any() {
     let server = MockServer::start();
+    let tt = Utc.timestamp_opt(1542222450, 0).unwrap();
 
     let mock = server.networking_allow_list_update(|when, then| {
         when.body(&AllowListUpdate {
@@ -62,8 +63,8 @@ fn test_allowlist_any() {
         });
         then.ok(&AllowList {
             allowed_ips: AllowedSourceIps::Any,
-            time_created: Utc::now(),
-            time_modified: Utc::now(),
+            time_created: tt,
+            time_modified: tt,
         });
     });
 
@@ -90,6 +91,7 @@ fn test_allowlist_any() {
 #[test]
 fn test_allowlist_one_ip() {
     let server = MockServer::start();
+    let tt = Utc.timestamp_opt(1542222450, 0).unwrap();
 
     let mock = server.networking_allow_list_update(|when, then| {
         when.body(&AllowListUpdate {
@@ -97,8 +99,8 @@ fn test_allowlist_one_ip() {
         });
         then.ok(&AllowList {
             allowed_ips: AllowedSourceIps::List(vec!["1.2.3.4/5".try_into().unwrap()]),
-            time_created: Utc::now(),
-            time_modified: Utc::now(),
+            time_created: tt,
+            time_modified: tt,
         });
     });
 
@@ -125,6 +127,7 @@ fn test_allowlist_one_ip() {
 #[test]
 fn test_allowlist_many_ips() {
     let server = MockServer::start();
+    let tt = Utc.timestamp_opt(1542222450, 0).unwrap();
 
     let mock = server.networking_allow_list_update(|when, then| {
         when.body(&AllowListUpdate {
@@ -144,8 +147,8 @@ fn test_allowlist_many_ips() {
                 "::1/127".try_into().unwrap(),
                 "::1/128".try_into().unwrap(),
             ]),
-            time_created: Utc::now(),
-            time_modified: Utc::now(),
+            time_created: tt,
+            time_modified: tt,
         });
     });
 

@@ -3423,29 +3423,6 @@
               ]
             },
             {
-              "name": "switch-port",
-              "subcommands": [
-                {
-                  "name": "status",
-                  "about": "Get switch port status",
-                  "args": [
-                    {
-                      "long": "port",
-                      "help": "A name to use when selecting switch ports."
-                    },
-                    {
-                      "long": "rack-id",
-                      "help": "A rack id to use when selecting switch ports."
-                    },
-                    {
-                      "long": "switch-location",
-                      "help": "A switch location to use when selecting switch ports."
-                    }
-                  ]
-                }
-              ]
-            },
-            {
               "name": "switch-port-settings",
               "subcommands": [
                 {
