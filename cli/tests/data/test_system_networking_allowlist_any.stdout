@@ -1,1 +1,7 @@
-null
+{
+  "allowed_ips": {
+    "allow": "any"
+  },
+  "time_created": "2024-05-05T01:20:54.063392Z",
+  "time_modified": "2024-05-05T01:20:54.063393Z"
+}

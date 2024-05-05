@@ -120,6 +120,7 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingSwitchPortClearSettings => {
                 Self::cli_networking_switch_port_clear_settings()
             }
+            CliCommand::NetworkingSwitchPortStatus => Self::cli_networking_switch_port_status(),
             CliCommand::SwitchList => Self::cli_switch_list(),
             CliCommand::SwitchView => Self::cli_switch_view(),
             CliCommand::SiloIdentityProviderList => Self::cli_silo_identity_provider_list(),
@@ -3087,6 +3088,32 @@ impl<T: CliConfig> Cli<T> {
             .about("Clear switch port settings")
     }
 
+    pub fn cli_networking_switch_port_status() -> clap::Command {
+        clap::Command::new("")
+            .arg(
+                clap::Arg::new("port")
+                    .long("port")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A name to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("rack-id")
+                    .long("rack-id")
+                    .value_parser(clap::value_parser!(uuid::Uuid))
+                    .required(true)
+                    .help("A rack id to use when selecting switch ports."),
+            )
+            .arg(
+                clap::Arg::new("switch-location")
+                    .long("switch-location")
+                    .value_parser(clap::value_parser!(types::Name))
+                    .required(true)
+                    .help("A switch location to use when selecting switch ports."),
+            )
+            .about("Get switch port status")
+    }
+
     pub fn cli_switch_list() -> clap::Command {
         clap::Command::new("")
             .arg(
@@ -5628,6 +5655,9 @@ impl<T: CliConfig> Cli<T> {
             CliCommand::NetworkingSwitchPortClearSettings => {
                 self.execute_networking_switch_port_clear_settings(matches)
                     .await
+            }
+            CliCommand::NetworkingSwitchPortStatus => {
+                self.execute_networking_switch_port_status(matches).await
             }
             CliCommand::SwitchList => self.execute_switch_list(matches).await,
             CliCommand::SwitchView => self.execute_switch_view(matches).await,
@@ -8971,6 +9001,38 @@ impl<T: CliConfig> Cli<T> {
 
         self.config
             .execute_networking_switch_port_clear_settings(matches, &mut request)?;
+        let result = request.send().await;
+        match result {
+            Ok(r) => {
+                self.config.item_success(&r);
+                Ok(())
+            }
+            Err(r) => {
+                self.config.item_error(&r);
+                Err(anyhow::Error::new(r))
+            }
+        }
+    }
+
+    pub async fn execute_networking_switch_port_status(
+        &self,
+        matches: &clap::ArgMatches,
+    ) -> anyhow::Result<()> {
+        let mut request = self.client.networking_switch_port_status();
+        if let Some(value) = matches.get_one::<types::Name>("port") {
+            request = request.port(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<uuid::Uuid>("rack-id") {
+            request = request.rack_id(value.clone());
+        }
+
+        if let Some(value) = matches.get_one::<types::Name>("switch-location") {
+            request = request.switch_location(value.clone());
+        }
+
+        self.config
+            .execute_networking_switch_port_status(matches, &mut request)?;
         let result = request.send().await;
         match result {
             Ok(r) => {
@@ -12668,6 +12730,14 @@ pub trait CliConfig {
         Ok(())
     }
 
+    fn execute_networking_switch_port_status(
+        &self,
+        matches: &clap::ArgMatches,
+        request: &mut builder::NetworkingSwitchPortStatus,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
     fn execute_switch_list(
         &self,
         matches: &clap::ArgMatches,
@@ -13472,6 +13542,7 @@ pub enum CliCommand {
     NetworkingSwitchPortList,
     NetworkingSwitchPortApplySettings,
     NetworkingSwitchPortClearSettings,
+    NetworkingSwitchPortStatus,
     SwitchList,
     SwitchView,
     SiloIdentityProviderList,
@@ -13662,6 +13733,7 @@ impl CliCommand {
             CliCommand::NetworkingSwitchPortList,
             CliCommand::NetworkingSwitchPortApplySettings,
             CliCommand::NetworkingSwitchPortClearSettings,
+            CliCommand::NetworkingSwitchPortStatus,
             CliCommand::SwitchList,
             CliCommand::SwitchView,
             CliCommand::SiloIdentityProviderList,

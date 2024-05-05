@@ -690,6 +690,184 @@ pub mod types {
         }
     }
 
+    /// Allowlist of IPs or subnets that can make requests to user-facing
+    /// services.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Allowlist of IPs or subnets that can make requests to
+    /// user-facing services.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allowed_ips",
+    ///    "time_created",
+    ///    "time_modified"
+    ///  ],
+    ///  "properties": {
+    ///    "allowed_ips": {
+    ///      "description": "The allowlist of IPs or subnets.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AllowedSourceIps"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "time_created": {
+    ///      "description": "Time the list was created.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "time_modified": {
+    ///      "description": "Time the list was last modified.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AllowList {
+        /// The allowlist of IPs or subnets.
+        pub allowed_ips: AllowedSourceIps,
+        /// Time the list was created.
+        pub time_created: chrono::DateTime<chrono::offset::Utc>,
+        /// Time the list was last modified.
+        pub time_modified: chrono::DateTime<chrono::offset::Utc>,
+    }
+
+    impl From<&AllowList> for AllowList {
+        fn from(value: &AllowList) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AllowList {
+        pub fn builder() -> builder::AllowList {
+            Default::default()
+        }
+    }
+
+    /// Parameters for updating allowed source IPs
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Parameters for updating allowed source IPs",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allowed_ips"
+    ///  ],
+    ///  "properties": {
+    ///    "allowed_ips": {
+    ///      "description": "The new list of allowed source IPs.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/AllowedSourceIps"
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct AllowListUpdate {
+        /// The new list of allowed source IPs.
+        pub allowed_ips: AllowedSourceIps,
+    }
+
+    impl From<&AllowListUpdate> for AllowListUpdate {
+        fn from(value: &AllowListUpdate) -> Self {
+            value.clone()
+        }
+    }
+
+    impl AllowListUpdate {
+        pub fn builder() -> builder::AllowListUpdate {
+            Default::default()
+        }
+    }
+
+    /// Description of source IPs allowed to reach rack services.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Description of source IPs allowed to reach rack
+    /// services.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Allow traffic from any external IP address.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "allow"
+    ///      ],
+    ///      "properties": {
+    ///        "allow": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "any"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "description": "Restrict access to a specific set of source IP
+    /// addresses or subnets.\n\nAll others are prevented from reaching rack
+    /// services.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "allow",
+    ///        "ips"
+    ///      ],
+    ///      "properties": {
+    ///        "allow": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "list"
+    ///          ]
+    ///        },
+    ///        "ips": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/IpNet"
+    ///          }
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "allow", content = "ips")]
+    pub enum AllowedSourceIps {
+        #[serde(rename = "any")]
+        Any,
+        /// Restrict access to a specific set of source IP addresses or subnets.
+        ///
+        /// All others are prevented from reaching rack services.
+        #[serde(rename = "list")]
+        List(Vec<IpNet>),
+    }
+
+    impl From<&AllowedSourceIps> for AllowedSourceIps {
+        fn from(value: &AllowedSourceIps) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<Vec<IpNet>> for AllowedSourceIps {
+        fn from(value: Vec<IpNet>) -> Self {
+            Self::List(value)
+        }
+    }
+
     /// Properties that uniquely identify an Oxide hardware component
     ///
     /// <details><summary>JSON schema</summary>
@@ -1760,10 +1938,14 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "addr",
+    ///    "allowed_export",
+    ///    "allowed_import",
     ///    "bgp_announce_set",
     ///    "bgp_config",
+    ///    "communities",
     ///    "connect_retry",
     ///    "delay_open",
+    ///    "enforce_first_as",
     ///    "hold_time",
     ///    "idle_hold_time",
     ///    "interface_name",
@@ -1774,6 +1956,22 @@ pub mod types {
     ///      "description": "The address of the host to peer with.",
     ///      "type": "string",
     ///      "format": "ip"
+    ///    },
+    ///    "allowed_export": {
+    ///      "description": "Define export policy for a peer.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ImportExportPolicy"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "allowed_import": {
+    ///      "description": "Define import policy for a peer.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ImportExportPolicy"
+    ///        }
+    ///      ]
     ///    },
     ///    "bgp_announce_set": {
     ///      "description": "The set of announcements advertised by the peer.",
@@ -1792,6 +1990,16 @@ pub mod types {
     ///        }
     ///      ]
     ///    },
+    ///    "communities": {
+    ///      "description": "Include the provided communities in updates sent to
+    /// the peer.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "integer",
+    ///        "format": "uint32",
+    ///        "minimum": 0.0
+    ///      }
+    ///    },
     ///    "connect_retry": {
     ///      "description": "How long to to wait between TCP connection retries
     /// (seconds).",
@@ -1805,6 +2013,11 @@ pub mod types {
     ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
+    ///    },
+    ///    "enforce_first_as": {
+    ///      "description": "Enforce that the first AS in paths received from
+    /// this peer is the peer's AS.",
+    ///      "type": "boolean"
     ///    },
     ///    "hold_time": {
     ///      "description": "How long to hold peer connections between
@@ -1832,6 +2045,62 @@ pub mod types {
     ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
+    ///    },
+    ///    "local_pref": {
+    ///      "description": "Apply a local preference to routes received from
+    /// this peer.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "md5_auth_key": {
+    ///      "description": "Use the given key for TCP-MD5 authentication with
+    /// the peer.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "min_ttl": {
+    ///      "description": "Require messages from a peer have a minimum IP time
+    /// to live field.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "multi_exit_discriminator": {
+    ///      "description": "Apply the provided multi-exit discriminator (MED)
+    /// updates sent to the peer.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "remote_asn": {
+    ///      "description": "Require that a peer has a specified ASN.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "vlan_id": {
+    ///      "description": "Associate a VLAN ID with a peer.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
     ///    }
     ///  }
     /// }
@@ -1841,16 +2110,25 @@ pub mod types {
     pub struct BgpPeer {
         /// The address of the host to peer with.
         pub addr: std::net::IpAddr,
+        /// Define export policy for a peer.
+        pub allowed_export: ImportExportPolicy,
+        /// Define import policy for a peer.
+        pub allowed_import: ImportExportPolicy,
         /// The set of announcements advertised by the peer.
         pub bgp_announce_set: NameOrId,
         /// The global BGP configuration used for establishing a session with
         /// this peer.
         pub bgp_config: NameOrId,
+        /// Include the provided communities in updates sent to the peer.
+        pub communities: Vec<u32>,
         /// How long to to wait between TCP connection retries (seconds).
         pub connect_retry: u32,
         /// How long to delay sending an open request after establishing a TCP
         /// session (seconds).
         pub delay_open: u32,
+        /// Enforce that the first AS in paths received from this peer is the
+        /// peer's AS.
+        pub enforce_first_as: bool,
         /// How long to hold peer connections between keppalives (seconds).
         pub hold_time: u32,
         /// How long to hold a peer in idle before attempting a new session
@@ -1863,6 +2141,25 @@ pub mod types {
         pub interface_name: String,
         /// How often to send keepalive requests (seconds).
         pub keepalive: u32,
+        /// Apply a local preference to routes received from this peer.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub local_pref: Option<u32>,
+        /// Use the given key for TCP-MD5 authentication with the peer.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub md5_auth_key: Option<String>,
+        /// Require messages from a peer have a minimum IP time to live field.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub min_ttl: Option<u8>,
+        /// Apply the provided multi-exit discriminator (MED) updates sent to
+        /// the peer.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub multi_exit_discriminator: Option<u32>,
+        /// Require that a peer has a specified ASN.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub remote_asn: Option<u32>,
+        /// Associate a VLAN ID with a peer.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub vlan_id: Option<u16>,
     }
 
     impl From<&BgpPeer> for BgpPeer {
@@ -9696,6 +9993,77 @@ pub mod types {
         }
     }
 
+    /// Define policy relating to the import and export of prefixes from a BGP
+    /// peer.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Define policy relating to the import and export of
+    /// prefixes from a BGP peer.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Do not perform any filtering.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "no_filtering"
+    ///          ]
+    ///        }
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "type",
+    ///        "value"
+    ///      ],
+    ///      "properties": {
+    ///        "type": {
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "allow"
+    ///          ]
+    ///        },
+    ///        "value": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/IpNet"
+    ///          }
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    #[serde(tag = "type", content = "value")]
+    pub enum ImportExportPolicy {
+        #[serde(rename = "no_filtering")]
+        NoFiltering,
+        #[serde(rename = "allow")]
+        Allow(Vec<IpNet>),
+    }
+
+    impl From<&ImportExportPolicy> for ImportExportPolicy {
+        fn from(value: &ImportExportPolicy) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<Vec<IpNet>> for ImportExportPolicy {
+        fn from(value: Vec<IpNet>) -> Self {
+            Self::Allow(value)
+        }
+    }
+
     /// View of an Instance
     ///
     /// <details><summary>JSON schema</summary>
@@ -11950,8 +12318,16 @@ pub mod types {
     ///  ],
     ///  "type": "string",
     ///  "pattern":
-    /// "^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,
-    /// 4}|([0-9a-fA-F]{1,4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/
+    /// "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:
+    /// |([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:
+    /// [0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,
+    /// 3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:
+    /// ){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,
+    /// 6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%
+    /// [0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,
+    /// 1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,
+    /// 1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,
+    /// 1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\\/
     /// ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$"
     /// }
     /// ```
@@ -11983,16 +12359,33 @@ pub mod types {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
             if regress::Regex::new(
-                "^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,\
-                 4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
+                "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:\
+                 |([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:\
+                 [0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,\
+                 3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:\
+                 [0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:\
+                 [0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:\
+                 0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,\
+                 3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:\
+                 ((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,\
+                 1}[0-9]){0,1}[0-9]))\\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
             )
             .unwrap()
             .find(value)
             .is_none()
             {
                 return Err("doesn't match pattern \
-                            \"^([fF][dD])[0-9a-fA-F]{2}:(([0-9a-fA-F]{1,4}:){6}[0-9a-fA-F]{1,\
-                            4}|([0-9a-fA-F]{1,4}:){1,6}:)([0-9a-fA-F]{1,4})?\\/\
+                            \"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,\
+                            7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,\
+                            5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,\
+                            4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,\
+                            4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,\
+                            4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:\
+                            [0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,\
+                            1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,\
+                            3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:\
+                            ((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,\
+                            3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\\/\
                             ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$\""
                     .into());
             }
@@ -18886,6 +19279,41 @@ pub mod types {
         }
     }
 
+    /// SwitchLinkState
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {}
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct SwitchLinkState(pub serde_json::Value);
+    impl std::ops::Deref for SwitchLinkState {
+        type Target = serde_json::Value;
+        fn deref(&self) -> &serde_json::Value {
+            &self.0
+        }
+    }
+
+    impl From<SwitchLinkState> for serde_json::Value {
+        fn from(value: SwitchLinkState) -> Self {
+            value.0
+        }
+    }
+
+    impl From<&SwitchLinkState> for SwitchLinkState {
+        fn from(value: &SwitchLinkState) -> Self {
+            value.clone()
+        }
+    }
+
+    impl From<serde_json::Value> for SwitchLinkState {
+        fn from(value: serde_json::Value) -> Self {
+            Self(value)
+        }
+    }
+
     /// Identifies switch physical location
     ///
     /// <details><summary>JSON schema</summary>
@@ -24106,6 +24534,120 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct AllowList {
+            allowed_ips: Result<super::AllowedSourceIps, String>,
+            time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            time_modified: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+        }
+
+        impl Default for AllowList {
+            fn default() -> Self {
+                Self {
+                    allowed_ips: Err("no value supplied for allowed_ips".to_string()),
+                    time_created: Err("no value supplied for time_created".to_string()),
+                    time_modified: Err("no value supplied for time_modified".to_string()),
+                }
+            }
+        }
+
+        impl AllowList {
+            pub fn allowed_ips<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::AllowedSourceIps>,
+                T::Error: std::fmt::Display,
+            {
+                self.allowed_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for allowed_ips: {}", e));
+                self
+            }
+            pub fn time_created<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_created = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_created: {}", e)
+                });
+                self
+            }
+            pub fn time_modified<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
+                T::Error: std::fmt::Display,
+            {
+                self.time_modified = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for time_modified: {}", e)
+                });
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AllowList> for super::AllowList {
+            type Error = super::error::ConversionError;
+            fn try_from(value: AllowList) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    allowed_ips: value.allowed_ips?,
+                    time_created: value.time_created?,
+                    time_modified: value.time_modified?,
+                })
+            }
+        }
+
+        impl From<super::AllowList> for AllowList {
+            fn from(value: super::AllowList) -> Self {
+                Self {
+                    allowed_ips: Ok(value.allowed_ips),
+                    time_created: Ok(value.time_created),
+                    time_modified: Ok(value.time_modified),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct AllowListUpdate {
+            allowed_ips: Result<super::AllowedSourceIps, String>,
+        }
+
+        impl Default for AllowListUpdate {
+            fn default() -> Self {
+                Self {
+                    allowed_ips: Err("no value supplied for allowed_ips".to_string()),
+                }
+            }
+        }
+
+        impl AllowListUpdate {
+            pub fn allowed_ips<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::AllowedSourceIps>,
+                T::Error: std::fmt::Display,
+            {
+                self.allowed_ips = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for allowed_ips: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<AllowListUpdate> for super::AllowListUpdate {
+            type Error = super::error::ConversionError;
+            fn try_from(value: AllowListUpdate) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    allowed_ips: value.allowed_ips?,
+                })
+            }
+        }
+
+        impl From<super::AllowListUpdate> for AllowListUpdate {
+            fn from(value: super::AllowListUpdate) -> Self {
+                Self {
+                    allowed_ips: Ok(value.allowed_ips),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct Baseboard {
             part: Result<String, String>,
             revision: Result<i64, String>,
@@ -25173,28 +25715,48 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct BgpPeer {
             addr: Result<std::net::IpAddr, String>,
+            allowed_export: Result<super::ImportExportPolicy, String>,
+            allowed_import: Result<super::ImportExportPolicy, String>,
             bgp_announce_set: Result<super::NameOrId, String>,
             bgp_config: Result<super::NameOrId, String>,
+            communities: Result<Vec<u32>, String>,
             connect_retry: Result<u32, String>,
             delay_open: Result<u32, String>,
+            enforce_first_as: Result<bool, String>,
             hold_time: Result<u32, String>,
             idle_hold_time: Result<u32, String>,
             interface_name: Result<String, String>,
             keepalive: Result<u32, String>,
+            local_pref: Result<Option<u32>, String>,
+            md5_auth_key: Result<Option<String>, String>,
+            min_ttl: Result<Option<u8>, String>,
+            multi_exit_discriminator: Result<Option<u32>, String>,
+            remote_asn: Result<Option<u32>, String>,
+            vlan_id: Result<Option<u16>, String>,
         }
 
         impl Default for BgpPeer {
             fn default() -> Self {
                 Self {
                     addr: Err("no value supplied for addr".to_string()),
+                    allowed_export: Err("no value supplied for allowed_export".to_string()),
+                    allowed_import: Err("no value supplied for allowed_import".to_string()),
                     bgp_announce_set: Err("no value supplied for bgp_announce_set".to_string()),
                     bgp_config: Err("no value supplied for bgp_config".to_string()),
+                    communities: Err("no value supplied for communities".to_string()),
                     connect_retry: Err("no value supplied for connect_retry".to_string()),
                     delay_open: Err("no value supplied for delay_open".to_string()),
+                    enforce_first_as: Err("no value supplied for enforce_first_as".to_string()),
                     hold_time: Err("no value supplied for hold_time".to_string()),
                     idle_hold_time: Err("no value supplied for idle_hold_time".to_string()),
                     interface_name: Err("no value supplied for interface_name".to_string()),
                     keepalive: Err("no value supplied for keepalive".to_string()),
+                    local_pref: Ok(Default::default()),
+                    md5_auth_key: Ok(Default::default()),
+                    min_ttl: Ok(Default::default()),
+                    multi_exit_discriminator: Ok(Default::default()),
+                    remote_asn: Ok(Default::default()),
+                    vlan_id: Ok(Default::default()),
                 }
             }
         }
@@ -25208,6 +25770,26 @@ pub mod types {
                 self.addr = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for addr: {}", e));
+                self
+            }
+            pub fn allowed_export<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ImportExportPolicy>,
+                T::Error: std::fmt::Display,
+            {
+                self.allowed_export = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for allowed_export: {}", e)
+                });
+                self
+            }
+            pub fn allowed_import<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::ImportExportPolicy>,
+                T::Error: std::fmt::Display,
+            {
+                self.allowed_import = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for allowed_import: {}", e)
+                });
                 self
             }
             pub fn bgp_announce_set<T>(mut self, value: T) -> Self
@@ -25233,6 +25815,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bgp_config: {}", e));
                 self
             }
+            pub fn communities<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Vec<u32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.communities = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for communities: {}", e));
+                self
+            }
             pub fn connect_retry<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u32>,
@@ -25251,6 +25843,19 @@ pub mod types {
                 self.delay_open = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for delay_open: {}", e));
+                self
+            }
+            pub fn enforce_first_as<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.enforce_first_as = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for enforce_first_as: {}",
+                        e
+                    )
+                });
                 self
             }
             pub fn hold_time<T>(mut self, value: T) -> Self
@@ -25293,6 +25898,69 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for keepalive: {}", e));
                 self
             }
+            pub fn local_pref<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.local_pref = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for local_pref: {}", e));
+                self
+            }
+            pub fn md5_auth_key<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<String>>,
+                T::Error: std::fmt::Display,
+            {
+                self.md5_auth_key = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for md5_auth_key: {}", e)
+                });
+                self
+            }
+            pub fn min_ttl<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u8>>,
+                T::Error: std::fmt::Display,
+            {
+                self.min_ttl = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min_ttl: {}", e));
+                self
+            }
+            pub fn multi_exit_discriminator<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.multi_exit_discriminator = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for multi_exit_discriminator: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn remote_asn<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u32>>,
+                T::Error: std::fmt::Display,
+            {
+                self.remote_asn = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for remote_asn: {}", e));
+                self
+            }
+            pub fn vlan_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u16>>,
+                T::Error: std::fmt::Display,
+            {
+                self.vlan_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<BgpPeer> for super::BgpPeer {
@@ -25300,14 +25968,24 @@ pub mod types {
             fn try_from(value: BgpPeer) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     addr: value.addr?,
+                    allowed_export: value.allowed_export?,
+                    allowed_import: value.allowed_import?,
                     bgp_announce_set: value.bgp_announce_set?,
                     bgp_config: value.bgp_config?,
+                    communities: value.communities?,
                     connect_retry: value.connect_retry?,
                     delay_open: value.delay_open?,
+                    enforce_first_as: value.enforce_first_as?,
                     hold_time: value.hold_time?,
                     idle_hold_time: value.idle_hold_time?,
                     interface_name: value.interface_name?,
                     keepalive: value.keepalive?,
+                    local_pref: value.local_pref?,
+                    md5_auth_key: value.md5_auth_key?,
+                    min_ttl: value.min_ttl?,
+                    multi_exit_discriminator: value.multi_exit_discriminator?,
+                    remote_asn: value.remote_asn?,
+                    vlan_id: value.vlan_id?,
                 })
             }
         }
@@ -25316,14 +25994,24 @@ pub mod types {
             fn from(value: super::BgpPeer) -> Self {
                 Self {
                     addr: Ok(value.addr),
+                    allowed_export: Ok(value.allowed_export),
+                    allowed_import: Ok(value.allowed_import),
                     bgp_announce_set: Ok(value.bgp_announce_set),
                     bgp_config: Ok(value.bgp_config),
+                    communities: Ok(value.communities),
                     connect_retry: Ok(value.connect_retry),
                     delay_open: Ok(value.delay_open),
+                    enforce_first_as: Ok(value.enforce_first_as),
                     hold_time: Ok(value.hold_time),
                     idle_hold_time: Ok(value.idle_hold_time),
                     interface_name: Ok(value.interface_name),
                     keepalive: Ok(value.keepalive),
+                    local_pref: Ok(value.local_pref),
+                    md5_auth_key: Ok(value.md5_auth_key),
+                    min_ttl: Ok(value.min_ttl),
+                    multi_exit_discriminator: Ok(value.multi_exit_discriminator),
+                    remote_asn: Ok(value.remote_asn),
+                    vlan_id: Ok(value.vlan_id),
                 }
             }
         }
@@ -42663,6 +43351,24 @@ pub trait ClientSystemHardwareExt {
     ///    .await;
     /// ```
     fn networking_switch_port_clear_settings(&self) -> builder::NetworkingSwitchPortClearSettings;
+    /// Get switch port status
+    ///
+    /// Sends a `GET` request to `/v1/system/hardware/switch-port/{port}/status`
+    ///
+    /// Arguments:
+    /// - `port`: A name to use when selecting switch ports.
+    /// - `rack_id`: A rack id to use when selecting switch ports.
+    /// - `switch_location`: A switch location to use when selecting switch
+    ///   ports.
+    /// ```ignore
+    /// let response = client.networking_switch_port_status()
+    ///    .port(port)
+    ///    .rack_id(rack_id)
+    ///    .switch_location(switch_location)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_switch_port_status(&self) -> builder::NetworkingSwitchPortStatus;
     /// List switches
     ///
     /// Sends a `GET` request to `/v1/system/hardware/switches`
@@ -42751,6 +43457,10 @@ impl ClientSystemHardwareExt for Client {
 
     fn networking_switch_port_clear_settings(&self) -> builder::NetworkingSwitchPortClearSettings {
         builder::NetworkingSwitchPortClearSettings::new(self)
+    }
+
+    fn networking_switch_port_status(&self) -> builder::NetworkingSwitchPortStatus {
+        builder::NetworkingSwitchPortStatus::new(self)
     }
 
     fn switch_list(&self) -> builder::SwitchList {
@@ -43128,6 +43838,27 @@ pub trait ClientSystemNetworkingExt {
     ///    .await;
     /// ```
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList;
+    /// Get user-facing services IP allowlist
+    ///
+    /// Sends a `GET` request to `/v1/system/networking/allow-list`
+    ///
+    /// ```ignore
+    /// let response = client.networking_allow_list_view()
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_allow_list_view(&self) -> builder::NetworkingAllowListView;
+    /// Update user-facing services IP allowlist
+    ///
+    /// Sends a `PUT` request to `/v1/system/networking/allow-list`
+    ///
+    /// ```ignore
+    /// let response = client.networking_allow_list_update()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    fn networking_allow_list_update(&self) -> builder::NetworkingAllowListUpdate;
     /// Disable a BFD session
     ///
     /// Sends a `POST` request to `/v1/system/networking/bfd-disable`
@@ -43478,6 +44209,14 @@ impl ClientSystemNetworkingExt for Client {
 
     fn networking_address_lot_block_list(&self) -> builder::NetworkingAddressLotBlockList {
         builder::NetworkingAddressLotBlockList::new(self)
+    }
+
+    fn networking_allow_list_view(&self) -> builder::NetworkingAllowListView {
+        builder::NetworkingAllowListView::new(self)
+    }
+
+    fn networking_allow_list_update(&self) -> builder::NetworkingAllowListUpdate {
+        builder::NetworkingAllowListUpdate::new(self)
     }
 
     fn networking_bfd_disable(&self) -> builder::NetworkingBfdDisable {
@@ -54419,6 +55158,104 @@ pub mod builder {
         }
     }
 
+    /// Builder for [`ClientSystemHardwareExt::networking_switch_port_status`]
+    ///
+    /// [`ClientSystemHardwareExt::networking_switch_port_status`]: super::ClientSystemHardwareExt::networking_switch_port_status
+    #[derive(Debug, Clone)]
+    pub struct NetworkingSwitchPortStatus<'a> {
+        client: &'a super::Client,
+        port: Result<types::Name, String>,
+        rack_id: Result<uuid::Uuid, String>,
+        switch_location: Result<types::Name, String>,
+    }
+
+    impl<'a> NetworkingSwitchPortStatus<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                port: Err("port was not initialized".to_string()),
+                rack_id: Err("rack_id was not initialized".to_string()),
+                switch_location: Err("switch_location was not initialized".to_string()),
+            }
+        }
+
+        pub fn port<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.port = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for port failed".to_string());
+            self
+        }
+
+        pub fn rack_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<uuid::Uuid>,
+        {
+            self.rack_id = value
+                .try_into()
+                .map_err(|_| "conversion to `uuid :: Uuid` for rack_id failed".to_string());
+            self
+        }
+
+        pub fn switch_location<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::Name>,
+        {
+            self.switch_location = value
+                .try_into()
+                .map_err(|_| "conversion to `Name` for switch_location failed".to_string());
+            self
+        }
+
+        /// Sends a `GET` request to
+        /// `/v1/system/hardware/switch-port/{port}/status`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::SwitchLinkState>, Error<types::Error>> {
+            let Self {
+                client,
+                port,
+                rack_id,
+                switch_location,
+            } = self;
+            let port = port.map_err(Error::InvalidRequest)?;
+            let rack_id = rack_id.map_err(Error::InvalidRequest)?;
+            let switch_location = switch_location.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/v1/system/hardware/switch-port/{}/status",
+                client.baseurl,
+                encode_path(&port.to_string()),
+            );
+            let mut query = Vec::with_capacity(2usize);
+            query.push(("rack_id", rack_id.to_string()));
+            query.push(("switch_location", switch_location.to_string()));
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&query)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
     /// Builder for [`ClientSystemHardwareExt::switch_list`]
     ///
     /// [`ClientSystemHardwareExt::switch_list`]: super::ClientSystemHardwareExt::switch_list
@@ -57419,6 +58256,116 @@ pub mod builder {
                 })
                 .try_flatten_stream()
                 .boxed()
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_allow_list_view`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_allow_list_view`]: super::ClientSystemNetworkingExt::networking_allow_list_view
+    #[derive(Debug, Clone)]
+    pub struct NetworkingAllowListView<'a> {
+        client: &'a super::Client,
+    }
+
+    impl<'a> NetworkingAllowListView<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+
+        /// Sends a `GET` request to `/v1/system/networking/allow-list`
+        pub async fn send(self) -> Result<ResponseValue<types::AllowList>, Error<types::Error>> {
+            let Self { client } = self;
+            let url = format!("{}/v1/system/networking/allow-list", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+
+    /// Builder for [`ClientSystemNetworkingExt::networking_allow_list_update`]
+    ///
+    /// [`ClientSystemNetworkingExt::networking_allow_list_update`]: super::ClientSystemNetworkingExt::networking_allow_list_update
+    #[derive(Debug, Clone)]
+    pub struct NetworkingAllowListUpdate<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::AllowListUpdate, String>,
+    }
+
+    impl<'a> NetworkingAllowListUpdate<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(types::builder::AllowListUpdate::default()),
+            }
+        }
+
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::AllowListUpdate>,
+            <V as std::convert::TryInto<types::AllowListUpdate>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `AllowListUpdate` for body failed: {}", s));
+            self
+        }
+
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::AllowListUpdate) -> types::builder::AllowListUpdate,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+
+        /// Sends a `PUT` request to `/v1/system/networking/allow-list`
+        pub async fn send(self) -> Result<ResponseValue<types::AllowList>, Error<types::Error>> {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::AllowListUpdate::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/v1/system/networking/allow-list", client.baseurl,);
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .put(url)
+                .header(
+                    reqwest::header::ACCEPT,
+                    reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .build()?;
+            let result = client.client.execute(request).await;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16..=499u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                500u16..=599u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
         }
     }
 

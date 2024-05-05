@@ -14,9 +14,7 @@ use async_trait::async_trait;
 use cli_builder::NewCli;
 use generated_cli::CliConfig;
 use oxide::context::Context;
-use oxide::types::{
-    AllowedSourceIps, IdpMetadataSource, IpAllowList, IpRange, Ipv4Range, Ipv6Range,
-};
+use oxide::types::{AllowedSourceIps, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
 
 mod cli_builder;
 mod cmd_api;
@@ -237,9 +235,9 @@ impl CliConfig for OxideOverride {
             Some("ips") => {
                 let values: Vec<IpOrNet> = matches.get_many("ips").unwrap().cloned().collect();
                 *request = request.to_owned().body_map(|body| {
-                    body.allowed_ips(AllowedSourceIps::List(IpAllowList(
+                    body.allowed_ips(AllowedSourceIps::List(
                         values.into_iter().map(IpOrNet::into_ip_net).collect(),
-                    )))
+                    ))
                 });
             }
             _ => unreachable!("invalid value for allow-list group"),
