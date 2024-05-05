@@ -376,13 +376,14 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("system networking loopback-address delete")
         }
 
-        CliCommand::NetworkingSwitchPortList => Some("system hardware switch-port list"),
         CliCommand::NetworkingSwitchPortApplySettings => {
             Some("system hardware switch-port apply-settings")
         }
         CliCommand::NetworkingSwitchPortClearSettings => {
             Some("system hardware switch-port clear-settings")
         }
+        CliCommand::NetworkingSwitchPortList => Some("system hardware switch-port list"),
+        CliCommand::NetworkingSwitchPortStatus => Some("system hardware switch-port status"),
         CliCommand::NetworkingSwitchPortSettingsList => {
             Some("system networking switch-port-settings list")
         }
