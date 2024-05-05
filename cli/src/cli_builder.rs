@@ -405,8 +405,7 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
             Some("system hardware switch-port clear-settings")
         }
         CliCommand::NetworkingSwitchPortList => Some("system hardware switch-port list"),
-        CliCommand::NetworkingSwitchPortStatus => Some("system networking switch-port status"),
-
+        CliCommand::NetworkingSwitchPortStatus => Some("system hardware switch-port status"),
         CliCommand::NetworkingSwitchPortSettingsList => {
             Some("system networking switch-port-settings list")
         }
