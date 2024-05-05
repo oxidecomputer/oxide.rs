@@ -57,6 +57,7 @@ toml = "0.8.12"
 toml_edit = "0.22.12"
 url = "2.5.0"
 uuid = { version = "1.8.0", features = ["serde", "v4"] }
+colored = "2.1.0"
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]
