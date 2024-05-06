@@ -117,6 +117,28 @@ impl<'a> Default for NewCli<'a> {
                             .multiple(false),
                     ),
 
+                CliCommand::NetworkingAllowListUpdate => cmd
+                    .mut_arg("json-body", |arg| arg.required(false))
+                    .arg(
+                        clap::Arg::new("any")
+                            .long("any")
+                            .action(clap::ArgAction::SetTrue)
+                            .value_parser(clap::value_parser!(bool)),
+                    )
+                    .arg(
+                        clap::Arg::new("ips")
+                            .long("ip")
+                            .action(clap::ArgAction::Append)
+                            .value_name("IP or IPNET")
+                            .value_parser(clap::value_parser!(crate::IpOrNet)),
+                    )
+                    .group(
+                        clap::ArgGroup::new("allow-list")
+                            .args(["ips", "any"])
+                            .required(true)
+                            .multiple(false),
+                    ),
+
                 // Command is fine as-is.
                 _ => cmd,
             };
@@ -466,6 +488,9 @@ fn xxx<'a>(command: CliCommand) -> Option<&'a str> {
 
         CliCommand::SystemPolicyView => Some("system policy view"),
         CliCommand::SystemPolicyUpdate => Some("system policy update"),
+
+        CliCommand::NetworkingAllowListView => Some("system networking allow-list view"),
+        CliCommand::NetworkingAllowListUpdate => Some("system networking allow-list update"),
 
         CliCommand::CurrentUserView => Some("current-user view"),
         CliCommand::CurrentUserGroups => Some("current-user groups"),
