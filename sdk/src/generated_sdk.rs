@@ -2210,8 +2210,8 @@ pub mod types {
     ///  "description": "The current state of a BGP peer.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "Initial state. Refuse all incomming BGP
-    /// connections. No resources allocated to peer.",
+    ///      "description": "Initial state. Refuse all incoming BGP connections.
+    /// No resources allocated to peer.",
     ///      "type": "string",
     ///      "enum": [
     ///        "idle"
@@ -2255,7 +2255,7 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "Session established. Able to exchange update,
-    /// notification and keepliave messages with peers.",
+    /// notification and keepalive messages with peers.",
     ///      "type": "string",
     ///      "enum": [
     ///        "established"
@@ -2279,7 +2279,7 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum BgpPeerState {
-        /// Initial state. Refuse all incomming BGP connections. No resources
+        /// Initial state. Refuse all incoming BGP connections. No resources
         /// allocated to peer.
         #[serde(rename = "idle")]
         Idle,
@@ -2300,7 +2300,7 @@ pub mod types {
         #[serde(rename = "session_setup")]
         SessionSetup,
         /// Session established. Able to exchange update, notification and
-        /// keepliave messages with peers.
+        /// keepalive messages with peers.
         #[serde(rename = "established")]
         Established,
     }
@@ -12704,7 +12704,7 @@ pub mod types {
     ///  "description": "The forward error correction mode of a link.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "Firecode foward error correction.",
+    ///      "description": "Firecode forward error correction.",
     ///      "type": "string",
     ///      "enum": [
     ///        "firecode"
@@ -12742,7 +12742,7 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum LinkFec {
-        /// Firecode foward error correction.
+        /// Firecode forward error correction.
         #[serde(rename = "firecode")]
         Firecode,
         /// No forward error correction.
