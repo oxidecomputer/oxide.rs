@@ -69,8 +69,31 @@ impl RunnableCmd for CmdPortConfig {
                     .await?
                     .into_inner();
 
-                println!("{}", p.port_name.blue());
-                println!("{}", "=".repeat(p.port_name.len()).dimmed());
+                println!(
+                    "{}{}{}",
+                    p.switch_location.to_string().blue(),
+                    "/".dimmed(),
+                    p.port_name.blue(),
+                );
+
+                println!(
+                    "{}",
+                    "=".repeat(p.port_name.len() + p.switch_location.to_string().len() + 1)
+                        .dimmed()
+                );
+
+                writeln!(
+                    &mut tw,
+                    "{}\t{}\t{}",
+                    "Autoneg".dimmed(),
+                    "Fec".dimmed(),
+                    "Speed".dimmed(),
+                )?;
+
+                for l in &config.links {
+                    writeln!(&mut tw, "{:?}\t{:?}\t{:?}", l.autoneg, l.fec, l.speed,)?;
+                }
+                tw.flush()?;
                 println!("");
 
                 writeln!(&mut tw, "{}\t{}", "Address".dimmed(), "Lot".dimmed())?;
@@ -85,19 +108,60 @@ impl RunnableCmd for CmdPortConfig {
                         .find(|x| x.1.id == a.address_lot_block_id)
                         .unwrap();
 
-                    writeln!(&mut tw, "{}\t{}", addr, alb.0.name.to_string())?;
+                    writeln!(&mut tw, "{}\t{}", addr, *alb.0.name)?;
                 }
                 tw.flush()?;
                 println!("");
 
-                writeln!(&mut tw, "{}", "BGP Peer".dimmed())?;
+                writeln!(
+                    &mut tw,
+                    "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                    "BGP Peer".dimmed(),
+                    "Export".dimmed(),
+                    "Import".dimmed(),
+                    "Communities".dimmed(),
+                    "Connect Retry".dimmed(),
+                    "Delay Open".dimmed(),
+                    "Enforce First AS".dimmed(),
+                    "Hold Time".dimmed(),
+                    "Idle Hold Time".dimmed(),
+                    "Keepalive".dimmed(),
+                    "Local Pref".dimmed(),
+                    "Md5 Auth".dimmed(),
+                    "Min TTL".dimmed(),
+                    "MED".dimmed(),
+                    "Remote ASN".dimmed(),
+                    "VLAN".dimmed(),
+                )?;
                 for p in &config.bgp_peers {
-                    writeln!(&mut tw, "{}", p.addr)?;
+                    writeln!(
+                        &mut tw,
+                        "{}\t{:?}\t{:?}\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}",
+                        p.addr,
+                        p.allowed_export,
+                        p.allowed_import,
+                        p.communities,
+                        p.connect_retry,
+                        p.delay_open,
+                        p.enforce_first_as,
+                        p.hold_time,
+                        p.idle_hold_time,
+                        p.keepalive,
+                        p.local_pref,
+                        p.md5_auth_key,
+                        p.min_ttl,
+                        p.multi_exit_discriminator,
+                        p.remote_asn,
+                        p.vlan_id,
+                    )?;
                 }
+                tw.flush()?;
+                println!("");
 
-                println!("");
-                println!("{:#?}", config);
-                println!("");
+                // Uncomment to see full payload
+                //println!("");
+                //println!("{:#?}", config);
+                //println!("");
             }
         }
 

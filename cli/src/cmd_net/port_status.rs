@@ -69,12 +69,30 @@ struct LinkStatus {
     speed: String,
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum ReceiverPower {
+    /// The measurement is represents average optical power, in mW.
+    Average(f32),
+
+    /// The measurement represents a peak-to-peak, in mW.
+    PeakToPeak(f32),
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+struct Monitors {
+    receiver_power: Vec<ReceiverPower>,
+    transmitter_bias_current: Vec<f32>,
+    transmitter_power: Vec<f32>,
+}
+
 impl CmdPortStatus {
     async fn show_switch(&self, c: &Client, sw: &str, ports: &Vec<&SwitchPort>) -> Result<()> {
-        let mut tw = TabWriter::new(std::io::stdout()).ansi(true);
+        let mut ltw = TabWriter::new(std::io::stdout()).ansi(true);
+        let mut mtw = TabWriter::new(std::io::stdout()).ansi(true);
 
         writeln!(
-            &mut tw,
+            &mut ltw,
             "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
             "Port".dimmed(),
             "Configured".dimmed(),
@@ -85,6 +103,14 @@ impl CmdPortStatus {
             "Link/FSM State".dimmed(),
             "Media".dimmed(),
             "Speed".dimmed(),
+        )?;
+
+        writeln!(
+            &mut mtw,
+            "{}\t{}\t{}",
+            "Receiver Power".dimmed(),
+            "Transmitter Bias Current".dimmed(),
+            "Transmitter Power".dimmed(),
         )?;
 
         for p in ports {
@@ -107,7 +133,7 @@ impl CmdPortStatus {
             });
 
             writeln!(
-                &mut tw,
+                &mut ltw,
                 "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                 p.port_name,
                 p.port_settings_id.is_some(),
@@ -141,10 +167,35 @@ impl CmdPortStatus {
                     .map(|x| x.speed.clone())
                     .unwrap_or("-".to_string()),
             )?;
+
+            let monitors = status.as_ref().map(|x| {
+                let ls: Monitors =
+                    serde_json::from_value(x.get("monitors").unwrap().clone()).unwrap();
+                ls
+            });
+
+            writeln!(
+                &mut mtw,
+                "{}\t{}\t{}",
+                monitors
+                    .as_ref()
+                    .map(|x| format!("{:?}", x.receiver_power))
+                    .unwrap_or("-".to_string()),
+                monitors
+                    .as_ref()
+                    .map(|x| format!("{:?}", x.transmitter_bias_current))
+                    .unwrap_or("-".to_string()),
+                monitors
+                    .as_ref()
+                    .map(|x| format!("{:?}", x.transmitter_power))
+                    .unwrap_or("-".to_string()),
+            )?;
         }
 
-        tw.flush()?;
-        println!("");
+        ltw.flush()?;
+        println!();
+        mtw.flush()?;
+        println!();
 
         Ok(())
     }

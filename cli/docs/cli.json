@@ -1967,6 +1967,33 @@
       ]
     },
     {
+      "name": "net",
+      "subcommands": [
+        {
+          "name": "bgp",
+          "subcommands": [
+            {
+              "name": "status",
+              "about": "Get the status of switch ports."
+            }
+          ]
+        },
+        {
+          "name": "port",
+          "subcommands": [
+            {
+              "name": "config",
+              "about": "Get the configuration of switch ports."
+            },
+            {
+              "name": "status",
+              "about": "Get the status of switch ports."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "ping",
       "about": "Ping API",
       "long_about": "Always responds with Ok if it responds at all."

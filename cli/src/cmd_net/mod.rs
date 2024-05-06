@@ -4,10 +4,12 @@
 
 use crate::cli_builder::NewCli;
 
+mod bgp_status;
 mod port_config;
 mod port_status;
 
 pub fn make_cli(cli: NewCli<'static>) -> NewCli<'static> {
     cli.add_custom::<port_status::CmdPortStatus>("net port status")
         .add_custom::<port_config::CmdPortConfig>("net port config")
+        .add_custom::<bgp_status::CmdBgpStatus>("net bgp status")
 }
