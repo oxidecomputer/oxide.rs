@@ -1940,7 +1940,6 @@ pub mod types {
     ///    "addr",
     ///    "allowed_export",
     ///    "allowed_import",
-    ///    "bgp_announce_set",
     ///    "bgp_config",
     ///    "communities",
     ///    "connect_retry",
@@ -1970,14 +1969,6 @@ pub mod types {
     ///      "allOf": [
     ///        {
     ///          "$ref": "#/components/schemas/ImportExportPolicy"
-    ///        }
-    ///      ]
-    ///    },
-    ///    "bgp_announce_set": {
-    ///      "description": "The set of announcements advertised by the peer.",
-    ///      "allOf": [
-    ///        {
-    ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
     ///      ]
     ///    },
@@ -2021,7 +2012,7 @@ pub mod types {
     ///    },
     ///    "hold_time": {
     ///      "description": "How long to hold peer connections between
-    /// keppalives (seconds).",
+    /// keepalives (seconds).",
     ///      "type": "integer",
     ///      "format": "uint32",
     ///      "minimum": 0.0
@@ -2114,8 +2105,6 @@ pub mod types {
         pub allowed_export: ImportExportPolicy,
         /// Define import policy for a peer.
         pub allowed_import: ImportExportPolicy,
-        /// The set of announcements advertised by the peer.
-        pub bgp_announce_set: NameOrId,
         /// The global BGP configuration used for establishing a session with
         /// this peer.
         pub bgp_config: NameOrId,
@@ -2129,7 +2118,7 @@ pub mod types {
         /// Enforce that the first AS in paths received from this peer is the
         /// peer's AS.
         pub enforce_first_as: bool,
-        /// How long to hold peer connections between keppalives (seconds).
+        /// How long to hold peer connections between keepalives (seconds).
         pub hold_time: u32,
         /// How long to hold a peer in idle before attempting a new session
         /// (seconds).
@@ -2221,8 +2210,8 @@ pub mod types {
     ///  "description": "The current state of a BGP peer.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "Initial state. Refuse all incomming BGP
-    /// connections. No resources allocated to peer.",
+    ///      "description": "Initial state. Refuse all incoming BGP connections.
+    /// No resources allocated to peer.",
     ///      "type": "string",
     ///      "enum": [
     ///        "idle"
@@ -2266,7 +2255,7 @@ pub mod types {
     ///    },
     ///    {
     ///      "description": "Session established. Able to exchange update,
-    /// notification and keepliave messages with peers.",
+    /// notification and keepalive messages with peers.",
     ///      "type": "string",
     ///      "enum": [
     ///        "established"
@@ -2290,7 +2279,7 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum BgpPeerState {
-        /// Initial state. Refuse all incomming BGP connections. No resources
+        /// Initial state. Refuse all incoming BGP connections. No resources
         /// allocated to peer.
         #[serde(rename = "idle")]
         Idle,
@@ -2311,7 +2300,7 @@ pub mod types {
         #[serde(rename = "session_setup")]
         SessionSetup,
         /// Session established. Able to exchange update, notification and
-        /// keepliave messages with peers.
+        /// keepalive messages with peers.
         #[serde(rename = "established")]
         Established,
     }
@@ -12715,7 +12704,7 @@ pub mod types {
     ///  "description": "The forward error correction mode of a link.",
     ///  "oneOf": [
     ///    {
-    ///      "description": "Firecode foward error correction.",
+    ///      "description": "Firecode forward error correction.",
     ///      "type": "string",
     ///      "enum": [
     ///        "firecode"
@@ -12753,7 +12742,7 @@ pub mod types {
         schemars :: JsonSchema,
     )]
     pub enum LinkFec {
-        /// Firecode foward error correction.
+        /// Firecode forward error correction.
         #[serde(rename = "firecode")]
         Firecode,
         /// No forward error correction.
@@ -19595,72 +19584,6 @@ pub mod types {
         }
     }
 
-    /// A BGP peer configuration for a port settings object.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    /// {
-    ///  "description": "A BGP peer configuration for a port settings object.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "addr",
-    ///    "bgp_config_id",
-    ///    "interface_name",
-    ///    "port_settings_id"
-    ///  ],
-    ///  "properties": {
-    ///    "addr": {
-    ///      "description": "The address of the peer.",
-    ///      "type": "string",
-    ///      "format": "ip"
-    ///    },
-    ///    "bgp_config_id": {
-    ///      "description": "The id of the global BGP configuration referenced
-    /// by this peer configuration.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "interface_name": {
-    ///      "description": "The interface name used to establish a peer
-    /// session.",
-    ///      "type": "string"
-    ///    },
-    ///    "port_settings_id": {
-    ///      "description": "The port settings object this BGP configuration
-    /// belongs to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    }
-    ///  }
-    /// }
-    /// ```
-    /// </details>
-    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
-    pub struct SwitchPortBgpPeerConfig {
-        /// The address of the peer.
-        pub addr: std::net::IpAddr,
-        /// The id of the global BGP configuration referenced by this peer
-        /// configuration.
-        pub bgp_config_id: uuid::Uuid,
-        /// The interface name used to establish a peer session.
-        pub interface_name: String,
-        /// The port settings object this BGP configuration belongs to.
-        pub port_settings_id: uuid::Uuid,
-    }
-
-    impl From<&SwitchPortBgpPeerConfig> for SwitchPortBgpPeerConfig {
-        fn from(value: &SwitchPortBgpPeerConfig) -> Self {
-            value.clone()
-        }
-    }
-
-    impl SwitchPortBgpPeerConfig {
-        pub fn builder() -> builder::SwitchPortBgpPeerConfig {
-            Default::default()
-        }
-    }
-
     /// A physical port configuration for a port settings object.
     ///
     /// <details><summary>JSON schema</summary>
@@ -19984,12 +19907,28 @@ pub mod types {
     ///  "description": "A link configuration for a port settings object.",
     ///  "type": "object",
     ///  "required": [
+    ///    "autoneg",
+    ///    "fec",
     ///    "link_name",
     ///    "lldp_service_config_id",
     ///    "mtu",
-    ///    "port_settings_id"
+    ///    "port_settings_id",
+    ///    "speed"
     ///  ],
     ///  "properties": {
+    ///    "autoneg": {
+    ///      "description": "Whether or not the link has autonegotiation
+    /// enabled.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "fec": {
+    ///      "description": "The forward error correction mode of the link.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/LinkFec"
+    ///        }
+    ///      ]
+    ///    },
     ///    "link_name": {
     ///      "description": "The name of this link.",
     ///      "type": "string"
@@ -20011,6 +19950,14 @@ pub mod types {
     /// to.",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "speed": {
+    ///      "description": "The configured speed of the link.",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/LinkSpeed"
+    ///        }
+    ///      ]
     ///    }
     ///  }
     /// }
@@ -20018,6 +19965,10 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct SwitchPortLinkConfig {
+        /// Whether or not the link has autonegotiation enabled.
+        pub autoneg: bool,
+        /// The forward error correction mode of the link.
+        pub fec: LinkFec,
         /// The name of this link.
         pub link_name: String,
         /// The link-layer discovery protocol service configuration id for this
@@ -20027,6 +19978,8 @@ pub mod types {
         pub mtu: u16,
         /// The port settings this link configuration belongs to.
         pub port_settings_id: uuid::Uuid,
+        /// The configured speed of the link.
+        pub speed: LinkSpeed,
     }
 
     impl From<&SwitchPortLinkConfig> for SwitchPortLinkConfig {
@@ -20512,7 +20465,7 @@ pub mod types {
     ///      "description": "BGP peer settings.",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/SwitchPortBgpPeerConfig"
+    ///        "$ref": "#/components/schemas/BgpPeer"
     ///      }
     ///    },
     ///    "groups": {
@@ -20583,7 +20536,7 @@ pub mod types {
         /// Layer 3 IP address settings.
         pub addresses: Vec<SwitchPortAddressConfig>,
         /// BGP peer settings.
-        pub bgp_peers: Vec<SwitchPortBgpPeerConfig>,
+        pub bgp_peers: Vec<BgpPeer>,
         /// Switch port settings included from other switch port settings
         /// groups.
         pub groups: Vec<SwitchPortSettingsGroups>,
@@ -25717,7 +25670,6 @@ pub mod types {
             addr: Result<std::net::IpAddr, String>,
             allowed_export: Result<super::ImportExportPolicy, String>,
             allowed_import: Result<super::ImportExportPolicy, String>,
-            bgp_announce_set: Result<super::NameOrId, String>,
             bgp_config: Result<super::NameOrId, String>,
             communities: Result<Vec<u32>, String>,
             connect_retry: Result<u32, String>,
@@ -25741,7 +25693,6 @@ pub mod types {
                     addr: Err("no value supplied for addr".to_string()),
                     allowed_export: Err("no value supplied for allowed_export".to_string()),
                     allowed_import: Err("no value supplied for allowed_import".to_string()),
-                    bgp_announce_set: Err("no value supplied for bgp_announce_set".to_string()),
                     bgp_config: Err("no value supplied for bgp_config".to_string()),
                     communities: Err("no value supplied for communities".to_string()),
                     connect_retry: Err("no value supplied for connect_retry".to_string()),
@@ -25789,19 +25740,6 @@ pub mod types {
             {
                 self.allowed_import = value.try_into().map_err(|e| {
                     format!("error converting supplied value for allowed_import: {}", e)
-                });
-                self
-            }
-            pub fn bgp_announce_set<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<super::NameOrId>,
-                T::Error: std::fmt::Display,
-            {
-                self.bgp_announce_set = value.try_into().map_err(|e| {
-                    format!(
-                        "error converting supplied value for bgp_announce_set: {}",
-                        e
-                    )
                 });
                 self
             }
@@ -25970,7 +25908,6 @@ pub mod types {
                     addr: value.addr?,
                     allowed_export: value.allowed_export?,
                     allowed_import: value.allowed_import?,
-                    bgp_announce_set: value.bgp_announce_set?,
                     bgp_config: value.bgp_config?,
                     communities: value.communities?,
                     connect_retry: value.connect_retry?,
@@ -25996,7 +25933,6 @@ pub mod types {
                     addr: Ok(value.addr),
                     allowed_export: Ok(value.allowed_export),
                     allowed_import: Ok(value.allowed_import),
-                    bgp_announce_set: Ok(value.bgp_announce_set),
                     bgp_config: Ok(value.bgp_config),
                     communities: Ok(value.communities),
                     connect_retry: Ok(value.connect_retry),
@@ -37683,96 +37619,6 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
-        pub struct SwitchPortBgpPeerConfig {
-            addr: Result<std::net::IpAddr, String>,
-            bgp_config_id: Result<uuid::Uuid, String>,
-            interface_name: Result<String, String>,
-            port_settings_id: Result<uuid::Uuid, String>,
-        }
-
-        impl Default for SwitchPortBgpPeerConfig {
-            fn default() -> Self {
-                Self {
-                    addr: Err("no value supplied for addr".to_string()),
-                    bgp_config_id: Err("no value supplied for bgp_config_id".to_string()),
-                    interface_name: Err("no value supplied for interface_name".to_string()),
-                    port_settings_id: Err("no value supplied for port_settings_id".to_string()),
-                }
-            }
-        }
-
-        impl SwitchPortBgpPeerConfig {
-            pub fn addr<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<std::net::IpAddr>,
-                T::Error: std::fmt::Display,
-            {
-                self.addr = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for addr: {}", e));
-                self
-            }
-            pub fn bgp_config_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.bgp_config_id = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for bgp_config_id: {}", e)
-                });
-                self
-            }
-            pub fn interface_name<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<String>,
-                T::Error: std::fmt::Display,
-            {
-                self.interface_name = value.try_into().map_err(|e| {
-                    format!("error converting supplied value for interface_name: {}", e)
-                });
-                self
-            }
-            pub fn port_settings_id<T>(mut self, value: T) -> Self
-            where
-                T: std::convert::TryInto<uuid::Uuid>,
-                T::Error: std::fmt::Display,
-            {
-                self.port_settings_id = value.try_into().map_err(|e| {
-                    format!(
-                        "error converting supplied value for port_settings_id: {}",
-                        e
-                    )
-                });
-                self
-            }
-        }
-
-        impl std::convert::TryFrom<SwitchPortBgpPeerConfig> for super::SwitchPortBgpPeerConfig {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: SwitchPortBgpPeerConfig,
-            ) -> Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    addr: value.addr?,
-                    bgp_config_id: value.bgp_config_id?,
-                    interface_name: value.interface_name?,
-                    port_settings_id: value.port_settings_id?,
-                })
-            }
-        }
-
-        impl From<super::SwitchPortBgpPeerConfig> for SwitchPortBgpPeerConfig {
-            fn from(value: super::SwitchPortBgpPeerConfig) -> Self {
-                Self {
-                    addr: Ok(value.addr),
-                    bgp_config_id: Ok(value.bgp_config_id),
-                    interface_name: Ok(value.interface_name),
-                    port_settings_id: Ok(value.port_settings_id),
-                }
-            }
-        }
-
-        #[derive(Clone, Debug)]
         pub struct SwitchPortConfig {
             geometry: Result<super::SwitchPortGeometry2, String>,
             port_settings_id: Result<uuid::Uuid, String>,
@@ -37879,26 +37725,52 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct SwitchPortLinkConfig {
+            autoneg: Result<bool, String>,
+            fec: Result<super::LinkFec, String>,
             link_name: Result<String, String>,
             lldp_service_config_id: Result<uuid::Uuid, String>,
             mtu: Result<u16, String>,
             port_settings_id: Result<uuid::Uuid, String>,
+            speed: Result<super::LinkSpeed, String>,
         }
 
         impl Default for SwitchPortLinkConfig {
             fn default() -> Self {
                 Self {
+                    autoneg: Err("no value supplied for autoneg".to_string()),
+                    fec: Err("no value supplied for fec".to_string()),
                     link_name: Err("no value supplied for link_name".to_string()),
                     lldp_service_config_id: Err(
                         "no value supplied for lldp_service_config_id".to_string()
                     ),
                     mtu: Err("no value supplied for mtu".to_string()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                    speed: Err("no value supplied for speed".to_string()),
                 }
             }
         }
 
         impl SwitchPortLinkConfig {
+            pub fn autoneg<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<bool>,
+                T::Error: std::fmt::Display,
+            {
+                self.autoneg = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for autoneg: {}", e));
+                self
+            }
+            pub fn fec<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::LinkFec>,
+                T::Error: std::fmt::Display,
+            {
+                self.fec = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for fec: {}", e));
+                self
+            }
             pub fn link_name<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -37945,6 +37817,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn speed<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::LinkSpeed>,
+                T::Error: std::fmt::Display,
+            {
+                self.speed = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for speed: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<SwitchPortLinkConfig> for super::SwitchPortLinkConfig {
@@ -37953,10 +37835,13 @@ pub mod types {
                 value: SwitchPortLinkConfig,
             ) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    autoneg: value.autoneg?,
+                    fec: value.fec?,
                     link_name: value.link_name?,
                     lldp_service_config_id: value.lldp_service_config_id?,
                     mtu: value.mtu?,
                     port_settings_id: value.port_settings_id?,
+                    speed: value.speed?,
                 })
             }
         }
@@ -37964,10 +37849,13 @@ pub mod types {
         impl From<super::SwitchPortLinkConfig> for SwitchPortLinkConfig {
             fn from(value: super::SwitchPortLinkConfig) -> Self {
                 Self {
+                    autoneg: Ok(value.autoneg),
+                    fec: Ok(value.fec),
                     link_name: Ok(value.link_name),
                     lldp_service_config_id: Ok(value.lldp_service_config_id),
                     mtu: Ok(value.mtu),
                     port_settings_id: Ok(value.port_settings_id),
+                    speed: Ok(value.speed),
                 }
             }
         }
@@ -38527,7 +38415,7 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct SwitchPortSettingsView {
             addresses: Result<Vec<super::SwitchPortAddressConfig>, String>,
-            bgp_peers: Result<Vec<super::SwitchPortBgpPeerConfig>, String>,
+            bgp_peers: Result<Vec<super::BgpPeer>, String>,
             groups: Result<Vec<super::SwitchPortSettingsGroups>, String>,
             interfaces: Result<Vec<super::SwitchInterfaceConfig>, String>,
             link_lldp: Result<Vec<super::LldpServiceConfig>, String>,
@@ -38568,7 +38456,7 @@ pub mod types {
             }
             pub fn bgp_peers<T>(mut self, value: T) -> Self
             where
-                T: std::convert::TryInto<Vec<super::SwitchPortBgpPeerConfig>>,
+                T: std::convert::TryInto<Vec<super::BgpPeer>>,
                 T::Error: std::fmt::Display,
             {
                 self.bgp_peers = value
