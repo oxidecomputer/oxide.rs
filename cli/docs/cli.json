@@ -3089,6 +3089,35 @@
               ]
             },
             {
+              "name": "allow-list",
+              "subcommands": [
+                {
+                  "name": "update",
+                  "about": "Update user-facing services IP allowlist",
+                  "args": [
+                    {
+                      "long": "any"
+                    },
+                    {
+                      "long": "ip"
+                    },
+                    {
+                      "long": "json-body",
+                      "help": "Path to a file that contains the full json body."
+                    },
+                    {
+                      "long": "json-body-template",
+                      "help": "XXX"
+                    }
+                  ]
+                },
+                {
+                  "name": "view",
+                  "about": "Get user-facing services IP allowlist"
+                }
+              ]
+            },
+            {
               "name": "bfd",
               "subcommands": [
                 {

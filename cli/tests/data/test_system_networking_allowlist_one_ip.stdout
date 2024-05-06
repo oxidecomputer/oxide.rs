@@ -1,0 +1,10 @@
+{
+  "allowed_ips": {
+    "allow": "list",
+    "ips": [
+      "1.2.3.4/5"
+    ]
+  },
+  "time_created": "2018-11-14T19:07:30Z",
+  "time_modified": "2018-11-14T19:07:30Z"
+}
