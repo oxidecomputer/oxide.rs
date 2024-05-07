@@ -16,7 +16,7 @@ $ cargo add tokio
 
 Create a new `oxide::Client` like this:
 
-```rust
+```rust ,no_run
 use futures::StreamExt;
 use oxide::{config::Config, context::Context, prelude::*};
 
