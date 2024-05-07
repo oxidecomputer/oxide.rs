@@ -12,6 +12,20 @@ $ cargo add oxide
 $ cargo add tokio
 ```
 
+## Authentication
+
+To connect to the Oxide API, the SDK needs a host URL and a token. There are
+two ways to specify these:
+
+* Environment variables: You can set the OXIDE_HOST and OXIDE_TOKEN environment
+  variables.
+* Configuration file: When you run oxide auth login in the CLI, a
+  $HOME/.config/oxide/hosts.toml file is generated. This file contains
+  sensitive information like your token and user ID.
+
+The SDK will first look for the environment variables, and if they are not
+defined, it will look for the config file.
+
 ## Example
 
 Create a new `oxide::Client` like this:
