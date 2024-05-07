@@ -25,6 +25,9 @@ toml = { workspace = true }
 toml_edit = { workspace = true }
 uuid = { workspace = true }
 
+[dev-dependencies]
+tokio = { workspace = true }
+
 [features]
 # TODO disable clap by default:
 default = ["clap"]
