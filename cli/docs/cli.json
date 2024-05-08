@@ -1,6 +1,6 @@
 {
   "name": "oxide",
-  "version": "0.4.0+20240327.0",
+  "version": "0.5.0+20240502.0",
   "args": [
     {
       "long": "cacert",
