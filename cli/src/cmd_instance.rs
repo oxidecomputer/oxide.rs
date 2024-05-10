@@ -8,6 +8,7 @@ use crate::RunnableCmd;
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
+use oxide::types::InstanceState;
 use oxide::types::{
     ByteCount, DiskSource, ExternalIpCreate, InstanceCpuCount, InstanceDiskAttachment, Name,
     NameOrId,
@@ -220,14 +221,27 @@ pub struct CmdInstanceVnc {
 #[async_trait]
 impl RunnableCmd for CmdInstanceVnc {
     async fn run(&self, ctx: &oxide::context::Context) -> Result<()> {
+        let mut prereq = ctx
+            .client()?
+            .instance_view()
+            .instance(self.instance.clone());
         let mut req = ctx.client()?.instance_vnc().instance(self.instance.clone());
 
         if let Some(value) = &self.project {
             req = req.project(value.clone());
+            prereq = prereq.project(value.clone());
         } else if let NameOrId::Name(_) = &self.instance {
             // on the server end, the connection is upgraded by the server
             // before the worker thread attempts to look up the instance.
             anyhow::bail!("Must provide --project when specifying instance by name rather than ID");
+        }
+
+        let view = prereq.send().await?;
+        if view.run_state != InstanceState::Running {
+            anyhow::bail!(
+                "Instance must be running to connect to VNC, but it is currently {:?}",
+                view.run_state
+            );
         }
 
         // TODO: custom listen address
@@ -288,9 +302,18 @@ impl RunnableCmd for CmdInstanceVnc {
         });
 
         let mut close_frame = None;
+        let mut task_joined = false;
         loop {
             tokio::select! {
-                _ = &mut jh => break,
+                res = &mut jh => {
+                    if let Ok(Ok(mut ws_sink)) = res {
+                        // take() avoids borrow checker complaint about code that sends close
+                        // if we don't join the handle in the select (below loop)
+                        let _ = ws_sink.send(Message::Close(close_frame.take())).await.is_ok();
+                    }
+                    task_joined = true;
+                    break;
+                }
                 msg = ws_stream.next() => {
                     match msg {
                         Some(Ok(Message::Binary(data))) => {
@@ -339,10 +362,12 @@ impl RunnableCmd for CmdInstanceVnc {
             }
         }
 
-        // let _: the connection may have already been dropped at this point.
-        let _ = closed_tx.send(()).is_ok();
-        if let Ok(Ok(mut ws_sink)) = jh.await {
-            let _ = ws_sink.send(Message::Close(close_frame)).await.is_ok();
+        if !task_joined {
+            // let _: the connection may have already been dropped at this point.
+            let _ = closed_tx.send(()).is_ok();
+            if let Ok(Ok(mut ws_sink)) = jh.await {
+                let _ = ws_sink.send(Message::Close(close_frame)).await.is_ok();
+            }
         }
 
         Ok(())
