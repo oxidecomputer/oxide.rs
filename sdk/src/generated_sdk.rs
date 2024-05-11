@@ -6786,6 +6786,7 @@ pub mod types {
     ///        "description",
     ///        "id",
     ///        "ip",
+    ///        "ip_pool_id",
     ///        "kind",
     ///        "name",
     ///        "project_id",
@@ -6817,6 +6818,12 @@ pub mod types {
     ///          "description": "The IP address held by this resource.",
     ///          "type": "string",
     ///          "format": "ip"
+    ///        },
+    ///        "ip_pool_id": {
+    ///          "description": "The ID of the IP pool this resource belongs
+    /// to.",
+    ///          "type": "string",
+    ///          "format": "uuid"
     ///        },
     ///        "kind": {
     ///          "type": "string",
@@ -6875,6 +6882,8 @@ pub mod types {
             instance_id: Option<uuid::Uuid>,
             /// The IP address held by this resource.
             ip: std::net::IpAddr,
+            /// The ID of the IP pool this resource belongs to.
+            ip_pool_id: uuid::Uuid,
             /// unique, mutable, user-controlled identifier for each resource
             name: Name,
             /// The project this resource exists within.
@@ -7886,6 +7895,7 @@ pub mod types {
     ///    "description",
     ///    "id",
     ///    "ip",
+    ///    "ip_pool_id",
     ///    "name",
     ///    "project_id",
     ///    "time_created",
@@ -7915,6 +7925,11 @@ pub mod types {
     ///      "description": "The IP address held by this resource.",
     ///      "type": "string",
     ///      "format": "ip"
+    ///    },
+    ///    "ip_pool_id": {
+    ///      "description": "The ID of the IP pool this resource belongs to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
     ///    },
     ///    "name": {
     ///      "description": "unique, mutable, user-controlled identifier for
@@ -7956,6 +7971,8 @@ pub mod types {
         pub instance_id: Option<uuid::Uuid>,
         /// The IP address held by this resource.
         pub ip: std::net::IpAddr,
+        /// The ID of the IP pool this resource belongs to.
+        pub ip_pool_id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
         /// The project this resource exists within.
@@ -28387,6 +28404,7 @@ pub mod types {
             id: Result<uuid::Uuid, String>,
             instance_id: Result<Option<uuid::Uuid>, String>,
             ip: Result<std::net::IpAddr, String>,
+            ip_pool_id: Result<uuid::Uuid, String>,
             name: Result<super::Name, String>,
             project_id: Result<uuid::Uuid, String>,
             time_created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
@@ -28400,6 +28418,7 @@ pub mod types {
                     id: Err("no value supplied for id".to_string()),
                     instance_id: Ok(Default::default()),
                     ip: Err("no value supplied for ip".to_string()),
+                    ip_pool_id: Err("no value supplied for ip_pool_id".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     project_id: Err("no value supplied for project_id".to_string()),
                     time_created: Err("no value supplied for time_created".to_string()),
@@ -28447,6 +28466,16 @@ pub mod types {
                 self.ip = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for ip: {}", e));
+                self
+            }
+            pub fn ip_pool_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<uuid::Uuid>,
+                T::Error: std::fmt::Display,
+            {
+                self.ip_pool_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ip_pool_id: {}", e));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -28499,6 +28528,7 @@ pub mod types {
                     id: value.id?,
                     instance_id: value.instance_id?,
                     ip: value.ip?,
+                    ip_pool_id: value.ip_pool_id?,
                     name: value.name?,
                     project_id: value.project_id?,
                     time_created: value.time_created?,
@@ -28514,6 +28544,7 @@ pub mod types {
                     id: Ok(value.id),
                     instance_id: Ok(value.instance_id),
                     ip: Ok(value.ip),
+                    ip_pool_id: Ok(value.ip_pool_id),
                     name: Ok(value.name),
                     project_id: Ok(value.project_id),
                     time_created: Ok(value.time_created),
