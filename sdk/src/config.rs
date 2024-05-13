@@ -5,9 +5,10 @@
 // Copyright 2024 Oxide Computer Company
 
 use core::str::FromStr;
+use std::collections::BTreeMap;
 use std::fs::create_dir_all;
 use std::net::IpAddr;
-use std::{collections::HashMap, path::PathBuf};
+use std::path::PathBuf;
 
 use crate::OxideError;
 use serde::{Deserialize, Serialize};
@@ -61,7 +62,7 @@ pub struct Config {
 #[derive(Default, Debug, Deserialize, Serialize)]
 pub struct Hosts {
     #[serde(flatten)]
-    pub hosts: HashMap<String, Host>,
+    pub hosts: BTreeMap<String, Host>,
 }
 
 impl Hosts {
