@@ -1487,7 +1487,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10",
+ "socket2 0.5.7",
  "tokio",
  "tower-service",
  "tracing",
@@ -2419,7 +2419,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#0aeb3a723ec515561a93ab38ae4da5cbf071306f"
+source = "git+https://github.com/oxidecomputer/progenitor#7eb562d11511d5157c0c712959fb9147a8bdd56c"
 dependencies = [
  "progenitor-client 0.6.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
@@ -2445,7 +2445,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#0aeb3a723ec515561a93ab38ae4da5cbf071306f"
+source = "git+https://github.com/oxidecomputer/progenitor#7eb562d11511d5157c0c712959fb9147a8bdd56c"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2459,7 +2459,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#0aeb3a723ec515561a93ab38ae4da5cbf071306f"
+source = "git+https://github.com/oxidecomputer/progenitor#7eb562d11511d5157c0c712959fb9147a8bdd56c"
 dependencies = [
  "getopts",
  "heck 0.5.0",
@@ -2481,7 +2481,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#0aeb3a723ec515561a93ab38ae4da5cbf071306f"
+source = "git+https://github.com/oxidecomputer/progenitor#7eb562d11511d5157c0c712959fb9147a8bdd56c"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -2919,6 +2919,9 @@ name = "semver"
 version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "61697e0a1c7e512e84a621326239844a24d8207b4669b41bc18b32ea5cbf988b"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "serde"
@@ -3704,7 +3707,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "typify"
 version = "0.0.16"
-source = "git+https://github.com/oxidecomputer/typify#336a042b8242587f57c5e8ec3ac0e54d3610e59c"
+source = "git+https://github.com/oxidecomputer/typify#eb6f303ca0a121106b8f9e5e8b1e4b18ac9a0b38"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3713,7 +3716,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.0.16"
-source = "git+https://github.com/oxidecomputer/typify#336a042b8242587f57c5e8ec3ac0e54d3610e59c"
+source = "git+https://github.com/oxidecomputer/typify#eb6f303ca0a121106b8f9e5e8b1e4b18ac9a0b38"
 dependencies = [
  "heck 0.5.0",
  "log",
@@ -3721,6 +3724,8 @@ dependencies = [
  "quote",
  "regress",
  "schemars",
+ "semver",
+ "serde",
  "serde_json",
  "syn",
  "thiserror",
@@ -3730,11 +3735,12 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.0.16"
-source = "git+https://github.com/oxidecomputer/typify#336a042b8242587f57c5e8ec3ac0e54d3610e59c"
+source = "git+https://github.com/oxidecomputer/typify#eb6f303ca0a121106b8f9e5e8b1e4b18ac9a0b38"
 dependencies = [
  "proc-macro2",
  "quote",
  "schemars",
+ "semver",
  "serde",
  "serde_json",
  "serde_tokenstream",
