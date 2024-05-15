@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-// Copyright 2023 Oxide Computer Company
+// Copyright 2024 Oxide Computer Company
 
 use assert_cmd::Command;
 use httpmock::MockServer;
@@ -12,7 +12,7 @@ use rand::SeedableRng;
 use test_common::JsonMock;
 
 #[test]
-fn test_projects_simple_list() {
+fn test_project_simple_list() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -36,14 +36,14 @@ fn test_projects_simple_list() {
         .assert()
         .success()
         .stdout(expectorate::eq_file_or_panic(
-            "tests/data/test_projects_simple_list.stdout",
+            "tests/data/test_project_simple_list.stdout",
         ));
 
     mock.assert();
 }
 
 #[test]
-fn test_projects_list_paginated() {
+fn test_project_list_paginated() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -85,7 +85,7 @@ fn test_projects_list_paginated() {
         .assert()
         .success()
         .stdout(expectorate::eq_file_or_panic(
-            "tests/data/test_projects_list_paginated.stdout",
+            "tests/data/test_project_list_paginated.stdout",
         ));
 
     mock_p1.assert();
@@ -95,7 +95,7 @@ fn test_projects_list_paginated() {
 }
 
 #[test]
-fn test_projects_list_paginated_fail() {
+fn test_project_list_paginated_fail() {
     let mut src = rand::rngs::SmallRng::seed_from_u64(42);
     let server = MockServer::start();
 
@@ -140,10 +140,37 @@ fn test_projects_list_paginated_fail() {
         .failure()
         // .stdout(predicates::str::starts_with(output));
         .stdout(expectorate::eq_file_or_panic(
-            "tests/data/test_projects_list_paginated_fail.stdout",
+            "tests/data/test_project_list_paginated_fail.stdout",
         ));
 
     mock_p1.assert();
     mock_p2.assert();
     mock_p3.assert();
+}
+
+#[test]
+fn test_project_delete() {
+    let server = MockServer::start();
+
+    let mock = server.project_delete(|when, then| {
+        when.into_inner().any_request();
+        then.no_content();
+    });
+
+    Command::cargo_bin("oxide")
+        .unwrap()
+        .env("RUST_BACKTRACE", "1")
+        .env("OXIDE_HOST", server.url(""))
+        .env("OXIDE_TOKEN", "fake-token")
+        .arg("project")
+        .arg("delete")
+        .arg("--project")
+        .arg("thx-1138")
+        .assert()
+        .success()
+        .stdout(expectorate::eq_file_or_panic(
+            "tests/data/test_project_delete.stdout",
+        ));
+
+    mock.assert();
 }

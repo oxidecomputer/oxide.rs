@@ -97,7 +97,7 @@ impl OxideOverride {
 }
 
 impl CliConfig for OxideOverride {
-    fn item_success<T>(&self, value: &oxide::ResponseValue<T>)
+    fn success_item<T>(&self, value: &oxide::ResponseValue<T>)
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
@@ -106,7 +106,9 @@ impl CliConfig for OxideOverride {
         println!("{}", s);
     }
 
-    fn item_error<T>(&self, _value: &oxide::Error<T>)
+    fn success_no_item(&self, _: &oxide::ResponseValue<()>) {}
+
+    fn error<T>(&self, _value: &oxide::Error<T>)
     where
         T: schemars::JsonSchema + serde::Serialize + std::fmt::Debug,
     {
