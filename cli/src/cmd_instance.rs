@@ -63,14 +63,18 @@ pub struct CmdInstanceSerialConsole {
     most_recent: u64,
 
     /// If this sequence of bytes is typed, the client will exit.
-    /// Defaults to "^]^C" (Ctrl+], Ctrl+C). Note that the string passed
-    /// for this argument must be valid UTF-8, and is used verbatim without
-    /// any parsing; in most shells, if you wish to include a special
-    /// character (such as Enter or a Ctrl+letter combo), you can insert
-    /// the character by preceding it with Ctrl+V at the command line.
+    /// Note that the string passed for this argument must be valid UTF-8,
+    /// and is used verbatim without any parsing; in most shells, if you wish
+    /// to include a special character (such as Enter or a Ctrl+letter combo),
+    /// you can insert the character by preceding it with Ctrl+V at the command
+    /// line.
     /// To disable the escape string altogether, provide an empty string to
     /// this flag (and to exit in such a case, use pkill or similar).
-    #[clap(long, short, default_value = "\x1d\x03")]
+    ///
+    /// [default: { Ctrl+], Ctrl+C }]
+    /// -- which would appear in your shell as ^]^C if you provided it manually
+    /// by typing { Ctrl+V, Ctrl+], Ctrl+V, Ctrl+C } at the command line.
+    #[clap(long, short, default_value = "\x1d\x03", hide_default_value = true)]
     escape_string: String,
 
     /// The number of bytes from the beginning of the escape string to pass
