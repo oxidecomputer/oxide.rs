@@ -43,6 +43,8 @@ enum SerialSubCommand {
 }
 
 /// Connect to an instance's serial console interactively.
+///
+/// (To pull output non-interactively, try `oxide instance serial history`)
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "console")]
@@ -131,6 +133,8 @@ impl RunnableCmd for CmdInstanceSerialConsole {
 }
 
 /// Fetch an instance's serial console output.
+///
+/// (To connect interactively and follow live output, try `oxide instance serial console`)
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "history")]

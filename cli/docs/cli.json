@@ -1496,6 +1496,7 @@
             {
               "name": "console",
               "about": "Connect to an instance's serial console interactively.",
+              "long_about": "Connect to an instance's serial console interactively.\n\n(To pull output non-interactively, try `oxide instance serial history`)",
               "args": [
                 {
                   "long": "escape-prefix-length",
@@ -1531,6 +1532,7 @@
             {
               "name": "history",
               "about": "Fetch an instance's serial console output.",
+              "long_about": "Fetch an instance's serial console output.\n\n(To connect interactively and follow live output, try `oxide instance serial console`)",
               "args": [
                 {
                   "long": "byte-offset",
