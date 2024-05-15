@@ -1487,7 +1487,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10",
+ "socket2 0.5.7",
  "tokio",
  "tower-service",
  "tracing",
@@ -2112,7 +2112,7 @@ dependencies = [
  "clap",
  "dirs",
  "futures",
- "progenitor-client 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "progenitor-client 0.6.0",
  "rand",
  "regress",
  "reqwest",
@@ -2418,10 +2418,10 @@ dependencies = [
 
 [[package]]
 name = "progenitor"
-version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#98d5f1b0b789509ce2546a16796c1997fcc18b53"
+version = "0.7.0"
+source = "git+https://github.com/oxidecomputer/progenitor#3dd09970a899cf7f94d1e4220df4fa53f94bba4c"
 dependencies = [
- "progenitor-client 0.6.0 (git+https://github.com/oxidecomputer/progenitor)",
+ "progenitor-client 0.7.0",
  "progenitor-impl",
  "progenitor-macro",
  "serde_json",
@@ -2444,8 +2444,8 @@ dependencies = [
 
 [[package]]
 name = "progenitor-client"
-version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#98d5f1b0b789509ce2546a16796c1997fcc18b53"
+version = "0.7.0"
+source = "git+https://github.com/oxidecomputer/progenitor#3dd09970a899cf7f94d1e4220df4fa53f94bba4c"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2458,8 +2458,8 @@ dependencies = [
 
 [[package]]
 name = "progenitor-impl"
-version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#98d5f1b0b789509ce2546a16796c1997fcc18b53"
+version = "0.7.0"
+source = "git+https://github.com/oxidecomputer/progenitor#3dd09970a899cf7f94d1e4220df4fa53f94bba4c"
 dependencies = [
  "getopts",
  "heck 0.5.0",
@@ -2480,8 +2480,8 @@ dependencies = [
 
 [[package]]
 name = "progenitor-macro"
-version = "0.6.0"
-source = "git+https://github.com/oxidecomputer/progenitor#98d5f1b0b789509ce2546a16796c1997fcc18b53"
+version = "0.7.0"
+source = "git+https://github.com/oxidecomputer/progenitor#3dd09970a899cf7f94d1e4220df4fa53f94bba4c"
 dependencies = [
  "openapiv3",
  "proc-macro2",
