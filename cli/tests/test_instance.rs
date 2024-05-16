@@ -108,17 +108,10 @@ fn test_instance_serial_console() {
         then.switching_protocols();
     });
 
-    // should fail to get the mode of the non-tty stdout, with differing
-    // specifics on what the syscall number is / how the IOErrors format
-    // depending on the OS.
-    #[cfg(target_family = "unix")]
-    let pred = predicate::str::starts_with(
-        "Failed to set raw mode: tcgetattr(stdout, termios) call failed:",
-    );
-    #[cfg(target_family = "windows")]
-    let pred = predicate::str::starts_with(
-        "Failed to set raw mode: GetConsoleMode(hConsoleHandle, lpMode) call failed:",
-    );
+    // Since we don't have a real WebSocket here, the connection is dropped
+    // immediately, and the CLI quits before attempting to set raw mode in the
+    // terminal (which it only does once the first binary frame is received).
+    let pred = predicate::str::contains("Connection lost.");
 
     Command::cargo_bin("oxide")
         .unwrap()
@@ -133,7 +126,7 @@ fn test_instance_serial_console() {
         .arg("influences")
         .arg("--most-recent=3")
         .assert()
-        .failure()
+        .success()
         .stderr(pred);
 
     mock.assert();
