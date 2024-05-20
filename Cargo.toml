@@ -9,7 +9,7 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-anyhow = "1.0.83"
+anyhow = "1.0.86"
 assert_cmd = "2.0.14"
 async-trait = "0.1.80"
 base64 = "0.22.1"
