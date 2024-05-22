@@ -882,8 +882,8 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 
 [[package]]
 name = "dropshot"
-version = "0.10.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#283d8978abfcfa9b720a155b18cc124c82cb29c9"
+version = "0.10.2-dev"
+source = "git+https://github.com/oxidecomputer/dropshot#2fdf37183d2fac385e0f66f48903bc567f2e8e26"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -927,8 +927,8 @@ dependencies = [
 
 [[package]]
 name = "dropshot_endpoint"
-version = "0.10.1-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#283d8978abfcfa9b720a155b18cc124c82cb29c9"
+version = "0.10.2-dev"
+source = "git+https://github.com/oxidecomputer/dropshot#2fdf37183d2fac385e0f66f48903bc567f2e8e26"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2919,18 +2919,18 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.201"
+version = "1.0.202"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "780f1cebed1629e4753a1a38a3c72d30b97ec044f0aef68cb26650a3c5cf363c"
+checksum = "226b61a0d411b2ba5ff6d7f73a476ac4f8bb900373459cd00fab8512828ba395"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.201"
+version = "1.0.202"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c5e405930b9796f1c00bee880d03fc7e0bb4b9a11afc776885ffe84320da2865"
+checksum = "6048858004bcff69094cd972ed40a32500f153bd3be9f716b2eed2e8217c4838"
 dependencies = [
  "proc-macro2",
  "quote",
