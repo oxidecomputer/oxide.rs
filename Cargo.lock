@@ -1487,7 +1487,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.5.7",
+ "socket2 0.4.10",
  "tokio",
  "tower-service",
  "tracing",
@@ -3406,7 +3406,7 @@ dependencies = [
 [[package]]
 name = "thouart"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/thouart.git#f960190b90261549361930924e22911af4fbe6fa"
+source = "git+https://github.com/oxidecomputer/thouart.git#1f22ae2457a2023b1e21613cf1228c7c3e80c37f"
 dependencies = [
  "futures",
  "libc",
