@@ -11417,7 +11417,12 @@ pub mod types {
     ///        }
     ///      ]
     ///    }
-    ///  ]
+    ///  ],
+    ///  "x-rust-type": {
+    ///    "crate": "oxnet",
+    ///    "path": "oxnet::IpNet",
+    ///    "version": "0.1.0"
+    ///  }
     /// }
     /// ```
     /// </details>
@@ -12115,14 +12120,14 @@ pub mod types {
         }
     }
 
-    /// An IPv4 subnet, including prefix and subnet mask
+    /// An IPv4 subnet, including prefix and prefix length
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
     ///  "title": "An IPv4 subnet",
-    ///  "description": "An IPv4 subnet, including prefix and subnet mask",
+    ///  "description": "An IPv4 subnet, including prefix and prefix length",
     ///  "examples": [
     ///    "192.168.1.0/24"
     ///  ],
@@ -12130,7 +12135,12 @@ pub mod types {
     ///  "pattern":
     /// "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.
     /// ){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])/
-    /// ([0-9]|1[0-9]|2[0-9]|3[0-2])$"
+    /// ([0-9]|1[0-9]|2[0-9]|3[0-2])$",
+    ///  "x-rust-type": {
+    ///    "crate": "oxnet",
+    ///    "path": "oxnet::Ipv4Net",
+    ///    "version": "0.1.0"
+    ///  }
     /// }
     /// ```
     /// </details>
@@ -12334,7 +12344,12 @@ pub mod types {
     /// 1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,
     /// 1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,
     /// 1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\\/
-    /// ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$"
+    /// ([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])$",
+    ///  "x-rust-type": {
+    ///    "crate": "oxnet",
+    ///    "path": "oxnet::Ipv6Net",
+    ///    "version": "0.1.0"
+    ///  }
     /// }
     /// ```
     /// </details>
