@@ -53,7 +53,7 @@ tempfile = "3.10.1"
 test-common = { path = "test-common" }
 thouart = { git = "https://github.com/oxidecomputer/thouart.git" }
 tokio = { version = "1.37.0", features = ["full"] }
-toml = "0.8.13"
+toml = "0.8.14"
 toml_edit = "0.22.14"
 url = "2.5.0"
 uuid = { version = "1.8.0", features = ["serde", "v4"] }
