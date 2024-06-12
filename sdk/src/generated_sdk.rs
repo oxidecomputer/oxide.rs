@@ -70,6 +70,15 @@ pub mod types {
     ///          "$ref": "#/components/schemas/NameOrId"
     ///        }
     ///      ]
+    ///    },
+    ///    "vlan_id": {
+    ///      "description": "Optional VLAN ID for this address",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
     ///    }
     ///  }
     /// }
@@ -81,6 +90,9 @@ pub mod types {
         pub address: IpNet,
         /// The address lot this address is drawn from.
         pub address_lot: NameOrId,
+        /// Optional VLAN ID for this address
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub vlan_id: Option<u16>,
     }
 
     impl From<&Address> for Address {
@@ -19544,6 +19556,15 @@ pub mod types {
     /// belongs to.",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "vlan_id": {
+    ///      "description": "An optional VLAN ID",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
     ///    }
     ///  }
     /// }
@@ -19559,6 +19580,9 @@ pub mod types {
         pub interface_name: String,
         /// The port settings object this address configuration belongs to.
         pub port_settings_id: uuid::Uuid,
+        /// An optional VLAN ID
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub vlan_id: Option<u16>,
     }
 
     impl From<&SwitchPortAddressConfig> for SwitchPortAddressConfig {
@@ -23869,6 +23893,7 @@ pub mod types {
         pub struct Address {
             address: Result<super::IpNet, String>,
             address_lot: Result<super::NameOrId, String>,
+            vlan_id: Result<Option<u16>, String>,
         }
 
         impl Default for Address {
@@ -23876,6 +23901,7 @@ pub mod types {
                 Self {
                     address: Err("no value supplied for address".to_string()),
                     address_lot: Err("no value supplied for address_lot".to_string()),
+                    vlan_id: Ok(Default::default()),
                 }
             }
         }
@@ -23901,6 +23927,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for address_lot: {}", e));
                 self
             }
+            pub fn vlan_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u16>>,
+                T::Error: std::fmt::Display,
+            {
+                self.vlan_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<Address> for super::Address {
@@ -23909,6 +23945,7 @@ pub mod types {
                 Ok(Self {
                     address: value.address?,
                     address_lot: value.address_lot?,
+                    vlan_id: value.vlan_id?,
                 })
             }
         }
@@ -23918,6 +23955,7 @@ pub mod types {
                 Self {
                     address: Ok(value.address),
                     address_lot: Ok(value.address_lot),
+                    vlan_id: Ok(value.vlan_id),
                 }
             }
         }
@@ -37530,6 +37568,7 @@ pub mod types {
             address_lot_block_id: Result<uuid::Uuid, String>,
             interface_name: Result<String, String>,
             port_settings_id: Result<uuid::Uuid, String>,
+            vlan_id: Result<Option<u16>, String>,
         }
 
         impl Default for SwitchPortAddressConfig {
@@ -37541,6 +37580,7 @@ pub mod types {
                     ),
                     interface_name: Err("no value supplied for interface_name".to_string()),
                     port_settings_id: Err("no value supplied for port_settings_id".to_string()),
+                    vlan_id: Ok(Default::default()),
                 }
             }
         }
@@ -37592,6 +37632,16 @@ pub mod types {
                 });
                 self
             }
+            pub fn vlan_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<u16>>,
+                T::Error: std::fmt::Display,
+            {
+                self.vlan_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for vlan_id: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<SwitchPortAddressConfig> for super::SwitchPortAddressConfig {
@@ -37604,6 +37654,7 @@ pub mod types {
                     address_lot_block_id: value.address_lot_block_id?,
                     interface_name: value.interface_name?,
                     port_settings_id: value.port_settings_id?,
+                    vlan_id: value.vlan_id?,
                 })
             }
         }
@@ -37615,6 +37666,7 @@ pub mod types {
                     address_lot_block_id: Ok(value.address_lot_block_id),
                     interface_name: Ok(value.interface_name),
                     port_settings_id: Ok(value.port_settings_id),
+                    vlan_id: Ok(value.vlan_id),
                 }
             }
         }
