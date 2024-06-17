@@ -599,9 +599,9 @@ dependencies = [
 
 [[package]]
 name = "clap_complete"
-version = "4.5.2"
+version = "4.5.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd79504325bf38b10165b02e89b4347300f855f273c4cb30c4a3209e6583275e"
+checksum = "d2020fa13af48afc65a9a87335bda648309ab3d154cd03c7ff95b378c7ed39c4"
 dependencies = [
  "clap",
 ]
@@ -2245,7 +2245,7 @@ dependencies = [
  "futures",
  "progenitor-client 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand",
- "regress 0.9.1",
+ "regress",
  "reqwest",
  "schemars",
  "serde",
@@ -2745,16 +2745,6 @@ name = "regex-syntax"
 version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "adad44e29e4c806119491a7f06f03de4d1af22c3a680dd47f1e6e179439d1f56"
-
-[[package]]
-name = "regress"
-version = "0.9.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0eae2a1ebfecc58aff952ef8ccd364329abe627762f5bf09ff42eb9d98522479"
-dependencies = [
- "hashbrown",
- "memchr",
-]
 
 [[package]]
 name = "regress"
@@ -3875,7 +3865,7 @@ dependencies = [
  "log",
  "proc-macro2",
  "quote",
- "regress 0.10.0",
+ "regress",
  "schemars",
  "semver",
  "serde",

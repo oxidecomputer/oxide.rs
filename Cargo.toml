@@ -16,7 +16,7 @@ base64 = "0.22.1"
 built = { version = "0.7.3", features = ["git2"] }
 chrono = { version = "0.4.38", features = ["serde"] }
 clap = { version = "4.5.7", features = ["derive", "string", "env"] }
-clap_complete = "4.5.2"
+clap_complete = "4.5.5"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
@@ -40,7 +40,7 @@ rand = "0.8.5"
 ratatui = "0.26.3"
 rcgen = "0.10.0"
 regex = "1.10.5"
-regress = "0.9.1"
+regress = "0.10.0"
 reqwest = "0.11.27"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
