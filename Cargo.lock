@@ -1498,7 +1498,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10",
+ "socket2 0.5.7",
  "tokio",
  "tower-service",
  "tracing",
@@ -3127,9 +3127,9 @@ dependencies = [
 
 [[package]]
 name = "serde_tokenstream"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8a00ffd23fd882d096f09fcaae2a9de8329a328628e86027e049ee051dc1621f"
+checksum = "8790a7c3fe883e443eaa2af6f705952bc5d6e8671a220b9335c8cae92c037e74"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3850,7 +3850,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "typify"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/typify#d36f65eea4356374a1d7e68009ecc210756ec755"
+source = "git+https://github.com/oxidecomputer/typify#66f11c64a70f6611c3c8863eb5d9327150817645"
 dependencies = [
  "typify-impl",
  "typify-macro",
@@ -3859,7 +3859,7 @@ dependencies = [
 [[package]]
 name = "typify-impl"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/typify#d36f65eea4356374a1d7e68009ecc210756ec755"
+source = "git+https://github.com/oxidecomputer/typify#66f11c64a70f6611c3c8863eb5d9327150817645"
 dependencies = [
  "heck 0.5.0",
  "log",
@@ -3878,7 +3878,7 @@ dependencies = [
 [[package]]
 name = "typify-macro"
 version = "0.1.0"
-source = "git+https://github.com/oxidecomputer/typify#d36f65eea4356374a1d7e68009ecc210756ec755"
+source = "git+https://github.com/oxidecomputer/typify#66f11c64a70f6611c3c8863eb5d9327150817645"
 dependencies = [
  "proc-macro2",
  "quote",
