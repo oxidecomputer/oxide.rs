@@ -4219,6 +4219,7 @@ pub mod types {
     ///  "description": "View of a Certificate",
     ///  "type": "object",
     ///  "required": [
+    ///    "cert",
     ///    "description",
     ///    "id",
     ///    "name",
@@ -4227,6 +4228,11 @@ pub mod types {
     ///    "time_modified"
     ///  ],
     ///  "properties": {
+    ///    "cert": {
+    ///      "description": "PEM-formatted string containing public certificate
+    /// chain",
+    ///      "type": "string"
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
@@ -4247,7 +4253,12 @@ pub mod types {
     ///      ]
     ///    },
     ///    "service": {
-    ///      "$ref": "#/components/schemas/ServiceUsingCertificate"
+    ///      "description": "The service using this certificate",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/ServiceUsingCertificate"
+    ///        }
+    ///      ]
     ///    },
     ///    "time_created": {
     ///      "description": "timestamp when this resource was created",
@@ -4265,12 +4276,15 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Certificate {
+        /// PEM-formatted string containing public certificate chain
+        pub cert: String,
         /// human-readable free-form text about a resource
         pub description: String,
         /// unique, immutable, system-controlled identifier for each resource
         pub id: uuid::Uuid,
         /// unique, mutable, user-controlled identifier for each resource
         pub name: Name,
+        /// The service using this certificate
         pub service: ServiceUsingCertificate,
         /// timestamp when this resource was created
         pub time_created: chrono::DateTime<chrono::offset::Utc>,
@@ -26755,6 +26769,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct Certificate {
+            cert: Result<String, String>,
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
             name: Result<super::Name, String>,
@@ -26766,6 +26781,7 @@ pub mod types {
         impl Default for Certificate {
             fn default() -> Self {
                 Self {
+                    cert: Err("no value supplied for cert".to_string()),
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     name: Err("no value supplied for name".to_string()),
@@ -26777,6 +26793,16 @@ pub mod types {
         }
 
         impl Certificate {
+            pub fn cert<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.cert = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cert: {}", e));
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -26843,6 +26869,7 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: Certificate) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    cert: value.cert?,
                     description: value.description?,
                     id: value.id?,
                     name: value.name?,
@@ -26856,6 +26883,7 @@ pub mod types {
         impl From<super::Certificate> for Certificate {
             fn from(value: super::Certificate) -> Self {
                 Self {
+                    cert: Ok(value.cert),
                     description: Ok(value.description),
                     id: Ok(value.id),
                     name: Ok(value.name),
