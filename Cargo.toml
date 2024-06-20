@@ -57,6 +57,8 @@ toml = "0.8.14"
 toml_edit = "0.22.14"
 url = "2.5.1"
 uuid = { version = "1.8.0", features = ["serde", "v4"] }
+colored = "2.1.0"
+humantime = "2"
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]

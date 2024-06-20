@@ -23,6 +23,7 @@ mod cmd_completion;
 mod cmd_disk;
 mod cmd_docs;
 mod cmd_instance;
+mod cmd_net;
 mod cmd_timeseries;
 
 mod cmd_version;
@@ -41,7 +42,7 @@ pub trait RunnableCmd: Send + Sync {
 }
 
 pub fn make_cli() -> NewCli<'static> {
-    NewCli::default()
+    let cli = NewCli::default()
         .add_custom::<cmd_auth::CmdAuth>("auth")
         .add_custom::<cmd_api::CmdApi>("api")
         .add_custom::<cmd_docs::CmdDocs>("docs")
@@ -50,7 +51,8 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_instance::CmdInstanceSerial>("instance serial")
         .add_custom::<cmd_instance::CmdInstanceFromImage>("instance from-image")
         .add_custom::<cmd_completion::CmdCompletion>("completion")
-        .add_custom::<cmd_timeseries::CmdTimeseriesDashboard>("experimental timeseries dashboard")
+        .add_custom::<cmd_timeseries::CmdTimeseriesDashboard>("experimental timeseries dashboard");
+    cmd_net::make_cli(cli)
 }
 
 #[tokio::main]
