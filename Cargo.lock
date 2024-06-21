@@ -1272,15 +1272,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "getopts"
-version = "0.2.21"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14dbbfd5c71d70241ecf9e6f13737f7b5ce823821063188d7e46c41d371eebd5"
-dependencies = [
- "unicode-width",
-]
-
-[[package]]
 name = "getrandom"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1498,7 +1489,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10",
+ "socket2 0.5.7",
  "tokio",
  "tower-service",
  "tracing",
@@ -2540,9 +2531,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.85"
+version = "1.0.86"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "22244ce15aa966053a896d1accb3a6e68469b97c7f33f284b99f0d576879fc23"
+checksum = "5e719e8df665df0d1c8fbfd238015744736151d4445ec0836b8e628aae103b77"
 dependencies = [
  "unicode-ident",
 ]
@@ -2550,12 +2541,11 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#a2d1100413e5d755009e9d04ced20393c84352e9"
+source = "git+https://github.com/oxidecomputer/progenitor#244fe03164393532b9383fea7b7affcaf6bd294c"
 dependencies = [
  "progenitor-client 0.7.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
  "progenitor-macro",
- "serde_json",
 ]
 
 [[package]]
@@ -2576,7 +2566,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#a2d1100413e5d755009e9d04ced20393c84352e9"
+source = "git+https://github.com/oxidecomputer/progenitor#244fe03164393532b9383fea7b7affcaf6bd294c"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2590,9 +2580,8 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#a2d1100413e5d755009e9d04ced20393c84352e9"
+source = "git+https://github.com/oxidecomputer/progenitor#244fe03164393532b9383fea7b7affcaf6bd294c"
 dependencies = [
- "getopts",
  "heck 0.5.0",
  "http 0.2.12",
  "indexmap",
@@ -2612,7 +2601,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#a2d1100413e5d755009e9d04ced20393c84352e9"
+source = "git+https://github.com/oxidecomputer/progenitor#244fe03164393532b9383fea7b7affcaf6bd294c"
 dependencies = [
  "openapiv3",
  "proc-macro2",
@@ -3416,9 +3405,9 @@ checksum = "81cdd64d312baedb58e21336b31bc043b77e01cc99033ce76ef539f78e965ebc"
 
 [[package]]
 name = "syn"
-version = "2.0.66"
+version = "2.0.67"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c42f3f41a2de00b01c0aaad383c5a45241efc8b2d1eda5661812fda5f3cdcff5"
+checksum = "ff8655ed1d86f3af4ee3fd3263786bc14245ad17c4c7e85ba7187fb3ae028c90"
 dependencies = [
  "proc-macro2",
  "quote",
