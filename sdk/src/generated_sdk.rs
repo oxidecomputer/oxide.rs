@@ -6588,18 +6588,28 @@ pub mod types {
         }
     }
 
-    /// A distribution is a sequence of bins and counts in those bins.
+    /// A distribution is a sequence of bins and counts in those bins, and some
+    /// statistical information tracked to compute the mean, standard deviation,
+    /// and quantile estimates.
+    ///
+    /// Min, max, and the p-* quantiles are treated as optional due to the
+    /// possibility of distribution operations, like subtraction.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
     ///  "description": "A distribution is a sequence of bins and counts in
-    /// those bins.",
+    /// those bins, and some statistical information tracked to compute the
+    /// mean, standard deviation, and quantile estimates.\n\nMin, max, and the
+    /// p-* quantiles are treated as optional due to the possibility of
+    /// distribution operations, like subtraction.",
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
-    ///    "counts"
+    ///    "counts",
+    ///    "squared_mean",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
@@ -6616,6 +6626,49 @@ pub mod types {
     ///        "format": "uint64",
     ///        "minimum": 0.0
     ///      }
+    ///    },
+    ///    "max": {
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
+    ///    },
+    ///    "min": {
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "double"
+    ///    },
+    ///    "p50": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "type": "number",
+    ///      "format": "double"
     ///    }
     ///  }
     /// }
@@ -6625,6 +6678,18 @@ pub mod types {
     pub struct Distributiondouble {
         pub bins: Vec<f64>,
         pub counts: Vec<u64>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub max: Option<f64>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub min: Option<f64>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub p50: Option<Quantile>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub p90: Option<Quantile>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub p99: Option<Quantile>,
+        pub squared_mean: f64,
+        pub sum_of_samples: f64,
     }
 
     impl From<&Distributiondouble> for Distributiondouble {
@@ -6639,18 +6704,28 @@ pub mod types {
         }
     }
 
-    /// A distribution is a sequence of bins and counts in those bins.
+    /// A distribution is a sequence of bins and counts in those bins, and some
+    /// statistical information tracked to compute the mean, standard deviation,
+    /// and quantile estimates.
+    ///
+    /// Min, max, and the p-* quantiles are treated as optional due to the
+    /// possibility of distribution operations, like subtraction.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
     ///  "description": "A distribution is a sequence of bins and counts in
-    /// those bins.",
+    /// those bins, and some statistical information tracked to compute the
+    /// mean, standard deviation, and quantile estimates.\n\nMin, max, and the
+    /// p-* quantiles are treated as optional due to the possibility of
+    /// distribution operations, like subtraction.",
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
-    ///    "counts"
+    ///    "counts",
+    ///    "squared_mean",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
@@ -6667,6 +6742,49 @@ pub mod types {
     ///        "format": "uint64",
     ///        "minimum": 0.0
     ///      }
+    ///    },
+    ///    "max": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "min": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "p50": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "type": "integer",
+    ///      "format": "int64"
     ///    }
     ///  }
     /// }
@@ -6676,6 +6794,18 @@ pub mod types {
     pub struct Distributionint64 {
         pub bins: Vec<i64>,
         pub counts: Vec<u64>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub max: Option<i64>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub min: Option<i64>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub p50: Option<Quantile>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub p90: Option<Quantile>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub p99: Option<Quantile>,
+        pub squared_mean: f64,
+        pub sum_of_samples: i64,
     }
 
     impl From<&Distributionint64> for Distributionint64 {
@@ -8454,24 +8584,80 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
+    ///    "max",
+    ///    "min",
     ///    "n_samples",
-    ///    "start_time"
+    ///    "p50",
+    ///    "p90",
+    ///    "p99",
+    ///    "squared_mean",
+    ///    "start_time",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
+    ///      "description": "The bins of the histogram.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Bindouble"
     ///      }
     ///    },
+    ///    "max": {
+    ///      "description": "The maximum value of all samples in the
+    /// histogram.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
+    ///    "min": {
+    ///      "description": "The minimum value of all samples in the
+    /// histogram.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "n_samples": {
+    ///      "description": "The total number of samples in the histogram.",
     ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
+    ///    "p50": {
+    ///      "description": "p50 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "description": "p95 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "description": "p99 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "start_time": {
+    ///      "description": "The start time of the histogram.",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "description": "The sum of all samples in the histogram.",
+    ///      "type": "number",
+    ///      "format": "double"
     ///    }
     ///  }
     /// }
@@ -8479,9 +8665,22 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramdouble {
+        /// The bins of the histogram.
         pub bins: Vec<Bindouble>,
+        pub max: f64,
+        pub min: f64,
+        /// The total number of samples in the histogram.
         pub n_samples: u64,
+        /// p50 Quantile
+        pub p50: Quantile,
+        /// p95 Quantile
+        pub p90: Quantile,
+        /// p99 Quantile
+        pub p99: Quantile,
+        pub squared_mean: f64,
+        /// The start time of the histogram.
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub sum_of_samples: f64,
     }
 
     impl From<&Histogramdouble> for Histogramdouble {
@@ -8521,24 +8720,80 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
+    ///    "max",
+    ///    "min",
     ///    "n_samples",
-    ///    "start_time"
+    ///    "p50",
+    ///    "p90",
+    ///    "p99",
+    ///    "squared_mean",
+    ///    "start_time",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
+    ///      "description": "The bins of the histogram.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binfloat"
     ///      }
     ///    },
+    ///    "max": {
+    ///      "description": "The maximum value of all samples in the
+    /// histogram.",
+    ///      "type": "number",
+    ///      "format": "float"
+    ///    },
+    ///    "min": {
+    ///      "description": "The minimum value of all samples in the
+    /// histogram.",
+    ///      "type": "number",
+    ///      "format": "float"
+    ///    },
     ///    "n_samples": {
+    ///      "description": "The total number of samples in the histogram.",
     ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
+    ///    "p50": {
+    ///      "description": "p50 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "description": "p95 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "description": "p99 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "start_time": {
+    ///      "description": "The start time of the histogram.",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "description": "The sum of all samples in the histogram.",
+    ///      "type": "number",
+    ///      "format": "double"
     ///    }
     ///  }
     /// }
@@ -8546,9 +8801,22 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramfloat {
+        /// The bins of the histogram.
         pub bins: Vec<Binfloat>,
+        pub max: f32,
+        pub min: f32,
+        /// The total number of samples in the histogram.
         pub n_samples: u64,
+        /// p50 Quantile
+        pub p50: Quantile,
+        /// p95 Quantile
+        pub p90: Quantile,
+        /// p99 Quantile
+        pub p99: Quantile,
+        pub squared_mean: f64,
+        /// The start time of the histogram.
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        pub sum_of_samples: f64,
     }
 
     impl From<&Histogramfloat> for Histogramfloat {
@@ -8588,24 +8856,80 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
+    ///    "max",
+    ///    "min",
     ///    "n_samples",
-    ///    "start_time"
+    ///    "p50",
+    ///    "p90",
+    ///    "p99",
+    ///    "squared_mean",
+    ///    "start_time",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
+    ///      "description": "The bins of the histogram.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binint16"
     ///      }
     ///    },
+    ///    "max": {
+    ///      "description": "The maximum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "int16"
+    ///    },
+    ///    "min": {
+    ///      "description": "The minimum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "int16"
+    ///    },
     ///    "n_samples": {
+    ///      "description": "The total number of samples in the histogram.",
     ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
+    ///    "p50": {
+    ///      "description": "p50 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "description": "p95 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "description": "p99 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "start_time": {
+    ///      "description": "The start time of the histogram.",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "description": "The sum of all samples in the histogram.",
+    ///      "type": "integer",
+    ///      "format": "int64"
     ///    }
     ///  }
     /// }
@@ -8613,9 +8937,25 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramint16 {
+        /// The bins of the histogram.
         pub bins: Vec<Binint16>,
+        /// The maximum value of all samples in the histogram.
+        pub max: i16,
+        /// The minimum value of all samples in the histogram.
+        pub min: i16,
+        /// The total number of samples in the histogram.
         pub n_samples: u64,
+        /// p50 Quantile
+        pub p50: Quantile,
+        /// p95 Quantile
+        pub p90: Quantile,
+        /// p99 Quantile
+        pub p99: Quantile,
+        pub squared_mean: f64,
+        /// The start time of the histogram.
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        /// The sum of all samples in the histogram.
+        pub sum_of_samples: i64,
     }
 
     impl From<&Histogramint16> for Histogramint16 {
@@ -8655,24 +8995,80 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
+    ///    "max",
+    ///    "min",
     ///    "n_samples",
-    ///    "start_time"
+    ///    "p50",
+    ///    "p90",
+    ///    "p99",
+    ///    "squared_mean",
+    ///    "start_time",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
+    ///      "description": "The bins of the histogram.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binint32"
     ///      }
     ///    },
+    ///    "max": {
+    ///      "description": "The maximum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "int32"
+    ///    },
+    ///    "min": {
+    ///      "description": "The minimum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "int32"
+    ///    },
     ///    "n_samples": {
+    ///      "description": "The total number of samples in the histogram.",
     ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
+    ///    "p50": {
+    ///      "description": "p50 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "description": "p95 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "description": "p99 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "start_time": {
+    ///      "description": "The start time of the histogram.",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "description": "The sum of all samples in the histogram.",
+    ///      "type": "integer",
+    ///      "format": "int64"
     ///    }
     ///  }
     /// }
@@ -8680,9 +9076,25 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramint32 {
+        /// The bins of the histogram.
         pub bins: Vec<Binint32>,
+        /// The maximum value of all samples in the histogram.
+        pub max: i32,
+        /// The minimum value of all samples in the histogram.
+        pub min: i32,
+        /// The total number of samples in the histogram.
         pub n_samples: u64,
+        /// p50 Quantile
+        pub p50: Quantile,
+        /// p95 Quantile
+        pub p90: Quantile,
+        /// p99 Quantile
+        pub p99: Quantile,
+        pub squared_mean: f64,
+        /// The start time of the histogram.
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        /// The sum of all samples in the histogram.
+        pub sum_of_samples: i64,
     }
 
     impl From<&Histogramint32> for Histogramint32 {
@@ -8722,24 +9134,80 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
+    ///    "max",
+    ///    "min",
     ///    "n_samples",
-    ///    "start_time"
+    ///    "p50",
+    ///    "p90",
+    ///    "p99",
+    ///    "squared_mean",
+    ///    "start_time",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
+    ///      "description": "The bins of the histogram.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binint64"
     ///      }
     ///    },
+    ///    "max": {
+    ///      "description": "The maximum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "min": {
+    ///      "description": "The minimum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
     ///    "n_samples": {
+    ///      "description": "The total number of samples in the histogram.",
     ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
+    ///    "p50": {
+    ///      "description": "p50 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "description": "p95 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "description": "p99 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "start_time": {
+    ///      "description": "The start time of the histogram.",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "description": "The sum of all samples in the histogram.",
+    ///      "type": "integer",
+    ///      "format": "int64"
     ///    }
     ///  }
     /// }
@@ -8747,9 +9215,25 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramint64 {
+        /// The bins of the histogram.
         pub bins: Vec<Binint64>,
+        /// The maximum value of all samples in the histogram.
+        pub max: i64,
+        /// The minimum value of all samples in the histogram.
+        pub min: i64,
+        /// The total number of samples in the histogram.
         pub n_samples: u64,
+        /// p50 Quantile
+        pub p50: Quantile,
+        /// p95 Quantile
+        pub p90: Quantile,
+        /// p99 Quantile
+        pub p99: Quantile,
+        pub squared_mean: f64,
+        /// The start time of the histogram.
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        /// The sum of all samples in the histogram.
+        pub sum_of_samples: i64,
     }
 
     impl From<&Histogramint64> for Histogramint64 {
@@ -8789,24 +9273,80 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
+    ///    "max",
+    ///    "min",
     ///    "n_samples",
-    ///    "start_time"
+    ///    "p50",
+    ///    "p90",
+    ///    "p99",
+    ///    "squared_mean",
+    ///    "start_time",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
+    ///      "description": "The bins of the histogram.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binint8"
     ///      }
     ///    },
+    ///    "max": {
+    ///      "description": "The maximum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "int8"
+    ///    },
+    ///    "min": {
+    ///      "description": "The minimum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "int8"
+    ///    },
     ///    "n_samples": {
+    ///      "description": "The total number of samples in the histogram.",
     ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
+    ///    "p50": {
+    ///      "description": "p50 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "description": "p95 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "description": "p99 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "start_time": {
+    ///      "description": "The start time of the histogram.",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "description": "The sum of all samples in the histogram.",
+    ///      "type": "integer",
+    ///      "format": "int64"
     ///    }
     ///  }
     /// }
@@ -8814,9 +9354,25 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramint8 {
+        /// The bins of the histogram.
         pub bins: Vec<Binint8>,
+        /// The maximum value of all samples in the histogram.
+        pub max: i8,
+        /// The minimum value of all samples in the histogram.
+        pub min: i8,
+        /// The total number of samples in the histogram.
         pub n_samples: u64,
+        /// p50 Quantile
+        pub p50: Quantile,
+        /// p95 Quantile
+        pub p90: Quantile,
+        /// p99 Quantile
+        pub p99: Quantile,
+        pub squared_mean: f64,
+        /// The start time of the histogram.
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        /// The sum of all samples in the histogram.
+        pub sum_of_samples: i64,
     }
 
     impl From<&Histogramint8> for Histogramint8 {
@@ -8856,24 +9412,82 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
+    ///    "max",
+    ///    "min",
     ///    "n_samples",
-    ///    "start_time"
+    ///    "p50",
+    ///    "p90",
+    ///    "p99",
+    ///    "squared_mean",
+    ///    "start_time",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
+    ///      "description": "The bins of the histogram.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binuint16"
     ///      }
     ///    },
+    ///    "max": {
+    ///      "description": "The maximum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "min": {
+    ///      "description": "The minimum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "uint16",
+    ///      "minimum": 0.0
+    ///    },
     ///    "n_samples": {
+    ///      "description": "The total number of samples in the histogram.",
     ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
+    ///    "p50": {
+    ///      "description": "p50 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "description": "p95 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "description": "p99 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "start_time": {
+    ///      "description": "The start time of the histogram.",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "description": "The sum of all samples in the histogram.",
+    ///      "type": "integer",
+    ///      "format": "int64"
     ///    }
     ///  }
     /// }
@@ -8881,9 +9495,25 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramuint16 {
+        /// The bins of the histogram.
         pub bins: Vec<Binuint16>,
+        /// The maximum value of all samples in the histogram.
+        pub max: u16,
+        /// The minimum value of all samples in the histogram.
+        pub min: u16,
+        /// The total number of samples in the histogram.
         pub n_samples: u64,
+        /// p50 Quantile
+        pub p50: Quantile,
+        /// p95 Quantile
+        pub p90: Quantile,
+        /// p99 Quantile
+        pub p99: Quantile,
+        pub squared_mean: f64,
+        /// The start time of the histogram.
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        /// The sum of all samples in the histogram.
+        pub sum_of_samples: i64,
     }
 
     impl From<&Histogramuint16> for Histogramuint16 {
@@ -8923,24 +9553,82 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
+    ///    "max",
+    ///    "min",
     ///    "n_samples",
-    ///    "start_time"
+    ///    "p50",
+    ///    "p90",
+    ///    "p99",
+    ///    "squared_mean",
+    ///    "start_time",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
+    ///      "description": "The bins of the histogram.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binuint32"
     ///      }
     ///    },
+    ///    "max": {
+    ///      "description": "The maximum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "min": {
+    ///      "description": "The minimum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "uint32",
+    ///      "minimum": 0.0
+    ///    },
     ///    "n_samples": {
+    ///      "description": "The total number of samples in the histogram.",
     ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
+    ///    "p50": {
+    ///      "description": "p50 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "description": "p95 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "description": "p99 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "start_time": {
+    ///      "description": "The start time of the histogram.",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "description": "The sum of all samples in the histogram.",
+    ///      "type": "integer",
+    ///      "format": "int64"
     ///    }
     ///  }
     /// }
@@ -8948,9 +9636,25 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramuint32 {
+        /// The bins of the histogram.
         pub bins: Vec<Binuint32>,
+        /// The maximum value of all samples in the histogram.
+        pub max: u32,
+        /// The minimum value of all samples in the histogram.
+        pub min: u32,
+        /// The total number of samples in the histogram.
         pub n_samples: u64,
+        /// p50 Quantile
+        pub p50: Quantile,
+        /// p95 Quantile
+        pub p90: Quantile,
+        /// p99 Quantile
+        pub p99: Quantile,
+        pub squared_mean: f64,
+        /// The start time of the histogram.
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        /// The sum of all samples in the histogram.
+        pub sum_of_samples: i64,
     }
 
     impl From<&Histogramuint32> for Histogramuint32 {
@@ -8990,24 +9694,82 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
+    ///    "max",
+    ///    "min",
     ///    "n_samples",
-    ///    "start_time"
+    ///    "p50",
+    ///    "p90",
+    ///    "p99",
+    ///    "squared_mean",
+    ///    "start_time",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
+    ///      "description": "The bins of the histogram.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binuint64"
     ///      }
     ///    },
-    ///    "n_samples": {
+    ///    "max": {
+    ///      "description": "The maximum value of all samples in the
+    /// histogram.",
     ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
+    ///    "min": {
+    ///      "description": "The minimum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "n_samples": {
+    ///      "description": "The total number of samples in the histogram.",
+    ///      "type": "integer",
+    ///      "format": "uint64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "p50": {
+    ///      "description": "p50 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "description": "p95 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "description": "p99 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "start_time": {
+    ///      "description": "The start time of the histogram.",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "description": "The sum of all samples in the histogram.",
+    ///      "type": "integer",
+    ///      "format": "int64"
     ///    }
     ///  }
     /// }
@@ -9015,9 +9777,25 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramuint64 {
+        /// The bins of the histogram.
         pub bins: Vec<Binuint64>,
+        /// The maximum value of all samples in the histogram.
+        pub max: u64,
+        /// The minimum value of all samples in the histogram.
+        pub min: u64,
+        /// The total number of samples in the histogram.
         pub n_samples: u64,
+        /// p50 Quantile
+        pub p50: Quantile,
+        /// p95 Quantile
+        pub p90: Quantile,
+        /// p99 Quantile
+        pub p99: Quantile,
+        pub squared_mean: f64,
+        /// The start time of the histogram.
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        /// The sum of all samples in the histogram.
+        pub sum_of_samples: i64,
     }
 
     impl From<&Histogramuint64> for Histogramuint64 {
@@ -9057,24 +9835,82 @@ pub mod types {
     ///  "type": "object",
     ///  "required": [
     ///    "bins",
+    ///    "max",
+    ///    "min",
     ///    "n_samples",
-    ///    "start_time"
+    ///    "p50",
+    ///    "p90",
+    ///    "p99",
+    ///    "squared_mean",
+    ///    "start_time",
+    ///    "sum_of_samples"
     ///  ],
     ///  "properties": {
     ///    "bins": {
+    ///      "description": "The bins of the histogram.",
     ///      "type": "array",
     ///      "items": {
     ///        "$ref": "#/components/schemas/Binuint8"
     ///      }
     ///    },
+    ///    "max": {
+    ///      "description": "The maximum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "min": {
+    ///      "description": "The minimum value of all samples in the
+    /// histogram.",
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 0.0
+    ///    },
     ///    "n_samples": {
+    ///      "description": "The total number of samples in the histogram.",
     ///      "type": "integer",
     ///      "format": "uint64",
     ///      "minimum": 0.0
     ///    },
+    ///    "p50": {
+    ///      "description": "p50 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p90": {
+    ///      "description": "p95 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "p99": {
+    ///      "description": "p99 Quantile",
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/Quantile"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "squared_mean": {
+    ///      "description": "M2 for Welford's algorithm for variance calculation.\n\nRead about [Welford's algorithm](https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Welford's_online_algorithm) for more information on the algorithm.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    },
     ///    "start_time": {
+    ///      "description": "The start time of the histogram.",
     ///      "type": "string",
     ///      "format": "date-time"
+    ///    },
+    ///    "sum_of_samples": {
+    ///      "description": "The sum of all samples in the histogram.",
+    ///      "type": "integer",
+    ///      "format": "int64"
     ///    }
     ///  }
     /// }
@@ -9082,9 +9918,25 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct Histogramuint8 {
+        /// The bins of the histogram.
         pub bins: Vec<Binuint8>,
+        /// The maximum value of all samples in the histogram.
+        pub max: u8,
+        /// The minimum value of all samples in the histogram.
+        pub min: u8,
+        /// The total number of samples in the histogram.
         pub n_samples: u64,
+        /// p50 Quantile
+        pub p50: Quantile,
+        /// p95 Quantile
+        pub p90: Quantile,
+        /// p99 Quantile
+        pub p99: Quantile,
+        pub squared_mean: f64,
+        /// The start time of the histogram.
         pub start_time: chrono::DateTime<chrono::offset::Utc>,
+        /// The sum of all samples in the histogram.
+        pub sum_of_samples: i64,
     }
 
     impl From<&Histogramuint8> for Histogramuint8 {
@@ -15796,6 +16648,103 @@ pub mod types {
 
     impl ProjectUpdate {
         pub fn builder() -> builder::ProjectUpdate {
+            Default::default()
+        }
+    }
+
+    /// Structure for estimating the p-quantile of a population.
+    ///
+    /// This is based on the P² algorithm for estimating quantiles using
+    /// constant space.
+    ///
+    /// The algorithm consists of maintaining five markers: the minimum, the
+    /// p/2-, p-, and (1 + p)/2 quantiles, and the maximum.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Structure for estimating the p-quantile of a
+    /// population.\n\nThis is based on the P² algorithm for estimating
+    /// quantiles using constant space.\n\nThe algorithm consists of maintaining
+    /// five markers: the minimum, the p/2-, p-, and (1 + p)/2 quantiles, and
+    /// the maximum.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "desired_marker_positions",
+    ///    "marker_heights",
+    ///    "marker_positions",
+    ///    "p"
+    ///  ],
+    ///  "properties": {
+    ///    "desired_marker_positions": {
+    ///      "description": "The desired marker positions.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "number",
+    ///        "format": "double"
+    ///      },
+    ///      "maxItems": 5,
+    ///      "minItems": 5
+    ///    },
+    ///    "marker_heights": {
+    ///      "description": "The heights of the markers.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "number",
+    ///        "format": "double"
+    ///      },
+    ///      "maxItems": 5,
+    ///      "minItems": 5
+    ///    },
+    ///    "marker_positions": {
+    ///      "description": "The positions of the markers.\n\nWe track sample
+    /// size in the 5th position, as useful observations won't start until we've
+    /// filled the heights at the 6th sample anyway This does deviate from the
+    /// paper, but it's a more useful representation that works according to the
+    /// paper's algorithm.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "integer",
+    ///        "format": "uint64",
+    ///        "minimum": 0.0
+    ///      },
+    ///      "maxItems": 5,
+    ///      "minItems": 5
+    ///    },
+    ///    "p": {
+    ///      "description": "The p value for the quantile.",
+    ///      "type": "number",
+    ///      "format": "double"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct Quantile {
+        /// The desired marker positions.
+        pub desired_marker_positions: [f64; 5usize],
+        /// The heights of the markers.
+        pub marker_heights: [f64; 5usize],
+        /// The positions of the markers.
+        ///
+        /// We track sample size in the 5th position, as useful observations
+        /// won't start until we've filled the heights at the 6th sample anyway
+        /// This does deviate from the paper, but it's a more useful
+        /// representation that works according to the paper's algorithm.
+        pub marker_positions: [u64; 5usize],
+        pub p: f64,
+    }
+
+    impl From<&Quantile> for Quantile {
+        fn from(value: &Quantile) -> Self {
+            value.clone()
+        }
+    }
+
+    impl Quantile {
+        pub fn builder() -> builder::Quantile {
             Default::default()
         }
     }
@@ -27965,6 +28914,13 @@ pub mod types {
         pub struct Distributiondouble {
             bins: Result<Vec<f64>, String>,
             counts: Result<Vec<u64>, String>,
+            max: Result<Option<f64>, String>,
+            min: Result<Option<f64>, String>,
+            p50: Result<Option<super::Quantile>, String>,
+            p90: Result<Option<super::Quantile>, String>,
+            p99: Result<Option<super::Quantile>, String>,
+            squared_mean: Result<f64, String>,
+            sum_of_samples: Result<f64, String>,
         }
 
         impl Default for Distributiondouble {
@@ -27972,6 +28928,13 @@ pub mod types {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
                     counts: Err("no value supplied for counts".to_string()),
+                    max: Ok(Default::default()),
+                    min: Ok(Default::default()),
+                    p50: Ok(Default::default()),
+                    p90: Ok(Default::default()),
+                    p99: Ok(Default::default()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -27997,6 +28960,76 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for counts: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<f64>>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<f64>>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Quantile>>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Quantile>>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Quantile>>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
+                self
+            }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Distributiondouble> for super::Distributiondouble {
@@ -28005,6 +29038,13 @@ pub mod types {
                 Ok(Self {
                     bins: value.bins?,
                     counts: value.counts?,
+                    max: value.max?,
+                    min: value.min?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -28014,6 +29054,13 @@ pub mod types {
                 Self {
                     bins: Ok(value.bins),
                     counts: Ok(value.counts),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -28022,6 +29069,13 @@ pub mod types {
         pub struct Distributionint64 {
             bins: Result<Vec<i64>, String>,
             counts: Result<Vec<u64>, String>,
+            max: Result<Option<i64>, String>,
+            min: Result<Option<i64>, String>,
+            p50: Result<Option<super::Quantile>, String>,
+            p90: Result<Option<super::Quantile>, String>,
+            p99: Result<Option<super::Quantile>, String>,
+            squared_mean: Result<f64, String>,
+            sum_of_samples: Result<i64, String>,
         }
 
         impl Default for Distributionint64 {
@@ -28029,6 +29083,13 @@ pub mod types {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
                     counts: Err("no value supplied for counts".to_string()),
+                    max: Ok(Default::default()),
+                    min: Ok(Default::default()),
+                    p50: Ok(Default::default()),
+                    p90: Ok(Default::default()),
+                    p99: Ok(Default::default()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -28054,6 +29115,76 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for counts: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<i64>>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<i64>>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Quantile>>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Quantile>>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<super::Quantile>>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
+                self
+            }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Distributionint64> for super::Distributionint64 {
@@ -28062,6 +29193,13 @@ pub mod types {
                 Ok(Self {
                     bins: value.bins?,
                     counts: value.counts?,
+                    max: value.max?,
+                    min: value.min?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -28071,6 +29209,13 @@ pub mod types {
                 Self {
                     bins: Ok(value.bins),
                     counts: Ok(value.counts),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -29023,16 +30168,30 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Histogramdouble {
             bins: Result<Vec<super::Bindouble>, String>,
+            max: Result<f64, String>,
+            min: Result<f64, String>,
             n_samples: Result<u64, String>,
+            p50: Result<super::Quantile, String>,
+            p90: Result<super::Quantile, String>,
+            p99: Result<super::Quantile, String>,
+            squared_mean: Result<f64, String>,
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            sum_of_samples: Result<f64, String>,
         }
 
         impl Default for Histogramdouble {
             fn default() -> Self {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
+                    max: Err("no value supplied for max".to_string()),
+                    min: Err("no value supplied for min".to_string()),
                     n_samples: Err("no value supplied for n_samples".to_string()),
+                    p50: Err("no value supplied for p50".to_string()),
+                    p90: Err("no value supplied for p90".to_string()),
+                    p99: Err("no value supplied for p99".to_string()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
                     start_time: Err("no value supplied for start_time".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -29048,6 +30207,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
             pub fn n_samples<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u64>,
@@ -29056,6 +30235,46 @@ pub mod types {
                 self.n_samples = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -29068,6 +30287,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Histogramdouble> for super::Histogramdouble {
@@ -29075,8 +30304,15 @@ pub mod types {
             fn try_from(value: Histogramdouble) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
+                    max: value.max?,
+                    min: value.min?,
                     n_samples: value.n_samples?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
                     start_time: value.start_time?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -29085,8 +30321,15 @@ pub mod types {
             fn from(value: super::Histogramdouble) -> Self {
                 Self {
                     bins: Ok(value.bins),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
                     n_samples: Ok(value.n_samples),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
                     start_time: Ok(value.start_time),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -29094,16 +30337,30 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Histogramfloat {
             bins: Result<Vec<super::Binfloat>, String>,
+            max: Result<f32, String>,
+            min: Result<f32, String>,
             n_samples: Result<u64, String>,
+            p50: Result<super::Quantile, String>,
+            p90: Result<super::Quantile, String>,
+            p99: Result<super::Quantile, String>,
+            squared_mean: Result<f64, String>,
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            sum_of_samples: Result<f64, String>,
         }
 
         impl Default for Histogramfloat {
             fn default() -> Self {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
+                    max: Err("no value supplied for max".to_string()),
+                    min: Err("no value supplied for min".to_string()),
                     n_samples: Err("no value supplied for n_samples".to_string()),
+                    p50: Err("no value supplied for p50".to_string()),
+                    p90: Err("no value supplied for p90".to_string()),
+                    p99: Err("no value supplied for p99".to_string()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
                     start_time: Err("no value supplied for start_time".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -29119,6 +30376,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f32>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f32>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
             pub fn n_samples<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u64>,
@@ -29127,6 +30404,46 @@ pub mod types {
                 self.n_samples = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -29139,6 +30456,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Histogramfloat> for super::Histogramfloat {
@@ -29146,8 +30473,15 @@ pub mod types {
             fn try_from(value: Histogramfloat) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
+                    max: value.max?,
+                    min: value.min?,
                     n_samples: value.n_samples?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
                     start_time: value.start_time?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -29156,8 +30490,15 @@ pub mod types {
             fn from(value: super::Histogramfloat) -> Self {
                 Self {
                     bins: Ok(value.bins),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
                     n_samples: Ok(value.n_samples),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
                     start_time: Ok(value.start_time),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -29165,16 +30506,30 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Histogramint16 {
             bins: Result<Vec<super::Binint16>, String>,
+            max: Result<i16, String>,
+            min: Result<i16, String>,
             n_samples: Result<u64, String>,
+            p50: Result<super::Quantile, String>,
+            p90: Result<super::Quantile, String>,
+            p99: Result<super::Quantile, String>,
+            squared_mean: Result<f64, String>,
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            sum_of_samples: Result<i64, String>,
         }
 
         impl Default for Histogramint16 {
             fn default() -> Self {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
+                    max: Err("no value supplied for max".to_string()),
+                    min: Err("no value supplied for min".to_string()),
                     n_samples: Err("no value supplied for n_samples".to_string()),
+                    p50: Err("no value supplied for p50".to_string()),
+                    p90: Err("no value supplied for p90".to_string()),
+                    p99: Err("no value supplied for p99".to_string()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
                     start_time: Err("no value supplied for start_time".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -29190,6 +30545,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i16>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i16>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
             pub fn n_samples<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u64>,
@@ -29198,6 +30573,46 @@ pub mod types {
                 self.n_samples = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -29210,6 +30625,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Histogramint16> for super::Histogramint16 {
@@ -29217,8 +30642,15 @@ pub mod types {
             fn try_from(value: Histogramint16) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
+                    max: value.max?,
+                    min: value.min?,
                     n_samples: value.n_samples?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
                     start_time: value.start_time?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -29227,8 +30659,15 @@ pub mod types {
             fn from(value: super::Histogramint16) -> Self {
                 Self {
                     bins: Ok(value.bins),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
                     n_samples: Ok(value.n_samples),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
                     start_time: Ok(value.start_time),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -29236,16 +30675,30 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Histogramint32 {
             bins: Result<Vec<super::Binint32>, String>,
+            max: Result<i32, String>,
+            min: Result<i32, String>,
             n_samples: Result<u64, String>,
+            p50: Result<super::Quantile, String>,
+            p90: Result<super::Quantile, String>,
+            p99: Result<super::Quantile, String>,
+            squared_mean: Result<f64, String>,
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            sum_of_samples: Result<i64, String>,
         }
 
         impl Default for Histogramint32 {
             fn default() -> Self {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
+                    max: Err("no value supplied for max".to_string()),
+                    min: Err("no value supplied for min".to_string()),
                     n_samples: Err("no value supplied for n_samples".to_string()),
+                    p50: Err("no value supplied for p50".to_string()),
+                    p90: Err("no value supplied for p90".to_string()),
+                    p99: Err("no value supplied for p99".to_string()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
                     start_time: Err("no value supplied for start_time".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -29261,6 +30714,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i32>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i32>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
             pub fn n_samples<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u64>,
@@ -29269,6 +30742,46 @@ pub mod types {
                 self.n_samples = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -29281,6 +30794,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Histogramint32> for super::Histogramint32 {
@@ -29288,8 +30811,15 @@ pub mod types {
             fn try_from(value: Histogramint32) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
+                    max: value.max?,
+                    min: value.min?,
                     n_samples: value.n_samples?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
                     start_time: value.start_time?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -29298,8 +30828,15 @@ pub mod types {
             fn from(value: super::Histogramint32) -> Self {
                 Self {
                     bins: Ok(value.bins),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
                     n_samples: Ok(value.n_samples),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
                     start_time: Ok(value.start_time),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -29307,16 +30844,30 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Histogramint64 {
             bins: Result<Vec<super::Binint64>, String>,
+            max: Result<i64, String>,
+            min: Result<i64, String>,
             n_samples: Result<u64, String>,
+            p50: Result<super::Quantile, String>,
+            p90: Result<super::Quantile, String>,
+            p99: Result<super::Quantile, String>,
+            squared_mean: Result<f64, String>,
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            sum_of_samples: Result<i64, String>,
         }
 
         impl Default for Histogramint64 {
             fn default() -> Self {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
+                    max: Err("no value supplied for max".to_string()),
+                    min: Err("no value supplied for min".to_string()),
                     n_samples: Err("no value supplied for n_samples".to_string()),
+                    p50: Err("no value supplied for p50".to_string()),
+                    p90: Err("no value supplied for p90".to_string()),
+                    p99: Err("no value supplied for p99".to_string()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
                     start_time: Err("no value supplied for start_time".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -29332,6 +30883,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
             pub fn n_samples<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u64>,
@@ -29340,6 +30911,46 @@ pub mod types {
                 self.n_samples = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -29352,6 +30963,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Histogramint64> for super::Histogramint64 {
@@ -29359,8 +30980,15 @@ pub mod types {
             fn try_from(value: Histogramint64) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
+                    max: value.max?,
+                    min: value.min?,
                     n_samples: value.n_samples?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
                     start_time: value.start_time?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -29369,8 +30997,15 @@ pub mod types {
             fn from(value: super::Histogramint64) -> Self {
                 Self {
                     bins: Ok(value.bins),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
                     n_samples: Ok(value.n_samples),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
                     start_time: Ok(value.start_time),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -29378,16 +31013,30 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Histogramint8 {
             bins: Result<Vec<super::Binint8>, String>,
+            max: Result<i8, String>,
+            min: Result<i8, String>,
             n_samples: Result<u64, String>,
+            p50: Result<super::Quantile, String>,
+            p90: Result<super::Quantile, String>,
+            p99: Result<super::Quantile, String>,
+            squared_mean: Result<f64, String>,
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            sum_of_samples: Result<i64, String>,
         }
 
         impl Default for Histogramint8 {
             fn default() -> Self {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
+                    max: Err("no value supplied for max".to_string()),
+                    min: Err("no value supplied for min".to_string()),
                     n_samples: Err("no value supplied for n_samples".to_string()),
+                    p50: Err("no value supplied for p50".to_string()),
+                    p90: Err("no value supplied for p90".to_string()),
+                    p99: Err("no value supplied for p99".to_string()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
                     start_time: Err("no value supplied for start_time".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -29403,6 +31052,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i8>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i8>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
             pub fn n_samples<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u64>,
@@ -29411,6 +31080,46 @@ pub mod types {
                 self.n_samples = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -29423,6 +31132,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Histogramint8> for super::Histogramint8 {
@@ -29430,8 +31149,15 @@ pub mod types {
             fn try_from(value: Histogramint8) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
+                    max: value.max?,
+                    min: value.min?,
                     n_samples: value.n_samples?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
                     start_time: value.start_time?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -29440,8 +31166,15 @@ pub mod types {
             fn from(value: super::Histogramint8) -> Self {
                 Self {
                     bins: Ok(value.bins),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
                     n_samples: Ok(value.n_samples),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
                     start_time: Ok(value.start_time),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -29449,16 +31182,30 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Histogramuint16 {
             bins: Result<Vec<super::Binuint16>, String>,
+            max: Result<u16, String>,
+            min: Result<u16, String>,
             n_samples: Result<u64, String>,
+            p50: Result<super::Quantile, String>,
+            p90: Result<super::Quantile, String>,
+            p99: Result<super::Quantile, String>,
+            squared_mean: Result<f64, String>,
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            sum_of_samples: Result<i64, String>,
         }
 
         impl Default for Histogramuint16 {
             fn default() -> Self {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
+                    max: Err("no value supplied for max".to_string()),
+                    min: Err("no value supplied for min".to_string()),
                     n_samples: Err("no value supplied for n_samples".to_string()),
+                    p50: Err("no value supplied for p50".to_string()),
+                    p90: Err("no value supplied for p90".to_string()),
+                    p99: Err("no value supplied for p99".to_string()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
                     start_time: Err("no value supplied for start_time".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -29474,6 +31221,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u16>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
             pub fn n_samples<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u64>,
@@ -29482,6 +31249,46 @@ pub mod types {
                 self.n_samples = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -29494,6 +31301,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Histogramuint16> for super::Histogramuint16 {
@@ -29501,8 +31318,15 @@ pub mod types {
             fn try_from(value: Histogramuint16) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
+                    max: value.max?,
+                    min: value.min?,
                     n_samples: value.n_samples?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
                     start_time: value.start_time?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -29511,8 +31335,15 @@ pub mod types {
             fn from(value: super::Histogramuint16) -> Self {
                 Self {
                     bins: Ok(value.bins),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
                     n_samples: Ok(value.n_samples),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
                     start_time: Ok(value.start_time),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -29520,16 +31351,30 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Histogramuint32 {
             bins: Result<Vec<super::Binuint32>, String>,
+            max: Result<u32, String>,
+            min: Result<u32, String>,
             n_samples: Result<u64, String>,
+            p50: Result<super::Quantile, String>,
+            p90: Result<super::Quantile, String>,
+            p99: Result<super::Quantile, String>,
+            squared_mean: Result<f64, String>,
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            sum_of_samples: Result<i64, String>,
         }
 
         impl Default for Histogramuint32 {
             fn default() -> Self {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
+                    max: Err("no value supplied for max".to_string()),
+                    min: Err("no value supplied for min".to_string()),
                     n_samples: Err("no value supplied for n_samples".to_string()),
+                    p50: Err("no value supplied for p50".to_string()),
+                    p90: Err("no value supplied for p90".to_string()),
+                    p99: Err("no value supplied for p99".to_string()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
                     start_time: Err("no value supplied for start_time".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -29545,6 +31390,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u32>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
             pub fn n_samples<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u64>,
@@ -29553,6 +31418,46 @@ pub mod types {
                 self.n_samples = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -29565,6 +31470,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Histogramuint32> for super::Histogramuint32 {
@@ -29572,8 +31487,15 @@ pub mod types {
             fn try_from(value: Histogramuint32) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
+                    max: value.max?,
+                    min: value.min?,
                     n_samples: value.n_samples?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
                     start_time: value.start_time?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -29582,8 +31504,15 @@ pub mod types {
             fn from(value: super::Histogramuint32) -> Self {
                 Self {
                     bins: Ok(value.bins),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
                     n_samples: Ok(value.n_samples),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
                     start_time: Ok(value.start_time),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -29591,16 +31520,30 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Histogramuint64 {
             bins: Result<Vec<super::Binuint64>, String>,
+            max: Result<u64, String>,
+            min: Result<u64, String>,
             n_samples: Result<u64, String>,
+            p50: Result<super::Quantile, String>,
+            p90: Result<super::Quantile, String>,
+            p99: Result<super::Quantile, String>,
+            squared_mean: Result<f64, String>,
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            sum_of_samples: Result<i64, String>,
         }
 
         impl Default for Histogramuint64 {
             fn default() -> Self {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
+                    max: Err("no value supplied for max".to_string()),
+                    min: Err("no value supplied for min".to_string()),
                     n_samples: Err("no value supplied for n_samples".to_string()),
+                    p50: Err("no value supplied for p50".to_string()),
+                    p90: Err("no value supplied for p90".to_string()),
+                    p99: Err("no value supplied for p99".to_string()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
                     start_time: Err("no value supplied for start_time".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -29616,6 +31559,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u64>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
             pub fn n_samples<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u64>,
@@ -29624,6 +31587,46 @@ pub mod types {
                 self.n_samples = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -29636,6 +31639,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Histogramuint64> for super::Histogramuint64 {
@@ -29643,8 +31656,15 @@ pub mod types {
             fn try_from(value: Histogramuint64) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
+                    max: value.max?,
+                    min: value.min?,
                     n_samples: value.n_samples?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
                     start_time: value.start_time?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -29653,8 +31673,15 @@ pub mod types {
             fn from(value: super::Histogramuint64) -> Self {
                 Self {
                     bins: Ok(value.bins),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
                     n_samples: Ok(value.n_samples),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
                     start_time: Ok(value.start_time),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -29662,16 +31689,30 @@ pub mod types {
         #[derive(Clone, Debug)]
         pub struct Histogramuint8 {
             bins: Result<Vec<super::Binuint8>, String>,
+            max: Result<u8, String>,
+            min: Result<u8, String>,
             n_samples: Result<u64, String>,
+            p50: Result<super::Quantile, String>,
+            p90: Result<super::Quantile, String>,
+            p99: Result<super::Quantile, String>,
+            squared_mean: Result<f64, String>,
             start_time: Result<chrono::DateTime<chrono::offset::Utc>, String>,
+            sum_of_samples: Result<i64, String>,
         }
 
         impl Default for Histogramuint8 {
             fn default() -> Self {
                 Self {
                     bins: Err("no value supplied for bins".to_string()),
+                    max: Err("no value supplied for max".to_string()),
+                    min: Err("no value supplied for min".to_string()),
                     n_samples: Err("no value supplied for n_samples".to_string()),
+                    p50: Err("no value supplied for p50".to_string()),
+                    p90: Err("no value supplied for p90".to_string()),
+                    p99: Err("no value supplied for p99".to_string()),
+                    squared_mean: Err("no value supplied for squared_mean".to_string()),
                     start_time: Err("no value supplied for start_time".to_string()),
+                    sum_of_samples: Err("no value supplied for sum_of_samples".to_string()),
                 }
             }
         }
@@ -29687,6 +31728,26 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for bins: {}", e));
                 self
             }
+            pub fn max<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u8>,
+                T::Error: std::fmt::Display,
+            {
+                self.max = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max: {}", e));
+                self
+            }
+            pub fn min<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<u8>,
+                T::Error: std::fmt::Display,
+            {
+                self.min = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for min: {}", e));
+                self
+            }
             pub fn n_samples<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<u64>,
@@ -29695,6 +31756,46 @@ pub mod types {
                 self.n_samples = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for n_samples: {}", e));
+                self
+            }
+            pub fn p50<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p50 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p50: {}", e));
+                self
+            }
+            pub fn p90<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p90 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p90: {}", e));
+                self
+            }
+            pub fn p99<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Quantile>,
+                T::Error: std::fmt::Display,
+            {
+                self.p99 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p99: {}", e));
+                self
+            }
+            pub fn squared_mean<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.squared_mean = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for squared_mean: {}", e)
+                });
                 self
             }
             pub fn start_time<T>(mut self, value: T) -> Self
@@ -29707,6 +31808,16 @@ pub mod types {
                     .map_err(|e| format!("error converting supplied value for start_time: {}", e));
                 self
             }
+            pub fn sum_of_samples<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<i64>,
+                T::Error: std::fmt::Display,
+            {
+                self.sum_of_samples = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sum_of_samples: {}", e)
+                });
+                self
+            }
         }
 
         impl std::convert::TryFrom<Histogramuint8> for super::Histogramuint8 {
@@ -29714,8 +31825,15 @@ pub mod types {
             fn try_from(value: Histogramuint8) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     bins: value.bins?,
+                    max: value.max?,
+                    min: value.min?,
                     n_samples: value.n_samples?,
+                    p50: value.p50?,
+                    p90: value.p90?,
+                    p99: value.p99?,
+                    squared_mean: value.squared_mean?,
                     start_time: value.start_time?,
+                    sum_of_samples: value.sum_of_samples?,
                 })
             }
         }
@@ -29724,8 +31842,15 @@ pub mod types {
             fn from(value: super::Histogramuint8) -> Self {
                 Self {
                     bins: Ok(value.bins),
+                    max: Ok(value.max),
+                    min: Ok(value.min),
                     n_samples: Ok(value.n_samples),
+                    p50: Ok(value.p50),
+                    p90: Ok(value.p90),
+                    p99: Ok(value.p99),
+                    squared_mean: Ok(value.squared_mean),
                     start_time: Ok(value.start_time),
+                    sum_of_samples: Ok(value.sum_of_samples),
                 }
             }
         }
@@ -34197,6 +36322,99 @@ pub mod types {
                 Self {
                     description: Ok(value.description),
                     name: Ok(value.name),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
+        pub struct Quantile {
+            desired_marker_positions: Result<[f64; 5usize], String>,
+            marker_heights: Result<[f64; 5usize], String>,
+            marker_positions: Result<[u64; 5usize], String>,
+            p: Result<f64, String>,
+        }
+
+        impl Default for Quantile {
+            fn default() -> Self {
+                Self {
+                    desired_marker_positions: Err(
+                        "no value supplied for desired_marker_positions".to_string()
+                    ),
+                    marker_heights: Err("no value supplied for marker_heights".to_string()),
+                    marker_positions: Err("no value supplied for marker_positions".to_string()),
+                    p: Err("no value supplied for p".to_string()),
+                }
+            }
+        }
+
+        impl Quantile {
+            pub fn desired_marker_positions<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<[f64; 5usize]>,
+                T::Error: std::fmt::Display,
+            {
+                self.desired_marker_positions = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for desired_marker_positions: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn marker_heights<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<[f64; 5usize]>,
+                T::Error: std::fmt::Display,
+            {
+                self.marker_heights = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for marker_heights: {}", e)
+                });
+                self
+            }
+            pub fn marker_positions<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<[u64; 5usize]>,
+                T::Error: std::fmt::Display,
+            {
+                self.marker_positions = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for marker_positions: {}",
+                        e
+                    )
+                });
+                self
+            }
+            pub fn p<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<f64>,
+                T::Error: std::fmt::Display,
+            {
+                self.p = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for p: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<Quantile> for super::Quantile {
+            type Error = super::error::ConversionError;
+            fn try_from(value: Quantile) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    desired_marker_positions: value.desired_marker_positions?,
+                    marker_heights: value.marker_heights?,
+                    marker_positions: value.marker_positions?,
+                    p: value.p?,
+                })
+            }
+        }
+
+        impl From<super::Quantile> for Quantile {
+            fn from(value: super::Quantile) -> Self {
+                Self {
+                    desired_marker_positions: Ok(value.desired_marker_positions),
+                    marker_heights: Ok(value.marker_heights),
+                    marker_positions: Ok(value.marker_positions),
+                    p: Ok(value.p),
                 }
             }
         }
