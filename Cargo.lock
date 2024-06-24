@@ -894,7 +894,7 @@ checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
 [[package]]
 name = "dropshot"
 version = "0.10.2-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#591b76623bf17c48e3cca1c712e234aa957f22ac"
+source = "git+https://github.com/oxidecomputer/dropshot#84aaeb7d7aadceaa77010e550811df6701bd5b55"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -939,7 +939,7 @@ dependencies = [
 [[package]]
 name = "dropshot_endpoint"
 version = "0.10.2-dev"
-source = "git+https://github.com/oxidecomputer/dropshot#591b76623bf17c48e3cca1c712e234aa957f22ac"
+source = "git+https://github.com/oxidecomputer/dropshot#84aaeb7d7aadceaa77010e550811df6701bd5b55"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1489,7 +1489,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.4.10",
+ "socket2 0.5.7",
  "tokio",
  "tower-service",
  "tracing",
@@ -3970,9 +3970,9 @@ checksum = "711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a"
 
 [[package]]
 name = "uuid"
-version = "1.8.0"
+version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a183cf7feeba97b4dd1c0d46788634f6221d87fa961b305bed08c851829efcc0"
+checksum = "3ea73390fe27785838dcbf75b91b1d84799e28f1ce71e6f372a5dc2200c80de5"
 dependencies = [
  "getrandom",
  "serde",
