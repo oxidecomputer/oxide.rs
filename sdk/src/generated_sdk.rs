@@ -880,6 +880,139 @@ pub mod types {
         }
     }
 
+    /// Authorization scope for a timeseries.
+    ///
+    /// This describes the level at which a user must be authorized to read data
+    /// from a timeseries. For example, fleet-scoping means the data is only
+    /// visible to an operator or fleet reader. Project-scoped, on the other
+    /// hand, indicates that a user will see data limited to the projects on
+    /// which they have read permissions.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Authorization scope for a timeseries.\n\nThis describes
+    /// the level at which a user must be authorized to read data from a
+    /// timeseries. For example, fleet-scoping means the data is only visible to
+    /// an operator or fleet reader. Project-scoped, on the other hand,
+    /// indicates that a user will see data limited to the projects on which
+    /// they have read permissions.",
+    ///  "oneOf": [
+    ///    {
+    ///      "description": "Timeseries data is limited to fleet readers.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "fleet"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Timeseries data is limited to the authorized silo
+    /// for a user.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "silo"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "Timeseries data is limited to the authorized
+    /// projects for a user.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "project"
+    ///      ]
+    ///    },
+    ///    {
+    ///      "description": "The timeseries is viewable to all without
+    /// limitation.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "viewable_to_all"
+    ///      ]
+    ///    }
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum AuthzScope {
+        /// Timeseries data is limited to fleet readers.
+        #[serde(rename = "fleet")]
+        Fleet,
+        /// Timeseries data is limited to the authorized silo for a user.
+        #[serde(rename = "silo")]
+        Silo,
+        /// Timeseries data is limited to the authorized projects for a user.
+        #[serde(rename = "project")]
+        Project,
+        /// The timeseries is viewable to all without limitation.
+        #[serde(rename = "viewable_to_all")]
+        ViewableToAll,
+    }
+
+    impl From<&AuthzScope> for AuthzScope {
+        fn from(value: &AuthzScope) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for AuthzScope {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Fleet => "fleet".to_string(),
+                Self::Silo => "silo".to_string(),
+                Self::Project => "project".to_string(),
+                Self::ViewableToAll => "viewable_to_all".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for AuthzScope {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "fleet" => Ok(Self::Fleet),
+                "silo" => Ok(Self::Silo),
+                "project" => Ok(Self::Project),
+                "viewable_to_all" => Ok(Self::ViewableToAll),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for AuthzScope {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for AuthzScope {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for AuthzScope {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     /// Properties that uniquely identify an Oxide hardware component
     ///
     /// <details><summary>JSON schema</summary>
@@ -7204,11 +7337,15 @@ pub mod types {
     /// timeseries schema.",
     ///  "type": "object",
     ///  "required": [
+    ///    "description",
     ///    "field_type",
     ///    "name",
     ///    "source"
     ///  ],
     ///  "properties": {
+    ///    "description": {
+    ///      "type": "string"
+    ///    },
     ///    "field_type": {
     ///      "$ref": "#/components/schemas/FieldType"
     ///    },
@@ -7224,6 +7361,7 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct FieldSchema {
+        pub description: String,
         pub field_type: FieldType,
         pub name: String,
         pub source: FieldSource,
@@ -21877,6 +22015,48 @@ pub mod types {
         }
     }
 
+    /// Text descriptions for the target and metric of a timeseries.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Text descriptions for the target and metric of a
+    /// timeseries.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "metric",
+    ///    "target"
+    ///  ],
+    ///  "properties": {
+    ///    "metric": {
+    ///      "type": "string"
+    ///    },
+    ///    "target": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    /// }
+    /// ```
+    /// </details>
+    #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
+    pub struct TimeseriesDescription {
+        pub metric: String,
+        pub target: String,
+    }
+
+    impl From<&TimeseriesDescription> for TimeseriesDescription {
+        fn from(value: &TimeseriesDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl TimeseriesDescription {
+        pub fn builder() -> builder::TimeseriesDescription {
+            Default::default()
+        }
+    }
+
     /// Names are constructed by concatenating the target and metric names with
     /// ':'. Target and metric names must be lowercase alphanumeric characters
     /// with '_' separating words.
@@ -22026,18 +22206,28 @@ pub mod types {
     /// schema for each field.",
     ///  "type": "object",
     ///  "required": [
+    ///    "authz_scope",
     ///    "created",
     ///    "datum_type",
+    ///    "description",
     ///    "field_schema",
-    ///    "timeseries_name"
+    ///    "timeseries_name",
+    ///    "units",
+    ///    "version"
     ///  ],
     ///  "properties": {
+    ///    "authz_scope": {
+    ///      "$ref": "#/components/schemas/AuthzScope"
+    ///    },
     ///    "created": {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "datum_type": {
     ///      "$ref": "#/components/schemas/DatumType"
+    ///    },
+    ///    "description": {
+    ///      "$ref": "#/components/schemas/TimeseriesDescription"
     ///    },
     ///    "field_schema": {
     ///      "type": "array",
@@ -22048,6 +22238,14 @@ pub mod types {
     ///    },
     ///    "timeseries_name": {
     ///      "$ref": "#/components/schemas/TimeseriesName"
+    ///    },
+    ///    "units": {
+    ///      "$ref": "#/components/schemas/Units"
+    ///    },
+    ///    "version": {
+    ///      "type": "integer",
+    ///      "format": "uint8",
+    ///      "minimum": 1.0
     ///    }
     ///  }
     /// }
@@ -22055,10 +22253,14 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct TimeseriesSchema {
+        pub authz_scope: AuthzScope,
         pub created: chrono::DateTime<chrono::offset::Utc>,
         pub datum_type: DatumType,
+        pub description: TimeseriesDescription,
         pub field_schema: Vec<FieldSchema>,
         pub timeseries_name: TimeseriesName,
+        pub units: Units,
+        pub version: std::num::NonZeroU8,
     }
 
     impl From<&TimeseriesSchema> for TimeseriesSchema {
@@ -22265,6 +22467,88 @@ pub mod types {
     impl UninitializedSledResultsPage {
         pub fn builder() -> builder::UninitializedSledResultsPage {
             Default::default()
+        }
+    }
+
+    /// Measurement units for timeseries samples.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    /// {
+    ///  "description": "Measurement units for timeseries samples.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "count",
+    ///    "bytes"
+    ///  ]
+    /// }
+    /// ```
+    /// </details>
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        Deserialize,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+        schemars :: JsonSchema,
+    )]
+    pub enum Units {
+        #[serde(rename = "count")]
+        Count,
+        #[serde(rename = "bytes")]
+        Bytes,
+    }
+
+    impl From<&Units> for Units {
+        fn from(value: &Units) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ToString for Units {
+        fn to_string(&self) -> String {
+            match *self {
+                Self::Count => "count".to_string(),
+                Self::Bytes => "bytes".to_string(),
+            }
+        }
+    }
+
+    impl std::str::FromStr for Units {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
+            match value {
+                "count" => Ok(Self::Count),
+                "bytes" => Ok(Self::Bytes),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl std::convert::TryFrom<&str> for Units {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<&String> for Units {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl std::convert::TryFrom<String> for Units {
+        type Error = self::error::ConversionError;
+        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -29393,6 +29677,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct FieldSchema {
+            description: Result<String, String>,
             field_type: Result<super::FieldType, String>,
             name: Result<String, String>,
             source: Result<super::FieldSource, String>,
@@ -29401,6 +29686,7 @@ pub mod types {
         impl Default for FieldSchema {
             fn default() -> Self {
                 Self {
+                    description: Err("no value supplied for description".to_string()),
                     field_type: Err("no value supplied for field_type".to_string()),
                     name: Err("no value supplied for name".to_string()),
                     source: Err("no value supplied for source".to_string()),
@@ -29409,6 +29695,16 @@ pub mod types {
         }
 
         impl FieldSchema {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
+                self
+            }
             pub fn field_type<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<super::FieldType>,
@@ -29445,6 +29741,7 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: FieldSchema) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    description: value.description?,
                     field_type: value.field_type?,
                     name: value.name?,
                     source: value.source?,
@@ -29455,6 +29752,7 @@ pub mod types {
         impl From<super::FieldSchema> for FieldSchema {
             fn from(value: super::FieldSchema) -> Self {
                 Self {
+                    description: Ok(value.description),
                     field_type: Ok(value.field_type),
                     name: Ok(value.name),
                     source: Ok(value.source),
@@ -41163,6 +41461,65 @@ pub mod types {
         }
 
         #[derive(Clone, Debug)]
+        pub struct TimeseriesDescription {
+            metric: Result<String, String>,
+            target: Result<String, String>,
+        }
+
+        impl Default for TimeseriesDescription {
+            fn default() -> Self {
+                Self {
+                    metric: Err("no value supplied for metric".to_string()),
+                    target: Err("no value supplied for target".to_string()),
+                }
+            }
+        }
+
+        impl TimeseriesDescription {
+            pub fn metric<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.metric = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for metric: {}", e));
+                self
+            }
+            pub fn target<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<String>,
+                T::Error: std::fmt::Display,
+            {
+                self.target = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for target: {}", e));
+                self
+            }
+        }
+
+        impl std::convert::TryFrom<TimeseriesDescription> for super::TimeseriesDescription {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: TimeseriesDescription,
+            ) -> Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    metric: value.metric?,
+                    target: value.target?,
+                })
+            }
+        }
+
+        impl From<super::TimeseriesDescription> for TimeseriesDescription {
+            fn from(value: super::TimeseriesDescription) -> Self {
+                Self {
+                    metric: Ok(value.metric),
+                    target: Ok(value.target),
+                }
+            }
+        }
+
+        #[derive(Clone, Debug)]
         pub struct TimeseriesQuery {
             query: Result<String, String>,
         }
@@ -41207,24 +41564,42 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct TimeseriesSchema {
+            authz_scope: Result<super::AuthzScope, String>,
             created: Result<chrono::DateTime<chrono::offset::Utc>, String>,
             datum_type: Result<super::DatumType, String>,
+            description: Result<super::TimeseriesDescription, String>,
             field_schema: Result<Vec<super::FieldSchema>, String>,
             timeseries_name: Result<super::TimeseriesName, String>,
+            units: Result<super::Units, String>,
+            version: Result<std::num::NonZeroU8, String>,
         }
 
         impl Default for TimeseriesSchema {
             fn default() -> Self {
                 Self {
+                    authz_scope: Err("no value supplied for authz_scope".to_string()),
                     created: Err("no value supplied for created".to_string()),
                     datum_type: Err("no value supplied for datum_type".to_string()),
+                    description: Err("no value supplied for description".to_string()),
                     field_schema: Err("no value supplied for field_schema".to_string()),
                     timeseries_name: Err("no value supplied for timeseries_name".to_string()),
+                    units: Err("no value supplied for units".to_string()),
+                    version: Err("no value supplied for version".to_string()),
                 }
             }
         }
 
         impl TimeseriesSchema {
+            pub fn authz_scope<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::AuthzScope>,
+                T::Error: std::fmt::Display,
+            {
+                self.authz_scope = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for authz_scope: {}", e));
+                self
+            }
             pub fn created<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<chrono::DateTime<chrono::offset::Utc>>,
@@ -41243,6 +41618,16 @@ pub mod types {
                 self.datum_type = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for datum_type: {}", e));
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::TimeseriesDescription>,
+                T::Error: std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {}", e));
                 self
             }
             pub fn field_schema<T>(mut self, value: T) -> Self
@@ -41265,16 +41650,40 @@ pub mod types {
                 });
                 self
             }
+            pub fn units<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<super::Units>,
+                T::Error: std::fmt::Display,
+            {
+                self.units = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for units: {}", e));
+                self
+            }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<std::num::NonZeroU8>,
+                T::Error: std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {}", e));
+                self
+            }
         }
 
         impl std::convert::TryFrom<TimeseriesSchema> for super::TimeseriesSchema {
             type Error = super::error::ConversionError;
             fn try_from(value: TimeseriesSchema) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    authz_scope: value.authz_scope?,
                     created: value.created?,
                     datum_type: value.datum_type?,
+                    description: value.description?,
                     field_schema: value.field_schema?,
                     timeseries_name: value.timeseries_name?,
+                    units: value.units?,
+                    version: value.version?,
                 })
             }
         }
@@ -41282,10 +41691,14 @@ pub mod types {
         impl From<super::TimeseriesSchema> for TimeseriesSchema {
             fn from(value: super::TimeseriesSchema) -> Self {
                 Self {
+                    authz_scope: Ok(value.authz_scope),
                     created: Ok(value.created),
                     datum_type: Ok(value.datum_type),
+                    description: Ok(value.description),
                     field_schema: Ok(value.field_schema),
                     timeseries_name: Ok(value.timeseries_name),
+                    units: Ok(value.units),
+                    version: Ok(value.version),
                 }
             }
         }
