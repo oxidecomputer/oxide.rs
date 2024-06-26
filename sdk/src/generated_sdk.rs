@@ -24796,7 +24796,7 @@ pub mod types {
     }
 
     /// A VPC subnet represents a logical grouping for instances that allows
-    /// network traffic between them, within a IPv4 subnetwork or optionall an
+    /// network traffic between them, within a IPv4 subnetwork or optionally an
     /// IPv6 subnetwork.
     ///
     /// <details><summary>JSON schema</summary>
@@ -24805,7 +24805,7 @@ pub mod types {
     /// {
     ///  "description": "A VPC subnet represents a logical grouping for
     /// instances that allows network traffic between them, within a IPv4
-    /// subnetwork or optionall an IPv6 subnetwork.",
+    /// subnetwork or optionally an IPv6 subnetwork.",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
@@ -24818,6 +24818,14 @@ pub mod types {
     ///    "vpc_id"
     ///  ],
     ///  "properties": {
+    ///    "custom_router_id": {
+    ///      "description": "ID for an attached custom router.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
     ///    "description": {
     ///      "description": "human-readable free-form text about a resource",
     ///      "type": "string"
@@ -24874,6 +24882,9 @@ pub mod types {
     /// </details>
     #[derive(Clone, Debug, Deserialize, Serialize, schemars :: JsonSchema)]
     pub struct VpcSubnet {
+        /// ID for an attached custom router.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pub custom_router_id: Option<uuid::Uuid>,
         /// human-readable free-form text about a resource
         pub description: String,
         /// unique, immutable, system-controlled identifier for each resource
@@ -43341,6 +43352,7 @@ pub mod types {
 
         #[derive(Clone, Debug)]
         pub struct VpcSubnet {
+            custom_router_id: Result<Option<uuid::Uuid>, String>,
             description: Result<String, String>,
             id: Result<uuid::Uuid, String>,
             ipv4_block: Result<super::Ipv4Net, String>,
@@ -43354,6 +43366,7 @@ pub mod types {
         impl Default for VpcSubnet {
             fn default() -> Self {
                 Self {
+                    custom_router_id: Ok(Default::default()),
                     description: Err("no value supplied for description".to_string()),
                     id: Err("no value supplied for id".to_string()),
                     ipv4_block: Err("no value supplied for ipv4_block".to_string()),
@@ -43367,6 +43380,19 @@ pub mod types {
         }
 
         impl VpcSubnet {
+            pub fn custom_router_id<T>(mut self, value: T) -> Self
+            where
+                T: std::convert::TryInto<Option<uuid::Uuid>>,
+                T::Error: std::fmt::Display,
+            {
+                self.custom_router_id = value.try_into().map_err(|e| {
+                    format!(
+                        "error converting supplied value for custom_router_id: {}",
+                        e
+                    )
+                });
+                self
+            }
             pub fn description<T>(mut self, value: T) -> Self
             where
                 T: std::convert::TryInto<String>,
@@ -43453,6 +43479,7 @@ pub mod types {
             type Error = super::error::ConversionError;
             fn try_from(value: VpcSubnet) -> Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    custom_router_id: value.custom_router_id?,
                     description: value.description?,
                     id: value.id?,
                     ipv4_block: value.ipv4_block?,
@@ -43468,6 +43495,7 @@ pub mod types {
         impl From<super::VpcSubnet> for VpcSubnet {
             fn from(value: super::VpcSubnet) -> Self {
                 Self {
+                    custom_router_id: Ok(value.custom_router_id),
                     description: Ok(value.description),
                     id: Ok(value.id),
                     ipv4_block: Ok(value.ipv4_block),
