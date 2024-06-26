@@ -14715,7 +14715,8 @@ pub mod types {
 
     /// Names must begin with a lower case ASCII letter, be composed exclusively
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
-    /// with a '-'. Names cannot be a UUID though they may contain a UUID.
+    /// with a '-'. Names cannot be a UUID, but they may contain a UUID. They
+    /// can be at most 63 characters long.
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -14724,8 +14725,8 @@ pub mod types {
     ///  "title": "A name unique within the parent collection",
     ///  "description": "Names must begin with a lower case ASCII letter, be
     /// composed exclusively of lowercase ASCII, uppercase ASCII, numbers, and
-    /// '-', and may not end with a '-'. Names cannot be a UUID though they may
-    /// contain a UUID.",
+    /// '-', and may not end with a '-'. Names cannot be a UUID, but they may
+    /// contain a UUID. They can be at most 63 characters long.",
     ///  "type": "string",
     ///  "maxLength": 63,
     ///  "minLength": 1,
@@ -22791,7 +22792,8 @@ pub mod types {
 
     /// Names must begin with a lower case ASCII letter, be composed exclusively
     /// of lowercase ASCII, uppercase ASCII, numbers, and '-', and may not end
-    /// with a '-'. Names cannot be a UUID though they may contain a UUID.
+    /// with a '-'. Names cannot be a UUID, but they may contain a UUID. They
+    /// can be at most 63 characters long.
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -22800,8 +22802,8 @@ pub mod types {
     ///  "title": "A name unique within the parent collection",
     ///  "description": "Names must begin with a lower case ASCII letter, be
     /// composed exclusively of lowercase ASCII, uppercase ASCII, numbers, and
-    /// '-', and may not end with a '-'. Names cannot be a UUID though they may
-    /// contain a UUID.",
+    /// '-', and may not end with a '-'. Names cannot be a UUID, but they may
+    /// contain a UUID. They can be at most 63 characters long.",
     ///  "type": "string",
     ///  "maxLength": 63,
     ///  "minLength": 1,
