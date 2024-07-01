@@ -1478,7 +1478,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.5.7",
+ "socket2 0.4.10",
  "tokio",
  "tower-service",
  "tracing",
@@ -2404,7 +2404,7 @@ dependencies = [
 [[package]]
 name = "progenitor"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#92b78f25ee9eda792dc9180663a04300f90b5dbd"
+source = "git+https://github.com/oxidecomputer/progenitor#26bbe2cf715bbae7cf15c298e1d26eded9cf2873"
 dependencies = [
  "progenitor-client 0.7.0 (git+https://github.com/oxidecomputer/progenitor)",
  "progenitor-impl",
@@ -2429,7 +2429,7 @@ dependencies = [
 [[package]]
 name = "progenitor-client"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#92b78f25ee9eda792dc9180663a04300f90b5dbd"
+source = "git+https://github.com/oxidecomputer/progenitor#26bbe2cf715bbae7cf15c298e1d26eded9cf2873"
 dependencies = [
  "bytes",
  "futures-core",
@@ -2443,7 +2443,7 @@ dependencies = [
 [[package]]
 name = "progenitor-impl"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#92b78f25ee9eda792dc9180663a04300f90b5dbd"
+source = "git+https://github.com/oxidecomputer/progenitor#26bbe2cf715bbae7cf15c298e1d26eded9cf2873"
 dependencies = [
  "heck 0.5.0",
  "http 0.2.12",
@@ -2464,7 +2464,7 @@ dependencies = [
 [[package]]
 name = "progenitor-macro"
 version = "0.7.0"
-source = "git+https://github.com/oxidecomputer/progenitor#92b78f25ee9eda792dc9180663a04300f90b5dbd"
+source = "git+https://github.com/oxidecomputer/progenitor#26bbe2cf715bbae7cf15c298e1d26eded9cf2873"
 dependencies = [
  "openapiv3",
  "proc-macro2",
