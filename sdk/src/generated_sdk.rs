@@ -23386,16 +23386,16 @@ pub mod types {
 
     /// View of a Built-in User
     ///
-    /// A Built-in User is explicitly created as opposed to being derived from
-    /// an Identify Provider.
+    /// Built-in users are identities internal to the system, used when the
+    /// control plane performs actions autonomously
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     /// {
-    ///  "description": "View of a Built-in User\n\nA Built-in User is
-    /// explicitly created as opposed to being derived from an Identify
-    /// Provider.",
+    ///  "description": "View of a Built-in User\n\nBuilt-in users are
+    /// identities internal to the system, used when the control plane performs
+    /// actions autonomously",
     ///  "type": "object",
     ///  "required": [
     ///    "description",
