@@ -23,6 +23,7 @@ mod cmd_completion;
 mod cmd_disk;
 mod cmd_docs;
 mod cmd_instance;
+mod cmd_net;
 mod cmd_timeseries;
 
 mod cmd_version;
@@ -51,6 +52,7 @@ pub fn make_cli() -> NewCli<'static> {
         .add_custom::<cmd_instance::CmdInstanceFromImage>("instance from-image")
         .add_custom::<cmd_completion::CmdCompletion>("completion")
         .add_custom::<cmd_timeseries::CmdTimeseriesDashboard>("experimental timeseries dashboard")
+        .add_custom::<cmd_net::CmdNet>("net")
 }
 
 #[tokio::main]
