@@ -15,11 +15,12 @@ use oauth2::{
 };
 use oxide::{
     config::{Config, Host},
-    context::{make_client, make_rclient, Context},
     ClientSessionExt,
 };
+use toml_edit::{Item, Table};
 
-use crate::RunnableCmd;
+use crate::context::{make_client, make_rclient, Context};
+use crate::{AsHost, RunnableCmd};
 
 /// Login, logout, and get the status of your authentication.
 ///
@@ -111,7 +112,7 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
 //     }
 // }
 
-/// Authenticate with an Oxide host.
+/// Authenticate with an Oxide Silo
 ///
 /// Alternatively, pass in a token on standard input by using `--with-token`.
 ///
@@ -130,6 +131,10 @@ pub fn parse_host(input: &str) -> Result<url::Url> {
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 pub struct CmdAuthLogin {
+    // Inherit from the top level command
+    #[clap(long, hide = true)]
+    profile: Option<String>,
+
     /// Read token from standard input.
     #[clap(long)]
     with_token: bool,
@@ -140,21 +145,30 @@ pub struct CmdAuthLogin {
     host: url::Url,
 
     /// Override the default browser when opening the authentication URL.
-    #[clap(long, group = "browser-options")]
+    #[clap(long)]
     browser: Option<String>,
 
     /// Print the authentication URL rather than opening a browser window.
-    #[clap(long = "no-browser", group = "browser-options")]
+    #[clap(long)]
     no_browser: bool,
 }
 
 impl CmdAuthLogin {
+    // TODO There are a few cases to consider
+    // - If the user specifies a profile, we use that profile name and prompt
+    //   if there's already a token/user
+    // - If there is no profile, we use the silo name to make a new profile
+    //   (if there's a conflict I guess we prompt: overwrite / new name)
+    // - If there's no default profile, we make the newly authenticated profile
+    //   the new default
     pub async fn run(&self, ctx: &Context) -> Result<()> {
         // if !ctx.io.can_prompt() && !self.with_token {
         //     return Err(anyhow!(
         //         "--with-token required when not running interactively"
         //     ));
         // }
+
+        let profile = self.profile.clone();
 
         let token = if self.with_token {
             // Read the token from stdin.
@@ -286,22 +300,23 @@ impl CmdAuthLogin {
         //     return Err(err);
         // }
 
-        // Set the token in the config file.
-        // ctx.config.set(host, "token", &token)?;
-
-        // let client = ctx.api_client(host)?;
-
-        // Get the session for the token.
-        // let session = client.hidden().session_me().await?;
+        let host = self.host.as_host();
+        println!("HOST = {}", host);
 
         // Construct a one-off API client, authenticated with the token
         // returned in the previous step, so that we can extract and save the
         // identity of the authenticated user.
-        let client = make_client(self.host.as_ref(), token.clone(), ctx.config());
+        let client = make_client(host, token.clone(), ctx.config());
 
         let user = client.current_user_view().send().await?;
 
+        // TODO format this more reasonably
         println!("{:#?}", user);
+
+        let profile_name = profile.unwrap_or_else(|| {
+            println!("saving token under profile \"{}\"", *user.silo_name);
+            user.silo_name.to_string()
+        });
 
         // Set the user.
         // TODO: This should instead store the email, or some username or something
@@ -317,13 +332,79 @@ impl CmdAuthLogin {
         println!("Logged in as {}", uid);
 
         let host_entry = Host {
-            token,
+            token: token.clone(),
             user: uid.to_string(),
             default: false,
         };
 
         ctx.config()
             .update_host(self.host.to_string(), host_entry)?;
+
+        // Read / modify / write the credentials file.
+        let credentials_path = ctx.config().config_dir.join("credentials.toml");
+        let mut credentials =
+            if let Ok(contents) = std::fs::read_to_string(credentials_path.clone()) {
+                contents.parse::<toml_edit::DocumentMut>().unwrap()
+            } else {
+                Default::default()
+            };
+
+        let profile_table = credentials
+            .entry("profile")
+            .or_insert_with(|| {
+                let mut table = Table::default();
+                // Avoid a bare [profile] table.
+                table.set_implicit(true);
+                Item::Table(table)
+            })
+            .as_table_mut()
+            .unwrap_or_else(|| {
+                panic!(
+                    "\"profile\" in {} is not a table",
+                    credentials_path.to_string_lossy()
+                )
+            });
+
+        let profile = profile_table
+            .entry(&profile_name)
+            .or_insert_with(|| Item::Table(Table::default()))
+            .as_table_mut()
+            .unwrap_or_else(|| {
+                panic!(
+                    "\"profile.{}\" in {} is not a table",
+                    profile_name,
+                    credentials_path.to_string_lossy()
+                )
+            });
+
+        profile.insert("host", toml_edit::value(self.host.as_host().to_string()));
+        profile.insert("token", toml_edit::value(token));
+        profile.insert("user", toml_edit::value(uid.to_string()));
+
+        std::fs::write(credentials_path, credentials.to_string())
+            .expect("unable to write credentials.toml");
+
+        println!("{}", credentials);
+
+        // If there is no default profile then we'll set this new profile to be
+        // the default.
+        let config_path = ctx.config().config_dir.join("config.toml");
+        let mut config = if let Ok(contents) = std::fs::read_to_string(config_path.clone()) {
+            contents.parse::<toml_edit::DocumentMut>().unwrap()
+        } else {
+            Default::default()
+        };
+
+        // TODO we should probably already have read this in so would know if
+        // we need to update it.
+        match config.entry("default-profile") {
+            toml_edit::Entry::Occupied(_) => (),
+            toml_edit::Entry::Vacant(vacant) => {
+                vacant.insert(Item::Value(profile_name.into()));
+                std::fs::write(config_path, config.to_string())
+                    .expect("unable to write config.toml");
+            }
+        }
 
         Ok(())
     }
@@ -384,10 +465,7 @@ impl CmdAuthLogout {
                 println!("Removed authentication information for: {}", host);
             }
             None => {
-                let mut dir = dirs::home_dir().unwrap();
-                dir.push(".config");
-                dir.push("oxide");
-                let hosts_path = dir.join("hosts.toml");
+                let hosts_path = ctx.config().config_dir.join("hosts.toml");
 
                 // Clear the entire file for users who want to reset their known hosts.
                 let _ = File::create(hosts_path)?;
@@ -512,6 +590,19 @@ impl CmdAuthStatus {
 
 #[cfg(test)]
 mod tests {
+    use std::fs::read_to_string;
+
+    use assert_cmd::Command;
+    use expectorate::assert_contents;
+    use httpmock::{
+        Method::{GET, POST},
+        MockServer,
+    };
+    use oxide::types::CurrentUser;
+    use oxide_httpmock::MockServerExt;
+    use predicates::str;
+    use serde_json::json;
+
     // use pretty_assertions::assert_eq;
 
     // use crate::cmd::Command;
@@ -699,107 +790,190 @@ mod tests {
             Ok(host) if host == "http://example.com:8888/"
         ));
     }
-}
 
-#[test]
-fn test_cmd_auth_status() {
-    use assert_cmd::Command;
-    use httpmock::{Method::GET, MockServer};
-    use predicates::str;
-
-    let server = MockServer::start();
-    let oxide_mock = server.mock(|when, then| {
-        when.method(GET)
-            .path("/v1/me")
-            .header("authorization", "Bearer oxide-token-1111");
-        then.status(200).json_body_obj(&oxide::types::CurrentUser {
-            display_name: "privileged".to_string(),
-            id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
-            silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
-            silo_name: "funky-town".parse().unwrap(),
+    #[test]
+    fn test_cmd_auth_status() {
+        let server = MockServer::start();
+        // TODO redo this to use the sdk-mock
+        let oxide_mock = server.mock(|when, then| {
+            when.method(GET)
+                .path("/v1/me")
+                .header("authorization", "Bearer oxide-token-1111");
+            then.status(200).json_body_obj(&oxide::types::CurrentUser {
+                display_name: "privileged".to_string(),
+                id: "001de000-05e4-4000-8000-000000004007".parse().unwrap(),
+                silo_id: "d1bb398f-872c-438c-a4c6-2211e2042526".parse().unwrap(),
+                silo_name: "funky-town".parse().unwrap(),
+            });
         });
-    });
 
-    // Validate authenticated credentials.
-    Command::cargo_bin("oxide")
-        .unwrap()
-        .arg("auth")
-        .arg("status")
-        .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "oxide-token-1111")
-        .assert()
-        .success()
-        .stdout(str::contains(format!(
-            "{}: [{}, {}]",
-            server.url(""),
-            format_args!(
-                "\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\"",
-                server.url("")
-            ),
-            "\"Token: *******************\"",
-        )));
+        // Validate authenticated credentials.
+        Command::cargo_bin("oxide")
+            .unwrap()
+            .arg("auth")
+            .arg("status")
+            .env("OXIDE_HOST", server.url(""))
+            .env("OXIDE_TOKEN", "oxide-token-1111")
+            .assert()
+            .success()
+            .stdout(str::contains(format!(
+                "{}: [{}, {}]",
+                server.url(""),
+                format_args!(
+                    "\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\"",
+                    server.url("")
+                ),
+                "\"Token: *******************\"",
+            )));
 
-    // Validate authenticated credentials with the token displayed in plain text.
-    Command::cargo_bin("oxide")
-        .unwrap()
-        .arg("auth")
-        .arg("status")
-        .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "oxide-token-1111")
-        .arg("-t")
-        .assert()
-        .success()
-        .stdout(str::contains(format!(
-            "{}: [{}, {}]",
-            server.url(""),
-            format_args!(
-                "\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\"",
-                server.url("")
-            ),
-            "\"Token: oxide-token-1111\"",
-        )));
+        // Validate authenticated credentials with the token displayed in plain text.
+        Command::cargo_bin("oxide")
+            .unwrap()
+            .arg("auth")
+            .arg("status")
+            .env("OXIDE_HOST", server.url(""))
+            .env("OXIDE_TOKEN", "oxide-token-1111")
+            .arg("-t")
+            .assert()
+            .success()
+            .stdout(str::contains(format!(
+                "{}: [{}, {}]",
+                server.url(""),
+                format_args!(
+                    "\"Logged in to {} as 001de000-05e4-4000-8000-000000004007\"",
+                    server.url("")
+                ),
+                "\"Token: oxide-token-1111\"",
+            )));
 
-    // Assert that both commands hit the mock.
-    oxide_mock.assert_hits(2);
+        // Assert that both commands hit the mock.
+        oxide_mock.assert_hits(2);
 
-    let oxide_mock = server.mock(|when, then| {
-        when.header("authorization", "Bearer oxide-token-1112");
-        then.status(401).json_body_obj(&oxide::types::Error {
-            error_code: None,
-            message: "oops".to_string(),
-            request_id: "42".to_string(),
+        let oxide_mock = server.mock(|when, then| {
+            when.header("authorization", "Bearer oxide-token-1112");
+            then.status(401).json_body_obj(&oxide::types::Error {
+                error_code: None,
+                message: "oops".to_string(),
+                request_id: "42".to_string(),
+            });
         });
-    });
 
-    // Try invalid credentials.
-    Command::cargo_bin("oxide")
-        .unwrap()
-        .arg("auth")
-        .arg("status")
-        .env("OXIDE_HOST", server.url(""))
-        .env("OXIDE_TOKEN", "oxide-token-1112")
-        .assert()
-        .success()
-        .stdout(str::contains(format!(
-            "{}: [\"Not authenticated. Host/token combination invalid\"]",
-            server.url("")
-        )));
+        // Try invalid credentials.
+        Command::cargo_bin("oxide")
+            .unwrap()
+            .arg("auth")
+            .arg("status")
+            .env("OXIDE_HOST", server.url(""))
+            .env("OXIDE_TOKEN", "oxide-token-1112")
+            .assert()
+            .success()
+            .stdout(str::contains(format!(
+                "{}: [\"Not authenticated. Host/token combination invalid\"]",
+                server.url("")
+            )));
 
-    // Make sure the command only returns information about the specified host.
-    Command::cargo_bin("oxide")
-        .unwrap()
-        .arg("auth")
-        .arg("status")
-        .env("OXIDE_HOST", server.url("/"))
-        .env("OXIDE_TOKEN", "oxide-token-1112")
-        .arg("-H")
-        .arg(server.url(""))
-        .assert()
-        .success()
-        .stdout(format!(
-            "{}: [\"Not authenticated. Host/token combination invalid\"]\n",
-            server.url("/")
-        ));
-    // Assert that both commands hit the mock.
-    oxide_mock.assert_hits(2);
+        // Make sure the command only returns information about the specified host.
+        Command::cargo_bin("oxide")
+            .unwrap()
+            .arg("auth")
+            .arg("status")
+            .env("OXIDE_HOST", server.url("/"))
+            .env("OXIDE_TOKEN", "oxide-token-1112")
+            .arg("-H")
+            .arg(server.url(""))
+            .assert()
+            .success()
+            .stdout(format!(
+                "{}: [\"Not authenticated. Host/token combination invalid\"]\n",
+                server.url("/")
+            ));
+        // Assert that both commands hit the mock.
+        oxide_mock.assert_hits(2);
+    }
+
+    #[test]
+    fn test_auth_login_first() {
+        env_logger::init();
+
+        let server = MockServer::start();
+
+        // Respond to the initial OAuth2 request.
+        let device_auth = server.mock(|when, then| {
+            let body = json!({
+                "device_code": "DEV-CODE",
+                "user_code": "0X1-D3C",
+                "verification_uri": "http://go.here.to/verify",
+                "expires_in": 10,
+            });
+            when.method(POST).path("/device/auth");
+            then.status(200)
+                .json_body(body)
+                .header("content-type", "application/json");
+        });
+
+        // This is where we'd poll, but let's just wave them through.
+        let device_token = server.mock(|when, then| {
+            let body = json!({
+                "access_token": "123-456-789",
+                "token_type": "Bearer",
+            });
+            when.method(POST).path("/device/token");
+            then.delay(std::time::Duration::from_secs(1))
+                .status(200)
+                .json_body(body)
+                .header("content-type", "application/json");
+        });
+
+        // User and silo identity now that we're "authenticated".
+        let me = server.current_user_view(|when, then| {
+            when.into_inner().any_request();
+            then.ok(&CurrentUser {
+                display_name: "falken".to_string(),
+                id: "831dedf4-0a66-4b04-a232-b610f9f8924c".parse().unwrap(),
+                silo_id: "12e8c7a4-399f-41e2-985e-7b120ecbcc1a".parse().unwrap(),
+                silo_name: "crystal-palace".try_into().unwrap(),
+            });
+        });
+
+        let temp_dir = tempfile::tempdir().unwrap().into_path();
+
+        println!("SERVER {}", server.url(""));
+
+        let x = Command::cargo_bin("oxide")
+            .unwrap()
+            .env("RUST_BACKTRACE", "1")
+            .arg("--config-dir")
+            .arg(temp_dir.as_os_str())
+            .arg("auth")
+            .arg("login")
+            .arg("--no-browser")
+            .arg("--host")
+            .arg(server.url(""))
+            .assert()
+            .success();
+        let x = x.get_output();
+
+        println!("{}", String::from_utf8_lossy(&x.stdout));
+
+        device_auth.assert();
+        device_token.assert();
+        me.assert();
+
+        assert_contents(
+            "tests/data/test_auth_login_first_credentials.toml",
+            &scrub_server(
+                read_to_string(temp_dir.join("credentials.toml")).unwrap(),
+                server.url(""),
+            ),
+        );
+
+        assert_contents(
+            "tests/data/test_auth_login_first_config.toml",
+            &read_to_string(temp_dir.join("config.toml")).unwrap(),
+        );
+    }
+
+    fn scrub_server(raw: String, server: String) -> String {
+        raw.replace(&server, "<TEST-SERVER>")
+    }
 }

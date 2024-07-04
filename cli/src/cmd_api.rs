@@ -98,7 +98,7 @@ pub struct PaginatedResponse {
 
 #[async_trait]
 impl RunnableCmd for CmdApi {
-    async fn run(&self, ctx: &oxide::context::Context) -> Result<()> {
+    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         // Make sure the endpoint starts with a slash.
         let endpoint = if self.endpoint.starts_with('/') {
             self.endpoint.clone()
@@ -294,7 +294,7 @@ impl CmdApi {
 
     fn parse_fields(
         &self,
-        _ctx: &oxide::context::Context,
+        _ctx: &crate::context::Context,
     ) -> Result<HashMap<String, serde_json::Value>> {
         let mut params: HashMap<String, serde_json::Value> = HashMap::new();
 
@@ -372,7 +372,7 @@ impl CmdApi {
 }
 
 fn print_headers(
-    _ctx: &oxide::context::Context,
+    _ctx: &crate::context::Context,
     headers: &reqwest::header::HeaderMap,
 ) -> Result<()> {
     let mut names: Vec<String> = headers.keys().map(|k| k.as_str().to_string()).collect();

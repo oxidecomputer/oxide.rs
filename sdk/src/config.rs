@@ -51,6 +51,7 @@ impl FromStr for ResolveValue {
 }
 
 pub struct Config {
+    pub config_dir: PathBuf,
     pub client_id: Uuid,
     pub hosts: Hosts,
     pub resolve: Option<ResolveValue>,
@@ -85,17 +86,17 @@ fn is_default<T: Default + PartialEq>(value: &T) -> bool {
 
 impl Default for Config {
     fn default() -> Self {
-        let mut dir = dirs::home_dir().unwrap();
-        dir.push(".config");
-        dir.push("oxide");
-        create_dir_all(&dir).unwrap();
-        Self::new_with_config_dir(dir)
+        let mut config_dir = dirs::home_dir().unwrap();
+        config_dir.push(".config");
+        config_dir.push("oxide");
+        create_dir_all(&config_dir).unwrap();
+        Self::new_with_config_dir(config_dir)
     }
 }
 
 impl Config {
-    pub fn new_with_config_dir(dir: PathBuf) -> Self {
-        let hosts_path = dir.join("hosts.toml");
+    pub fn new_with_config_dir(config_dir: PathBuf) -> Self {
+        let hosts_path = config_dir.join("hosts.toml");
         let hosts = if let Ok(contents) = std::fs::read_to_string(hosts_path) {
             toml::from_str(&contents).unwrap()
         } else {
@@ -103,6 +104,7 @@ impl Config {
         };
 
         Self {
+            config_dir,
             client_id: Default::default(),
             hosts,
             resolve: None,
@@ -113,6 +115,7 @@ impl Config {
     }
 
     pub fn update_host(&self, hostname: String, host_entry: Host) -> Result<(), OxideError> {
+        // TODO need to adjust the directory
         let mut dir = dirs::home_dir().unwrap();
         dir.push(".config");
         dir.push("oxide");

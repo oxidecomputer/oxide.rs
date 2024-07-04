@@ -11,6 +11,7 @@ use std::{
     time::Duration,
 };
 
+use crate::context::Context;
 use anyhow::{Context as _, Result};
 use async_trait::async_trait;
 use clap::Parser;
@@ -18,7 +19,6 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use oxide::context::Context;
 use ratatui::{prelude::CrosstermBackend, Terminal};
 
 use self::dashboard::Dashboard;

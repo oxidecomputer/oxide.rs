@@ -12,20 +12,23 @@ use clap::{ArgMatches, Command, CommandFactory, FromArgMatches};
 use log::LevelFilter;
 
 use crate::{
+    context::Context,
     generated_cli::{Cli, CliCommand},
     OxideOverride, RunnableCmd,
 };
-use oxide::{
-    config::{Config, ResolveValue},
-    context::Context,
-};
+use oxide::config::{Config, ResolveValue};
 
+/// Control an Oxide environment
 #[derive(clap::Parser, Debug, Clone)]
-#[command(name = "oxide")]
+#[command(name = "oxide", verbatim_doc_comment)]
 struct OxideCli {
     /// Enable debug output
     #[clap(long)]
     pub debug: bool,
+
+    /// Configuration profile to use for commands
+    #[clap(long, global = true)]
+    pub profile: Option<String>,
 
     /// Directory to use for configuration
     #[clap(long, value_name = "DIR")]
@@ -182,6 +185,7 @@ impl<'a> NewCli<'a> {
         let matches = parser.get_matches();
 
         let OxideCli {
+            profile,
             debug,
             config_dir,
             resolve,
@@ -203,32 +207,25 @@ impl<'a> NewCli<'a> {
             config = config.with_resolve(resolve);
         }
         if let Some(cacert_path) = cacert {
-            enum CertType {
-                Pem,
-                Der,
-            }
-
             let extension = cacert_path
                 .extension()
                 .map(std::ffi::OsStr::to_ascii_lowercase);
-            let ct = match extension.as_ref().and_then(|ex| ex.to_str()) {
-                Some("pem") => CertType::Pem,
-                Some("der") => CertType::Der,
-                _ => bail!("--cacert path must be a 'pem' or 'der' file".to_string()),
-            };
-
             let contents = std::fs::read(cacert_path)?;
-
-            let cert = match ct {
-                CertType::Pem => reqwest::tls::Certificate::from_pem(&contents),
-                CertType::Der => reqwest::tls::Certificate::from_der(&contents),
+            let cert = match extension.as_ref().and_then(|ex| ex.to_str()) {
+                Some("pem") => reqwest::tls::Certificate::from_pem(&contents),
+                Some("der") => reqwest::tls::Certificate::from_der(&contents),
+                _ => bail!("--cacert path must be a 'pem' or 'der' file".to_string()),
             }?;
+
             config = config.with_cert(cert);
         }
         config = config.with_insecure(insecure);
         if let Some(timeout) = timeout {
             config = config.with_timeout(timeout);
         }
+
+        // TODO I think we should try to avoid creating an authenticated client
+        // until we know we're going to need one.
         let ctx = Context::new(config)?;
 
         let mut node = &runner;
@@ -236,6 +233,7 @@ impl<'a> NewCli<'a> {
         while let Some((sub_name, sub_matches)) = sm.subcommand() {
             node = node.children.get(sub_name).unwrap();
             sm = sub_matches;
+            // TODO I don't see how we can hit this
             if node.terminal {
                 break;
             }

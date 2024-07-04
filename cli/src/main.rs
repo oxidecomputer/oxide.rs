@@ -12,9 +12,10 @@ use std::sync::atomic::AtomicBool;
 use anyhow::Result;
 use async_trait::async_trait;
 use cli_builder::NewCli;
+use context::Context;
 use generated_cli::CliConfig;
-use oxide::context::Context;
 use oxide::types::{AllowedSourceIps, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
+use url::Url;
 
 mod cli_builder;
 mod cmd_api;
@@ -24,6 +25,7 @@ mod cmd_disk;
 mod cmd_docs;
 mod cmd_instance;
 mod cmd_timeseries;
+mod context;
 
 mod cmd_version;
 #[allow(unused_mut)]
@@ -392,5 +394,17 @@ impl IpOrNet {
             IpOrNet::Ip(std::net::IpAddr::V6(v6)) => format!("{}/128", v6).parse().unwrap(),
             IpOrNet::Net(net) => net,
         }
+    }
+}
+
+pub(crate) trait AsHost {
+    fn as_host(&self) -> &str;
+}
+
+impl AsHost for Url {
+    fn as_host(&self) -> &str {
+        assert_eq!(self.path(), "/");
+        let s = self.as_str();
+        &s[..s.len() - 1]
     }
 }

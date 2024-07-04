@@ -90,7 +90,7 @@ pub struct CmdCompletion {
 
 #[async_trait]
 impl RunnableCmd for CmdCompletion {
-    async fn run(&self, _ctx: &oxide::context::Context) -> Result<()> {
+    async fn run(&self, _ctx: &crate::context::Context) -> Result<()> {
         let cli = crate::make_cli();
         let mut cmd = cli.command_take();
         let name = cmd.get_name().to_string();

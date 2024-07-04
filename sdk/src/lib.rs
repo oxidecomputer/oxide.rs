@@ -8,13 +8,14 @@
 #![doc = include_str!("../README.md")]
 
 use thiserror::Error;
+
+mod auth;
 mod generated_sdk;
 
 #[cfg(feature = "clap")]
 mod clap_feature;
 
 pub mod config;
-pub mod context;
 
 pub use generated_sdk::*;
 

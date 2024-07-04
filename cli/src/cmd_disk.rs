@@ -248,7 +248,7 @@ impl RunnableCmd for CmdDiskImport {
     fn is_subtree() -> bool {
         false
     }
-    async fn run(&self, ctx: &oxide::context::Context) -> Result<()> {
+    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
         let client = ctx.client()?;
 
         if !Path::new(&self.path).exists() {

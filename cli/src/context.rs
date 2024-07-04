@@ -8,7 +8,7 @@ use std::{net::SocketAddr, time::Duration};
 
 use reqwest::ClientBuilder;
 
-use crate::{
+use oxide::{
     config::{Config, ResolveValue},
     Client, OxideError,
 };

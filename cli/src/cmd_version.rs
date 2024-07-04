@@ -7,9 +7,9 @@
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
-use oxide::{context::Context, Client};
+use oxide::Client;
 
-use crate::RunnableCmd;
+use crate::{context::Context, RunnableCmd};
 
 pub mod built_info {
     include!(concat!(env!("OUT_DIR"), "/built.rs"));
