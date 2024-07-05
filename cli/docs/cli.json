@@ -1986,6 +1986,84 @@
           "name": "bgp",
           "subcommands": [
             {
+              "name": "config",
+              "subcommands": [
+                {
+                  "name": "peer",
+                  "subcommands": [
+                    {
+                      "name": "add",
+                      "args": [
+                        {
+                          "long": "allowed-exports",
+                          "help": "Prefixes that may be exported to the peer. Empty list means all prefixes allowed"
+                        },
+                        {
+                          "long": "allowed-imports",
+                          "help": "Prefixes that may be imported form the peer. Empty list means all prefixes allowed"
+                        },
+                        {
+                          "long": "communities",
+                          "help": "Include the provided communities in updates sent to the peer"
+                        },
+                        {
+                          "long": "connect-retry",
+                          "help": "How long to to wait between TCP connection retries (seconds)"
+                        },
+                        {
+                          "long": "delay-open",
+                          "help": "How long to delay sending an open request after establishing a TCP session (seconds)"
+                        },
+                        {
+                          "long": "enforce-first-as",
+                          "help": "Enforce that the first AS in paths received from this peer is the peer's AS"
+                        },
+                        {
+                          "long": "hold-time",
+                          "help": "How long to hold peer connections between keepalives (seconds)"
+                        },
+                        {
+                          "long": "idle-hold-time",
+                          "help": "How long to hold a peer in idle before attempting a new session (seconds)"
+                        },
+                        {
+                          "long": "keepalive",
+                          "help": "How often to send keepalive requests (seconds)"
+                        },
+                        {
+                          "long": "local-pref",
+                          "help": "Apply a local preference to routes received from this peer"
+                        },
+                        {
+                          "long": "md5-auth-key",
+                          "help": "Use the given key for TCP-MD5 authentication with the peer"
+                        },
+                        {
+                          "long": "min-ttl",
+                          "help": "Require messages from a peer have a minimum IP time to live field"
+                        },
+                        {
+                          "long": "multi-exit-discriminator",
+                          "help": "Apply the provided multi-exit discriminator (MED) updates sent to the peer"
+                        },
+                        {
+                          "long": "remote-asn",
+                          "help": "Require that a peer has a specified ASN"
+                        },
+                        {
+                          "long": "vlan-id",
+                          "help": "Associate a VLAN ID with a peer"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "del"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "name": "status",
               "about": "Get the status of BGP."
             }

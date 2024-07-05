@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, net::IpAddr};
 
 use crate::RunnableCmd;
 use anyhow::Result;
@@ -8,10 +8,11 @@ use colored::*;
 use oxide::{
     context::Context,
     types::{
-        Address, AddressConfig, BgpPeerConfig, BgpPeerStatus, IpNet, LinkConfigCreate,
-        LldpServiceConfigCreate, NameOrId, Route, RouteConfig, SwitchInterfaceConfigCreate,
-        SwitchInterfaceKind, SwitchInterfaceKind2, SwitchLocation, SwitchPort,
-        SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2, SwitchPortSettingsCreate,
+        Address, AddressConfig, BgpPeer, BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet,
+        LinkConfigCreate, LldpServiceConfigCreate, Name, NameOrId, Route, RouteConfig,
+        SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchLocation,
+        SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2,
+        SwitchPortSettingsCreate,
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
@@ -77,13 +78,16 @@ impl RunnableCmd for CmdBgp {
     async fn run(&self, ctx: &Context) -> Result<()> {
         match &self.subcmd {
             BgpSubCommand::Status(cmd) => cmd.run(ctx).await,
+            BgpSubCommand::Config(cmd) => cmd.run(ctx).await,
         }
     }
 }
 
+#[allow(clippy::large_enum_variant)]
 #[derive(Parser, Debug, Clone)]
 enum BgpSubCommand {
     Status(CmdBgpStatus),
+    Config(CmdBgpConfig),
 }
 
 #[derive(Parser, Debug, Clone)]
@@ -196,6 +200,238 @@ impl RunnableCmd for CmdAddrDel {
     }
 }
 
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "config")]
+pub struct CmdBgpConfig {
+    #[clap(subcommand)]
+    subcmd: BgpConfigSubCommand,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdBgpConfig {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        match &self.subcmd {
+            BgpConfigSubCommand::Peer(cmd) => cmd.run(ctx).await,
+        }
+    }
+}
+
+#[derive(Parser, Debug, Clone)]
+enum BgpConfigSubCommand {
+    Peer(CmdBgpPeer),
+}
+
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "peer")]
+pub struct CmdBgpPeer {
+    #[clap(subcommand)]
+    subcmd: BgpConfigPeerSubCommand,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdBgpPeer {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        match &self.subcmd {
+            BgpConfigPeerSubCommand::Add(cmd) => cmd.run(ctx).await,
+            BgpConfigPeerSubCommand::Del(cmd) => cmd.run(ctx).await,
+        }
+    }
+}
+
+#[derive(Parser, Debug, Clone)]
+enum BgpConfigPeerSubCommand {
+    Add(CmdBgpPeerAdd),
+    Del(CmdBgpPeerDel),
+}
+
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "add")]
+pub struct CmdBgpPeerAdd {
+    /// Id of the rack to add the peer to.
+    rack: Uuid,
+
+    /// Switch to add the peer to.
+    #[arg(value_enum)]
+    switch: Switch,
+
+    /// Port to add the peer to.
+    #[arg(value_enum)]
+    port: Port,
+
+    /// Address of the peer to add.
+    addr: IpAddr,
+
+    /// BGP configuration this peer is associated with.
+    bgp_config: NameOrId,
+
+    /// Prefixes that may be imported form the peer. Empty list means all prefixes
+    /// allowed.
+    #[clap(long)]
+    allowed_imports: Vec<oxnet::IpNet>,
+
+    /// Prefixes that may be exported to the peer. Empty list means all prefixes
+    /// allowed.
+    #[clap(long)]
+    allowed_exports: Vec<oxnet::IpNet>,
+
+    /// Include the provided communities in updates sent to the peer.
+    #[clap(long)]
+    communities: Vec<u32>,
+
+    /// How long to to wait between TCP connection retries (seconds).
+    #[clap(long, default_value_t = 0u32)]
+    pub connect_retry: u32,
+
+    /// How long to delay sending an open request after establishing a TCP
+    /// session (seconds).
+    #[clap(long, default_value_t = 0u32)]
+    pub delay_open: u32,
+
+    /// Enforce that the first AS in paths received from this peer is the
+    /// peer's AS.
+    #[clap(long, default_value_t = false)]
+    pub enforce_first_as: bool,
+
+    /// How long to hold peer connections between keepalives (seconds).
+    #[clap(long, default_value_t = 6u32)]
+    pub hold_time: u32,
+
+    /// How often to send keepalive requests (seconds).
+    #[clap(long, default_value_t = 2u32)]
+    pub keepalive: u32,
+
+    /// How long to hold a peer in idle before attempting a new session
+    /// (seconds).
+    #[clap(long, default_value_t = 0u32)]
+    pub idle_hold_time: u32,
+
+    /// Apply a local preference to routes received from this peer.
+    #[clap(long)]
+    pub local_pref: Option<u32>,
+
+    /// Use the given key for TCP-MD5 authentication with the peer.
+    #[clap(long)]
+    pub md5_auth_key: Option<String>,
+
+    /// Require messages from a peer have a minimum IP time to live field.
+    #[clap(long)]
+    pub min_ttl: Option<u8>,
+
+    /// Apply the provided multi-exit discriminator (MED) updates sent to
+    /// the peer.
+    #[clap(long)]
+    pub multi_exit_discriminator: Option<u32>,
+
+    /// Require that a peer has a specified ASN.
+    #[clap(long)]
+    pub remote_asn: Option<u32>,
+
+    /// Associate a VLAN ID with a peer.
+    #[clap(long)]
+    pub vlan_id: Option<u16>,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdBgpPeerAdd {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+        let peer = BgpPeer {
+            addr: self.addr,
+            allowed_import: if self.allowed_imports.is_empty() {
+                ImportExportPolicy::NoFiltering
+            } else {
+                ImportExportPolicy::Allow(
+                    self.allowed_imports
+                        .clone()
+                        .into_iter()
+                        .map(|x| x.to_string().parse().unwrap())
+                        .collect(),
+                )
+            },
+            allowed_export: if self.allowed_exports.is_empty() {
+                ImportExportPolicy::NoFiltering
+            } else {
+                ImportExportPolicy::Allow(
+                    self.allowed_exports
+                        .clone()
+                        .into_iter()
+                        .map(|x| x.to_string().parse().unwrap())
+                        .collect(),
+                )
+            },
+            bgp_config: self.bgp_config.clone(),
+            communities: self.communities.clone(),
+            connect_retry: self.connect_retry,
+            delay_open: self.delay_open,
+            enforce_first_as: self.enforce_first_as,
+            hold_time: self.hold_time,
+            idle_hold_time: self.idle_hold_time,
+            interface_name: PHY0.to_owned(),
+            keepalive: self.keepalive,
+            local_pref: self.local_pref,
+            md5_auth_key: self.md5_auth_key.clone(),
+            min_ttl: self.min_ttl,
+            multi_exit_discriminator: self.multi_exit_discriminator,
+            remote_asn: self.remote_asn,
+            vlan_id: self.vlan_id,
+        };
+        match settings.bgp_peers.get_mut(PHY0) {
+            Some(conf) => {
+                conf.peers.push(peer);
+            }
+            None => {
+                settings
+                    .bgp_peers
+                    .insert(String::from(PHY0), BgpPeerConfig { peers: vec![peer] });
+            }
+        }
+        ctx.client()?
+            .networking_switch_port_settings_create()
+            .body(settings)
+            .send()
+            .await?;
+        Ok(())
+    }
+}
+
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "del")]
+pub struct CmdBgpPeerDel {
+    /// Id of the rack to remove the peer from.
+    rack: Uuid,
+
+    /// Switch to remove the peer from.
+    #[arg(value_enum)]
+    switch: Switch,
+
+    /// Port to remove the peer from.
+    #[arg(value_enum)]
+    port: Port,
+
+    /// Address of the peer to remove.
+    addr: IpAddr,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdBgpPeerDel {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+        if let Some(config) = settings.bgp_peers.get_mut(PHY0) {
+            config.peers.retain(|x| x.addr != self.addr);
+        }
+        ctx.client()?
+            .networking_switch_port_settings_create()
+            .body(settings)
+            .send()
+            .await?;
+        Ok(())
+    }
+}
+
 /// Get the configuration of switch ports.
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
@@ -252,6 +488,17 @@ impl RunnableCmd for CmdPortConfig {
                     .await?
                     .into_inner();
 
+                let bgp_configs: HashMap<Uuid, Name> = c
+                    .networking_bgp_config_list()
+                    .limit(u32::MAX)
+                    .send()
+                    .await?
+                    .into_inner()
+                    .items
+                    .into_iter()
+                    .map(|x| (x.id, x.name))
+                    .collect();
+
                 println!(
                     "{}{}{}",
                     p.switch_location.to_string().blue(),
@@ -298,8 +545,9 @@ impl RunnableCmd for CmdPortConfig {
 
                 writeln!(
                     &mut tw,
-                    "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                    "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                     "BGP Peer".dimmed(),
+                    "Config".dimmed(),
                     "Export".dimmed(),
                     "Import".dimmed(),
                     "Communities".dimmed(),
@@ -319,8 +567,12 @@ impl RunnableCmd for CmdPortConfig {
                 for p in &config.bgp_peers {
                     writeln!(
                         &mut tw,
-                        "{}\t{:?}\t{:?}\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}",
+                        "{}\t{}\t{:?}\t{:?}\t{:?}\t{}\t{}\t{}\t{}\t{}\t{}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}\t{:?}",
                         p.addr,
+                        match &p.bgp_config {
+                            NameOrId::Id(id) =>  bgp_configs[id].to_string(),
+                            NameOrId::Name(name) => name.to_string(),
+                        },
                         p.allowed_export,
                         p.allowed_import,
                         p.communities,
