@@ -20,6 +20,11 @@ use std::io::Write;
 use tabwriter::TabWriter;
 use uuid::Uuid;
 
+// We do not yet support port breakouts, but the API is phrased in terms of
+// ports that can be broken out. The constant phy0 represents the first port
+// in a breakout.
+const PHY0: &str = "phy0";
+
 #[derive(Parser, Debug, Clone)]
 #[command(verbatim_doc_comment)]
 #[command(name = "net")]
@@ -89,77 +94,20 @@ pub struct CmdAddr {
     subcmd: AddrSubCommand,
 }
 
+#[async_trait]
+impl RunnableCmd for CmdAddr {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        match &self.subcmd {
+            AddrSubCommand::Add(cmd) => cmd.run(ctx).await,
+            AddrSubCommand::Del(cmd) => cmd.run(ctx).await,
+        }
+    }
+}
+
 #[derive(Parser, Debug, Clone)]
 enum AddrSubCommand {
     Add(CmdAddrAdd),
-}
-
-#[derive(clap::ValueEnum, Clone, Debug)]
-enum Switch {
-    Switch0,
-    Switch1,
-}
-
-impl std::fmt::Display for Switch {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", format!("{self:?}").to_lowercase())
-    }
-}
-
-#[derive(clap::ValueEnum, Clone, Debug)]
-enum Port {
-    Qsfp0,
-    Qsfp1,
-    Qsfp2,
-    Qsfp3,
-    Qsfp4,
-    Qsfp5,
-    Qsfp6,
-    Qsfp7,
-    Qsfp8,
-    Qsfp9,
-    Qsfp10,
-    Qsfp11,
-    Qsfp12,
-    Qsfp13,
-    Qsfp14,
-    Qsfp15,
-    Qsfp16,
-    Qsfp17,
-    Qsfp18,
-    Qsfp19,
-    Qsfp20,
-    Qsfp21,
-    Qsfp22,
-    Qsfp23,
-    Qsfp24,
-    Qsfp25,
-    Qsfp26,
-    Qsfp27,
-    Qsfp28,
-    Qsfp29,
-    Qsfp30,
-    Qsfp31,
-}
-
-impl std::fmt::Display for Port {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", format!("{self:?}").to_lowercase())
-    }
-}
-
-#[derive(Parser, Debug, Clone)]
-#[command(verbatim_doc_comment)]
-#[command(name = "addr")]
-pub struct CmdAddrAdd {
-    rack: Uuid,
-    #[arg(value_enum)]
-    switch: Switch,
-    #[arg(value_enum)]
-    port: Port,
-    addr: oxnet::Ipv4Net,
-    lot: NameOrId,
-    vlan: Option<u16>,
+    Del(CmdAddrDel),
 }
 
 #[async_trait]
@@ -173,21 +121,36 @@ impl RunnableCmd for CmdNet {
     }
 }
 
-impl CmdAddrAdd {
-    async fn modify_settings_for_address(&self, settings_id: Uuid, ctx: &Context) -> Result<()> {
-        let mut settings = self.create_current(settings_id, ctx).await?;
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "add")]
+pub struct CmdAddrAdd {
+    rack: Uuid,
+    #[arg(value_enum)]
+    switch: Switch,
+    #[arg(value_enum)]
+    port: Port,
+    addr: oxnet::Ipv4Net,
+    lot: NameOrId,
+    vlan: Option<u16>,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdAddrAdd {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
         let addr = Address {
             address: IpNet::V4(self.addr.to_string().parse().unwrap()),
             address_lot: self.lot.clone(),
             vlan_id: self.vlan,
         };
-        match settings.addresses.get_mut("phy0") {
+        match settings.addresses.get_mut(PHY0) {
             Some(ac) => {
                 ac.addresses.push(addr);
             }
             None => {
                 settings.addresses.insert(
-                    String::from("phy0"),
+                    String::from(PHY0),
                     AddressConfig {
                         addresses: vec![addr],
                     },
@@ -201,225 +164,35 @@ impl CmdAddrAdd {
             .await?;
         Ok(())
     }
+}
 
-    // NOTE: This bonanza of befuckerry is needed to translate the current
-    //       switch port settings view into a corresponding switch port
-    //       settings create request. It's the preliminary step for a read-
-    //       modify-write operation.
-    async fn create_current(
-        &self,
-        settings_id: Uuid,
-        ctx: &Context,
-    ) -> Result<SwitchPortSettingsCreate> {
-        let list = ctx
-            .client()?
-            .networking_switch_port_settings_list()
-            .limit(u32::MAX)
-            .send()
-            .await
-            .unwrap()
-            .into_inner()
-            .items;
-
-        let name = list
-            .iter()
-            .find(|x| x.id == settings_id)
-            .ok_or(anyhow::anyhow!("settings not found for {}", settings_id))?
-            .name
-            .clone();
-
-        let current = ctx
-            .client()?
-            .networking_switch_port_settings_view()
-            .port(settings_id)
-            .send()
-            .await
-            .unwrap()
-            .into_inner();
-
-        let mut block_to_lot = HashMap::new();
-        let lots = ctx
-            .client()?
-            .networking_address_lot_list()
-            .limit(u32::MAX)
-            .send()
-            .await
-            .unwrap()
-            .into_inner()
-            .items;
-        for lot in lots.iter() {
-            let lot_blocks = ctx
-                .client()?
-                .networking_address_lot_block_list()
-                .address_lot(lot.id)
-                .limit(u32::MAX)
-                .send()
-                .await
-                .unwrap()
-                .into_inner()
-                .items;
-            for block in lot_blocks.iter() {
-                block_to_lot.insert(block.id, lot.id);
-            }
-        }
-
-        let addrs: Vec<Address> = current
-            .addresses
-            .clone()
-            .into_iter()
-            .map(|x| Address {
-                address: x.address,
-                address_lot: NameOrId::Id(block_to_lot[&x.address_lot_block_id]),
-                vlan_id: x.vlan_id,
-            })
-            .collect();
-
-        let mut addresses = HashMap::new();
-        addresses.insert(String::from("phy0"), AddressConfig { addresses: addrs });
-
-        let mut bgp_peers = HashMap::new();
-        bgp_peers.insert(
-            String::from("phy0"),
-            BgpPeerConfig {
-                peers: current.bgp_peers,
-            },
-        );
-
-        let groups: Vec<NameOrId> = current
-            .groups
-            .iter()
-            .map(|x| NameOrId::Id(x.port_settings_group_id))
-            .collect();
-
-        let mut interfaces: HashMap<String, SwitchInterfaceConfigCreate> = current
-            .interfaces
-            .iter()
-            .map(|x| {
-                (
-                    x.interface_name.clone(),
-                    SwitchInterfaceConfigCreate {
-                        kind: match x.kind {
-                            SwitchInterfaceKind2::Primary => SwitchInterfaceKind::Primary,
-                            SwitchInterfaceKind2::Loopback => SwitchInterfaceKind::Loopback,
-                            SwitchInterfaceKind2::Vlan => {
-                                todo!("vlan interface outside vlan interfaces?")
-                            }
-                        },
-                        v6_enabled: x.v6_enabled,
-                    },
-                )
-            })
-            .collect();
-
-        for v in current.vlan_interfaces.iter() {
-            interfaces.insert(
-                format!("vlan-{}", v.vlan_id),
-                SwitchInterfaceConfigCreate {
-                    kind: SwitchInterfaceKind::Vlan(v.vlan_id),
-                    v6_enabled: false,
-                },
-            );
-        }
-
-        let links: HashMap<String, LinkConfigCreate> = current
-            .links
-            .iter()
-            .enumerate()
-            .map(|(i, x)| {
-                (
-                    format!("phy{}", i),
-                    LinkConfigCreate {
-                        autoneg: x.autoneg,
-                        fec: x.fec,
-                        lldp: LldpServiceConfigCreate {
-                            //TODO
-                            enabled: false,
-                            lldp_config: None,
-                        },
-                        mtu: x.mtu,
-                        speed: x.speed,
-                    },
-                )
-            })
-            .collect();
-
-        let port_config = SwitchPortConfigCreate {
-            geometry: match current.port.geometry {
-                SwitchPortGeometry2::Qsfp28x1 => SwitchPortGeometry::Qsfp28x1,
-                SwitchPortGeometry2::Qsfp28x2 => SwitchPortGeometry::Qsfp28x2,
-                SwitchPortGeometry2::Sfp28x4 => SwitchPortGeometry::Sfp28x4,
-            },
-        };
-
-        let route_config = RouteConfig {
-            routes: current
-                .routes
-                .iter()
-                .map(|x| Route {
-                    dst: x.dst.clone(),
-                    gw: x.gw.to_string().parse().unwrap(),
-                    vid: x.vlan_id,
-                })
-                .collect(),
-        };
-
-        let mut routes = HashMap::new();
-        routes.insert(String::from("phy0"), route_config);
-
-        let create = SwitchPortSettingsCreate {
-            addresses,
-            bgp_peers,
-            description: String::from("switch port settings"),
-            groups,
-            interfaces,
-            links,
-            name: name.parse().unwrap(),
-            port_config,
-            routes,
-        };
-
-        Ok(create)
-    }
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "del")]
+pub struct CmdAddrDel {
+    rack: Uuid,
+    #[arg(value_enum)]
+    switch: Switch,
+    #[arg(value_enum)]
+    port: Port,
+    addr: oxnet::Ipv4Net,
 }
 
 #[async_trait]
-impl RunnableCmd for CmdAddr {
+impl RunnableCmd for CmdAddrDel {
     async fn run(&self, ctx: &Context) -> Result<()> {
-        match &self.subcmd {
-            AddrSubCommand::Add(cmd) => cmd.run(ctx).await,
+        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+        if let Some(addrs) = settings.addresses.get_mut(PHY0) {
+            addrs
+                .addresses
+                .retain(|x| x.address.to_string() != self.addr.to_string());
         }
-    }
-}
-
-#[async_trait]
-impl RunnableCmd for CmdAddrAdd {
-    async fn run(&self, ctx: &Context) -> Result<()> {
-        let ports = ctx
-            .client()?
-            .networking_switch_port_list()
-            .limit(u32::MAX)
+        ctx.client()?
+            .networking_switch_port_settings_create()
+            .body(settings)
             .send()
-            .await
-            .unwrap()
-            .into_inner()
-            .items;
-
-        let port = ports
-            .into_iter()
-            .find(|x| x.rack_id == self.rack && x.port_name == self.port.to_string())
-            .ok_or(anyhow::anyhow!(
-                "port {} not found for rack {}",
-                self.port,
-                self.rack
-            ))?;
-
-        match port.port_settings_id {
-            Some(id) => self.modify_settings_for_address(id, ctx).await,
-            None => Err(anyhow::anyhow!(
-                "Cannot add address to port without settings. \
-                Port settings with a link configuration is required"
-            )),
-        }
+            .await?;
+        Ok(())
     }
 }
 
@@ -504,7 +277,7 @@ impl RunnableCmd for CmdPortConfig {
                     writeln!(&mut tw, "{:?}\t{:?}\t{:?}", l.autoneg, l.fec, l.speed,)?;
                 }
                 tw.flush()?;
-                println!("");
+                println!();
 
                 writeln!(&mut tw, "{}\t{}", "Address".dimmed(), "Lot".dimmed())?;
                 for a in &config.addresses {
@@ -521,7 +294,7 @@ impl RunnableCmd for CmdPortConfig {
                     writeln!(&mut tw, "{}\t{}", addr, *alb.0.name)?;
                 }
                 tw.flush()?;
-                println!("");
+                println!();
 
                 writeln!(
                     &mut tw,
@@ -566,7 +339,7 @@ impl RunnableCmd for CmdPortConfig {
                     )?;
                 }
                 tw.flush()?;
-                println!("");
+                println!();
 
                 // Uncomment to see full payload
                 //println!("");
@@ -663,11 +436,11 @@ impl RunnableCmd for CmdPortStatus {
 
         println!("{}", "switch0".dimmed());
         println!("{}", "=======".dimmed());
-        self.show_switch(&c, "switch0", &sw0).await?;
+        self.show_switch(c, "switch0", &sw0).await?;
 
         println!("{}", "switch1".dimmed());
         println!("{}", "=======".dimmed());
-        self.show_switch(&c, "switch1", &sw1).await?;
+        self.show_switch(c, "switch1", &sw1).await?;
 
         Ok(())
     }
@@ -825,4 +598,289 @@ impl CmdPortStatus {
 
         Ok(())
     }
+}
+
+// NOTE: This bonanza of befuckerry is needed to translate the current
+//       switch port settings view into a corresponding switch port
+//       settings create request. It's the preliminary step for a read-
+//       modify-write operation.
+async fn create_current(settings_id: Uuid, ctx: &Context) -> Result<SwitchPortSettingsCreate> {
+    let list = ctx
+        .client()?
+        .networking_switch_port_settings_list()
+        .limit(u32::MAX)
+        .send()
+        .await
+        .unwrap()
+        .into_inner()
+        .items;
+
+    let name = list
+        .iter()
+        .find(|x| x.id == settings_id)
+        .ok_or(anyhow::anyhow!("settings not found for {}", settings_id))?
+        .name
+        .clone();
+
+    let current = ctx
+        .client()?
+        .networking_switch_port_settings_view()
+        .port(settings_id)
+        .send()
+        .await
+        .unwrap()
+        .into_inner();
+
+    let mut block_to_lot = HashMap::new();
+    let lots = ctx
+        .client()?
+        .networking_address_lot_list()
+        .limit(u32::MAX)
+        .send()
+        .await
+        .unwrap()
+        .into_inner()
+        .items;
+    for lot in lots.iter() {
+        let lot_blocks = ctx
+            .client()?
+            .networking_address_lot_block_list()
+            .address_lot(lot.id)
+            .limit(u32::MAX)
+            .send()
+            .await
+            .unwrap()
+            .into_inner()
+            .items;
+        for block in lot_blocks.iter() {
+            block_to_lot.insert(block.id, lot.id);
+        }
+    }
+
+    let addrs: Vec<Address> = current
+        .addresses
+        .clone()
+        .into_iter()
+        .map(|x| Address {
+            address: x.address,
+            address_lot: NameOrId::Id(block_to_lot[&x.address_lot_block_id]),
+            vlan_id: x.vlan_id,
+        })
+        .collect();
+
+    let mut addresses = HashMap::new();
+    addresses.insert(String::from(PHY0), AddressConfig { addresses: addrs });
+
+    let mut bgp_peers = HashMap::new();
+    bgp_peers.insert(
+        String::from(PHY0),
+        BgpPeerConfig {
+            peers: current.bgp_peers,
+        },
+    );
+
+    let groups: Vec<NameOrId> = current
+        .groups
+        .iter()
+        .map(|x| NameOrId::Id(x.port_settings_group_id))
+        .collect();
+
+    let mut interfaces: HashMap<String, SwitchInterfaceConfigCreate> = current
+        .interfaces
+        .iter()
+        .map(|x| {
+            (
+                x.interface_name.clone(),
+                SwitchInterfaceConfigCreate {
+                    kind: match x.kind {
+                        SwitchInterfaceKind2::Primary => SwitchInterfaceKind::Primary,
+                        SwitchInterfaceKind2::Loopback => SwitchInterfaceKind::Loopback,
+                        SwitchInterfaceKind2::Vlan => {
+                            todo!("vlan interface outside vlan interfaces?")
+                        }
+                    },
+                    v6_enabled: x.v6_enabled,
+                },
+            )
+        })
+        .collect();
+
+    for v in current.vlan_interfaces.iter() {
+        interfaces.insert(
+            format!("vlan-{}", v.vlan_id),
+            SwitchInterfaceConfigCreate {
+                kind: SwitchInterfaceKind::Vlan(v.vlan_id),
+                v6_enabled: false,
+            },
+        );
+    }
+
+    let links: HashMap<String, LinkConfigCreate> = current
+        .links
+        .iter()
+        .enumerate()
+        .map(|(i, x)| {
+            (
+                format!("phy{}", i),
+                LinkConfigCreate {
+                    autoneg: x.autoneg,
+                    fec: x.fec,
+                    lldp: LldpServiceConfigCreate {
+                        //TODO
+                        enabled: false,
+                        lldp_config: None,
+                    },
+                    mtu: x.mtu,
+                    speed: x.speed,
+                },
+            )
+        })
+        .collect();
+
+    let port_config = SwitchPortConfigCreate {
+        geometry: match current.port.geometry {
+            SwitchPortGeometry2::Qsfp28x1 => SwitchPortGeometry::Qsfp28x1,
+            SwitchPortGeometry2::Qsfp28x2 => SwitchPortGeometry::Qsfp28x2,
+            SwitchPortGeometry2::Sfp28x4 => SwitchPortGeometry::Sfp28x4,
+        },
+    };
+
+    let route_config = RouteConfig {
+        routes: current
+            .routes
+            .iter()
+            .map(|x| Route {
+                dst: x.dst.clone(),
+                gw: x.gw.to_string().parse().unwrap(),
+                vid: x.vlan_id,
+            })
+            .collect(),
+    };
+
+    let mut routes = HashMap::new();
+    routes.insert(String::from(PHY0), route_config);
+
+    let create = SwitchPortSettingsCreate {
+        addresses,
+        bgp_peers,
+        description: String::from("switch port settings"),
+        groups,
+        interfaces,
+        links,
+        name: name.parse().unwrap(),
+        port_config,
+        routes,
+    };
+
+    Ok(create)
+}
+#[derive(clap::ValueEnum, Clone, Debug)]
+enum Switch {
+    Switch0,
+    Switch1,
+}
+
+impl std::fmt::Display for Switch {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", format!("{self:?}").to_lowercase())
+    }
+}
+
+#[derive(clap::ValueEnum, Clone, Debug)]
+enum Port {
+    Qsfp0,
+    Qsfp1,
+    Qsfp2,
+    Qsfp3,
+    Qsfp4,
+    Qsfp5,
+    Qsfp6,
+    Qsfp7,
+    Qsfp8,
+    Qsfp9,
+    Qsfp10,
+    Qsfp11,
+    Qsfp12,
+    Qsfp13,
+    Qsfp14,
+    Qsfp15,
+    Qsfp16,
+    Qsfp17,
+    Qsfp18,
+    Qsfp19,
+    Qsfp20,
+    Qsfp21,
+    Qsfp22,
+    Qsfp23,
+    Qsfp24,
+    Qsfp25,
+    Qsfp26,
+    Qsfp27,
+    Qsfp28,
+    Qsfp29,
+    Qsfp30,
+    Qsfp31,
+}
+
+impl std::fmt::Display for Port {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", format!("{self:?}").to_lowercase())
+    }
+}
+
+async fn get_port(
+    ctx: &Context,
+    rack_id: &Uuid,
+    switch: &Switch,
+    port: &Port,
+) -> Result<SwitchPort> {
+    let ports = ctx
+        .client()?
+        .networking_switch_port_list()
+        .limit(u32::MAX)
+        .send()
+        .await
+        .unwrap()
+        .into_inner()
+        .items;
+
+    let port = ports
+        .into_iter()
+        .find(|x| {
+            x.rack_id == *rack_id
+                && x.switch_location == switch.to_string()
+                && x.port_name == port.to_string()
+        })
+        .ok_or(anyhow::anyhow!(
+            "port {} not found for rack {} switch {}",
+            port,
+            switch,
+            rack_id
+        ))?;
+
+    Ok(port)
+}
+
+async fn get_port_settings_id(
+    ctx: &Context,
+    rack_id: &Uuid,
+    switch: &Switch,
+    port: &Port,
+) -> Result<Uuid> {
+    let port = get_port(ctx, rack_id, switch, port).await?;
+    let id = port.port_settings_id.ok_or(anyhow::anyhow!(
+        "Port settings uninitialized. Initialize by creating a link."
+    ))?;
+    Ok(id)
+}
+
+async fn current_port_settings(
+    ctx: &Context,
+    rack_id: &Uuid,
+    switch: &Switch,
+    port: &Port,
+) -> Result<SwitchPortSettingsCreate> {
+    let id = get_port_settings_id(ctx, rack_id, switch, port).await?;
+    let settings = create_current(id, ctx).await?;
+    Ok(settings)
 }

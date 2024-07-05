@@ -323,7 +323,7 @@ impl RunnableCmd for CmdDiskImport {
                 disk_source: DiskSource::ImportingBlocks {
                     block_size: disk_block_size.clone(),
                 },
-                size: disk_size.try_into()?,
+                size: disk_size.into(),
             })
             .send()
             .await?;
