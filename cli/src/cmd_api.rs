@@ -107,7 +107,7 @@ impl RunnableCmd for CmdApi {
         };
 
         // Parse the fields.
-        let params = self.parse_fields(ctx)?;
+        let params = self.parse_fields()?;
 
         // Set them as our body if they exist.
         let mut b = String::new();
@@ -292,10 +292,7 @@ impl CmdApi {
         Ok(headers)
     }
 
-    fn parse_fields(
-        &self,
-        _ctx: &crate::context::Context,
-    ) -> Result<HashMap<String, serde_json::Value>> {
+    fn parse_fields(&self) -> Result<HashMap<String, serde_json::Value>> {
         let mut params: HashMap<String, serde_json::Value> = HashMap::new();
 
         // Parse the raw fields.

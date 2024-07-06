@@ -17,6 +17,7 @@ mod clap_feature;
 
 pub mod config;
 
+pub use auth::*;
 pub use generated_sdk::*;
 
 #[derive(Error, Debug)]

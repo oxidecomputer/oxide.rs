@@ -45,13 +45,15 @@ pub trait RunnableCmd: Send + Sync {
 pub fn make_cli() -> NewCli<'static> {
     NewCli::default()
         .add_custom::<cmd_auth::CmdAuth>("auth")
-        .add_custom::<cmd_api::CmdApi>("api")
+        // Informational commands that don't require server access
         .add_custom::<cmd_docs::CmdDocs>("docs")
+        .add_custom::<cmd_completion::CmdCompletion>("completion")
         .add_custom::<cmd_version::CmdVersion>("version")
+        // Custom, often compound, client commands
+        .add_custom::<cmd_api::CmdApi>("api")
         .add_custom::<cmd_disk::CmdDiskImport>("disk import")
         .add_custom::<cmd_instance::CmdInstanceSerial>("instance serial")
         .add_custom::<cmd_instance::CmdInstanceFromImage>("instance from-image")
-        .add_custom::<cmd_completion::CmdCompletion>("completion")
         .add_custom::<cmd_timeseries::CmdTimeseriesDashboard>("experimental timeseries dashboard")
 }
 

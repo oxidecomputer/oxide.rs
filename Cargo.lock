@@ -2278,6 +2278,7 @@ dependencies = [
  "test-common",
  "thouart",
  "tokio",
+ "toml",
  "toml_edit",
  "url",
  "uuid",

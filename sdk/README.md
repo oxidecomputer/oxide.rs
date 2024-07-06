@@ -17,11 +17,12 @@ $ cargo add tokio
 To connect to the Oxide API, the SDK needs a host URL and a token. There are
 two ways to specify these:
 
+* Configuration files: When you run oxide auth login in the CLI, `config.toml`
+  and `credentials.toml` files are generated in `$HOME/.config/oxide/`. The
+  credentials file contains sensitive information such as your token and user
+  ID.
 * Environment variables: You can set the OXIDE_HOST and OXIDE_TOKEN environment
   variables.
-* Configuration file: When you run oxide auth login in the CLI, a
-  $HOME/.config/oxide/hosts.toml file is generated. This file contains
-  sensitive information like your token and user ID.
 
 The SDK will first look for the environment variables, and if they are not
 defined, it will look for the config file.
@@ -32,13 +33,13 @@ Create a new `oxide::Client` like this:
 
 ```rust ,no_run
 use futures::StreamExt;
-use oxide::{config::Config, context::Context, prelude::*};
+use oxide::{Client, prelude::*};
 
 #[tokio::main]
 async fn main() {
-    // Get a client from the on-disk configuration.
-    let context = Context::new(Config::default()).expect("unabled to create context");
-    let client: &Client = context.client().expect("unable to get client");
+    // Make a client from the on-disk configuration.
+    let client = Client::new_authenticated()
+        .expect("unable to create an authenticated client");
 
     // Start using the client!
 

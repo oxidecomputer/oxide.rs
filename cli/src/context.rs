@@ -4,24 +4,59 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use std::{net::SocketAddr, time::Duration};
+use std::{net::SocketAddr, path::PathBuf, time::Duration};
 
 use reqwest::ClientBuilder;
 
 use oxide::{
     config::{Config, ResolveValue},
-    Client, OxideError,
+    BasicConfigFile, Client, ClientConfig, CredentialsFile, OxideError,
 };
+use serde::{de::DeserializeOwned, Deserialize};
+
+// TODO
+// I think we're going to want a few things here:
+// The parameters necessary for creating the client. Most of that is going to
+// be in ClientConfig.
+// The other big chunk is going to be more customization: output format (text,
+// json), ... other shit? default project? I don't know.
 
 pub struct Context {
     client: Option<Client>,
     config: Config,
+    client_config: ClientConfig,
+    cred_file: CredentialsFile,
+    config_file: ConfigFile,
+}
+
+#[derive(Deserialize, Debug, Default)]
+#[serde(rename_all = "kebab-case")]
+pub struct ConfigFile {
+    #[serde(flatten)]
+    pub basics: BasicConfigFile,
+}
+
+fn read_or_default<T: DeserializeOwned + Default>(path: PathBuf) -> T {
+    std::fs::read_to_string(path)
+        .ok()
+        .and_then(|contents| toml::from_str(&contents).ok())
+        .unwrap_or_default()
 }
 
 impl Context {
-    pub fn new(config: Config) -> Result<Self, OxideError> {
+    pub fn new(config: Config, client_config: ClientConfig) -> Result<Self, OxideError> {
         let client = get_client(&config)?;
-        Ok(Self { client, config })
+
+        let cred_file = read_or_default(client_config.config_dir.join("credentials.toml"));
+        let config_file = read_or_default(client_config.config_dir.join("config.toml"));
+
+        Ok(Self {
+            client,
+            config,
+            client_config,
+            cred_file,
+            config_file,
+        })
     }
 
     pub fn client(&self) -> Result<&Client, OxideError> {
@@ -32,6 +67,18 @@ impl Context {
 
     pub fn config(&self) -> &Config {
         &self.config
+    }
+
+    pub fn client_config(&self) -> &ClientConfig {
+        &self.client_config
+    }
+
+    pub fn cred_file(&self) -> &CredentialsFile {
+        &self.cred_file
+    }
+
+    pub fn config_file(&self) -> &ConfigFile {
+        &self.config_file
     }
 }
 

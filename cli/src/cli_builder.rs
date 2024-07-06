@@ -16,7 +16,10 @@ use crate::{
     generated_cli::{Cli, CliCommand},
     OxideOverride, RunnableCmd,
 };
-use oxide::config::{Config, ResolveValue};
+use oxide::{
+    config::{Config, ResolveValue},
+    ClientConfig,
+};
 
 /// Control an Oxide environment
 #[derive(clap::Parser, Debug, Clone)]
@@ -198,15 +201,15 @@ impl<'a> NewCli<'a> {
             env_logger::builder().filter_level(LevelFilter::Debug);
         }
 
-        let mut config = if let Some(dir) = config_dir {
+        let mut config = if let Some(dir) = config_dir.clone() {
             Config::new_with_config_dir(dir)
         } else {
             Config::default()
         };
-        if let Some(resolve) = resolve {
+        if let Some(resolve) = resolve.clone() {
             config = config.with_resolve(resolve);
         }
-        if let Some(cacert_path) = cacert {
+        if let Some(cacert_path) = cacert.clone() {
             let extension = cacert_path
                 .extension()
                 .map(std::ffi::OsStr::to_ascii_lowercase);
@@ -224,9 +227,39 @@ impl<'a> NewCli<'a> {
             config = config.with_timeout(timeout);
         }
 
+        // TODO obviously redundant
+        let mut client_config = ClientConfig::default();
+
+        if let Some(profile_name) = profile {
+            client_config = client_config.with_profile(profile_name);
+        } else if let Some(config_dir) = config_dir {
+            client_config = client_config.with_config_dir(config_dir);
+        }
+
+        if let Some(resolve) = resolve {
+            client_config = client_config.with_resolve(resolve.host, resolve.addr);
+        }
+        if let Some(cacert_path) = cacert {
+            let extension = cacert_path
+                .extension()
+                .map(std::ffi::OsStr::to_ascii_lowercase);
+            let contents = std::fs::read(cacert_path)?;
+            let cert = match extension.as_ref().and_then(|ex| ex.to_str()) {
+                Some("pem") => reqwest::tls::Certificate::from_pem(&contents),
+                Some("der") => reqwest::tls::Certificate::from_der(&contents),
+                _ => bail!("--cacert path must be a 'pem' or 'der' file".to_string()),
+            }?;
+
+            client_config = client_config.with_cert(cert);
+        }
+        client_config = client_config.with_insecure(insecure);
+        if let Some(timeout) = timeout {
+            client_config = client_config.with_timeout(timeout);
+        }
+
         // TODO I think we should try to avoid creating an authenticated client
         // until we know we're going to need one.
-        let ctx = Context::new(config)?;
+        let ctx = Context::new(config, client_config)?;
 
         let mut node = &runner;
         let mut sm = &matches;
@@ -265,7 +298,8 @@ struct GeneratedCmd(CliCommand);
 #[async_trait]
 impl RunIt for GeneratedCmd {
     async fn run_cmd(&self, matches: &ArgMatches, ctx: &Context) -> Result<()> {
-        let cli = Cli::new(ctx.client()?.clone(), OxideOverride::default());
+        let client = oxide::Client::new_authenticated_config(ctx.client_config())?;
+        let cli = Cli::new(client, OxideOverride::default());
         cli.execute(self.0, matches).await
     }
 

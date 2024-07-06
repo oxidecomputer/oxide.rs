@@ -4,7 +4,6 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use crate::RunnableCmd;
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
@@ -89,8 +88,8 @@ pub struct CmdCompletion {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdCompletion {
-    async fn run(&self, _ctx: &crate::context::Context) -> Result<()> {
+impl crate::RunnableCmd for CmdCompletion {
+    async fn run(&self, _: &crate::Context) -> Result<()> {
         let cli = crate::make_cli();
         let mut cmd = cli.command_take();
         let name = cmd.get_name().to_string();
