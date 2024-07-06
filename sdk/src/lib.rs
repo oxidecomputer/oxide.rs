@@ -15,8 +15,6 @@ mod generated_sdk;
 #[cfg(feature = "clap")]
 mod clap_feature;
 
-pub mod config;
-
 pub use auth::*;
 pub use generated_sdk::*;
 

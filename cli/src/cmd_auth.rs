@@ -16,6 +16,7 @@ use oauth2::{
 use oxide::{Client, ClientConfig, ClientSessionExt};
 use reqwest::ClientBuilder;
 use toml_edit::{Item, Table};
+use uuid::Uuid;
 
 use crate::context::Context;
 use crate::{AsHost, RunnableCmd};
@@ -287,7 +288,8 @@ impl CmdAuthLogin {
             // Do an OAuth 2.0 Device Authorization Grant dance to get a token.
             let device_auth_url =
                 DeviceAuthorizationUrl::new(format!("{}device/auth", &self.host))?;
-            let client_id = &ctx.config().client_id;
+            // TODO what's the point of this?
+            let client_id = Uuid::new_v4();
             let auth_client = BasicClient::new(
                 ClientId::new(client_id.to_string()),
                 None,
@@ -352,7 +354,7 @@ impl CmdAuthLogin {
         println!("Logged in as {} under profile {}", uid, profile_name);
 
         // Read / modify / write the credentials file.
-        let credentials_path = ctx.config().config_dir.join("credentials.toml");
+        let credentials_path = ctx.client_config().config_dir.join("credentials.toml");
         let mut credentials =
             if let Ok(contents) = std::fs::read_to_string(credentials_path.clone()) {
                 contents.parse::<toml_edit::DocumentMut>().unwrap()
@@ -400,7 +402,7 @@ impl CmdAuthLogin {
         // If there is no default profile then we'll set this new profile to be
         // the default.
         if ctx.config_file().basics.default_profile.is_none() {
-            let config_path = ctx.config().config_dir.join("config.toml");
+            let config_path = ctx.client_config().config_dir.join("config.toml");
             let mut config = if let Ok(contents) = std::fs::read_to_string(config_path.clone()) {
                 contents.parse::<toml_edit::DocumentMut>().unwrap()
             } else {
@@ -436,7 +438,7 @@ impl CmdAuthLogout {
             return Ok(());
         }
 
-        let credentials_path = ctx.config().config_dir.join("credentials.toml");
+        let credentials_path = ctx.client_config().config_dir.join("credentials.toml");
 
         if self.all {
             // Clear the entire file for users who want to reset their known hosts.

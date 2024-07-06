@@ -13,9 +13,8 @@ use anyhow::{anyhow, Result};
 use async_trait::async_trait;
 use clap::Parser;
 use futures::{StreamExt, TryStreamExt};
+use oxide::Client;
 use serde::Deserialize;
-
-use crate::RunnableCmd;
 
 /// Makes an authenticated HTTP request to the Oxide API and prints the response.
 ///
@@ -97,8 +96,8 @@ pub struct PaginatedResponse {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdApi {
-    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
+impl crate::AuthenticatedCmd for CmdApi {
+    async fn run(&self, client: &Client) -> Result<()> {
         // Make sure the endpoint starts with a slash.
         let endpoint = if self.endpoint.starts_with('/') {
             self.endpoint.clone()
@@ -164,7 +163,6 @@ impl RunnableCmd for CmdApi {
             }
         }
 
-        let client = ctx.client()?;
         let rclient = client.client();
         let uri = format!("{}{}", client.baseurl(), endpoint_with_query);
 
@@ -197,7 +195,7 @@ impl RunnableCmd for CmdApi {
         // Print the response headers if requested.
         if self.include {
             println!("{:?} {}", resp.version(), resp.status());
-            print_headers(ctx, resp.headers())?;
+            print_headers(resp.headers())?;
         }
 
         if resp.status() == reqwest::StatusCode::NO_CONTENT {
@@ -368,10 +366,7 @@ impl CmdApi {
     }
 }
 
-fn print_headers(
-    _ctx: &crate::context::Context,
-    headers: &reqwest::header::HeaderMap,
-) -> Result<()> {
+fn print_headers(headers: &reqwest::header::HeaderMap) -> Result<()> {
     let mut names: Vec<String> = headers.keys().map(|k| k.as_str().to_string()).collect();
     names.sort_by_key(|a| a.to_lowercase());
 

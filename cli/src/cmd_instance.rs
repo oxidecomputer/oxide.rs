@@ -4,7 +4,6 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use crate::RunnableCmd;
 use anyhow::Result;
 use async_trait::async_trait;
 use clap::Parser;
@@ -13,8 +12,8 @@ use oxide::types::{
     NameOrId,
 };
 
-use oxide::ClientImagesExt;
 use oxide::ClientInstancesExt;
+use oxide::{Client, ClientImagesExt};
 use std::path::PathBuf;
 
 /// Connect to or retrieve data from the instance's serial console.
@@ -27,11 +26,11 @@ pub struct CmdInstanceSerial {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdInstanceSerial {
-    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
+impl crate::AuthenticatedCmd for CmdInstanceSerial {
+    async fn run(&self, client: &Client) -> Result<()> {
         match &self.subcmd {
-            SerialSubCommand::Console(cmd) => cmd.run(ctx).await,
-            SerialSubCommand::History(cmd) => cmd.run(ctx).await,
+            SerialSubCommand::Console(cmd) => cmd.run(client).await,
+            SerialSubCommand::History(cmd) => cmd.run(client).await,
         }
     }
 }
@@ -98,12 +97,10 @@ by typing { Ctrl+V, Ctrl+], Ctrl+V, Ctrl+C } at the command line."
     tty: Option<PathBuf>,
 }
 
-#[async_trait]
-impl RunnableCmd for CmdInstanceSerialConsole {
+impl CmdInstanceSerialConsole {
     // cli process becomes an interactive remote shell.
-    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
-        let mut req = ctx
-            .client()?
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut req = client
             .instance_serial_console_stream()
             .instance(self.instance.clone())
             .most_recent(self.most_recent);
@@ -175,12 +172,10 @@ pub struct CmdInstanceSerialHistory {
     json: bool,
 }
 
-#[async_trait]
-impl RunnableCmd for CmdInstanceSerialHistory {
+impl CmdInstanceSerialHistory {
     // cli process becomes an interactive remote shell.
-    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
-        let mut req = ctx
-            .client()?
+    async fn run(&self, client: &Client) -> Result<()> {
+        let mut req = client
             .instance_serial_console()
             .instance(self.instance.clone());
 
@@ -253,18 +248,17 @@ pub struct CmdInstanceFromImage {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdInstanceFromImage {
-    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
+impl crate::AuthenticatedCmd for CmdInstanceFromImage {
+    async fn run(&self, client: &Client) -> Result<()> {
         // Validate the image and get its ID (if specified by name).
-        let mut image_request = ctx.client()?.image_view().image(&self.image);
+        let mut image_request = client.image_view().image(&self.image);
         // We only need the project if the image is specified by name.
         if let NameOrId::Name(_) = &self.image {
             image_request = image_request.project(&self.project);
         };
         let image_view = image_request.send().await?;
 
-        let instance = ctx
-            .client()?
+        let instance = client
             .instance_create()
             .project(&self.project)
             .body_map(|body| {

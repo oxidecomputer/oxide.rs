@@ -4,7 +4,6 @@
 
 // Copyright 2024 Oxide Computer Company
 
-use crate::RunnableCmd;
 use anyhow::bail;
 use anyhow::Result;
 use async_trait::async_trait;
@@ -244,13 +243,11 @@ impl CmdDiskImport {
 }
 
 #[async_trait]
-impl RunnableCmd for CmdDiskImport {
+impl crate::AuthenticatedCmd for CmdDiskImport {
     fn is_subtree() -> bool {
         false
     }
-    async fn run(&self, ctx: &crate::context::Context) -> Result<()> {
-        let client = ctx.client()?;
-
+    async fn run(&self, client: &Client) -> Result<()> {
         if !Path::new(&self.path).exists() {
             bail!("path {} does not exist", self.path.to_string_lossy());
         }

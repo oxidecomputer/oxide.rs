@@ -14,7 +14,10 @@ use async_trait::async_trait;
 use cli_builder::NewCli;
 use context::Context;
 use generated_cli::CliConfig;
-use oxide::types::{AllowedSourceIps, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range};
+use oxide::{
+    types::{AllowedSourceIps, IdpMetadataSource, IpRange, Ipv4Range, Ipv6Range},
+    Client,
+};
 use url::Url;
 
 mod cli_builder;
@@ -39,6 +42,25 @@ pub trait RunnableCmd: Send + Sync {
     async fn run(&self, ctx: &Context) -> Result<()>;
     fn is_subtree() -> bool {
         true
+    }
+}
+
+#[async_trait]
+pub trait AuthenticatedCmd: Send + Sync {
+    async fn run(&self, client: &Client) -> Result<()>;
+    fn is_subtree() -> bool {
+        true
+    }
+}
+
+#[async_trait]
+impl<T: AuthenticatedCmd> RunnableCmd for T {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let client = Client::new_authenticated_config(ctx.client_config())?;
+        self.run(&client).await
+    }
+    fn is_subtree() -> bool {
+        <T as AuthenticatedCmd>::is_subtree()
     }
 }
 
