@@ -1973,26 +1973,33 @@
       "subcommands": [
         {
           "name": "addr",
+          "about": "Address management",
           "subcommands": [
             {
-              "name": "add"
+              "name": "add",
+              "about": "Add an address to a port configuration"
             },
             {
-              "name": "del"
+              "name": "del",
+              "about": "Remove an address from a port configuration"
             }
           ]
         },
         {
           "name": "bgp",
+          "about": "BGP management",
           "subcommands": [
             {
               "name": "config",
+              "about": "Manage BGP configuration",
               "subcommands": [
                 {
                   "name": "peer",
+                  "about": "Manage BGP peer configuration",
                   "subcommands": [
                     {
                       "name": "add",
+                      "about": "Add a BGP peer to a port configuration",
                       "args": [
                         {
                           "long": "allowed-exports",
@@ -2057,7 +2064,8 @@
                       ]
                     },
                     {
-                      "name": "del"
+                      "name": "del",
+                      "about": "Remove a BGP from a port configuration"
                     }
                   ]
                 }
@@ -2065,19 +2073,21 @@
             },
             {
               "name": "status",
-              "about": "Get the status of BGP."
+              "about": "Observe BGP status"
             }
           ]
         },
         {
           "name": "link",
+          "about": "Link management",
           "subcommands": [
             {
               "name": "add",
+              "about": "Add a link to a port",
               "args": [
                 {
                   "long": "autoneg",
-                  "help": "Whether or not to set autonegotiation"
+                  "help": "Whether or not to set auto-negotiation"
                 },
                 {
                   "long": "mtu",
@@ -2086,20 +2096,22 @@
               ]
             },
             {
-              "name": "del"
+              "name": "del",
+              "about": "Remove a link from a port"
             }
           ]
         },
         {
           "name": "port",
+          "about": "Port management",
           "subcommands": [
             {
               "name": "config",
-              "about": "Get the configuration of switch ports."
+              "about": "Manage port configuration"
             },
             {
               "name": "status",
-              "about": "Get the status of switch ports."
+              "about": "Observe port status"
             }
           ]
         }

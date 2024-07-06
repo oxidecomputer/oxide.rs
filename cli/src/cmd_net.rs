@@ -36,9 +36,16 @@ pub struct CmdNet {
 
 #[derive(Parser, Debug, Clone)]
 enum NetSubCommand {
+    /// Address management.
     Addr(CmdAddr),
+
+    /// Port management.
     Port(CmdPort),
+
+    /// Link management.
     Link(CmdLink),
+
+    /// BGP management.
     Bgp(CmdBgp),
 }
 
@@ -62,7 +69,10 @@ impl RunnableCmd for CmdPort {
 
 #[derive(Parser, Debug, Clone)]
 enum PortSubCommand {
+    /// Manage port configuration.
     Config(CmdPortConfig),
+
+    /// Observe port status.
     Status(CmdPortStatus),
 }
 
@@ -86,7 +96,10 @@ impl RunnableCmd for CmdLink {
 
 #[derive(Parser, Debug, Clone)]
 enum LinkSubCommand {
+    /// Add a link to a port.
     Add(CmdLinkAdd),
+
+    /// Remove a link from a port.
     Del(CmdLinkDel),
 }
 
@@ -105,7 +118,7 @@ pub struct CmdLinkAdd {
     #[arg(value_enum)]
     port: Port,
 
-    /// Whether or not to set autonegotiation
+    /// Whether or not to set auto-negotiation
     #[arg(long)]
     pub autoneg: bool,
 
@@ -205,7 +218,10 @@ impl RunnableCmd for CmdBgp {
 #[allow(clippy::large_enum_variant)]
 #[derive(Parser, Debug, Clone)]
 enum BgpSubCommand {
+    /// Observe BGP status.
     Status(CmdBgpStatus),
+
+    /// Manage BGP configuration.
     Config(CmdBgpConfig),
 }
 
@@ -229,7 +245,10 @@ impl RunnableCmd for CmdAddr {
 
 #[derive(Parser, Debug, Clone)]
 enum AddrSubCommand {
+    /// Add an address to a port configuration.
     Add(CmdAddrAdd),
+
+    /// Remove an address from a port configuration.
     Del(CmdAddrDel),
 }
 
@@ -357,6 +376,7 @@ impl RunnableCmd for CmdBgpConfig {
 
 #[derive(Parser, Debug, Clone)]
 enum BgpConfigSubCommand {
+    /// Manage BGP peer configuration.
     Peer(CmdBgpPeer),
 }
 
@@ -380,7 +400,10 @@ impl RunnableCmd for CmdBgpPeer {
 
 #[derive(Parser, Debug, Clone)]
 enum BgpConfigPeerSubCommand {
+    /// Add a BGP peer to a port configuration.
     Add(CmdBgpPeerAdd),
+
+    /// Remove a BGP from a port configuration.
     Del(CmdBgpPeerDel),
 }
 
@@ -907,8 +930,6 @@ impl CmdPortStatus {
                 .await
                 .ok()
                 .map(|x| x.into_inner().0);
-
-            //println!("{:?}", status);
 
             let link = status.as_ref().map(|x| {
                 let ls: LinkStatus =
