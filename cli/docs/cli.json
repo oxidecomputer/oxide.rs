@@ -2070,6 +2070,27 @@
           ]
         },
         {
+          "name": "link",
+          "subcommands": [
+            {
+              "name": "add",
+              "args": [
+                {
+                  "long": "autoneg",
+                  "help": "Whether or not to set autonegotiation"
+                },
+                {
+                  "long": "mtu",
+                  "help": "Maximum transmission unit for the link"
+                }
+              ]
+            },
+            {
+              "name": "del"
+            }
+          ]
+        },
+        {
           "name": "port",
           "subcommands": [
             {

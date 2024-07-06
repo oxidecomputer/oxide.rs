@@ -9,10 +9,10 @@ use oxide::{
     context::Context,
     types::{
         Address, AddressConfig, BgpPeer, BgpPeerConfig, BgpPeerStatus, ImportExportPolicy, IpNet,
-        LinkConfigCreate, LldpServiceConfigCreate, Name, NameOrId, Route, RouteConfig,
-        SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2, SwitchLocation,
-        SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry, SwitchPortGeometry2,
-        SwitchPortSettingsCreate,
+        LinkConfigCreate, LinkFec, LinkSpeed, LldpServiceConfigCreate, Name, NameOrId, Route,
+        RouteConfig, SwitchInterfaceConfigCreate, SwitchInterfaceKind, SwitchInterfaceKind2,
+        SwitchLocation, SwitchPort, SwitchPortConfigCreate, SwitchPortGeometry,
+        SwitchPortGeometry2, SwitchPortSettingsCreate,
     },
     Client, ClientSystemHardwareExt, ClientSystemNetworkingExt,
 };
@@ -38,6 +38,7 @@ pub struct CmdNet {
 enum NetSubCommand {
     Addr(CmdAddr),
     Port(CmdPort),
+    Link(CmdLink),
     Bgp(CmdBgp),
 }
 
@@ -63,6 +64,124 @@ impl RunnableCmd for CmdPort {
 enum PortSubCommand {
     Config(CmdPortConfig),
     Status(CmdPortStatus),
+}
+
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "link")]
+pub struct CmdLink {
+    #[clap(subcommand)]
+    subcmd: LinkSubCommand,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdLink {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        match &self.subcmd {
+            LinkSubCommand::Add(cmd) => cmd.run(ctx).await,
+            LinkSubCommand::Del(cmd) => cmd.run(ctx).await,
+        }
+    }
+}
+
+#[derive(Parser, Debug, Clone)]
+enum LinkSubCommand {
+    Add(CmdLinkAdd),
+    Del(CmdLinkDel),
+}
+
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "add")]
+pub struct CmdLinkAdd {
+    /// Id of the rack to add the link to.
+    rack: Uuid,
+
+    /// Switch to add the link to.
+    #[arg(value_enum)]
+    switch: Switch,
+
+    /// Port to add the link to.
+    #[arg(value_enum)]
+    port: Port,
+
+    /// Whether or not to set autonegotiation
+    #[arg(long)]
+    pub autoneg: bool,
+
+    /// The forward error correction mode of the link.
+    #[arg(value_enum)]
+    pub fec: LinkFec,
+
+    /// Maximum transmission unit for the link.
+    #[arg(long, default_value_t = 1500u16)]
+    pub mtu: u16,
+
+    /// The speed of the link.
+    #[arg(value_enum)]
+    pub speed: LinkSpeed,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdLinkAdd {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+        let link = LinkConfigCreate {
+            autoneg: self.autoneg,
+            fec: self.fec,
+            mtu: self.mtu,
+            speed: self.speed,
+            //TODO not fully plumbed on the back end yet.
+            lldp: LldpServiceConfigCreate {
+                enabled: false,
+                lldp_config: None,
+            },
+        };
+        match settings.links.get(PHY0) {
+            Some(_) => {
+                return Err(anyhow::anyhow!("only one link per port supported"));
+            }
+            None => {
+                settings.links.insert(String::from(PHY0), link);
+            }
+        }
+        ctx.client()?
+            .networking_switch_port_settings_create()
+            .body(settings)
+            .send()
+            .await?;
+        Ok(())
+    }
+}
+
+#[derive(Parser, Debug, Clone)]
+#[command(verbatim_doc_comment)]
+#[command(name = "del")]
+pub struct CmdLinkDel {
+    /// Id of the rack to remove the link from.
+    rack: Uuid,
+
+    /// Switch to remove the link from.
+    #[arg(value_enum)]
+    switch: Switch,
+
+    /// Port to remove the link from.
+    #[arg(value_enum)]
+    port: Port,
+}
+
+#[async_trait]
+impl RunnableCmd for CmdLinkDel {
+    async fn run(&self, ctx: &Context) -> Result<()> {
+        let mut settings = current_port_settings(ctx, &self.rack, &self.switch, &self.port).await?;
+        settings.links.clear();
+        ctx.client()?
+            .networking_switch_port_settings_create()
+            .body(settings)
+            .send()
+            .await?;
+        Ok(())
+    }
 }
 
 #[derive(Parser, Debug, Clone)]
@@ -120,6 +239,7 @@ impl RunnableCmd for CmdNet {
         match &self.subcmd {
             NetSubCommand::Addr(cmd) => cmd.run(ctx).await,
             NetSubCommand::Port(cmd) => cmd.run(ctx).await,
+            NetSubCommand::Link(cmd) => cmd.run(ctx).await,
             NetSubCommand::Bgp(cmd) => cmd.run(ctx).await,
         }
     }
@@ -129,13 +249,24 @@ impl RunnableCmd for CmdNet {
 #[command(verbatim_doc_comment)]
 #[command(name = "add")]
 pub struct CmdAddrAdd {
+    /// Id of the rack to add the address to.
     rack: Uuid,
+
+    /// Switch to add the address to.
     #[arg(value_enum)]
     switch: Switch,
+
+    /// Port to add the port to.
     #[arg(value_enum)]
     port: Port,
+
+    /// Address to add.
     addr: oxnet::Ipv4Net,
+
+    /// Address lot to allocate from.
     lot: NameOrId,
+
+    /// Optional VLAN to assign to the address.
     vlan: Option<u16>,
 }
 
@@ -174,11 +305,18 @@ impl RunnableCmd for CmdAddrAdd {
 #[command(verbatim_doc_comment)]
 #[command(name = "del")]
 pub struct CmdAddrDel {
+    /// Id of the rack to remove the address from.
     rack: Uuid,
+
+    /// Switch to remove the address from.
     #[arg(value_enum)]
     switch: Switch,
+
+    /// Port to remove the address from.
     #[arg(value_enum)]
     port: Port,
+
+    /// Address to remove.
     addr: oxnet::Ipv4Net,
 }
 
