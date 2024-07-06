@@ -5116,7 +5116,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
-                        "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
+                        "Name or ID of the VPC, only required if `router` is provided as a `Name`",
                     ),
             )
             .about("List routes")
@@ -5159,7 +5159,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
-                        "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
+                        "Name or ID of the VPC, only required if `router` is provided as a `Name`",
                     ),
             )
             .arg(
@@ -5210,7 +5210,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
-                        "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
+                        "Name or ID of the VPC, only required if `router` is provided as a `Name`",
                     ),
             )
             .about("Fetch route")
@@ -5259,7 +5259,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
-                        "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
+                        "Name or ID of the VPC, only required if `router` is provided as a `Name`",
                     ),
             )
             .arg(
@@ -5310,7 +5310,7 @@ impl<T: CliConfig> Cli<T> {
                     .value_parser(clap::value_parser!(types::NameOrId))
                     .required(false)
                     .help(
-                        "Name or ID of the VPC, only required if `subnet` is provided as a `Name`",
+                        "Name or ID of the VPC, only required if `router` is provided as a `Name`",
                     ),
             )
             .about("Delete route")

@@ -49380,7 +49380,7 @@ pub trait ClientVpcsExt {
     ///   provided as a `Name`
     /// - `router`: Name or ID of the router
     /// - `sort_by`
-    /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
+    /// - `vpc`: Name or ID of the VPC, only required if `router` is provided as
     ///   a `Name`
     /// ```ignore
     /// let response = client.vpc_router_route_list()
@@ -49402,7 +49402,7 @@ pub trait ClientVpcsExt {
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `router`: Name or ID of the router
-    /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
+    /// - `vpc`: Name or ID of the VPC, only required if `router` is provided as
     ///   a `Name`
     /// - `body`
     /// ```ignore
@@ -49424,7 +49424,7 @@ pub trait ClientVpcsExt {
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `router`: Name or ID of the router
-    /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
+    /// - `vpc`: Name or ID of the VPC, only required if `router` is provided as
     ///   a `Name`
     /// ```ignore
     /// let response = client.vpc_router_route_view()
@@ -49445,7 +49445,7 @@ pub trait ClientVpcsExt {
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `router`: Name or ID of the router
-    /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
+    /// - `vpc`: Name or ID of the VPC, only required if `router` is provided as
     ///   a `Name`
     /// - `body`
     /// ```ignore
@@ -49468,7 +49468,7 @@ pub trait ClientVpcsExt {
     /// - `project`: Name or ID of the project, only required if `vpc` is
     ///   provided as a `Name`
     /// - `router`: Name or ID of the router
-    /// - `vpc`: Name or ID of the VPC, only required if `subnet` is provided as
+    /// - `vpc`: Name or ID of the VPC, only required if `router` is provided as
     ///   a `Name`
     /// ```ignore
     /// let response = client.vpc_router_route_delete()
