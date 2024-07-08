@@ -16,7 +16,7 @@ base64 = "0.22.1"
 built = { version = "0.7.3", features = ["git2"] }
 chrono = { version = "0.4.38", features = ["serde"] }
 clap = { version = "4.5.7", features = ["derive", "string", "env"] }
-clap_complete = "4.5.6"
+clap_complete = "4.5.7"
 crossterm = { version = "0.27.0", features = [ "event-stream" ] }
 dialoguer = "0.10.4"
 dirs = "4.0.0"
@@ -26,7 +26,7 @@ expectorate = { version = "1.1.0", features = ["predicates"] }
 futures = "0.3.30"
 httpmock = "0.6.8"
 indicatif = "0.17"
-log = "0.4.21"
+log = "0.4.22"
 newline-converter = "0.3.0"
 oauth2 = "4.4.2"
 open = "4.2.0"
@@ -45,7 +45,7 @@ reqwest = "0.11.27"
 rustfmt-wrapper = "0.2.1"
 schemars = { version = "0.8.20", features = ["chrono", "uuid1"] }
 serde = { version = "1.0.203", features = ["derive"] }
-serde_json = "1.0.116"
+serde_json = "1.0.120"
 similar = "2.4.0"
 tabwriter = "1.4.0"
 thiserror = { version = "1", default-features = false }
